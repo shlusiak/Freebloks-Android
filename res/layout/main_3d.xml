@@ -12,6 +12,8 @@
         android:id="@+id/stoneGallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:unselectedAlpha="0.4"
+        android:animationDuration="500"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" />
 

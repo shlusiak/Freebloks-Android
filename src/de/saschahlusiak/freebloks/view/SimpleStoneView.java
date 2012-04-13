@@ -12,7 +12,7 @@ public class SimpleStoneView extends View {
 	int player;
 	Paint blockPaint;
 	
-	static final int block_size = 20;
+	static final int block_size = 25;
 	
 	public SimpleStoneView(Context context, int player, Stone stone) {
 		super(context);
@@ -20,16 +20,16 @@ public class SimpleStoneView extends View {
 		this.player = player;
 		
 		int alpha;
-		if (stone.get_available() <= 0)
-			alpha = 30;
+		if (stone != null && stone.get_available() <= 0)
+			alpha = 40;
 		else
-			alpha = 200;
+			alpha = 240;
 		blockPaint = new Paint();
 		switch (player) {
-		case 0:	blockPaint.setColor(Color.argb(alpha, 0, 30, 190));		break;
-		case 1:	blockPaint.setColor(Color.argb(alpha, 190, 190, 0));	break;
-		case 2:	blockPaint.setColor(Color.argb(alpha, 190, 0, 0));		break;
-		case 3:	blockPaint.setColor(Color.argb(alpha, 0, 190, 0));		break;
+		case 0:	blockPaint.setColor(Color.argb(alpha, 0, 50, 230));		break;
+		case 1:	blockPaint.setColor(Color.argb(alpha, 230, 230, 0));	break;
+		case 2:	blockPaint.setColor(Color.argb(alpha, 230, 0, 0));		break;
+		case 3:	blockPaint.setColor(Color.argb(alpha, 0, 230, 0));		break;
 		}
 	}
 	
@@ -41,11 +41,16 @@ public class SimpleStoneView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		//canvas.drawColor(Color.RED);
+		if (stone == null)
+			return;
+		
+		int left = (getWidth() - block_size * stone.get_stone_size()) / 2;
+		int top = (getHeight() - block_size * stone.get_stone_size()) / 2;
+		
 		for (int y = 0; y < stone.get_stone_size(); y++)
 			for (int x = 0; x < stone.get_stone_size(); x++) {
 				if (stone.get_stone_field(y, x) != Stone.STONE_FIELD_FREE) {
-					canvas.drawRect(block_size * x, block_size * y, (block_size) * (x + 1) - 1, (block_size) * (y + 1) - 1, blockPaint);
+					canvas.drawRect(left + block_size * x, top + block_size * y, left + (block_size) * (x + 1) - 1, top + (block_size) * (y + 1) - 1, blockPaint);
 				}
 			}
 		

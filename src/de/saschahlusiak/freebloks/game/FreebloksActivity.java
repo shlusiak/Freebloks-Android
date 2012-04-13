@@ -98,18 +98,11 @@ public class FreebloksActivity extends Activity  {
 			for (i = 0; i < Spiel.PLAYER_MAX; i++)
 				if (spiel.is_local_player(i))
 					Log.d(tag, "Local player: " + i);
-			view.updateView();		
+			view.updateView();
 		}
 
 		public void newCurrentPlayer(int player) {
-			final Player p = spiel.get_current_player();
-			stoneGallery.post(new Runnable() {
-				@Override
-				public void run() {
-					stoneGalleryAdapter.setPlayer(p);
-					stoneGalleryAdapter.notifyDataSetChanged();
-				}
-			});
+			updateStoneGallery(player);
 			
 			if (!spiel.is_local_player())
 				return;
@@ -125,6 +118,27 @@ public class FreebloksActivity extends Activity  {
 			stone = spiel.get_current_player().get_stone(turn.m_stone_number);
 			stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 			spiel.set_stone(stone, turn.m_stone_number, turn.m_y, turn.m_x);
+		}
+		
+		void updateStoneGallery(int player) {
+			final Player p = (player < 0) ? null : spiel.get_player(player);
+			stoneGallery.post(new Runnable() {
+				@Override
+				public void run() {
+					if (p != null)
+						stoneGalleryAdapter.setPlayer(p);
+					stoneGalleryAdapter.notifyDataSetChanged();
+				}
+			});
+		}
+		
+		void updateStoneGallery() {
+			stoneGallery.post(new Runnable() {
+				@Override
+				public void run() {
+					stoneGalleryAdapter.notifyDataSetChanged();
+				}
+			});
 		}
 
 		public void chatReceived(final NET_CHAT c) {
@@ -153,6 +167,7 @@ public class FreebloksActivity extends Activity  {
 						+ " has " + player.m_stone_count + " stones left and "
 						+ -player.m_stone_points_left + " points.");
 			}
+			updateStoneGallery();
 
 			spiel.disconnect();
 			view.updateView();
@@ -161,6 +176,7 @@ public class FreebloksActivity extends Activity  {
 		@Override
 		public void stoneWasSet(NET_SET_STONE s) {
 			view.updateView();
+			updateStoneGallery();
 		}
 
 		@Override
@@ -172,7 +188,7 @@ public class FreebloksActivity extends Activity  {
 		@Override
 		public void stoneUndone(Stone s, Turn t) {
 			view.updateView();
-
+			updateStoneGallery();
 		}
 
 		@Override

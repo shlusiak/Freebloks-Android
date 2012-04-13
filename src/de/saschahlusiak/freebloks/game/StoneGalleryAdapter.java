@@ -27,12 +27,29 @@ public class StoneGalleryAdapter extends BaseAdapter {
 	public int getCount() {
 		if (player == null)
 			return 0;
-		return Stone.STONE_COUNT_ALL_SHAPES;
+		int c = 0;
+		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
+			if (player.get_stone(i).get_available() > 0)
+				c++;
+		return c;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return player.get_stone(position);
+		int i = 0;
+		do {
+			while (player.get_stone(i).get_available() == 0) {
+				i++;
+				if (i >= Stone.STONE_COUNT_ALL_SHAPES)
+					return null;
+			}
+			if (position == 0)
+				return player.get_stone(i);
+			
+			position--;
+			i++;
+		} while (i < Stone.STONE_COUNT_ALL_SHAPES);
+		return null;
 	}
 
 	@Override
