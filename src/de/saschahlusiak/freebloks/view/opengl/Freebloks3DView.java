@@ -42,22 +42,21 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
-			gl.glTranslatef(0, 4.5f, 0);
+			gl.glTranslatef(0, 4.0f, 0);
 			GLU.gluLookAt(gl, 
 					(float) (camera_distance*Math.sin(-mAngleY*Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 					(float) (camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
 					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(mAngleY*Math.PI/180.0)),
 					0.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f);
-//			gl.glRotatef(mAngleY, 1, 0, 0);
-//			gl.glRotatef(mAngleX, 0, 1, 0);
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
 			
 
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 
-			board.render(gl);
+			board.renderBoard(gl);
+			board.renderField(gl);
 		}
 
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -148,11 +147,11 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 			if (event.getPointerCount() > 1) {
 				float newDist = spacing(event);
 			    if (newDist > 10f) {
-			    	zoom *= (newDist / oldDist);
-			    	if (zoom > 40.0f)
-			    		zoom = 40.0f;
-			    	if (zoom < 20.0f)
-			    		zoom = 20.0f;
+			    	zoom *= (oldDist / newDist);
+			    	if (zoom > 400.0f)
+			    		zoom = 400.0f;
+			    	if (zoom < 2.0f)
+			    		zoom = 2.0f;
 			    	oldDist = newDist;
 			    }
 			} else {
@@ -185,11 +184,9 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 //		return super.onTouchEvent(event);
 		return true;
 	}
-	
-	@Override
-	public void invalidate() {
-//		requestRender();
-		super.invalidate();
-	}
 
+	@Override
+	public void updateView() {
+		requestRender();
+	}
 }

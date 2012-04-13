@@ -110,4 +110,9 @@ public class SimpleFreebloksView extends View implements FreebloksViewInterface 
 		return spiel;
 	}
 
+	@Override
+	public void updateView() {
+		postInvalidate();
+	}
+
 }

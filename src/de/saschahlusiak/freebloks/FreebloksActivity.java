@@ -89,7 +89,7 @@ public class FreebloksActivity extends Activity  {
 			for (i = 0; i < Spiel.PLAYER_MAX; i++)
 				if (spiel.is_local_player(i))
 					Log.d(tag, "Local player: " + i);
-			((View)view).postInvalidate();			
+			view.updateView();		
 		}
 
 		public void newCurrentPlayer(int player) {
@@ -97,7 +97,7 @@ public class FreebloksActivity extends Activity  {
 				return;
 
 			/* Ermittle CTurn, den die KI jetzt setzen wuerde */
-			((View)view).postInvalidate();
+			view.updateView();
 			Turn turn = ki.get_ki_turn(spiel, spiel.current_player(), 5);
 			Stone stone;
 			if (turn == null) {
@@ -137,13 +137,12 @@ public class FreebloksActivity extends Activity  {
 			}
 
 			spiel.disconnect();
-			((View)view).postInvalidate();
-
+			view.updateView();
 		}
 
 		@Override
 		public void stoneWasSet(NET_SET_STONE s) {
-			((View)view).postInvalidate();
+			view.updateView();
 		}
 
 		@Override
@@ -154,7 +153,7 @@ public class FreebloksActivity extends Activity  {
 
 		@Override
 		public void stoneUndone(Stone s, Turn t) {
-			((View)view).postInvalidate();
+			view.updateView();
 
 		}
 
