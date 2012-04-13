@@ -4,7 +4,7 @@
 
     <PreferenceCategory android:title="@string/preferences_view" >
         <CheckBoxPreference
-            android:defaultValue="0"
+            android:defaultValue="1"
             android:key="view_opengl"
             android:persistent="true"
             android:summary="@string/preferences_3dview_summary"

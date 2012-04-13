@@ -22,12 +22,11 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 		float width = 1, height = 1, fov = 60.0f;
 
 		BoardRenderer board;
-		
 
 		public MyRenderer() {
 			init();
 		}
-		
+
 		public void init() {
 			board = new BoardRenderer(spiel);
 		}
@@ -57,6 +56,10 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 
 			board.renderBoard(gl);
 			board.renderField(gl);
+			for (int i = 0; i < 4; i++) {
+				board.renderPlayerStones(gl, i);
+				gl.glRotatef(-90, 0, 1, 0);
+			}
 		}
 
 		public void onSurfaceChanged(GL10 gl, int width, int height) {

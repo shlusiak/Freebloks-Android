@@ -223,7 +223,7 @@ public class FreebloksActivity extends Activity  {
 		super.onCreate(savedInstanceState);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-		setContentView(prefs.getBoolean("view_opengl", false) ? R.layout.main_3d : R.layout.main);
+		setContentView(prefs.getBoolean("view_opengl", true) ? R.layout.main_3d : R.layout.main);
 
 		view = (FreebloksViewInterface)findViewById(R.id.board);
 		spiel = (SpielClient)getLastNonConfigurationInstance();
