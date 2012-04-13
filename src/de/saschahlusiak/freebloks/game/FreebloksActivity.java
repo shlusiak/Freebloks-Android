@@ -50,153 +50,7 @@ public class FreebloksActivity extends Activity  {
 	Gallery stoneGallery;
 	StoneGalleryAdapter stoneGalleryAdapter;
 	SpielClient spiel = null;
-
-	class KIThread extends Thread implements SpielClientInterface {
-		SpielClient spiel;
-		boolean godown;
-		Ki ki = new Ki();
-		
-		KIThread(SpielClient spiel) {
-			this.spiel = spiel;
-			spiel.addClientInterface(this);
-		}
-		
-		public synchronized boolean getGoDown() {
-			return godown;
-		}
-		
-		public synchronized void goDown() {
-			godown = true;
-		}
-
-		@Override
-		public void run() {
-			godown = false;
-		
-			spiel.request_player();
-//			spiel.request_player();
-//			spiel.request_player();
-//			spiel.request_player();
-
-			do {
-				if (!spiel.poll(true))
-					break;
-				if (getGoDown()) {
-					Log.i("KIThread", "detaching");
-					spiel.removeClientInterface(this);
-					return;
-				}
-			} while (spiel.isConnected());
-			spiel.disconnect();
-			spiel.removeClientInterface(this);
-			Log.i("KIThread", "disconnected, thread going down");
-		}
-		
-		public void gameStarted() {
-			int i;
-			Log.d(tag, "Game started");
-			for (i = 0; i < Spiel.PLAYER_MAX; i++)
-				if (spiel.is_local_player(i))
-					Log.d(tag, "Local player: " + i);
-			view.updateView();
-		}
-
-		public void newCurrentPlayer(int player) {
-			updateStoneGallery(player);
-			
-			if (!spiel.is_local_player())
-				return;
-
-			/* Ermittle CTurn, den die KI jetzt setzen wuerde */
-			view.updateView();
-			Turn turn = ki.get_ki_turn(spiel, spiel.current_player(), 5);
-			Stone stone;
-			if (turn == null) {
-				Log.e(tag, "Player " + player + ": Did not find a valid move");
-				return;
-			}
-			stone = spiel.get_current_player().get_stone(turn.m_stone_number);
-			stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
-			spiel.set_stone(stone, turn.m_stone_number, turn.m_y, turn.m_x);
-		}
-		
-		void updateStoneGallery(int player) {
-			final Player p = (player < 0) ? null : spiel.get_player(player);
-			stoneGallery.post(new Runnable() {
-				@Override
-				public void run() {
-					if (p != null)
-						stoneGalleryAdapter.setPlayer(p);
-					stoneGalleryAdapter.notifyDataSetChanged();
-				}
-			});
-		}
-		
-		void updateStoneGallery() {
-			stoneGallery.post(new Runnable() {
-				@Override
-				public void run() {
-					stoneGalleryAdapter.notifyDataSetChanged();
-				}
-			});
-		}
-
-		public void chatReceived(final NET_CHAT c) {
-			if (spiel.current_player() < 0)
-				return;
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					if (c.client == -1)
-						Toast.makeText(FreebloksActivity.this, "* " + c.text,
-								Toast.LENGTH_LONG).show();
-					else
-						Toast.makeText(FreebloksActivity.this,
-								"Client " + c.client + ": " + c.text,
-								Toast.LENGTH_LONG).show();
-				}
-			});
-		}
-
-		public void gameFinished() {
-			int i;
-			Log.i(tag, "-- Game finished! --");
-			for (i = 0; i < Spiel.PLAYER_MAX; i++) {
-				Player player = spiel.get_player(i);
-				Log.i(tag, (spiel.is_local_player(i) ? "*" : " ") + "Player " + i
-						+ " has " + player.m_stone_count + " stones left and "
-						+ -player.m_stone_points_left + " points.");
-			}
-			updateStoneGallery();
-
-			spiel.disconnect();
-			view.updateView();
-		}
-
-		@Override
-		public void stoneWasSet(NET_SET_STONE s) {
-			view.updateView();
-			updateStoneGallery();
-		}
-
-		@Override
-		public void hintReceived(NET_SET_STONE s) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void stoneUndone(Stone s, Turn t) {
-			view.updateView();
-			updateStoneGallery();
-		}
-
-		@Override
-		public void serverStatus(NET_SERVER_STATUS status) {
-			// TODO Auto-generated method stub
-			
-		}
-	}
+	SpielClientThread spielthread = null;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -206,7 +60,7 @@ public class FreebloksActivity extends Activity  {
 		protected void onPreExecute() {
 			view.setSpiel(null);
 			mySpiel = new SpielClient();
-			kithread = new KIThread(mySpiel);
+			spielthread = new SpielClientThread(mySpiel);
 			progress = new ProgressDialog(FreebloksActivity.this);
 			progress.setMessage("Connecting...");
 			progress.setIndeterminate(true);
@@ -243,14 +97,14 @@ public class FreebloksActivity extends Activity  {
 			} else {
 				showDialog(DIALOG_LOBBY);
 			}
-			kithread.start();
+			spielthread.setView(FreebloksActivity.this, view);
+			spielthread.start();
 			super.onPostExecute(result);
 		}
 		
 
 	}
 	
-	KIThread kithread = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -263,22 +117,24 @@ public class FreebloksActivity extends Activity  {
 		stoneGallery = (Gallery)findViewById(R.id.stoneGallery);
 		stoneGalleryAdapter = new StoneGalleryAdapter(this, null);
 		stoneGallery.setAdapter(stoneGalleryAdapter);
-		spiel = (SpielClient)getLastNonConfigurationInstance();
-		view.setSpiel(spiel);
-		if (spiel != null) {
-			kithread = new KIThread(spiel);
-			kithread.start();
-		} else 
+		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
+		if (spielthread != null) {
+			spielthread.setView(this,  view);
+			spiel = spielthread.spiel;
+			stoneGalleryAdapter.setPlayer(spiel.get_current_player());
+			stoneGalleryAdapter.notifyDataSetChanged();
+		} else
 			showDialog(DIALOG_JOIN);
+		view.setSpiel(spiel);
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (kithread != null) try {
-			kithread.spiel.disconnect();
-			kithread.goDown();
-			kithread.join();
-			kithread = null;
+		if (spielthread != null) try {
+			spielthread.spiel.disconnect();
+			spielthread.goDown();
+			spielthread.join();
+			spielthread = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -287,15 +143,12 @@ public class FreebloksActivity extends Activity  {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		if (kithread != null) try {
-			kithread.goDown();
-			kithread.join();
-			spiel.clearClientInterface();
-			kithread = null;
-		} catch (Exception e) {
-			e.printStackTrace();
+		SpielClientThread t = spielthread;
+		if (t != null) {
+			spielthread.setView(null, null);
+			spielthread = null;
 		}
-		return spiel;
+		return t;
 	}
 
 	@Override
@@ -319,8 +172,8 @@ public class FreebloksActivity extends Activity  {
 			okAdd.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					String n = ((EditText)addDialog.findViewById(R.id.server)).getText().toString();
-					if (kithread != null && kithread.spiel != null)
-						kithread.spiel.disconnect();
+					if (spielthread != null && spielthread.spiel != null)
+						spielthread.spiel.disconnect();
 
 					new ConnectTask().execute(n);
 					addDialog.dismiss();
