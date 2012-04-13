@@ -1,5 +1,10 @@
-package de.saschahlusiak.freebloks;
+package de.saschahlusiak.freebloks.game;
 
+import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.R.id;
+import de.saschahlusiak.freebloks.R.layout;
+import de.saschahlusiak.freebloks.R.menu;
+import de.saschahlusiak.freebloks.R.string;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
@@ -12,6 +17,7 @@ import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
+import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.FreebloksViewInterface;
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
@@ -40,6 +47,8 @@ public class FreebloksActivity extends Activity  {
 	static final int DIALOG_LOBBY = 2;
 
 	FreebloksViewInterface view;
+	Gallery stoneGallery;
+	StoneGalleryAdapter stoneGalleryAdapter;
 	SpielClient spiel = null;
 
 	class KIThread extends Thread implements SpielClientInterface {
@@ -64,7 +73,7 @@ public class FreebloksActivity extends Activity  {
 		public void run() {
 			godown = false;
 		
-//			spiel.request_player();
+			spiel.request_player();
 //			spiel.request_player();
 //			spiel.request_player();
 //			spiel.request_player();
@@ -93,6 +102,15 @@ public class FreebloksActivity extends Activity  {
 		}
 
 		public void newCurrentPlayer(int player) {
+			final Player p = spiel.get_current_player();
+			stoneGallery.post(new Runnable() {
+				@Override
+				public void run() {
+					stoneGalleryAdapter.setPlayer(p);
+					stoneGalleryAdapter.notifyDataSetChanged();
+				}
+			});
+			
 			if (!spiel.is_local_player())
 				return;
 
@@ -226,6 +244,9 @@ public class FreebloksActivity extends Activity  {
 		setContentView(prefs.getBoolean("view_opengl", true) ? R.layout.main_3d : R.layout.main);
 
 		view = (FreebloksViewInterface)findViewById(R.id.board);
+		stoneGallery = (Gallery)findViewById(R.id.stoneGallery);
+		stoneGalleryAdapter = new StoneGalleryAdapter(this, null);
+		stoneGallery.setAdapter(stoneGalleryAdapter);
 		spiel = (SpielClient)getLastNonConfigurationInstance();
 		view.setSpiel(spiel);
 		if (spiel != null) {
@@ -277,6 +298,7 @@ public class FreebloksActivity extends Activity  {
 			addDialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
 					LayoutParams.WRAP_CONTENT);
 			addDialog.setTitle(R.string.menu_join_game);
+			((EditText)addDialog.findViewById(R.id.server)).setText("192.168.2.159");
 			Button okAdd = (Button) addDialog.findViewById(android.R.id.button1);
 			okAdd.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {

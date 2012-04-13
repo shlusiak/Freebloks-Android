@@ -57,7 +57,7 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 			board.renderBoard(gl);
 			board.renderField(gl);
 			for (int i = 0; i < 4; i++) {
-				board.renderPlayerStones(gl, i);
+			//	board.renderPlayerStones(gl, i);
 				gl.glRotatef(-90, 0, 1, 0);
 			}
 		}

@@ -39,6 +39,10 @@ public class Player {
 		}
 	}
 	
+	public int getPlayerNumber() {
+		return m_number;
+	}
+	
 	public Stone get_stone(int n) {
 		return m_stone[n];
 	}

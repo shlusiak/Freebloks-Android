@@ -12,7 +12,7 @@
         android:icon="@drawable/freebloks"
         android:label="@string/app_name" >
         <activity
-            android:name=".FreebloksActivity"
+            android:name=".game.FreebloksActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 		<activity
-            android:name=".FreebloksPreferences"
+            android:name=".preferences.FreebloksPreferences"
             android:label="@string/app_name" >
         </activity>        
     </application>

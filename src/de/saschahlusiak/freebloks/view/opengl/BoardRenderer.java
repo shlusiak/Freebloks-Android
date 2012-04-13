@@ -162,7 +162,7 @@ public class BoardRenderer {
 			w = 5.0f;
 		else
 			w = stone_size * spiel.m_field_size_x;
-	    
+
 	    final float[] coords_border = {
 	        	/* lower side */
 	             w, 0,  w,	/* 0 */

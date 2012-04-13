@@ -360,10 +360,6 @@ public class Stone {
 		return true;
 	}
 
-	public void CStone(int shape){
-		init(shape);
-	}
-	
 	void init(int shape) {
 		m_available = 1;
 		m_shape = shape;
