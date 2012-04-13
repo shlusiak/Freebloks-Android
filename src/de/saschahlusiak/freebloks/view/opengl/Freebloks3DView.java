@@ -6,6 +6,7 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.view.FreebloksViewInterface;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.opengl.GLU;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 		final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 		final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
+		float width = 1, height = 1, fov = 60.0f;
 
 		BoardRenderer board;
 		
@@ -27,29 +29,41 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 		}
 		
 		public void init() {
-			board = new BoardRenderer();
+			board = new BoardRenderer(spiel);
 		}
 
 		public void onDrawFrame(GL10 gl) {
+			final float camera_distance = zoom;
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+			
+			gl.glMatrixMode(GL10.GL_PROJECTION);
+			gl.glLoadIdentity();
+			GLU.gluPerspective(gl, fov, width / height, 1.0f, 300.0f);
 
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
-			gl.glTranslatef(0, 5, -zoom);
-			gl.glRotatef(mAngleY, 1, 0, 0);
-			gl.glRotatef(mAngleX, 0, 1, 0);
+			gl.glTranslatef(0, 4.5f, 0);
+			GLU.gluLookAt(gl, 
+					(float) (camera_distance*Math.sin(-mAngleY*Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
+					(float) (camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
+					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(mAngleY*Math.PI/180.0)),
+					0.0f, 0.0f, 0.0f,
+					0.0f, 1.0f, 0.0f);
+//			gl.glRotatef(mAngleY, 1, 0, 0);
+//			gl.glRotatef(mAngleX, 0, 1, 0);
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
 			
 
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 
-			board.render(gl, spiel);
+			board.render(gl);
 		}
 
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
 			gl.glViewport(0, 0, width, height);
-
+			this.width = (float)width;
+			this.height = (float)height;
 			float ratio = (float) width / height;
 			gl.glMatrixMode(GL10.GL_PROJECTION);
 			gl.glLoadIdentity();
@@ -88,9 +102,9 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 
 	SpielClient spiel;
 	MyRenderer renderer;
-	float angleX = 0.0f;
-	float angleY = 45.0f;
-	float zoom = 13;
+	float angleX = 60.0f;
+	float angleY = 0.0f;
+	float zoom = 30;
 	
 	public Freebloks3DView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -135,19 +149,19 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 				float newDist = spacing(event);
 			    if (newDist > 10f) {
 			    	zoom *= (newDist / oldDist);
-			    	if (zoom > 20.0f)
+			    	if (zoom > 40.0f)
+			    		zoom = 40.0f;
+			    	if (zoom < 20.0f)
 			    		zoom = 20.0f;
-			    	if (zoom < 9.0f)
-			    		zoom = 9.0f;
 			    	oldDist = newDist;
 			    }
 			} else {
-				angleX += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
-				angleY += (float)(event.getY() - mPreviousY) / (float)getHeight() * 180.0f;
-				if (angleY < 30)
-					angleY = 30;
-				if (angleY > 90)
-					angleY = 90;
+				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
+				angleX += (float)(event.getY() - mPreviousY) / (float)getHeight() * 180.0f;
+				if (angleX < 20)
+					angleX = 20;
+				if (angleX > 90)
+					angleX = 90;
 			}
 			queueEvent(new Runnable() {
 				@Override
