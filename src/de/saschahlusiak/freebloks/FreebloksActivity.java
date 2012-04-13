@@ -2,19 +2,23 @@ package de.saschahlusiak.freebloks;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Ki;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
+import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
-import de.saschahlusiak.freebloks.view.SimpleFreebloksView;
+import de.saschahlusiak.freebloks.view.FreebloksViewInterface;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,45 +28,58 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
 public class FreebloksActivity extends Activity  {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
+	static final int DIALOG_JOIN = 1;
+	static final int DIALOG_LOBBY = 2;
 
-	SimpleFreebloksView view;
+	FreebloksViewInterface view;
+	SpielClient spiel = null;
 
-	class KIThread extends Thread implements SpielClientInterface{
+	class KIThread extends Thread implements SpielClientInterface {
 		SpielClient spiel;
+		boolean godown;
 		Ki ki = new Ki();
 		
-		KIThread(String server) {
-			try {
-				spiel = new SpielClient(this);
-				view.setSpiel(spiel);
-				spiel.connect(server, Network.DEFAULT_PORT);
-			} catch (Exception e) {
-				Toast.makeText(FreebloksActivity.this, e.getMessage(),
-						Toast.LENGTH_LONG);
-			}
+		KIThread(SpielClient spiel) {
+			this.spiel = spiel;
+			spiel.addClientInterface(this);
+		}
+		
+		public synchronized boolean getGoDown() {
+			return godown;
+		}
+		
+		public synchronized void goDown() {
+			godown = true;
 		}
 
 		@Override
 		public void run() {
+			godown = false;
+		
 //			spiel.request_player();
 //			spiel.request_player();
 //			spiel.request_player();
 //			spiel.request_player();
-
-			spiel.request_start();
 
 			do {
 				if (!spiel.poll(true))
 					break;
+				if (getGoDown()) {
+					Log.i("KIThread", "detaching");
+					spiel.removeClientInterface(this);
+					return;
+				}
 			} while (spiel.isConnected());
 			spiel.disconnect();
-			Log.i("KIThread", "thread going down");
+			spiel.removeClientInterface(this);
+			Log.i("KIThread", "disconnected, thread going down");
 		}
 		
 		public void gameStarted() {
@@ -71,6 +88,7 @@ public class FreebloksActivity extends Activity  {
 			for (i = 0; i < Spiel.PLAYER_MAX; i++)
 				if (spiel.is_local_player(i))
 					Log.d(tag, "Local player: " + i);
+			((View)view).postInvalidate();			
 		}
 
 		public void newCurrentPlayer(int player) {
@@ -78,6 +96,7 @@ public class FreebloksActivity extends Activity  {
 				return;
 
 			/* Ermittle CTurn, den die KI jetzt setzen wuerde */
+			((View)view).postInvalidate();
 			Turn turn = ki.get_ki_turn(spiel, spiel.current_player(), 5);
 			Stone stone;
 			if (turn == null) {
@@ -90,8 +109,9 @@ public class FreebloksActivity extends Activity  {
 		}
 
 		public void chatReceived(final NET_CHAT c) {
+			if (spiel.current_player() < 0)
+				return;
 			runOnUiThread(new Runnable() {
-
 				@Override
 				public void run() {
 					if (c.client == -1)
@@ -116,17 +136,13 @@ public class FreebloksActivity extends Activity  {
 			}
 
 			spiel.disconnect();
+			((View)view).postInvalidate();
+
 		}
 
 		@Override
 		public void stoneWasSet(NET_SET_STONE s) {
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					view.invalidate();			
-				}
-			});
+			((View)view).postInvalidate();
 		}
 
 		@Override
@@ -137,9 +153,67 @@ public class FreebloksActivity extends Activity  {
 
 		@Override
 		public void stoneUndone(Stone s, Turn t) {
-			// TODO Auto-generated method stub
+			((View)view).postInvalidate();
 
-		}		
+		}
+
+		@Override
+		public void serverStatus(NET_SERVER_STATUS status) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	class ConnectTask extends AsyncTask<String,Void,String> {
+		ProgressDialog progress;
+		SpielClient mySpiel = null;
+		
+		@Override
+		protected void onPreExecute() {
+			view.setSpiel(null);
+			mySpiel = new SpielClient();
+			kithread = new KIThread(mySpiel);
+			progress = new ProgressDialog(FreebloksActivity.this);
+			progress.setMessage("Connecting...");
+			progress.setIndeterminate(true);
+			progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progress.setCancelable(true);
+			progress.show();
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				mySpiel.connect(params[0], Network.DEFAULT_PORT);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return e.getMessage();
+			}
+			view.setSpiel(mySpiel);
+			return null;
+		}
+		
+		@Override
+		protected void onCancelled() {
+			progress.dismiss();
+			super.onCancelled();
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			spiel = mySpiel;
+			progress.dismiss();
+			if (result != null) {
+				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
+			} else {
+				showDialog(DIALOG_LOBBY);
+			}
+			kithread.start();
+			super.onPostExecute(result);
+		}
+		
+
 	}
 	
 	KIThread kithread = null;
@@ -148,16 +222,41 @@ public class FreebloksActivity extends Activity  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
-		view = (SimpleFreebloksView)findViewById(R.id.board);
-		view.setSpiel(new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X));
+
+		view = (FreebloksViewInterface)findViewById(R.id.board);
+		spiel = (SpielClient)getLastNonConfigurationInstance();
+		view.setSpiel(spiel);
+		if (spiel != null) {
+			kithread = new KIThread(spiel);
+			kithread.start();
+		} else 
+			showDialog(DIALOG_JOIN);
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (kithread != null && kithread.spiel != null)
+		if (kithread != null) try {
 			kithread.spiel.disconnect();
+			kithread.goDown();
+			kithread.join();
+			kithread = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		super.onDestroy();
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		if (kithread != null) try {
+			kithread.goDown();
+			kithread.join();
+			spiel.clearClientInterface();
+			kithread = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return spiel;
 	}
 
 	@Override
@@ -167,30 +266,55 @@ public class FreebloksActivity extends Activity  {
 		return true;
 	}
 	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DIALOG_JOIN:
+			final Dialog addDialog = new Dialog(this);
+			addDialog.setContentView(R.layout.join_game_dialog);
+			addDialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
+					LayoutParams.WRAP_CONTENT);
+			addDialog.setTitle(R.string.menu_join_game);
+			Button okAdd = (Button) addDialog.findViewById(android.R.id.button1);
+			okAdd.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					String n = ((EditText)addDialog.findViewById(R.id.server)).getText().toString();
+					if (kithread != null && kithread.spiel != null)
+						kithread.spiel.disconnect();
+
+					new ConnectTask().execute(n);
+					addDialog.dismiss();
+				}
+			});
+			((Button)addDialog.findViewById(android.R.id.button2)).setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					addDialog.dismiss();
+					if (view.getSpiel() == null)
+						finish();						
+				}
+			});
+			return addDialog;
+			
+		case DIALOG_LOBBY:
+			return new LobbyDialog(this, new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					spiel.disconnect();
+				}
+			});
+		default:
+			return super.onCreateDialog(id);
+		}
+	}
 	
-	void showJoinGameDialog() {
-		final Dialog addDialog = new Dialog(this);
-		addDialog.setContentView(R.layout.join_game_dialog);
-		addDialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
-				LayoutParams.WRAP_CONTENT);
-		addDialog.setTitle(R.string.menu_join_game);
-		Button okAdd = (Button) addDialog.findViewById(android.R.id.button1);
-		okAdd.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				String n = ((EditText)addDialog.findViewById(R.id.server)).getText().toString();
-				if (kithread != null && kithread.spiel != null)
-					kithread.spiel.disconnect();
-				kithread = new KIThread(n);
-				kithread.start();
-				addDialog.dismiss();
-			}
-		});
-		((Button)addDialog.findViewById(android.R.id.button2)).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				addDialog.dismiss();
-			}
-		});
-		addDialog.show();
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+		switch (id) {
+		case DIALOG_LOBBY:
+			((LobbyDialog)dialog).setSpiel(spiel);
+			break;
+		}
+		super.onPrepareDialog(id, dialog, args);
 	}
 
 	@Override
@@ -202,7 +326,7 @@ public class FreebloksActivity extends Activity  {
 			return true;
 			
 		case R.id.join_game:
-			showJoinGameDialog();
+			showDialog(DIALOG_JOIN);
 			return true;
 
 		case R.id.preferences:

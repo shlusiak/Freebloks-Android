@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.view;
 
+import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Stone;
 import android.content.Context;
@@ -11,10 +12,10 @@ import android.graphics.drawable.shapes.RectShape;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class SimpleFreebloksView extends View {
-	Spielleiter spiel;
+public class SimpleFreebloksView extends View implements FreebloksViewInterface {
+	SpielClient spiel;
 	Drawable redStone, blueStone, greenStone, yellowStone, availableField, freeField;
-	int tilesize;
+	int tilesize = 1;
 
 	public SimpleFreebloksView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,22 +39,25 @@ public class SimpleFreebloksView extends View {
 		freeField = d = new ShapeDrawable(new RectShape());
 		d.getPaint().setColor(Color.BLACK);
 		
-		
 		tilesize = 1;
 	}
 	
-	public void setSpiel(Spielleiter spiel) {
+	public void setSpiel(SpielClient spiel) {
 		this.spiel = spiel;
-		invalidate();
+		if (spiel != null) {
+			tilesize = getWidth() < getHeight() ? getWidth() : getHeight();
+			tilesize /= spiel.m_field_size_x;
+		}
+		postInvalidate();
 	}
 	
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		
-		tilesize = w < h ? w : h;
-		tilesize /= spiel.m_field_size_x;
-		
+		if (spiel != null) {
+			tilesize = w < h ? w : h;
+			tilesize /= spiel.m_field_size_x;
+		}
 	}
 	
 	@Override
@@ -61,6 +65,8 @@ public class SimpleFreebloksView extends View {
 		int i, j, p;
 		super.onDraw(canvas);
 		
+		if (spiel == null)
+			return;
 		
 		p = spiel.current_player();
 		for (i = 0; i < spiel.m_field_size_x; i++)
@@ -83,6 +89,9 @@ public class SimpleFreebloksView extends View {
 						d = availableField;
 					else
 						d = freeField;
+					
+					if (! spiel.is_local_player(p))
+						d = freeField;
 					break;
 				default:
 					d = freeField;
@@ -92,12 +101,13 @@ public class SimpleFreebloksView extends View {
 				if (d != null) {
 					d.setBounds(i * tilesize, j * tilesize, i * tilesize + tilesize, j * tilesize + tilesize);
 					d.draw(canvas);
-				}
-				
-				
+				}	
 			}
-				
-			
+	}
+
+	@Override
+	public SpielClient getSpiel() {
+		return spiel;
 	}
 
 }

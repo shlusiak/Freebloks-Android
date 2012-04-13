@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.controller;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import android.util.Log;
 
@@ -13,31 +14,47 @@ import de.saschahlusiak.freebloks.network.*;
 public class SpielClient extends Spielleiter {
 	static final String tag = SpielClient.class.getSimpleName();
 	
-	SpielClientInterface spielClientInterface;
+	ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
 	Socket client_socket;
-	NET_SERVER_STATUS status = new NET_SERVER_STATUS();
+	String lastHost;
 
 	public boolean isConnected() {
 		return (client_socket != null) && (!client_socket.isClosed());
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		disconnect();
+		super.finalize();
 	}
 
 	public boolean is_local_player() {
 		return is_local_player(m_current_player);
 	}
 
-	public SpielClient(SpielClientInterface sci) {
+	public SpielClient() {
 		super(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
-		this.spielClientInterface = sci;
 		start_new_game();
 		client_socket = null;
-		status.clients = status.player = status.computer = 0;
-		status.width = status.height = 20;
 		set_stone_numbers(0, 0, 0, 0, 0);
-		for (int i = 0; i < Stone.STONE_SIZE_MAX; i++)
-			status.stone_numbers[i] = 0;
+	}
+	
+	public synchronized void addClientInterface(SpielClientInterface sci) {
+		this.spielClientInterface.add(sci);
+	}
+	
+	public synchronized void removeClientInterface(SpielClientInterface sci) {
+		this.spielClientInterface.remove(sci);
+	}
+	
+	public synchronized void clearClientInterface() {
+		spielClientInterface.clear();
 	}
 
+
+
 	public void connect(String host, int port) throws Exception {
+		this.lastHost = host;
 		try {
 			client_socket = new Socket(host, port);
 		} catch (Exception e) {
@@ -50,7 +67,7 @@ public class SpielClient extends Spielleiter {
 		this.client_socket = client_socket;
 	}
 
-	public void disconnect() {
+	public synchronized void disconnect() {
 		if (client_socket != null)
 			try {
 				client_socket.close();
@@ -79,11 +96,11 @@ public class SpielClient extends Spielleiter {
 		return true;
 	}
 
-	public void request_player() {
+	synchronized public void request_player() {
 		new NET_REQUEST_PLAYER().send(client_socket);
 	}
 
-	void process_message(NET_HEADER data) throws Exception {
+	synchronized void process_message(NET_HEADER data) throws Exception {
 		int i;
 		switch(data.msg_type)
 		{
@@ -91,14 +108,14 @@ public class SpielClient extends Spielleiter {
 		case Network.MSG_GRANT_PLAYER:
 			i=((NET_GRANT_PLAYER)data).player;
 			/* Merken, dass es sich bei i um einen lokalen Spieler handelt */
-			spieler[i]=PLAYER_LOCAL;
+			spieler[i] = PLAYER_LOCAL;
 			break;
 
 		/* Der Server hat einen aktuellen Spieler festgelegt */
 		case Network.MSG_CURRENT_PLAYER: 
 			m_current_player=((NET_CURRENT_PLAYER)data).player;
-			if (spielClientInterface != null)
-				spielClientInterface.newCurrentPlayer(m_current_player);
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.newCurrentPlayer(m_current_player);
 			break;
 				
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
@@ -118,28 +135,28 @@ public class SpielClient extends Spielleiter {
 			}
 			/* Zug der History anhaengen */
 			addHistory(s.player, stone, s.y, s.x);
-			if (spielClientInterface != null)
-				spielClientInterface.stoneWasSet(s);
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.stoneWasSet(s);
 			break;
 		}
 		
 		case Network.MSG_STONE_HINT: {
-			if (spielClientInterface != null)
-				spielClientInterface.hintReceived((NET_SET_STONE)data);
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.hintReceived((NET_SET_STONE)data);
 			break;
 		}
 
 		/* Server hat entschlossen, dass das Spiel vorbei ist */
 		case Network.MSG_GAME_FINISH: {
-			if (spielClientInterface != null)
-				spielClientInterface.gameFinished();
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.gameFinished();
 			break;
 		}
 	
 		/* Ein Server-Status Paket ist eingetroffen, Inhalt merken */
 		case Network.MSG_SERVER_STATUS:
 		{
-			status = (NET_SERVER_STATUS)data;
+			NET_SERVER_STATUS status = (NET_SERVER_STATUS)data;
 			/* Wenn Spielfeldgroesse sich von Server unterscheidet,
 			   lokale Spielfeldgroesse hier anpassen */
 			if (status.width != m_field_size_x || status.height != m_field_size_y)
@@ -163,13 +180,15 @@ public class SpielClient extends Spielleiter {
 					get_player(3).get_stone(n).set_available(0);
 				}
 			}
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.serverStatus(status);
 		}
 		break;
 	
 		/* Server hat eine Chat-Nachricht geschickt. */
 		case Network.MSG_CHAT: {
-			if (spielClientInterface != null)
-				spielClientInterface.chatReceived((NET_CHAT) data);
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.chatReceived((NET_CHAT) data);
 			break;
 		}
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
@@ -179,7 +198,7 @@ public class SpielClient extends Spielleiter {
 			if (history != null)
 				history.delete_all_turns();
 
-			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
+//			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
 			if (m_gamemode==GAMEMODE_4_COLORS_2_PLAYERS)
 				set_teams(0,2,1,3);
 			if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS)
@@ -190,8 +209,8 @@ public class SpielClient extends Spielleiter {
 				}
 			}
 			m_current_player=-1;
-			if (spielClientInterface != null)
-				spielClientInterface.gameStarted();
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.gameStarted();
 			break;
 		}
 	
@@ -199,8 +218,8 @@ public class SpielClient extends Spielleiter {
 		case Network.MSG_UNDO_STONE: {
 			Turn t = history.m_tail;
 			Stone stone = get_player(t.m_playernumber).get_stone(t.m_stone_number);
-			if (spielClientInterface != null)
-				spielClientInterface.stoneUndone(stone, t);
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.stoneUndone(stone, t);
 			undo_turn(history);
 			break;
 		}
@@ -276,5 +295,13 @@ public class SpielClient extends Spielleiter {
 		if (player == -1)
 			return false;
 		return (spieler[player] != PLAYER_COMPUTER);
+	}
+	
+	public String getLastHost() {
+		return lastHost;
+	}
+	
+	public void send(NET_HEADER msg) {
+		msg.send(client_socket);
 	}
 }

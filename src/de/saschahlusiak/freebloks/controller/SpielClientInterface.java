@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.controller;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
+import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 
 public interface SpielClientInterface {
@@ -13,4 +14,5 @@ public interface SpielClientInterface {
 	void chatReceived(NET_CHAT c);
 	void gameStarted();
 	void stoneUndone(Stone s, Turn t);
+	void serverStatus(NET_SERVER_STATUS status);
 }
