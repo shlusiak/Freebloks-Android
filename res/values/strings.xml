@@ -12,4 +12,8 @@
     <string name="connected_clients">%1$d clients</string>
     <string name="chat_button">Chat</string>
     <string name="start_now_button">Start now</string>
+    
+	<string name="preferences_view">Interface</string>        
+    <string name="preferences_3dview">3D View</string>        
+	<string name="preferences_3dview_summary">Use OpenGL for board</string>        
 </resources>

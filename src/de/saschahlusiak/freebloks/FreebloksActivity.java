@@ -18,8 +18,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +30,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
@@ -221,7 +222,9 @@ public class FreebloksActivity extends Activity  {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+		setContentView(prefs.getBoolean("view_opengl", false) ? R.layout.main_3d : R.layout.main);
 
 		view = (FreebloksViewInterface)findViewById(R.id.board);
 		spiel = (SpielClient)getLastNonConfigurationInstance();
@@ -289,8 +292,8 @@ public class FreebloksActivity extends Activity  {
 			((Button)addDialog.findViewById(android.R.id.button2)).setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					addDialog.dismiss();
-					if (view.getSpiel() == null)
-						finish();						
+//					if (view.getSpiel() == null)
+//						finish();						
 				}
 			});
 			return addDialog;
@@ -330,8 +333,8 @@ public class FreebloksActivity extends Activity  {
 			return true;
 
 		case R.id.preferences:
-			// intent = new Intent(this, WordMixPreferencesActivity.class);
-			// startActivity(intent);
+			intent = new Intent(this, FreebloksPreferences.class);
+			startActivity(intent);
 			return true;
 
 		default:

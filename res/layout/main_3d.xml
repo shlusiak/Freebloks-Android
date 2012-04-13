@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >    
     
-    <de.saschahlusiak.freebloks.view.Freebloks3DView
+    <de.saschahlusiak.freebloks.view.opengl.Freebloks3DView
         android:id="@+id/board"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

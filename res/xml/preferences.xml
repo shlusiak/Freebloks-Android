@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="first_preferencescreen" >
+
+    <PreferenceCategory android:title="@string/preferences_view" >
+        <CheckBoxPreference
+            android:defaultValue="0"
+            android:key="view_opengl"
+            android:persistent="true"
+            android:summary="@string/preferences_3dview_summary"
+            android:title="@string/preferences_3dview" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
