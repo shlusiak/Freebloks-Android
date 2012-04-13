@@ -25,7 +25,7 @@ public class NET_HEADER {
 		this.buffer = from.buffer;
 	}
 	
-	boolean read(Socket socket) throws Exception {
+	boolean read(Socket socket, boolean block) throws Exception {
 		InputStream is;
 		int r;
 		int check1, check2;
@@ -37,7 +37,7 @@ public class NET_HEADER {
 		buffer = new byte[HEADER_SIZE];
 		is = socket.getInputStream();
 
-		if (is.available() < HEADER_SIZE)
+		if (!block && (is.available() < HEADER_SIZE))
 			return false;
 
 		r = is.read(buffer, 0, HEADER_SIZE);

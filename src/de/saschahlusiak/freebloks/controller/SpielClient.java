@@ -13,6 +13,7 @@ import de.saschahlusiak.freebloks.network.*;
 public class SpielClient extends Spielleiter {
 	static final String tag = SpielClient.class.getSimpleName();
 	
+	SpielClientInterface spielClientInterface;
 	Socket client_socket;
 	NET_SERVER_STATUS status = new NET_SERVER_STATUS();
 
@@ -20,12 +21,13 @@ public class SpielClient extends Spielleiter {
 		return (client_socket != null) && (!client_socket.isClosed());
 	}
 
-	protected boolean is_local_player() {
+	public boolean is_local_player() {
 		return is_local_player(m_current_player);
 	}
 
-	public SpielClient() {
+	public SpielClient(SpielClientInterface sci) {
 		super(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
+		this.spielClientInterface = sci;
 		start_new_game();
 		client_socket = null;
 		status.clients = status.player = status.computer = 0;
@@ -58,15 +60,17 @@ public class SpielClient extends Spielleiter {
 		client_socket = null;
 	}
 
-	public boolean poll() {
+	public boolean poll(boolean block) {
 		NET_HEADER pkg;
 		/* Puffer fuer eine Netzwerknachricht. */
 		do {
 			/* Lese eine Nachricht komplett aus dem Socket in buffer */
 			try {
-				pkg = Network.read_package(client_socket);
+				pkg = Network.read_package(client_socket, block);
 				if (pkg != null)
 					process_message(pkg);
+				if (block)
+					return (pkg != null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
@@ -93,7 +97,8 @@ public class SpielClient extends Spielleiter {
 		/* Der Server hat einen aktuellen Spieler festgelegt */
 		case Network.MSG_CURRENT_PLAYER: 
 			m_current_player=((NET_CURRENT_PLAYER)data).player;
-			newCurrentPlayer(m_current_player);
+			if (spielClientInterface != null)
+				spielClientInterface.newCurrentPlayer(m_current_player);
 			break;
 				
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
@@ -113,18 +118,21 @@ public class SpielClient extends Spielleiter {
 			}
 			/* Zug der History anhaengen */
 			addHistory(s.player, stone, s.y, s.x);
-			stoneWasSet(s);
+			if (spielClientInterface != null)
+				spielClientInterface.stoneWasSet(s);
 			break;
 		}
 		
 		case Network.MSG_STONE_HINT: {
-			hintReceived((NET_SET_STONE)data);
+			if (spielClientInterface != null)
+				spielClientInterface.hintReceived((NET_SET_STONE)data);
 			break;
 		}
 
 		/* Server hat entschlossen, dass das Spiel vorbei ist */
 		case Network.MSG_GAME_FINISH: {
-			gameFinished();
+			if (spielClientInterface != null)
+				spielClientInterface.gameFinished();
 			break;
 		}
 	
@@ -160,7 +168,8 @@ public class SpielClient extends Spielleiter {
 	
 		/* Server hat eine Chat-Nachricht geschickt. */
 		case Network.MSG_CHAT: {
-			chatReceived((NET_CHAT) data);
+			if (spielClientInterface != null)
+				spielClientInterface.chatReceived((NET_CHAT) data);
 			break;
 		}
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
@@ -181,7 +190,8 @@ public class SpielClient extends Spielleiter {
 				}
 			}
 			m_current_player=-1;
-			gameStarted();
+			if (spielClientInterface != null)
+				spielClientInterface.gameStarted();
 			break;
 		}
 	
@@ -189,7 +199,8 @@ public class SpielClient extends Spielleiter {
 		case Network.MSG_UNDO_STONE: {
 			Turn t = history.m_tail;
 			Stone stone = get_player(t.m_playernumber).get_stone(t.m_stone_number);
-			stoneUndone(stone, t);
+			if (spielClientInterface != null)
+				spielClientInterface.stoneUndone(stone, t);
 			undo_turn(history);
 			break;
 		}
@@ -257,7 +268,7 @@ public class SpielClient extends Spielleiter {
 	/**
 	 * Gibt true zurueck, wenn der Spieler kein Computerspieler ist
 	 **/
-	protected boolean is_local_player(int player) {
+	public boolean is_local_player(int player) {
 		/*
 		 * Bei keinem aktuellem Spieler, ist der aktuelle natuerlich nicht
 		 * lokal.
@@ -266,14 +277,4 @@ public class SpielClient extends Spielleiter {
 			return false;
 		return (spieler[player] != PLAYER_COMPUTER);
 	}
-	
-	
-	
-	public void newCurrentPlayer(int player){};
-	public void stoneWasSet(NET_SET_STONE s){};
-	public void hintReceived(NET_SET_STONE s){};
-	public void gameFinished(){};
-	public void chatReceived(NET_CHAT c){};
-	public void gameStarted(){};
-	public void stoneUndone(Stone s, Turn t){};
 }

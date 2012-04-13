@@ -4,4 +4,7 @@
     <string name="hello">Hello World, FreebloksActivity!</string>
     <string name="app_name">Freebloks</string>
 
+    <string name="menu_new_local_game">New game</string>
+    <string name="menu_join_game">Join</string>
+    <string name="menu_preferences">Preferences</string>
 </resources>

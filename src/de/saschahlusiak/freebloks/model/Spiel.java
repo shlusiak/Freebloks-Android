@@ -28,8 +28,8 @@ public class Spiel {
 
 	static final int PLAYER_BIT_HAVE_MIN = 252;
 	
-	protected int m_field_size_y;
-	protected int m_field_size_x;
+	public int m_field_size_y;
+	public int m_field_size_x;
 
 	Player m_player[] = new Player[PLAYER_MAX];
 	int m_game_field[][];
@@ -78,13 +78,11 @@ public class Spiel {
 		set_stone(turn);
 	}
 	
-
-	
-	int get_game_field_value(int y, int x) {
+	public int get_game_field_value(int y, int x) {
 		return m_game_field[y][x];
 	}
 
-	int get_game_field(int playernumber, int y, int x) {
+	public int get_game_field(int playernumber, int y, int x) {
 		int wert = get_game_field_value(y, x);
 		if (wert >= PLAYER_BIT_HAVE_MIN) return Stone.FIELD_DENIED;
 		wert &= PLAYER_BIT_ADDR[playernumber];
@@ -93,7 +91,7 @@ public class Spiel {
 		return Stone.FIELD_ALLOWED;
 	}
 
-	int get_game_field(int y, int x) {
+	public int get_game_field(int y, int x) {
 		int wert = get_game_field_value(y,x);
 		if (wert < PLAYER_BIT_HAVE_MIN) return Stone.FIELD_FREE;
 		return wert & 3;

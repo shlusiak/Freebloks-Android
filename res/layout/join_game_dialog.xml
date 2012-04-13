@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textk6address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adresse:" />
+
+    <EditText
+        android:id="@+id/server"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="blokus.mooo.com"
+        android:inputType="textNoSuggestions"
+        android:singleLine="true" >
+
+        <requestFocus />
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@android:id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:text="Ok" />
+
+        <Button
+            android:id="@android:id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:text="Abbruch" />
+
+    </LinearLayout>
+
+</LinearLayout>

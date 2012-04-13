@@ -174,17 +174,17 @@ public class Ki {
 	int get_ultimate_points(Spiel follow_situation, int playernumber, int ki_fehler, Turn turn) {
 		int summe = 0;
 		for (int p = 0; p < Spiel.PLAYER_MAX; p++){
-			if (p != playernumber){
+			if (p != playernumber) {
 				if (p != follow_situation.get_player(playernumber).m_teammate){
-					summe -= follow_situation.get_player(playernumber).m_position_points;
+					summe -= follow_situation.get_player(p).m_position_points;
 				}
 			}else{
-				summe += follow_situation.get_player(playernumber).m_position_points;
-				summe -= follow_situation.get_player(playernumber).m_stone_points_left * 175;
+				summe += follow_situation.get_player(p).m_position_points;
+				summe -= follow_situation.get_player(p).m_stone_points_left * 175;
 			}
 		}
 		summe += get_distance_points(follow_situation, playernumber, turn) * 20;
-		return (100 + (int)(Math.random() * ((ki_fehler+1))) * summe) / 100;
+		return ((100 + (int)(Math.random() * (double)(ki_fehler+1))) * summe) / 100;
 	}
 
 

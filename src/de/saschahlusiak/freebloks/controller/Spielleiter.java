@@ -20,7 +20,7 @@ public class Spielleiter extends Spiel {
 	
 	Turnpool history;
 
-	Spielleiter(int size_y, int size_x) {
+	public Spielleiter(int size_y, int size_x) {
 		super(size_y, size_x);
 		m_current_player=-1;
 		m_gamemode = GAMEMODE_4_COLORS_4_PLAYERS;
@@ -32,11 +32,11 @@ public class Spielleiter extends Spiel {
 		m_current_player=-1;
 	}
 	
-	protected int current_player() {
+	public int current_player() {
 		return m_current_player;
 	}
 
-	protected Player get_current_player() { 
+	public Player get_current_player() { 
 		if (m_current_player == -1) 
 			return null; 
 		else 
