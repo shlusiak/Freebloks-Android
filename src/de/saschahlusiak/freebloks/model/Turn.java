@@ -1,15 +1,15 @@
 package de.saschahlusiak.freebloks.model;
 
 public class Turn {
-	int m_playernumber;
+	public int m_playernumber;
 
-	int m_stone_number;
+	public int m_stone_number;
 	
-	int m_mirror_count;
-	int m_rotate_count;
+	public int m_mirror_count;
+	public int m_rotate_count;
 
-	int m_y;
-	int m_x;
+	public int m_y;
+	public int m_x;
 
 	int m_turn_number;
 	

@@ -1,8 +1,8 @@
 package de.saschahlusiak.freebloks.model;
 
 public class Player {
-	int m_stone_points_left;
-	int m_stone_count;
+	public int m_stone_points_left;
+	public int m_stone_count;
 	int m_number_of_possible_turns;
 	int m_position_points;
 
@@ -11,9 +11,36 @@ public class Player {
 	int m_number;
 
 	Stone m_stone[] = new Stone[Stone.STONE_COUNT_ALL_SHAPES];
-
-	Stone get_stone(int n) {
-		return null;
+	
+	public Player() {
+		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
+			m_stone[i] = new Stone();
+		}
+	}
+	
+	void init(Spiel spiel, int playernumber){
+		m_number = playernumber;
+		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
+			m_stone[i].init(i);
+		}
+		refresh_data(spiel);
+	}
+	
+	public void copyFrom(Player from) {
+		this.m_stone_points_left = from.m_stone_points_left;
+		this.m_stone_count = from.m_stone_count;
+		this.m_number_of_possible_turns = from.m_number_of_possible_turns;
+		this.m_position_points = from.m_position_points;
+		this.m_teammate = from.m_teammate;
+		this.m_nemesis = from.m_nemesis;
+		this.m_number = from.m_number;
+		for (int i = 0; i < m_stone.length; i++) {
+			this.m_stone[i].copyFrom(from.m_stone[i]);
+		}
+	}
+	
+	public Stone get_stone(int n) {
+		return m_stone[n];
 	}
 	
 	void set_teammate(int player) {
@@ -24,13 +51,6 @@ public class Player {
 		m_nemesis = player;
 	}
 	
-	void init(Spiel spiel, int playernumber){
-		m_number = playernumber;
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
-			m_stone[i].init(i);
-		}
-		refresh_data(spiel);
-	}
 	 
 	void refresh_data(Spiel spiel){
 		m_stone_points_left = 0;

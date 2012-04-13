@@ -1,8 +1,8 @@
 package de.saschahlusiak.freebloks.model;
 
 public class Stone {
-	static final int STONE_COUNT_ALL_SHAPES = 21;
-	static final int STONE_SIZE_MAX  =  5;
+	public static final int STONE_COUNT_ALL_SHAPES = 21;
+	public static final int STONE_SIZE_MAX  =  5;
 
 	static final int MIRRORABLE_NOT = 0;
 	static final int MIRRORABLE_OPTIONAL = 1;
@@ -12,12 +12,12 @@ public class Stone {
 	static final int ROTATEABLE_TWO   = 2;
 	static final int ROTATEABLE_FOUR  = 4;
 	
-	static final int FIELD_FREE   =  240;
-	static final int FIELD_ALLOWED=  241;
-	static final int FIELD_DENIED =  255;
+	public static final int FIELD_FREE   =  240;
+	public static final int FIELD_ALLOWED=  241;
+	public static final int FIELD_DENIED =  255;
 
-	static final int STONE_FIELD_FREE = 0;
-	static final int STONE_FIELD_ALLOWED = 1;
+	public static final int STONE_FIELD_FREE = 0;
+	public static final int STONE_FIELD_ALLOWED = 1;
 
 	static final int STONE_SIZE[] =
 						{
@@ -283,7 +283,15 @@ public class Stone {
 
 	
 	public Stone() {
-		m_available = m_shape = m_mirror_counter = m_rotate_counter = 0;
+		m_available = m_shape = m_size = m_mirror_counter = m_rotate_counter = 0;
+	}
+	
+	public void copyFrom(Stone from) {
+		this.m_available = from.m_available;
+		this.m_shape = from.m_shape;
+		this.m_size = from.m_size;
+		this.m_mirror_counter = from.m_mirror_counter;
+		this.m_rotate_counter = from.m_rotate_counter;
 	}
 	
 	public void mirror_rotate_to(int mirror_counter, int rotate_counter){
@@ -372,33 +380,33 @@ public class Stone {
 				nx = y;
 				ny = x;
 			} else if (m_rotate_counter == 1){
-				nx = m_size-1-x;
+				nx = m_size - 1 - x;
 				ny = y;
 			} else if (m_rotate_counter == 2){
-				nx = m_size-1-y;
-				ny = m_size-1-x;
+				nx = m_size - 1 - y;
+				ny = m_size - 1 - x;
 			} else if (m_rotate_counter == 3){
 				nx = x;
-				ny = m_size-1-y;
+				ny = m_size - 1 - y;
 			} else return 0; /* ERROR */
 		}else{
 			if (m_rotate_counter == 0){
-				nx = m_size-1-y;
+				nx = m_size - 1 - y;
 				ny = x;
 			} else if (m_rotate_counter == 1){
 				nx = x;
 				ny = y;
 			} else if (m_rotate_counter == 2){
 				nx = y;
-				ny = m_size-1-x;
+				ny = m_size - 1 - x;
 			} else
 			if (m_rotate_counter == 3){
-				nx = m_size-1-x;
-				ny = m_size-1-y;
+				nx = m_size - 1 - x;
+				ny = m_size - 1 - y;
 			} else return 0; /* ERROR */
 		}
 		
-		return STONE_FIELD[m_shape][nx + ny * STONE_SIZE_MAX];
+		return STONE_FIELD[m_shape][ny + nx * STONE_SIZE_MAX];
 	}
 
 

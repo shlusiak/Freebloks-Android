@@ -2,8 +2,8 @@ package de.saschahlusiak.freebloks.model;
 
 public class Spiel {
 	public static final int PLAYER_MAX = 4;
-	static final int DEFAULT_FIELD_SIZE_X = 20;
-	static final int DEFAULT_FIELD_SIZE_Y = 20;
+	public static final int DEFAULT_FIELD_SIZE_X = 20;
+	public static final int DEFAULT_FIELD_SIZE_Y = 20;
 	
 	static final int PLAYER_BIT_ADDR[] = {
 			  3, //0
@@ -28,13 +28,57 @@ public class Spiel {
 
 	static final int PLAYER_BIT_HAVE_MIN = 252;
 	
-	int m_field_size_y;
-	int m_field_size_x;
+	protected int m_field_size_y;
+	protected int m_field_size_x;
 
-	Player m_player[];
+	Player m_player[] = new Player[PLAYER_MAX];
 	int m_game_field[][];
 	
-	 
+	public Spiel(int size_y, int size_x) {
+		m_game_field = null;
+		m_field_size_y = size_y;
+		m_field_size_x = size_x;
+		for (int i = 0; i < PLAYER_MAX; i++)
+			m_player[i] = new Player();
+		init_field();
+	}
+	
+	public Spiel(Spiel s) {
+		m_game_field = null;
+		m_field_size_y = s.m_field_size_y;
+		m_field_size_x = s.m_field_size_x;
+		
+		m_game_field = new int[m_field_size_y][m_field_size_x];
+		for (int i = 0; i < PLAYER_MAX; i++)
+			m_player[i] = new Player();
+	}
+	
+	private void init_field() {
+		m_game_field = new int[m_field_size_y][m_field_size_x];
+		for (int y = 0; y < m_field_size_y; y++) {
+			for (int x = 0; x < m_field_size_x ; x++){
+				m_game_field[y][x] = 0;
+			}
+		}
+		for (int p = 0; p < PLAYER_MAX; p++){
+			set_game_field(get_player_start_y(p), get_player_start_x(p), PLAYER_BIT_ALLOWED[p]);
+		}
+	}
+	
+	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) {
+		int i,j;
+		for (i = 0; i < m_field_size_x; i++)
+			for (j = 0; j < m_field_size_y; j++)
+				m_game_field[j][i] = vorher_situation.m_game_field[j][i];
+		
+		for (i = 0; i < PLAYER_MAX; i++) {
+			m_player[i].copyFrom(vorher_situation.m_player[i]);
+		}
+		
+		set_stone(turn);
+	}
+	
+
 	
 	int get_game_field_value(int y, int x) {
 		return m_game_field[y][x];
@@ -49,7 +93,6 @@ public class Spiel {
 		return Stone.FIELD_ALLOWED;
 	}
 
-
 	int get_game_field(int y, int x) {
 		int wert = get_game_field_value(y,x);
 		if (wert < PLAYER_BIT_HAVE_MIN) return Stone.FIELD_FREE;
@@ -60,7 +103,7 @@ public class Spiel {
 		m_game_field[y][x] = value;
 	}
 
-	Player get_player(int playernumber) {
+	public Player get_player(int playernumber) {
 		return m_player[playernumber];
 	}
 
@@ -70,27 +113,6 @@ public class Spiel {
 
 	int get_max_stone_size() {
 		return Stone.STONE_SIZE_MAX;
-	}
-
-
-	Spiel(){ 
-		m_game_field = null;
-		m_field_size_y = DEFAULT_FIELD_SIZE_Y;
-		m_field_size_x = DEFAULT_FIELD_SIZE_X;
-	}
-
-	Spiel(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2) { 
-		m_game_field = null;
-		m_field_size_y = DEFAULT_FIELD_SIZE_Y;
-		m_field_size_x = DEFAULT_FIELD_SIZE_X;
-		start_new_game();
-		set_teams(player_team1_1, player_team1_2, player_team2_1, player_team2_2);
-	}
-
-	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) {
-		m_game_field = vorher_situation.m_game_field.clone();
-		m_player = vorher_situation.m_player.clone();
-		set_stone(turn);
 	}
 
 	int get_player_start_x(int playernumber) {
@@ -109,16 +131,16 @@ public class Spiel {
 		}
 
 	}
-
-
-	void set_field_size_and_new(int y, int x) {
+	
+	protected void set_field_size_and_new(int y, int x) {
 		m_field_size_x = x;
 		m_field_size_y = y;
+		m_game_field = new int[m_field_size_y][m_field_size_x];
 		start_new_game();
 	}
 
 
-	void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer){
+	public void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer){
 		int counts[] = {einer, zweier, dreier, vierer, fuenfer};
 
 		for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){  
@@ -132,7 +154,7 @@ public class Spiel {
 	}
 
 
-	void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
+	protected void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
 		m_player[player_team1_1].set_teammate(player_team1_2);
 		m_player[player_team1_2].set_teammate(player_team1_1);
 		m_player[player_team1_1].set_nemesis(player_team2_1);
@@ -144,12 +166,11 @@ public class Spiel {
 		m_player[player_team2_2].set_nemesis(player_team1_1);
 	}
 
-	void start_new_game(){
-		init_field();
+	public void start_new_game(){
 		for (int n = 0; n < PLAYER_MAX; n++){
 			m_player[n].init(this, n);
 		}
-	}
+	} 
 
 	void refresh_player_data(){
 		for (int n = 0; n < PLAYER_MAX; n++){
@@ -157,19 +178,8 @@ public class Spiel {
 		}
 	}
 
-	void init_field(){ 
-		m_game_field = new int[m_field_size_y][m_field_size_x];
-		for (int y = 0; y < m_field_size_y; y++){
-			for (int x = 0; x < m_field_size_x ; x++){
-				set_game_field(y, x, 0);
-			}
-		}
-		for (int p = 0; p < PLAYER_MAX; p++){
-			set_game_field(get_player_start_y(p), get_player_start_x(p), PLAYER_BIT_ALLOWED[p]);
-		}
-	}
 
-	int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
+	protected int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
 		int valid = Stone.FIELD_DENIED;
 		int field_value;
 
@@ -198,7 +208,6 @@ public class Spiel {
 		set_game_field(y, x, 0);
 	}
 
-
 	void set_single_stone_for_player(int playernumber, int startY, int startX){
 		set_game_field(startY , startX, PLAYER_BIT_HAVE_MIN | playernumber);
 		for (int y = startY-1; y <= startY+1; y++)if (y>=0 && y<m_field_size_y) {
@@ -215,14 +224,14 @@ public class Spiel {
 		}
 	}
 
-	int set_stone(Turn turn){
+	public int set_stone(Turn turn){
 		int playernumber = turn.m_playernumber;
 		Stone stone = m_player[playernumber].get_stone(turn.m_stone_number);
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 		return set_stone(stone, playernumber, turn.m_y, turn.m_x);
 	}
 
-	int set_stone(Stone stone, int playernumber, int startY, int startX) {
+	public int set_stone(Stone stone, int playernumber, int startY, int startX) {
 		for (int y = 0; y < stone.get_stone_size(); y++){
 			for (int x = 0; x < stone.get_stone_size(); x++){
 				if (stone.get_stone_field(y,x) != Stone.STONE_FIELD_FREE) {
@@ -235,7 +244,7 @@ public class Spiel {
 		return Stone.FIELD_ALLOWED;
 	}
 
-	void undo_turn(Turnpool turnpool){
+	protected void undo_turn(Turnpool turnpool){
 		Turn turn = turnpool.m_tail;
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;
@@ -275,5 +284,5 @@ public class Spiel {
 		refresh_player_data();
 		//end redraw
 		turnpool.delete_last();
-	}	
+	}
 }

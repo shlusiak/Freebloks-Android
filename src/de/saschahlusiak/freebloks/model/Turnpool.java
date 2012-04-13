@@ -1,9 +1,11 @@
 package de.saschahlusiak.freebloks.model;
 
 public class Turnpool {
-	Turn m_tail, m_head, m_current;
+	public Turn m_tail;
+	Turn m_head;
+	Turn m_current;
 
-	void add_turn(Turn turn) {
+	public void add_turn(Turn turn) {
 		if (null == m_head) {
 			Turn new_element = new Turn(turn);
 			new_element.m_turn_number = 1;
@@ -23,7 +25,7 @@ public class Turnpool {
 		}
 	}
 
-	void add_turn(int playernumber, Stone stone, int y, int x) {
+	public void add_turn(int playernumber, Stone stone, int y, int x) {
 		if (null == m_head){
 			Turn new_element = new Turn(playernumber, stone, y, x);
 			new_element.m_turn_number = 1;
@@ -56,7 +58,7 @@ public class Turnpool {
 		m_current = m_head;
 	}
 
-	void delete_all_turns() {
+	public void delete_all_turns() {
 		m_tail = null;
 		m_head = null;
 		m_current = null;

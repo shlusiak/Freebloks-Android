@@ -3,9 +3,9 @@ package de.saschahlusiak.freebloks.model;
 public class Ki {
 	int num_threads;
 	static final int BIGGEST_X_STONES = 9;
-	Turnpool m_turnpool;
+	Turnpool m_turnpool = new Turnpool();
 	
-	Ki() {
+	public Ki() {
 		num_threads = 1;
 	}
 	
@@ -67,19 +67,15 @@ public class Ki {
 				return;
 			
 			int new_points;
-			Spiel follow = new Spiel();
-			
-			follow.m_field_size_y = spiel.m_field_size_y;
-			follow.m_field_size_x = spiel.m_field_size_x;
-			follow.init_field();
+			Spiel follow = new Spiel(spiel);
 			
 			follow.follow_situation(current_player, spiel, ki.m_turnpool.get_turn(from));
-			best_points = get_ultimate_points(spiel, current_player, ki_fehler, ki.m_turnpool.get_turn(from));
+			best_points = get_ultimate_points(follow, current_player, ki_fehler, ki.m_turnpool.get_turn(from));
 			best = ki.m_turnpool.get_turn(from);
 			
 			for (int n = from + 1; n <= to; n++) {
-				spiel.follow_situation(current_player, spiel, ki.m_turnpool.get_turn(n));
-				new_points = get_ultimate_points(spiel, current_player, ki_fehler, ki.m_turnpool.get_turn(n));
+				follow.follow_situation(current_player, spiel, ki.m_turnpool.get_turn(n));
+				new_points = get_ultimate_points(follow, current_player, ki_fehler, ki.m_turnpool.get_turn(n));
 				
 				if (new_points >= best_points) {
 					best = ki.m_turnpool.get_turn(n);
@@ -95,7 +91,7 @@ public class Ki {
 		
 		Turn best;
 		int best_points;
-		Spiel follow_situation = new Spiel();
+		Spiel follow_situation = new Spiel(spiel);
 		int i;
 		KiThread threads[] = new KiThread[num_threads];
 		if (num_threads>8)
@@ -121,7 +117,6 @@ public class Ki {
 		best = m_turnpool.get_turn(1);
 		follow_situation.m_field_size_y = spiel.m_field_size_y;
 		follow_situation.m_field_size_x = spiel.m_field_size_x;
-		follow_situation.init_field();
 		follow_situation.follow_situation(current_player, spiel, best);
 
 		best_points = get_ultimate_points(follow_situation, current_player, ki_fehler, best);
@@ -194,7 +189,7 @@ public class Ki {
 
 
 
-	Turn get_ki_turn(Spiel spiel, int playernumber, int ki_fehler){
+	public Turn get_ki_turn(Spiel spiel, int playernumber, int ki_fehler){
 		if (spiel.get_player(playernumber).m_number_of_possible_turns == 0) return null;
 		return get_ultimate_turn(spiel, playernumber, ki_fehler);
 	}
