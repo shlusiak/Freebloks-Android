@@ -12,7 +12,7 @@ public class SimpleStoneView extends View {
 	int player;
 	Paint blockPaint;
 	
-	static final int block_size = 25;
+	static final int block_size = 22;
 	
 	public SimpleStoneView(Context context, int player, Stone stone) {
 		super(context);
@@ -35,7 +35,7 @@ public class SimpleStoneView extends View {
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		setMeasuredDimension(block_size * 5, block_size * 5);
+		setMeasuredDimension(block_size * 5 + 15, block_size * 5 + 15);
 		// super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 

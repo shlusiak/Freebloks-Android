@@ -86,8 +86,8 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 		if (view != null)
 			view.updateView();
 		
-//		if (1 == 1)
-	//		return;
+		if (1 == 1)
+			return;
 		
 		Turn turn = ki.get_ki_turn(spiel, spiel.current_player(), 5);
 		Stone stone;

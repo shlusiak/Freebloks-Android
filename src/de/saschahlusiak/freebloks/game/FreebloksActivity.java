@@ -34,6 +34,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
@@ -115,6 +118,7 @@ public class FreebloksActivity extends Activity  {
 
 		view = (FreebloksViewInterface)findViewById(R.id.board);
 		stoneGallery = (Gallery)findViewById(R.id.stoneGallery);
+		stoneGallery.setScrollbarFadingEnabled(false);
 		stoneGalleryAdapter = new StoneGalleryAdapter(this, null);
 		stoneGallery.setAdapter(stoneGalleryAdapter);
 		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
@@ -123,9 +127,43 @@ public class FreebloksActivity extends Activity  {
 			spiel = spielthread.spiel;
 			stoneGalleryAdapter.setPlayer(spiel.get_current_player());
 			stoneGalleryAdapter.notifyDataSetChanged();
+			stoneGallery.setSelection(Stone.STONE_COUNT_ALL_SHAPES - 5);
 		} else
 			showDialog(DIALOG_JOIN);
 		view.setSpiel(spiel);
+		
+		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Stone stone = (Stone)stoneGallery.getSelectedItem();
+				int r = stone.get_rotate_counter();
+				r--;
+				if (r < 0)
+					r = stone.get_rotateable() - 1;
+				stone.mirror_rotate_to(stone.get_mirror_counter(), r);
+//				stoneGalleryAdapter.notifyDataSetChanged();
+				Animation a = new RotateAnimation(90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+				a.setDuration(250);
+				a.setInterpolator(new OvershootInterpolator());
+				stoneGallery.getSelectedView().startAnimation(a);
+			}
+		});
+		findViewById(R.id.rotateRight).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Stone stone = (Stone)stoneGallery.getSelectedItem();
+				int r = stone.get_rotate_counter();
+				r++;
+				if (r >= stone.get_rotateable())
+					r = 0;
+				stone.mirror_rotate_to(stone.get_mirror_counter(), r);
+//				stoneGalleryAdapter.notifyDataSetChanged();
+				Animation a = new RotateAnimation(-90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+				a.setDuration(250);
+				a.setInterpolator(new OvershootInterpolator());
+				stoneGallery.getSelectedView().startAnimation(a);
+			}
+		});
 	}
 
 	@Override
