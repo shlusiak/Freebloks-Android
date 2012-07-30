@@ -38,6 +38,7 @@ import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.Toast;
@@ -59,11 +60,14 @@ public class FreebloksActivity extends Activity  {
 		ProgressDialog progress;
 		SpielClient mySpiel = null;
 		
+		ConnectTask(boolean request_player) {
+			mySpiel = new SpielClient();
+			spielthread = new SpielClientThread(mySpiel, request_player);
+		}
+		
 		@Override
 		protected void onPreExecute() {
 			view.setSpiel(null);
-			mySpiel = new SpielClient();
-			spielthread = new SpielClientThread(mySpiel);
 			progress = new ProgressDialog(FreebloksActivity.this);
 			progress.setMessage("Connecting...");
 			progress.setIndeterminate(true);
@@ -205,15 +209,16 @@ public class FreebloksActivity extends Activity  {
 			addDialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
 					LayoutParams.WRAP_CONTENT);
 			addDialog.setTitle(R.string.menu_join_game);
-			((EditText)addDialog.findViewById(R.id.server)).setText("192.168.2.159");
+			((EditText)addDialog.findViewById(R.id.server)).setText("blokus.mooo.com");
 			Button okAdd = (Button) addDialog.findViewById(android.R.id.button1);
 			okAdd.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					String n = ((EditText)addDialog.findViewById(R.id.server)).getText().toString();
+					boolean request_player = ((CheckBox)addDialog.findViewById(R.id.request_player)).isChecked();
 					if (spielthread != null && spielthread.spiel != null)
 						spielthread.spiel.disconnect();
 
-					new ConnectTask().execute(n);
+					new ConnectTask(request_player).execute(n);
 					addDialog.dismiss();
 				}
 			});

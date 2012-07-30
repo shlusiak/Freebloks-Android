@@ -22,11 +22,13 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	Ki ki = new Ki();
 	FreebloksViewInterface view = null;
 	FreebloksActivity activity = null;
+	boolean request_player;
 	
-	SpielClientThread(SpielClient spiel) {
+	SpielClientThread(SpielClient spiel, boolean request_player) {
 		this.spiel = spiel;
 		this.view = null;
 		this.activity = null;
+		this.request_player = request_player;
 		spiel.addClientInterface(this);
 	}
 	
@@ -46,8 +48,9 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	@Override
 	public void run() {
 		godown = false;
-	
-		spiel.request_player();
+
+		if (request_player)
+			spiel.request_player();
 //		spiel.request_player();
 //		spiel.request_player();
 //		spiel.request_player();
