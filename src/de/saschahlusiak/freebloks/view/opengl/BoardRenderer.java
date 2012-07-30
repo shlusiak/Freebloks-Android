@@ -7,6 +7,8 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.PointF;
+
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -244,7 +246,7 @@ public class BoardRenderer {
 	    gl.glTranslatef(-stone_size * (float)(spiel.m_field_size_x - 1), 0, -stone_size * (float)(spiel.m_field_size_x - 1) );
 	    for (int y = 0; y < spiel.m_field_size_y; y++) {
 	    	int x;
-	    	for (x = 0; x < spiel.m_field_size_y; x++) {
+	    	for (x = 0; x < spiel.m_field_size_x; x++) {
 	    		if (spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
 	    			renderStone(gl, spiel.get_game_field(y, x), 0.65f);
 	    		}	    		
@@ -319,5 +321,22 @@ public class BoardRenderer {
 		}
 		gl.glTranslatef(0, 0, -i * stone_size * 2.0f);
 		gl.glTranslatef(stone.get_stone_size() * stone_size, 0, stone.get_stone_size() * stone_size);
+	}
+	
+	public void renderPlayerStone(GL10 gl, int player, Stone stone, int x, int y) {
+	    gl.glTranslatef(
+	    		-stone_size * (float)(spiel.m_field_size_x - 1) + stone_size * 2.0f * (float)x,
+	    		0,
+	    		+stone_size * (float)(spiel.m_field_size_x - 1) - stone_size * 2.0f * (float)y);
+	    
+		for (int i = 0; i < stone.get_stone_size(); i++) {
+			int j;
+			for (j = 0; j < stone.get_stone_size(); j++) {				
+				if (stone.get_stone_field(j,  i) != Stone.STONE_FIELD_FREE)
+					renderStone(gl, player, 0.65f);
+				gl.glTranslatef(stone_size * 2.0f, 0, 0);
+			}
+			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
+		}
 	}
 }

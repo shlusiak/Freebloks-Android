@@ -2,11 +2,14 @@ package de.saschahlusiak.freebloks.view.opengl;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.ViewInterface;
 import android.content.Context;
+import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.AttributeSet;
@@ -21,10 +24,15 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 		final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 		final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
-		float width = 1, height = 1, fov = 60.0f;
+		float width = 1, height = 1;
+		
+		int viewport[] = new int[4];
+		float projectionMatrix[] = new float[16];
+		float modelViewMatrix[] = new float[16];
 
 		BoardRenderer board;
 		Stone currentStone; /* current Stone of current player, if local */
+		int currentStone_x, currentStone_y;
 
 		public MyRenderer() {
 			init();
@@ -33,14 +41,45 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 		public void init() {
 			board = new BoardRenderer(spiel);
 		}
+		
+		public synchronized PointF windowToModel(PointF point) {
+			float outputfar[] = new float[4];
+			float outputnear[] = new float[4];
+			float x1, y1, z1, x2, y2, z2, u;
+			
+			GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputnear, 0);
+			GLU.gluUnProject(point.x, viewport[3] - point.y, 1.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputfar, 0);
+//			Log.d("windowToModel", "(" + point.x + "/" + point.y + ")  => far  (" + outputfar[0] + "/" + outputfar[1] + "/" + outputfar[2] + "/" + outputfar[3] + ")");
+//			Log.d("windowToModel", "(" + point.x + "/" + point.y + ")  => near (" + outputnear[0] + "/" + outputnear[1] + "/" + outputnear[2] + "/" + outputnear[3] + ")");
+			
+			x1 = (outputfar[0] / outputfar[3]);
+			y1 = (outputfar[1] / outputfar[3]);
+			z1 = (outputfar[2] / outputfar[3]);
+			x2 = (outputnear[0] / outputnear[3]);
+			y2 = (outputnear[1] / outputnear[3]);
+			z2 = (outputnear[2] / outputnear[3]);
+			u = (0.0f - y1) / (y2 - y1);
+
+			point.x = x1 + u * (x2 - x1);
+			point.y = z1 + u * (z2 - z1);
+			return point;
+		}
+		
+		public PointF modelToField(PointF point) {
+			point.x = point.x + BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1);
+			point.y = BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) - point.y;
+			
+			point.x = point.x / (BoardRenderer.stone_size * 2.0f);
+			point.y = point.y / (BoardRenderer.stone_size * 2.0f);
+			
+			return point;
+		}
+
+		boolean updateModelViewMatrix = true;
 
 		public synchronized void onDrawFrame(GL10 gl) {
 			final float camera_distance = zoom;
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-			
-			gl.glMatrixMode(GL10.GL_PROJECTION);
-			gl.glLoadIdentity();
-			GLU.gluPerspective(gl, fov, width / height, 1.0f, 300.0f);
 
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
@@ -51,6 +90,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(mAngleY*Math.PI/180.0)),
 					0.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f);
+			if (updateModelViewMatrix) {
+				GL11 gl11 = (GL11)gl;
+				Log.w("onDrawFrame", "updating modelViewMatrix");
+				gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
+				updateModelViewMatrix = false;
+			}
+
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
 			
 
@@ -59,15 +105,27 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 
 			board.renderBoard(gl);
 			board.renderField(gl);
+			if (currentStone != null && spiel != null && spiel.is_local_player()) {
+				gl.glPushMatrix();
+				if (currentStone_x >= 0 && currentStone_y >= 0)
+					board.renderPlayerStone(gl, spiel.current_player(), currentStone, currentStone_x, currentStone_y);
+				gl.glPopMatrix();
+			}
+
+
 			for (int i = 0; i < 4; i++) {
-				if (currentStone != null && spiel.is_local_player(i)) {
-					gl.glPushMatrix();
-					gl.glRotatef(90.0f * (float)i - mAngleY, 0, 1, 0);
-					gl.glTranslatef(0, 1.0f, 15.0f);
-					gl.glRotatef(mAngleY, 0, 1, 0);
-					gl.glScalef(1.7f, 1.7f, 1.7f);
-					board.renderPlayerStone(gl, i, currentStone);
-					gl.glPopMatrix();
+				if (currentStone != null && spiel != null && spiel.is_local_player(i)) {
+					if (currentStone_x < 0 || currentStone_y < 0) {
+						gl.glPushMatrix();
+					
+						gl.glRotatef(90.0f * (float)i - mAngleY, 0, 1, 0);
+						gl.glTranslatef(0, 1.0f, 15.0f);
+						gl.glRotatef(mAngleY, 0, 1, 0);
+						gl.glScalef(1.7f, 1.7f, 1.7f);
+						board.renderPlayerStone(gl, i, currentStone);
+						
+						gl.glPopMatrix();
+					}					
 				} else {
 					board.renderPlayerStones(gl, i);
 				}
@@ -76,13 +134,23 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 		}
 
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
+			GL11 gl11 = (GL11)gl;
+			
 			gl.glViewport(0, 0, width, height);
+			viewport[0] = 0;
+			viewport[1] = 0;
+			viewport[2] = width;
+			viewport[3] = height;
+			
 			this.width = (float)width;
 			this.height = (float)height;
-			float ratio = (float) width / height;
+			
 			gl.glMatrixMode(GL10.GL_PROJECTION);
 			gl.glLoadIdentity();
-			gl.glFrustumf(-ratio, ratio, -1, 1, 1, 60);
+			GLU.gluPerspective(gl, 60.0f, this.width / this.height, 1.0f, 300.0f);
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+			gl11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
 		}
 
 		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -102,6 +170,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, light0_ambient, 0);
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light0_diffuse, 0);
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light0_specular, 0);
+			
+			renderer.updateModelViewMatrix = true;
+
 		}
 
 		float mAngleX;
@@ -112,6 +183,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 			mAngleX = ax;
 			mAngleY = ay;
 			this.zoom = zoom;
+			
+			updateModelViewMatrix = true;
 		}
 	}
 
@@ -165,9 +238,18 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
+		PointF p = new PointF(event.getX(), event.getY());
+		renderer.windowToModel(p);
+		Log.d(tag, "model coordinates (" + p.x + ", " + p.y + ")");
+		renderer.modelToField(p);
+		Log.d(tag, "field coordinates (" + p.x + ", " + p.y + ")");
+		
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			move = false;
+			renderer.currentStone_x = (int)p.x;
+			renderer.currentStone_y = (int)p.y;
+			requestRender();
 			break;
 			
 		case MotionEvent.ACTION_MOVE:
@@ -180,17 +262,23 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 			    	if (zoom < 2.0f)
 			    		zoom = 2.0f;
 			    	oldDist = newDist;
+			    	renderer.updateModelViewMatrix = true;
+					renderer.setAngle(angleX, angleY, zoom);
 			    }
 			} else {
-				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
+/*				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
 				angleX += (float)(event.getY() - mPreviousY) / (float)getHeight() * 180.0f;
 				if (angleX < 20)
 					angleX = 20;
 				if (angleX > 90)
-					angleX = 90;
+					angleX = 90; 
+				renderer.setAngle(angleX, angleY, zoom);
+ 				*/
+				renderer.currentStone_x = (int)p.x;
+				renderer.currentStone_y = (int)p.y + 6;
+
 				move = true;
 			}
-			renderer.setAngle(angleX, angleY, zoom);
 			requestRender();
 			break;
 			
@@ -222,5 +310,11 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 	public void setCurrentStone(Stone stone) {
 		this.currentStone = stone;
 		renderer.currentStone = stone;
+	}
+	
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		renderer.updateModelViewMatrix = true;
+		super.onSizeChanged(w, h, oldw, oldh);
 	}
 }
