@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >    
     
@@ -8,32 +7,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Gallery
-        android:id="@+id/stoneGallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:animationDuration="500"
-        android:background="#50000000"
-        android:scrollbars="horizontal"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:unselectedAlpha="0.4" />
-
     <ImageButton
         android:id="@+id/rotateLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/stoneGallery"
-        android:layout_alignLeft="@+id/stoneGallery"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:src="@drawable/rotate_left" />
     <ImageButton
         android:id="@+id/rotateRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/stoneGallery"
-        android:layout_alignRight="@+id/stoneGallery"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:src="@drawable/rotate_right" />
     
 </RelativeLayout>

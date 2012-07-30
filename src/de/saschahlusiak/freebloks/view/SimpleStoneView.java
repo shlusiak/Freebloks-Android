@@ -12,7 +12,7 @@ public class SimpleStoneView extends View {
 	int player;
 	Paint blockPaint;
 	
-	static final int block_size = 22;
+	static final int block_size = 12;
 	
 	public SimpleStoneView(Context context, int player, Stone stone) {
 		super(context);

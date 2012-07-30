@@ -18,7 +18,7 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
-import de.saschahlusiak.freebloks.view.FreebloksViewInterface;
+import de.saschahlusiak.freebloks.view.ViewInterface;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -44,16 +44,16 @@ import android.widget.Gallery;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class FreebloksActivity extends Activity  {
+public class FreebloksActivity extends Activity implements ActivityInterface {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_JOIN = 1;
 	static final int DIALOG_LOBBY = 2;
+	static final int DIALOG_STONE_SELECT = 3;
 
-	FreebloksViewInterface view;
-	Gallery stoneGallery;
-	StoneGalleryAdapter stoneGalleryAdapter;
+	ViewInterface view;
 	SpielClient spiel = null;
+	Stone currentStone = null;
 	SpielClientThread spielthread = null;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
@@ -120,52 +120,53 @@ public class FreebloksActivity extends Activity  {
 
 		setContentView(prefs.getBoolean("view_opengl", true) ? R.layout.main_3d : R.layout.main);
 
-		view = (FreebloksViewInterface)findViewById(R.id.board);
-		stoneGallery = (Gallery)findViewById(R.id.stoneGallery);
-		stoneGallery.setScrollbarFadingEnabled(false);
-		stoneGalleryAdapter = new StoneGalleryAdapter(this, null);
-		stoneGallery.setAdapter(stoneGalleryAdapter);
+		view = (ViewInterface)findViewById(R.id.board);
+		view.setActivity(this);
+		
+
 		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
 		if (spielthread != null) {
 			spielthread.setView(this,  view);
 			spiel = spielthread.spiel;
-			stoneGalleryAdapter.setPlayer(spiel.get_current_player());
-			stoneGalleryAdapter.notifyDataSetChanged();
-			stoneGallery.setSelection(Stone.STONE_COUNT_ALL_SHAPES - 5);
 		} else
 			showDialog(DIALOG_JOIN);
 		view.setSpiel(spiel);
 		
-		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Stone stone = (Stone)stoneGallery.getSelectedItem();
-				int r = stone.get_rotate_counter();
-				r--;
-				if (r < 0)
-					r = stone.get_rotateable() - 1;
-				stone.mirror_rotate_to(stone.get_mirror_counter(), r);
-//				stoneGalleryAdapter.notifyDataSetChanged();
-				Animation a = new RotateAnimation(90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-				a.setDuration(250);
-				a.setInterpolator(new OvershootInterpolator());
-				stoneGallery.getSelectedView().startAnimation(a);
-			}
-		});
 		findViewById(R.id.rotateRight).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Stone stone = (Stone)stoneGallery.getSelectedItem();
-				int r = stone.get_rotate_counter();
-				r++;
-				if (r >= stone.get_rotateable())
-					r = 0;
-				stone.mirror_rotate_to(stone.get_mirror_counter(), r);
+				if (currentStone == null)
+					return;
+				int r = currentStone.get_rotate_counter();
+				r--;
+				if (r < 0)
+					r = currentStone.get_rotateable() - 1;
+				currentStone.mirror_rotate_to(currentStone.get_mirror_counter(), r);
+				view.updateView();
+
 //				stoneGalleryAdapter.notifyDataSetChanged();
-				Animation a = new RotateAnimation(-90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-				a.setDuration(250);
-				a.setInterpolator(new OvershootInterpolator());
-				stoneGallery.getSelectedView().startAnimation(a);
+//				Animation a = new RotateAnimation(90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//				a.setDuration(250);
+//				a.setInterpolator(new OvershootInterpolator());
+//				stoneGallery.getSelectedView().startAnimation(a);
+			}
+		});
+		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (currentStone == null)
+					return;
+				int r = currentStone.get_rotate_counter();
+				r++;
+				if (r >= currentStone.get_rotateable())
+					r = 0;
+				currentStone.mirror_rotate_to(currentStone.get_mirror_counter(), r);
+				view.updateView();
+//				stoneGalleryAdapter.notifyDataSetChanged();
+//				Animation a = new RotateAnimation(-90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//				a.setDuration(250);
+//				a.setInterpolator(new OvershootInterpolator());
+//				stoneGallery.getSelectedView().startAnimation(a);
 			}
 		});
 	}
@@ -238,6 +239,15 @@ public class FreebloksActivity extends Activity  {
 					spiel.disconnect();
 				}
 			});
+		case DIALOG_STONE_SELECT:
+			return new StoneSelectDialog(this, new StoneSelectDialog.OnStoneSelectListener() {
+				@Override
+				public void onClick(DialogInterface dialog, Stone stone) {
+					currentStone = stone;
+					view.setCurrentStone(stone);
+					view.updateView();
+				}
+			}, spiel.get_current_player());
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -273,6 +283,11 @@ public class FreebloksActivity extends Activity  {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void OnShowStoneSelect() {
+		showDialog(DIALOG_STONE_SELECT);
 	}
 
 }

@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.view;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Stone;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,8 +13,9 @@ import android.graphics.drawable.shapes.RectShape;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class SimpleFreebloksView extends View implements FreebloksViewInterface {
+public class SimpleFreebloksView extends View implements ViewInterface {
 	SpielClient spiel;
+	ActivityInterface activity;
 	Drawable redStone, blueStone, greenStone, yellowStone, availableField, freeField;
 	int tilesize = 1;
 
@@ -113,6 +115,17 @@ public class SimpleFreebloksView extends View implements FreebloksViewInterface 
 	@Override
 	public void updateView() {
 		postInvalidate();
+	}
+
+	@Override
+	public void setActivity(ActivityInterface activity) {
+		this.activity = activity;
+	}
+
+	@Override
+	public void setCurrentStone(Stone stone) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

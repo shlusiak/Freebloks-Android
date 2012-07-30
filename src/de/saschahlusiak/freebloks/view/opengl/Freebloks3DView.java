@@ -3,7 +3,9 @@ package de.saschahlusiak.freebloks.view.opengl;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.view.FreebloksViewInterface;
+import de.saschahlusiak.freebloks.game.ActivityInterface;
+import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.ViewInterface;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -11,7 +13,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInterface {
+public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
 	private class MyRenderer implements GLSurfaceView.Renderer {
@@ -22,6 +24,7 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 		float width = 1, height = 1, fov = 60.0f;
 
 		BoardRenderer board;
+		Stone currentStone; /* current Stone of current player, if local */
 
 		public MyRenderer() {
 			init();
@@ -31,7 +34,7 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 			board = new BoardRenderer(spiel);
 		}
 
-		public void onDrawFrame(GL10 gl) {
+		public synchronized void onDrawFrame(GL10 gl) {
 			final float camera_distance = zoom;
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			
@@ -57,7 +60,17 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 			board.renderBoard(gl);
 			board.renderField(gl);
 			for (int i = 0; i < 4; i++) {
-			//	board.renderPlayerStones(gl, i);
+				if (currentStone != null && spiel.is_local_player(i)) {
+					gl.glPushMatrix();
+					gl.glRotatef(90.0f * (float)i - mAngleY, 0, 1, 0);
+					gl.glTranslatef(0, 1.0f, 15.0f);
+					gl.glRotatef(mAngleY, 0, 1, 0);
+					gl.glScalef(1.7f, 1.7f, 1.7f);
+					board.renderPlayerStone(gl, i, currentStone);
+					gl.glPopMatrix();
+				} else {
+					board.renderPlayerStones(gl, i);
+				}
 				gl.glRotatef(-90, 0, 1, 0);
 			}
 		}
@@ -95,7 +108,7 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 		float mAngleY;
 		float zoom;
 		
-		void setAngle(float ax, float ay, float zoom) {
+		synchronized void setAngle(float ax, float ay, float zoom) {
 			mAngleX = ax;
 			mAngleY = ay;
 			this.zoom = zoom;
@@ -103,7 +116,9 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 	}
 
 	SpielClient spiel;
+	Stone currentStone;
 	MyRenderer renderer;
+	ActivityInterface activity;
 	float angleX = 60.0f;
 	float angleY = 0.0f;
 	float zoom = 30;
@@ -115,6 +130,10 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 		setRenderer(renderer);
 		renderer.setAngle(angleX, angleY, zoom);
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+	}
+	
+	public void setActivity(ActivityInterface activity) {
+		this.activity = activity;
 	}
 
 	public void setSpiel(SpielClient spiel) {
@@ -142,10 +161,15 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 	float mPreviousX;
 	float mPreviousY;
 	float oldDist;
+	boolean move;
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
 		switch (event.getActionMasked()) {
+		case MotionEvent.ACTION_DOWN:
+			move = false;
+			break;
+			
 		case MotionEvent.ACTION_MOVE:
 			if (event.getPointerCount() > 1) {
 				float newDist = spacing(event);
@@ -164,18 +188,19 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 					angleX = 20;
 				if (angleX > 90)
 					angleX = 90;
+				move = true;
 			}
-			queueEvent(new Runnable() {
-				@Override
-				public void run() {
-					renderer.setAngle(angleX, angleY, zoom);
-					requestRender();
-				}
-			});
+			renderer.setAngle(angleX, angleY, zoom);
+			requestRender();
 			break;
 			
 		case MotionEvent.ACTION_POINTER_DOWN:
 			oldDist = spacing(event);
+			break;
+			
+		case MotionEvent.ACTION_UP:
+			if (move == false)
+				activity.OnShowStoneSelect();
 			break;
 			
 		default:
@@ -191,5 +216,11 @@ public class Freebloks3DView extends GLSurfaceView implements FreebloksViewInter
 	@Override
 	public void updateView() {
 		requestRender();
+	}
+
+	@Override
+	public void setCurrentStone(Stone stone) {
+		this.currentStone = stone;
+		renderer.currentStone = stone;
 	}
 }

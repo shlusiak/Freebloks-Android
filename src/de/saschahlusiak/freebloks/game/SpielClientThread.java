@@ -12,7 +12,7 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
-import de.saschahlusiak.freebloks.view.FreebloksViewInterface;
+import de.saschahlusiak.freebloks.view.ViewInterface;
 
 
 class SpielClientThread extends Thread implements SpielClientInterface {
@@ -20,7 +20,7 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	SpielClient spiel;
 	boolean godown;
 	Ki ki = new Ki();
-	FreebloksViewInterface view = null;
+	ViewInterface view = null;
 	FreebloksActivity activity = null;
 	boolean request_player;
 	
@@ -36,7 +36,7 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 		return godown;
 	}
 	
-	public void setView(FreebloksActivity activity, FreebloksViewInterface view) {
+	public void setView(FreebloksActivity activity, ViewInterface view) {
 		this.view = view;
 		this.activity = activity;
 	}
@@ -105,28 +105,8 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	
 	void updateStoneGallery(int player) {
 		final Player p = (player < 0) ? null : spiel.get_player(player);
-		if (activity != null)
-		activity.stoneGallery.post(new Runnable() {
-			@Override
-			public void run() {
-				if (p != null)
-					activity.stoneGalleryAdapter.setPlayer(p);
-				activity.stoneGalleryAdapter.notifyDataSetChanged();
-			}
-		});
 	}
 	
-	void updateStoneGallery() {
-		if (activity == null)
-			return;
-		activity.stoneGallery.post(new Runnable() {
-			@Override
-			public void run() {
-				activity.stoneGalleryAdapter.notifyDataSetChanged();
-			}
-		});
-	}
-
 	public void chatReceived(final NET_CHAT c) {
 		if (spiel.current_player() < 0)
 			return;
@@ -156,7 +136,7 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 					+ " has " + player.m_stone_count + " stones left and "
 					+ -player.m_stone_points_left + " points.");
 		}
-		updateStoneGallery();
+//		updateStoneGallery();
 
 		spiel.disconnect();
 		view.updateView();
@@ -165,7 +145,7 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
 		view.updateView();
-		updateStoneGallery();
+//		updateStoneGallery();
 	}
 
 	@Override
@@ -177,7 +157,7 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
 		view.updateView();
-		updateStoneGallery();
+//		updateStoneGallery();
 	}
 
 	@Override
