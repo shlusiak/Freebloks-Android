@@ -275,7 +275,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    	renderer.updateModelViewMatrix = true;
 					renderer.setAngle(angleX, angleY, zoom);
 			    }
-			} else {
+			} else if (spiel.is_local_player()){
 /*				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
 				angleX += (float)(event.getY() - mPreviousY) / (float)getHeight() * 180.0f;
 				if (angleX < 20)
@@ -305,7 +305,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			break;
 			
 		case MotionEvent.ACTION_UP:
-			if (move == false) {
+			if (move == false && spiel.is_local_player()) {
 				if (currentStone != null && placed && (Math.abs((int)p.x - renderer.currentStone_x) < 5) &&  (Math.abs((int)p.y - renderer.currentStone_y) < 5)) {
 					if (spiel.is_valid_turn(currentStone, spiel.current_player(), 19 - renderer.currentStone_y, renderer.currentStone_x) == Stone.FIELD_ALLOWED) {
 						Log.d("place", "x = " + renderer.currentStone_x + ", y = " + renderer.currentStone_y);
@@ -316,8 +316,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 						Log.d("place", "NOT PLACING, x = " + renderer.currentStone_x + ", y = " + renderer.currentStone_y);
 					}
 					requestRender();
-				} else
+				} else {
 					activity.OnShowStoneSelect();
+				}
 			}
 			break;
 			
