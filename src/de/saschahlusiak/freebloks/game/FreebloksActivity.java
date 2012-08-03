@@ -104,7 +104,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 			} else {
 				showDialog(DIALOG_LOBBY);
 			}
-			spielthread.setView(FreebloksActivity.this, view);
+			spielthread.setView(FreebloksActivity.this);
 			spielthread.start();
 			super.onPostExecute(result);
 		}
@@ -126,13 +126,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 
 		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
 		if (spielthread != null) {
-			spielthread.setView(this,  view);
+			spielthread.setView(this);
 			spiel = spielthread.spiel;
 		} else
 			showDialog(DIALOG_JOIN);
 		view.setSpiel(spiel);
 		
-		findViewById(R.id.rotateRight).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (currentStone == null)
@@ -151,7 +151,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 //				stoneGallery.getSelectedView().startAnimation(a);
 			}
 		});
-		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.rotateRight).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (currentStone == null)
@@ -188,7 +188,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 	public Object onRetainNonConfigurationInstance() {
 		SpielClientThread t = spielthread;
 		if (t != null) {
-			spielthread.setView(null, null);
+			spielthread.setView(null);
 			spielthread = null;
 		}
 		return t;

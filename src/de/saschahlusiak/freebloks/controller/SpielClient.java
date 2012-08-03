@@ -233,7 +233,7 @@ public class SpielClient extends Spielleiter {
 	 * Aktion wird nur an den Server geschickt, der Stein wird NICHT lokal
 	 * gesetzt
 	 **/
-	public int set_stone(Stone stone, int stone_number, int y, int x)
+	public int set_stone(Stone stone, int y, int x)
 	{
 		NET_SET_STONE data;
 		if (m_current_player==-1)return Stone.FIELD_DENIED;
@@ -241,7 +241,7 @@ public class SpielClient extends Spielleiter {
 		data = new NET_SET_STONE();
 		/* Datenstruktur mit Daten der Aktion fuellen */
 		data.player=m_current_player;
-		data.stone=stone_number;
+		data.stone=stone.get_number();
 		data.mirror_count=stone.get_mirror_counter();
 		data.rotate_count=stone.get_rotate_counter();
 		data.x=x;

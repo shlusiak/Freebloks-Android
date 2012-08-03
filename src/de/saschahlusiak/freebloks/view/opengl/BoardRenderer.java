@@ -313,7 +313,7 @@ public class BoardRenderer {
 		for (i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
-				if (stone.get_stone_field(j,  i) != Stone.STONE_FIELD_FREE)
+				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
 					renderStone(gl, player, 0.65f);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
@@ -332,7 +332,7 @@ public class BoardRenderer {
 		for (int i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
-				if (stone.get_stone_field(j,  i) != Stone.STONE_FIELD_FREE)
+				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
 					renderStone(gl, player, 0.65f);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}

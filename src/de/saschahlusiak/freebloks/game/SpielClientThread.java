@@ -20,13 +20,11 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 	SpielClient spiel;
 	boolean godown;
 	Ki ki = new Ki();
-	ViewInterface view = null;
 	FreebloksActivity activity = null;
 	boolean request_player;
 	
 	SpielClientThread(SpielClient spiel, boolean request_player) {
 		this.spiel = spiel;
-		this.view = null;
 		this.activity = null;
 		this.request_player = request_player;
 		spiel.addClientInterface(this);
@@ -36,8 +34,7 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 		return godown;
 	}
 	
-	public void setView(FreebloksActivity activity, ViewInterface view) {
-		this.view = view;
+	public void setView(FreebloksActivity activity) {
 		this.activity = activity;
 	}
 	
@@ -75,8 +72,6 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 		for (i = 0; i < Spiel.PLAYER_MAX; i++)
 			if (spiel.is_local_player(i))
 				Log.d(tag, "Local player: " + i);
-		if (view != null)
-			view.updateView();
 	}
 
 	public void newCurrentPlayer(int player) {
@@ -86,8 +81,6 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 			return;
 
 		/* Ermittle CTurn, den die KI jetzt setzen wuerde */
-		if (view != null)
-			view.updateView();
 		
 		if (1 == 1)
 			return;
@@ -139,12 +132,10 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 //		updateStoneGallery();
 
 		spiel.disconnect();
-		view.updateView();
 	}
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
-		view.updateView();
 //		updateStoneGallery();
 	}
 
@@ -156,7 +147,6 @@ class SpielClientThread extends Thread implements SpielClientInterface {
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		view.updateView();
 //		updateStoneGallery();
 	}
 

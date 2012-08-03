@@ -177,7 +177,7 @@ public class Spiel {
 	}
 
 
-	protected int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
+	public int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
 		int valid = Stone.FIELD_DENIED;
 		int field_value;
 

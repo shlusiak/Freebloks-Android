@@ -5,8 +5,14 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
+import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
+import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Turn;
+import de.saschahlusiak.freebloks.network.NET_CHAT;
+import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
+import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.view.ViewInterface;
 import android.content.Context;
 import android.graphics.PointF;
@@ -16,7 +22,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
+public class Freebloks3DView extends GLSurfaceView implements ViewInterface, SpielClientInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
 	private class MyRenderer implements GLSurfaceView.Renderer {
@@ -125,7 +131,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 						board.renderPlayerStone(gl, i, currentStone);
 						
 						gl.glPopMatrix();
-					}					
+					}
 				} else {
 					board.renderPlayerStones(gl, i);
 				}
@@ -218,6 +224,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 				requestRender();
 			}
 		});
+		if (spiel != null)
+			spiel.addClientInterface(this);
 	}
 
 	@Override
@@ -235,6 +243,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 	float mPreviousY;
 	float oldDist;
 	boolean move;
+	boolean placed;
+	int ox, oy;
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
@@ -247,8 +257,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			move = false;
-			renderer.currentStone_x = (int)p.x;
-			renderer.currentStone_y = (int)p.y;
+			ox = (int)p.x;
+			oy = (int)p.y;
 			requestRender();
 			break;
 			
@@ -274,9 +284,17 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 					angleX = 90; 
 				renderer.setAngle(angleX, angleY, zoom);
  				*/
-				renderer.currentStone_x = (int)p.x;
-				renderer.currentStone_y = (int)p.y + 6;
-
+				if (!placed) {
+					renderer.currentStone_x = (int)p.x;
+					renderer.currentStone_y = (int)p.y;
+					placed = true;
+				} else {
+					renderer.currentStone_x += (int)p.x - ox;
+					renderer.currentStone_y += (int)p.y - oy;
+				}
+				ox = (int)p.x;
+				oy = (int)p.y;
+				
 				move = true;
 			}
 			requestRender();
@@ -287,8 +305,20 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 			break;
 			
 		case MotionEvent.ACTION_UP:
-			if (move == false)
-				activity.OnShowStoneSelect();
+			if (move == false) {
+				if (currentStone != null && placed && (Math.abs((int)p.x - renderer.currentStone_x) < 5) &&  (Math.abs((int)p.y - renderer.currentStone_y) < 5)) {
+					if (spiel.is_valid_turn(currentStone, spiel.current_player(), 19 - renderer.currentStone_y, renderer.currentStone_x) == Stone.FIELD_ALLOWED) {
+						Log.d("place", "x = " + renderer.currentStone_x + ", y = " + renderer.currentStone_y);
+						spiel.set_stone(currentStone, 19 - renderer.currentStone_y, renderer.currentStone_x);
+					
+						setCurrentStone(null);
+					} else {
+						Log.d("place", "NOT PLACING, x = " + renderer.currentStone_x + ", y = " + renderer.currentStone_y);
+					}
+					requestRender();
+				} else
+					activity.OnShowStoneSelect();
+			}
 			break;
 			
 		default:
@@ -310,11 +340,67 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface {
 	public void setCurrentStone(Stone stone) {
 		this.currentStone = stone;
 		renderer.currentStone = stone;
+		placed = false;
+		renderer.currentStone_x = -100;
+		renderer.currentStone_y = -100;
 	}
 	
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		renderer.updateModelViewMatrix = true;
 		super.onSizeChanged(w, h, oldw, oldh);
+	}
+
+	@Override
+	public void newCurrentPlayer(int player) {
+		// TODO Auto-generated method stub
+		
+		updateView();
+	}
+
+	@Override
+	public void stoneWasSet(NET_SET_STONE s) {
+		// TODO Auto-generated method stub
+		
+		updateView();
+	}
+
+	@Override
+	public void hintReceived(NET_SET_STONE s) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gameFinished() {
+		updateView();
+	}
+
+	@Override
+	public void chatReceived(NET_CHAT c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gameStarted() {
+		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
+			renderer.setAngle(angleX, (float)i * 90.0f, zoom);
+			break;
+		}
+		
+		updateView();
+	}
+
+	@Override
+	public void stoneUndone(Stone s, Turn t) {
+		updateView();
+		
+	}
+
+	@Override
+	public void serverStatus(NET_SERVER_STATUS status) {
+		// TODO Auto-generated method stub
+		
 	}
 }
