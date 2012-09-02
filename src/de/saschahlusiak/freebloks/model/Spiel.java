@@ -195,7 +195,7 @@ public class Spiel {
 		return valid;
 	}
 
-	int is_valid_turn(Turn turn){
+	public int is_valid_turn(Turn turn){
 		int playernumber = turn.m_playernumber;
 		Stone stone = m_player[playernumber].get_stone(turn.m_stone_number);
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);

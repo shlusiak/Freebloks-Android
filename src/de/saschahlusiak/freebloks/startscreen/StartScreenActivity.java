@@ -26,9 +26,17 @@ public class StartScreenActivity extends Activity {
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Intent intent = new Intent(StartScreenActivity.this, FreebloksActivity.class);
+				startActivity(intent);
+			}
+		});
+		findViewById(R.id.continue_game).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				
 			}
 		});
+		findViewById(R.id.continue_game).setEnabled(false);
 		findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

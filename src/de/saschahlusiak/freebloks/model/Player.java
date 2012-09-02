@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.model;
 public class Player {
 	public int m_stone_points_left;
 	public int m_stone_count;
-	int m_number_of_possible_turns;
+	public int m_number_of_possible_turns;
 	int m_position_points;
 
 	int m_teammate;

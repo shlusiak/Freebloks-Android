@@ -77,6 +77,10 @@ public class Turnpool {
 		m_current.m_next = null;
 		m_tail = m_current;
 	}
+	
+	public Turn get_last_turn() {
+		return m_tail;
+	}
 
 
 	Turn get_turn(int i) {

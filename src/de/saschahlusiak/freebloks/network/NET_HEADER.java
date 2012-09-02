@@ -62,13 +62,15 @@ public class NET_HEADER {
 		/* Bei Ungleichheit Fehler, sonst Nachricht ok */
 		if (c1 != check1 || c2 != check2)
 			throw new Exception("header checksum failed");
+		
+		data_length -= HEADER_SIZE;
 
-		if (is.available() < (data_length - HEADER_SIZE))
+		if (is.available() < data_length)
 			throw new Exception("short read for remaining package payload");
-		buffer = new byte[data_length - HEADER_SIZE];
+		buffer = new byte[data_length];
 
-		r = is.read(buffer, 0, data_length - HEADER_SIZE);
-		if (r < data_length - HEADER_SIZE)
+		r = is.read(buffer, 0, data_length);
+		if (r < data_length)
 			throw new Exception("short read for remaining package payload");
 
 		return true;

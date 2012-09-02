@@ -1,8 +1,10 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.ServerListener;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
+import de.saschahlusiak.freebloks.model.Ki;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
@@ -54,7 +56,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 			progress.show();
 			super.onPreExecute();
 		}
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 			try {
@@ -108,6 +110,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 		} else {
 			String server = getIntent().getStringExtra("server");
 			boolean request_player = getIntent().getBooleanExtra("request_player", true);
+			
+			if (server == null)
+				new ServerListener(null, Network.DEFAULT_PORT, Ki.MEDIUM).start();
 			
 			new ConnectTask(request_player).execute(server);
 		}

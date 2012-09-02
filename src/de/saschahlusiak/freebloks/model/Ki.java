@@ -5,6 +5,11 @@ public class Ki {
 	static final int BIGGEST_X_STONES = 9;
 	Turnpool m_turnpool = new Turnpool();
 	
+	public static final int PERFECT = 0;
+	public static final int HARD = 5;
+	public static final int MEDIUM = 50;
+	public static final int EASY = 120;
+	
 	public Ki() {
 		num_threads = 1;
 	}

@@ -126,7 +126,7 @@ public class SpielClient extends Spielleiter {
 			/* Stein in richtige Position drehen */
 			stone.mirror_rotate_to(s.mirror_count, s.rotate_count);
 			/* Stein aufs echte Spielfeld setzen */
-			Log.d(tag, "stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
+			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
 			if ((is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
 			   (super.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
@@ -281,7 +281,7 @@ public class SpielClient extends Spielleiter {
 		/* Bei Textlaenge von 0 wird nix verschickt */
 		if (text.length() < 1)return;
 		
-		new NET_CHAT(text).send(client_socket);
+		new NET_CHAT(text, -1).send(client_socket);
 	}
 
 	/**

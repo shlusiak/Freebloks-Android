@@ -8,9 +8,14 @@ public class NET_CHAT extends NET_HEADER {
 	public String text; /* uint8[] */
 
 	public NET_CHAT(String text) {
+		this(text, 0);
+	}	
+	
+	public NET_CHAT(String text, int client) {
 		super(Network.MSG_CHAT, 3 + text.length());
 		this.text = text;
 		this.length = text.length();
+		this.client = client;
 	}
 
 	public NET_CHAT(NET_HEADER from) {

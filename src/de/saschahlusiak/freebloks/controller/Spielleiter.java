@@ -64,6 +64,4 @@ public class Spielleiter extends Spiel {
 		for (int i=0;i<PLAYER_MAX;i++)if (spieler[i]!=PLAYER_COMPUTER)n++;
 		return n;
 	}
-
-	
 }
