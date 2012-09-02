@@ -27,6 +27,11 @@ public class StartScreenActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(StartScreenActivity.this, FreebloksActivity.class);
+				/* request_player:
+				 *   false for AUTO PLAY
+				 *   true for requesting 1 player
+				 */
+				intent.putExtra("request_player", false);
 				startActivity(intent);
 			}
 		});

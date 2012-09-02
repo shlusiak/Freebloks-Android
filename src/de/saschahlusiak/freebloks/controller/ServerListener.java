@@ -15,6 +15,7 @@ public class ServerListener extends Thread {
 	
 	ServerSocket socket;
 	SpielServer server;
+	private boolean go_down;
 	
 	public ServerListener(InetAddress addr, int port, int ki_mode) {
 		try {
@@ -24,6 +25,7 @@ public class ServerListener extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		go_down = false;
 		server = new SpielServer(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X, ki_mode);
 		server.listener = this;
 	}
@@ -38,6 +40,11 @@ public class ServerListener extends Thread {
 
 		server = null;
 		socket = null;
+	}
+	
+	public void go_down() {
+		go_down = true;
+		close();
 	}
 
 	boolean wait_for_player() {
@@ -63,6 +70,8 @@ public class ServerListener extends Thread {
 			if (!wait_for_player())
 				break;
 			if (interrupted())
+				break;
+			if (go_down)
 				break;
 		} while (true);
 		Log.d(tag, "going down");

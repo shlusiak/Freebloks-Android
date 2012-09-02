@@ -35,14 +35,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 	SpielClient spiel = null;
 	Stone currentStone = null;
 	SpielClientThread spielthread = null;
+	ServerListener listener = null;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
 		SpielClient mySpiel = null;
+		boolean auto_start;
 		
-		ConnectTask(boolean request_player) {
+		ConnectTask(boolean request_player, boolean auto_start) {
 			mySpiel = new SpielClient();
 			spielthread = new SpielClientThread(mySpiel, request_player);
+			this.auto_start = auto_start;
 		}
 		
 		@Override
@@ -83,7 +86,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
 				FreebloksActivity.this.finish();
 			} else {
-				showDialog(DIALOG_LOBBY);
+				if (auto_start) {
+					spiel.request_start();
+					if (listener != null) {
+						listener.go_down();
+					}
+					listener = null;
+				} else
+					showDialog(DIALOG_LOBBY);
+				
 				spielthread.setView(FreebloksActivity.this);
 				spielthread.start();
 			}
@@ -91,7 +102,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 		}
 	}
 	
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,9 +122,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 			boolean request_player = getIntent().getBooleanExtra("request_player", true);
 			
 			if (server == null)
-				new ServerListener(null, Network.DEFAULT_PORT, Ki.MEDIUM).start();
+				listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.MEDIUM);
+			listener.start();
 			
-			new ConnectTask(request_player).execute(server);
+			new ConnectTask(request_player, (server == null)).execute(server);
 		}
 		view.setSpiel(spiel);
 		
