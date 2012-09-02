@@ -1,21 +1,9 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.R.id;
-import de.saschahlusiak.freebloks.R.layout;
-import de.saschahlusiak.freebloks.R.menu;
-import de.saschahlusiak.freebloks.R.string;
 import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
-import de.saschahlusiak.freebloks.model.Ki;
-import de.saschahlusiak.freebloks.model.Player;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.network.NET_CHAT;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
-import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.ViewInterface;
@@ -28,26 +16,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.OvershootInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Gallery;
 import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 
 public class FreebloksActivity extends Activity implements ActivityInterface {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
-	static final int DIALOG_JOIN = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_STONE_SELECT = 3;
 
@@ -101,15 +79,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 			progress.dismiss();
 			if (result != null) {
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
+				FreebloksActivity.this.finish();
 			} else {
 				showDialog(DIALOG_LOBBY);
+				spielthread.setView(FreebloksActivity.this);
+				spielthread.start();
 			}
-			spielthread.setView(FreebloksActivity.this);
-			spielthread.start();
 			super.onPostExecute(result);
 		}
-		
-
 	}
 	
 
@@ -128,8 +105,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 		if (spielthread != null) {
 			spielthread.setView(this);
 			spiel = spielthread.spiel;
-		} else
-			showDialog(DIALOG_JOIN);
+		} else {
+			String server = getIntent().getStringExtra("server");
+			boolean request_player = getIntent().getBooleanExtra("request_player", true);
+			
+			new ConnectTask(request_player).execute(server);
+		}
 		view.setSpiel(spiel);
 		
 		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
@@ -203,35 +184,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case DIALOG_JOIN:
-			final Dialog addDialog = new Dialog(this);
-			addDialog.setContentView(R.layout.join_game_dialog);
-			addDialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
-					LayoutParams.WRAP_CONTENT);
-			addDialog.setTitle(R.string.menu_join_game);
-			((EditText)addDialog.findViewById(R.id.server)).setText("blokus.mooo.com");
-			Button okAdd = (Button) addDialog.findViewById(android.R.id.button1);
-			okAdd.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					String n = ((EditText)addDialog.findViewById(R.id.server)).getText().toString();
-					boolean request_player = ((CheckBox)addDialog.findViewById(R.id.request_player)).isChecked();
-					if (spielthread != null && spielthread.spiel != null)
-						spielthread.spiel.disconnect();
-
-					new ConnectTask(request_player).execute(n);
-					addDialog.dismiss();
-				}
-			});
-			((Button)addDialog.findViewById(android.R.id.button2)).setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					addDialog.dismiss();
-//					if (view.getSpiel() == null)
-//						finish();						
-				}
-			});
-			return addDialog;
-			
+		switch (id) {		
 		case DIALOG_LOBBY:
 			return new LobbyDialog(this, new DialogInterface.OnCancelListener() {
 				@Override
@@ -264,17 +217,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 	}
 
 	@Override
-	/** Called when a menu item is selected. */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.new_local_game:
-			return true;
-			
-		case R.id.join_game:
-			showDialog(DIALOG_JOIN);
-			return true;
-
 		case R.id.preferences:
 			intent = new Intent(this, FreebloksPreferences.class);
 			startActivity(intent);
