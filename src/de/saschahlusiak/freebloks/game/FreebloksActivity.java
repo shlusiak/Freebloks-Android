@@ -107,7 +107,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface {
 		super.onCreate(savedInstanceState);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-		setContentView(prefs.getBoolean("view_opengl", true) ? R.layout.main_3d : R.layout.main);
+		setContentView(R.layout.main_3d);
 
 		view = (ViewInterface)findViewById(R.id.board);
 		view.setActivity(this);
