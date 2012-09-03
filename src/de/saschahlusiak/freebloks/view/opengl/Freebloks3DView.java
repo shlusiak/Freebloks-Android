@@ -52,9 +52,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			board = new BoardRenderer(spiel);
 		}
 
+		private float outputfar[] = new float[4];
+		private float outputnear[] = new float[4];
 		public synchronized PointF windowToModel(PointF point) {
-			float outputfar[] = new float[4];
-			float outputnear[] = new float[4];
 			float x1, y1, z1, x2, y2, z2, u;
 			
 			GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputnear, 0);
