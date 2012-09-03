@@ -94,9 +94,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glLoadIdentity();
 			gl.glTranslatef(0, 9.0f, 0);
 			GLU.gluLookAt(gl, 
-					(float) (camera_distance*Math.sin(-mAngleY*Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
+					(float) (camera_distance*Math.sin(getAngleY() * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 					(float) (camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
-					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(mAngleY*Math.PI/180.0)),
+					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-getAngleY()*Math.PI/180.0)),
 					0.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f);
 			if (updateModelViewMatrix) {
@@ -123,10 +123,14 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 			if (currentPlayer >= 0) {
 				gl.glPushMatrix();
-				gl.glRotatef(angleY, 0, 1, 0);
+				gl.glRotatef(getAngleY(), 0, 1, 0);
 				board.renderPlayerStones(gl, currentPlayer, currentWheelAngle);
 				gl.glPopMatrix();
 			}
+		}
+		
+		final float getAngleY() {
+			return -90.0f * (float)showPlayer;
 		}
 
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -168,16 +172,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light0_specular, 0);
 			
 			renderer.updateModelViewMatrix = true;
-
 		}
 
 		float mAngleX;
-		float mAngleY;
 		float zoom;
 		
-		synchronized void setAngle(float ax, float ay, float zoom) {
+		synchronized void setAngle(float ax, float zoom) {
 			mAngleX = ax;
-			mAngleY = ay;
 			this.zoom = zoom;
 			
 			updateModelViewMatrix = true;
@@ -188,8 +189,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	Stone currentStone;
 	MyRenderer renderer;
 	ActivityInterface activity;
-	float angleX = 70.0f;
-	float angleY = 0.0f;
+	int showPlayer;
 	float zoom = 30;
 	
 	public Freebloks3DView(Context context, AttributeSet attrs) {
@@ -197,7 +197,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 		renderer = new MyRenderer();
 		setRenderer(renderer);
-		renderer.setAngle(angleX, angleY, zoom);
+		renderer.setAngle(70.0f, zoom);
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
 	
@@ -231,7 +231,30 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	
 
 	float oldDist;
-	float ox, oy;
+	PointF originalPos = new PointF();
+	
+	void fieldToUnified(PointF p) {
+		float tmp;
+		
+		switch (showPlayer) {
+		case 0: /* nothing */
+			break;
+		case 1:
+			tmp = p.x;
+			p.x = spiel.m_field_size_x - p.y;
+			p.y = tmp;
+			break;
+		case 2: /* 180 degree */
+			p.x = -p.x;
+			p.y = -p.y;
+			break;
+		case 3:
+			tmp = p.y;
+			p.y = spiel.m_field_size_y - p.x;
+			p.x = tmp;
+			break;
+		}
+	}
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
@@ -243,9 +266,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
-			ox = p.x;
-			oy = p.y;
-			
+			originalPos.x = p.x;
+			originalPos.y = p.y;
+			fieldToUnified(originalPos);
 			requestRender();
 			break;
 			
@@ -260,7 +283,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    		zoom = 2.0f;
 			    	oldDist = newDist;
 			    	renderer.updateModelViewMatrix = true;
-					renderer.setAngle(angleX, angleY, zoom);
+					renderer.setAngle(70.0f, zoom);
 			    }
 			} else {
 /*				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
@@ -272,11 +295,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				renderer.setAngle(angleX, angleY, zoom);
  				*/
 
-				if (oy < 0) {
+				if (originalPos.y < 0) {
 					/* everything underneath row 0 spins the wheel */
-					renderer.currentWheelAngle += 8.0f * (ox - p.x);
+					fieldToUnified(p);
+
+					renderer.currentWheelAngle += 8.0f * (originalPos.x - p.x);
 					
-					ox = p.x;
+					originalPos.x = p.x;
 				}
 
 //				oy = p.y;
@@ -352,7 +377,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	@Override
 	public void gameStarted() {
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
-			renderer.setAngle(angleX, (float)i * 90.0f, zoom);
+			showPlayer = i;
+			renderer.updateModelViewMatrix = true;
 			break;
 		}
 		
