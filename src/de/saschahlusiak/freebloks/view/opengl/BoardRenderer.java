@@ -286,7 +286,7 @@ public class BoardRenderer {
     	gl.glDisable(GL10.GL_BLEND);
 	}
 	
-	public void renderPlayerStones(GL10 gl, int player, float wheelAngle) {
+	public void renderPlayerStones(GL10 gl, int player, float wheelAngle, int highlightStone) {
 		final float da = 17.0f;
 		float angle = wheelAngle + 9.5f * 0.5f * da;
 		
@@ -310,10 +310,10 @@ public class BoardRenderer {
 			while (angle > 180.0f)
 				angle -= 360.0f;
 			
-			alpha = 1.0f / (1.0f + Math.abs(angle) / 50.0f);
+			alpha = 1.0f / (1.0f + Math.abs(angle) / 47.0f);
 			
 			if (s.get_available() > 0)
-				renderPlayerStone(gl, player, s, alpha);
+				renderPlayerStone(gl, (i == highlightStone) ? -1 : player, s, alpha);
 			
 			gl.glTranslatef(stone_size * 2.0f * 5.1f, 0, 0);
 			if (i % 11 == 10) {
