@@ -27,7 +27,7 @@ public class Network {
 		if (! p.read(socket, block))
 			return null;
 		
-		Log.d(tag, "Received network package type " + p.msg_type);
+//		Log.d(tag, "Received network package type " + p.msg_type);
 		
 		switch (p.msg_type) {
 		case MSG_REQUEST_PLAYER:

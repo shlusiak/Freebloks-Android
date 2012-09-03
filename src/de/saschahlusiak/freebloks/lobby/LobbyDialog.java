@@ -154,4 +154,16 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			}
 		});
 	}
+
+	@Override
+	public void onConnected(Spiel spiel) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDisconnected(Spiel spiel) {
+		// TODO Auto-generated method stub
+		
+	}
 }

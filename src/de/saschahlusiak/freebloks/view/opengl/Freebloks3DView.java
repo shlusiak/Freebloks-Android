@@ -404,4 +404,16 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onConnected(Spiel spiel) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDisconnected(Spiel spiel) {
+		// TODO Auto-generated method stub
+		
+	}
 }

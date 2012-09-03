@@ -12,5 +12,7 @@
     <string name="chat_button">Chat</string>
     <string name="start_now_button">Start now</string>
     
-	<string name="preferences_view">Interface</string>        
+	<string name="preferences_view">Interface</string>
+	
+	<string name="game_finished">Game finished</string>
 </resources>

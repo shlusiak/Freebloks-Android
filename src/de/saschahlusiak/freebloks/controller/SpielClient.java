@@ -61,6 +61,8 @@ public class SpielClient extends Spielleiter {
 			e.printStackTrace();
 			throw new Exception("Connection refused");
 		}
+		for (SpielClientInterface sci : spielClientInterface)
+			sci.onConnected(this);		
 	}
 
 	void setSocket(Socket client_socket) {
@@ -68,12 +70,15 @@ public class SpielClient extends Spielleiter {
 	}
 
 	public synchronized void disconnect() {
-		if (client_socket != null)
+		if (client_socket != null) {
 			try {
 				client_socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.onDisconnected(this);		
+		}
 		client_socket = null;
 	}
 
@@ -126,7 +131,7 @@ public class SpielClient extends Spielleiter {
 			/* Stein in richtige Position drehen */
 			stone.mirror_rotate_to(s.mirror_count, s.rotate_count);
 			/* Stein aufs echte Spielfeld setzen */
-			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
+//			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
 			if ((is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
 			   (super.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
