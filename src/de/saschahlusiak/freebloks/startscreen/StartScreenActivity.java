@@ -31,7 +31,7 @@ public class StartScreenActivity extends Activity {
 				 *   false for AUTO PLAY
 				 *   true for requesting 1 player
 				 */
-				intent.putExtra("request_player", false);
+				intent.putExtra("request_player", true);
 				startActivity(intent);
 			}
 		});

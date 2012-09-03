@@ -52,7 +52,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		ConnectTask(boolean request_player, boolean auto_start) {
 			mySpiel = new SpielClient();
-			spielthread = new SpielClientThread(mySpiel, request_player);
+			spielthread = new SpielClientThread(mySpiel, request_player, auto_start);
 			this.auto_start = auto_start;
 		}
 		
@@ -94,17 +94,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
 				FreebloksActivity.this.finish();
 			} else {
-				if (auto_start) {
-					spiel.request_start();
-					if (listener != null) {
-						listener.go_down();
-					}
-					listener = null;
-				} else
+				if (! auto_start)
 					showDialog(DIALOG_LOBBY);
 				
 				spiel.addClientInterface(FreebloksActivity.this);
-				
 				spielthread.start();
 			}
 			super.onPostExecute(result);
@@ -320,6 +313,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void gameStarted() {
+		if (listener != null) {
+			listener.go_down();
+			listener = null;
+		}
+			
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
 			if (spiel.is_local_player(i))
