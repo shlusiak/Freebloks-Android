@@ -128,18 +128,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			public void onClick(View v) {
 				if (currentStone == null)
 					return;
-				int r = currentStone.get_rotate_counter();
-				r--;
-				if (r < 0)
-					r = currentStone.get_rotateable() - 1;
-				currentStone.mirror_rotate_to(currentStone.get_mirror_counter(), r);
+				currentStone.rotate_left();
 				view.updateView();
-
-//				stoneGalleryAdapter.notifyDataSetChanged();
-//				Animation a = new RotateAnimation(90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//				a.setDuration(250);
-//				a.setInterpolator(new OvershootInterpolator());
-//				stoneGallery.getSelectedView().startAnimation(a);
 			}
 		});
 		findViewById(R.id.rotateRight).setOnClickListener(new OnClickListener() {
@@ -147,19 +137,35 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			public void onClick(View v) {
 				if (currentStone == null)
 					return;
-				int r = currentStone.get_rotate_counter();
-				r++;
-				if (r >= currentStone.get_rotateable())
-					r = 0;
-				currentStone.mirror_rotate_to(currentStone.get_mirror_counter(), r);
+				currentStone.rotate_right();
 				view.updateView();
-//				stoneGalleryAdapter.notifyDataSetChanged();
-//				Animation a = new RotateAnimation(-90, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//				a.setDuration(250);
-//				a.setInterpolator(new OvershootInterpolator());
-//				stoneGallery.getSelectedView().startAnimation(a);
 			}
 		});
+		findViewById(R.id.flipHorizontally).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (currentStone == null)
+					return;
+				if (spiel.current_player() % 2 == 0)
+					currentStone.mirror_over_y();
+				else 
+					currentStone.mirror_over_x();
+				view.updateView();
+			}
+		});
+		findViewById(R.id.flipVertically).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (currentStone == null)
+					return;
+				if (spiel.current_player() % 2 == 0)
+					currentStone.mirror_over_x();
+				else 
+					currentStone.mirror_over_y();
+				view.updateView();
+			}
+		});
+		
 	}
 
 	@Override
@@ -263,6 +269,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void newCurrentPlayer(int player) {
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
+		selectCurrentStone(spiel, null);
 	}
 
 	@Override
@@ -345,7 +352,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void selectCurrentStone(Spiel spiel, Stone stone) {
+	public void selectCurrentStone(SpielClient spiel, Stone stone) {
 		currentStone = stone;
+	}
+
+	@Override
+	public void commitCurrentStone(SpielClient spiel, Stone stone, int x, int y) {
+		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
+		if (!spiel.is_local_player())
+			return;
+		if (spiel.is_valid_turn(stone, spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
+			return;
+		
+		spiel.set_stone(stone, 19 - y, x);
+		selectCurrentStone(spiel, null);
 	}
 }

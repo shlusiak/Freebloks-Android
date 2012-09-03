@@ -4,11 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-
 import javax.microedition.khronos.opengles.GL10;
-
-import android.graphics.PointF;
-
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;

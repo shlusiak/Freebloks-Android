@@ -186,9 +186,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			updateModelViewMatrix = true;
 		}
 		
-		synchronized void setStonePosition(Stone stone, int x, int y) {
+		synchronized boolean setStonePosition(Stone stone, int x, int y) {
 			if (stone == null)
-				return;
+				return false;
 			
 			for (int i = 0; i < stone.get_stone_size(); i++)
 				for (int j = 0; j < stone.get_stone_size(); j++) {
@@ -206,8 +206,12 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					
 				}
 			
-			currentStonePos.x = x;
-			currentStonePos.y = y;
+			if (currentStonePos.x != x || currentStonePos.y != y) {
+				currentStonePos.x = x;
+				currentStonePos.y = y;
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -285,6 +289,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	
 	int highlightStone = -1;
 	boolean dragStone;
+	boolean stoneMoved;
 	
 	PointF fieldPoint = new PointF();
 	PointF unifiedPoint = new PointF();
@@ -309,9 +314,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			originalWheelAngle = renderer.currentWheelAngle;
 			highlightStone = -1;
 			dragStone = false;
+			stoneMoved = false;
 			if (spiel.is_local_player()) {
 				if (originalPos.y < 0) {
-					int row = (int)(-originalPos.y / 5.2f);
+					int row = (int)(-originalPos.y / 5.5f);
 					int col = (int)((originalPos.x - (float)spiel.m_field_size_x / 2.0f) / 7.0f + 5.5f + originalWheelAngle / 17.0f);
 					
 					
@@ -322,6 +328,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					highlightStone = row * 11 + col;
 					if (col > 11 || row > 1 || col < 0 || row < 0 || highlightStone >= 21)
 						highlightStone = -1;
+					Stone s = spiel.get_current_player().get_stone(highlightStone);
+					if (s != null && s.get_available() <= 0)
+						highlightStone = -1;
+					
 					if (currentStone == null)
 						activity.selectCurrentStone(spiel, spiel.get_current_player().get_stone(highlightStone));
 				} else if (currentStone != null) {
@@ -379,6 +389,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 								highlightStone = -1;
 								if (currentStone != null) {
 									renderer.setStonePosition(currentStone, (int)fieldPoint.x, (int)fieldPoint.y);
+									stoneMoved = true;
 									stone_rel_x = 0;
 									stone_rel_y = 0;
 								}
@@ -389,7 +400,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					originalPos.x = unifiedPoint.x;
 					int x = (int)fieldPoint.x + stone_rel_x + currentStone.get_stone_size() / 2;
 					int y = (int)fieldPoint.y + stone_rel_y + currentStone.get_stone_size() / 2;
-					renderer.setStonePosition(currentStone, x, y);
+					stoneMoved |= renderer.setStonePosition(currentStone, x, y);
 					unifiedPoint.x = x;
 					unifiedPoint.y = y;
 					fieldToUnified(unifiedPoint);
@@ -409,6 +420,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			break;
 			
 		case MotionEvent.ACTION_UP:
+			if (!stoneMoved && dragStone && currentStone != null) {
+				activity.commitCurrentStone(spiel, currentStone, renderer.currentStonePos.x, renderer.currentStonePos.y);
+				currentStone = null;
+			}
 			highlightStone = -1;
 			requestRender();
 			break;

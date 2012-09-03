@@ -21,5 +21,25 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/rotate_right" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" >
+
+        <ImageButton
+            android:id="@+id/flipHorizontally"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flip_horizontal" />
+
+        <ImageButton
+            android:id="@+id/flipVertically"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flip_vertical" />
+
+    </LinearLayout>
     
 </RelativeLayout>

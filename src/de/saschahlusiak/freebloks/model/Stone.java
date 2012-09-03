@@ -407,23 +407,23 @@ public class Stone {
 
 
 
-	void rotate_left(){
+	public void rotate_left(){
 		m_rotate_counter--;
 		if (m_rotate_counter < 0) m_rotate_counter += STONE_ROTATEABLE[m_shape];
 	}
 
-	void rotate_right(){
+	public void rotate_right(){
 		m_rotate_counter=(m_rotate_counter+1)%STONE_ROTATEABLE[m_shape];
 	}
 
-	void mirror_over_x(){
+	public void mirror_over_x(){
 		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
 		if (m_rotate_counter%2 == 1) 
 			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
 	}
 
-	 void mirror_over_y(){
+	 public void mirror_over_y(){
 		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
 		if (m_rotate_counter%2 == 0) 
