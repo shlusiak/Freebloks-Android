@@ -45,10 +45,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 		public MyRenderer() {
 			init();
+			currentPlayer = -1;
 		}
 
 		public void init() {
-			currentPlayer = -1;
 			board = new BoardRenderer(spiel);
 		}
 
@@ -237,6 +237,16 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	public void setSpiel(SpielClient spiel) {
 		this.spiel = spiel;
+		if (spiel != null) {
+			spiel.addClientInterface(this);
+			for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
+				showPlayer = i;
+				renderer.updateModelViewMatrix = true;
+				break;
+			}
+			renderer.currentPlayer = spiel.current_player();
+		}
+		
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -244,8 +254,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				requestRender();
 			}
 		});
-		if (spiel != null)
-			spiel.addClientInterface(this);
 	}
 
 	@Override
