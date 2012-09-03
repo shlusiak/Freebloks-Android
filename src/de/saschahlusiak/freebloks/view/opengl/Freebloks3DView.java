@@ -15,6 +15,7 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.view.ViewInterface;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -37,7 +38,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		float modelViewMatrix[] = new float[16];
 
 		BoardRenderer board;
-		int currentStone_x, currentStone_y;
+		Point currentStonePos = new Point();
+		
 		int currentPlayer;
 		float currentWheelAngle = 0.0f;
 
@@ -114,16 +116,17 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			board.renderBoard(gl);
 			board.renderField(gl);
 			if (currentStone != null && spiel != null && spiel.is_local_player()) {
-				gl.glPushMatrix();
-				if (currentStone_x >= 0 && currentStone_y >= 0)
-					board.renderPlayerStone(gl, spiel.current_player(), currentStone, currentStone_x, currentStone_y);
-				gl.glPopMatrix();
+				if (currentStonePos.x > -50 && currentStonePos.y > -50) {
+					gl.glPushMatrix();
+					board.renderPlayerStone(gl, spiel.current_player(), currentStone, currentStonePos.x, currentStonePos.y);
+					gl.glPopMatrix();
+				}
 			}
 
 			if (currentPlayer >= 0) {
 				gl.glPushMatrix();
 				gl.glRotatef(getAngleY(), 0, 1, 0);
-				board.renderPlayerStones(gl, currentPlayer, currentWheelAngle, highlightStone);
+				board.renderPlayerStones(gl, currentPlayer, currentWheelAngle, highlightStone, currentStone);
 				gl.glPopMatrix();
 			}
 		}
@@ -181,6 +184,30 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			this.zoom = zoom;
 			
 			updateModelViewMatrix = true;
+		}
+		
+		synchronized void setStonePosition(Stone stone, int x, int y) {
+			if (stone == null)
+				return;
+			
+			for (int i = 0; i < stone.get_stone_size(); i++)
+				for (int j = 0; j < stone.get_stone_size(); j++) {
+					if (stone.get_stone_field(j, i) == Stone.STONE_FIELD_ALLOWED) {
+						if (i + x < 0)
+							x = -i;
+						if (y - j < 0)
+							y = j;
+						
+						if (i + x >= spiel.m_field_size_x)
+							x = spiel.m_field_size_x - i - 1;
+						if (y - j >= spiel.m_field_size_y)
+							y = spiel.m_field_size_y + j - 1;
+					}
+					
+				}
+			
+			currentStonePos.x = x;
+			currentStonePos.y = y;
 		}
 	}
 
@@ -295,9 +322,11 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					highlightStone = row * 11 + col;
 					if (col > 11 || row > 1 || col < 0 || row < 0 || highlightStone >= 21)
 						highlightStone = -1;
+					if (currentStone == null)
+						activity.selectCurrentStone(spiel, spiel.get_current_player().get_stone(highlightStone));
 				} else if (currentStone != null) {
-					stone_rel_x = (int)(0.5f + renderer.currentStone_x - fieldPoint.x - (float)currentStone.get_stone_size() / 2.0f);
-					stone_rel_y = (int)(0.5f + renderer.currentStone_y - fieldPoint.y - (float)currentStone.get_stone_size() / 2.0f);
+					stone_rel_x = (int)(0.5f + renderer.currentStonePos.x - fieldPoint.x - (float)currentStone.get_stone_size() / 2.0f);
+					stone_rel_y = (int)(0.5f + renderer.currentStonePos.y - fieldPoint.y - (float)currentStone.get_stone_size() / 2.0f);
 					if ((Math.abs(stone_rel_x) < 9) &&
 						(Math.abs(stone_rel_y) < 9)) {
 						dragStone = true;
@@ -336,18 +365,20 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 						renderer.currentWheelAngle += 8.0f * (originalPos.x - unifiedPoint.x);
 						originalPos.x = unifiedPoint.x;
 						
-						if (Math.abs(renderer.currentWheelAngle - originalWheelAngle) >= 15.0f)
+						if (Math.abs(renderer.currentWheelAngle - originalWheelAngle) >= 90.0f) {
 							highlightStone = -1;
+							activity.selectCurrentStone(spiel, null);
+						}
 						
 						if (highlightStone >= 0 && unifiedPoint.y >= 0) {
-							if (Math.abs(renderer.currentWheelAngle - originalWheelAngle) < 15.0f) {
+							if (Math.abs(renderer.currentWheelAngle - originalWheelAngle) < 90.0f) {
 								dragStone = true;
-								renderer.currentWheelAngle = originalWheelAngle;
+//								renderer.currentWheelAngle = originalWheelAngle;
 								currentStone = spiel.get_current_player().get_stone(highlightStone);
+								activity.selectCurrentStone(spiel, spiel.get_current_player().get_stone(highlightStone));
 								highlightStone = -1;
 								if (currentStone != null) {
-									renderer.currentStone_x = (int)fieldPoint.x;
-									renderer.currentStone_y = (int)fieldPoint.y;
+									renderer.setStonePosition(currentStone, (int)fieldPoint.x, (int)fieldPoint.y);
 									stone_rel_x = 0;
 									stone_rel_y = 0;
 								}
@@ -355,13 +386,20 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 						}
 					}
 				} else {
-					renderer.currentStone_x = (int)fieldPoint.x + stone_rel_x + currentStone.get_stone_size() / 2;
-					renderer.currentStone_y = (int)fieldPoint.y + stone_rel_y + currentStone.get_stone_size() / 2;
-					
+					originalPos.x = unifiedPoint.x;
+					int x = (int)fieldPoint.x + stone_rel_x + currentStone.get_stone_size() / 2;
+					int y = (int)fieldPoint.y + stone_rel_y + currentStone.get_stone_size() / 2;
+					renderer.setStonePosition(currentStone, x, y);
+					unifiedPoint.x = x;
+					unifiedPoint.y = y;
+					fieldToUnified(unifiedPoint);
+					if (unifiedPoint.y < -2.0f) {
+						highlightStone = currentStone.get_number();
+						dragStone = false;
+						currentStone = null;
+						renderer.setStonePosition(null, 0, 0);
+					}
 				}
-
-//				oy = p.y;
-				
 			}
 			requestRender();
 			break;
@@ -388,13 +426,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		requestRender();
 	}
 
-	@Override
-	public void setCurrentStone(Stone stone) {
-		this.currentStone = stone;
-		renderer.currentStone_x = -100;
-		renderer.currentStone_y = -100;
-	}
-	
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		renderer.updateModelViewMatrix = true;

@@ -43,7 +43,9 @@ public class Player {
 		return m_number;
 	}
 	
-	public Stone get_stone(int n) {
+	final public Stone get_stone(int n) {
+		if (n < 0 || n > m_stone.length)
+			return null;
 		return m_stone[n];
 	}
 	

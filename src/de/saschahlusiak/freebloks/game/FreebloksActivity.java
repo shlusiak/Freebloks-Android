@@ -343,4 +343,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
 	}
+
+	@Override
+	public void selectCurrentStone(Spiel spiel, Stone stone) {
+		currentStone = stone;
+	}
 }

@@ -9,5 +9,4 @@ public interface ViewInterface {
 	void setSpiel(SpielClient spiel);
 	SpielClient getSpiel();
 	void updateView();
-	void setCurrentStone(Stone stone);
 }
