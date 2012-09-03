@@ -201,6 +201,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			listener.start();
 		}
 		
+		if (spielthread != null)
+			spielthread.spiel.disconnect();
+		
 		new ConnectTask(request_player, (server == null)).execute(server);
 	}
 

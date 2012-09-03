@@ -2,13 +2,9 @@ package de.saschahlusiak.freebloks.controller;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.channels.SocketChannel;
-
 import android.util.Log;
-
 import de.saschahlusiak.freebloks.model.Ki;
 import de.saschahlusiak.freebloks.model.Player;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
@@ -122,41 +118,55 @@ public class SpielServer extends Spielleiter {
 		}
 	}
 	
-	synchronized void do_computer_turn() {
-		if (m_current_player < 0)
-			return;
-		if (spieler[m_current_player] != PLAYER_COMPUTER)
-			return;
-
-		/* Ermittle CTurn, den die KI jetzt setzen wuerde */
-		Turn turn=m_ki.get_ki_turn(this, current_player(), ki_mode);
-		if (turn != null) {
-			/* Datenstruktur fuellen, die an die Clients geschickt werden soll. */
-			NET_SET_STONE data = new NET_SET_STONE();
-
-			data.player = current_player();
-			data.stone = turn.m_stone_number;
-			data.mirror_count = turn.m_mirror_count;
-			data.rotate_count = turn.m_rotate_count;
-			data.x = turn.m_x;
-			data.y = turn.m_y;
-			/* Zug lokal wirklich setzen, wenn Fehlschlag, ist das Spiel wohl nicht mehr synchron */
-			if ((is_valid_turn(turn) == Stone.FIELD_DENIED) ||
-			   (set_stone(turn) != Stone.FIELD_ALLOWED))
-			{
-				Log.e(tag, "Game not in sync (2)");
-				return;
-			}
-			/* sonst Spielzug an alle Clients uebermitteln */
-			send_all(data);
-			/* Sowie den Zug der History anhaengen */
-			addHistory(turn);
+	private class AIThread extends Thread {
+		private final String tag = AIThread.class.getSimpleName();
+		
+		@Override
+		public void run() {
+			Log.d(tag, "start");
+			do_computer_turn();
+			next_player();
+			send_current_player();
+			Log.d(tag, "finish");
 		}
-		/* Naechsten Spieler ermitteln */
-		next_player();
-		/* Ausgewaehlten aktuellen Spieler an alle Clients schicken */
-		send_current_player();
+		
+		void do_computer_turn() {
+			/* Ermittle CTurn, den die KI jetzt setzen wuerde */
+			Turn turn=m_ki.get_ki_turn(SpielServer.this, current_player(), ki_mode);
+			if (turn != null) {
+				/* Datenstruktur fuellen, die an die Clients geschickt werden soll. */
+				NET_SET_STONE data = new NET_SET_STONE();
+
+				data.player = current_player();
+				data.stone = turn.m_stone_number;
+				data.mirror_count = turn.m_mirror_count;
+				data.rotate_count = turn.m_rotate_count;
+				data.x = turn.m_x;
+				data.y = turn.m_y;
+				/* Zug lokal wirklich setzen, wenn Fehlschlag, ist das Spiel wohl nicht mehr synchron */
+				if ((is_valid_turn(turn) == Stone.FIELD_DENIED) ||
+				   (set_stone(turn) != Stone.FIELD_ALLOWED))
+				{
+					Log.e(tag, "Game not in sync (2)");
+					return;
+				}
+				/* sonst Spielzug an alle Clients uebermitteln */
+				send_all(data);
+				/* Sowie den Zug der History anhaengen */
+				addHistory(turn);
+			}
+		}
+
 	}
+	
+	boolean is_computer_turn() {
+		if (m_current_player < 0)
+			return false;
+		if (spieler[m_current_player] != PLAYER_COMPUTER)
+			return false;
+		return true;
+	}
+	
 
 		/**
 		 * Verarbeitet eine einzige Nachricht eines bestimmten Clients, von dem Daten anliegen
@@ -272,8 +282,6 @@ public class SpielServer extends Spielleiter {
 						return;
 					}
 //		 			printf("Client %d requesting undo. ",client);
-					NET_UNDO_STONE undo;
-					int i=0;
 					/* Solange Steine zurueck nehmen, bis keine mehr in der History vorliegen,
 					   oder ein menschlicher Spieler wieder dran ist. */
 					do
@@ -281,7 +289,6 @@ public class SpielServer extends Spielleiter {
 						Turn turn = history.get_last_turn();
 						if (turn == null)
 							break; // Kein Zug mehr in der History
-						i++;
 						// "Zug zuruecknehmen" an Clients senden
 						send_all(data);
 						// Spieler von zurueckgenommenen Stein ist wieder dran
@@ -388,7 +395,8 @@ public class SpielServer extends Spielleiter {
 			send_all(new NET_START_GAME());
 			send_current_player();
 			
-			do_computer_turn();
+			if (is_computer_turn())
+				new AIThread().start();
 		}
 
 		/**
@@ -403,7 +411,11 @@ public class SpielServer extends Spielleiter {
 				if (get_player(m_current_player).m_number_of_possible_turns > 0) {
 //		 			printf("Spieler %d ist dran: Hat %d moegliche Zuege.\n",m_current_player,get_number_of_possible_turns(m_current_player));
 					
-					do_computer_turn();
+					if (get_num_clients() <= 0)
+						return;
+					
+					if (is_computer_turn())
+						new AIThread().start();
 					
 					return;
 				}//else printf("Spieler %d muss aussetzen.\n",m_current_player);
