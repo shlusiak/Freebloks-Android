@@ -5,5 +5,31 @@
     <PreferenceCategory android:title="@string/preferences_view" >
 
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="About..." >
+
+        <PreferenceScreen
+            android:summary="Please fork me!"
+            android:title="Freebloks on GitHub..." >
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/shlusiak/Freebloks-Android" />
+        </PreferenceScreen>
+        
+        <PreferenceScreen
+            android:summary="Please rate or leave a comment"
+            android:title="Freebloks in Google Play..." >
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=de.saschahlusiak.freebloks" />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="Copyright (c) by Sascha Hlusiak, 2012."
+            android:title="About Freebloks..." >
+        </PreferenceScreen>
+    </PreferenceCategory>    
 
 </PreferenceScreen>
