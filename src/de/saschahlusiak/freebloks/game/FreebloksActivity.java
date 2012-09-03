@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -270,6 +271,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void newCurrentPlayer(int player) {
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
 		selectCurrentStone(spiel, null);
+
+		final int visibility = spiel.is_local_player() ? View.VISIBLE : View.INVISIBLE;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				findViewById(R.id.flipVertically).setVisibility(visibility);
+				findViewById(R.id.flipHorizontally).setVisibility(visibility);
+				findViewById(R.id.rotateLeft).setVisibility(visibility);
+				findViewById(R.id.rotateRight).setVisibility(visibility);
+				
+				findViewById(R.id.progressBar).setVisibility(spiel.is_local_player() ? View.GONE : View.VISIBLE);
+			}
+		});
 	}
 
 	@Override
@@ -352,7 +366,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void selectCurrentStone(SpielClient spiel, Stone stone) {
+	public void selectCurrentStone(SpielClient spiel, final Stone stone) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				findViewById(R.id.rotateLeft).setEnabled(stone != null);
+				findViewById(R.id.rotateRight).setEnabled(stone != null);
+				findViewById(R.id.flipHorizontally).setEnabled(stone != null);
+				findViewById(R.id.flipVertically).setEnabled(stone != null);
+			}
+		});
+		
 		currentStone = stone;
 	}
 
