@@ -6,6 +6,9 @@ import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.TextView;
 
 public class StartScreenActivity extends Activity {
 	private static final int DIALOG_JOIN = 1;
@@ -23,6 +27,15 @@ public class StartScreenActivity extends Activity {
 
 		setContentView(R.layout.start_screen);
 		
+		PackageInfo pinfo;
+		try {
+			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			((TextView)findViewById(R.id.version)).setText("version: " + pinfo.versionName);
+		} catch (NameNotFoundException e) {
+			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
+			e.printStackTrace();
+		}
+				
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

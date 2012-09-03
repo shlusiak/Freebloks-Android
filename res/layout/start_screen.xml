@@ -51,4 +51,46 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="WARNING:"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffff0000"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:gravity="center_horizontal"
+        android:text="This is a development version of Freebloks! Please do not complain if something does not work yet. Freebloks is OpenSource, so please try to get involved on GitHub:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2"
+        android:autoLink="web"
+        android:gravity="center_horizontal"
+        android:text="https://github.com/shlusiak/Freebloks-Android"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView3"
+        android:gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>

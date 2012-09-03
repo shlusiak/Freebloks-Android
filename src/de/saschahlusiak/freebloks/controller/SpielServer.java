@@ -123,11 +123,9 @@ public class SpielServer extends Spielleiter {
 		
 		@Override
 		public void run() {
-			Log.d(tag, "start");
 			do_computer_turn();
 			next_player();
 			send_current_player();
-			Log.d(tag, "finish");
 		}
 		
 		void do_computer_turn() {
