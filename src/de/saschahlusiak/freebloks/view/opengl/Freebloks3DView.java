@@ -39,15 +39,18 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		BoardRenderer board;
 		Stone currentStone; /* current Stone of current player, if local */
 		int currentStone_x, currentStone_y;
+		int currentPlayer;
+		float currentWheelAngle = 0.0f;
 
 		public MyRenderer() {
 			init();
 		}
 
 		public void init() {
+			currentPlayer = -1;
 			board = new BoardRenderer(spiel);
 		}
-		
+
 		public synchronized PointF windowToModel(PointF point) {
 			float outputfar[] = new float[4];
 			float outputnear[] = new float[4];
@@ -89,7 +92,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
-			gl.glTranslatef(0, 4.0f, 0);
+			gl.glTranslatef(0, 9.0f, 0);
 			GLU.gluLookAt(gl, 
 					(float) (camera_distance*Math.sin(-mAngleY*Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 					(float) (camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
@@ -98,7 +101,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					0.0f, 1.0f, 0.0f);
 			if (updateModelViewMatrix) {
 				GL11 gl11 = (GL11)gl;
-				Log.w("onDrawFrame", "updating modelViewMatrix");
+//				Log.w("onDrawFrame", "updating modelViewMatrix");
 				gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
 				updateModelViewMatrix = false;
 			}
@@ -118,24 +121,11 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				gl.glPopMatrix();
 			}
 
-
-			for (int i = 0; i < 4; i++) {
-				if (currentStone != null && spiel != null && spiel.is_local_player(i)) {
-					if (currentStone_x < 0 || currentStone_y < 0) {
-						gl.glPushMatrix();
-					
-						gl.glRotatef(90.0f * (float)i - mAngleY, 0, 1, 0);
-						gl.glTranslatef(0, 1.0f, 15.0f);
-						gl.glRotatef(mAngleY, 0, 1, 0);
-						gl.glScalef(1.7f, 1.7f, 1.7f);
-						board.renderPlayerStone(gl, i, currentStone);
-						
-						gl.glPopMatrix();
-					}
-				} else {
-					board.renderPlayerStones(gl, i);
-				}
-				gl.glRotatef(-90, 0, 1, 0);
+			if (currentPlayer >= 0) {
+				gl.glPushMatrix();
+				gl.glRotatef(angleY, 0, 1, 0);
+				board.renderPlayerStones(gl, currentPlayer, currentWheelAngle);
+				gl.glPopMatrix();
 			}
 		}
 
@@ -198,7 +188,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	Stone currentStone;
 	MyRenderer renderer;
 	ActivityInterface activity;
-	float angleX = 60.0f;
+	float angleX = 70.0f;
 	float angleY = 0.0f;
 	float zoom = 30;
 	
@@ -239,12 +229,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		return (float)Math.sqrt(x * x + y * y);
 	}
 	
-	float mPreviousX;
-	float mPreviousY;
+
 	float oldDist;
-	boolean move;
-	boolean placed;
-	int ox, oy;
+	float ox, oy;
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
@@ -256,9 +243,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
-			move = false;
-			ox = (int)p.x;
-			oy = (int)p.y;
+			ox = p.x;
+			oy = p.y;
+			
 			requestRender();
 			break;
 			
@@ -275,7 +262,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    	renderer.updateModelViewMatrix = true;
 					renderer.setAngle(angleX, angleY, zoom);
 			    }
-			} else if (spiel.is_local_player()){
+			} else {
 /*				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
 				angleX += (float)(event.getY() - mPreviousY) / (float)getHeight() * 180.0f;
 				if (angleX < 20)
@@ -284,18 +271,16 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					angleX = 90; 
 				renderer.setAngle(angleX, angleY, zoom);
  				*/
-				if (!placed) {
-					renderer.currentStone_x = (int)p.x;
-					renderer.currentStone_y = (int)p.y;
-					placed = true;
-				} else {
-					renderer.currentStone_x += (int)p.x - ox;
-					renderer.currentStone_y += (int)p.y - oy;
+
+				if (oy < 0) {
+					/* everything underneath row 0 spins the wheel */
+					renderer.currentWheelAngle += 8.0f * (ox - p.x);
+					
+					ox = p.x;
 				}
-				ox = (int)p.x;
-				oy = (int)p.y;
+
+//				oy = p.y;
 				
-				move = true;
 			}
 			requestRender();
 			break;
@@ -305,29 +290,12 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			break;
 			
 		case MotionEvent.ACTION_UP:
-			if (move == false && spiel.is_local_player()) {
-				if (currentStone != null && placed && (Math.abs((int)p.x - renderer.currentStone_x) < 5) &&  (Math.abs((int)p.y - renderer.currentStone_y) < 5)) {
-					if (spiel.is_valid_turn(currentStone, spiel.current_player(), 19 - renderer.currentStone_y, renderer.currentStone_x) == Stone.FIELD_ALLOWED) {
-						Log.d("place", "x = " + renderer.currentStone_x + ", y = " + renderer.currentStone_y);
-						spiel.set_stone(currentStone, 19 - renderer.currentStone_y, renderer.currentStone_x);
-					
-						setCurrentStone(null);
-					} else {
-						Log.d("place", "NOT PLACING, x = " + renderer.currentStone_x + ", y = " + renderer.currentStone_y);
-					}
-					requestRender();
-				} else {
-					activity.OnShowStoneSelect();
-				}
-			}
 			break;
 			
 		default:
 			break;
 		}
 		
-		mPreviousX = event.getX();
-		mPreviousY = event.getY();
 //		return super.onTouchEvent(event);
 		return true;
 	}
@@ -341,7 +309,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	public void setCurrentStone(Stone stone) {
 		this.currentStone = stone;
 		renderer.currentStone = stone;
-		placed = false;
 		renderer.currentStone_x = -100;
 		renderer.currentStone_y = -100;
 	}
@@ -354,8 +321,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		// TODO Auto-generated method stub
-		
+		renderer.currentPlayer = player;
 		updateView();
 	}
 

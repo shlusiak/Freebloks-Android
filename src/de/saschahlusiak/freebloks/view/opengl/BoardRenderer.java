@@ -15,8 +15,8 @@ import de.saschahlusiak.freebloks.model.Stone;
 
 public class BoardRenderer {
 	final static float bevel_size = 0.18f;
-	final static float bevel_height = 0.15f;
-	final static float border_bottom = -0.6f;
+	final static float bevel_height = 0.25f;
+	final static float border_bottom = -1.2f;
 	final public static float stone_size = 0.45f;
 	
 	private ShortBuffer _indexBuffer_field;
@@ -286,35 +286,59 @@ public class BoardRenderer {
     	gl.glDisable(GL10.GL_BLEND);
 	}
 	
-	public void renderPlayerStones(GL10 gl, int player) {
+	public void renderPlayerStones(GL10 gl, int player, float wheelAngle) {
+		final float da = 17.0f;
+		float angle = wheelAngle + 9.5f * 0.5f * da;
+		
 		if (spiel == null)
 			return;
 		
-		gl.glPushMatrix();
-		gl.glTranslatef(-stone_size * (spiel.m_field_size_x), 0, stone_size * (spiel.m_field_size_x + 5));
 		
-		gl.glScalef(0.6f, 0.6f, 0.6f);
+		gl.glPushMatrix();
+		gl.glTranslatef(0, -stone_size * 27.0f, 0);
+		gl.glRotatef(wheelAngle, 0, 0, 1);
+		gl.glTranslatef(-stone_size * 5.1f * 6.5f, 0, stone_size * (spiel.m_field_size_x + 8));
+		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
+		gl.glPushMatrix();
+//		gl.glScalef(0.6f, 0.6f, 0.6f);
 		Player p = spiel.get_player(player);
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++) {
 			Stone s = p.get_stone(i);
+			float alpha = 1.0f;
+			while (angle < -180f)
+				angle += 360.0f;
+			while (angle > 180.0f)
+				angle -= 360.0f;
+			
+			alpha = 1.0f / (1.0f + Math.abs(angle) / 50.0f);
+			
 			if (s.get_available() > 0)
-				renderPlayerStone(gl, player, s);
-			gl.glTranslatef(stone_size * 2.0f * 5.5f, 0, 0);
-			if (i % 7 == 6)
-				gl.glTranslatef(-stone_size * 2.0f * 5.5f * 7, 0, stone_size * 2.0f * 5.5f);
+				renderPlayerStone(gl, player, s, alpha);
+			
+			gl.glTranslatef(stone_size * 2.0f * 5.1f, 0, 0);
+			if (i % 11 == 10) {
+				gl.glPopMatrix();
+				gl.glTranslatef(0, 0, stone_size * 2.0f * 5.1f);
+				angle = wheelAngle + 9.5f * 0.5f * da;
+				gl.glPushMatrix();
+			} else {
+				gl.glRotatef(-da, 0, 0, 1);
+				angle -= da;
+			}
 		}
 		
 		gl.glPopMatrix();
+		gl.glPopMatrix();
 	}
 	
-	public void renderPlayerStone(GL10 gl, int player, Stone stone) {
+	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {
 		int i;
 		gl.glTranslatef(-stone.get_stone_size() * stone_size, 0, -stone.get_stone_size() * stone_size);
 		for (i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
 				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
-					renderStone(gl, player, 0.65f);
+					renderStone(gl, player, 0.65f * alpha);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);

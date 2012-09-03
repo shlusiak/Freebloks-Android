@@ -37,7 +37,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_LOBBY = 2;
-	static final int DIALOG_STONE_SELECT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
 
 	ViewInterface view;
@@ -224,17 +223,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					spiel.disconnect();
 				}
 			});
-			
-		case DIALOG_STONE_SELECT:
-			return new StoneSelectDialog(this, new StoneSelectDialog.OnStoneSelectListener() {
-				@Override
-				public void onClick(DialogInterface dialog, Stone stone) {
-					currentStone = stone;
-					view.setCurrentStone(stone);
-					view.updateView();
-				}
-			}, spiel.get_current_player());
-			
+		
 		case DIALOG_GAME_FINISH:
 			return new GameFinishDialog(this);
 			
@@ -276,11 +265,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void OnShowStoneSelect() {
-		showDialog(DIALOG_STONE_SELECT);
 	}
 
 	@Override
