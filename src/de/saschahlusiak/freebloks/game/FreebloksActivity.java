@@ -274,7 +274,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
 		selectCurrentStone(spiel, null);
 
-		final int visibility = spiel.is_local_player() ? View.VISIBLE : View.INVISIBLE;
+		final int visibility = (spiel.is_local_player()) ? View.VISIBLE : View.INVISIBLE;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -283,7 +283,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				findViewById(R.id.rotateLeft).setVisibility(visibility);
 				findViewById(R.id.rotateRight).setVisibility(visibility);
 				
-				findViewById(R.id.progressBar).setVisibility(spiel.is_local_player() ? View.GONE : View.VISIBLE);
+				findViewById(R.id.progressBar).setVisibility((spiel.is_local_player() || spiel.current_player() < 0) ? View.GONE : View.VISIBLE);
 			}
 		});
 	}
