@@ -436,8 +436,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			if (!stoneMoved && dragStone && currentStone != null) {
 				activity.commitCurrentStone(spiel, currentStone, renderer.currentStonePos.x, renderer.currentStonePos.y);
 				currentStone = null;
+				highlightStone = -1;
 			}
-			highlightStone = -1;
 			requestRender();
 			break;
 			
