@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.saschahlusiak.freebloks"
     android:versionCode="1"
-    android:versionName="0.0.1" >
+    android:versionName="0.0.1_pre1" >
 
     <uses-sdk android:minSdkVersion="8" 
         android:targetSdkVersion="15" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
