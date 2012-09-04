@@ -381,6 +381,11 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					if (originalPos.y < 0) {
 						/* everything underneath row 0 spins the wheel */
 						renderer.currentWheelAngle += 8.0f * (originalPos.x - unifiedPoint.x);
+						while (renderer.currentWheelAngle > 180)
+							renderer.currentWheelAngle -= 360.0f;
+						while (renderer.currentWheelAngle < -180)
+							renderer.currentWheelAngle += 360.0f;
+						
 						originalPos.x = unifiedPoint.x;
 						
 						if (Math.abs(renderer.currentWheelAngle - originalWheelAngle) >= 90.0f) {
