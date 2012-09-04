@@ -21,7 +21,7 @@
             <Button
                 android:id="@+id/new_game"
                 android:layout_width="wrap_content"
-                android:layout_height="52dp"
+                android:layout_height="54dp"
                 android:text="@string/new_local_game"
                 android:layout_weight="1"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -39,7 +39,7 @@
         <Button
             android:id="@+id/join_game"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="54dp"
             android:text="@string/join_game"
             android:textAppearance="?android:attr/textAppearanceMedium" />
         
