@@ -119,6 +119,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
 		if (spielthread != null) {
 			spiel = spielthread.spiel;
+			spiel.addClientInterface(this);
 		} else {
 			startNewGame();
 		}
@@ -179,6 +180,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		spiel.removeClientInterface(this);
 		super.onDestroy();
 	}
 	
