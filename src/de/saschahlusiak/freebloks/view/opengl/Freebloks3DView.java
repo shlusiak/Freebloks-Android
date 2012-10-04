@@ -250,7 +250,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		int stone_rel_x, stone_rel_y;
 		int texture[];
 		SimpleModel overlay;
-		boolean isvalid;
 		
 		
 		CurrentStone() {
@@ -258,7 +257,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			pos.y = -50;
 			float s = 5.5f;
 			texture = null;
-			isvalid = false;
 			
 			overlay = new SimpleModel(4, 2);
 			overlay.addVertex(-s, 0, s, 0, -1, 0, 0, 0);
@@ -315,6 +313,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				gl.glEnable(GL10.GL_BLEND);
 				gl.glDisable(GL10.GL_DEPTH_TEST);
 				
+				boolean isvalid = spiel.is_valid_turn(stone, showPlayer, 19 - pos.y, pos.x) == Stone.FIELD_ALLOWED;
 				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
 
 			    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
@@ -358,8 +357,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			if (currentStone.pos.x != x || currentStone.pos.y != y) {
 				currentStone.pos.x = x;
 				currentStone.pos.y = y;
-				
-				isvalid = spiel.is_valid_turn(stone, showPlayer, 19 - y, x) == Stone.FIELD_ALLOWED;
 				return true;
 			}
 			return false;
