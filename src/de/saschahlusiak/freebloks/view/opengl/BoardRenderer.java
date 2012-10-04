@@ -198,12 +198,13 @@ public class BoardRenderer {
 		initStone();
 	}
 
-	public void renderBoard(GL10 gl) {
-		float diffuse[]={0.43f,0.43f,0.38f,1.0f};
-		float specular[]={0.27f,0.25f,0.25f,1.0f};
-		float shininess[]={35.0f};	    
+	public void renderBoard(GL10 gl, int currentPlayer) {
+		float diffuse_normal[] = {0.43f,0.43f,0.38f,1.0f};
+		float diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
+		float specular[] = {0.27f,0.25f,0.25f,1.0f};
+		float shininess[] = {35.0f};
 
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
 	 
@@ -218,13 +219,19 @@ public class BoardRenderer {
 	    for (int y = 0; y < spiel.m_field_size_y; y++) {
 	    	int x;
 	    	for (x = 0; x < spiel.m_field_size_y; x++) {
+	    		if (currentPlayer >= 0 && spiel.get_game_field(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
+	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_available, 0);
+	    		else
+	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
+
 	    		gl.glDrawElements(GL10.GL_TRIANGLES, _indicesArray_field.length, GL10.GL_UNSIGNED_SHORT, _indexBuffer_field);	    		
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
 	    	}
 	    	gl.glTranslatef(- x * stone_size * 2.0f, 0, stone_size * 2.0f);
 	    }
 	    gl.glPopMatrix();
-	    
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
+
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, _vertexBuffer_border);
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, _normalBuffer_border);
 	    for (int i = 0; i < 4; i++) {
