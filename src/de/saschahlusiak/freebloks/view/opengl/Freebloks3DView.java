@@ -203,8 +203,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			
 			if (currentStone.stone != null) {
 				currentStone.stone = s;
-				activity.selectCurrentStone(spiel, s);
 			}
+			activity.selectCurrentStone(spiel, s);
 		}
 		
 		void handleMove() {
