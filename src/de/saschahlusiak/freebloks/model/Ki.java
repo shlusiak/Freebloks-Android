@@ -11,7 +11,7 @@ public class Ki {
 	public static final int EASY = 120;
 	
 	public Ki() {
-		num_threads = 1;
+		num_threads = 2;
 	}
 	
 	void setNum_threads(int threads) {
