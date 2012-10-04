@@ -15,10 +15,17 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.view.ViewInterface;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Typeface;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.opengl.GLUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -108,7 +115,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-
+			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+			
 			board.renderBoard(gl, showPlayer);
 			board.renderField(gl);
 			if (currentStone.stone != null && spiel != null && spiel.is_local_player()) {
@@ -166,6 +174,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light0_specular, 0);
 			
 			renderer.updateModelViewMatrix = true;
+			currentStone.updateTexture(gl);
 		}
 
 		float mAngleX;
@@ -239,17 +248,90 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		Point pos = new Point();
 		boolean dragging, hasMoved;
 		int stone_rel_x, stone_rel_y;
+		int texture[];
+		SimpleModel overlay;
+		boolean isvalid;
+		
 		
 		CurrentStone() {
 			pos.x = -50;
 			pos.y = -50;
+			float s = 5.5f;
+			texture = null;
+			isvalid = false;
+			
+			overlay = new SimpleModel(4, 2);
+			overlay.addVertex(-s, 0, s, 0, -1, 0, 0, 0);
+			overlay.addVertex(+s, 0, s, 0, -1, 0, 1, 0);
+			overlay.addVertex(+s, 0, -s, 0, -1, 0, 1, 1);
+			overlay.addVertex(-s, 0, -s, 0, -1, 0, 0, 1);
+			overlay.addIndex(0, 1, 2);
+			overlay.addIndex(0, 2, 3);
+			
+			overlay.commit();
 		}
+		
+		void updateTexture(GL10 gl) {
+			if (texture == null)
+				texture = new int[1];
+
+			gl.glGenTextures(1, texture, 0);
+
+			Bitmap bmp = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
+			Canvas canvas = new Canvas(bmp);
+
+			canvas.drawColor(Color.TRANSPARENT);
+			
+			Paint paint = new Paint();
+			paint.setAntiAlias(true);
+			paint.setStyle(Style.FILL_AND_STROKE);
+			paint.setColor(Color.argb(240, 255, 255, 255));
+			canvas.drawCircle(64, 64, 64, paint);
+			
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);		
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bmp, 0);
+
+			bmp.recycle();
+		}
+		
+		final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 0.50f };
+		final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 0.50f };
 		
 		void render(GL10 gl) {
 			if (pos.x > -50 && pos.y > -50) {
 				gl.glPushMatrix();
 				gl.glTranslatef(0, 0.3f, 0.0f);
+				
+				gl.glPushMatrix();
+			    gl.glTranslatef(
+			    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(currentStone.pos.x + currentStone.stone.get_stone_size() / 2),
+			    		0,
+			    		+BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)(currentStone.pos.y - currentStone.stone.get_stone_size() / 2));
+
+			    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
+				gl.glEnable(GL10.GL_TEXTURE_2D);
+				gl.glEnable(GL10.GL_BLEND);
+				gl.glDisable(GL10.GL_DEPTH_TEST);
+				
+				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
+
+			    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
+			    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
+			    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
+			    
+			    overlay.drawElements(gl, GL10.GL_TRIANGLES);
+			    
+			    gl.glPopMatrix();
+			    
+				gl.glDisable(GL10.GL_BLEND);
+				gl.glDisable(GL10.GL_TEXTURE_2D);
+				
 				renderer.board.renderPlayerStone(gl, spiel.current_player(), currentStone.stone, currentStone.pos.x, currentStone.pos.y);
+				
+				gl.glEnable(GL10.GL_DEPTH_TEST);
+				
 				gl.glPopMatrix();
 			}
 		}
@@ -271,12 +353,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 						if (y - j >= spiel.m_field_size_y)
 							y = spiel.m_field_size_y + j - 1;
 					}
-					
 				}
 			
 			if (currentStone.pos.x != x || currentStone.pos.y != y) {
 				currentStone.pos.x = x;
 				currentStone.pos.y = y;
+				
+				isvalid = spiel.is_valid_turn(stone, showPlayer, 19 - y, x) == Stone.FIELD_ALLOWED;
 				return true;
 			}
 			return false;
