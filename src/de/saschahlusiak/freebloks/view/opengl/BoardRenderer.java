@@ -15,13 +15,8 @@ public class BoardRenderer {
 	final static float border_bottom = -1.2f;
 	final public static float stone_size = 0.45f;
 	
-	private ShortBuffer _indexBuffer_field;
-	private FloatBuffer _vertexBuffer_field;
-	private FloatBuffer _normalBuffer_field;
-
-	private ShortBuffer _indexBuffer_border;
-	private FloatBuffer _vertexBuffer_border;
-	private FloatBuffer _normalBuffer_border;
+	SimpleModel field;
+	SimpleModel border;
 
 	private ShortBuffer _indexBuffer_stone;
 	private FloatBuffer _normalBuffer_stone;
@@ -32,47 +27,6 @@ public class BoardRenderer {
     final float y2 = 0.0f;
     
     Spiel spiel;
-    
-    final private float[] coords_field = {
-    	/* lower */
-        -r2, y1,  r2,	/* 0 */
-         r2, y1,  r2,	/* 1 */
-         r2, y1, -r2,	/* 2 */
-        -r2, y1, -r2,	/* 3 */
-        
-        /* middle */
-        -r1, y2,  r1,	/* 4 */
-         r1, y2,  r1,	/* 5 */
-         r1, y2, -r1,	/* 6 */
-        -r1, y2, -r1,	/* 7 */
-    };
-    
-    final private float[] normals_field = {
-    	/* lower */
-        0, 1, 0,	/* 0 */
-        0, 1, 0,	/* 1 */
-        0, 1, 0,	/* 2 */
-        0, 1, 0,	/* 3 */
-        
-        /* upper */
-         1, 1, -1,	/* 4 */
-        -1, 1, -1,	/* 5 */
-        -1, 1,  1,	/* 6 */
-         1, 1,  1,	/* 7 */
-    };
-    
-	final private short[] _indicesArray_field = {
-		0, 1, 2,
-		0, 2, 3,
-		0, 5, 1,
-		0, 4, 5,
-		1, 5, 6,
-		1, 6, 2,
-		2, 6, 7,
-		2, 7, 3,
-		3, 7, 4,
-		3, 4, 0
-	};
 	
     final private float[] normals_stone = {
     	/* lower */
@@ -101,33 +55,32 @@ public class BoardRenderer {
 		3, 0, 4
 	};	
 
-	final private short[] _indicesArray_border = {
-			0, 1, 2,
-			0, 2, 3,
-	};
+
 
 	private void initField() {
-	    // float has 4 bytes
-	    ByteBuffer vbb = ByteBuffer.allocateDirect(coords_field.length * 4);
-	    vbb.order(ByteOrder.nativeOrder());
-	    _vertexBuffer_field = vbb.asFloatBuffer();
-	    
-	    vbb = ByteBuffer.allocateDirect(normals_field.length * 4);
-	    vbb.order(ByteOrder.nativeOrder());
-	    _normalBuffer_field = vbb.asFloatBuffer();
-	 
-	    // short has 2 bytes
-	    ByteBuffer ibb = ByteBuffer.allocateDirect(_indicesArray_field.length * 2);
-	    ibb.order(ByteOrder.nativeOrder());
-	    _indexBuffer_field = ibb.asShortBuffer();
+		field = new SimpleModel(8, 10);
+		field.addVertex(-r2, y1, +r2,  0, 1, 0,  0, 0);
+		field.addVertex(+r2, y1, +r2,  0, 1, 0,  0, 0);
+		field.addVertex(+r2, y1, -r2,  0, 1, 0,  0, 0);
+		field.addVertex(-r2, y1, -r2,  0, 1, 0,  0, 0);
 
-	    _vertexBuffer_field.put(coords_field);
-	    _normalBuffer_field.put(normals_field);
-	    _indexBuffer_field.put(_indicesArray_field);
-
-	    _vertexBuffer_field.position(0);
-	    _normalBuffer_field.position(0);
-	    _indexBuffer_field.position(0);
+		field.addVertex(-r1, y2, +r1, +1, 1, -1,  0, 0);
+		field.addVertex(+r1, y2, +r1, -1, 1, -1,  0, 0);
+		field.addVertex(+r1, y2, -r1, -1, 1, +1,  0, 0);
+		field.addVertex(-r1, y2, -r1, +1, 1, +1,  0, 0);
+		
+		field.addIndex(0, 1, 2);
+		field.addIndex(0, 2, 3);
+		field.addIndex(0, 5, 1);
+		field.addIndex(0, 4, 5);
+		field.addIndex(1, 5, 6);
+		field.addIndex(1, 6, 2);
+		field.addIndex(2, 6, 7);
+		field.addIndex(2, 7, 3);
+		field.addIndex(3, 7, 4);
+		field.addIndex(3, 4, 0);
+		
+		field.commit();
 	}
 
 	private void initStone() {
@@ -148,47 +101,21 @@ public class BoardRenderer {
 	}
 	
 	private void initBorder() {
+		border = new SimpleModel(4, 2);
 		float w;
-	    final float[] normals_border = {
-            0, 0, 1,	/* 0 */
-            0, 0, 1,	/* 1 */
-            0, 0, 1,	/* 2 */
-            0, 0, 1,	/* 3 */
-	    };
 	    
 	    if (spiel == null)
 			w = 5.0f;
 		else
 			w = stone_size * spiel.m_field_size_x;
 
-	    final float[] coords_border = {
-	        	/* lower side */
-	             w, 0,  w,	/* 0 */
-	            -w, 0,  w,	/* 1 */
-	            -w, border_bottom,  w,	/* 2 */
-	             w, border_bottom,  w,	/* 3 */
-	        };	    
-	    
-	    ByteBuffer vbb = ByteBuffer.allocateDirect(3 * 4 * 4);
-	    vbb.order(ByteOrder.nativeOrder());
-	    _vertexBuffer_border = vbb.asFloatBuffer();
-
-	    vbb = ByteBuffer.allocateDirect(normals_border.length * 4);
-	    vbb.order(ByteOrder.nativeOrder());
-	    _normalBuffer_border = vbb.asFloatBuffer();
-
-	    // short has 2 bytes
-	    ByteBuffer ibb = ByteBuffer.allocateDirect(_indicesArray_border.length * 2);
-	    ibb.order(ByteOrder.nativeOrder());
-	    _indexBuffer_border = ibb.asShortBuffer();
-
-	    _vertexBuffer_border.put(coords_border);
-	    _normalBuffer_border.put(normals_border);
-	    _indexBuffer_border.put(_indicesArray_border);
-
-	    _vertexBuffer_border.position(0);
-	    _normalBuffer_border.position(0);
-	    _indexBuffer_border.position(0);
+		border.addVertex(w, 0, w, 0, 0, 1, 0, 0);
+		border.addVertex(-w, 0, w, 0, 0, 1, 0, 0);
+		border.addVertex(-w, border_bottom, w, 0, 0, 1, 0, 0);
+		border.addVertex(w, border_bottom, w, 0, 0, 1, 0, 0);
+		border.addIndex(0, 1, 2);
+		border.addIndex(0, 2, 3);
+		border.commit();
 	}
 	
 	BoardRenderer(Spiel spiel) {
@@ -208,8 +135,8 @@ public class BoardRenderer {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
 	 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, _vertexBuffer_field);
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, _normalBuffer_field);
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, field.getNormalBuffer());
 
 	    if (spiel == null)
 	    	return;
@@ -224,7 +151,7 @@ public class BoardRenderer {
 	    		else
 	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
 
-	    		gl.glDrawElements(GL10.GL_TRIANGLES, _indicesArray_field.length, GL10.GL_UNSIGNED_SHORT, _indexBuffer_field);	    		
+	    		field.drawElements(gl, GL10.GL_TRIANGLES);
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
 	    	}
 	    	gl.glTranslatef(- x * stone_size * 2.0f, 0, stone_size * 2.0f);
@@ -232,10 +159,10 @@ public class BoardRenderer {
 	    gl.glPopMatrix();
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, _vertexBuffer_border);
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, _normalBuffer_border);
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, border.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, border.getNormalBuffer());
 	    for (int i = 0; i < 4; i++) {
-	    	gl.glDrawElements(GL10.GL_TRIANGLES, _indicesArray_border.length, GL10.GL_UNSIGNED_SHORT, _indexBuffer_border);
+	    	border.drawElements(gl, GL10.GL_TRIANGLES);
 	    	gl.glRotatef(90, 0, 1, 0);
 	    }
 	}
@@ -278,7 +205,7 @@ public class BoardRenderer {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
 	 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, _vertexBuffer_field);
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, _normalBuffer_stone);
 	    
    		gl.glDrawElements(GL10.GL_TRIANGLES, _indicesArray_stone.length, GL10.GL_UNSIGNED_SHORT, _indexBuffer_stone);
