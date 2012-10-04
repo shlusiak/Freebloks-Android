@@ -327,7 +327,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	MyRenderer renderer;
 	ActivityInterface activity;
 	int showPlayer;
-	float zoom = 30;
+	float zoom = 28;
 	int currentPlayer;
 	
 	Wheel wheel = new Wheel();
