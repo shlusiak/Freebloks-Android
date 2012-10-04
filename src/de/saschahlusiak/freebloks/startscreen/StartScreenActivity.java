@@ -48,13 +48,6 @@ public class StartScreenActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		findViewById(R.id.continue_game).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
-		findViewById(R.id.continue_game).setEnabled(false);
 		findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
