@@ -248,6 +248,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		void render(GL10 gl) {
 			if (pos.x > -50 && pos.y > -50) {
 				gl.glPushMatrix();
+				gl.glTranslatef(0, 0.3f, 0.0f);
 				renderer.board.renderPlayerStone(gl, spiel.current_player(), currentStone.stone, currentStone.pos.x, currentStone.pos.y);
 				gl.glPopMatrix();
 			}
