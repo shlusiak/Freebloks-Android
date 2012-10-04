@@ -8,6 +8,8 @@
         android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+	<uses-feature android:name="android.hardware.screen.portrait" android:required="true"/>
+	<supports-screens android:smallScreens="false" android:normalScreens="false" android:largeScreens="true" />
 
     <application
         android:icon="@drawable/freebloks"
