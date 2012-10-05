@@ -4,12 +4,16 @@
     android:versionCode="2"
     android:versionName="0.0.1_pre2" >
 
-    <uses-sdk android:minSdkVersion="8" 
-        android:targetSdkVersion="15" />
+    <uses-sdk android:minSdkVersion="14" 
+        android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-feature android:name="android.hardware.screen.portrait" android:required="true"/>
-	<supports-screens android:smallScreens="false" android:normalScreens="false" android:largeScreens="true" />
+	<supports-screens
+	    android:smallScreens="false"
+	    android:normalScreens="true"
+	    android:largeScreens="true" 
+	    android:xlargeScreens="true" />
 
     <application
         android:icon="@drawable/freebloks"
