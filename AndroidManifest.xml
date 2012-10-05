@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.saschahlusiak.freebloks"
-    android:versionCode="2"
-    android:versionName="0.0.1_pre2" >
+    android:versionCode="3"
+    android:versionName="0.0.1_pre3" >
 
     <uses-sdk android:minSdkVersion="14" 
         android:targetSdkVersion="16" />
