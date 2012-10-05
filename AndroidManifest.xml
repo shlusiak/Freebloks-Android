@@ -13,7 +13,7 @@
 	    android:smallScreens="false"
 	    android:normalScreens="true"
 	    android:largeScreens="true" 
-	    android:xlargeScreens="true" />
+	    android:xlargeScreens="true"/>
 
     <application
         android:icon="@drawable/freebloks"

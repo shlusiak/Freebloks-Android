@@ -6,6 +6,7 @@ import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -30,6 +31,19 @@ public class GameFinishDialog extends Dialog {
 	public void setData(SpielClient spiel) {
 		int place[] = { 0, 1, 2, 3 };
 		TextView t[] = new TextView[4];
+		final int colors[] = {
+				Color.argb(96, 0, 0, 255),
+				Color.argb(96, 255, 255, 0),
+				Color.argb(96, 255, 0, 0),
+				Color.argb(96, 0, 255, 0),
+		};
+		/* TODO: translate */
+		final String names[] = {
+				"Blue",
+				"Yellow",
+				"Red",
+				"Green"
+		};
 		
 		int i = 0;
 		while ( i < Spiel.PLAYER_MAX - 1)
@@ -49,7 +63,9 @@ public class GameFinishDialog extends Dialog {
 		
 		for (i = 0; i < 4; i++) {
 			Player p = spiel.get_player(place[i]);
-			t[i].setText(String.format("Player %d: -%d points (%d stones)", place[i], p.m_stone_points_left, p.m_stone_count));
+			/* TODO: translate */
+			t[i].setText(String.format("%s: -%d points (%d stones)", names[place[i]], place[i], p.m_stone_points_left, p.m_stone_count));
+			t[i].setBackgroundColor(colors[place[i]]);
 		}
 	}
 }
