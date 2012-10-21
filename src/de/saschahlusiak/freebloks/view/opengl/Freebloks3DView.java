@@ -554,9 +554,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			
 		case MotionEvent.ACTION_UP:
 			if (!currentStone.hasMoved && currentStone.dragging) {
-				activity.commitCurrentStone(spiel, currentStone.stone, currentStone.pos.x, currentStone.pos.y);
-				currentStone.stone = null;
-				wheel.highlightStone = -1;
+				if (activity.commitCurrentStone(spiel, currentStone.stone, currentStone.pos.x, currentStone.pos.y)) {
+					currentStone.stone = null;
+					wheel.highlightStone = -1;
+				}
 			}
 			currentStone.dragging = false;
 			requestRender();

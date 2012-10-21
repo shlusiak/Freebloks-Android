@@ -383,14 +383,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void commitCurrentStone(SpielClient spiel, Stone stone, int x, int y) {
+	public boolean commitCurrentStone(SpielClient spiel, Stone stone, int x, int y) {
 		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
 		if (!spiel.is_local_player())
-			return;
+			return false;
 		if (spiel.is_valid_turn(stone, spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
-			return;
+			return false;
 		
 		spiel.set_stone(stone, 19 - y, x);
 		selectCurrentStone(spiel, null);
+		return true;
 	}
 }
