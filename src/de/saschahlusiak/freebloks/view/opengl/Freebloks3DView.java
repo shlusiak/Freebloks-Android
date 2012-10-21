@@ -247,7 +247,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		Stone stone;
 		Point pos = new Point();
 		boolean dragging, hasMoved;
-		int stone_rel_x, stone_rel_y;
+		float stone_rel_x, stone_rel_y;
 		int texture[];
 		SimpleModel overlay;
 		
@@ -366,8 +366,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			dragging = false;
 			hasMoved = false;
 			if (stone != null) {
-				stone_rel_x = (int)(0.5f + pos.x - fieldPoint.x - (float)stone.get_stone_size() / 2.0f);
-				stone_rel_y = (int)(0.5f + pos.y - fieldPoint.y - (float)stone.get_stone_size() / 2.0f);
+				stone_rel_x = (pos.x - fieldPoint.x);
+				stone_rel_y = (pos.y - fieldPoint.y);
+				
+				Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
 				if ((Math.abs(stone_rel_x) < 9) &&
 					(Math.abs(stone_rel_y) < 9)) {
 					dragging = true;
@@ -377,8 +379,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		
 		void handleMove() {
 			originalPos.x = unifiedPoint.x;
-			int x = (int)fieldPoint.x + stone_rel_x + stone.get_stone_size() / 2;
-			int y = (int)fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2;
+			int x = (int)(0.5f + fieldPoint.x + stone_rel_x);
+			int y = (int)(0.5f + fieldPoint.y + stone_rel_y);
 			hasMoved |= moveTo(x, y);
 			unifiedPoint.x = x;
 			unifiedPoint.y = y;
@@ -397,9 +399,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			
 			dragging = true;
 			hasMoved = false;
-			moveTo(x, y);
-			stone_rel_x = 0;
-			stone_rel_y = 0;
+			stone_rel_x = -(float)stone.get_stone_size() / 2.0f;
+			stone_rel_y =  (float)stone.get_stone_size() / 2.0f;
+			handleMove();
 		}
 	}
 	
