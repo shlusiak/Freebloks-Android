@@ -64,7 +64,10 @@ public class GameFinishDialog extends Dialog {
 		for (i = 0; i < 4; i++) {
 			Player p = spiel.get_player(place[i]);
 			/* TODO: translate */
-			t[i].setText(String.format("%s: -%d points (%d stones)", names[place[i]], place[i], p.m_stone_points_left, p.m_stone_count));
+			t[i].setText(String.format("%s: -%d points (%d stones)",
+					names[place[i]],
+					p.m_stone_points_left,
+					p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);
 		}
 	}
