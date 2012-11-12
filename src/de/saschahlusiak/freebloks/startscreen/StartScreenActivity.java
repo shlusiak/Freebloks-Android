@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.startscreen;
 
+import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.FreebloksActivity;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
@@ -10,6 +11,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -100,5 +103,29 @@ public class StartScreenActivity extends Activity {
 			return addDialog;
 		}
 		return super.onCreateDialog(id);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.startscreen_optionsmenu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.about:
+			intent = new Intent(this, AboutActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.preferences:
+			intent = new Intent(this, FreebloksPreferences.class);
+			startActivity(intent);
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

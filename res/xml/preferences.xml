@@ -29,6 +29,7 @@
         <PreferenceScreen
             android:summary="Copyright (c) by Sascha Hlusiak, 2012."
             android:title="About Freebloks..." >
+            <intent android:action="de.saschahlusiak.freebloks.SHOW_ABOUT" />
         </PreferenceScreen>
     </PreferenceCategory>    
 

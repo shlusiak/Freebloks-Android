@@ -36,7 +36,16 @@
    		<activity
             android:name=".preferences.FreebloksPreferences"
             android:label="@string/app_name" >
-        </activity>        
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about_freebloks"
+            android:theme="@android:style/Theme.Dialog" >
+            <intent-filter>
+                <action android:name="de.saschahlusiak.freebloks.SHOW_ABOUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

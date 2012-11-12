@@ -214,7 +214,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.optionsmenu, menu);
+		inflater.inflate(R.menu.game_optionsmenu, menu);
 		return true;
 	}
 	
