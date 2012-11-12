@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -45,6 +46,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	Stone currentStone = null;
 	SpielClientThread spielthread = null;
 	ServerListener listener = null;
+	Vibrator vibrator;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -115,6 +117,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view = (ViewInterface)findViewById(R.id.board);
 		view.setActivity(this);
 		
+		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
 		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
 		if (spielthread != null) {
@@ -392,6 +395,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		spiel.set_stone(stone, 19 - y, x);
 		selectCurrentStone(spiel, null);
+		vibrator.vibrate(150);
 		return true;
+	}
+	
+	public void vibrate(int ms) {
+		vibrator.vibrate(ms);
 	}
 }

@@ -6,6 +6,7 @@ import android.graphics.PointF;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
+import de.saschahlusiak.freebloks.view.ViewInterface;
 
 @SuppressWarnings("serial")
 public class ViewModel extends ArrayList<ViewElement> {
@@ -14,11 +15,14 @@ public class ViewModel extends ArrayList<ViewElement> {
 	SpielClient spiel;
 	Board board;
 	ActivityInterface activity;
+	ViewInterface view;
 
 
 	int showPlayer;
 
-	public ViewModel() {
+	public ViewModel(ViewInterface view) {
+		this.view = view;
+		
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
 		board = new Board(this);

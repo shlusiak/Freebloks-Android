@@ -28,7 +28,7 @@ import android.view.MotionEvent;
 public class Freebloks3DView extends GLSurfaceView implements ViewInterface, SpielClientInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
-	ViewModel model = new ViewModel();
+	ViewModel model = new ViewModel(this);
 	
 	class MyRenderer implements GLSurfaceView.Renderer {
 		final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};

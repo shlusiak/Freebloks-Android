@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.graphics.PointF;
+import android.os.Handler;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Stone;
 
@@ -13,33 +14,20 @@ public class Wheel extends ViewElement {
 	int highlightStone = -1;
 	float currentAngle = 0.0f;
 	float originalAngle;
-	Timer timer;
+	float originalX;
+	boolean spinning = false;
 	
 	public Wheel(ViewModel model) {
 		super(model);
 	}
-
-	TimerTask moveStoneTask = new TimerTask() {
-		@Override
-		public void run() {
-			timer = null;
-			cancel();
-
-			if (highlightStone == -1)
-				return;
-
-			if (Math.abs(currentAngle - originalAngle) < 10.0f) {
-
-			}
-		}
-	};
 	
 	PointF tmp = new PointF();
-	float originalX;
-	boolean spinning = false;
+	Handler handler = new Handler();
+	Timer timer = new Timer();
+	TimerTask task;
 
 	@Override
-	boolean handlePointerDown(PointF m) {
+	boolean handlePointerDown(final PointF m) {
 		spinning = false;
 		if (!model.spiel.is_local_player())
 			return false;
@@ -73,10 +61,43 @@ public class Wheel extends ViewElement {
 			highlightStone = -1;
 		else if (s != null) {
 			/* we tapped on a stone; start timer */
-			if (timer != null)
-				timer.cancel();
-			timer = new Timer();
-//			timer.schedule(moveStoneTask, 300);
+			if (task != null)
+				task.cancel();
+			timer.schedule(task = new TimerTask() {
+				
+				@Override
+				public void run() {
+					if (!spinning)
+						return;
+					if (highlightStone < 0)
+						return;
+					if (Math.abs(currentAngle - originalAngle) > 10.0f)
+						return;
+					if (!model.spiel.is_local_player())
+						return;
+					
+					handler.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							tmp.x = m.x;
+							tmp.y = m.y;
+							model.board.modelToBoard(tmp);
+							
+							Log.d(tag, "timer expire, start moving stone");
+							Stone stone = model.spiel.get_current_player().get_stone(highlightStone);
+							model.activity.selectCurrentStone(model.spiel, stone);
+							highlightStone = -1;
+							model.activity.vibrate(100);
+							model.currentStone.startDragging(stone);
+							model.currentStone.moveTo((int)tmp.x, (int)tmp.y);
+							spinning = false;
+							model.view.updateView();
+						}
+					});
+					spinning = false;
+				}
+			}, 500);
 		}
 
 		if (model.currentStone.stone != null) {
@@ -117,11 +138,12 @@ public class Wheel extends ViewElement {
 				Stone stone = model.spiel.get_current_player().get_stone(
 						highlightStone);
 				model.activity.selectCurrentStone(model.spiel, stone);
+				model.activity.vibrate(100);
 				highlightStone = -1;
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
-				model.currentStone.startDragging(stone, (int)tmp.x, (int)tmp.y);
+				model.currentStone.startDragging(stone);
 				spinning = false;
 			}
 		}

@@ -171,30 +171,40 @@ public class CurrentStone extends ViewElement {
 			int x = (int)(0.5f + fieldPoint.x + stone_rel_x);
 			int y = (int)(0.5f + fieldPoint.y + stone_rel_y);
 			hasMoved |= moveTo(x, y);
-			fieldPoint.x = x;
-			fieldPoint.y = y;
-			model.board.boardToUnified(fieldPoint);
-			if (fieldPoint.y < -2.0f) {
-				model.wheel.highlightStone = stone.get_number();
-				dragging = false;
-				stone = null;
-			}
 			return true;
 		}
 		
 		@Override
 		public boolean handlePointerUp(PointF m) {
-			if (!hasMoved && dragging) {
-				if (model.activity.commitCurrentStone(model.spiel, stone, pos.x, pos.y)) {
-					stone = null;
-					model.wheel.highlightStone = -1;
+			if (dragging) {
+				if (!hasMoved) {
+					if (model.activity.commitCurrentStone(model.spiel, stone, pos.x, pos.y)) {
+						stone = null;
+						model.wheel.highlightStone = -1;
+					}
+				} else {
+					fieldPoint.x = m.x;
+					fieldPoint.y = m.y;
+					model.board.modelToBoard(fieldPoint);
+
+					int x = (int)(0.5f + fieldPoint.x + stone_rel_x);
+					int y = (int)(0.5f + fieldPoint.y + stone_rel_y);
+					fieldPoint.x = x;
+					fieldPoint.y = y;
+					model.board.boardToUnified(fieldPoint);
+					if (fieldPoint.y < -2.0f) {
+						model.wheel.highlightStone = stone.get_number();
+						dragging = false;
+						stone = null;
+					}
+
 				}
 			}
 			dragging = false;
 			return false;
 		}
 		
-		void startDragging(Stone stone, int x, int y) {
+		void startDragging(Stone stone) {
 			this.stone = stone;
 			if (stone == null)
 				return;
