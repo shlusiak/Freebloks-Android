@@ -3,8 +3,32 @@
     android:key="first_preferencescreen" >
 
     <PreferenceCategory android:title="@string/preferences_view" >
+		<CheckBoxPreference
+		    android:summary="Vibrate when moving stones"
+		    android:title="Vibrate" 
+		    android:enabled="false" />
 
-    </PreferenceCategory>
+		<CheckBoxPreference
+		    android:summary="Play sound effects"
+		    android:title="Sounds" 
+		    android:enabled="false" />
+
+		<CheckBoxPreference
+		    android:summary="Show possible corners of your stones"
+		    android:title="Show corners" 
+		    android:enabled="false" />
+
+		<CheckBoxPreference
+		    android:summary="Show stones of opponents"
+		    android:title="Show opponents" 
+		    android:enabled="false" />
+
+		<CheckBoxPreference
+		    android:summary="Show animations when placing stones"
+		    android:title="Show Animations"
+		    android:enabled="false" />
+		
+	</PreferenceCategory>
     
     <PreferenceCategory android:title="About..." >
 
