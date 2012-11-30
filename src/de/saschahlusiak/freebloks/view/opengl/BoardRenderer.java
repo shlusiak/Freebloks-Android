@@ -167,26 +167,6 @@ public class BoardRenderer {
 	    }
 	}
 	
-	
-	public void renderField(GL10 gl) {
-	    if (spiel == null)
-	    	return;
-	    
-	    gl.glPushMatrix();
-	    gl.glTranslatef(-stone_size * (float)(spiel.m_field_size_x - 1), 0, -stone_size * (float)(spiel.m_field_size_x - 1) );
-	    for (int y = 0; y < spiel.m_field_size_y; y++) {
-	    	int x;
-	    	for (x = 0; x < spiel.m_field_size_x; x++) {
-	    		if (spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
-	    			renderStone(gl, spiel.get_game_field(y, x), 0.65f);
-	    		}	    		
-	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
-	    	}
-	    	gl.glTranslatef(- x * stone_size * 2.0f, 0, stone_size * 2.0f);
-	    }
-	    gl.glPopMatrix();
-	}
-	
 	public void renderStone(GL10 gl, int color, float alpha) {
 		float red[]={0.75f, 0, 0, alpha};
 		float blue[]={0.0f, 0.05f, 0.8f, alpha};

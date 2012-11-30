@@ -94,16 +94,49 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			}
 
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
-			
+
 
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 			
+			/* render board */
 			board.renderBoard(gl, spiel.is_local_player() ? model.showPlayer : -1);
-			board.renderField(gl);
-			if (model.currentStone.stone != null && spiel != null && spiel.is_local_player()) {
+			
+			/* render player stones on board, unless they are "effected" */
+			{
+			    gl.glPushMatrix();
+			    gl.glTranslatef(-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) );
+			    for (int y = 0; y < spiel.m_field_size_y; y++) {
+			    	int x;
+			    	for (x = 0; x < spiel.m_field_size_x; x++) {
+			    		if (spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
+			    			boolean effected = false;
+			    			synchronized (model.effects) {
+			    				for (AbsEffect effect: model.effects)
+			    					if (effect.isEffected(x, y)) {
+			    						effected = true;
+			    						break;
+			    					}
+			    			}
+			    			if (!effected)
+			    				board.renderStone(gl, spiel.get_game_field(y, x), 0.65f);
+			    		}	    		
+			    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
+			    	}
+			    	gl.glTranslatef(- x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
+			    }
+			    gl.glPopMatrix();
+			}
+			/* render current player stone on the field */
+			if (model.currentStone.stone != null && spiel != null && spiel.is_local_player())
 				model.currentStone.render(this, gl);
+			
+			/* render all effects */
+			synchronized (model.effects) {
+				for (AbsEffect effect: model.effects) {
+					effect.render(gl, board);
+				}
 			}
 
 			if (currentPlayer >= 0) {
@@ -387,4 +420,78 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	class UpdateThread extends Thread {
+		boolean goDown = false;
+		
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			
+			long time = System.currentTimeMillis(), tmp;
+			while (!goDown) {
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					break;
+				}
+				tmp = System.currentTimeMillis();
+				
+				execute((float)(tmp - time) / 1000.0f);
+				time = tmp;
+			}
+			super.run();
+		}
+	}
+	
+	public void execute(float elapsed) {
+		boolean animated = false;
+		
+		synchronized (model.effects) {
+			int i = 0;
+			while (i < model.effects.size()) {
+				animated |= model.effects.get(i).execute(elapsed);
+				if (model.effects.get(i).isDone()) {
+					model.effects.remove(i);
+				} else
+					i++;
+			}
+		}
+		
+		if (animated) {
+			requestRender();
+		}
+	}
+	
+	UpdateThread thread = null;
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		thread.goDown = true;
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		model.effects.clear();
+		thread = null;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (thread == null) {
+			thread = new UpdateThread();
+			thread.start();
+		}
+	}
+	
 }

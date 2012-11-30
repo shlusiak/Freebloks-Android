@@ -16,6 +16,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 	Board board;
 	ActivityInterface activity;
 	ViewInterface view;
+	ArrayList<AbsEffect> effects;
 
 
 	int showPlayer;
@@ -26,6 +27,8 @@ public class ViewModel extends ArrayList<ViewElement> {
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
 		board = new Board(this);
+		
+		effects = new ArrayList<AbsEffect>();
 		
 		add(currentStone);
 		add(wheel);
@@ -55,5 +58,11 @@ public class ViewModel extends ArrayList<ViewElement> {
 			if (e.handlePointerUp(m))
 				return true;
 		return false;
+	}
+	
+	public void addEffect(AbsEffect effect) {
+		synchronized (effects) {
+			effects.add(effect);
+		}
 	}
 }

@@ -15,14 +15,13 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
-import de.saschahlusiak.freebloks.view.ViewInterface;
+import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -41,7 +40,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_GAME_FINISH = 4;
 
-	ViewInterface view;
+	Freebloks3DView view;
 	SpielClient spiel = null;
 	Stone currentStone = null;
 	SpielClientThread spielthread = null;
@@ -114,7 +113,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 		setContentView(R.layout.main_3d);
 
-		view = (ViewInterface)findViewById(R.id.board);
+		view = (Freebloks3DView)findViewById(R.id.board);
 		view.setActivity(this);
 		
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -185,6 +184,18 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		spiel.removeClientInterface(this);
 		super.onDestroy();
+	}
+	
+	@Override
+	protected void onPause() {
+		view.onPause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		view.onResume();
+		super.onResume();
 	}
 	
 	@Override
