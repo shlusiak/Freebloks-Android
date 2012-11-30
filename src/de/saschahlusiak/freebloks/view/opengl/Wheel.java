@@ -29,8 +29,6 @@ public class Wheel extends ViewElement {
 	@Override
 	boolean handlePointerDown(final PointF m) {
 		spinning = false;
-		if (!model.spiel.is_local_player())
-			return false;
 		
 		originalAngle = currentAngle;
 		
@@ -50,11 +48,17 @@ public class Wheel extends ViewElement {
 		Log.d(tag, "currentWheelAngle = " + originalAngle);
 		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
 		Log.d(tag, "row " + row + ", col " + col);
+		
+		if (!model.spiel.is_local_player()) {
+			spinning = true;
+			return true;
+		}
+		
+		
 
 		highlightStone = row * 11 + col;
 		if (col > 11 || row > 1 || col < 0 || row < 0 || highlightStone >= 21) {
 			highlightStone = -1;
-			return false;
 		}
 		Stone s = model.spiel.get_current_player().get_stone(highlightStone);
 		if (s != null && s.get_available() <= 0)
@@ -98,12 +102,12 @@ public class Wheel extends ViewElement {
 					spinning = false;
 				}
 			}, 500);
+			if (model.currentStone.stone != null) {
+				model.currentStone.stone = s;
+			}
+			model.activity.selectCurrentStone(model.spiel, s);
 		}
 
-		if (model.currentStone.stone != null) {
-			model.currentStone.stone = s;
-		}
-		model.activity.selectCurrentStone(model.spiel, s);
 		spinning = true;
 		return true;
 	}

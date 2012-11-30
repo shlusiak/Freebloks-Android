@@ -1,8 +1,5 @@
 package de.saschahlusiak.freebloks.view.opengl;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -22,7 +19,6 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class Freebloks3DView extends GLSurfaceView implements ViewInterface, SpielClientInterface {
