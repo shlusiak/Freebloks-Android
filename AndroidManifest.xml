@@ -4,7 +4,7 @@
     android:versionCode="5"
     android:versionName="0.0.1_pre5" >
 
-    <uses-sdk android:minSdkVersion="14" 
+    <uses-sdk android:minSdkVersion="8" 
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
