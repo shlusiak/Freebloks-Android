@@ -360,7 +360,7 @@ public class Stone {
 		return true;
 	}
 
-	void init(int shape) {
+	public void init(int shape) {
 		m_available = 1;
 		m_shape = shape;
 		m_size = STONE_SIZE[m_shape];

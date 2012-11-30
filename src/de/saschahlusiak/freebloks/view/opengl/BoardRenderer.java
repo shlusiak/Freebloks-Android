@@ -260,7 +260,7 @@ public class BoardRenderer {
 		gl.glTranslatef(stone.get_stone_size() * stone_size, 0, stone.get_stone_size() * stone_size);
 	}
 	
-	public void renderPlayerStone(GL10 gl, int player, Stone stone, int x, int y) {
+	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha, int x, int y) {
 	    gl.glTranslatef(
 	    		-stone_size * (float)(spiel.m_field_size_x - 1) + stone_size * 2.0f * (float)x,
 	    		0,
@@ -270,7 +270,7 @@ public class BoardRenderer {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
 				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
-					renderStone(gl, player, 0.65f);
+					renderStone(gl, player, alpha);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);

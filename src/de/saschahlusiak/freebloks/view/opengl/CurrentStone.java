@@ -12,6 +12,7 @@ import android.graphics.Paint.Style;
 import android.opengl.GLUtils;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.opengl.AbsEffect.FadeEffect;
 import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView.MyRenderer;
 
 public class CurrentStone extends ViewElement {
@@ -100,7 +101,7 @@ public class CurrentStone extends ViewElement {
 				gl.glDisable(GL10.GL_BLEND);
 				gl.glDisable(GL10.GL_TEXTURE_2D);
 				
-				renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, pos.x, pos.y);
+				renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f, pos.x, pos.y);
 				
 				gl.glEnable(GL10.GL_DEPTH_TEST);
 				
@@ -178,7 +179,14 @@ public class CurrentStone extends ViewElement {
 		public boolean handlePointerUp(PointF m) {
 			if (dragging) {
 				if (!hasMoved) {
+					int player = model.spiel.current_player();
 					if (model.activity.commitCurrentStone(model.spiel, stone, pos.x, pos.y)) {
+						Stone st = new Stone();
+						st.copyFrom(stone);
+						FadeEffect e = new FadeEffect(st, player, pos.x, 19 - pos.y);
+					
+						model.addEffect(e);
+						
 						stone = null;
 						model.wheel.highlightStone = -1;
 					}

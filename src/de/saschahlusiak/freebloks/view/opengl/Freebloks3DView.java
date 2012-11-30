@@ -14,6 +14,7 @@ import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.view.ViewInterface;
+import de.saschahlusiak.freebloks.view.opengl.AbsEffect.FadeEffect;
 import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
@@ -104,7 +105,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			board.renderBoard(gl, spiel.is_local_player() ? model.showPlayer : -1);
 			
 			/* render player stones on board, unless they are "effected" */
-			{
+			synchronized (model.effects) {
 			    gl.glPushMatrix();
 			    gl.glTranslatef(-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) );
 			    for (int y = 0; y < spiel.m_field_size_y; y++) {
@@ -112,16 +113,14 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    	for (x = 0; x < spiel.m_field_size_x; x++) {
 			    		if (spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
 			    			boolean effected = false;
-			    			synchronized (model.effects) {
-			    				for (AbsEffect effect: model.effects)
-			    					if (effect.isEffected(x, y)) {
-			    						effected = true;
-			    						break;
-			    					}
-			    			}
+			    			for (AbsEffect effect: model.effects)
+			    				if (effect.isEffected(x, y)) {
+			    					effected = true;
+			    					break;
+			    				}
 			    			if (!effected)
 			    				board.renderStone(gl, spiel.get_game_field(y, x), 0.65f);
-			    		}	    		
+			    		}
 			    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
 			    	}
 			    	gl.glTranslatef(- x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
@@ -364,9 +363,16 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
-		// TODO Auto-generated method stub
-		
 		updateView();
+		
+		if (!spiel.is_local_player(s.player)) {
+			Stone st = new Stone();
+			st.init(s.stone);
+			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
+			FadeEffect e = new FadeEffect(st, s.player, s.x, s.y, 3.5f, 0.0f);
+		
+			model.addEffect(e);
+		}
 	}
 
 	@Override
@@ -437,7 +443,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			long time = System.currentTimeMillis(), tmp;
 			while (!goDown) {
 				try {
-					Thread.sleep(25);
+					Thread.sleep(33);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					break;
