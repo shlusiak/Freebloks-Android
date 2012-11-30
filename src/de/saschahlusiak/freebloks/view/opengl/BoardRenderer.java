@@ -126,7 +126,7 @@ public class BoardRenderer {
 	}
 
 	public void renderBoard(GL10 gl, int currentPlayer) {
-		float diffuse_normal[] = {0.43f,0.43f,0.38f,1.0f};
+		float diffuse_normal[] = {0.52f,0.52f,0.50f,1.0f};
 		float diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
 		float specular[] = {0.27f,0.25f,0.25f,1.0f};
 		float shininess[] = {35.0f};
