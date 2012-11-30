@@ -100,7 +100,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 			
-			board.renderBoard(gl, model.showPlayer);
+			board.renderBoard(gl, spiel.is_local_player() ? model.showPlayer : -1);
 			board.renderField(gl);
 			if (model.currentStone.stone != null && spiel != null && spiel.is_local_player()) {
 				model.currentStone.render(this, gl);
