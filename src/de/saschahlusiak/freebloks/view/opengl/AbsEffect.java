@@ -40,6 +40,7 @@ public abstract class AbsEffect {
 		
 		@Override
 		boolean isEffected(int x, int y) {
+			/* TODO: fix this nonesense once and for all! */
 			y = 19 - y;
 			x = x - this.x;
 			y = this.y - y;

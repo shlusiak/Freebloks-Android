@@ -124,16 +124,16 @@ public class BoardRenderer {
 		initBorder();
 		initStone();
 	}
+	
+	final float board_diffuse_normal[] = {0.52f,0.52f,0.50f,1.0f};
+	final float board_diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
+	final float board_specular[] = {0.27f,0.25f,0.25f,1.0f};
+	final float board_shininess[] = {35.0f};
 
 	public void renderBoard(GL10 gl, int currentPlayer) {
-		float diffuse_normal[] = {0.52f,0.52f,0.50f,1.0f};
-		float diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
-		float specular[] = {0.27f,0.25f,0.25f,1.0f};
-		float shininess[] = {35.0f};
-
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board_shininess, 0);
 	 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, field.getNormalBuffer());
@@ -147,9 +147,9 @@ public class BoardRenderer {
 	    	int x;
 	    	for (x = 0; x < spiel.m_field_size_y; x++) {
 	    		if (currentPlayer >= 0 && spiel.get_game_field(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
-	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_available, 0);
+	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);
 	    		else
-	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
+	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 
 	    		field.drawElements(gl, GL10.GL_TRIANGLES);
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
@@ -157,7 +157,7 @@ public class BoardRenderer {
 	    	gl.glTranslatef(- x * stone_size * 2.0f, 0, stone_size * 2.0f);
 	    }
 	    gl.glPopMatrix();
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_normal, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, border.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, border.getNormalBuffer());
@@ -167,23 +167,25 @@ public class BoardRenderer {
 	    }
 	}
 	
+	final float stone_red[]={0.75f, 0, 0, 0};
+	final float stone_blue[]={0.0f, 0.05f, 0.8f, 0};
+	final float stone_green[]={0.0f, 0.75f, 0, 0};
+	final float stone_yellow[]={0.75f, 0.75f, 0, 0};
+	final float stone_white[]={0.7f, 0.7f, 0.7f, 0};
+	final float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green };
+	final float stone_specular[]={0.4f,0.4f,0.4f,1.0f};
+	final float stone_shininess[]={40.0f};
+
 	public void renderStone(GL10 gl, int color, float alpha) {
-		float red[]={0.75f, 0, 0, alpha};
-		float blue[]={0.0f, 0.05f, 0.8f, alpha};
-		float green[]={0.0f, 0.75f, 0, alpha};
-		float yellow[]={0.75f, 0.75f, 0, alpha};
-		float white[]={0.7f, 0.7f, 0.7f, alpha};
-		float color_a[][] = { white, blue, yellow, red, green };
-		
-		float specular[]={0.4f,0.4f,0.4f,1.0f};
-		float shininess[]={40.0f};
+		final float c[] = stone_color_a[color + 1];
+		c[3] = alpha;
 		
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, color_a[color + 1], 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
 	 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, _normalBuffer_stone);

@@ -345,7 +345,7 @@ public class Stone {
 	}
 
 	
-	public int get_stone_size() {
+	public final int get_stone_size() {
 		return m_size;
 	}
 
@@ -369,7 +369,7 @@ public class Stone {
 	}
 
 
-	public int get_stone_field(int y, int x) {
+	public final int get_stone_field(int y, int x) {
 		int nx=x,ny=y;
 		if (m_mirror_counter == 0){
 			if (m_rotate_counter == 0){
