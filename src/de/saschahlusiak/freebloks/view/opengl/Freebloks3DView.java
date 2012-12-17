@@ -133,7 +133,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    gl.glPopMatrix();
 			}
 			/* render current player stone on the field */
-			if (model.currentStone.stone != null && spiel != null && spiel.is_local_player())
+			if (spiel != null && spiel.is_local_player())
 				model.currentStone.render(this, gl);
 			
 			/* render all effects */

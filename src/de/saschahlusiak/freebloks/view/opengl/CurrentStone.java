@@ -71,7 +71,10 @@ public class CurrentStone extends ViewElement {
 		final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 0.50f };
 		final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 0.50f };
 		
-		void render(MyRenderer renderer, GL10 gl) {
+		synchronized void render(MyRenderer renderer, GL10 gl) {
+			if (stone == null)
+				return;
+			
 			if (pos.x > -50 && pos.y > -50) {
 				gl.glPushMatrix();
 				gl.glTranslatef(0, 0.3f, 0.0f);
@@ -87,6 +90,7 @@ public class CurrentStone extends ViewElement {
 				gl.glEnable(GL10.GL_BLEND);
 				gl.glDisable(GL10.GL_DEPTH_TEST);
 				
+				/* TODO: cache result of is_valid_turn when moved */
 				boolean isvalid = model.spiel.is_valid_turn(stone, model.showPlayer, 19 - pos.y, pos.x) == Stone.FIELD_ALLOWED;
 				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
 
@@ -139,7 +143,7 @@ public class CurrentStone extends ViewElement {
 		PointF fieldPoint = new PointF();
 		
 		@Override
-		public boolean handlePointerDown(PointF m) {
+		synchronized public boolean handlePointerDown(PointF m) {
 			dragging = false;
 			hasMoved = false;
 			if (stone != null) {
@@ -161,7 +165,7 @@ public class CurrentStone extends ViewElement {
 		}
 		
 		@Override
-		public boolean handlePointerMove(PointF m) {
+		synchronized public boolean handlePointerMove(PointF m) {
 			if (!dragging)
 				return false;
 			
@@ -176,7 +180,7 @@ public class CurrentStone extends ViewElement {
 		}
 		
 		@Override
-		public boolean handlePointerUp(PointF m) {
+		synchronized public boolean handlePointerUp(PointF m) {
 			if (dragging) {
 				if (!hasMoved) {
 					int player = model.spiel.current_player();
