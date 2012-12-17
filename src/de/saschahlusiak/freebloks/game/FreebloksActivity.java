@@ -46,6 +46,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	SpielClientThread spielthread = null;
 	ServerListener listener = null;
 	Vibrator vibrator;
+	boolean vibrate;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -198,6 +199,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		super.onResume();
 	}
 	
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+		vibrate = prefs.getBoolean("vibrate", true);
+	}
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		SpielClientThread t = spielthread;
@@ -406,11 +420,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		spiel.set_stone(stone, 19 - y, x);
 		selectCurrentStone(spiel, null);
-		vibrator.vibrate(150);
+		if (vibrate)
+			vibrator.vibrate(100);
 		return true;
 	}
 	
 	public void vibrate(int ms) {
-		vibrator.vibrate(ms);
+		if (vibrate)
+			vibrator.vibrate(ms);
 	}
 }

@@ -5,8 +5,10 @@
     <PreferenceCategory android:title="@string/preferences_view" >
 		<CheckBoxPreference
 		    android:summary="Vibrate when moving stones"
-		    android:title="Vibrate" 
-		    android:enabled="false" />
+		    android:title="Vibrate"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="vibrate" />
 
 		<CheckBoxPreference
 		    android:summary="Play sound effects"
