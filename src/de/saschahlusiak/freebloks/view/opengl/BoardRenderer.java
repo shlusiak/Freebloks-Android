@@ -17,9 +17,7 @@ public class BoardRenderer {
 	
 	SimpleModel field;
 	SimpleModel border;
-
-	private ShortBuffer _indexBuffer_stone;
-	private FloatBuffer _normalBuffer_stone;
+	SimpleModel stone;
 	
     final float r1 = stone_size;
     final float r2 = stone_size - bevel_size;
@@ -27,43 +25,17 @@ public class BoardRenderer {
     final float y2 = 0.0f;
     
     Spiel spiel;
-	
-    final private float[] normals_stone = {
-    	/* lower */
-        0, -1, 0,	/* 0 */
-        0, -1, 0,	/* 1 */
-        0, -1, 0,	/* 2 */
-        0, -1, 0,	/* 3 */
-        
-        /* upper */
-         1, 1, -1,	/* 4 */
-        -1, 1, -1,	/* 5 */
-        -1, 1,  1,	/* 6 */
-         1, 1,  1,	/* 7 */
-    };
-    
-	final private short[] _indicesArray_stone = {
-		0, 2, 1,
-		0, 3, 2,
-		0, 1, 5,
-		0, 5, 4,
-		1, 6, 5,
-		1, 2, 6,
-		2, 7, 6,
-		2, 3, 7,
-		3, 4, 7,
-		3, 0, 4
-	};	
-
 
 
 	private void initField() {
 		field = new SimpleModel(8, 10);
+		/* bottom, inner */
 		field.addVertex(-r2, y1, +r2,  0, 1, 0,  0, 0);
 		field.addVertex(+r2, y1, +r2,  0, 1, 0,  0, 0);
 		field.addVertex(+r2, y1, -r2,  0, 1, 0,  0, 0);
 		field.addVertex(-r2, y1, -r2,  0, 1, 0,  0, 0);
 
+		/* top, outer */
 		field.addVertex(-r1, y2, +r1, +1, 1, -1,  0, 0);
 		field.addVertex(+r1, y2, +r1, -1, 1, -1,  0, 0);
 		field.addVertex(+r1, y2, -r1, -1, 1, +1,  0, 0);
@@ -84,20 +56,50 @@ public class BoardRenderer {
 	}
 
 	private void initStone() {
-	    ByteBuffer vbb = ByteBuffer.allocateDirect(normals_stone.length * 4);
-	    vbb.order(ByteOrder.nativeOrder());
-	    _normalBuffer_stone = vbb.asFloatBuffer();
-	 
-	    // short has 2 bytes
-	    ByteBuffer ibb = ByteBuffer.allocateDirect(_indicesArray_stone.length * 2);
-	    ibb.order(ByteOrder.nativeOrder());
-	    _indexBuffer_stone = ibb.asShortBuffer();
+		stone = new SimpleModel(12, 20);
+		/* top, inner */
+		stone.addVertex(-r2, -y1, +r2,  0, 1, 0,  0, 0);
+		stone.addVertex(+r2, -y1, +r2,  0, 1, 0,  0, 0);
+		stone.addVertex(+r2, -y1, -r2,  0, 1, 0,  0, 0);
+		stone.addVertex(-r2, -y1, -r2,  0, 1, 0,  0, 0);
 
-	    _normalBuffer_stone.put(normals_stone);
-	    _indexBuffer_stone.put(_indicesArray_stone);
+		/* middle, outer */
+		stone.addVertex(-r1, y2, +r1, -1, 0, +1,  0, 0);
+		stone.addVertex(+r1, y2, +r1, +1, 0, +1,  0, 0);
+		stone.addVertex(+r1, y2, -r1, +1, 0, -1,  0, 0);
+		stone.addVertex(-r1, y2, -r1, -1, 0, -1,  0, 0);
 
-	    _normalBuffer_stone.position(0);
-	    _indexBuffer_stone.position(0);
+		/* bottom, inner */
+		stone.addVertex(-r2, y1, +r2,  0, -1, 0,  0, 0);
+		stone.addVertex(+r2, y1, +r2,  0, -1, 0,  0, 0);
+		stone.addVertex(+r2, y1, -r2,  0, -1, 0,  0, 0);
+		stone.addVertex(-r2, y1, -r2,  0, -1, 0,  0, 0);
+		
+		/* top */
+		stone.addIndex(0, 1, 2);
+		stone.addIndex(0, 2, 3);
+		stone.addIndex(0, 5, 1);
+		stone.addIndex(0, 4, 5);
+		stone.addIndex(1, 5, 6);
+		stone.addIndex(1, 6, 2);
+		stone.addIndex(2, 6, 7);
+		stone.addIndex(2, 7, 3);
+		stone.addIndex(3, 7, 4);
+		stone.addIndex(3, 4, 0);
+		
+		/* bottom */
+		stone.addIndex(8, 10, 9);
+		stone.addIndex(8, 11, 10);
+		stone.addIndex(8, 9, 5);
+		stone.addIndex(8, 5, 4);
+		stone.addIndex(9, 6, 5);
+		stone.addIndex(9, 10, 6);
+		stone.addIndex(10, 7, 6);
+		stone.addIndex(10, 11, 7);
+		stone.addIndex(11, 4, 7);
+		stone.addIndex(11, 8, 4);
+		
+		stone.commit();
 	}
 	
 	private void initBorder() {
@@ -186,14 +188,12 @@ public class BoardRenderer {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
+		
 	 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, _normalBuffer_stone);
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, stone.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, stone.getNormalBuffer());
 	    
-   		gl.glDrawElements(GL10.GL_TRIANGLES, _indicesArray_stone.length, GL10.GL_UNSIGNED_SHORT, _indexBuffer_stone);
-    	gl.glRotatef(180, 1, 0, 0);
-   		gl.glDrawElements(GL10.GL_TRIANGLES, _indicesArray_stone.length, GL10.GL_UNSIGNED_SHORT, _indexBuffer_stone);
-    	gl.glRotatef(180, 1, 0, 0);
+	    stone.drawElements(gl, GL10.GL_TRIANGLES);
     	
     	gl.glDisable(GL10.GL_BLEND);
 	}

@@ -14,7 +14,7 @@ public class SimpleModel {
     private FloatBuffer _vertexBuffer;
     private FloatBuffer _normalBuffer;
     private FloatBuffer _textureBuffer;
-    
+        
     public SimpleModel(int num_vertices, int num_triangles) {
     	this.num_triangles = num_triangles;
     	
@@ -60,10 +60,6 @@ public class SimpleModel {
 		_indexBuffer.put((short)(v1));
 		_indexBuffer.put((short)(v2));
 		_indexBuffer.put((short)(v3));
-	}
-	
-	void addIndex(int offset, int v1, int v2, int v3) {
-		addIndex(v1 + offset, v2 + offset, v3 + offset);
 	}
 	
 	FloatBuffer getVertexBuffer() {
