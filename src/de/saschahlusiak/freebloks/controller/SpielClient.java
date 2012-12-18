@@ -72,6 +72,7 @@ public class SpielClient extends Spielleiter {
 	public synchronized void disconnect() {
 		if (client_socket != null) {
 			try {
+				client_socket.shutdownInput();
 				client_socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
