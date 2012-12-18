@@ -127,50 +127,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			startNewGame();
 		}
 		view.setSpiel(spiel);
-		
-		findViewById(R.id.rotateLeft).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (currentStone == null)
-					return;
-				currentStone.rotate_left();
-				view.updateView();
-			}
-		});
-		findViewById(R.id.rotateRight).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (currentStone == null)
-					return;
-				currentStone.rotate_right();
-				view.updateView();
-			}
-		});
-		findViewById(R.id.flipHorizontally).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (currentStone == null)
-					return;
-				if (spiel.current_player() % 2 == 0)
-					currentStone.mirror_over_y();
-				else 
-					currentStone.mirror_over_x();
-				view.updateView();
-			}
-		});
-		findViewById(R.id.flipVertically).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (currentStone == null)
-					return;
-				if (spiel.current_player() % 2 == 0)
-					currentStone.mirror_over_x();
-				else 
-					currentStone.mirror_over_y();
-				view.updateView();
-			}
-		});
-		
 	}
 
 	@Override
@@ -302,15 +258,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
 		selectCurrentStone(spiel, null);
 
-		final int visibility = (spiel.is_local_player()) ? View.VISIBLE : View.INVISIBLE;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				findViewById(R.id.flipVertically).setVisibility(visibility);
-				findViewById(R.id.flipHorizontally).setVisibility(visibility);
-				findViewById(R.id.rotateLeft).setVisibility(visibility);
-				findViewById(R.id.rotateRight).setVisibility(visibility);
-				
 				findViewById(R.id.progressBar).setVisibility((spiel.is_local_player() || spiel.current_player() < 0) ? View.GONE : View.VISIBLE);
 			}
 		});
@@ -397,16 +347,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void selectCurrentStone(SpielClient spiel, final Stone stone) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				findViewById(R.id.rotateLeft).setEnabled(stone != null);
-				findViewById(R.id.rotateRight).setEnabled(stone != null);
-				findViewById(R.id.flipHorizontally).setEnabled(stone != null);
-				findViewById(R.id.flipVertically).setEnabled(stone != null);
-			}
-		});
-		
 		currentStone = stone;
 	}
 
