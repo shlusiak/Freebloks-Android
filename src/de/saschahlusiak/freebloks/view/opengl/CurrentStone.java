@@ -337,7 +337,7 @@ public class CurrentStone extends ViewElement {
 		
 		status = Status.DRAGGING;
 		hasMoved = false;
-		stone_rel_x = -(float)stone.get_stone_size() / 2.0f;
-		stone_rel_y =  (float)stone.get_stone_size() / 2.0f;
+		stone_rel_x = 0;
+		stone_rel_y = 0;
 	}	
 }
