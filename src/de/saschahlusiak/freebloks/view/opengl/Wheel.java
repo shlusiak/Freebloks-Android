@@ -34,7 +34,7 @@ public class Wheel extends ViewElement {
 	TimerTask task;
 	
 	
-	void update(int currentPlayer) {
+	synchronized void update(int currentPlayer) {
 		if (currentPlayer < 0)
 			return;
 		Player p = model.spiel.get_player(currentPlayer);
@@ -47,7 +47,7 @@ public class Wheel extends ViewElement {
 	}
 
 	@Override
-	boolean handlePointerDown(final PointF m) {
+	synchronized boolean handlePointerDown(final PointF m) {
 		spinning = false;
 		
 		originalAngle = currentAngle;
@@ -131,7 +131,7 @@ public class Wheel extends ViewElement {
 	}
 
 	@Override
-	boolean handlePointerMove(PointF m) {
+	synchronized boolean handlePointerMove(PointF m) {
 		if (!spinning)
 			return false;
 		
@@ -176,7 +176,7 @@ public class Wheel extends ViewElement {
 		return false;
 	}
 
-	public void render(MyRenderer renderer, GL10 gl, int player) {
+	public synchronized void render(MyRenderer renderer, GL10 gl, int player) {
 		final float da = 17.0f;
 		float angle = currentAngle + 9.5f * 0.5f * da;
 		
@@ -200,11 +200,15 @@ public class Wheel extends ViewElement {
 			while (angle > 180.0f)
 				angle -= 360.0f;
 			
-			alpha = 1.0f / (1.0f + Math.abs(angle) / 47.0f);
-			
+			alpha = 0.8f / (1.0f + Math.abs(angle) / 47.0f);
+			if (model.currentStone.stone != null)
+				alpha *= 0.7f;
+
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
 				gl.glRotatef(90 * player, 0, 1, 0);
+				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
 				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : player, s, alpha);
+				gl.glTranslatef(s.get_stone_size() * BoardRenderer.stone_size, 0, s.get_stone_size() * BoardRenderer.stone_size);
 				gl.glRotatef(-90 * player, 0, 1, 0);
 			}
 			

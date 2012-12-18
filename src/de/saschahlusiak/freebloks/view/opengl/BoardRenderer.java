@@ -199,27 +199,7 @@ public class BoardRenderer {
 	
 	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {
 		int i;
-		gl.glTranslatef(-stone.get_stone_size() * stone_size, 0, -stone.get_stone_size() * stone_size);
 		for (i = 0; i < stone.get_stone_size(); i++) {
-			int j;
-			for (j = 0; j < stone.get_stone_size(); j++) {				
-				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
-					renderStone(gl, player, 0.65f * alpha);
-				gl.glTranslatef(stone_size * 2.0f, 0, 0);
-			}
-			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
-		}
-		gl.glTranslatef(0, 0, -i * stone_size * 2.0f);
-		gl.glTranslatef(stone.get_stone_size() * stone_size, 0, stone.get_stone_size() * stone_size);
-	}
-	
-	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha, int x, int y) {
-	    gl.glTranslatef(
-	    		-stone_size * (float)(spiel.m_field_size_x - 1) + stone_size * 2.0f * (float)x,
-	    		0,
-	    		+stone_size * (float)(spiel.m_field_size_x - 1) - stone_size * 2.0f * (float)y);
-	    
-		for (int i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
 				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
@@ -228,11 +208,8 @@ public class BoardRenderer {
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
 		}
+		gl.glTranslatef(0, 0, -i * stone_size * 2.0f);
 	}
-	
-	
-
-	
 	
 	public static void myTexImage2D(GL10 gl, Bitmap bitmap) {
 		// Don't loading using GLUtils, load using gl-method directly

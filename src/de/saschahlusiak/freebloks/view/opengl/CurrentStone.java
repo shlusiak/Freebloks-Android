@@ -16,16 +16,24 @@ import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView.MyRenderer;
 public class CurrentStone extends ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
 	
+	enum Status {
+		IDLE, DRAGGING, ROTATING
+	}
+	
 	Stone stone;
 	Point pos = new Point();
-	boolean dragging, hasMoved;
+	boolean hasMoved;
 	float stone_rel_x, stone_rel_y;
+	float rotate_angle;
 	int texture[];
 	SimpleModel overlay;
+	Status status;
 	
 	
 	CurrentStone(ViewModel model) {
 		super(model);
+		
+		status = Status.IDLE;
 		
 		pos.x = -50;
 		pos.y = -50;
@@ -80,6 +88,9 @@ public class CurrentStone extends ViewElement {
 		    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.x + stone.get_stone_size() / 2),
 		    		0,
 		    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)(pos.y - stone.get_stone_size() / 2));
+		    
+		    if (status == Status.ROTATING)
+		    	gl.glRotatef(rotate_angle, 0, 1, 0);
 
 		    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 			gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -106,7 +117,29 @@ public class CurrentStone extends ViewElement {
 			gl.glDisable(GL10.GL_BLEND);
 			gl.glDisable(GL10.GL_TEXTURE_2D);
 			
-			renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f, pos.x, pos.y);
+		    gl.glTranslatef(
+		    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
+		    		0,
+		    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * pos.y);
+			
+			
+		    if (status == Status.ROTATING) {
+		    	float offset = (float)(stone.get_stone_size())/ 2.0f;
+		    	offset -= 0.5f;
+		    	
+			    gl.glTranslatef(
+			    		BoardRenderer.stone_size * 2.0f * offset,
+			    		0,
+			    		BoardRenderer.stone_size * 2.0f * offset);
+
+		    	gl.glRotatef(rotate_angle, 0, 1, 0);
+		    	
+			    gl.glTranslatef(
+			    		-BoardRenderer.stone_size * 2.0f * offset,
+			    		0,
+			    		-BoardRenderer.stone_size * 2.0f * offset);
+		    }
+			renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f);
 			
 			gl.glEnable(GL10.GL_DEPTH_TEST);
 			
@@ -145,20 +178,25 @@ public class CurrentStone extends ViewElement {
 	
 	@Override
 	synchronized public boolean handlePointerDown(PointF m) {
-		dragging = false;
+		status = Status.IDLE;
 		hasMoved = false;
 		if (stone != null) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
 			model.board.modelToBoard(fieldPoint);
 			
-			stone_rel_x = (pos.x - fieldPoint.x);
-			stone_rel_y = (pos.y - fieldPoint.y);
+			stone_rel_x = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
+			stone_rel_y = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
 			
 			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
-			if ((Math.abs(stone_rel_x) < 9) &&
-					(Math.abs(stone_rel_y) < 9)) {
-				dragging = true;
+			if ((Math.abs(stone_rel_x) <= 8) && (Math.abs(stone_rel_y) <= 8)) {
+				if ((Math.abs(stone_rel_x) > 5.0f) && (Math.abs(stone_rel_y) < 2.5f) ||
+					(Math.abs(stone_rel_x) < 2.5f) && (Math.abs(stone_rel_y) > 5.0f)) {
+					status = Status.ROTATING;
+					rotate_angle = 0.0f;
+				} else {
+					status = Status.DRAGGING;
+				}
 				return true;
 			}
 		}
@@ -167,22 +205,32 @@ public class CurrentStone extends ViewElement {
 	
 	@Override
 	synchronized public boolean handlePointerMove(PointF m) {
-		if (!dragging)
+		if (status == Status.IDLE)
 			return false;
 		
 		fieldPoint.x = m.x;
 		fieldPoint.y = m.y;
 		model.board.modelToBoard(fieldPoint);
 		
-		int x = (int)(0.5f + fieldPoint.x + stone_rel_x);
-		int y = (int)(0.5f + fieldPoint.y + stone_rel_y);
-		hasMoved |= moveTo(x, y);
+		if (status == Status.DRAGGING) {
+			int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+			int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+			hasMoved |= moveTo(x, y);
+		}
+		if (status == Status.ROTATING) {
+			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
+			float ry = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
+			float a1 = (float)Math.atan2(stone_rel_y, stone_rel_x);
+			float a2 = (float)Math.atan2(ry, rx);
+			rotate_angle = (a2 - a1) * 180.0f / (float)Math.PI;
+			Log.w(tag, "a1 = " + a1 + ", a2 = " + a2);
+		}
 		return true;
 	}
 	
 	@Override
 	synchronized public boolean handlePointerUp(PointF m) {
-		if (dragging) {
+		if (status == Status.DRAGGING) {
 			if (!hasMoved) {
 				int player = model.spiel.current_player();
 				if (model.activity.commitCurrentStone(model.spiel, stone, pos.x, pos.y)) {
@@ -200,20 +248,31 @@ public class CurrentStone extends ViewElement {
 				fieldPoint.y = m.y;
 				model.board.modelToBoard(fieldPoint);
 
-				int x = (int)(0.5f + fieldPoint.x + stone_rel_x);
-				int y = (int)(0.5f + fieldPoint.y + stone_rel_y);
+				int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+				int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
 				fieldPoint.x = x;
 				fieldPoint.y = y;
 				model.board.boardToUnified(fieldPoint);
 				if (fieldPoint.y < -2.0f) {
 					model.wheel.highlightStone = stone;
-					dragging = false;
+					status = Status.IDLE;
 					stone = null;
 				}
 
 			}
 		}
-		dragging = false;
+		if (status == Status.ROTATING) {
+			while (rotate_angle < -45.0f) {
+				rotate_angle += 90.0f;
+				stone.rotate_right();
+			}
+			while (rotate_angle > 45.0f) {
+				rotate_angle -= 90.0f;
+				stone.rotate_left();
+			}
+			rotate_angle = 0.0f;
+		}
+		status = Status.IDLE;
 		return false;
 	}
 	
@@ -222,7 +281,7 @@ public class CurrentStone extends ViewElement {
 		if (stone == null)
 			return;
 		
-		dragging = true;
+		status = Status.DRAGGING;
 		hasMoved = false;
 		stone_rel_x = -(float)stone.get_stone_size() / 2.0f;
 		stone_rel_y =  (float)stone.get_stone_size() / 2.0f;
