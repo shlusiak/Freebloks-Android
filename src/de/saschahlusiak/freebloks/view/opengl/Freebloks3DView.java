@@ -193,7 +193,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light0_specular, 0);
 			
 			renderer.updateModelViewMatrix = true;
-			model.currentStone.updateTexture(gl);
+			model.currentStone.updateTexture(getContext(), gl);
 		}
 
 		float mAngleX;

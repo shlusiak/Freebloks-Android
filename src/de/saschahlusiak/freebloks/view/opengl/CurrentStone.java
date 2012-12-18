@@ -1,16 +1,13 @@
 package de.saschahlusiak.freebloks.view.opengl;
 
 import javax.microedition.khronos.opengles.GL10;
-
+import javax.microedition.khronos.opengles.GL11;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Paint.Style;
-import android.opengl.GLUtils;
-import android.util.Log;
+import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.opengl.AbsEffect.FadeEffect;
 import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView.MyRenderer;
@@ -43,33 +40,29 @@ public class CurrentStone extends ViewElement {
 			overlay.commit();
 		}
 		
-		void updateTexture(GL10 gl) {
+		void updateTexture(Context context, GL10 gl) {
 			if (texture == null)
 				texture = new int[1];
 
 			gl.glGenTextures(1, texture, 0);
+			Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay);
 
-			Bitmap bmp = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
-			Canvas canvas = new Canvas(bmp);
-
-			canvas.drawColor(Color.TRANSPARENT);
-			
-			Paint paint = new Paint();
-			paint.setAntiAlias(true);
-			paint.setStyle(Style.FILL_AND_STROKE);
-			paint.setColor(Color.argb(240, 255, 255, 255));
-			canvas.drawCircle(64, 64, 64, paint);
 			
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);		
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+			if (gl instanceof GL11) {
+				gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
+				gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+			} else {
+				gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+			}
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bmp, 0);
+			BoardRenderer.myTexImage2D(gl, bitmap);
 
-			bmp.recycle();
+			bitmap.recycle();
 		}
 		
-		final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 0.50f };
-		final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 0.50f };
+		final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
+		final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
 		
 		synchronized void render(MyRenderer renderer, GL10 gl) {
 			if (stone == null)

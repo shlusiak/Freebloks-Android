@@ -1,9 +1,12 @@
 package de.saschahlusiak.freebloks.view.opengl;
 
+import java.nio.ByteBuffer;
+
 import javax.microedition.khronos.opengles.GL10;
-import de.saschahlusiak.freebloks.model.Player;
+import android.graphics.Bitmap;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
+
 
 public class BoardRenderer {
 	final static float bevel_size = 0.18f;
@@ -225,5 +228,48 @@ public class BoardRenderer {
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
 		}
+	}
+	
+	
+
+	
+	
+	public static void myTexImage2D(GL10 gl, Bitmap bitmap) {
+		// Don't loading using GLUtils, load using gl-method directly
+//		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+
+		int[] pixels = extractPixels(bitmap);
+		byte[] pixelComponents = new byte[pixels.length * 4];
+		int byteIndex = 0;
+		for (int i = 0; i < pixels.length; i++) {
+			int p = pixels[i];
+			// Convert to byte representation RGBA required by gl.glTexImage2D.
+			// We don't use intbuffer, because then we
+			// would be relying on the intbuffer wrapping to write the ints in
+			// big-endian format, which means it would work for the wrong
+			// reasons, and it might brake on some hardware.
+			pixelComponents[byteIndex++] = (byte) ((p >> 16) & 0xFF); // red
+			pixelComponents[byteIndex++] = (byte) ((p >> 8) & 0xFF); // green
+			pixelComponents[byteIndex++] = (byte) ((p) & 0xFF); // blue
+			pixelComponents[byteIndex++] = (byte) (p >> 24); // alpha
+		}
+		pixels = null;
+		ByteBuffer pixelBuffer = ByteBuffer.wrap(pixelComponents);
+
+		gl.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA, bitmap.getWidth(),
+				bitmap.getHeight(), 0, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE,
+				pixelBuffer);
+		
+		pixelComponents = null;
+	}
+
+	private static int[] extractPixels(Bitmap src) {
+		int x = 0;
+		int y = 0;
+		int w = src.getWidth();
+		int h = src.getHeight();
+		int[] colors = new int[w * h];
+		src.getPixels(colors, 0, w, x, y, w, h);
+		return colors;
 	}
 }
