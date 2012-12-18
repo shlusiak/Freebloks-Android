@@ -132,9 +132,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    }
 			    gl.glPopMatrix();
 			}
-			/* render current player stone on the field */
-			if (spiel != null && spiel.is_local_player())
-				model.currentStone.render(this, gl);
+			
+			if (currentPlayer >= 0 && model.showPlayer >= 0) {
+				gl.glPushMatrix();
+				gl.glRotatef(angle, 0, 1, 0);
+				model.wheel.render(this, gl, currentPlayer);
+				gl.glPopMatrix();
+			}
 			
 			/* render all effects */
 			synchronized (model.effects) {
@@ -142,13 +146,10 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 					effect.render(gl, board);
 				}
 			}
-
-			if (currentPlayer >= 0 && model.showPlayer >= 0) {
-				gl.glPushMatrix();
-				gl.glRotatef(angle, 0, 1, 0);
-				model.wheel.render(this, gl, currentPlayer);
-				gl.glPopMatrix();
-			}
+			
+			/* render current player stone on the field */
+			if (spiel != null && spiel.is_local_player())
+				model.currentStone.render(this, gl);
 		}
 		
 		final float getAngleY() {
