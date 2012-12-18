@@ -1,30 +1,50 @@
 package de.saschahlusiak.freebloks.view.opengl;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.PointF;
 import android.os.Handler;
 import android.util.Log;
+import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView.MyRenderer;
 
 public class Wheel extends ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
 	
-	int highlightStone = -1;
+	Stone highlightStone;
 	float currentAngle = 0.0f;
 	float originalAngle;
 	float originalX;
 	boolean spinning = false;
+	ArrayList<Stone> stones;
 	
 	public Wheel(ViewModel model) {
 		super(model);
+		stones = new ArrayList<Stone>();
 	}
 	
 	PointF tmp = new PointF();
 	Handler handler = new Handler();
 	Timer timer = new Timer();
 	TimerTask task;
+	
+	
+	void update(int currentPlayer) {
+		if (currentPlayer < 0)
+			return;
+		Player p = model.spiel.get_player(currentPlayer);
+		stones.clear();
+		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++) {
+			Stone s = p.get_stone(i);
+			if (s != null && s.get_available() > 0)
+				stones.add(s);
+		}
+	}
 
 	@Override
 	boolean handlePointerDown(final PointF m) {
@@ -55,15 +75,14 @@ public class Wheel extends ViewElement {
 		}
 		
 		
-
-		highlightStone = row * 11 + col;
-		if (col > 11 || row > 1 || col < 0 || row < 0 || highlightStone >= 21) {
-			highlightStone = -1;
-		}
-		Stone s = model.spiel.get_current_player().get_stone(highlightStone);
-		if (s != null && s.get_available() <= 0)
-			highlightStone = -1;
-		else if (s != null) {
+		int nr = col * 2 + row;
+		if (nr < 0 || nr >= stones.size())
+			highlightStone = null;
+		else
+			highlightStone = stones.get(nr);
+		if (highlightStone != null && highlightStone.get_available() <= 0)
+			highlightStone = null;
+		else if (highlightStone != null) {
 			/* we tapped on a stone; start timer */
 			if (task != null)
 				task.cancel();
@@ -73,7 +92,7 @@ public class Wheel extends ViewElement {
 				public void run() {
 					if (!spinning)
 						return;
-					if (highlightStone < 0)
+					if (highlightStone == null)
 						return;
 					if (Math.abs(currentAngle - originalAngle) > 10.0f)
 						return;
@@ -89,11 +108,10 @@ public class Wheel extends ViewElement {
 							model.board.modelToBoard(tmp);
 							
 							Log.d(tag, "timer expire, start moving stone");
-							Stone stone = model.spiel.get_current_player().get_stone(highlightStone);
-							model.activity.selectCurrentStone(model.spiel, stone);
-							highlightStone = -1;
+							model.activity.selectCurrentStone(model.spiel, highlightStone);
 							model.activity.vibrate(100);
-							model.currentStone.startDragging(stone);
+							model.currentStone.startDragging(highlightStone);
+							highlightStone = null;
 							model.currentStone.moveTo((int)tmp.x, (int)tmp.y);
 							spinning = false;
 							model.view.updateView();
@@ -103,9 +121,9 @@ public class Wheel extends ViewElement {
 				}
 			}, 500);
 			if (model.currentStone.stone != null) {
-				model.currentStone.stone = s;
+				model.currentStone.stone = highlightStone;
 			}
-			model.activity.selectCurrentStone(model.spiel, s);
+			model.activity.selectCurrentStone(model.spiel, highlightStone);
 		}
 
 		spinning = true;
@@ -132,22 +150,20 @@ public class Wheel extends ViewElement {
 		originalX = tmp.x;
 
 		if (Math.abs(currentAngle - originalAngle) >= 90.0f) {
-			highlightStone = -1;
+			highlightStone = null;
 			model.activity.selectCurrentStone(model.spiel, null);
 		}
 
-		if (highlightStone >= 0 && tmp.y >= 0) {
+		if (highlightStone != null && tmp.y >= 0) {
 			if (Math.abs(currentAngle - originalAngle) < 90.0f) {
 				// renderer.currentWheelAngle = originalWheelAngle;
-				Stone stone = model.spiel.get_current_player().get_stone(
-						highlightStone);
-				model.activity.selectCurrentStone(model.spiel, stone);
+				model.activity.selectCurrentStone(model.spiel, highlightStone);
 				model.activity.vibrate(100);
-				highlightStone = -1;
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
-				model.currentStone.startDragging(stone);
+				model.currentStone.startDragging(highlightStone);
+				highlightStone = null;
 				spinning = false;
 			}
 		}
@@ -160,4 +176,50 @@ public class Wheel extends ViewElement {
 		return false;
 	}
 
+	public void render(MyRenderer renderer, GL10 gl, int player) {
+		final float da = 17.0f;
+		float angle = currentAngle + 9.5f * 0.5f * da;
+		
+		if (model.spiel == null)
+			return;
+		
+		
+		gl.glPushMatrix();
+		gl.glTranslatef(0, -BoardRenderer.stone_size * 27.0f, 0);
+		gl.glRotatef(currentAngle, 0, 0, 1);
+		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 8));
+		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
+		gl.glPushMatrix();
+//		gl.glScalef(0.6f, 0.6f, 0.6f);
+		for (int i = 0; i < stones.size(); i++) {
+			Stone s = stones.get(i);
+			
+			float alpha = 1.0f;
+			while (angle < -180f)
+				angle += 360.0f;
+			while (angle > 180.0f)
+				angle -= 360.0f;
+			
+			alpha = 1.0f / (1.0f + Math.abs(angle) / 47.0f);
+			
+			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+				gl.glRotatef(90 * player, 0, 1, 0);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : player, s, alpha);
+				gl.glRotatef(-90 * player, 0, 1, 0);
+			}
+			
+			if (i % 2 == 0) {
+				gl.glTranslatef(0, 0, BoardRenderer.stone_size * 2.0f * 5.1f);
+			} else {
+				gl.glPopMatrix();
+				gl.glTranslatef(BoardRenderer.stone_size * 2.0f * 5.1f, 0, 0);
+				gl.glRotatef(-da, 0, 0, 1);
+				angle -= da;
+				gl.glPushMatrix();
+			}
+		}
+		
+		gl.glPopMatrix();
+		gl.glPopMatrix();
+	}
 }

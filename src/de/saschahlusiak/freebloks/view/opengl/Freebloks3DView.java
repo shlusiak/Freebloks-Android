@@ -145,12 +145,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			if (currentPlayer >= 0) {
 				gl.glPushMatrix();
 				gl.glRotatef(getAngleY(), 0, 1, 0);
-				board.renderPlayerStones(
-						gl, 
-						currentPlayer, 
-						model.wheel.currentAngle, 
-						model.wheel.highlightStone, 
-						model.currentStone.stone);
+				model.wheel.render(this, gl, currentPlayer);
 				gl.glPopMatrix();
 			}
 		}
@@ -364,11 +359,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	public void newCurrentPlayer(int player) {
 		currentPlayer = player;
 		updateView();
+		model.wheel.update(player);
 	}
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
 		updateView();
+		model.wheel.update(spiel.current_player());
 		
 		if (!spiel.is_local_player(s.player)) {
 			Stone st = new Stone();

@@ -189,57 +189,9 @@ public class BoardRenderer {
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, stone.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, stone.getNormalBuffer());
 	    
-	    stone.drawElements(gl, GL10.GL_TRIANGLES);
+	    stone.drawElements(gl);
     	
     	gl.glDisable(GL10.GL_BLEND);
-	}
-	
-	public void renderPlayerStones(GL10 gl, int player, float wheelAngle, int highlightStone, Stone currentStone) {
-		final float da = 17.0f;
-		float angle = wheelAngle + 9.5f * 0.5f * da;
-		
-		if (spiel == null)
-			return;
-		
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(0, -stone_size * 27.0f, 0);
-		gl.glRotatef(wheelAngle, 0, 0, 1);
-		gl.glTranslatef(-stone_size * 5.1f * 6.5f, 0, stone_size * (spiel.m_field_size_x + 8));
-		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
-		gl.glPushMatrix();
-//		gl.glScalef(0.6f, 0.6f, 0.6f);
-		Player p = spiel.get_player(player);
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++) {
-			Stone s = p.get_stone(i);
-			float alpha = 1.0f;
-			while (angle < -180f)
-				angle += 360.0f;
-			while (angle > 180.0f)
-				angle -= 360.0f;
-			
-			alpha = 1.0f / (1.0f + Math.abs(angle) / 47.0f);
-			
-			if (s.get_available() - ((s == currentStone) ? 1 : 0) > 0) {
-				gl.glRotatef(90 * player, 0, 1, 0);
-				renderPlayerStone(gl, (i == highlightStone) ? -1 : player, s, alpha);
-				gl.glRotatef(-90 * player, 0, 1, 0);
-			}
-			
-			gl.glTranslatef(stone_size * 2.0f * 5.1f, 0, 0);
-			if (i % 11 == 10) {
-				gl.glPopMatrix();
-				gl.glTranslatef(0, 0, stone_size * 2.0f * 5.1f);
-				angle = wheelAngle + 9.5f * 0.5f * da;
-				gl.glPushMatrix();
-			} else {
-				gl.glRotatef(-da, 0, 0, 1);
-				angle -= da;
-			}
-		}
-		
-		gl.glPopMatrix();
-		gl.glPopMatrix();
 	}
 	
 	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {

@@ -197,7 +197,7 @@ public class CurrentStone extends ViewElement {
 						model.addEffect(e);
 						
 						stone = null;
-						model.wheel.highlightStone = -1;
+						model.wheel.highlightStone = null;
 					}
 				} else {
 					fieldPoint.x = m.x;
@@ -210,7 +210,7 @@ public class CurrentStone extends ViewElement {
 					fieldPoint.y = y;
 					model.board.boardToUnified(fieldPoint);
 					if (fieldPoint.y < -2.0f) {
-						model.wheel.highlightStone = stone.get_number();
+						model.wheel.highlightStone = stone;
 						dragging = false;
 						stone = null;
 					}
