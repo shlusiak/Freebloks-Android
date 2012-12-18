@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
@@ -111,7 +112,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		setContentView(R.layout.main_3d);
 
 		view = (Freebloks3DView)findViewById(R.id.board);
