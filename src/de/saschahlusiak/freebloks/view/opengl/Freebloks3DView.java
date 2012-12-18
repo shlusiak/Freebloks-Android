@@ -99,7 +99,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 			
 			if (spiel == null) {
 				board.renderBoard(gl, -1);
@@ -227,6 +226,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		setRenderer(renderer);
 		renderer.setAngle(70.0f, zoom);
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
 	
 	public void setActivity(ActivityInterface activity) {

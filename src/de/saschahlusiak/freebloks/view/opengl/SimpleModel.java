@@ -34,7 +34,7 @@ public class SimpleModel {
 	    
 	    ByteBuffer tbb = ByteBuffer.allocateDirect(num_vertices * 2 * 4);
 	    tbb.order(ByteOrder.nativeOrder());
-	    _textureBuffer = tbb.asFloatBuffer(); 
+	    _textureBuffer = tbb.asFloatBuffer();
     }
     
     void commit() {
@@ -75,7 +75,7 @@ public class SimpleModel {
 		return _indexBuffer;
 	}
 
-	public void drawElements(GL10 gl, int mode) {
+	public void drawElements(GL10 gl) {
 		gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, getIndexBuffer());
 	}
 

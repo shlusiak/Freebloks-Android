@@ -1,9 +1,5 @@
 package de.saschahlusiak.freebloks.view.opengl;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -153,7 +149,7 @@ public class BoardRenderer {
 	    		else
 	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 
-	    		field.drawElements(gl, GL10.GL_TRIANGLES);
+	    		field.drawElements(gl);
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
 	    	}
 	    	gl.glTranslatef(- x * stone_size * 2.0f, 0, stone_size * 2.0f);
@@ -164,7 +160,7 @@ public class BoardRenderer {
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, border.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, border.getNormalBuffer());
 	    for (int i = 0; i < 4; i++) {
-	    	border.drawElements(gl, GL10.GL_TRIANGLES);
+	    	border.drawElements(gl);
 	    	gl.glRotatef(90, 0, 1, 0);
 	    }
 	}
