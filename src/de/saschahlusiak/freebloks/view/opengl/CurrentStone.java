@@ -17,7 +17,7 @@ public class CurrentStone extends ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
 	
 	enum Status {
-		IDLE, DRAGGING, ROTATING
+		IDLE, DRAGGING, ROTATING, FLIPPING_HORIZONTAL, FLIPPING_VERTICAL
 	}
 	
 	Stone stone;
@@ -89,8 +89,12 @@ public class CurrentStone extends ViewElement {
 		    		0,
 		    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)(pos.y - stone.get_stone_size() / 2));
 		    
-		    if (status == Status.ROTATING)
-		    	gl.glRotatef(rotate_angle, 0, 1, 0);
+			if (status == Status.ROTATING)
+				gl.glRotatef(rotate_angle, 0, 1, 0);
+			if (status == Status.FLIPPING_HORIZONTAL)
+				gl.glRotatef(rotate_angle, 0, 0, 1);
+			if (status == Status.FLIPPING_VERTICAL)
+				gl.glRotatef(rotate_angle, 1, 0, 0);
 
 		    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 			gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -108,6 +112,9 @@ public class CurrentStone extends ViewElement {
 		    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
 		    
 		    overlay.drawElements(gl);
+		    gl.glRotatef(180.0f, 1, 0, 0);
+		    overlay.drawElements(gl);
+		    gl.glRotatef(180.0f, 1, 0, 0);
 
 			gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		    
@@ -123,22 +130,25 @@ public class CurrentStone extends ViewElement {
 		    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * pos.y);
 			
 			
-		    if (status == Status.ROTATING) {
-		    	float offset = (float)(stone.get_stone_size())/ 2.0f;
-		    	offset -= 0.5f;
+			float offset = (float)(stone.get_stone_size())/ 2.0f;
+			offset -= 0.5f;
 		    	
-			    gl.glTranslatef(
-			    		BoardRenderer.stone_size * 2.0f * offset,
-			    		0,
-			    		BoardRenderer.stone_size * 2.0f * offset);
+			gl.glTranslatef(BoardRenderer.stone_size * 2.0f * offset,
+					0,
+					BoardRenderer.stone_size * 2.0f * offset);
 
-		    	gl.glRotatef(rotate_angle, 0, 1, 0);
+			if (status == Status.ROTATING)
+				gl.glRotatef(rotate_angle, 0, 1, 0);
+			if (status == Status.FLIPPING_HORIZONTAL)
+				gl.glRotatef(rotate_angle, 0, 0, 1);
+			if (status == Status.FLIPPING_VERTICAL)
+				gl.glRotatef(rotate_angle, 1, 0, 0);
 		    	
-			    gl.glTranslatef(
-			    		-BoardRenderer.stone_size * 2.0f * offset,
-			    		0,
-			    		-BoardRenderer.stone_size * 2.0f * offset);
-		    }
+		    gl.glTranslatef(
+					-BoardRenderer.stone_size * 2.0f * offset,
+					0,
+					-BoardRenderer.stone_size * 2.0f * offset);
+		    
 			renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f);
 			
 			gl.glEnable(GL10.GL_DEPTH_TEST);
@@ -190,8 +200,8 @@ public class CurrentStone extends ViewElement {
 			
 			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
 			if ((Math.abs(stone_rel_x) <= 8) && (Math.abs(stone_rel_y) <= 8)) {
-				if ((Math.abs(stone_rel_x) > 5.0f) && (Math.abs(stone_rel_y) < 2.5f) ||
-					(Math.abs(stone_rel_x) < 2.5f) && (Math.abs(stone_rel_y) > 5.0f)) {
+				if ((Math.abs(stone_rel_x) > 4.0f) && (Math.abs(stone_rel_y) < 3.0f) ||
+					(Math.abs(stone_rel_x) < 3.0f) && (Math.abs(stone_rel_y) > 4.0f)) {
 					status = Status.ROTATING;
 					rotate_angle = 0.0f;
 				} else {
@@ -223,7 +233,39 @@ public class CurrentStone extends ViewElement {
 			float a1 = (float)Math.atan2(stone_rel_y, stone_rel_x);
 			float a2 = (float)Math.atan2(ry, rx);
 			rotate_angle = (a2 - a1) * 180.0f / (float)Math.PI;
+			if (Math.abs(rx) + Math.abs(ry) < 5 && Math.abs(rotate_angle) < 25.0f) {
+				rotate_angle = 0.0f;
+				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
+			}
 			Log.w(tag, "a1 = " + a1 + ", a2 = " + a2);
+		}
+		if (status == Status.FLIPPING_HORIZONTAL) {
+			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
+			float p = 0.0f;
+			p = (stone_rel_x - rx) / (stone_rel_x * 2.0f);
+			if (p < 0)
+				p = 0;
+			if (p > 1)
+				p = 1;
+			if (stone_rel_x > 0)
+				p = -p;
+			
+			rotate_angle = p * 180;
+			Log.w(tag, "flip = " + p);
+		}
+		if (status == Status.FLIPPING_VERTICAL) {
+			float ry = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
+			float p = 0.0f;
+			p = (stone_rel_y - ry) / (stone_rel_y * 2.0f);
+			if (p < 0)
+				p = 0;
+			if (p > 1)
+				p = 1;
+			if (stone_rel_y > 0)
+				p = -p;
+			
+			rotate_angle = p * 180;
+			Log.w(tag, "flip = " + p);
 		}
 		return true;
 	}
@@ -270,6 +312,18 @@ public class CurrentStone extends ViewElement {
 				rotate_angle -= 90.0f;
 				stone.rotate_left();
 			}
+			rotate_angle = 0.0f;
+		}
+		if (status == Status.FLIPPING_HORIZONTAL) {
+			if (Math.abs(rotate_angle) > 90.0f)
+				stone.mirror_over_y();
+			
+			rotate_angle = 0.0f;
+		}
+		if (status == Status.FLIPPING_VERTICAL) {
+			if (Math.abs(rotate_angle) > 90.0f)
+				stone.mirror_over_x();
+			
 			rotate_angle = 0.0f;
 		}
 		status = Status.IDLE;
