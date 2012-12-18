@@ -92,8 +92,7 @@ public class StartScreenActivity extends Activity {
 		case DIALOG_JOIN:
 			final Dialog addDialog = new Dialog(this);
 			addDialog.setContentView(R.layout.join_game_dialog);
-			addDialog.getWindow().setLayout(LayoutParams.FILL_PARENT,
-					LayoutParams.WRAP_CONTENT);
+			
 			addDialog.setTitle(R.string.join_game);
 			((EditText) addDialog.findViewById(R.id.server))
 					.setText("blokus.mooo.com");
