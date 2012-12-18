@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="WARNING:"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffff0000"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textView1"
+        android:gravity="center_horizontal"
+        android:text="This is a development version of Freebloks! Please send crash reports or feedback. Do not complain if something does not work yet."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textView1"
+        android:gravity="center_horizontal"
+        android:text="Freebloks is OpenSource, you can get involved on GitHub:"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2"
+        android:autoLink="web"
+        android:gravity="center_horizontal"
+        android:paddingTop="12dp"
+        android:text="https://github.com/shlusiak/Freebloks-Android"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>

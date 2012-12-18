@@ -2,8 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff003f7f"
-    android:orientation="vertical" >
+    android:background="#ff003f7f" >
+    
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/freebloks_logo" />
+    
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="development version"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffff2f2f"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffff2f2f"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -12,9 +42,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
+        android:orientation="vertical"
         android:paddingLeft="56dp"
-        android:paddingRight="56dp"
-        android:orientation="vertical" >
+        android:paddingRight="56dp" >
 
         <Button
             android:id="@+id/new_game"
@@ -37,47 +67,5 @@
             android:text="@string/preferences"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="WARNING:"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffff0000"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
-        android:gravity="center_horizontal"
-        android:text="This is a development version of Freebloks! Please do not complain if something does not work yet. Freebloks is OpenSource, so please try to get involved on GitHub:"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView2"
-        android:autoLink="web"
-        android:gravity="center_horizontal"
-        android:text="https://github.com/shlusiak/Freebloks-Android"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/version"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView3"
-        android:gravity="center_horizontal"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
