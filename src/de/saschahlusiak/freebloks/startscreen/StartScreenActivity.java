@@ -5,12 +5,18 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.FreebloksActivity;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,17 +29,22 @@ import android.widget.TextView;
 
 public class StartScreenActivity extends Activity {
 	private static final int DIALOG_JOIN = 1;
+	private static final int DIALOG_DEV = 2;
 
+	PackageInfo pinfo;
+	SharedPreferences prefs;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.start_screen);
 		
-		PackageInfo pinfo;
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		try {
 			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			((TextView)findViewById(R.id.version)).setText("version: " + pinfo.versionName);
+			((TextView)findViewById(R.id.version)).setText("" + pinfo.versionName);
 		} catch (NameNotFoundException e) {
 			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
 			e.printStackTrace();
@@ -64,6 +75,16 @@ public class StartScreenActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		if (savedInstanceState == null) {
+			if (prefs.getInt("lastVersion", 0) != pinfo.versionCode) {
+				showDialog(DIALOG_DEV);
+				
+				Editor editor = prefs.edit();
+				editor.putInt("lastVersion", pinfo.versionCode);
+				editor.commit();
+			}
+		}
 	}
 
 	protected Dialog onCreateDialog(int id) {
@@ -101,6 +122,17 @@ public class StartScreenActivity extends Activity {
 						}
 					});
 			return addDialog;
+		case DIALOG_DEV:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("version " + pinfo.versionName);
+			builder.setView(LayoutInflater.from(this).inflate(R.layout.development_warning, null, false));
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();					
+				}
+			});
+			return builder.create();
 		}
 		return super.onCreateDialog(id);
 	}
