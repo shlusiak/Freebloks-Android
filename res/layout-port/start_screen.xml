@@ -8,9 +8,9 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:src="@drawable/freebloks_logo" />
     
@@ -39,10 +39,10 @@
         android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="16dp"
-        android:minWidth="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+		android:minWidth="200dp"        
         android:orientation="vertical" >
 
         <Button
