@@ -76,15 +76,16 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 		public synchronized void onDrawFrame(GL10 gl) {
 			final float camera_distance = zoom;
+			float angle = getAngleY();
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glTranslatef(0, 9.0f, 0);
 			GLU.gluLookAt(gl, 
-					(float) (camera_distance*Math.sin(getAngleY() * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
+					(float) (camera_distance*Math.sin(angle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 					(float) (camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
-					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-getAngleY()*Math.PI/180.0)),
+					(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-angle*Math.PI/180.0)),
 					0.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f);
 			if (updateModelViewMatrix) {
@@ -142,15 +143,17 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				}
 			}
 
-			if (currentPlayer >= 0) {
+			if (currentPlayer >= 0 && model.showPlayer >= 0) {
 				gl.glPushMatrix();
-				gl.glRotatef(getAngleY(), 0, 1, 0);
+				gl.glRotatef(angle, 0, 1, 0);
 				model.wheel.render(this, gl, currentPlayer);
 				gl.glPopMatrix();
 			}
 		}
 		
 		final float getAngleY() {
+			if (model.showPlayer < 0)
+				return 0.0f;
 			return -90.0f * (float)model.showPlayer;
 		}
 
@@ -270,6 +273,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
+		if (spiel == null)
+			return true;
+		
 		modelPoint.x = event.getX();
 		modelPoint.y = event.getY();
 		

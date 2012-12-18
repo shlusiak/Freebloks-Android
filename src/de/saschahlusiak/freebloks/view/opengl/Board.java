@@ -31,6 +31,7 @@ public class Board extends ViewElement {
 		float tmp;
 		
 		switch (model.showPlayer) {
+		default:
 		case 0: /* nothing */
 			break;
 		case 1:

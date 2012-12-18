@@ -27,6 +27,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
 		board = new Board(this);
+		showPlayer = -1;
 		
 		effects = new ArrayList<AbsEffect>();
 		
