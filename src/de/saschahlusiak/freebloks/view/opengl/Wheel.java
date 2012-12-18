@@ -62,7 +62,7 @@ public class Wheel extends ViewElement {
 		if (tmp.y > 0)
 			return false;
 		
-		int row = (int) (-tmp.y / 5.5f);
+		int row = (int) (-(tmp.y + 2.0f) / 5.5f);
 		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.5f + originalAngle / 17.0f);
 
 		Log.d(tag, "currentWheelAngle = " + originalAngle);
@@ -76,7 +76,7 @@ public class Wheel extends ViewElement {
 		
 		
 		int nr = col * 2 + row;
-		if (nr < 0 || nr >= stones.size())
+		if (nr < 0 || nr >= stones.size() || row > 1)
 			highlightStone = null;
 		else
 			highlightStone = stones.get(nr);
@@ -187,7 +187,7 @@ public class Wheel extends ViewElement {
 		gl.glPushMatrix();
 		gl.glTranslatef(0, -BoardRenderer.stone_size * 27.0f, 0);
 		gl.glRotatef(currentAngle, 0, 0, 1);
-		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 8));
+		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
 		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
 		gl.glPushMatrix();
 //		gl.glScalef(0.6f, 0.6f, 0.6f);
