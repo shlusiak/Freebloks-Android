@@ -243,6 +243,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				break;
 			}
 			currentPlayer = spiel.current_player();
+			model.wheel.update(currentPlayer);
 		}
 		
 		queueEvent(new Runnable() {
