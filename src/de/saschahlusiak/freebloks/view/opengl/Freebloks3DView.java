@@ -25,9 +25,8 @@ import android.view.MotionEvent;
 public class Freebloks3DView extends GLSurfaceView implements ViewInterface, SpielClientInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
-	ViewModel model = new ViewModel(this);
+	public ViewModel model = new ViewModel(this);
 	
-	public boolean showSeeds, showOpponents;
 	
 	class MyRenderer implements GLSurfaceView.Renderer {
 		final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
@@ -109,7 +108,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			}
 
 			/* render board */
-			board.renderBoard(gl, (spiel.is_local_player() && showSeeds) ? model.showPlayer : -1);
+			board.renderBoard(gl, (spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
 			
 			/* render player stones on board, unless they are "effected" */
 			synchronized (model.effects) {
@@ -245,7 +244,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				break;
 			}
 			currentPlayer = spiel.current_player();
-			model.wheel.update(showOpponents ? currentPlayer : model.showPlayer);
+			model.wheel.update(model.showOpponents ? currentPlayer : model.showPlayer);
 		}
 		
 		queueEvent(new Runnable() {
@@ -369,15 +368,15 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	public void newCurrentPlayer(int player) {
 		currentPlayer = player;
 		updateView();
-		model.wheel.update(showOpponents ? player : model.showPlayer);
+		model.wheel.update(model.showOpponents ? player : model.showPlayer);
 	}
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
 		updateView();
-		model.wheel.update(showOpponents ? spiel.current_player() : model.showPlayer);
+		model.wheel.update(model.showOpponents ? spiel.current_player() : model.showPlayer);
 		
-		if (!spiel.is_local_player(s.player)) {
+		if (model.showAnimations && !spiel.is_local_player(s.player)) {
 			Stone st = new Stone();
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
@@ -511,5 +510,4 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			thread.start();
 		}
 	}
-	
 }

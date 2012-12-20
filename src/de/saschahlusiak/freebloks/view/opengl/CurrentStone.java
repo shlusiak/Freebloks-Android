@@ -276,11 +276,13 @@ public class CurrentStone extends ViewElement {
 			if (!hasMoved) {
 				int player = model.spiel.current_player();
 				if (model.activity.commitCurrentStone(model.spiel, stone, pos.x, pos.y)) {
-					Stone st = new Stone();
-					st.copyFrom(stone);
-					FadeEffect e = new FadeEffect(st, player, pos.x, 19 - pos.y);
+					if (model.showAnimations) {
+						Stone st = new Stone();
+						st.copyFrom(stone);
+						FadeEffect e = new FadeEffect(st, player, pos.x, 19 - pos.y);
 				
-					model.addEffect(e);
+						model.addEffect(e);
+					}
 					
 					stone = null;
 					model.wheel.highlightStone = null;
