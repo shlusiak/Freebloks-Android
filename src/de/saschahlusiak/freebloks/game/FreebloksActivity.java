@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
+import java.security.acl.LastOwnerException;
+
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.ServerListener;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -17,6 +19,7 @@ import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -39,6 +42,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_LOBBY = 2;
+	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
 
 	Freebloks3DView view;
@@ -48,6 +52,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	ServerListener listener = null;
 	Vibrator vibrator;
 	boolean vibrate;
+	NET_SERVER_STATUS lastStatus;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -216,6 +221,24 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					spiel.disconnect();
 				}
 			});
+			
+		case DIALOG_QUIT:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			/* TODO: don't ask, if lastStatus.clients == 1 && implemented(resume) */
+			builder.setMessage("Do you want to quit the current game? The game cannot be resumed (yet).");
+			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					finish();
+				}
+			});
+			builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					arg0.dismiss();
+				}
+			});
+			return builder.create();
 		
 		case DIALOG_GAME_FINISH:
 			return new GameFinishDialog(this);
@@ -340,6 +363,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
 		Log.d(tag, "serverStatus()");
+		lastStatus = status;
 	}
 
 	@Override
@@ -375,5 +399,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void vibrate(int ms) {
 		if (vibrate)
 			vibrator.vibrate(ms);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		showDialog(DIALOG_QUIT);
 	}
 }
