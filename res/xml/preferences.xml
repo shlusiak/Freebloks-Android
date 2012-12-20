@@ -18,12 +18,16 @@
 		<CheckBoxPreference
 		    android:summary="Show possible corners of your stones"
 		    android:title="Show corners" 
-		    android:enabled="false" />
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="show_seeds" />
 
 		<CheckBoxPreference
 		    android:summary="Show stones of opponents"
-		    android:title="Show opponents" 
-		    android:enabled="false" />
+		    android:title="Show opponents"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="show_opponents" />
 
 		<CheckBoxPreference
 		    android:summary="Show animations when placing stones"

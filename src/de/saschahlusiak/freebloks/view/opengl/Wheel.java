@@ -22,6 +22,7 @@ public class Wheel extends ViewElement {
 	float originalX;
 	boolean spinning = false;
 	ArrayList<Stone> stones;
+	int lastPlayer;
 	
 	public Wheel(ViewModel model) {
 		super(model);
@@ -35,6 +36,7 @@ public class Wheel extends ViewElement {
 	
 	
 	synchronized void update(int currentPlayer) {
+		lastPlayer = currentPlayer;
 		if (currentPlayer < 0)
 			return;
 		Player p = model.spiel.get_player(currentPlayer);
@@ -176,7 +178,7 @@ public class Wheel extends ViewElement {
 		return false;
 	}
 
-	public synchronized void render(MyRenderer renderer, GL10 gl, int player) {
+	public synchronized void render(MyRenderer renderer, GL10 gl) {
 		final float da = 17.0f;
 		float angle = currentAngle + 9.5f * 0.5f * da;
 		
@@ -205,11 +207,11 @@ public class Wheel extends ViewElement {
 				alpha *= 0.7f;
 
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
-				gl.glRotatef(90 * player, 0, 1, 0);
+				gl.glRotatef(90 * lastPlayer, 0, 1, 0);
 				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : player, s, alpha);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : lastPlayer, s, alpha);
 				gl.glTranslatef(s.get_stone_size() * BoardRenderer.stone_size, 0, s.get_stone_size() * BoardRenderer.stone_size);
-				gl.glRotatef(-90 * player, 0, 1, 0);
+				gl.glRotatef(-90 * lastPlayer, 0, 1, 0);
 			}
 			
 			if (i % 2 == 0) {
