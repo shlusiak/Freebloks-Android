@@ -18,7 +18,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 	ViewInterface view;
 	ArrayList<AbsEffect> effects;
 
-
+	public boolean showSeeds, showOpponents, showAnimations;
 	int showPlayer;
 
 	public ViewModel(ViewInterface view) {

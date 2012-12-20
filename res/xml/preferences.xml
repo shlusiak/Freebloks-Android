@@ -32,7 +32,9 @@
 		<CheckBoxPreference
 		    android:summary="Show animations when placing stones"
 		    android:title="Show Animations"
-		    android:enabled="false" />
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="show_animations" />
 		
 	</PreferenceCategory>
     
