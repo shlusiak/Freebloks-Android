@@ -169,6 +169,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 		vibrate = prefs.getBoolean("vibrate", true);
+		view.showSeeds = prefs.getBoolean("show_seeds", true);
+		/* TODO: update wheel when changing show_opponents preference */
+		view.showOpponents = prefs.getBoolean("show_opponents", true);
 	}
 
 	@Override

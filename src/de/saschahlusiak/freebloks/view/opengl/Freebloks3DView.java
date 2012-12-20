@@ -27,6 +27,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	ViewModel model = new ViewModel(this);
 	
+	public boolean showSeeds, showOpponents;
+	
 	class MyRenderer implements GLSurfaceView.Renderer {
 		final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
 		final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
@@ -107,7 +109,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			}
 
 			/* render board */
-			board.renderBoard(gl, spiel.is_local_player() ? model.showPlayer : -1);
+			board.renderBoard(gl, (spiel.is_local_player() && showSeeds) ? model.showPlayer : -1);
 			
 			/* render player stones on board, unless they are "effected" */
 			synchronized (model.effects) {
@@ -136,7 +138,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			if (currentPlayer >= 0 && model.showPlayer >= 0) {
 				gl.glPushMatrix();
 				gl.glRotatef(angle, 0, 1, 0);
-				model.wheel.render(this, gl, currentPlayer);
+				model.wheel.render(this, gl);
 				gl.glPopMatrix();
 			}
 			
@@ -243,7 +245,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				break;
 			}
 			currentPlayer = spiel.current_player();
-			model.wheel.update(currentPlayer);
+			model.wheel.update(showOpponents ? currentPlayer : model.showPlayer);
 		}
 		
 		queueEvent(new Runnable() {
@@ -367,13 +369,13 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	public void newCurrentPlayer(int player) {
 		currentPlayer = player;
 		updateView();
-		model.wheel.update(player);
+		model.wheel.update(showOpponents ? player : model.showPlayer);
 	}
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
 		updateView();
-		model.wheel.update(spiel.current_player());
+		model.wheel.update(showOpponents ? spiel.current_player() : model.showPlayer);
 		
 		if (!spiel.is_local_player(s.player)) {
 			Stone st = new Stone();
