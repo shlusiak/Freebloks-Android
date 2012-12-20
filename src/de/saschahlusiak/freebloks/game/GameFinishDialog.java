@@ -62,10 +62,15 @@ public class GameFinishDialog extends Dialog {
 		t[3] = (TextView) findViewById(R.id.place4);
 		
 		for (i = 0; i < 4; i++) {
+			String name;
 			Player p = spiel.get_player(place[i]);
 			/* TODO: translate */
+			name = names[place[i]];
+			if (spiel.is_local_player(place[i]))
+				name = "* " + name;
+			
 			t[i].setText(String.format("%s: -%d points (%d stones)",
-					names[place[i]],
+					name,
 					p.m_stone_points_left,
 					p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);
