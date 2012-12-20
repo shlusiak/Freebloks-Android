@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -22,32 +25,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:paddingTop="12dp"
+        android:paddingTop="8dp"
         android:layout_below="@+id/textView1"
         android:gravity="center_horizontal"
-        android:text="This is a development version of Freebloks! Please send crash reports or feedback. Do not complain if something does not work yet."
+        android:text="This is a development version of Freebloks! Please send crash reports or feedback."
         android:textAppearance="?android:attr/textAppearanceMedium" />
-    
+
     <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="What's new:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff00" />
+
+    <TextView
+        android:id="@+id/whatsnew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[nothing]"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ffffff00" />
+
+	<TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textView1"
         android:gravity="center_horizontal"
-        android:text="Freebloks is OpenSource, you can get involved on GitHub:"
+        android:text="Freebloks is OpenSource, you can get involved on GitHub or send me an email:"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+        
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView2"
         android:autoLink="web"
         android:gravity="center_horizontal"
-        android:paddingTop="12dp"
         android:text="https://github.com/shlusiak/Freebloks-Android"
         android:textAppearance="?android:attr/textAppearanceSmall" />
-
+	<TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:autoLink="email"
+        android:gravity="center_horizontal"
+        android:paddingBottom="8dp"
+        android:text="mail@saschahlusiak.de"
+        android:textAppearance="?android:attr/textAppearanceSmall" />    
 </LinearLayout>
+</ScrollView>
