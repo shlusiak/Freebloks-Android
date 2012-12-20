@@ -34,6 +34,9 @@ public class StartScreenActivity extends Activity {
 	PackageInfo pinfo;
 	SharedPreferences prefs;
 	
+	private static final String WHATS_NEW = 
+			"[nothing]";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,8 +126,11 @@ public class StartScreenActivity extends Activity {
 			return addDialog;
 		case DIALOG_DEV:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			View view;
+			view = LayoutInflater.from(this).inflate(R.layout.development_warning, null, false);
 			builder.setTitle("version " + pinfo.versionName);
-			builder.setView(LayoutInflater.from(this).inflate(R.layout.development_warning, null, false));
+			((TextView)(view.findViewById(R.id.whatsnew))).setText(WHATS_NEW);
+			builder.setView(view);
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
