@@ -1,7 +1,5 @@
 package de.saschahlusiak.freebloks.game;
 
-import java.security.acl.LastOwnerException;
-
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.ServerListener;
 import de.saschahlusiak.freebloks.controller.SpielClient;

@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
 public class StartScreenActivity extends Activity {
@@ -35,7 +33,10 @@ public class StartScreenActivity extends Activity {
 	SharedPreferences prefs;
 	
 	private static final String WHATS_NEW = 
-			"[nothing]";
+			"* fix stones disappearing on rotate\n" + 
+			"* added more preferences\n" +
+			"* confirmation when leaving running game\n" +
+			"* improved layouts";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
