@@ -147,7 +147,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				
 				v.setText("None");
 				v.setTextColor(Color.WHITE);
-				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
+				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
 					v.setText(colorNames[i]);
 					v.setTextColor(colors[i]);
 				}

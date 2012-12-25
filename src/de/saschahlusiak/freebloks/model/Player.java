@@ -1,6 +1,10 @@
 package de.saschahlusiak.freebloks.model;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable, Cloneable {
+	private static final long serialVersionUID = -7320011705508155304L;
+	
 	public int m_stone_points_left;
 	public int m_stone_count;
 	public int m_number_of_possible_turns;
@@ -16,6 +20,15 @@ public class Player {
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
 			m_stone[i] = new Stone();
 		}
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Player c = (Player) super.clone();
+		c.m_stone = m_stone.clone();
+		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
+			c.m_stone[i] = (Stone)m_stone[i].clone();
+		return c;
 	}
 	
 	void init(Spiel spiel, int playernumber){

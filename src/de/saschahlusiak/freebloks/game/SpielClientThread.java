@@ -9,13 +9,8 @@ class SpielClientThread extends Thread {
 	SpielClient spiel;
 	boolean godown;
 	
-	boolean request_player;
-	boolean auto_start;
-	
-	SpielClientThread(SpielClient spiel, boolean request_player, boolean auto_start) {
+	SpielClientThread(SpielClient spiel) {
 		this.spiel = spiel;
-		this.request_player = request_player;
-		this.auto_start = auto_start;
 	}
 	
 	private synchronized boolean getGoDown() {
@@ -29,12 +24,6 @@ class SpielClientThread extends Thread {
 	@Override
 	public void run() {
 		godown = false;
-
-		if (request_player)
-			spiel.request_player();
-		if (auto_start)
-			spiel.request_start();
-
 		do {
 			if (!spiel.poll(true))
 				break;

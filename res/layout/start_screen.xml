@@ -49,22 +49,29 @@
             android:id="@+id/new_game"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="@string/new_local_game"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/new_local_game" />
+        
+        <Button
+            android:id="@+id/resume_game"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Resume" />
+        
         <Button
             android:id="@+id/join_game"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="@string/join_game"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/join_game" />
 
         <Button
             android:id="@+id/preferences"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="@string/preferences"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/preferences" />
     </LinearLayout>
 
 </RelativeLayout>

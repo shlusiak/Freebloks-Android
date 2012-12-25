@@ -275,7 +275,7 @@ public class CurrentStone extends ViewElement {
 		if (status == Status.DRAGGING) {
 			if (!hasMoved) {
 				int player = model.spiel.current_player();
-				if (model.activity.commitCurrentStone(model.spiel, stone, pos.x, pos.y)) {
+				if (model.activity.commitCurrentStone(stone, pos.x, pos.y)) {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);

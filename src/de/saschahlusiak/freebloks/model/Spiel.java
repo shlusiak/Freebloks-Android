@@ -1,6 +1,10 @@
 package de.saschahlusiak.freebloks.model;
 
-public class Spiel {
+import java.io.Serializable;
+
+public class Spiel implements Serializable, Cloneable {
+	private static final long serialVersionUID = -3803056324652460783L;
+	
 	public static final int PLAYER_MAX = 4;
 	public static final int DEFAULT_FIELD_SIZE_X = 20;
 	public static final int DEFAULT_FIELD_SIZE_Y = 20;
@@ -53,6 +57,21 @@ public class Spiel {
 			m_player[i] = new Player();
 	}
 	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Spiel c = (Spiel)super.clone();
+		c.m_player = m_player.clone();
+		for (int i = 0; i < PLAYER_MAX; i++)
+			c.m_player[i] = (Player)m_player[i].clone();
+		c.m_game_field = new int[m_field_size_y][m_field_size_x];
+		for (int y = 0; y < m_field_size_y; y++) {
+			for (int x = 0; x < m_field_size_x ; x++){
+				c.m_game_field[y][x] = m_game_field[y][x];
+			}
+		}
+		return c;
+	}
+	
 	private void init_field() {
 		m_game_field = new int[m_field_size_y][m_field_size_x];
 		for (int y = 0; y < m_field_size_y; y++) {
@@ -83,7 +102,7 @@ public class Spiel {
 	}
 
 	public int get_game_field(int playernumber, int y, int x) {
-		int wert = get_game_field_value(y, x);
+		int wert = m_game_field[y][x];
 		if (wert >= PLAYER_BIT_HAVE_MIN) return Stone.FIELD_DENIED;
 		wert &= PLAYER_BIT_ADDR[playernumber];
 		if (wert == 0) return Stone.FIELD_FREE;
@@ -130,7 +149,7 @@ public class Spiel {
 
 	}
 	
-	protected void set_field_size_and_new(int y, int x) {
+	public void set_field_size_and_new(int y, int x) {
 		m_field_size_x = x;
 		m_field_size_y = y;
 		m_game_field = new int[m_field_size_y][m_field_size_x];
@@ -152,7 +171,7 @@ public class Spiel {
 	}
 
 
-	protected void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
+	public void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
 		m_player[player_team1_1].set_teammate(player_team1_2);
 		m_player[player_team1_2].set_teammate(player_team1_1);
 		m_player[player_team1_1].set_nemesis(player_team2_1);
@@ -242,7 +261,7 @@ public class Spiel {
 		return Stone.FIELD_ALLOWED;
 	}
 
-	protected void undo_turn(Turnpool turnpool){
+	public void undo_turn(Turnpool turnpool){
 		Turn turn = turnpool.m_tail;
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;

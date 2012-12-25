@@ -11,32 +11,34 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 
-public class SpielClient extends Spielleiter {
+public class SpielClient {
 	static final String tag = SpielClient.class.getSimpleName();
 	
 	ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
 	Socket client_socket;
 	String lastHost;
+	public Spielleiter spiel;
 
-	public boolean isConnected() {
-		return (client_socket != null) && (!client_socket.isClosed());
+	
+	public SpielClient(Spielleiter leiter) {
+		if (leiter == null) {
+			spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
+			spiel.start_new_game();			
+			spiel.set_stone_numbers(0, 0, 0, 0, 0);
+		} else
+			this.spiel = leiter;
+		client_socket = null;
 	}
+
 	
 	@Override
 	protected void finalize() throws Throwable {
 		disconnect();
 		super.finalize();
 	}
-
-	public boolean is_local_player() {
-		return is_local_player(m_current_player);
-	}
-
-	public SpielClient() {
-		super(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
-		start_new_game();
-		client_socket = null;
-		set_stone_numbers(0, 0, 0, 0, 0);
+	
+	public boolean isConnected() {
+		return (client_socket != null) && (!client_socket.isClosed());
 	}
 	
 	public synchronized void addClientInterface(SpielClientInterface sci) {
@@ -62,7 +64,7 @@ public class SpielClient extends Spielleiter {
 			throw new Exception("Connection refused");
 		}
 		for (SpielClientInterface sci : spielClientInterface)
-			sci.onConnected(this);		
+			sci.onConnected(spiel);		
 	}
 
 	void setSocket(Socket client_socket) {
@@ -78,7 +80,7 @@ public class SpielClient extends Spielleiter {
 				e.printStackTrace();
 			}
 			for (SpielClientInterface sci : spielClientInterface)
-				sci.onDisconnected(this);		
+				sci.onDisconnected(spiel);		
 		}
 		client_socket = null;
 	}
@@ -114,33 +116,33 @@ public class SpielClient extends Spielleiter {
 		case Network.MSG_GRANT_PLAYER:
 			i=((NET_GRANT_PLAYER)data).player;
 			/* Merken, dass es sich bei i um einen lokalen Spieler handelt */
-			spieler[i] = PLAYER_LOCAL;
+			spiel.spieler[i] = Spielleiter.PLAYER_LOCAL;
 			break;
 
 		/* Der Server hat einen aktuellen Spieler festgelegt */
 		case Network.MSG_CURRENT_PLAYER: 
-			m_current_player=((NET_CURRENT_PLAYER)data).player;
+			spiel.m_current_player=((NET_CURRENT_PLAYER)data).player;
 			for (SpielClientInterface sci : spielClientInterface)
-				sci.newCurrentPlayer(m_current_player);
+				sci.newCurrentPlayer(spiel.m_current_player);
 			break;
 				
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
 		case Network.MSG_SET_STONE: {
 			NET_SET_STONE s=(NET_SET_STONE)data;
 			/* Entsprechenden Stein des Spielers holen */
-			Stone stone=get_player(s.player).get_stone(s.stone);
+			Stone stone = spiel.get_player(s.player).get_stone(s.stone);
 			/* Stein in richtige Position drehen */
 			stone.mirror_rotate_to(s.mirror_count, s.rotate_count);
 			/* Stein aufs echte Spielfeld setzen */
 //			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
-			if ((is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
-			   (super.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
+			if ((spiel.is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
+			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
 				// GAANZ schlecht!!
 				throw new Exception("Game not in sync!");
 			}
 			/* Zug der History anhaengen */
-			addHistory(s.player, stone, s.y, s.x);
+			spiel.addHistory(s.player, stone, s.y, s.x);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneWasSet(s);
 			break;
@@ -165,8 +167,8 @@ public class SpielClient extends Spielleiter {
 			NET_SERVER_STATUS status = (NET_SERVER_STATUS)data;
 			/* Wenn Spielfeldgroesse sich von Server unterscheidet,
 			   lokale Spielfeldgroesse hier anpassen */
-			if (status.width != m_field_size_x || status.height != m_field_size_y)
-				set_field_size_and_new(status.height,status.width);
+			if (status.width != spiel.m_field_size_x || status.height != spiel.m_field_size_y)
+				spiel.set_field_size_and_new(status.height,status.width);
 			{
 				boolean changed=false;
 				for (i = 0; i < Stone.STONE_SIZE_MAX; i++)
@@ -174,16 +176,16 @@ public class SpielClient extends Spielleiter {
 					changed |= (status.stone_numbers[i] != status.stone_numbers[i]);
 					status.stone_numbers[i]=status.stone_numbers[i];
 				}
-				if (changed)set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
+				if (changed)spiel.set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
 			}
-			m_gamemode = status.gamemode;
-			if (m_gamemode == GAMEMODE_4_COLORS_2_PLAYERS)
-				set_teams(0, 2, 1, 3);
-			if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS)
+			spiel.m_gamemode = status.gamemode;
+			if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+				spiel.set_teams(0, 2, 1, 3);
+			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
-					get_player(1).get_stone(n).set_available(0);
-					get_player(3).get_stone(n).set_available(0);
+					spiel.get_player(1).get_stone(n).set_available(0);
+					spiel.get_player(3).get_stone(n).set_available(0);
 				}
 			}
 			for (SpielClientInterface sci : spielClientInterface)
@@ -199,22 +201,22 @@ public class SpielClient extends Spielleiter {
 		}
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
-			start_new_game();
+			spiel.start_new_game();
 			/* Unbedingt history leeren. */
-			if (history != null)
-				history.delete_all_turns();
+			if (spiel.history != null)
+				spiel.history.delete_all_turns();
 
 //			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
-			if (m_gamemode==GAMEMODE_4_COLORS_2_PLAYERS)
-				set_teams(0,2,1,3);
-			if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS)
+			if (spiel.m_gamemode==Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+				spiel.set_teams(0,2,1,3);
+			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
-					get_player(1).get_stone(n).set_available(0);
-					get_player(3).get_stone(n).set_available(0);
+					spiel.get_player(1).get_stone(n).set_available(0);
+					spiel.get_player(3).get_stone(n).set_available(0);
 				}
 			}
-			m_current_player=-1;
+			spiel.m_current_player=-1;
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.gameStarted();
 			break;
@@ -222,11 +224,11 @@ public class SpielClient extends Spielleiter {
 	
 		/* Server laesst den letzten Zug rueckgaengig machen */
 		case Network.MSG_UNDO_STONE: {
-			Turn t = history.m_tail;
-			Stone stone = get_player(t.m_playernumber).get_stone(t.m_stone_number);
+			Turn t = spiel.history.m_tail;
+			Stone stone = spiel.get_player(t.m_playernumber).get_stone(t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone(stone, t);
-			undo_turn(history);
+			spiel.undo_turn(spiel.history);
 			break;
 		}
 		default: Log.e(tag, "FEHLER: unbekannte Nachricht empfangen: #" + data.msg_type);
@@ -242,11 +244,11 @@ public class SpielClient extends Spielleiter {
 	public int set_stone(Stone stone, int y, int x)
 	{
 		NET_SET_STONE data;
-		if (m_current_player==-1)return Stone.FIELD_DENIED;
+		if (spiel.m_current_player==-1)return Stone.FIELD_DENIED;
 
 		data = new NET_SET_STONE();
 		/* Datenstruktur mit Daten der Aktion fuellen */
-		data.player=m_current_player;
+		data.player=spiel.m_current_player;
 		data.stone=stone.get_number();
 		data.mirror_count=stone.get_mirror_counter();
 		data.rotate_count=stone.get_rotate_counter();
@@ -259,7 +261,7 @@ public class SpielClient extends Spielleiter {
 
 		/* Lokal keinen Spieler als aktiv setzen.
 	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
-		set_noplayer();
+		spiel.set_noplayer();
 		return Stone.FIELD_ALLOWED;
 	}
 
@@ -288,19 +290,6 @@ public class SpielClient extends Spielleiter {
 		if (text.length() < 1)return;
 		
 		new NET_CHAT(text, -1).send(client_socket);
-	}
-
-	/**
-	 * Gibt true zurueck, wenn der Spieler kein Computerspieler ist
-	 **/
-	public boolean is_local_player(int player) {
-		/*
-		 * Bei keinem aktuellem Spieler, ist der aktuelle natuerlich nicht
-		 * lokal.
-		 */
-		if (player == -1)
-			return false;
-		return (spieler[player] != PLAYER_COMPUTER);
 	}
 	
 	public String getLastHost() {
