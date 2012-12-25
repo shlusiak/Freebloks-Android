@@ -6,7 +6,9 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.model.Turnpool;
 
-public class Spielleiter extends Spiel {
+public class Spielleiter extends Spiel implements Cloneable {
+	private static final long serialVersionUID = -7880809258246268794L;
+	
 	static final int PLAYER_COMPUTER = -2;
 	static final int PLAYER_LOCAL = -1;
 	
@@ -26,6 +28,14 @@ public class Spielleiter extends Spiel {
 		m_gamemode = GAMEMODE_4_COLORS_4_PLAYERS;
 		for (int i=0;i<PLAYER_MAX;i++)spieler[i]=PLAYER_COMPUTER;
 		history=new Turnpool();
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Spielleiter c = (Spielleiter)super.clone();
+		c.spieler = spieler.clone();
+		c.history = new Turnpool();
+		return c;
 	}
 	
 	void set_noplayer() { 
@@ -63,5 +73,22 @@ public class Spielleiter extends Spiel {
 		n=0;
 		for (int i=0;i<PLAYER_MAX;i++)if (spieler[i]!=PLAYER_COMPUTER)n++;
 		return n;
+	}
+	
+	/**
+	 * Gibt true zurueck, wenn der Spieler kein Computerspieler ist
+	 **/
+	public boolean is_local_player(int player) {
+		/*
+		 * Bei keinem aktuellem Spieler, ist der aktuelle natuerlich nicht
+		 * lokal.
+		 */
+		if (player == -1)
+			return false;
+		return (spieler[player] != Spielleiter.PLAYER_COMPUTER);
+	}
+	
+	public boolean is_local_player() {
+		return is_local_player(m_current_player);
 	}
 }

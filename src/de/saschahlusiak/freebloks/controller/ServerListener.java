@@ -17,7 +17,8 @@ public class ServerListener extends Thread {
 	SpielServer server;
 	private boolean go_down;
 	
-	public ServerListener(InetAddress addr, int port, int ki_mode) {
+	
+	public ServerListener(InetAddress addr, int port) {
 		try {
 			socket = new ServerSocket();
 			socket.setReuseAddress(true);
@@ -26,7 +27,17 @@ public class ServerListener extends Thread {
 			e.printStackTrace();
 		}
 		go_down = false;
+	}
+	
+	public ServerListener(InetAddress addr, int port, int ki_mode) {
+		this(addr, port);
 		server = new SpielServer(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X, ki_mode);
+		server.listener = this;
+	}
+
+	public ServerListener(SpielServer spielServer, InetAddress addr, int port, int ki_mode) {
+		this(addr, port);
+		server = spielServer;
 		server.listener = this;
 	}
 	

@@ -1,6 +1,10 @@
 package de.saschahlusiak.freebloks.model;
 
-public class Stone {
+import java.io.Serializable;
+
+public class Stone implements Serializable, Cloneable {
+	private static final long serialVersionUID = -4949247356899826370L;
+	
 	public static final int STONE_COUNT_ALL_SHAPES = 21;
 	public static final int STONE_SIZE_MAX  =  5;
 
@@ -284,6 +288,11 @@ public class Stone {
 	
 	public Stone() {
 		m_available = m_shape = m_size = m_mirror_counter = m_rotate_counter = 0;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 	
 	public void copyFrom(Stone from) {

@@ -1,5 +1,8 @@
 package de.saschahlusiak.freebloks.startscreen;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+
 import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.FreebloksActivity;
@@ -14,6 +17,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +28,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StartScreenActivity extends Activity {
 	private static final int DIALOG_JOIN = 1;
@@ -66,6 +71,13 @@ public class StartScreenActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				resumeGame();
+			}
+		});
+
 		findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -88,6 +100,53 @@ public class StartScreenActivity extends Activity {
 				editor.putInt("lastVersion", pinfo.versionCode);
 				editor.commit();
 			}
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		try {
+			FileInputStream fis = null;;
+			fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
+			if (fis != null)
+				fis.close();
+			((Button)findViewById(R.id.resume_game)).setEnabled(true);
+		} catch (Exception e) {
+			((Button)findViewById(R.id.resume_game)).setEnabled(false);
+		}
+	}
+	
+	void resumeGame() {
+		try {
+			FileInputStream fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			Parcel p = Parcel.obtain();
+			byte[] b = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(b)) != -1) {
+			   bos.write(b, 0, bytesRead);
+			}
+			fis.close();
+			fis = null;
+			
+			byte[] bytes = bos.toByteArray();
+			bos.close();
+			bos = null;
+			
+			Bundle bundle;
+			p.unmarshall(bytes, 0, bytes.length);
+			p.setDataPosition(0);
+			bundle = p.readBundle(FreebloksActivity.class.getClassLoader());
+
+			Intent intent = new Intent(StartScreenActivity.this, FreebloksActivity.class);
+			intent.putExtra("gamestate", bundle);
+			startActivity(intent);
+			deleteFile(FreebloksActivity.GAME_STATE_FILE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			/* TODO: translate */
+			Toast.makeText(this, "Could not restore game", Toast.LENGTH_LONG).show();
 		}
 	}
 

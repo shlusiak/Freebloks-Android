@@ -1,9 +1,14 @@
 package de.saschahlusiak.freebloks.model;
 
-public class Turnpool {
+import java.io.Serializable;
+
+public class Turnpool implements Serializable {
+	private static final long serialVersionUID = 4356065376532513833L;
+	
 	public Turn m_tail;
 	Turn m_head;
 	Turn m_current;
+	
 
 	public void add_turn(Turn turn) {
 		if (null == m_head) {

@@ -6,6 +6,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -212,7 +213,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		}
 	}
 	
-	SpielClient spiel;
+	Spielleiter spiel;
 	MyRenderer renderer;
 	ActivityInterface activity;
 	float zoom = 28;
@@ -233,11 +234,11 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		model.activity = activity;
 	}
 
-	public void setSpiel(SpielClient spiel) {
+	public void setSpiel(SpielClient client, Spielleiter spiel) {
 		this.spiel = spiel;
 		model.setSpiel(spiel);
 		if (spiel != null) {
-			spiel.addClientInterface(this);
+			client.addClientInterface(this);
 			for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
 				model.showPlayer = i;
 				renderer.updateModelViewMatrix = true;
@@ -254,11 +255,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				requestRender();
 			}
 		});
-	}
-
-	@Override
-	public SpielClient getSpiel() {
-		return spiel;
 	}
 	
 	private final static float spacing(MotionEvent event) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.graphics.PointF;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.view.ViewInterface;
 
@@ -12,7 +13,7 @@ import de.saschahlusiak.freebloks.view.ViewInterface;
 public class ViewModel extends ArrayList<ViewElement> {
 	Wheel wheel;
 	CurrentStone currentStone;
-	SpielClient spiel;
+	Spielleiter spiel;
 	Board board;
 	ActivityInterface activity;
 	ViewInterface view;
@@ -36,7 +37,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 		add(board);
 	}
 
-	public void setSpiel(SpielClient spiel) {
+	public void setSpiel(Spielleiter spiel) {
 		this.spiel = spiel;
 	}
 

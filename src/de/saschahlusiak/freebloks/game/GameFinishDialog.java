@@ -48,7 +48,7 @@ public class GameFinishDialog extends Dialog {
 		int i = 0;
 		while ( i < Spiel.PLAYER_MAX - 1)
 		{
-			if (spiel.get_player(place[i]).m_stone_points_left > spiel.get_player(place[i + 1]).m_stone_points_left) {
+			if (spiel.spiel.get_player(place[i]).m_stone_points_left > spiel.spiel.get_player(place[i + 1]).m_stone_points_left) {
 				int bla = place[i];
 				place[i] = place[i + 1];
 				place[i + 1] = bla;
@@ -63,10 +63,10 @@ public class GameFinishDialog extends Dialog {
 		
 		for (i = 0; i < 4; i++) {
 			String name;
-			Player p = spiel.get_player(place[i]);
+			Player p = spiel.spiel.get_player(place[i]);
 			/* TODO: translate */
 			name = names[place[i]];
-			if (spiel.is_local_player(place[i]))
+			if (spiel.spiel.is_local_player(place[i]))
 				name = "* " + name;
 			
 			t[i].setText(String.format("%s: -%d points (%d stones)",

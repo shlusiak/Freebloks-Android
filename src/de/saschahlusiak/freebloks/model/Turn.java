@@ -1,6 +1,10 @@
 package de.saschahlusiak.freebloks.model;
 
-public class Turn {
+import java.io.Serializable;
+
+public class Turn implements Serializable {
+	private static final long serialVersionUID = -1715006791524885742L;
+
 	public int m_playernumber;
 
 	public int m_stone_number;

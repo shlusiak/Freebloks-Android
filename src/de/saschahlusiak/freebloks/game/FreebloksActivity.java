@@ -1,9 +1,13 @@
 package de.saschahlusiak.freebloks.game;
 
+import java.io.FileOutputStream;
+
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.ServerListener;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
+import de.saschahlusiak.freebloks.controller.SpielServer;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Ki;
 import de.saschahlusiak.freebloks.model.Player;
@@ -20,11 +24,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -42,6 +48,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
+	
+	public static final String GAME_STATE_FILE = "gamestate.bin";
 
 	Freebloks3DView view;
 	SpielClient spiel = null;
@@ -52,20 +60,27 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	boolean vibrate;
 	NET_SERVER_STATUS lastStatus;
 	
+	static class RetainedConfig {
+		SpielClientThread clientThread;
+		NET_SERVER_STATUS lastStatus;
+	}
+	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
 		SpielClient mySpiel = null;
-		boolean auto_start;
+		boolean auto_start, request_player, show_lobby;
 		
-		ConnectTask(boolean request_player, boolean auto_start) {
-			mySpiel = new SpielClient();
-			spielthread = new SpielClientThread(mySpiel, request_player, auto_start);
+		ConnectTask(Spielleiter spiel, boolean request_player, boolean auto_start, boolean show_lobby) {
+			mySpiel = new SpielClient(spiel);
+			spielthread = new SpielClientThread(mySpiel);
 			this.auto_start = auto_start;
+			this.request_player = request_player;
+			this.show_lobby = show_lobby;
 		}
 		
 		@Override
 		protected void onPreExecute() {
-			view.setSpiel(null);
+			view.setSpiel(null, null);
 			progress = new ProgressDialog(FreebloksActivity.this);
 			progress.setMessage("Connecting...");
 			progress.setIndeterminate(true);
@@ -83,7 +98,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				e.printStackTrace();
 				return e.getMessage();
 			}
-			view.setSpiel(mySpiel);
+			if (request_player)
+				mySpiel.request_player();
+			if (auto_start)
+				mySpiel.request_start();
+			view.setSpiel(mySpiel, mySpiel.spiel);
 			return null;
 		}
 		
@@ -101,7 +120,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
 				FreebloksActivity.this.finish();
 			} else {
-				if (! auto_start)
+				if (! auto_start && show_lobby)
 					showDialog(DIALOG_LOBBY);
 				
 				spiel.addClientInterface(FreebloksActivity.this);
@@ -125,14 +144,33 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-		spielthread = (SpielClientThread)getLastNonConfigurationInstance();
+		RetainedConfig config = (RetainedConfig)getLastNonConfigurationInstance();
+		if (config != null) {
+			spielthread = config.clientThread;
+			lastStatus = config.lastStatus;
+		}
+		
 		if (spielthread != null) {
+			/* we just rotated and got *hot* objects */
 			spiel = spielthread.spiel;
 			spiel.addClientInterface(this);
+			view.setSpiel(spiel, spiel.spiel);
 		} else {
-			startNewGame();
+			if (savedInstanceState == null) {
+				Bundle b;
+				b = getIntent().getBundleExtra("gamestate");
+				if (b != null) {
+					if (readStateFromBundle(b)) {
+						
+					} else {
+						Toast.makeText(this, "Could not restore game ", Toast.LENGTH_LONG).show();
+						startNewGame();
+					}
+				} else /* without a game state, start a new game */
+					startNewGame();				
+			} else /* TODO: we should resume from previously saved data; don't just start a new game */
+				startNewGame();
 		}
-		view.setSpiel(spiel);
 	}
 
 	@Override
@@ -152,6 +190,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onPause() {
 		view.onPause();
+		if (spiel.spiel.current_player() >= 0)
+			saveGameState(GAME_STATE_FILE);
+		else
+			deleteFile(FreebloksActivity.GAME_STATE_FILE);
 		super.onPause();
 	}
 
@@ -180,26 +222,75 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		SpielClientThread t = spielthread;
-		if (t != null) {
-			spielthread = null;
-		}
-		return t;
+		RetainedConfig config = new RetainedConfig();
+		config.clientThread = spielthread;
+		config.lastStatus = lastStatus;
+		spielthread = null;
+		return config;
 	}
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		writeStateToBundle(outState);
+	}
+	
+	private void writeStateToBundle(Bundle outState) {
+		Log.d(tag, "onSaveInstanceState");
+		Spielleiter l = spiel.spiel;
+		outState.putSerializable("game", l);
+	}
+	
+	private boolean readStateFromBundle(Bundle in) {
+		try {
+			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
+			Spielleiter spiel2 = (Spielleiter)spiel1.clone();
+			
+			SpielServer server = new SpielServer(spiel1, Ki.HARD);
+			listener = new ServerListener(server, null, Network.DEFAULT_PORT, Ki.HARD);
+			listener.start();
+			
+			/* this will start a new SpielClient, which needs to be restored 
+			 * from saved gamestate first */
+			new ConnectTask(spiel2, false, false, false).execute((String)null);
+
+			return true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public void startNewGame() {
 		String server = getIntent().getStringExtra("server");
 		boolean request_player = getIntent().getBooleanExtra("request_player", true);
 		
 		if (server == null) {
-			listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.MEDIUM);
+			listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.HARD);
 			listener.start();
 		}
 		
 		if (spielthread != null)
 			spielthread.spiel.disconnect();
 		
-		new ConnectTask(request_player, (server == null)).execute(server);
+		new ConnectTask(null, request_player, (server == null), (server != null)).execute(server);
+	}
+	
+	private void saveGameState(String filename) {
+		FileOutputStream fos;
+		try {
+			fos = openFileOutput(filename, Context.MODE_PRIVATE);
+			Parcel p = Parcel.obtain();
+			Bundle b = new Bundle();
+			writeStateToBundle(b);
+			p.writeBundle(b);
+			fos.write(p.marshall());
+			fos.flush();
+			fos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -222,7 +313,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			/* TODO: don't ask, if lastStatus.clients == 1 && implemented(resume) */
 			builder.setMessage("Do you want to quit the current game? The game cannot be resumed (yet).");
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
@@ -284,12 +374,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void newCurrentPlayer(int player) {
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
-		selectCurrentStone(spiel, null);
+		selectCurrentStone(null);
 
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				findViewById(R.id.progressBar).setVisibility((spiel.is_local_player() || spiel.current_player() < 0) ? View.GONE : View.VISIBLE);
+				findViewById(R.id.progressBar).setVisibility((spiel.spiel.is_local_player() || spiel.spiel.current_player() < 0) ? View.GONE : View.VISIBLE);
 			}
 		});
 	}
@@ -309,8 +399,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		int i;
 		Log.i(tag, "-- Game finished! --");
 		for (i = 0; i < Spiel.PLAYER_MAX; i++) {
-			Player player = spiel.get_player(i);
-			Log.i(tag, (spiel.is_local_player(i) ? "*" : " ") + "Player " + i
+			Player player = spiel.spiel.get_player(i);
+			Log.i(tag, (spiel.spiel.is_local_player(i) ? "*" : " ") + "Player " + i
 					+ " has " + player.m_stone_count + " stones left and "
 					+ -player.m_stone_points_left + " points.");
 		}
@@ -349,7 +439,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
-			if (spiel.is_local_player(i))
+			if (spiel.spiel.is_local_player(i))
 				Log.d(tag, "Local player: " + i);
 	}
 
@@ -375,20 +465,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void selectCurrentStone(SpielClient spiel, final Stone stone) {
+	public void selectCurrentStone(final Stone stone) {
 		currentStone = stone;
 	}
 
 	@Override
-	public boolean commitCurrentStone(SpielClient spiel, Stone stone, int x, int y) {
+	public boolean commitCurrentStone(Stone stone, int x, int y) {
 		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
-		if (!spiel.is_local_player())
+		if (!spiel.spiel.is_local_player())
 			return false;
-		if (spiel.is_valid_turn(stone, spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
+		if (spiel.spiel.is_valid_turn(stone, spiel.spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
 			return false;
 		
 		spiel.set_stone(stone, 19 - y, x);
-		selectCurrentStone(spiel, null);
+		selectCurrentStone(null);
 		if (vibrate)
 			vibrator.vibrate(100);
 		return true;
@@ -401,6 +491,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	public void onBackPressed() {
-		showDialog(DIALOG_QUIT);
+		if (spiel != null && spiel.spiel.current_player() >= 0 && lastStatus.clients > 1)
+			showDialog(DIALOG_QUIT);
+		else
+			super.onBackPressed();
 	}
 }
