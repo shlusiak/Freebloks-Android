@@ -96,12 +96,8 @@ public class Spiel implements Serializable, Cloneable {
 		
 		set_stone(turn);
 	}
-	
-	public int get_game_field_value(int y, int x) {
-		return m_game_field[y][x];
-	}
 
-	public int get_game_field(int playernumber, int y, int x) {
+	final public int get_game_field(int playernumber, int y, int x) {
 		int wert = m_game_field[y][x];
 		if (wert >= PLAYER_BIT_HAVE_MIN) return Stone.FIELD_DENIED;
 		wert &= PLAYER_BIT_ADDR[playernumber];
@@ -110,26 +106,19 @@ public class Spiel implements Serializable, Cloneable {
 		return Stone.FIELD_ALLOWED;
 	}
 
-	public int get_game_field(int y, int x) {
-		int wert = get_game_field_value(y,x);
-		if (wert < PLAYER_BIT_HAVE_MIN) return Stone.FIELD_FREE;
+	public final int get_game_field(int y, int x) {
+		int wert = m_game_field[y][x];
+		if (wert < PLAYER_BIT_HAVE_MIN)
+			return Stone.FIELD_FREE;
 		return wert & 3;
 	}
 
-	void set_game_field(int y, int x, int value){
+	final void set_game_field(int y, int x, int value){
 		m_game_field[y][x] = value;
 	}
 
 	public Player get_player(int playernumber) {
 		return m_player[playernumber];
-	}
-
-	boolean is_position_inside_field(int y, int x) {
-		return (y >= 0 && y < m_field_size_y && x >= 0 && x < m_field_size_x);
-	}
-
-	int get_max_stone_size() {
-		return Stone.STONE_SIZE_MAX;
 	}
 
 	int get_player_start_x(int playernumber) {
@@ -203,9 +192,10 @@ public class Spiel implements Serializable, Cloneable {
 		for (int y = 0; y < stone.get_stone_size(); y++){
 			for (int x = 0; x < stone.get_stone_size(); x++){
 				if (stone.get_stone_field(y,x) != Stone.STONE_FIELD_FREE) {
-					if (!is_position_inside_field(y + startY, x + startX)) return Stone.FIELD_DENIED;
+					if (y + startY < 0 || y + startY >= m_field_size_y || x + startX < 0 || x + startX >= m_field_size_x)
+						return Stone.FIELD_DENIED;
 
-					field_value = get_game_field (playernumber, y + startY , x + startX);
+					field_value = get_game_field(playernumber, y + startY , x + startX);
 					if (field_value == Stone.FIELD_DENIED) return Stone.FIELD_DENIED;
 					if (field_value == Stone.FIELD_ALLOWED) valid = Stone.FIELD_ALLOWED;
 				}

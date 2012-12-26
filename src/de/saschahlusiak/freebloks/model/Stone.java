@@ -295,7 +295,7 @@ public class Stone implements Serializable, Cloneable {
 		return super.clone();
 	}
 	
-	public void copyFrom(Stone from) {
+	public final void copyFrom(Stone from) {
 		this.m_available = from.m_available;
 		this.m_shape = from.m_shape;
 		this.m_size = from.m_size;
@@ -303,53 +303,52 @@ public class Stone implements Serializable, Cloneable {
 		this.m_rotate_counter = from.m_rotate_counter;
 	}
 	
-	public void mirror_rotate_to(int mirror_counter, int rotate_counter){
+	public final void mirror_rotate_to(int mirror_counter, int rotate_counter){
 		this.m_mirror_counter = mirror_counter;
 		this.m_rotate_counter = rotate_counter;
 	}
 
-	public void set_available(int value){
+	public final void set_available(int value){
 		this.m_available = value;
 	}
 
-	public void available_increment(){
+	public final void available_increment(){
 		m_available++;
 	}
 
-	public void available_decrement(){
+	public final void available_decrement(){
 		m_available--;
 	}
 
-	public int get_available() {
+	public final int get_available() {
 		return m_available;
 	}
 
-	public int get_mirrorable() {
+	public final int get_mirrorable() {
 		return STONE_MIRRORABLE[m_shape];
 	}
 
-	public int get_rotateable() {
+	public final int get_rotateable() {
 		return STONE_ROTATEABLE[m_shape];
 	}
 
-	public int get_stone_position_points() {
+	public final int get_stone_position_points() {
 		return STONE_POSITION_POINTS[m_shape];
 	}
 
-	public int get_rotate_counter() {
+	public final int get_rotate_counter() {
 		return m_rotate_counter;
 	}
 
-	public int get_mirror_counter() {
+	public final int get_mirror_counter() {
 		return m_mirror_counter;
 	}
 
-	public int get_stone_shape() {
+	public final int get_stone_shape() {
 		return m_shape;
 	}
 
-	
-	public int get_number() {
+	public final int get_number() {
 		return m_shape;
 	}
 
@@ -358,18 +357,11 @@ public class Stone implements Serializable, Cloneable {
 		return m_size;
 	}
 
-	
-	public int get_stone_points() {
+	public final int get_stone_points() {
 		return STONE_POINTS[m_shape];
 	}
 
-	
-	public boolean is_position_inside_stone(int y, int x) { 
-		if (y < 0 || y >= m_size || x < 0 || x >= m_size) return false;
-		return true;
-	}
-
-	public void init(int shape) {
+	public final void init(int shape) {
 		m_available = 1;
 		m_shape = shape;
 		m_size = STONE_SIZE[m_shape];
@@ -377,9 +369,8 @@ public class Stone implements Serializable, Cloneable {
 		m_mirror_counter = 0;		
 	}
 
-
 	public final int get_stone_field(int y, int x) {
-		int nx=x,ny=y;
+		int nx=x, ny=y;
 		if (m_mirror_counter == 0){
 			if (m_rotate_counter == 0){
 				nx = y;
@@ -416,23 +407,23 @@ public class Stone implements Serializable, Cloneable {
 
 
 
-	public void rotate_left(){
+	public final void rotate_left(){
 		m_rotate_counter--;
 		if (m_rotate_counter < 0) m_rotate_counter += STONE_ROTATEABLE[m_shape];
 	}
 
-	public void rotate_right(){
+	public final void rotate_right(){
 		m_rotate_counter=(m_rotate_counter+1)%STONE_ROTATEABLE[m_shape];
 	}
 
-	public void mirror_over_x(){
+	public final void mirror_over_x(){
 		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
 		if (m_rotate_counter%2 == 1) 
 			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
 	}
 
-	 public void mirror_over_y(){
+	public final void mirror_over_y(){
 		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
 		if (m_rotate_counter%2 == 0) 
@@ -468,5 +459,4 @@ public class Stone implements Serializable, Cloneable {
 		m_mirror_counter = mirror_count;
 		return count;
 	}
-
 }
