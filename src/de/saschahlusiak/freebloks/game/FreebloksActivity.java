@@ -67,17 +67,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
-		SpielClient mySpiel = null;
-		boolean auto_start, request_player, show_lobby;
+		SpielClient client = null;
+		boolean show_lobby;
+		Runnable connectedRunnable;
 		
-		ConnectTask(Spielleiter spiel, boolean request_player, boolean auto_start, boolean show_lobby) {
-			mySpiel = new SpielClient(spiel);
-			spielthread = new SpielClientThread(mySpiel);
-			this.auto_start = auto_start;
-			this.request_player = request_player;
+		ConnectTask(SpielClient client, boolean show_lobby, Runnable connectedRunnable) {
+			this.client = client;
+			spielthread = new SpielClientThread(client);
 			this.show_lobby = show_lobby;
+			this.connectedRunnable = connectedRunnable;
 		}
-		
+				
 		@Override
 		protected void onPreExecute() {
 			view.setSpiel(null, null);
@@ -93,16 +93,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				mySpiel.connect(params[0], Network.DEFAULT_PORT);
+				client.connect(params[0], Network.DEFAULT_PORT);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return e.getMessage();
 			}
-			if (request_player)
-				mySpiel.request_player();
-			if (auto_start)
-				mySpiel.request_start();
-			view.setSpiel(mySpiel, mySpiel.spiel);
+			if (connectedRunnable != null)
+				connectedRunnable.run();
+			view.setSpiel(client, client.spiel);
 			return null;
 		}
 		
@@ -114,13 +112,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		@Override
 		protected void onPostExecute(String result) {
-			spiel = mySpiel;
+			spiel = client;
 			progress.dismiss();
 			if (result != null) {
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
 				FreebloksActivity.this.finish();
 			} else {
-				if (! auto_start && show_lobby)
+				if (show_lobby)
 					showDialog(DIALOG_LOBBY);
 				
 				spiel.addClientInterface(FreebloksActivity.this);
@@ -246,13 +244,23 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 			Spielleiter spiel2 = (Spielleiter)spiel1.clone();
 			
-			SpielServer server = new SpielServer(spiel1, Ki.HARD);
+			final SpielServer server = new SpielServer(spiel1, Ki.HARD);
 			listener = new ServerListener(server, null, Network.DEFAULT_PORT, Ki.HARD);
 			listener.start();
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
-			new ConnectTask(spiel2, false, false, false).execute((String)null);
+			SpielClient client = new SpielClient(spiel2);
+			ConnectTask task = new ConnectTask(client, false, new Runnable() {
+				@Override
+				public void run() {
+					server.resume_game();
+					if (listener != null)
+						listener.go_down();
+					listener = null;
+				}
+			});
+			task.execute((String)null);
 
 			return true;
 		}
@@ -263,8 +271,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	public void startNewGame() {
-		String server = getIntent().getStringExtra("server");
-		boolean request_player = getIntent().getBooleanExtra("request_player", true);
+		final String server = getIntent().getStringExtra("server");
+		final boolean request_player = getIntent().getBooleanExtra("request_player", true);
 		
 		if (server == null) {
 			listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.HARD);
@@ -274,7 +282,21 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (spielthread != null)
 			spielthread.spiel.disconnect();
 		
-		new ConnectTask(null, request_player, (server == null), (server != null)).execute(server);
+		Spielleiter spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
+		final SpielClient client = new SpielClient(spiel);
+		spiel.start_new_game();			
+		spiel.set_stone_numbers(0, 0, 0, 0, 0);
+		
+		ConnectTask task = new ConnectTask(client, server != null, new Runnable() {
+			@Override
+			public void run() {
+				if (request_player)
+					client.request_player();
+				if (server == null)
+					client.request_start();
+			}
+		});
+		task.execute(server);
 	}
 	
 	private void saveGameState(String filename) {
