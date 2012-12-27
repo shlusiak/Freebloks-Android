@@ -215,7 +215,7 @@ public class Spiel implements Serializable, Cloneable {
 		set_game_field(y, x, 0);
 	}
 
-	void set_single_stone_for_player(int playernumber, int startY, int startX){
+	final void set_single_stone_for_player(int playernumber, int startY, int startX){
 		set_game_field(startY , startX, PLAYER_BIT_HAVE_MIN | playernumber);
 		for (int y = startY-1; y <= startY+1; y++)if (y>=0 && y<m_field_size_y) {
 			for (int x = startX-1; x <= startX+1; x++)if (x>=0 && x<m_field_size_x){
@@ -231,16 +231,15 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	}
 
-	public int set_stone(Turn turn){
-		int playernumber = turn.m_playernumber;
-		Stone stone = m_player[playernumber].get_stone(turn.m_stone_number);
+	public final int set_stone(Turn turn){
+		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
-		return set_stone(stone, playernumber, turn.m_y, turn.m_x);
+		return set_stone(stone, turn.m_playernumber, turn.m_y, turn.m_x);
 	}
 
-	public int set_stone(Stone stone, int playernumber, int startY, int startX) {
-		for (int y = 0; y < stone.get_stone_size(); y++){
-			for (int x = 0; x < stone.get_stone_size(); x++){
+	public final int set_stone(Stone stone, int playernumber, int startY, int startX) {
+		for (int y = 0; y < stone.m_size; y++){
+			for (int x = 0; x < stone.m_size; x++){
 				if (stone.get_stone_field(y,x) != Stone.STONE_FIELD_FREE) {
 					set_single_stone_for_player(playernumber, startY+y, startX+x); 
 				}

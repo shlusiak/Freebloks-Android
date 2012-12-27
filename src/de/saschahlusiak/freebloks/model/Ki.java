@@ -120,8 +120,6 @@ public class Ki {
 		}
 
 		best = m_turnpool.get_turn(1);
-		follow_situation.m_field_size_y = spiel.m_field_size_y;
-		follow_situation.m_field_size_x = spiel.m_field_size_x;
 		follow_situation.follow_situation(current_player, spiel, best);
 
 		best_points = get_ultimate_points(follow_situation, current_player, ki_fehler, best);
