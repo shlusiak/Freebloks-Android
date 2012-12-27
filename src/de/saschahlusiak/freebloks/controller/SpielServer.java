@@ -406,6 +406,13 @@ public class SpielServer {
 				new AIThread().start();
 		}
 
+		public void resume_game() {
+			send_server_status();
+			send_current_player();
+			if (is_computer_turn())
+				new AIThread().start();
+		}
+		
 		/**
 		 * Ermittle naechsten Spieler
 		 **/
