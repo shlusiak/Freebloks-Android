@@ -139,7 +139,12 @@ public class SpielServer {
 		
 		void do_computer_turn() {
 			/* Ermittle CTurn, den die KI jetzt setzen wuerde */
+			long time = System.currentTimeMillis();
 			Turn turn=m_ki.get_ki_turn(leiter, leiter.current_player(), ki_mode);
+			time = System.currentTimeMillis() - time;
+			
+			Log.d("AIThread", "player " + leiter.current_player() + " took " + time + " ms, " + m_ki.get_number_of_stored_turns() + " turns");
+			
 			if (turn != null) {
 				/* Datenstruktur fuellen, die an die Clients geschickt werden soll. */
 				NET_SET_STONE data = new NET_SET_STONE();
@@ -163,7 +168,6 @@ public class SpielServer {
 				leiter.addHistory(turn);
 			}
 		}
-
 	}
 	
 	boolean is_computer_turn() {
