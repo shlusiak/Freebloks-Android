@@ -67,9 +67,9 @@ public class Wheel extends ViewElement {
 		int row = (int) (-(tmp.y + 2.0f) / 5.5f);
 		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.5f + originalAngle / 17.0f);
 
-		Log.d(tag, "currentWheelAngle = " + originalAngle);
-		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
-		Log.d(tag, "row " + row + ", col " + col);
+//		Log.d(tag, "currentWheelAngle = " + originalAngle);
+//		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
+//		Log.d(tag, "row " + row + ", col " + col);
 		
 		if (!model.spiel.is_local_player()) {
 			spinning = true;

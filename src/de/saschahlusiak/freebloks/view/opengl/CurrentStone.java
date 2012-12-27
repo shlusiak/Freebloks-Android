@@ -198,7 +198,7 @@ public class CurrentStone extends ViewElement {
 			stone_rel_x = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
 			stone_rel_y = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
 			
-			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
+//			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
 			if ((Math.abs(stone_rel_x) <= 8) && (Math.abs(stone_rel_y) <= 8)) {
 				if ((Math.abs(stone_rel_x) > 4.0f) && (Math.abs(stone_rel_y) < 3.0f) ||
 					(Math.abs(stone_rel_x) < 3.0f) && (Math.abs(stone_rel_y) > 4.0f)) {
@@ -237,7 +237,6 @@ public class CurrentStone extends ViewElement {
 				rotate_angle = 0.0f;
 				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
 			}
-			Log.w(tag, "a1 = " + a1 + ", a2 = " + a2);
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
@@ -251,7 +250,6 @@ public class CurrentStone extends ViewElement {
 				p = -p;
 			
 			rotate_angle = p * 180;
-			Log.w(tag, "flip = " + p);
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			float ry = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
@@ -265,7 +263,6 @@ public class CurrentStone extends ViewElement {
 				p = -p;
 			
 			rotate_angle = p * 180;
-			Log.w(tag, "flip = " + p);
 		}
 		return true;
 	}

@@ -199,6 +199,9 @@ public class Ki {
 		return get_ultimate_turn(spiel, playernumber, ki_fehler);
 	}
 	
+	public int get_number_of_stored_turns() {
+		return m_turnpool.get_number_of_stored_turns();
+	}
 	
 	
 	
