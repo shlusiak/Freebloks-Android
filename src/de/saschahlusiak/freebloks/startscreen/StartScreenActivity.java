@@ -38,10 +38,9 @@ public class StartScreenActivity extends Activity {
 	SharedPreferences prefs;
 	
 	private static final String WHATS_NEW = 
-			"* fix stones disappearing on rotate\n" + 
-			"* added more preferences\n" +
-			"* confirmation when leaving running game\n" +
-			"* improved layouts";
+			"* basic resume support\n" + 
+			"* darker overlay\n" + 
+			"* stronger computer";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
