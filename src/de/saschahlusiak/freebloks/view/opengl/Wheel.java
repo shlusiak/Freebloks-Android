@@ -105,6 +105,8 @@ public class Wheel extends ViewElement {
 						
 						@Override
 						public void run() {
+							if (highlightStone == null)
+								return;
 							tmp.x = m.x;
 							tmp.y = m.y;
 							model.board.modelToBoard(tmp);
