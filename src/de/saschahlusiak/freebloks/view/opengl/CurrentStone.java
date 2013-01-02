@@ -329,10 +329,12 @@ public class CurrentStone extends ViewElement {
 		return false;
 	}
 	
-	void startDragging(Stone stone) {
+	synchronized void startDragging(Stone stone) {
 		this.stone = stone;
-		if (stone == null)
+		if (stone == null) {
+			status = Status.IDLE;
 			return;
+		}
 		
 		status = Status.DRAGGING;
 		hasMoved = false;
