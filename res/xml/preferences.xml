@@ -59,7 +59,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:summary="Copyright (c) by Sascha Hlusiak, 2012."
+            android:summary="Copyright (c) by Sascha Hlusiak, 2012-2013."
             android:title="About Freebloks..." >
             <intent android:action="de.saschahlusiak.freebloks.SHOW_ABOUT" />
         </PreferenceScreen>
