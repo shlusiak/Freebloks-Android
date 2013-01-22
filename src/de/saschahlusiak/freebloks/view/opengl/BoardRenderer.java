@@ -23,8 +23,6 @@ public class BoardRenderer {
     final float y1 = -bevel_height;
     final float y2 = 0.0f;
     
-    Spiel spiel;
-
 
 	private void initField() {
 		field = new SimpleModel(8, 10);
@@ -103,12 +101,8 @@ public class BoardRenderer {
 	
 	private void initBorder() {
 		border = new SimpleModel(4, 2);
-		float w;
-	    
-	    if (spiel == null)
-			w = 5.0f;
-		else
-			w = stone_size * spiel.m_field_size_x;
+		float w;	    
+		w = stone_size * 20;
 
 		border.addVertex(w, 0, w, 0, 0, 1, 0, 0);
 		border.addVertex(-w, 0, w, 0, 0, 1, 0, 0);
@@ -119,8 +113,7 @@ public class BoardRenderer {
 		border.commit();
 	}
 	
-	BoardRenderer(Spiel spiel) {
-		this.spiel = spiel;
+	BoardRenderer() {
 		initField();
 		initBorder();
 		initStone();
@@ -131,7 +124,7 @@ public class BoardRenderer {
 	final float board_specular[] = {0.27f,0.25f,0.25f,1.0f};
 	final float board_shininess[] = {35.0f};
 
-	public void renderBoard(GL10 gl, int currentPlayer) {
+	public void renderBoard(GL10 gl, Spiel spiel, int currentPlayer) {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board_shininess, 0);

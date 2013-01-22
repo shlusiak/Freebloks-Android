@@ -48,7 +48,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		}
 
 		public void init() {
-			board = new BoardRenderer(spiel);
+			board = new BoardRenderer();
 		}
 
 		private float outputfar[] = new float[4];
@@ -103,13 +103,11 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 			
-			if (spiel == null) {
-				board.renderBoard(gl, -1);
+			if (spiel == null)
 				return;
-			}
 
 			/* render board */
-			board.renderBoard(gl, (spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
+			board.renderBoard(gl, spiel, (spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
 			
 			/* render player stones on board, unless they are "effected" */
 			synchronized (model.effects) {
@@ -145,7 +143,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			/* render all effects */
 			synchronized (model.effects) {
 				for (AbsEffect effect: model.effects) {
-					effect.render(gl, board);
+					effect.render(gl, spiel, board);
 				}
 			}
 			

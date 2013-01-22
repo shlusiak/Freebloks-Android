@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.view.opengl;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public abstract class AbsEffect {
@@ -18,7 +19,7 @@ public abstract class AbsEffect {
 		return true;
 	}
 	
-	abstract void render(GL10 gl, BoardRenderer renderer);
+	abstract void render(GL10 gl, Spiel spiel, BoardRenderer renderer);
 
 	boolean isEffected(int x, int y) {
 		return false;
@@ -96,7 +97,7 @@ public abstract class AbsEffect {
 		}
 
 		@Override
-		void render(GL10 gl, BoardRenderer renderer) {
+		void render(GL10 gl, Spiel spiel, BoardRenderer renderer) {
 			float alpha;
 			gl.glPushMatrix();
 			gl.glTranslatef(0, z, 0);
@@ -106,9 +107,9 @@ public abstract class AbsEffect {
 				alpha = 1.0f;
 			
 		    gl.glTranslatef(
-		    		-BoardRenderer.stone_size * (float)(renderer.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+		    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 		    		0,
-		    		+BoardRenderer.stone_size * (float)(renderer.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)y);
+		    		+BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)y);
 			
 			renderer.renderPlayerStone(gl, player, stone, alpha);
 			gl.glPopMatrix();
