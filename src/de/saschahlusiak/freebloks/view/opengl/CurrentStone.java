@@ -217,6 +217,8 @@ public class CurrentStone extends ViewElement {
 	synchronized public boolean handlePointerMove(PointF m) {
 		if (status == Status.IDLE)
 			return false;
+		if (stone == null)
+			return false;
 		
 		fieldPoint.x = m.x;
 		fieldPoint.y = m.y;
@@ -280,7 +282,7 @@ public class CurrentStone extends ViewElement {
 				
 						model.addEffect(e);
 					}
-					
+					status = Status.IDLE;
 					stone = null;
 					model.wheel.highlightStone = null;
 				}
