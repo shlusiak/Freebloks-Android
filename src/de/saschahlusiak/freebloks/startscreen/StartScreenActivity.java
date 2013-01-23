@@ -38,9 +38,7 @@ public class StartScreenActivity extends Activity {
 	SharedPreferences prefs;
 	
 	private static final String WHATS_NEW = 
-			"* basic resume support\n" + 
-			"* darker overlay\n" + 
-			"* stronger computer";
+			"* fixed several crashes on resume/rotate";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
