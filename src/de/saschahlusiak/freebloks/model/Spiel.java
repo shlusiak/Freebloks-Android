@@ -251,7 +251,7 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	public void undo_turn(Turnpool turnpool){
-		Turn turn = turnpool.m_tail;
+		Turn turn = turnpool.get_last_turn();
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
