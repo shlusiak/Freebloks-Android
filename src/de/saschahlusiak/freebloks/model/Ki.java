@@ -155,13 +155,11 @@ public class Ki {
 					stored_stones++;
 					stored_turns = m_turnpool.get_number_of_stored_turns();
 					if (stored_stones >= max_stored_stones) {
-						m_turnpool.end_add();
 						return;
 					}
 				}
 			}
 		}
-		m_turnpool.end_add();
 	}
 
 

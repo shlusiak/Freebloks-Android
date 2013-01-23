@@ -224,7 +224,7 @@ public class SpielClient {
 	
 		/* Server laesst den letzten Zug rueckgaengig machen */
 		case Network.MSG_UNDO_STONE: {
-			Turn t = spiel.history.m_tail;
+			Turn t = spiel.history.get_last_turn();
 			Stone stone = spiel.get_player(t.m_playernumber).get_stone(t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone(stone, t);

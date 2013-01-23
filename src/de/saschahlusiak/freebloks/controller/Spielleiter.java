@@ -1,12 +1,14 @@
 package de.saschahlusiak.freebloks.controller;
 
+import java.io.Serializable;
+
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.model.Turnpool;
 
-public class Spielleiter extends Spiel implements Cloneable {
+public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	private static final long serialVersionUID = -7880809258246268794L;
 	
 	static final int PLAYER_COMPUTER = -2;

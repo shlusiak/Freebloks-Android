@@ -1,104 +1,57 @@
 package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Turnpool implements Serializable {
 	private static final long serialVersionUID = 4356065376532513833L;
 	
-	public Turn m_tail;
-	Turn m_head;
-	Turn m_current;
-	
+	ArrayList<Turn> turns = new ArrayList<Turn>();
+	int current = 0;
 
-	public void add_turn(Turn turn) {
-		if (null == m_head) {
-			Turn new_element = new Turn(turn);
-			new_element.m_turn_number = 1;
-			m_head = new_element;
-			m_tail = new_element;
+	final public void add_turn(Turn turn) {
+		current++;
+		if (turns.size() < current) {
+			turns.add(new Turn(turn));
 		} else {
-			if (m_current != null) {
-				m_tail = m_current;
-				m_current.copy(turn);
-				m_current = m_current.m_next;
-			} else {
-				Turn new_element = new Turn(turn);
-				new_element.m_turn_number = m_tail.m_turn_number + 1;
-				m_tail.m_next = new_element;
-				m_tail = new_element;
-			}
+			turns.get(current - 1).copy(turn);
 		}
 	}
 
-	public void add_turn(int playernumber, Stone stone, int y, int x) {
-		if (null == m_head){
-			Turn new_element = new Turn(playernumber, stone, y, x);
-			new_element.m_turn_number = 1;
-			m_head = new_element;
-			m_tail = new_element;
+	final public void add_turn(int playernumber, Stone stone, int y, int x) {
+		current++;
+		if (turns.size() < current){
+			turns.add(new Turn(playernumber, stone, y, x));
 		} else {
-			if (m_current != null) {
-				m_tail = m_current;
-				m_current.init(playernumber, stone, y, x);
-				m_current = m_current.m_next;
-			} else {
-				Turn new_element = new Turn(playernumber, stone, y, x);
-				new_element.m_turn_number = m_tail.m_turn_number + 1;;
-				m_tail.m_next = new_element;
-				m_tail = new_element;
-			}
+			turns.get(current - 1).init(playernumber, stone, y, x);
 		}
 	}
 	
-	void begin_add() {
-		m_current = m_tail = m_head;
+	final void begin_add() {
+		current = 0;
 	}
 
-	void end_add() {
-		if (m_current == m_head) {
-			m_head = m_tail = null;		
-		} else {
-			m_tail.m_next = null;
-		}
-		m_current = m_head;
+	final public void delete_all_turns() {
+		current = 0;
+		turns.clear();
 	}
 
-	public void delete_all_turns() {
-		m_tail = null;
-		m_head = null;
-		m_current = null;
-	}
-
-	void delete_last() {
-		if (get_number_of_stored_turns() == 1) {
-			delete_all_turns();
+	final void delete_last() {
+		if (current <= 0)
 			return;
-		}
-			
-		m_current = m_head;
-		while (m_current.m_next != m_tail) {
-			m_current = m_current.m_next;
-		}
-		m_current.m_next = null;
-		m_tail = m_current;
+		current--;
+		turns.remove(current);		
 	}
 	
-	public Turn get_last_turn() {
-		return m_tail;
+	final public Turn get_last_turn() {
+		return turns.get(current - 1);
 	}
 
-
-	Turn get_turn(int i) {
-		if (i < m_current.m_turn_number) m_current = m_head;
-		while (i > m_current.m_turn_number){
-			m_current = m_current.m_next;
-		}
-		return m_current;	
+	final Turn get_turn(int i) {
+		return turns.get(i - 1);
 	}
 	
-	int get_number_of_stored_turns() {
-		if (m_tail == null)
-			return 0;
-		return m_tail.m_turn_number;
-	}
+	final int get_number_of_stored_turns() {
+		return current;
+	}	
 }
