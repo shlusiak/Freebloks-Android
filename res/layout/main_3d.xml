@@ -8,13 +8,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/currentPlayerLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" />
+        android:background="#A0202020"
+        android:visibility="gone"
+        android:padding="2dp" >
+
+        <TextView
+            android:id="@+id/currentPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:shadowRadius="5"
+            android:shadowDy="2"
+            android:shadowColor="#9f000000"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ffffffff"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/currentPlayer"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/currentPlayer" />
+
+    </RelativeLayout>
     
 </RelativeLayout>

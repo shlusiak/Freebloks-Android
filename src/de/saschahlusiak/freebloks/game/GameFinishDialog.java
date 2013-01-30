@@ -31,6 +31,7 @@ public class GameFinishDialog extends Dialog {
 	public void setData(SpielClient spiel) {
 		int place[] = { 0, 1, 2, 3 };
 		TextView t[] = new TextView[4];
+		/* TODO: generalize */
 		final int colors[] = {
 				Color.argb(96, 0, 0, 255),
 				Color.argb(96, 255, 255, 0),
