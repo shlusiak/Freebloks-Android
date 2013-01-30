@@ -185,6 +185,7 @@ public class CurrentStone extends ViewElement {
 	}
 	
 	PointF fieldPoint = new PointF();
+	PointF screenPoint = new PointF();
 	
 	@Override
 	synchronized public boolean handlePointerDown(PointF m) {
@@ -194,6 +195,8 @@ public class CurrentStone extends ViewElement {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
 			model.board.modelToBoard(fieldPoint);
+			screenPoint.x = fieldPoint.x;
+			screenPoint.y = fieldPoint.y;
 			
 			stone_rel_x = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
 			stone_rel_y = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
@@ -225,8 +228,11 @@ public class CurrentStone extends ViewElement {
 		model.board.modelToBoard(fieldPoint);
 		
 		if (status == Status.DRAGGING) {
+			final float THRESHOLD = 1.0f;
 			int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
 			int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
+				return true;
 			hasMoved |= moveTo(x, y);
 		}
 		if (status == Status.ROTATING) {
