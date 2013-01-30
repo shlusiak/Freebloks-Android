@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -40,6 +41,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface {
@@ -397,11 +403,55 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void newCurrentPlayer(int player) {
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
 		selectCurrentStone(null);
+		final int current = player;
+		final boolean local = spiel.spiel.is_local_player();
 
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				findViewById(R.id.progressBar).setVisibility((spiel.spiel.is_local_player() || spiel.spiel.current_player() < 0) ? View.GONE : View.VISIBLE);
+				/* TODO: generalize */
+				final int colors[] = {
+						Color.argb(204, 0, 0, 96),
+						Color.argb(204, 96, 96, 0),
+						Color.argb(204, 96, 0, 0),
+						Color.argb(204, 0, 96, 0),
+				};
+				/* TODO: generalize */
+				final String names[] = {
+						"Blue",
+						"Yellow",
+						"Red",
+						"Green"
+				};
+
+				View v;
+				v = findViewById(R.id.progressBar);
+				v.setVisibility((local || current < 0) ? View.GONE : View.VISIBLE);
+				v = findViewById(R.id.currentPlayerLayout);
+				v.setVisibility(View.VISIBLE);
+				v.clearAnimation();
+				TextView t = (TextView)findViewById(R.id.currentPlayer);
+				if (current < 0) { 
+					v.setBackgroundColor(Color.argb(96, 255, 255, 255));
+					t.setText("no player");
+				} else {
+					v.setBackgroundColor(colors[current]);
+					if (!local) 
+						t.setText(String.format("Waiting for %s", names[current]));
+					else {
+						t.setText("It's your turn!");
+						AnimationSet set = new AnimationSet(true);
+						Animation a = new AlphaAnimation(1.0f, 0.0f);
+						set.setStartOffset(1500);
+						set.setDuration(500);
+						set.setFillAfter(true);
+						set.addAnimation(a);
+						/* TODO: getWidth() is unknown after layouting/screen rotate */
+						a = new TranslateAnimation(0, -v.getWidth() * 0.85f, 0, 0);
+						set.addAnimation(a);
+						v.startAnimation(set);
+					}
+				}
 			}
 		});
 	}
