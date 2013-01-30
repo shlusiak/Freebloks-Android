@@ -129,6 +129,7 @@ public class SpielServer {
 	
 	private class AIThread extends Thread {
 		private final String tag = AIThread.class.getSimpleName();
+		private final int MIN_TIME = 1000; /* ms */
 		
 		@Override
 		public void run() {
@@ -144,6 +145,13 @@ public class SpielServer {
 			time = System.currentTimeMillis() - time;
 			
 			Log.d("AIThread", "player " + leiter.current_player() + " took " + time + " ms, " + m_ki.get_number_of_stored_turns() + " turns");
+			if (time < MIN_TIME) {
+				try {
+					Thread.sleep(MIN_TIME - time);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			
 			if (turn != null) {
 				/* Datenstruktur fuellen, die an die Clients geschickt werden soll. */
