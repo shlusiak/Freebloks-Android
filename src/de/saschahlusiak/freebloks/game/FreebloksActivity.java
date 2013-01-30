@@ -128,6 +128,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					showDialog(DIALOG_LOBBY);
 				
 				spiel.addClientInterface(FreebloksActivity.this);
+				newCurrentPlayer(spiel.spiel.current_player());
 				spielthread.start();
 			}
 			super.onPostExecute(result);
@@ -159,6 +160,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			spiel = spielthread.spiel;
 			spiel.addClientInterface(this);
 			view.setSpiel(spiel, spiel.spiel);
+			newCurrentPlayer(spiel.spiel.current_player());
 		} else {
 			if (savedInstanceState == null) {
 				Bundle b;
