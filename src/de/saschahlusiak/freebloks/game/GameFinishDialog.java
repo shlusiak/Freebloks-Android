@@ -7,7 +7,14 @@ import de.saschahlusiak.freebloks.model.Spiel;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 public class GameFinishDialog extends Dialog {
@@ -30,13 +37,13 @@ public class GameFinishDialog extends Dialog {
 	
 	public void setData(SpielClient spiel) {
 		int place[] = { 0, 1, 2, 3 };
-		TextView t[] = new TextView[4];
+		ViewGroup t[] = new ViewGroup[4];
 		/* TODO: generalize */
 		final int colors[] = {
-				Color.argb(96, 0, 0, 255),
-				Color.argb(96, 255, 255, 0),
-				Color.argb(96, 255, 0, 0),
-				Color.argb(96, 0, 255, 0),
+				Color.argb(96, 0, 0, 180),
+				Color.argb(96, 180, 180, 0),
+				Color.argb(96, 180, 0, 0),
+				Color.argb(96, 0, 180, 0),
 		};
 		/* TODO: translate */
 		final String names[] = {
@@ -57,24 +64,70 @@ public class GameFinishDialog extends Dialog {
 			}else i++;
 		}
 		
-		t[0] = (TextView) findViewById(R.id.place1);
-		t[1] = (TextView) findViewById(R.id.place2);
-		t[2] = (TextView) findViewById(R.id.place3);
-		t[3] = (TextView) findViewById(R.id.place4);
+		t[0] = (ViewGroup) findViewById(R.id.place1);
+		t[1] = (ViewGroup) findViewById(R.id.place2);
+		t[2] = (ViewGroup) findViewById(R.id.place3);
+		t[3] = (ViewGroup) findViewById(R.id.place4);
 		
+		int myplace = -1;
 		for (i = 0; i < 4; i++) {
 			String name;
 			Player p = spiel.spiel.get_player(place[i]);
 			/* TODO: translate */
 			name = names[place[i]];
-			if (spiel.spiel.is_local_player(place[i]))
-				name = "* " + name;
+			if (spiel.spiel.is_local_player(place[i])) {
+				myplace = i;
+			}
 			
-			t[i].setText(String.format("%s: -%d points (%d stones)",
-					name,
-					p.m_stone_points_left,
-					p.m_stone_count));
+			((TextView)t[i].findViewById(R.id.name)).setText(name);
+			((TextView)t[i].findViewById(R.id.points)).setText(String.format("-%d points", p.m_stone_points_left));
+			((TextView)t[i].findViewById(R.id.stones)).setText(String.format("%d stones", p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);
+			
+			AnimationSet set = new AnimationSet(false);
+			Animation a = new AlphaAnimation(0.0f, 1.0f);
+			a.setStartOffset(i * 100);
+			a.setDuration(600);
+			a.setFillBefore(true);
+			set.addAnimation(a);
+			a = new TranslateAnimation(
+					TranslateAnimation.RELATIVE_TO_SELF, 
+					-1, 
+					TranslateAnimation.RELATIVE_TO_SELF, 
+					0, 
+					TranslateAnimation.RELATIVE_TO_SELF, 
+					0, 
+					TranslateAnimation.RELATIVE_TO_SELF, 
+					0);
+			a.setStartOffset(200 + i * 100);
+			a.setDuration(600);
+			a.setFillBefore(true);
+			set.addAnimation(a);
+			
+			if (myplace == i) {
+				a = new TranslateAnimation(
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0, 
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0.4f, 
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0, 
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0);
+				a.setDuration(300);
+				a.setInterpolator(new DecelerateInterpolator());
+				a.setRepeatMode(Animation.REVERSE);
+				a.setRepeatCount(Animation.INFINITE);
+
+				((TextView)t[i].findViewById(R.id.name)).setTextColor(Color.WHITE);
+				((TextView)t[i].findViewById(R.id.name)).setTypeface(Typeface.DEFAULT_BOLD);
+
+				(t[i].findViewById(R.id.name)).startAnimation(a);
+			}
+			t[i].startAnimation(set);
+		}
+		if (myplace >= 0) {
+			setTitle(String.format("Place %d", myplace + 1));
 		}
 	}
 }
