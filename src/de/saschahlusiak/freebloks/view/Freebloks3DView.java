@@ -11,7 +11,7 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
-import de.saschahlusiak.freebloks.view.effects.AbsEffect.FadeEffect;
+import de.saschahlusiak.freebloks.view.effects.FadeEffect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import android.content.Context;
 import android.graphics.PointF;
