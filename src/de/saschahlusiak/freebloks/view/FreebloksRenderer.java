@@ -21,6 +21,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	int currentPlayer;
 	ViewModel model;
 	Context context;
+	float fixed_zoom;
+	float density;
 	
 	int viewport[] = new int[4];
 	float projectionMatrix[] = new float[16];
@@ -71,11 +73,14 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0, 9.0f, 0);
+		if (height > width)
+			gl.glTranslatef(0, 8.0f, 0);
+		else
+			gl.glTranslatef(5.0f, 1.2f, 0);
 		GLU.gluLookAt(gl, 
-				(float) (camera_distance*Math.sin(angle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
-				(float) (camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
-				(float) (camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-angle*Math.PI/180.0)),
+				(float) (fixed_zoom/camera_distance*Math.sin(angle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
+				(float) (fixed_zoom/camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
+				(float) (fixed_zoom/camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-angle*Math.PI/180.0)),
 				0.0f, 0.0f, 0.0f,
 				0.0f, 1.0f, 0.0f);
 		if (updateModelViewMatrix) {
@@ -124,6 +129,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		if (currentPlayer >= 0 && model.showPlayer >= 0) {
 			gl.glPushMatrix();
 			gl.glRotatef(angle, 0, 1, 0);
+			if (width > height)
+				gl.glRotatef(-90.0f, 0, 1, 0);
 			model.wheel.render(this, gl);
 			gl.glPopMatrix();
 		}
@@ -155,12 +162,22 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		viewport[2] = width;
 		viewport[3] = height;
 		
+		
 		this.width = (float)width;
 		this.height = (float)height;
+		model.vertical_layout = (height >= width);
 		
+		float fovy;
+		if (height > width) {
+			fovy = 35.0f;
+		} else {
+			fovy = 23.0f;
+		}
+		fixed_zoom = 50.0f;
+
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		GLU.gluPerspective(gl, 60.0f, this.width / this.height, 1.0f, 300.0f);
+		GLU.gluPerspective(gl, fovy, this.width / this.height, 1.0f, 300.0f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
 		gl11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
