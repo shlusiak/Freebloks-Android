@@ -39,7 +39,7 @@ public class Player implements Serializable, Cloneable {
 		refresh_data(spiel);
 	}
 	
-	public void copyFrom(Player from) {
+	public final void copyFrom(Player from) {
 		this.m_stone_points_left = from.m_stone_points_left;
 		this.m_stone_count = from.m_stone_count;
 		this.m_number_of_possible_turns = from.m_number_of_possible_turns;
