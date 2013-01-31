@@ -37,8 +37,6 @@ public class CurrentStone extends ViewElement {
 		
 		status = Status.IDLE;
 		
-		pos.x = -50;
-		pos.y = -50;
 		float s = 5.5f;
 		texture = null;
 		
@@ -81,82 +79,80 @@ public class CurrentStone extends ViewElement {
 		if (stone == null)
 			return;
 		
-		if (pos.x > -50 && pos.y > -50) {
-			gl.glPushMatrix();
-			gl.glTranslatef(0, 0.3f, 0.0f);
-			
-			gl.glPushMatrix();
-		    gl.glTranslatef(
-		    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.x + stone.get_stone_size() / 2),
-		    		0,
-		    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)(pos.y - stone.get_stone_size() / 2));
-		    
-			if (status == Status.ROTATING)
-				gl.glRotatef(rotate_angle, 0, 1, 0);
-			if (status == Status.FLIPPING_HORIZONTAL)
-				gl.glRotatef(rotate_angle, 0, 0, 1);
-			if (status == Status.FLIPPING_VERTICAL)
-				gl.glRotatef(rotate_angle, 1, 0, 0);
+		gl.glPushMatrix();
+		gl.glTranslatef(0, 0.3f, 0.0f);
+		
+		gl.glPushMatrix();
+	    gl.glTranslatef(
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.x + stone.get_stone_size() / 2),
+	    		0,
+	    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)(pos.y - stone.get_stone_size() / 2));
+	    
+		if (status == Status.ROTATING)
+			gl.glRotatef(rotate_angle, 0, 1, 0);
+		if (status == Status.FLIPPING_HORIZONTAL)
+			gl.glRotatef(rotate_angle, 0, 0, 1);
+		if (status == Status.FLIPPING_VERTICAL)
+			gl.glRotatef(rotate_angle, 1, 0, 0);
 
-		    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
-			gl.glEnable(GL10.GL_TEXTURE_2D);
-			gl.glEnable(GL10.GL_BLEND);
-			gl.glDisable(GL10.GL_DEPTH_TEST);
-			
-			/* TODO: cache result of is_valid_turn when moved */
-			boolean isvalid = model.spiel.is_valid_turn(stone, model.showPlayer, 19 - pos.y, pos.x) == Stone.FIELD_ALLOWED;
-			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		
+		/* TODO: cache result of is_valid_turn when moved */
+		boolean isvalid = model.spiel.is_valid_turn(stone, model.showPlayer, 19 - pos.y, pos.x) == Stone.FIELD_ALLOWED;
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
 
-			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
-		    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
-		    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
-		    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
-		    
-		    overlay.drawElements(gl);
-		    gl.glRotatef(180.0f, 1, 0, 0);
-		    overlay.drawElements(gl);
-		    gl.glRotatef(180.0f, 1, 0, 0);
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
+	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
+	    
+	    overlay.drawElements(gl);
+	    gl.glRotatef(180.0f, 1, 0, 0);
+	    overlay.drawElements(gl);
+	    gl.glRotatef(180.0f, 1, 0, 0);
 
-			gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		    
-		    
-		    gl.glPopMatrix();
-		    
-			gl.glDisable(GL10.GL_BLEND);
-			gl.glDisable(GL10.GL_TEXTURE_2D);
-			
-		    gl.glTranslatef(
-		    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
-		    		0,
-		    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * pos.y);
-			
-			
-			float offset = (float)(stone.get_stone_size())/ 2.0f;
-			offset -= 0.5f;
-		    	
-			gl.glTranslatef(BoardRenderer.stone_size * 2.0f * offset,
-					0,
-					BoardRenderer.stone_size * 2.0f * offset);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+	    
+	    
+	    gl.glPopMatrix();
+	    
+		gl.glDisable(GL10.GL_BLEND);
+		gl.glDisable(GL10.GL_TEXTURE_2D);
+		
+	    gl.glTranslatef(
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
+	    		0,
+	    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * pos.y);
+		
+		
+		float offset = (float)(stone.get_stone_size())/ 2.0f;
+		offset -= 0.5f;
+	    	
+		gl.glTranslatef(BoardRenderer.stone_size * 2.0f * offset,
+				0,
+				BoardRenderer.stone_size * 2.0f * offset);
 
-			if (status == Status.ROTATING)
-				gl.glRotatef(rotate_angle, 0, 1, 0);
-			if (status == Status.FLIPPING_HORIZONTAL)
-				gl.glRotatef(rotate_angle, 0, 0, 1);
-			if (status == Status.FLIPPING_VERTICAL)
-				gl.glRotatef(rotate_angle, 1, 0, 0);
-		    	
-		    gl.glTranslatef(
-					-BoardRenderer.stone_size * 2.0f * offset,
-					0,
-					-BoardRenderer.stone_size * 2.0f * offset);
-		    
-			renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f);
-			
-			gl.glEnable(GL10.GL_DEPTH_TEST);
-			
-			gl.glPopMatrix();
-		}
+		if (status == Status.ROTATING)
+			gl.glRotatef(rotate_angle, 0, 1, 0);
+		if (status == Status.FLIPPING_HORIZONTAL)
+			gl.glRotatef(rotate_angle, 0, 0, 1);
+		if (status == Status.FLIPPING_VERTICAL)
+			gl.glRotatef(rotate_angle, 1, 0, 0);
+	    	
+	    gl.glTranslatef(
+				-BoardRenderer.stone_size * 2.0f * offset,
+				0,
+				-BoardRenderer.stone_size * 2.0f * offset);
+	    
+		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f);
+		
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		
+		gl.glPopMatrix();
 	}
 
 	boolean moveTo(int x, int y) {
@@ -351,16 +347,21 @@ public class CurrentStone extends ViewElement {
 		return false;
 	}
 	
-	synchronized void startDragging(Stone stone) {
+	synchronized void startDragging(PointF fieldPoint, Stone stone) {
 		this.stone = stone;
 		if (stone == null) {
 			status = Status.IDLE;
 			return;
 		}
-		
+
 		status = Status.DRAGGING;
 		hasMoved = false;
 		stone_rel_x = 0;
 		stone_rel_y = 0;
+		
+		int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+		int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+
+		moveTo(x, y);
 	}	
 }

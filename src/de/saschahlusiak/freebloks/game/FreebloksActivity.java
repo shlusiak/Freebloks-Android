@@ -59,7 +59,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	Freebloks3DView view;
 	SpielClient client = null;
-	Stone currentStone = null;
 	SpielClientThread spielthread = null;
 	ServerListener listener = null;
 	Vibrator vibrator;
@@ -405,7 +404,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void newCurrentPlayer(int player) {
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
-		selectCurrentStone(null);
 		final int current = player;
 		final boolean local = client.spiel.is_local_player();
 
@@ -540,11 +538,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void selectCurrentStone(final Stone stone) {
-		currentStone = stone;
-	}
-
-	@Override
 	public boolean commitCurrentStone(Stone stone, int x, int y) {
 		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
 		if (!client.spiel.is_local_player())
@@ -553,7 +546,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return false;
 		
 		client.set_stone(stone, 19 - y, x);
-		selectCurrentStone(null);
 		if (vibrate)
 			vibrator.vibrate(100);
 		return true;
