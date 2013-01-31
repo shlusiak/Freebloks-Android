@@ -10,16 +10,11 @@ public class Ki {
 	public static final int MEDIUM = 50;
 	public static final int EASY = 120;
 	
-	public Ki() {
-		num_threads = 2;
-	}
+	public Ki(int num_threads) {
+		this.num_threads = num_threads;
+	}	
 	
-	void setNum_threads(int threads) {
-		num_threads = threads;
-	}
-	
-	
-	void calculate_possible_turns(Spiel spiel, Stone stone, int playernumber){
+	private void calculate_possible_turns(Spiel spiel, Stone stone, int playernumber){
 		for (int x = 0; x < spiel.m_field_size_x; x++){
 			for (int y = 0; y < spiel.m_field_size_y; y++){
 				if (spiel.get_game_field(playernumber, y, x) == Stone.FIELD_ALLOWED){
@@ -30,7 +25,7 @@ public class Ki {
 	}
 
 
-	void calculate_possible_turns_in_position(Spiel spiel, Stone stone, int playernumber, int fieldY, int fieldX) {
+	private void calculate_possible_turns_in_position(Spiel spiel, Stone stone, int playernumber, int fieldY, int fieldX) {
 		int mirror;
 			
 		int rotate_count = stone.m_rotate_counter;
@@ -58,7 +53,6 @@ public class Ki {
 	}
 
 	class KiThread extends Thread {
-		Ki ki;
 		int from, to;
 		int best_points;
 		int current_player;
@@ -74,16 +68,16 @@ public class Ki {
 			int new_points;
 			Spiel follow = new Spiel(spiel);
 			
-			follow.follow_situation(current_player, spiel, ki.m_turnpool.get_turn(from));
-			best_points = get_ultimate_points(follow, current_player, ki_fehler, ki.m_turnpool.get_turn(from));
-			best = ki.m_turnpool.get_turn(from);
+			follow.follow_situation(current_player, spiel, m_turnpool.get_turn(from));
+			best_points = get_ultimate_points(follow, current_player, ki_fehler, m_turnpool.get_turn(from));
+			best = m_turnpool.get_turn(from);
 			
 			for (int n = from + 1; n <= to; n++) {
-				follow.follow_situation(current_player, spiel, ki.m_turnpool.get_turn(n));
-				new_points = get_ultimate_points(follow, current_player, ki_fehler, ki.m_turnpool.get_turn(n));
+				follow.follow_situation(current_player, spiel, m_turnpool.get_turn(n));
+				new_points = get_ultimate_points(follow, current_player, ki_fehler, m_turnpool.get_turn(n));
 				
 				if (new_points >= best_points) {
-					best = ki.m_turnpool.get_turn(n);
+					best = m_turnpool.get_turn(n);
 					best_points = new_points;
 				}
 			}
@@ -91,7 +85,7 @@ public class Ki {
 		}
 	}
 
-	Turn get_ultimate_turn(Spiel spiel, int current_player, int ki_fehler) {
+	private Turn get_ultimate_turn(Spiel spiel, int current_player, int ki_fehler) {
 		build_up_turnpool_biggest_x_stones(spiel, current_player, BIGGEST_X_STONES);
 		
 		Turn best;
@@ -99,13 +93,10 @@ public class Ki {
 		Spiel follow_situation = new Spiel(spiel);
 		int i;
 		KiThread threads[] = new KiThread[num_threads];
-		if (num_threads>8)
-			return null;
 
 		for (i = 0; i < num_threads; i++)
 		{
 			threads[i] = new KiThread();
-			threads[i].ki=this;
 			threads[i].best=null;
 			threads[i].best_points=0;
 			threads[i].current_player=current_player;
@@ -143,20 +134,16 @@ public class Ki {
 	}
 
 
-	void build_up_turnpool_biggest_x_stones(Spiel spiel, int playernumber, int max_stored_stones) {
+	private void build_up_turnpool_biggest_x_stones(Spiel spiel, int playernumber, int max_stored_stones) {
 		m_turnpool.begin_add();
-		int stored_stones = 0;
-		int stored_turns = 0;
 		for (int n = Stone.STONE_COUNT_ALL_SHAPES - 1; n >= 0; n--){
 			Stone stone = spiel.get_player(playernumber).get_stone(n);
 			if (stone.get_available() > 0){
+				int old = m_turnpool.get_number_of_stored_turns();
 				calculate_possible_turns(spiel, stone, playernumber);
-				if (m_turnpool.get_number_of_stored_turns() > stored_turns){
-					stored_stones++;
-					stored_turns = m_turnpool.get_number_of_stored_turns();
-					if (stored_stones >= max_stored_stones) {
+				if (m_turnpool.get_number_of_stored_turns() > old) {
+					if (--max_stored_stones <= 0)
 						return;
-					}
 				}
 			}
 		}
@@ -164,7 +151,7 @@ public class Ki {
 
 
 
-	int get_distance_points(Spiel follow_situation, int playernumber, Turn turn){
+	private static int get_distance_points(Spiel follow_situation, int playernumber, Turn turn){
 		Stone stone = follow_situation.get_player(playernumber).get_stone(turn.m_stone_number);
 		int summe = Math.abs(follow_situation.get_player_start_x(playernumber) - turn.m_x + stone.get_stone_size()/2);
 		summe += Math.abs(follow_situation.get_player_start_y(playernumber) - turn.m_y+ stone.get_stone_size()/2);
@@ -172,7 +159,7 @@ public class Ki {
 	}
 
 
-	int get_ultimate_points(Spiel follow_situation, int playernumber, int ki_fehler, Turn turn) {
+	private static int get_ultimate_points(Spiel follow_situation, int playernumber, int ki_fehler, Turn turn) {
 		int summe = 0;
 		for (int p = 0; p < Spiel.PLAYER_MAX; p++){
 			if (p != playernumber) {
@@ -198,7 +185,4 @@ public class Ki {
 	public int get_number_of_stored_turns() {
 		return m_turnpool.get_number_of_stored_turns();
 	}
-	
-	
-	
 }

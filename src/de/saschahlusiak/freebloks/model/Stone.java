@@ -430,7 +430,7 @@ public class Stone implements Serializable, Cloneable {
 			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
 	}
 
-	int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX){
+	final int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX){
 		int mirror;
 		int count = 0;
 		

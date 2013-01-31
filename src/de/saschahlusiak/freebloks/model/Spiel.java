@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
@@ -17,10 +18,10 @@ public class Spiel implements Serializable, Cloneable {
 		};
 
 	static final int PLAYER_BIT_ALLOWED[] = {
-			  1, //0
-			  4, //1
-			 16, //2
-			 64  //3
+			 0x01, //0
+			 0x04, //1
+			 0x10, //2
+			 0x40  //3
 		};
 
 	static final int PLAYER_BIT_DENIED[] = {
@@ -36,7 +37,7 @@ public class Spiel implements Serializable, Cloneable {
 	public int m_field_size_x;
 
 	Player m_player[] = new Player[PLAYER_MAX];
-	int m_game_field[][];
+	private int m_game_field[];
 	
 	public Spiel(int size_y, int size_x) {
 		m_game_field = null;
@@ -48,11 +49,10 @@ public class Spiel implements Serializable, Cloneable {
 	}
 	
 	public Spiel(Spiel s) {
-		m_game_field = null;
 		m_field_size_y = s.m_field_size_y;
 		m_field_size_x = s.m_field_size_x;
 		
-		m_game_field = new int[m_field_size_y][m_field_size_x];
+		m_game_field = new int[m_field_size_x * m_field_size_y];
 		for (int i = 0; i < PLAYER_MAX; i++)
 			m_player[i] = new Player();
 	}
@@ -63,32 +63,22 @@ public class Spiel implements Serializable, Cloneable {
 		c.m_player = m_player.clone();
 		for (int i = 0; i < PLAYER_MAX; i++)
 			c.m_player[i] = (Player)m_player[i].clone();
-		c.m_game_field = new int[m_field_size_y][m_field_size_x];
-		for (int y = 0; y < m_field_size_y; y++) {
-			for (int x = 0; x < m_field_size_x ; x++){
-				c.m_game_field[y][x] = m_game_field[y][x];
-			}
-		}
+		c.m_game_field = m_game_field.clone();
 		return c;
 	}
 	
 	private void init_field() {
-		m_game_field = new int[m_field_size_y][m_field_size_x];
-		for (int y = 0; y < m_field_size_y; y++) {
-			for (int x = 0; x < m_field_size_x ; x++){
-				m_game_field[y][x] = 0;
-			}
-		}
+		m_game_field = new int[m_field_size_x * m_field_size_y];
+//		Arrays.fill(m_game_field, (byte)0);
 		for (int p = 0; p < PLAYER_MAX; p++){
 			set_game_field(get_player_start_y(p), get_player_start_x(p), PLAYER_BIT_ALLOWED[p]);
 		}
 	}
 	
 	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) {
-		int i,j;
-		for (i = 0; i < m_field_size_x; i++)
-			for (j = 0; j < m_field_size_y; j++)
-				m_game_field[j][i] = vorher_situation.m_game_field[j][i];
+		int i;
+		
+		System.arraycopy(vorher_situation.m_game_field, 0, m_game_field, 0, m_game_field.length);
 		
 		for (i = 0; i < PLAYER_MAX; i++) {
 			m_player[i].copyFrom(vorher_situation.m_player[i]);
@@ -98,7 +88,7 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	final public int get_game_field(int playernumber, int y, int x) {
-		int wert = m_game_field[y][x];
+		int wert = m_game_field[y * m_field_size_x + x];
 		if (wert >= PLAYER_BIT_HAVE_MIN) return Stone.FIELD_DENIED;
 		wert &= PLAYER_BIT_ADDR[playernumber];
 		if (wert == 0) return Stone.FIELD_FREE;
@@ -107,17 +97,17 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	public final int get_game_field(int y, int x) {
-		int wert = m_game_field[y][x];
+		int wert = m_game_field[y * m_field_size_x + x];
 		if (wert < PLAYER_BIT_HAVE_MIN)
 			return Stone.FIELD_FREE;
 		return wert & 3;
 	}
 
 	final void set_game_field(int y, int x, int value){
-		m_game_field[y][x] = value;
+		m_game_field[y * m_field_size_x + x] = value;
 	}
 
-	public Player get_player(int playernumber) {
+	public final Player get_player(int playernumber) {
 		return m_player[playernumber];
 	}
 
@@ -135,13 +125,12 @@ public class Spiel implements Serializable, Cloneable {
 		case 2 : return 0;
 		default: return m_field_size_y - 1;
 		}
-
 	}
 	
 	public void set_field_size_and_new(int y, int x) {
 		m_field_size_x = x;
 		m_field_size_y = y;
-		m_game_field = new int[m_field_size_y][m_field_size_x];
+		m_game_field = new int[m_field_size_x * m_field_size_y];
 		start_new_game();
 	}
 
@@ -185,7 +174,7 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 
-	public int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
+	public final int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
 		int valid = Stone.FIELD_DENIED;
 		int field_value;
 
@@ -220,11 +209,12 @@ public class Spiel implements Serializable, Cloneable {
 		for (int y = startY-1; y <= startY+1; y++)if (y>=0 && y<m_field_size_y) {
 			for (int x = startX-1; x <= startX+1; x++)if (x>=0 && x<m_field_size_x){
 				if (get_game_field(playernumber, y, x) != Stone.FIELD_DENIED){
+					int idx = y * m_field_size_x + x;
 					if (y != startY && x != startX){
-						m_game_field[y][x] |= PLAYER_BIT_ALLOWED[playernumber];
+						m_game_field[idx] |= PLAYER_BIT_ALLOWED[playernumber];
 					}else{
-						m_game_field[y][x] &= ~PLAYER_BIT_ADDR[playernumber];
-						m_game_field[y][x] |= PLAYER_BIT_DENIED[playernumber];
+						m_game_field[idx] &= ~PLAYER_BIT_ADDR[playernumber];
+						m_game_field[idx] |= PLAYER_BIT_DENIED[playernumber];
 					}
 				}
 			}
@@ -283,7 +273,7 @@ public class Spiel implements Serializable, Cloneable {
 
 		for (int p = 0; p < PLAYER_MAX; p++){
 			if (get_game_field(p, get_player_start_y(p), get_player_start_x(p)) == Stone.FIELD_FREE){
-				m_game_field[get_player_start_y(p)][get_player_start_x(p)] |= PLAYER_BIT_ALLOWED[p]; 
+				m_game_field[get_player_start_y(p) * m_field_size_x + get_player_start_x(p)] |= PLAYER_BIT_ALLOWED[p]; 
 			}
 		}
 		stone.available_increment();
