@@ -59,6 +59,10 @@ public class Ki {
 		int ki_fehler;
 		Turn best;
 		Spiel spiel;
+		
+		KiThread() {
+			setPriority(Thread.NORM_PRIORITY - 2);
+		}
 
 		@Override
 		public void run() {

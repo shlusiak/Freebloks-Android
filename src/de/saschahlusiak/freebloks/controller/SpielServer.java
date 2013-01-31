@@ -131,6 +131,10 @@ public class SpielServer {
 		private final String tag = AIThread.class.getSimpleName();
 		private final int MIN_TIME = 1000; /* ms */
 		
+		AIThread() {
+			setPriority(Thread.NORM_PRIORITY - 2);
+		}
+		
 		@Override
 		public void run() {
 			do_computer_turn();
