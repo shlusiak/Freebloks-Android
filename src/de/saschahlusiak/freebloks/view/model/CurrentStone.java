@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view.model;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -10,7 +10,10 @@ import android.graphics.PointF;
 import android.util.Log;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.view.opengl.AbsEffect.FadeEffect;
+import de.saschahlusiak.freebloks.view.BoardRenderer;
+import de.saschahlusiak.freebloks.view.FreebloksRenderer;
+import de.saschahlusiak.freebloks.view.SimpleModel;
+import de.saschahlusiak.freebloks.view.effects.AbsEffect.FadeEffect;
 
 public class CurrentStone extends ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
@@ -50,7 +53,7 @@ public class CurrentStone extends ViewElement {
 		overlay.commit();
 	}
 	
-	void updateTexture(Context context, GL10 gl) {
+	public void updateTexture(Context context, GL10 gl) {
 		if (texture == null)
 			texture = new int[1];
 
@@ -74,7 +77,7 @@ public class CurrentStone extends ViewElement {
 	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
 	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
 	
-	synchronized void render(FreebloksRenderer renderer, GL10 gl) {
+	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		if (stone == null)
 			return;
 		

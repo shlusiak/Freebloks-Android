@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,7 +37,7 @@ public class SimpleModel {
 	    _textureBuffer = tbb.asFloatBuffer();
     }
     
-    void commit() {
+    public void commit() {
 	    _vertexBuffer.position(0);
 	    _normalBuffer.position(0);
 	    _indexBuffer.position(0);
@@ -45,7 +45,7 @@ public class SimpleModel {
    	
     }
     
-	void addVertex(float x, float y, float z, float nx, float ny, float nz, float tu, float tv) {
+	public void addVertex(float x, float y, float z, float nx, float ny, float nz, float tu, float tv) {
 		_vertexBuffer.put(x);
 		_vertexBuffer.put(y);
 		_vertexBuffer.put(z);
@@ -56,28 +56,26 @@ public class SimpleModel {
 		_textureBuffer.put(tv);
 	}
 
-	void addIndex(int v1, int v2, int v3) {
+	public void addIndex(int v1, int v2, int v3) {
 		_indexBuffer.put((short)(v1));
 		_indexBuffer.put((short)(v2));
 		_indexBuffer.put((short)(v3));
 	}
 	
-	FloatBuffer getVertexBuffer() {
+	public FloatBuffer getVertexBuffer() {
 		return _vertexBuffer;
 	}
-	FloatBuffer getNormalBuffer() {
+	public FloatBuffer getNormalBuffer() {
 		return _normalBuffer;
 	}
-	FloatBuffer getTextureBuffer() {
+	public FloatBuffer getTextureBuffer() {
 		return _textureBuffer;
 	}
-	ShortBuffer getIndexBuffer() {
+	public ShortBuffer getIndexBuffer() {
 		return _indexBuffer;
 	}
 
 	public void drawElements(GL10 gl) {
 		gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, getIndexBuffer());
 	}
-
-	
 }

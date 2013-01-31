@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view.model;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.BoardRenderer;
+import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 
 public class Wheel extends ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
@@ -34,7 +36,7 @@ public class Wheel extends ViewElement {
 	TimerTask task;
 	
 	
-	synchronized void update(int currentPlayer) {
+	public synchronized void update(int currentPlayer) {
 		lastPlayer = currentPlayer;
 		if (currentPlayer < 0)
 			return;

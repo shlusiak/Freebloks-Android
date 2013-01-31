@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >    
     
-    <de.saschahlusiak.freebloks.view.opengl.Freebloks3DView
+    <de.saschahlusiak.freebloks.view.Freebloks3DView
         android:id="@+id/board"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

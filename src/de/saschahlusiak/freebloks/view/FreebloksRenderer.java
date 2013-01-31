@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -9,8 +9,10 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.effects.AbsEffect;
+import de.saschahlusiak.freebloks.view.model.ViewModel;
 
-class FreebloksRenderer implements GLSurfaceView.Renderer {
+public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
 	final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 	final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -24,7 +26,7 @@ class FreebloksRenderer implements GLSurfaceView.Renderer {
 	float projectionMatrix[] = new float[16];
 	float modelViewMatrix[] = new float[16];
 
-	BoardRenderer board;
+	public BoardRenderer board;
 
 	public FreebloksRenderer(Context context, ViewModel model) {
 		this.context = context;
