@@ -6,11 +6,11 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 
 class SpielClientThread extends Thread {
 	static final String tag = SpielClientThread.class.getSimpleName();
-	SpielClient spiel;
+	SpielClient client;
 	boolean godown;
 	
 	SpielClientThread(SpielClient spiel) {
-		this.spiel = spiel;
+		this.client = spiel;
 	}
 	
 	private synchronized boolean getGoDown() {
@@ -25,13 +25,13 @@ class SpielClientThread extends Thread {
 	public void run() {
 		godown = false;
 		do {
-			if (!spiel.poll(true))
+			if (!client.poll(true))
 				break;
 			if (getGoDown()) {
 				return;
 			}
-		} while (spiel.isConnected());
-		spiel.disconnect();
+		} while (client.isConnected());
+		client.disconnect();
 		Log.i(tag, "disconnected, thread going down");
 	}
 }

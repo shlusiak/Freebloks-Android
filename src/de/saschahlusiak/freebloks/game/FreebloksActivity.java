@@ -58,7 +58,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
 	Freebloks3DView view;
-	SpielClient spiel = null;
+	SpielClient client = null;
 	Stone currentStone = null;
 	SpielClientThread spielthread = null;
 	ServerListener listener = null;
@@ -73,13 +73,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
-		SpielClient client = null;
+		SpielClient myclient = null;
 		boolean show_lobby;
 		Runnable connectedRunnable;
 		
 		ConnectTask(SpielClient client, boolean show_lobby, Runnable connectedRunnable) {
-			this.client = client;
-			spielthread = new SpielClientThread(client);
+			this.myclient = client;
+			spielthread = new SpielClientThread(myclient);
 			this.show_lobby = show_lobby;
 			this.connectedRunnable = connectedRunnable;
 		}
@@ -99,14 +99,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				client.connect(params[0], Network.DEFAULT_PORT);
+				this.myclient.connect(params[0], Network.DEFAULT_PORT);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return e.getMessage();
 			}
 			if (connectedRunnable != null)
 				connectedRunnable.run();
-			view.setSpiel(client, client.spiel);
+			view.setSpiel(myclient, myclient.spiel);
 			return null;
 		}
 		
@@ -118,7 +118,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		@Override
 		protected void onPostExecute(String result) {
-			spiel = client;
+			FreebloksActivity.this.client = this.myclient;
 			progress.dismiss();
 			if (result != null) {
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
@@ -127,8 +127,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				if (show_lobby)
 					showDialog(DIALOG_LOBBY);
 				
-				spiel.addClientInterface(FreebloksActivity.this);
-				newCurrentPlayer(spiel.spiel.current_player());
+				myclient.addClientInterface(FreebloksActivity.this);
+				newCurrentPlayer(myclient.spiel.current_player());
 				spielthread.start();
 			}
 			super.onPostExecute(result);
@@ -157,10 +157,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
-			spiel = spielthread.spiel;
-			spiel.addClientInterface(this);
-			view.setSpiel(spiel, spiel.spiel);
-			newCurrentPlayer(spiel.spiel.current_player());
+			client = spielthread.client;
+			client.addClientInterface(this);
+			view.setSpiel(client, client.spiel);
+			newCurrentPlayer(client.spiel.current_player());
 		} else {
 			if (savedInstanceState == null) {
 				Bundle b;
@@ -182,21 +182,21 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onDestroy() {
 		if (spielthread != null) try {
-			spielthread.spiel.disconnect();
+			spielthread.client.disconnect();
 			spielthread.goDown();
 			spielthread.join();
 			spielthread = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		spiel.removeClientInterface(this);
+		client.removeClientInterface(this);
 		super.onDestroy();
 	}
 	
 	@Override
 	protected void onPause() {
 		view.onPause();
-		if (spiel.spiel.current_player() >= 0)
+		if (client.spiel.current_player() >= 0)
 			saveGameState(GAME_STATE_FILE);
 		else
 			deleteFile(FreebloksActivity.GAME_STATE_FILE);
@@ -244,7 +244,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	private void writeStateToBundle(Bundle outState) {
 		Log.d(tag, "onSaveInstanceState");
-		Spielleiter l = spiel.spiel;
+		Spielleiter l = client.spiel;
 		outState.putSerializable("game", l);
 	}
 	
@@ -289,7 +289,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		
 		if (spielthread != null)
-			spielthread.spiel.disconnect();
+			spielthread.client.disconnect();
 		
 		Spielleiter spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
 		final SpielClient client = new SpielClient(spiel);
@@ -338,7 +338,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new LobbyDialog(this, new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface arg0) {
-					spiel.disconnect();
+					client.disconnect();
 				}
 			});
 			
@@ -371,10 +371,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	protected void onPrepareDialog(int id, final Dialog dialog, Bundle args) {
 		switch (id) {
 		case DIALOG_LOBBY:
-			((LobbyDialog)dialog).setSpiel(spiel);
+			((LobbyDialog)dialog).setSpiel(client);
 			break;
 		case DIALOG_GAME_FINISH:
-			((GameFinishDialog)dialog).setData(spiel);
+			((GameFinishDialog)dialog).setData(client);
 			((GameFinishDialog)dialog).setOnNewGameListener(new OnClickListener() {
 				
 				@Override
@@ -407,7 +407,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
 		selectCurrentStone(null);
 		final int current = player;
-		final boolean local = spiel.spiel.is_local_player();
+		final boolean local = client.spiel.is_local_player();
 
 		runOnUiThread(new Runnable() {
 			@Override
@@ -474,8 +474,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		int i;
 		Log.i(tag, "-- Game finished! --");
 		for (i = 0; i < Spiel.PLAYER_MAX; i++) {
-			Player player = spiel.spiel.get_player(i);
-			Log.i(tag, (spiel.spiel.is_local_player(i) ? "*" : " ") + "Player " + i
+			Player player = client.spiel.get_player(i);
+			Log.i(tag, (client.spiel.is_local_player(i) ? "*" : " ") + "Player " + i
 					+ " has " + player.m_stone_count + " stones left and "
 					+ -player.m_stone_points_left + " points.");
 		}
@@ -514,7 +514,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
-			if (spiel.spiel.is_local_player(i))
+			if (client.spiel.is_local_player(i))
 				Log.d(tag, "Local player: " + i);
 	}
 
@@ -547,12 +547,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public boolean commitCurrentStone(Stone stone, int x, int y) {
 		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
-		if (!spiel.spiel.is_local_player())
+		if (!client.spiel.is_local_player())
 			return false;
-		if (spiel.spiel.is_valid_turn(stone, spiel.spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
+		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
 			return false;
 		
-		spiel.set_stone(stone, 19 - y, x);
+		client.set_stone(stone, 19 - y, x);
 		selectCurrentStone(null);
 		if (vibrate)
 			vibrator.vibrate(100);
@@ -566,7 +566,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	public void onBackPressed() {
-		if (spiel != null && spiel.spiel.current_player() >= 0 && lastStatus.clients > 1)
+		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else
 			super.onBackPressed();
