@@ -29,12 +29,15 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	public ViewModel model = new ViewModel(this);
 	
 	
-	class MyRenderer implements GLSurfaceView.Renderer {
+	static class MyRenderer implements GLSurfaceView.Renderer {
 		final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
 		final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 		final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
 		float width = 1, height = 1;
+		int currentPlayer;
+		ViewModel model;
+		Context context;
 		
 		int viewport[] = new int[4];
 		float projectionMatrix[] = new float[16];
@@ -42,7 +45,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 		BoardRenderer board;
 
-		public MyRenderer() {
+		public MyRenderer(Context context, ViewModel model) {
+			this.context = context;
+			this.model = model;
 			init();
 			currentPlayer = -1;
 		}
@@ -103,20 +108,20 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 			
-			if (spiel == null)
+			if (model.spiel == null)
 				return;
 
 			/* render board */
-			board.renderBoard(gl, spiel, (spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
+			board.renderBoard(gl, model.spiel, (model.spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
 			
 			/* render player stones on board, unless they are "effected" */
 			synchronized (model.effects) {
 			    gl.glPushMatrix();
-			    gl.glTranslatef(-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) );
-			    for (int y = 0; y < spiel.m_field_size_y; y++) {
+			    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
+			    for (int y = 0; y < model.spiel.m_field_size_y; y++) {
 			    	int x;
-			    	for (x = 0; x < spiel.m_field_size_x; x++) {
-			    		if (spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
+			    	for (x = 0; x < model.spiel.m_field_size_x; x++) {
+			    		if (model.spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
 			    			boolean effected = false;
 			    			for (AbsEffect effect: model.effects)
 			    				if (effect.isEffected(x, y)) {
@@ -124,7 +129,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			    					break;
 			    				}
 			    			if (!effected)
-			    				board.renderStone(gl, spiel.get_game_field(y, x), 0.65f);
+			    				board.renderStone(gl, model.spiel.get_game_field(y, x), 0.65f);
 			    		}
 			    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
 			    	}
@@ -143,12 +148,12 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			/* render all effects */
 			synchronized (model.effects) {
 				for (AbsEffect effect: model.effects) {
-					effect.render(gl, spiel, board);
+					effect.render(gl, model.spiel, board);
 				}
 			}
 			
 			/* render current player stone on the field */
-			if (spiel != null && spiel.is_local_player())
+			if (model.spiel != null && model.spiel.is_local_player())
 				model.currentStone.render(this, gl);
 		}
 		
@@ -196,8 +201,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light0_diffuse, 0);
 			gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light0_specular, 0);
 			
-			renderer.updateModelViewMatrix = true;
-			model.currentStone.updateTexture(getContext(), gl);
+			updateModelViewMatrix = true;
+			model.currentStone.updateTexture(context, gl);
 		}
 
 		float mAngleX;
@@ -211,17 +216,15 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		}
 	}
 	
-	Spielleiter spiel;
 	MyRenderer renderer;
 	ActivityInterface activity;
 	float zoom = 28;
-	int currentPlayer;
 
 	
 	public Freebloks3DView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		renderer = new MyRenderer();
+		renderer = new MyRenderer(context, model);
 		setRenderer(renderer);
 		renderer.setAngle(70.0f, zoom);
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
@@ -233,7 +236,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	}
 
 	public void setSpiel(SpielClient client, Spielleiter spiel) {
-		this.spiel = spiel;
 		model.setSpiel(spiel);
 		if (spiel != null) {
 			client.addClientInterface(this);
@@ -242,8 +244,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 				renderer.updateModelViewMatrix = true;
 				break;
 			}
-			currentPlayer = spiel.current_player();
-			model.wheel.update(model.showOpponents ? currentPlayer : model.showPlayer);
+			renderer.currentPlayer = spiel.current_player();
+			model.wheel.update(model.showOpponents ? renderer.currentPlayer : model.showPlayer);
 		}
 		
 		queueEvent(new Runnable() {
@@ -270,7 +272,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
-		if (spiel == null)
+		if (model.spiel == null)
 			return true;
 		
 		modelPoint.x = event.getX();
@@ -360,7 +362,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		currentPlayer = player;
+		renderer.currentPlayer = player;
 		updateView();
 		model.wheel.update(model.showOpponents ? player : model.showPlayer);
 	}
@@ -368,9 +370,9 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
 		updateView();
-		model.wheel.update(model.showOpponents ? spiel.current_player() : model.showPlayer);
+		model.wheel.update(model.showOpponents ? model.spiel.current_player() : model.showPlayer);
 		
-		if (model.showAnimations && !spiel.is_local_player(s.player)) {
+		if (model.showAnimations && !model.spiel.is_local_player(s.player)) {
 			Stone st = new Stone();
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
@@ -399,7 +401,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 
 	@Override
 	public void gameStarted() {
-		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
+		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (model.spiel.is_local_player(i)) {
 			model.showPlayer = i;
 			renderer.updateModelViewMatrix = true;
 			break;
