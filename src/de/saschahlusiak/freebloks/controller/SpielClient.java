@@ -135,16 +135,22 @@ public class SpielClient {
 			stone.mirror_rotate_to(s.mirror_count, s.rotate_count);
 			/* Stein aufs echte Spielfeld setzen */
 //			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
+			/* Zug der History anhaengen */
+			spiel.addHistory(s.player, stone, s.y, s.x);
+			/* inform listeners first, so that effects can be added before the stone
+			 * is committed. fixes drawing glitches, where stone is set, but
+			 * effect hasn't been added yet
+			 */
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.stoneWasSet(s);
+			
 			if ((spiel.is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
 			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
 				// GAANZ schlecht!!
 				throw new Exception("Game not in sync!");
 			}
-			/* Zug der History anhaengen */
-			spiel.addHistory(s.player, stone, s.y, s.x);
-			for (SpielClientInterface sci : spielClientInterface)
-				sci.stoneWasSet(s);
+
 			break;
 		}
 		

@@ -172,13 +172,12 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	@Override
 	public void newCurrentPlayer(int player) {
 		renderer.currentPlayer = player;
-		updateView();
 		model.wheel.update(model.showOpponents ? player : model.showPlayer);
+		updateView();
 	}
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
-		updateView();
 		model.wheel.update(model.showOpponents ? model.spiel.current_player() : model.showPlayer);
 		
 		if (model.showAnimations && !model.spiel.is_local_player(s.player)) {
@@ -189,6 +188,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		
 			model.addEffect(e);
 		}
+		updateView();
 	}
 
 	@Override
