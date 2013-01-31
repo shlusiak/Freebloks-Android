@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView.MyRenderer;
 
 public class Wheel extends ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
@@ -180,7 +179,7 @@ public class Wheel extends ViewElement {
 		return false;
 	}
 
-	public synchronized void render(MyRenderer renderer, GL10 gl) {
+	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		final float da = 17.0f;
 		float angle = currentAngle + 9.5f * 0.5f * da;
 		

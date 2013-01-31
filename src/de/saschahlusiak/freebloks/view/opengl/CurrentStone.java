@@ -11,7 +11,6 @@ import android.util.Log;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.opengl.AbsEffect.FadeEffect;
-import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView.MyRenderer;
 
 public class CurrentStone extends ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
@@ -75,7 +74,7 @@ public class CurrentStone extends ViewElement {
 	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
 	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
 	
-	synchronized void render(MyRenderer renderer, GL10 gl) {
+	synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		if (stone == null)
 			return;
 		
