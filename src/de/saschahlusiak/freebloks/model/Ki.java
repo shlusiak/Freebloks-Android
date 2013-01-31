@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.model;
 
 public class Ki {
 	int num_threads;
-	static final int BIGGEST_X_STONES = 9;
+	static final int BIGGEST_X_STONES = 7;
 	Turnpool m_turnpool = new Turnpool();
 	
 	public static final int PERFECT = 0;
