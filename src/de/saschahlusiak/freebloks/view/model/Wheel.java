@@ -196,13 +196,12 @@ public class Wheel extends ViewElement {
 			return;
 		
 		
-		gl.glPushMatrix();
-		gl.glTranslatef(0, -BoardRenderer.stone_size * 27.0f, 0);
+		gl.glTranslatef(0, -BoardRenderer.stone_size * 33.0f, 0);
 		gl.glRotatef(currentAngle, 0, 0, 1);
 		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
 		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
+		gl.glScalef(1.1f, 1.1f, 1.1f);
 		gl.glPushMatrix();
-//		gl.glScalef(0.6f, 0.6f, 0.6f);
 		for (int i = 0; i < stones.size(); i++) {
 			Stone s = stones.get(i);
 			
@@ -237,7 +236,6 @@ public class Wheel extends ViewElement {
 			}
 		}
 		
-		gl.glPopMatrix();
 		gl.glPopMatrix();
 	}
 }

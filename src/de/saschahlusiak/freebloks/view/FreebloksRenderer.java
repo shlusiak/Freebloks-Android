@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.util.Log;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.effects.AbsEffect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
@@ -68,6 +69,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 	public synchronized void onDrawFrame(GL10 gl) {
 		final float camera_distance = zoom;
+		long t = System.currentTimeMillis();
 		float angle = getAngleY();
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -103,13 +105,14 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board.renderBoard(gl, model.spiel, (model.spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
 		
 		/* render player stones on board, unless they are "effected" */
-		synchronized (model.effects) {
-		    gl.glPushMatrix();
-		    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
+	    gl.glPushMatrix();
+	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
+	    synchronized (model.effects) {
 		    for (int y = 0; y < model.spiel.m_field_size_y; y++) {
 		    	int x;
 		    	for (x = 0; x < model.spiel.m_field_size_x; x++) {
-		    		if (model.spiel.get_game_field(y, x) != Stone.FIELD_FREE) {
+		    		int field = model.spiel.get_game_field(y, x);
+		    		if (field != Stone.FIELD_FREE) {
 		    			boolean effected = false;
 		    			for (AbsEffect effect: model.effects)
 		    				if (effect.isEffected(x, y)) {
@@ -117,14 +120,14 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		    					break;
 		    				}
 		    			if (!effected)
-		    				board.renderStone(gl, model.spiel.get_game_field(y, x), 0.65f);
+		    				board.renderStone(gl, field, 0.65f);
 		    		}
 		    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
 		    	}
 		    	gl.glTranslatef(- x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
 		    }
-		    gl.glPopMatrix();
-		}
+	    }
+	    gl.glPopMatrix();
 		
 		if (currentPlayer >= 0 && model.showPlayer >= 0) {
 			gl.glPushMatrix();
@@ -143,8 +146,10 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 		
 		/* render current player stone on the field */
-		if (model.spiel != null && model.spiel.is_local_player())
+		if (model.spiel.is_local_player())
 			model.currentStone.render(this, gl);
+		
+		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");
 	}
 	
 	final float getAngleY() {
