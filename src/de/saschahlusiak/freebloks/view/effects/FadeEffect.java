@@ -55,7 +55,7 @@ public class FadeEffect extends AbsStoneEffect {
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
-	    		+BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
 		renderer.renderPlayerStone(gl, player, stone, alpha);
 		gl.glPopMatrix();

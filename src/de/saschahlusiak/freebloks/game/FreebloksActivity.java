@@ -542,10 +542,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
 		if (!client.spiel.is_local_player())
 			return false;
-		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), 19 - y, x) != Stone.FIELD_ALLOWED)
+		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
 			return false;
 		
-		client.set_stone(stone, 19 - y, x);
+		client.set_stone(stone, y, x);
 		if (vibrate)
 			vibrator.vibrate(100);
 		return true;

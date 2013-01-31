@@ -86,7 +86,7 @@ public class CurrentStone extends ViewElement {
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.x + stone.get_stone_size() / 2),
 	    		0,
-	    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * (float)(pos.y - stone.get_stone_size() / 2));
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.y + stone.get_stone_size() / 2));
 	    
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
@@ -101,7 +101,7 @@ public class CurrentStone extends ViewElement {
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 		
 		/* TODO: cache result of is_valid_turn when moved */
-		boolean isvalid = model.spiel.is_valid_turn(stone, model.showPlayer, 19 - pos.y, pos.x) == Stone.FIELD_ALLOWED;
+		boolean isvalid = model.spiel.is_valid_turn(stone, model.showPlayer, pos.y, pos.x) == Stone.FIELD_ALLOWED;
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
 
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -126,13 +126,14 @@ public class CurrentStone extends ViewElement {
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
 	    		0,
-	    		+BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) - BoardRenderer.stone_size * 2.0f * pos.y);
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.y);
 		
 		
 		float offset = (float)(stone.get_stone_size())/ 2.0f;
 		offset -= 0.5f;
 	    	
-		gl.glTranslatef(BoardRenderer.stone_size * 2.0f * offset,
+		gl.glTranslatef(
+				BoardRenderer.stone_size * 2.0f * offset,
 				0,
 				BoardRenderer.stone_size * 2.0f * offset);
 
@@ -162,15 +163,15 @@ public class CurrentStone extends ViewElement {
 		for (int i = 0; i < stone.get_stone_size(); i++)
 			for (int j = 0; j < stone.get_stone_size(); j++) {
 				if (stone.get_stone_field(j, i) == Stone.STONE_FIELD_ALLOWED) {
-					if (i + x < 0)
+					if (x + i < 0)
 						x = -i;
-					if (y - j < 0)
-						y = j;
+					if (y + j < 0)
+						y = -j;
 					
-					if (i + x >= model.spiel.m_field_size_x)
+					if (x + i >= model.spiel.m_field_size_x)
 						x = model.spiel.m_field_size_x - i - 1;
-					if (y - j >= model.spiel.m_field_size_y)
-						y = model.spiel.m_field_size_y + j - 1;
+					if (y + j >= model.spiel.m_field_size_y)
+						y = model.spiel.m_field_size_y - j - 1;
 				}
 			}
 		
@@ -197,7 +198,7 @@ public class CurrentStone extends ViewElement {
 			screenPoint.y = fieldPoint.y;
 			
 			stone_rel_x = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
-			stone_rel_y = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
+			stone_rel_y = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
 			
 //			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
 			if ((Math.abs(stone_rel_x) <= 8) && (Math.abs(stone_rel_y) <= 8)) {
@@ -228,15 +229,15 @@ public class CurrentStone extends ViewElement {
 		if (status == Status.DRAGGING) {
 			final float THRESHOLD = 1.0f;
 			int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-			int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+			int y = (int)(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
 				return true;
 			
-			if (model.snapAid && model.spiel.is_valid_turn(stone, model.showPlayer, 19 - y, x) != Stone.FIELD_ALLOWED)
+			if (model.snapAid && model.spiel.is_valid_turn(stone, model.showPlayer, y, x) != Stone.FIELD_ALLOWED)
 				for (int i = -1; i <= 1; i++)
 					for (int j = -1; j <= 1; j++)
 				{
-					if (model.spiel.is_valid_turn(stone, model.showPlayer, 19 - y +-j, x + i) == Stone.FIELD_ALLOWED)
+					if (model.spiel.is_valid_turn(stone, model.showPlayer, y + j, x + i) == Stone.FIELD_ALLOWED)
 					{
 						hasMoved |= moveTo(x + i, y + j);
 						return true;
@@ -247,10 +248,10 @@ public class CurrentStone extends ViewElement {
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
-			float ry = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
+			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
 			float a1 = (float)Math.atan2(stone_rel_y, stone_rel_x);
 			float a2 = (float)Math.atan2(ry, rx);
-			rotate_angle = (a2 - a1) * 180.0f / (float)Math.PI;
+			rotate_angle = (a1 - a2) * 180.0f / (float)Math.PI;
 			if (Math.abs(rx) + Math.abs(ry) < 5 && Math.abs(rotate_angle) < 25.0f) {
 				rotate_angle = 0.0f;
 				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
@@ -270,14 +271,14 @@ public class CurrentStone extends ViewElement {
 			rotate_angle = p * 180;
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
-			float ry = (pos.y - fieldPoint.y) - stone.get_stone_size() / 2;
+			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
 			float p = 0.0f;
 			p = (stone_rel_y - ry) / (stone_rel_y * 2.0f);
 			if (p < 0)
 				p = 0;
 			if (p > 1)
 				p = 1;
-			if (stone_rel_y > 0)
+			if (stone_rel_y < 0)
 				p = -p;
 			
 			rotate_angle = p * 180;
@@ -294,7 +295,7 @@ public class CurrentStone extends ViewElement {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);
-						FadeEffect e = new FadeEffect(st, player, pos.x, 19 - pos.y);
+						FadeEffect e = new FadeEffect(st, player, pos.x, pos.y);
 				
 						model.addEffect(e);
 					}

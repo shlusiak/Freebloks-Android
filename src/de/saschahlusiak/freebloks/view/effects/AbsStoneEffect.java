@@ -8,19 +8,14 @@ public abstract class AbsStoneEffect extends AbsEffect {
 	AbsStoneEffect(Stone stone, int player, int x, int y) {
 		this.stone = stone;
 		this.player = player;
-		/* x = 19 - y;
-		 * y = x;
-		 */
-		this.y = 19 - y;
 		this.x = x;
+		this.y = y;
 	}
 	
 	@Override
 	public boolean isEffected(int x, int y) {
-		/* TODO: fix this nonesense once and for all! */
-		y = 19 - y;
 		x = x - this.x;
-		y = this.y - y;
+		y = y - this.y;
 
 		if (x < 0 || y < 0)
 			return false;
