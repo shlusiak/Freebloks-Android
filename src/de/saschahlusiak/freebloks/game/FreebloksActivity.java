@@ -137,7 +137,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		Log.d(tag, "onCreate");
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -180,6 +180,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	protected void onDestroy() {
+		Log.d(tag, "onDestroy");
 		if (spielthread != null) try {
 			spielthread.client.disconnect();
 			spielthread.goDown();
@@ -194,11 +195,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected void onPause() {
+		Log.d(tag, "onPause1");
 		view.onPause();
 		if (client.spiel.current_player() >= 0)
 			saveGameState(GAME_STATE_FILE);
 		else
 			deleteFile(FreebloksActivity.GAME_STATE_FILE);
+		Log.d(tag, "onPause2");
 		super.onPause();
 	}
 
@@ -228,6 +231,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
+		Log.d(tag, "onRetainNonConfigurationInstance");
 		RetainedConfig config = new RetainedConfig();
 		config.clientThread = spielthread;
 		config.lastStatus = lastStatus;
@@ -237,12 +241,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		Log.d(tag, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 		writeStateToBundle(outState);
 	}
 	
 	private void writeStateToBundle(Bundle outState) {
-		Log.d(tag, "onSaveInstanceState");
 		Spielleiter l = client.spiel;
 		outState.putSerializable("game", l);
 	}

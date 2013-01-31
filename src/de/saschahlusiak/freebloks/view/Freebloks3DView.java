@@ -299,6 +299,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		super.onPause();
 		thread.goDown = true;
 		try {
+			thread.interrupt();
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
