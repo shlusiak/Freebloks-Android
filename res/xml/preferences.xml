@@ -23,6 +23,13 @@
 		    android:key="show_seeds" />
 
 		<CheckBoxPreference
+		    android:summary="Help by snapping pieces to close valid positions"
+		    android:title="Snap to corners" 
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="snap_aid" />
+		
+		<CheckBoxPreference
 		    android:summary="Show stones of opponents"
 		    android:title="Show opponents"
 		    android:defaultValue="true"

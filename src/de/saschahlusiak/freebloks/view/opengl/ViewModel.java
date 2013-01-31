@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 
-import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.view.ViewInterface;
@@ -19,7 +18,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 	ViewInterface view;
 	ArrayList<AbsEffect> effects;
 
-	public boolean showSeeds, showOpponents, showAnimations;
+	public boolean showSeeds, showOpponents, showAnimations, snapAid;
 	int showPlayer;
 
 	public ViewModel(ViewInterface view) {
