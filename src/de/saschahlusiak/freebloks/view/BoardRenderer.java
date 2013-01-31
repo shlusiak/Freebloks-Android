@@ -125,9 +125,9 @@ public class BoardRenderer {
 	final float board_shininess[] = {35.0f};
 
 	public void renderBoard(GL10 gl, Spiel spiel, int currentPlayer) {
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board_shininess, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 	 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, field.getNormalBuffer());
@@ -140,10 +140,12 @@ public class BoardRenderer {
 	    for (int y = 0; y < spiel.m_field_size_y; y++) {
 	    	int x;
 	    	for (x = 0; x < spiel.m_field_size_y; x++) {
-	    		if (currentPlayer >= 0 && spiel.get_game_field(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
-	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);
-	    		else
-	    			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
+	    		if (currentPlayer >= 0) {
+	    			if (spiel.get_game_field(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
+	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);
+	    			else
+	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
+	    		}
 
 	    		field.drawElements(gl);
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
@@ -195,13 +197,12 @@ public class BoardRenderer {
 		for (i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
-				if (stone.get_stone_field(i,  j) != Stone.STONE_FIELD_FREE)
+				if (stone.get_stone_field(i, j) != Stone.STONE_FIELD_FREE)
 					renderStone(gl, player, alpha);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
 		}
-		gl.glTranslatef(0, 0, -i * stone_size * 2.0f);
 	}
 	
 	public static void myTexImage2D(GL10 gl, Bitmap bitmap) {
