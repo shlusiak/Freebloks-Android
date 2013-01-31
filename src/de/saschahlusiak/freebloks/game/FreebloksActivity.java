@@ -19,7 +19,7 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
-import de.saschahlusiak.freebloks.view.opengl.Freebloks3DView;
+import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

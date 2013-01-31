@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view.model;
 
 import java.util.ArrayList;
 
@@ -7,19 +7,20 @@ import android.graphics.PointF;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.view.ViewInterface;
+import de.saschahlusiak.freebloks.view.effects.AbsEffect;
 
 @SuppressWarnings("serial")
 public class ViewModel extends ArrayList<ViewElement> {
-	Wheel wheel;
-	CurrentStone currentStone;
-	Spielleiter spiel;
-	Board board;
-	ActivityInterface activity;
-	ViewInterface view;
-	ArrayList<AbsEffect> effects;
+	public Wheel wheel;
+	public CurrentStone currentStone;
+	public Spielleiter spiel;
+	public Board board;
+	public ActivityInterface activity;
+	public ViewInterface view;
+	public ArrayList<AbsEffect> effects;
 
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
-	int showPlayer;
+	public int showPlayer;
 
 	public ViewModel(ViewInterface view) {
 		this.view = view;

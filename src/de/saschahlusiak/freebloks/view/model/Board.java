@@ -1,5 +1,6 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view.model;
 
+import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
 public class Board extends ViewElement {

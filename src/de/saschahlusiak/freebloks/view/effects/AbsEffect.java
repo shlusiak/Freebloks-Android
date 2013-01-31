@@ -1,9 +1,10 @@
-package de.saschahlusiak.freebloks.view.opengl;
+package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.BoardRenderer;
 
 public abstract class AbsEffect {
 	AbsEffect() {
@@ -12,16 +13,16 @@ public abstract class AbsEffect {
 		
 	float time;
 	
-	abstract boolean isDone();
+	public abstract boolean isDone();
 	
-	boolean execute(float elapsed) {
+	public boolean execute(float elapsed) {
 		time += elapsed;
 		return true;
 	}
 	
-	abstract void render(GL10 gl, Spiel spiel, BoardRenderer renderer);
+	public abstract void render(GL10 gl, Spiel spiel, BoardRenderer renderer);
 
-	boolean isEffected(int x, int y) {
+	public boolean isEffected(int x, int y) {
 		return false;
 	}
 	
@@ -40,7 +41,7 @@ public abstract class AbsEffect {
 		}
 		
 		@Override
-		boolean isEffected(int x, int y) {
+		public boolean isEffected(int x, int y) {
 			/* TODO: fix this nonesense once and for all! */
 			y = 19 - y;
 			x = x - this.x;
@@ -74,12 +75,12 @@ public abstract class AbsEffect {
 		}
 		
 		@Override
-		boolean isDone() {
+		public boolean isDone() {
 			return time > 8.0f;
 		}
 		
 		@Override
-		boolean execute(float elapsed) {
+		public boolean execute(float elapsed) {
 			final float EPSILON = 0.10f;
 			if (z > EPSILON || (vz > EPSILON || vz < -EPSILON)) {
 				z -= vz * elapsed;
@@ -97,7 +98,7 @@ public abstract class AbsEffect {
 		}
 
 		@Override
-		void render(GL10 gl, Spiel spiel, BoardRenderer renderer) {
+		public void render(GL10 gl, Spiel spiel, BoardRenderer renderer) {
 			float alpha;
 			gl.glPushMatrix();
 			gl.glTranslatef(0, z, 0);
