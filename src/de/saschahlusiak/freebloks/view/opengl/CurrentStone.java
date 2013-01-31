@@ -233,6 +233,18 @@ public class CurrentStone extends ViewElement {
 			int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
 			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
 				return true;
+			
+			if (model.snapAid && model.spiel.is_valid_turn(stone, model.showPlayer, 19 - y, x) != Stone.FIELD_ALLOWED)
+				for (int i = -1; i <= 1; i++)
+					for (int j = -1; j <= 1; j++)
+				{
+					if (model.spiel.is_valid_turn(stone, model.showPlayer, 19 - y +-j, x + i) == Stone.FIELD_ALLOWED)
+					{
+						hasMoved |= moveTo(x + i, y + j);
+						return true;
+					}
+				}
+
 			hasMoved |= moveTo(x, y);
 		}
 		if (status == Status.ROTATING) {

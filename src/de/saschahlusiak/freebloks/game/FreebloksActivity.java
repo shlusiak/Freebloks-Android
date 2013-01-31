@@ -224,6 +224,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		/* TODO: update wheel when changing show_opponents preference */
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
+		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 	}
 
 	@Override
