@@ -38,7 +38,11 @@ public class StartScreenActivity extends Activity {
 	SharedPreferences prefs;
 	
 	private static final String WHATS_NEW = 
-			"* fixed several crashes on resume/rotate";
+			"* improved speed\n" + 
+			"* slow down too fast computer moves\n" + 
+			"* show current player\n" +
+			"* threshold when first moving stone\n" + 
+			"* snap stones to closest valid position";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
