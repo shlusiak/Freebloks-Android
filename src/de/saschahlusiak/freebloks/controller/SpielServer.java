@@ -22,7 +22,7 @@ public class SpielServer {
 		leiter = new Spielleiter(size_y, size_x);
 		
 		this.ki_mode = ki_mode;
-		m_ki = new Ki(3);
+		m_ki = new Ki(2);
 		leiter.start_new_game();
 		clients = new Socket[8];
 	}
