@@ -113,11 +113,9 @@ public class Wheel extends ViewElement {
 							model.board.modelToBoard(tmp);
 							
 							Log.d(tag, "timer expire, start moving stone");
-							model.activity.selectCurrentStone(highlightStone);
 							model.activity.vibrate(100);
-							model.currentStone.startDragging(highlightStone);
+							model.currentStone.startDragging(tmp, highlightStone);
 							highlightStone = null;
-							model.currentStone.moveTo((int)tmp.x, (int)tmp.y);
 							spinning = false;
 							model.view.updateView();
 						}
@@ -128,7 +126,6 @@ public class Wheel extends ViewElement {
 			if (model.currentStone.stone != null) {
 				model.currentStone.stone = highlightStone;
 			}
-			model.activity.selectCurrentStone(highlightStone);
 		}
 
 		spinning = true;
@@ -156,18 +153,16 @@ public class Wheel extends ViewElement {
 
 		if (Math.abs(currentAngle - originalAngle) >= 90.0f) {
 			highlightStone = null;
-			model.activity.selectCurrentStone(null);
 		}
 
 		if (highlightStone != null && tmp.y >= 0) {
 			if (Math.abs(currentAngle - originalAngle) < 90.0f) {
 				// renderer.currentWheelAngle = originalWheelAngle;
-				model.activity.selectCurrentStone(highlightStone);
 				model.activity.vibrate(100);
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
-				model.currentStone.startDragging(highlightStone);
+				model.currentStone.startDragging(tmp, highlightStone);
 				highlightStone = null;
 				spinning = false;
 			}
