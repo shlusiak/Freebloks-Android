@@ -13,7 +13,7 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.SimpleModel;
-import de.saschahlusiak.freebloks.view.effects.AbsEffect.FadeEffect;
+import de.saschahlusiak.freebloks.view.effects.FadeEffect;
 
 public class CurrentStone extends ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
