@@ -59,14 +59,20 @@ public class Wheel extends ViewElement {
 		tmp.y = m.y;
 		model.board.modelToBoard(tmp);
 		model.board.boardToUnified(tmp);
+		if (!model.vertical_layout) {
+			float t = tmp.x;
+			tmp.x = model.spiel.m_field_size_y - tmp.y - 1;
+			tmp.y = t;
+		}
 		
 		originalX = tmp.x;
 
 		if (tmp.y > 0)
 			return false;
 		
+		/* TODO: remove or understand magic numbers */
 		int row = (int) (-(tmp.y + 2.0f) / 5.5f);
-		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.5f + originalAngle / 17.0f);
+		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.6f + originalAngle / 17.0f);
 
 //		Log.d(tag, "currentWheelAngle = " + originalAngle);
 //		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
@@ -142,6 +148,12 @@ public class Wheel extends ViewElement {
 		model.board.modelToBoard(tmp);
 		model.board.boardToUnified(tmp);
 		
+		if (!model.vertical_layout) {
+			float t = tmp.x;
+			tmp.x = model.spiel.m_field_size_y - tmp.y - 1;
+			tmp.y = t;
+		}
+		
 		/* everything underneath row 0 spins the wheel */
 		currentAngle += 8.0f * (originalX - tmp.x);
 		while (currentAngle > 180)
@@ -205,11 +217,13 @@ public class Wheel extends ViewElement {
 				alpha *= 0.7f;
 
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+				gl.glPushMatrix();
 				gl.glRotatef(90 * lastPlayer, 0, 1, 0);
+				if (!model.vertical_layout)
+					gl.glRotatef(90.0f, 0, 1, 0);
 				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
 				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : lastPlayer, s, alpha);
-				gl.glTranslatef(s.get_stone_size() * BoardRenderer.stone_size, 0, s.get_stone_size() * BoardRenderer.stone_size);
-				gl.glRotatef(-90 * lastPlayer, 0, 1, 0);
+				gl.glPopMatrix();
 			}
 			
 			if (i % 2 == 0) {

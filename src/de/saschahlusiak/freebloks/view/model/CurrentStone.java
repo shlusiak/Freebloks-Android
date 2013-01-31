@@ -313,6 +313,8 @@ public class CurrentStone extends ViewElement {
 				fieldPoint.x = x;
 				fieldPoint.y = y;
 				model.board.boardToUnified(fieldPoint);
+				if (!model.vertical_layout)
+					fieldPoint.y = fieldPoint.x;
 				if (fieldPoint.y < -2.0f) {
 					model.wheel.highlightStone = stone;
 					status = Status.IDLE;

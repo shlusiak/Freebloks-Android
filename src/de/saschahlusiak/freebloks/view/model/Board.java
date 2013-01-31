@@ -37,7 +37,7 @@ public class Board extends ViewElement {
 		switch (model.showPlayer) {
 		default:
 		case 0: /* nothing */
-			p.y = model.spiel.m_field_size_y - p.y;
+			p.y = model.spiel.m_field_size_y - p.y - 1;
 			break;
 		case 1:
 			tmp = p.x;
@@ -45,12 +45,12 @@ public class Board extends ViewElement {
 			p.y = tmp;
 			break;
 		case 2: /* 180 degree */
-			p.x = model.spiel.m_field_size_x - p.x;
+			p.x = model.spiel.m_field_size_x - p.x - 1;
 			break;
 		case 3:
 			tmp = p.y;
-			p.y = model.spiel.m_field_size_x - p.x;
-			p.x = model.spiel.m_field_size_y - tmp;
+			p.y = model.spiel.m_field_size_x - p.x - 1;
+			p.x = model.spiel.m_field_size_y - tmp - 1;
 			break;
 		}
 	}

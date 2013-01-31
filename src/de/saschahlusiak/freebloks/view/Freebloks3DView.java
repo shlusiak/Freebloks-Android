@@ -17,6 +17,7 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class Freebloks3DView extends GLSurfaceView implements ViewInterface, SpielClientInterface {
@@ -27,15 +28,16 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	
 	FreebloksRenderer renderer;
 	ActivityInterface activity;
-	float zoom = 28;
+	float scale = 1.0f;
 
 	
 	public Freebloks3DView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		renderer = new FreebloksRenderer(context, model);
+		renderer.density = getResources().getDisplayMetrics().density;
 		setRenderer(renderer);
-		renderer.setAngle(70.0f, zoom);
+		renderer.setAngle(70.0f, scale);
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
@@ -109,14 +111,14 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			if (event.getPointerCount() > 1) {
 				float newDist = spacing(event);
 			    if (newDist > 10f) {
-			    	zoom *= (oldDist / newDist);
-			    	if (zoom > 400.0f)
-			    		zoom = 400.0f;
-			    	if (zoom < 2.0f)
-			    		zoom = 2.0f;
-			    	oldDist = newDist;
-			    	renderer.updateModelViewMatrix = true;
-					renderer.setAngle(70.0f, zoom);
+				scale *= (newDist / oldDist);
+				if (scale > 3.0f)
+					scale = 3.0f;
+				if (scale < 0.3f)
+					scale = 0.3f;
+				oldDist = newDist;
+				renderer.updateModelViewMatrix = true;
+				renderer.setAngle(70.0f, scale);
 			    }
 			} else {
 /*				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;

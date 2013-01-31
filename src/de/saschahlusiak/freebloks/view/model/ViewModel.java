@@ -21,6 +21,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
 	public int showPlayer;
+	public boolean vertical_layout = true;
 
 	public ViewModel(ViewInterface view) {
 		this.view = view;
