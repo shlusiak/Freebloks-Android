@@ -123,7 +123,7 @@ public class Wheel extends ViewElement {
 							model.currentStone.startDragging(tmp, highlightStone);
 							highlightStone = null;
 							spinning = false;
-							model.view.updateView();
+							model.view.requestRender();
 						}
 					});
 					spinning = false;

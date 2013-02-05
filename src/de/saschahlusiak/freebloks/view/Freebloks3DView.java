@@ -20,7 +20,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class Freebloks3DView extends GLSurfaceView implements ViewInterface, SpielClientInterface {
+public class Freebloks3DView extends GLSurfaceView implements SpielClientInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
 	public ViewModel model = new ViewModel(this);
@@ -134,11 +134,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	}
 
 	@Override
-	public void updateView() {
-		requestRender();
-	}
-
-	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		renderer.updateModelViewMatrix = true;
 		super.onSizeChanged(w, h, oldw, oldh);
@@ -148,7 +143,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	public void newCurrentPlayer(int player) {
 		renderer.currentPlayer = player;
 		model.wheel.update(model.showOpponents ? player : model.showPlayer);
-		updateView();
+		requestRender();
 	}
 
 	@Override
@@ -163,23 +158,21 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		
 			model.addEffect(e);
 		}
-		updateView();
+		requestRender();
 	}
 
 	@Override
 	public void hintReceived(NET_SET_STONE s) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void gameFinished() {
-		updateView();
+		requestRender();
 	}
 
 	@Override
 	public void chatReceived(NET_CHAT c) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -191,30 +184,27 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			break;
 		}
 		
-		updateView();
+		requestRender();
 	}
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		updateView();
+		requestRender();
 		
 	}
 
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onConnected(Spiel spiel) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onDisconnected(Spiel spiel) {
-		// TODO Auto-generated method stub
 		
 	}
 	
