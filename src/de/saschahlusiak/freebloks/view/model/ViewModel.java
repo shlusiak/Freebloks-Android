@@ -22,6 +22,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
 	public int showPlayer;
 	public boolean vertical_layout = true;
+	boolean redraw;
 
 	public ViewModel(ViewInterface view) {
 		this.view = view;
@@ -43,24 +44,27 @@ public class ViewModel extends ArrayList<ViewElement> {
 	}
 
 	public boolean handlePointerDown(PointF m) {
+		redraw = false;
 		for (ViewElement e: this)
 			if (e.handlePointerDown(m))
-				return true;
-		return false;
+				return redraw;
+		return redraw;
 	}
 
 	public boolean handlePointerMove(PointF m) {
+		redraw = false;
 		for (ViewElement e: this)
 			if (e.handlePointerMove(m))
-				return true;
-		return false;
+				return redraw;
+		return redraw;
 	}
 
 	public boolean handlePointerUp(PointF m) {
+		redraw = false;
 		for (ViewElement e: this)
 			if (e.handlePointerUp(m))
-				return true;
-		return false;
+				return redraw;
+		return redraw;
 	}
 	
 	public void addEffect(AbsEffect effect) {

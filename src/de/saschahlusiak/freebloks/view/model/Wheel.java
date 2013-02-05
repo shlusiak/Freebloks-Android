@@ -179,6 +179,7 @@ public class Wheel extends ViewElement {
 				spinning = false;
 			}
 		}
+		model.redraw = true;
 		return true;
 	}
 	
