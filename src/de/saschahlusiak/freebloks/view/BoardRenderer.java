@@ -119,9 +119,9 @@ public class BoardRenderer {
 		initStone();
 	}
 	
-	final float board_diffuse_normal[] = {0.52f,0.52f,0.50f,1.0f};
+	final float board_diffuse_normal[] = {0.47f,0.47f,0.44f,1.0f};
 	final float board_diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
-	final float board_specular[] = {0.27f,0.25f,0.25f,1.0f};
+	final float board_specular[] = {0.24f,0.22f,0.22f,1.0f};
 	final float board_shininess[] = {35.0f};
 
 	public void renderBoard(GL10 gl, Spiel spiel, int currentPlayer) {
@@ -166,11 +166,11 @@ public class BoardRenderer {
 	final float stone_red[]={0.75f, 0, 0, 0};
 	final float stone_blue[]={0.0f, 0.05f, 0.8f, 0};
 	final float stone_green[]={0.0f, 0.75f, 0, 0};
-	final float stone_yellow[]={0.75f, 0.75f, 0, 0};
+	final float stone_yellow[]={0.80f, 0.80f, 0, 0};
 	final float stone_white[]={0.7f, 0.7f, 0.7f, 0};
 	final float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green };
-	final float stone_specular[]={0.4f,0.4f,0.4f,1.0f};
-	final float stone_shininess[]={40.0f};
+	final float stone_specular[]={0.3f, 0.3f, 0.3f, 1.0f};
+	final float stone_shininess[]={ 30.0f };
 
 	public void renderStone(GL10 gl, int color, float alpha) {
 		final float c[] = stone_color_a[color + 1];
