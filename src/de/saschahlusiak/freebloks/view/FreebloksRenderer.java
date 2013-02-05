@@ -24,6 +24,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	Context context;
 	float fixed_zoom;
 	float density;
+	float mAngleX;
+	float zoom;
 	
 	int viewport[] = new int[4];
 	float projectionMatrix[] = new float[16];
@@ -34,6 +36,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public FreebloksRenderer(Context context, ViewModel model) {
 		this.context = context;
 		this.model = model;
+		mAngleX = 70.0f;
 		init();
 		currentPlayer = -1;
 	}
@@ -208,15 +211,5 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
-	}
-
-	float mAngleX;
-	float zoom;
-	
-	synchronized void setAngle(float ax, float zoom) {
-		mAngleX = ax;
-		this.zoom = zoom;
-		
-		updateModelViewMatrix = true;
 	}
 }
