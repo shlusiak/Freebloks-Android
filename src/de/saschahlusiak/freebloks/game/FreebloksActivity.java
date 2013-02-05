@@ -296,7 +296,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		Spielleiter spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
 		final SpielClient client = new SpielClient(spiel);
-		spiel.start_new_game();			
+		spiel.start_new_game();
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
 		ConnectTask task = new ConnectTask(client, server != null, new Runnable() {
@@ -542,14 +542,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public boolean commitCurrentStone(Stone stone, int x, int y) {
+	public boolean commitCurrentStone(final Stone stone, final int x, final int y) {
 		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
 		if (!client.spiel.is_local_player())
 			return false;
 		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
 			return false;
 		
-		client.set_stone(stone, y, x);
+		spielthread.post(new Runnable() {
+			@Override
+			public void run() {
+				client.set_stone(stone, y, x);
+			}
+		});
 		if (vibrate)
 			vibrator.vibrate(100);
 		return true;
