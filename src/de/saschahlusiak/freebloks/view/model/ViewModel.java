@@ -6,7 +6,7 @@ import android.graphics.PointF;
 
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
-import de.saschahlusiak.freebloks.view.ViewInterface;
+import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.AbsEffect;
 
 @SuppressWarnings("serial")
@@ -16,7 +16,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 	public Spielleiter spiel;
 	public Board board;
 	public ActivityInterface activity;
-	public ViewInterface view;
+	public Freebloks3DView view;
 	public ArrayList<AbsEffect> effects;
 
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
@@ -24,7 +24,7 @@ public class ViewModel extends ArrayList<ViewElement> {
 	public boolean vertical_layout = true;
 	boolean redraw;
 
-	public ViewModel(ViewInterface view) {
+	public ViewModel(Freebloks3DView view) {
 		this.view = view;
 		
 		currentStone = new CurrentStone(this);
