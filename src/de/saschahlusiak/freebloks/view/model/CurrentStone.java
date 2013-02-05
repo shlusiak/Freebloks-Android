@@ -149,7 +149,7 @@ public class CurrentStone extends ViewElement {
 				0,
 				-BoardRenderer.stone_size * 2.0f * offset);
 	    
-		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 0.65f);
+		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, BoardRenderer.DEFAULT_ALPHA);
 		
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		

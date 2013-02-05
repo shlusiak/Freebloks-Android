@@ -52,7 +52,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
-		renderer.renderPlayerStone(gl, player, stone, 0.65f);
+		renderer.renderPlayerStone(gl, player, stone, BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 }
