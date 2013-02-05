@@ -14,6 +14,8 @@ public class BoardRenderer {
 	final static float border_bottom = -1.2f;
 	final public static float stone_size = 0.45f;
 	
+	final public static float DEFAULT_ALPHA = 0.75f;
+	
 	SimpleModel field;
 	SimpleModel border;
 	SimpleModel stone;
