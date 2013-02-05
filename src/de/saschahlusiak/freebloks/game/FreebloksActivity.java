@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -82,7 +83,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			this.show_lobby = show_lobby;
 			this.connectedRunnable = connectedRunnable;
 		}
-				
+
 		@Override
 		protected void onPreExecute() {
 			view.setSpiel(null, null);
@@ -153,6 +154,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			spielthread = config.clientThread;
 			lastStatus = config.lastStatus;
 		}
+		if (savedInstanceState != null) {
+			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
+		} else {
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+			view.setScale(pref.getFloat("view_scale", 1.0f));
+		}
 		
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
@@ -213,6 +220,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected void onStop() {
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor editor = pref.edit();
+		editor.putFloat("view_scale", view.getScale());
+		editor.commit();
 		super.onStop();
 	}
 
@@ -243,6 +254,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.d(tag, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
+		outState.putFloat("view_scale", view.getScale());
 		writeStateToBundle(outState);
 	}
 	

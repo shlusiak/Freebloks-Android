@@ -28,7 +28,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	
 	FreebloksRenderer renderer;
 	ActivityInterface activity;
-	float scale = 1.0f;
+	private float scale = 1.0f;
 
 	
 	public Freebloks3DView(Context context, AttributeSet attrs) {
@@ -37,7 +37,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		renderer = new FreebloksRenderer(context, model);
 		renderer.density = getResources().getDisplayMetrics().density;
 		setRenderer(renderer);
-		renderer.setAngle(70.0f, scale);
+		renderer.zoom = scale;
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
@@ -108,7 +108,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			    		scale = 0.3f;
 			    	oldDist = newDist;
 			    	renderer.updateModelViewMatrix = true;
-			    	renderer.setAngle(70.0f, scale);
+			    	renderer.zoom = scale;
 			    	requestRender();
 			    }
 			} else {
@@ -282,5 +282,15 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			thread = new UpdateThread();
 			thread.start();
 		}
+	}
+	
+	public void setScale(float scale) {
+		this.scale = scale;
+		renderer.zoom = scale;
+		renderer.updateModelViewMatrix = true;
+	}
+	
+	public float getScale() {
+		return scale;
 	}
 }
