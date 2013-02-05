@@ -239,12 +239,17 @@ public class CurrentStone extends ViewElement {
 				{
 					if (model.spiel.is_valid_turn(stone, model.showPlayer, y + j, x + i) == Stone.FIELD_ALLOWED)
 					{
-						hasMoved |= moveTo(x + i, y + j);
+						boolean mv = moveTo(x + i, y + j);
+						model.redraw |= mv;
+						hasMoved |= mv;
+						
 						return true;
 					}
 				}
 
-			hasMoved |= moveTo(x, y);
+			boolean mv = moveTo(x, y);
+			model.redraw |= mv;
+			hasMoved |= mv;
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
@@ -256,6 +261,7 @@ public class CurrentStone extends ViewElement {
 				rotate_angle = 0.0f;
 				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
 			}
+			model.redraw = true;
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
@@ -269,6 +275,7 @@ public class CurrentStone extends ViewElement {
 				p = -p;
 			
 			rotate_angle = p * 180;
+			model.redraw = true;
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
@@ -282,6 +289,7 @@ public class CurrentStone extends ViewElement {
 				p = -p;
 			
 			rotate_angle = p * 180;
+			model.redraw = true;
 		}
 		return true;
 	}

@@ -94,16 +94,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			model.handlePointerDown(modelPoint);
-//			originalPos.x = unifiedPoint.x;
-//			originalPos.y = unifiedPoint.y;
-
-/*			if (spiel.is_local_player()) {
-				if (originalPos.y < 0) {
-					model.wheel.handleTouch();
-				} else {
-					model.currentStone.handleTouch();
-				}
-			} */
 			requestRender();
 			break;
 			
@@ -111,36 +101,20 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			if (event.getPointerCount() > 1) {
 				float newDist = spacing(event);
 			    if (newDist > 10f) {
-				scale *= (newDist / oldDist);
-				if (scale > 3.0f)
-					scale = 3.0f;
-				if (scale < 0.3f)
-					scale = 0.3f;
-				oldDist = newDist;
-				renderer.updateModelViewMatrix = true;
-				renderer.setAngle(70.0f, scale);
+			    	scale *= (newDist / oldDist);
+			    	if (scale > 3.0f)
+			    		scale = 3.0f;
+			    	if (scale < 0.3f)
+			    		scale = 0.3f;
+			    	oldDist = newDist;
+			    	renderer.updateModelViewMatrix = true;
+			    	renderer.setAngle(70.0f, scale);
+			    	requestRender();
 			    }
 			} else {
-/*				angleY += (float)(event.getX() - mPreviousX) / (float)getWidth() * 180.0f;
-				angleX += (float)(event.getY() - mPreviousY) / (float)getHeight() * 180.0f;
-				if (angleX < 20)
-					angleX = 20;
-				if (angleX > 90)
-					angleX = 90; 
-				renderer.setAngle(angleX, angleY, zoom);
- 				*/
-
-				model.handlePointerMove(modelPoint);
-				
-			//	if (!model.currentStone.dragging) {
-					/* only move wheel, if original touch was inside area */
-			//		if (originalPos.y < 0)
-			//			model.wheel.handleMove();
-			//	} else {
-			//		model.currentStone.handleMove();
-			//	}
+				if (model.handlePointerMove(modelPoint))
+					requestRender();
 			}
-			requestRender();
 			break;
 			
 		case MotionEvent.ACTION_POINTER_DOWN:
@@ -156,7 +130,6 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			break;
 		}
 		
-//		return super.onTouchEvent(event);
 		return true;
 	}
 
@@ -248,6 +221,8 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 	
 	class UpdateThread extends Thread {
 		boolean goDown = false;
+		private static final int FPS = 30;
+		private static final int DELAY = 1000 / FPS;
 		
 		@Override
 		public void run() {
@@ -261,7 +236,7 @@ public class Freebloks3DView extends GLSurfaceView implements ViewInterface, Spi
 			long time = System.currentTimeMillis(), tmp;
 			while (!goDown) {
 				try {
-					Thread.sleep(33);
+					Thread.sleep(DELAY);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					break;
