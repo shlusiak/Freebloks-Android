@@ -149,7 +149,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		if (model.spiel.is_local_player())
 			model.currentStone.render(this, gl);
 		
-		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");
+//		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");
 	}
 	
 	final float getAngleY() {
@@ -178,7 +178,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		} else {
 			fovy = 23.0f;
 		}
-		fixed_zoom = 50.0f;
+		fixed_zoom = 55.0f;
 
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
