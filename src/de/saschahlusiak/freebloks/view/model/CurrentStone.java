@@ -13,7 +13,7 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.SimpleModel;
-import de.saschahlusiak.freebloks.view.effects.FadeEffect;
+import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 
 public class CurrentStone extends ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
@@ -303,7 +303,7 @@ public class CurrentStone extends ViewElement {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);
-						FadeEffect e = new FadeEffect(st, player, pos.x, pos.y);
+						StoneRollEffect e = new StoneRollEffect(st, player, pos.x, pos.y, 0.5f, -13.0f);
 				
 						model.addEffect(e);
 					}
