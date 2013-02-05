@@ -39,10 +39,11 @@ public class StartScreenActivity extends Activity {
 	
 	private static final String WHATS_NEW = 
 			"* improved speed\n" + 
-			"* slow down too fast computer moves\n" + 
-			"* show current player\n" +
-			"* threshold when first moving stone\n" + 
-			"* snap stones to closest valid position";
+			"* smoother animations\n" + 
+			"* basic horizontal layout\n" +
+			"* improved result dialog\n" +
+			"* remember user zoom\n" +
+			"* fixed some crashes";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
