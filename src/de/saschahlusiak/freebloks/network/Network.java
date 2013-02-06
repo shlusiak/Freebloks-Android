@@ -54,7 +54,9 @@ public class Network {
 			return new NET_REQUEST_HINT(p);
 		
 		default:
-			throw new Exception("Unhandled message type " + p.msg_type);
+			//throw new Exception("Unhandled message type " + p.msg_type);
+			Log.e(tag, "Unhandled message type: " + p.msg_type);
+			return null;
 		}
 	}
 }
