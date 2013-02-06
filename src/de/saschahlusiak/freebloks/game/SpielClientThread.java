@@ -19,7 +19,8 @@ class SpielClientThread extends Thread {
 			Looper.prepare();
 			handler = new Handler();
 			looper = Looper.myLooper();
-			Looper.loop();
+			if (!interrupted())
+				Looper.loop();
 			Log.d("SendThread", "going down");
 		}
 	}
@@ -41,6 +42,15 @@ class SpielClientThread extends Thread {
 		godown = false;
 		sendThread = new SendThread();
 		sendThread.start();
+		/* wait short time for sendThread to come up, so that
+		 * looper is initialized and can be quit, if following loop
+		 * is finished to fast.
+		 */
+		try {
+			sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		do {
 			if (!client.poll(true))
 				break;
@@ -49,7 +59,10 @@ class SpielClientThread extends Thread {
 			}
 		} while (client.isConnected());
 		client.disconnect();
-		sendThread.looper.quit();
+		if (sendThread.looper != null)
+			sendThread.looper.quit();
+		else
+			sendThread.interrupt();
 		Log.i(tag, "disconnected, thread going down");
 	}
 	
