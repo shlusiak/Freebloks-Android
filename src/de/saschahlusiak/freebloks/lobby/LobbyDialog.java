@@ -1,9 +1,6 @@
 package de.saschahlusiak.freebloks.lobby;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.R.id;
-import de.saschahlusiak.freebloks.R.layout;
-import de.saschahlusiak.freebloks.R.string;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -16,7 +13,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
-import android.sax.TextElementListener;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -163,7 +159,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void onDisconnected(Spiel spiel) {
-		// TODO Auto-generated method stub
-		
+		dismiss();
 	}
 }
