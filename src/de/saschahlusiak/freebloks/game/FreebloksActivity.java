@@ -45,6 +45,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -448,6 +449,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				v.setVisibility(View.VISIBLE);
 				v.clearAnimation();
 				TextView t = (TextView)findViewById(R.id.currentPlayer);
+				t.clearAnimation();
 				if (current < 0) { 
 					v.setBackgroundColor(Color.argb(96, 255, 255, 255));
 					t.setText("no player");
@@ -457,16 +459,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						t.setText(String.format("Waiting for %s", names[current]));
 					else {
 						t.setText("It's your turn!");
-						AnimationSet set = new AnimationSet(true);
-						Animation a = new AlphaAnimation(1.0f, 0.0f);
-						set.setStartOffset(1500);
-						set.setDuration(500);
-						set.setFillAfter(true);
-						set.addAnimation(a);
-						/* TODO: getWidth() is unknown after layouting/screen rotate */
-						a = new TranslateAnimation(0, -v.getWidth() * 0.85f, 0, 0);
-						set.addAnimation(a);
-						v.startAnimation(set);
+						Animation a = new TranslateAnimation(0, 8, 0, 0);
+						a.setInterpolator(new CycleInterpolator(2));
+						a.setDuration(500);
+						a.setStartOffset(5000);
+						a.setRepeatCount(Animation.INFINITE);
+//						a.setRepeatMode(Animation.REVERSE);
+						t.startAnimation(a);
 					}
 				}
 			}
