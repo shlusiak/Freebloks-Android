@@ -25,6 +25,15 @@ public class NET_HEADER {
 		this.buffer = from.buffer;
 	}
 	
+	/**
+	 * a java byte is always signed, being -128..127
+	 * casting (byte)-1 to int will result in (int)-1
+	 *  
+	 */
+	public static final int unsigned(byte b) {
+		return (b & 0xFF);
+	}
+	
 	boolean read(Socket socket, boolean block) throws Exception {
 		InputStream is;
 		int r;
@@ -44,14 +53,10 @@ public class NET_HEADER {
 		if (r < HEADER_SIZE)
 			throw new Exception("Short read for header");
 
-		check1 = buffer[0];
-		if (check1 < 0)
-			check1 += 256;
-		data_length = buffer[1] << 8 | buffer[2];
+		check1 = unsigned(buffer[0]);
+		data_length = unsigned(buffer[1]) << 8 | unsigned(buffer[2]);
 		msg_type = buffer[3];
-		check2 = buffer[4];
-		if (check2 < 0)
-			check2 += 256;
+		check2 = unsigned(buffer[4]);
 
 		if (data_length < HEADER_SIZE)
 			throw new Exception("Invalid length in header data");
