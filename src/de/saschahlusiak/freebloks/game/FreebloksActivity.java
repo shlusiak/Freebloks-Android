@@ -359,7 +359,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Do you want to quit the current game? The game cannot be resumed (yet).");
+			builder.setMessage("Do you want to quit the current game? The game can be resumed, but all other players will be replaced by computers.");
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
