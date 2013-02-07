@@ -828,6 +828,7 @@ int CServerListener::init(const char* interface_,int port)
 			}
 
 #endif
+
 			if (bind(listen_socket,res->ai_addr,res->ai_addrlen)==0)
 			{
 				/* Mit listen einkommende Verbindungen akzeptieren */
