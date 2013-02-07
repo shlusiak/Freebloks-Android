@@ -23,8 +23,10 @@ public class NET_CHAT extends NET_HEADER {
 		client = buffer[0];
 		length = unsigned(buffer[1]);
 		
-		while ((buffer[length + 1] == (byte)'\0') || (buffer[length +1] == (byte)'\n') || (buffer[length + 1]== (byte)'\r')) 
+		while ((buffer[length + 1] == (byte)'\0') || (buffer[length +1] == (byte)'\n') || (buffer[length + 1]== (byte)'\r'))  {
 			length--;
+			data_length--;
+		}
 		
 		char[] c = new char[length]; /* ignore the trailing \0 */
 		for (int i = 0; i < c.length; i++)
