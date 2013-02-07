@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 void error_exit(const char* fehlertext, int fehlernummer){
-	printf("Fehler %d: %s\n", fehlernummer, fehlertext);
+	D("Fehler %d: %s\n", fehlernummer, fehlertext);
 	getchar();
 	exit (fehlernummer);
 }
