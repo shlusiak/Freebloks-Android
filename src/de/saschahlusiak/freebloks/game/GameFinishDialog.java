@@ -40,10 +40,10 @@ public class GameFinishDialog extends Dialog {
 		ViewGroup t[] = new ViewGroup[4];
 		/* TODO: generalize */
 		final int colors[] = {
-				Color.argb(96, 0, 0, 180),
-				Color.argb(96, 180, 180, 0),
-				Color.argb(96, 180, 0, 0),
-				Color.argb(96, 0, 180, 0),
+				Color.rgb(0, 0, 96),
+				Color.rgb(128, 128, 0),
+				Color.rgb(96, 0, 0),
+				Color.rgb(0, 96, 0),
 		};
 		/* TODO: translate */
 		final String names[] = {
