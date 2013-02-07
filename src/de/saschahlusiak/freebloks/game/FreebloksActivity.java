@@ -40,19 +40,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
+	static final int DIALOG_CONNECTION_LOST = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
@@ -375,6 +377,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			});
 			return builder.create();
 		
+		case DIALOG_CONNECTION_LOST:
+			builder = new AlertDialog.Builder(this);
+			builder.setTitle("Connection lost");
+			builder.setMessage("The connection to the server has been lost.");
+			builder.setIcon(android.R.drawable.ic_dialog_alert);
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+//					finish();
+				}
+			});
+			return builder.create();
+
+			
 		case DIALOG_GAME_FINISH:
 			return new GameFinishDialog(this);
 			
@@ -551,6 +567,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
+		
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				newCurrentPlayer(-1);
+				showDialog(DIALOG_CONNECTION_LOST);
+			}
+		});
 	}
 
 	@Override
