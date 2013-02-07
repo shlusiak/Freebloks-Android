@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Small Text"
+            android:textColor="#ffffffff"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -25,6 +26,7 @@
             android:layout_weight="0.7"
             android:gravity="right"
             android:layout_margin="3dp"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -34,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
@@ -50,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Small Text"
+            android:textColor="#ffffffff"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -59,6 +63,7 @@
             android:layout_weight="0.7"
             android:gravity="right"
             android:layout_margin="3dp"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -68,6 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" /> 
     </LinearLayout>
@@ -84,6 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Small Text"
+            android:textColor="#ffffffff"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -93,6 +100,7 @@
             android:layout_weight="0.7"
             android:gravity="right"
             android:layout_margin="3dp"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -102,6 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 	</LinearLayout>
@@ -118,6 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Small Text"
+            android:textColor="#ffffffff"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -127,6 +137,7 @@
             android:layout_weight="0.7"
             android:gravity="right"
             android:layout_margin="3dp"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -136,6 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:textColor="#ffffffff"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
