@@ -15,10 +15,8 @@ static int EstablishGame(CServerListener* listener)
 	int ret;
 	do
 	{
-		sockaddr_storage client;
-		client.ss_family = AF_UNSPEC;
 		/* Listener auf einen Client warten oder eine Netzwerknachricht verarbeiten lassen */
-		ret=listener->wait_for_player(true, &client);
+		ret=listener->wait_for_player(false, NULL);
 		/* Bei Fehler: Raus hier */
 		if (ret==-1)
 		{
@@ -33,12 +31,10 @@ static int EstablishGame(CServerListener* listener)
 void* gameRunThread(void* param)
 {
 	CServerListener *listener = (CServerListener*)param;
-	D("thread 1");
 
 	if (EstablishGame(listener) == -1)
 		return NULL;
 
-	D("thread 2");
 
 	CSpielServer* game = listener->get_game();
 
@@ -47,6 +43,7 @@ void* gameRunThread(void* param)
 	game->run();
 
 	delete listener;
+	D("server thread going down");
 
 	return NULL;
 }
@@ -54,7 +51,7 @@ void* gameRunThread(void* param)
 
 static int max_humans = 4;
 static GAMEMODE gamemode = GAMEMODE_4_COLORS_4_PLAYERS;
-static int ki_threads = 3;
+static int ki_threads = 2;
 static int force_delay = 1;
 static int port = 59995;
 static char* _interface = NULL;
@@ -65,20 +62,14 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	int ret;
 	pthread_t pt;
 
-	D("init 1");
 	CServerListener* listener=new CServerListener();
-	D("init 2");
 	ret=listener->init(_interface, port);
 	if (ret!=0)
 	{
 	    return -1;
 	}
 
-	D("init 3");
-
 	listener->new_game(max_humans, ki_mode, gamemode, ki_threads, force_delay);
-
-	D("starting thread");
 
 	if (pthread_create(&pt,NULL,gameRunThread,(void*)listener))
 		perror("pthread_create");
