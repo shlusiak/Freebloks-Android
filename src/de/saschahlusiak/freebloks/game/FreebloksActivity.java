@@ -429,10 +429,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			public void run() {
 				/* TODO: generalize */
 				final int colors[] = {
-						Color.argb(204, 0, 0, 96),
-						Color.argb(204, 96, 96, 0),
-						Color.argb(204, 96, 0, 0),
-						Color.argb(204, 0, 96, 0),
+						Color.rgb(0, 0, 96),
+						Color.rgb(128, 128, 0),
+						Color.rgb(96, 0, 0),
+						Color.rgb(0, 96, 0),
 				};
 				/* TODO: generalize */
 				final String names[] = {
@@ -445,13 +445,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				View v;
 				v = findViewById(R.id.progressBar);
 				v.setVisibility((local || current < 0) ? View.GONE : View.VISIBLE);
+				
 				v = findViewById(R.id.currentPlayerLayout);
 				v.setVisibility(View.VISIBLE);
 				v.clearAnimation();
 				TextView t = (TextView)findViewById(R.id.currentPlayer);
 				t.clearAnimation();
 				if (current < 0) { 
-					v.setBackgroundColor(Color.argb(96, 255, 255, 255));
+					v.setBackgroundColor(Color.rgb(128, 128, 128));
 					t.setText("no player");
 				} else {
 					v.setBackgroundColor(colors[current]);
