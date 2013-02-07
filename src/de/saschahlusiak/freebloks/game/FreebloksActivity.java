@@ -2,7 +2,9 @@ package de.saschahlusiak.freebloks.game;
 
 import java.io.FileOutputStream;
 
+import de.saschahlusiak.freebloks.Config;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.ServerListener;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
@@ -272,6 +274,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			Spielleiter spiel2 = (Spielleiter)spiel1.clone();
 			
 			final SpielServer server = new SpielServer(spiel1, Ki.HARD);
+			/* TODO: replace this with JNI
+			 * for this, we need to somehow pass the game data to the JNI method
+			 */
 			listener = new ServerListener(server, null, Network.DEFAULT_PORT, Ki.HARD);
 			listener.start();
 			
@@ -297,13 +302,18 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 	}
 
+	long gameStartTime = 0;
 	public void startNewGame() {
 		final String server = getIntent().getStringExtra("server");
 		final boolean request_player = getIntent().getBooleanExtra("request_player", true);
 		
 		if (server == null) {
-			listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.HARD);
-			listener.start();
+			if (Config.USE_JNI) {
+				JNIServer.runServer(Ki.HARD);
+			} else {
+				listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.HARD);
+				listener.start();
+			}
 		}
 		
 		if (spielthread != null)
@@ -502,7 +512,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void gameFinished() {
 		int i;
-		Log.i(tag, "-- Game finished! --");
+		Log.i(tag, "-- Game finished! -- took " + (System.currentTimeMillis() - gameStartTime)/1000 + " s");
 		for (i = 0; i < Spiel.PLAYER_MAX; i++) {
 			Player player = client.spiel.get_player(i);
 			Log.i(tag, (client.spiel.is_local_player(i) ? "*" : " ") + "Player " + i
@@ -541,6 +551,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			listener.go_down();
 			listener = null;
 		}
+		gameStartTime = System.currentTimeMillis();
 			
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
