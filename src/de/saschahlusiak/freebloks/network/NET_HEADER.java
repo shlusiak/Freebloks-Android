@@ -96,6 +96,8 @@ public class NET_HEADER {
 	}
 	
 	public boolean send(Socket socket) {
+		if (socket == null)
+			return false;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		prepare(bos);
 		try {
