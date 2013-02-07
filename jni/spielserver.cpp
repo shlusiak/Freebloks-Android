@@ -797,7 +797,7 @@ int CServerListener::init(const char* interface_,int port)
 	sprintf(s_port,"%d",port);
 
 	memset(&hints,0,sizeof(hints));
-	hints.ai_flags=AI_PASSIVE | AI_ADDRCONFIG | AI_ALL;
+	hints.ai_flags=AI_PASSIVE;
 	hints.ai_family=AF_UNSPEC;
 	hints.ai_socktype=SOCK_STREAM;
 
@@ -843,7 +843,8 @@ int CServerListener::init(const char* interface_,int port)
 		}
 		res=res->ai_next;
 	}
-	freeaddrinfo(ressave);
+	if (ressave)
+		freeaddrinfo(ressave);
 	if (num_listen_sockets == 0)
 	{
 		if (errno) return errno;
