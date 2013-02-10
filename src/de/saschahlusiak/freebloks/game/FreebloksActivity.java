@@ -5,10 +5,8 @@ import java.io.FileOutputStream;
 import de.saschahlusiak.freebloks.Config;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
-import de.saschahlusiak.freebloks.controller.ServerListener;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
-import de.saschahlusiak.freebloks.controller.SpielServer;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Ki;
@@ -66,7 +64,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	Freebloks3DView view;
 	SpielClient client = null;
 	SpielClientThread spielthread = null;
-	ServerListener listener = null;
 	Vibrator vibrator;
 	boolean vibrate;
 	NET_SERVER_STATUS lastStatus;
@@ -271,30 +268,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	private boolean readStateFromBundle(Bundle in) {
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
-			Spielleiter spiel2 = (Spielleiter)spiel1.clone();
 			
-			final SpielServer server = new SpielServer(spiel1, Ki.HARD);
-			
-			/* TODO: replace this with JNI
-			 * for this, we need to somehow pass the game data to the JNI method
-			 */
-			if (Config.USE_JNI) {
-				JNIServer.runServer(spiel1, Ki.HARD);
-			} else {
-				listener = new ServerListener(server, null, Network.DEFAULT_PORT, Ki.HARD);
-				listener.start();
-			}
+			JNIServer.runServer(spiel1, Ki.HARD);
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
-			SpielClient client = new SpielClient(spiel2);
+			SpielClient client = new SpielClient(spiel1);
 			ConnectTask task = new ConnectTask(client, false, new Runnable() {
 				@Override
 				public void run() {
-					server.resume_game();
-					if (listener != null)
-						listener.go_down();
-					listener = null;
 				}
 			});
 			task.execute((String)null);
@@ -314,12 +296,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		newCurrentPlayer(-1);
 		if (server == null) {
-			if (Config.USE_JNI) {
-				JNIServer.runServer(null, Ki.HARD);
-			} else {
-				listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.HARD);
-				listener.start();
-			}
+			JNIServer.runServer(null, Ki.HARD);
 		}
 		
 		if (spielthread != null)
@@ -558,10 +535,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void gameStarted() {
-		if (listener != null) {
-			listener.go_down();
-			listener = null;
-		}
 		gameStartTime = System.currentTimeMillis();
 			
 		Log.d(tag, "Game started");
