@@ -274,11 +274,16 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			Spielleiter spiel2 = (Spielleiter)spiel1.clone();
 			
 			final SpielServer server = new SpielServer(spiel1, Ki.HARD);
+			
 			/* TODO: replace this with JNI
 			 * for this, we need to somehow pass the game data to the JNI method
 			 */
-			listener = new ServerListener(server, null, Network.DEFAULT_PORT, Ki.HARD);
-			listener.start();
+			if (Config.USE_JNI) {
+				JNIServer.runServer(spiel1, Ki.HARD);
+			} else {
+				listener = new ServerListener(server, null, Network.DEFAULT_PORT, Ki.HARD);
+				listener.start();
+			}
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
@@ -309,7 +314,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		if (server == null) {
 			if (Config.USE_JNI) {
-				JNIServer.runServer(Ki.HARD);
+				JNIServer.runServer(null, Ki.HARD);
 			} else {
 				listener = new ServerListener(null, Network.DEFAULT_PORT, Ki.HARD);
 				listener.start();
