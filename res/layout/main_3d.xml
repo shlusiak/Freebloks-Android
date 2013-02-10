@@ -3,18 +3,18 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >    
     
-    <de.saschahlusiak.freebloks.view.Freebloks3DView
-        android:id="@+id/board"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+	<de.saschahlusiak.freebloks.view.Freebloks3DView
+	    android:id="@+id/board"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_above="@+id/currentPlayerLayout" />
 
     <RelativeLayout
         android:id="@+id/currentPlayerLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#A0202020"
-        android:visibility="gone"
+        android:visibility="visible"
         android:padding="2dp" >
 
         <TextView
