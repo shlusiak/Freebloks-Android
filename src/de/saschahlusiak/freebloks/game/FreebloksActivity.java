@@ -312,6 +312,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		final String server = getIntent().getStringExtra("server");
 		final boolean request_player = getIntent().getBooleanExtra("request_player", true);
 		
+		newCurrentPlayer(-1);
 		if (server == null) {
 			if (Config.USE_JNI) {
 				JNIServer.runServer(null, Ki.HARD);
@@ -450,14 +451,16 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void newCurrentPlayer(int player) {
+	public void newCurrentPlayer(final int player) {
 //		Log.d(tag, "newCurrentPlayer(" + player + ")");
-		final int current = player;
-		final boolean local = client.spiel.is_local_player();
 
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				boolean local = false;
+				if (client != null && client.spiel != null)
+					local = client.spiel.is_local_player(player);
+				
 				/* TODO: generalize */
 				final int colors[] = {
 						Color.rgb(0, 0, 96),
@@ -475,20 +478,23 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 				View v;
 				v = findViewById(R.id.progressBar);
-				v.setVisibility((local || current < 0) ? View.GONE : View.VISIBLE);
+				v.setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
 				
 				v = findViewById(R.id.currentPlayerLayout);
 				v.setVisibility(View.VISIBLE);
 				v.clearAnimation();
 				TextView t = (TextView)findViewById(R.id.currentPlayer);
 				t.clearAnimation();
-				if (current < 0) { 
+				if (player < 0) { 
 					v.setBackgroundColor(Color.rgb(128, 128, 128));
-					t.setText("no player");
+					if (client == null || !client.isConnected())
+						t.setText("not connected");
+					else
+						t.setText("no player");
 				} else {
-					v.setBackgroundColor(colors[current]);
+					v.setBackgroundColor(colors[player]);
 					if (!local) 
-						t.setText(String.format("Waiting for %s", names[current]));
+						t.setText(String.format("Waiting for %s", names[player]));
 					else {
 						t.setText("It's your turn!");
 						Animation a = new TranslateAnimation(0, 8, 0, 0);
@@ -589,7 +595,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void run() {
 				newCurrentPlayer(-1);
-				showDialog(DIALOG_CONNECTION_LOST);
+//				showDialog(DIALOG_CONNECTION_LOST);
 			}
 		});
 	}
