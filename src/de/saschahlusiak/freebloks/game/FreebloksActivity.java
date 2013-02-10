@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.game;
 
 import java.io.FileOutputStream;
 
-import de.saschahlusiak.freebloks.Config;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -40,14 +39,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
