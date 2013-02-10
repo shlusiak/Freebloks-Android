@@ -27,7 +27,6 @@ class CSpiel{
 		const bool is_position_inside_field(const int y, const int x)const;
 		void refresh_player_data();
 
-		void set_game_field(const int y, const int x, const TSingleField value);
 
 		void set_single_stone_for_player(const int playernumber, const int y, const int x);
 		void free_gamefield(int y, int x);
@@ -74,6 +73,7 @@ class CSpiel{
 
 		const TSingleField get_game_field(const int playernumber, const int y, const int x)const; //f�r spielerr�ckgaben
 		const TSingleField get_game_field(const int y, const int x)const; //f�r feldr�ckgaben
+		void set_game_field(const int y, const int x, const TSingleField value);
 		
 		const char get_game_field_value(const int y, const int x)const; //f�r �bergabe an andere spiel-klassen
 		TSingleField* get_field_pointer()const;

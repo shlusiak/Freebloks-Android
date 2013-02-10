@@ -44,10 +44,14 @@ protected:
 	/* Fuegt einen Zug der History hinzu */
 	void addHistory(CTurn *turn);
 	void addHistory(int player,CStone *stone,int y,int x);
+
+
 public:
 	CSpielleiter();
 	virtual ~CSpielleiter();
 
+	void setSpieler(int i, int s) { spieler[i] = s; }
+	void setCurrentPlayer(int c) { m_current_player = c; }
 
 	/* Keinen Spieler als aktiv setzen */
 	void set_noplayer() { m_current_player=-1; }

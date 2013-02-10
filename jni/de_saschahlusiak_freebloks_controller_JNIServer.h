@@ -10,10 +10,18 @@ extern "C" {
 /*
  * Class:     de_saschahlusiak_freebloks_controller_JNIServer
  * Method:    native_run_server
- * Signature: (I)V
+ * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1run_1server
   (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     de_saschahlusiak_freebloks_controller_JNIServer
+ * Method:    native_resume_server
+ * Signature: (III[I[II)I
+ */
+JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1resume_1server
+  (JNIEnv *, jclass, jint, jint, jint, jintArray, jintArray, jintArray, jint);
 
 #ifdef __cplusplus
 }

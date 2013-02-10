@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
@@ -73,6 +72,10 @@ public class Spiel implements Serializable, Cloneable {
 		for (int p = 0; p < PLAYER_MAX; p++){
 			m_game_field[get_player_start_y(p) * m_field_size_x + get_player_start_x(p)] = PLAYER_BIT_ALLOWED[p];
 		}
+	}
+	
+	public int[] get_game_field() {
+		return m_game_field;
 	}
 	
 	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) {
