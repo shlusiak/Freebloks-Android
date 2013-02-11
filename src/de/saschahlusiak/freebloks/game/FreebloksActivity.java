@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Vibrator;
@@ -39,6 +40,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -63,6 +65,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	Vibrator vibrator;
 	boolean vibrate;
 	boolean undo_with_back;
+	boolean hasActionBar;
 	NET_SERVER_STATUS lastStatus;
 	
 	static class RetainedConfig {
@@ -139,7 +142,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		super.onCreate(savedInstanceState);
 		Log.d(tag, "onCreate");
 		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		hasActionBar = false;
+		/* by default, don't show title bar */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			/* all honeycomb tablets had no menu button; leave action bar visible */
+			hasActionBar = true;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+				/* tablets/phone with ICS may or may not have physical buttons. Show action bar if mising */
+				ViewConfiguration viewConfig = ViewConfiguration.get(this);
+				/* we need the action bar if we don't have a menu key */
+				hasActionBar = !viewConfig.hasPermanentMenuKey();
+			}
+		}
+		if (!hasActionBar)
+			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		setContentView(R.layout.main_3d);
 
