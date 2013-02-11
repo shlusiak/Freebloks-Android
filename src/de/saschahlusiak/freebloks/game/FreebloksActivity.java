@@ -417,6 +417,24 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			intent = new Intent(this, FreebloksPreferences.class);
 			startActivity(intent);
 			return true;
+			
+		
+		case R.id.hint:
+			if (client == null)
+				return true;
+			if (client.spiel == null)
+				return true;
+			if (!client.isConnected())
+				return true;
+			if (!client.spiel.is_local_player())
+				return true;
+			spielthread.post(new Runnable() {
+				@Override
+				public void run() {
+					client.request_hint(client.spiel.current_player());
+				}
+			});
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
