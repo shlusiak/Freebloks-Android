@@ -190,7 +190,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
 		requestRender();
-		
 	}
 
 	@Override

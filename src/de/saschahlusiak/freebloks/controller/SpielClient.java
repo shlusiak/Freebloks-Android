@@ -104,8 +104,12 @@ public class SpielClient {
 		return true;
 	}
 
-	synchronized public void request_player() {
+	public void request_player() {
 		new NET_REQUEST_PLAYER().send(client_socket);
+	}
+	
+	public void request_hint(int player) {
+		new NET_REQUEST_HINT(player).send(client_socket);
 	}
 
 	synchronized void process_message(NET_HEADER data) throws Exception {
@@ -274,15 +278,14 @@ public class SpielClient {
 	/**
 	 * Erbittet den Spielstart beim Server
 	 **/
-	public void request_start()
-	{
+	public void request_start() {
 		new NET_START_GAME().send(client_socket);
 	}
 
 	/**
 	 * Erbittet eine Zugzuruecknahme beim Server
 	 **/
-	void request_undo() {
+	public void request_undo() {
 		new NET_REQUEST_UNDO().send(client_socket);
 	}
 
