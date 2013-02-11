@@ -179,7 +179,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		if (height > width) {
 			fovy = 35.0f;
 		} else {
-			fovy = 23.0f;
+			fovy = 21.0f;
 		}
 		fixed_zoom = 55.0f;
 
