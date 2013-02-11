@@ -10,4 +10,9 @@
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/hint">
     </item>
+    <item
+        android:id="@+id/undo"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="@string/undo">
+    </item>
 </menu>
