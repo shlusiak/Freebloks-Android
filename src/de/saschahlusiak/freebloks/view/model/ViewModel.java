@@ -72,4 +72,10 @@ public class ViewModel extends ArrayList<ViewElement> {
 			effects.add(effect);
 		}
 	}
+	
+	public void clearEffects() {
+		synchronized (effects) {
+			effects.clear();
+		}
+	}
 }

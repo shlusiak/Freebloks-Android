@@ -422,12 +422,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.hint:
 			if (client == null)
 				return true;
-			if (client.spiel == null)
-				return true;
-			if (!client.isConnected())
-				return true;
-			if (!client.spiel.is_local_player())
-				return true;
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
@@ -438,12 +432,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.undo:
 			if (client == null)
 				return true;
-			if (client.spiel == null)
-				return true;
-			if (!client.isConnected())
-				return true;
-			if (!client.spiel.is_local_player())
-				return true;
+			view.model.clearEffects();
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
