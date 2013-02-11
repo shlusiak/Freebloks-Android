@@ -13,6 +13,8 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.SimpleModel;
+import de.saschahlusiak.freebloks.view.effects.EffectSet;
+import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 
 public class CurrentStone extends ViewElement {
@@ -305,7 +307,11 @@ public class CurrentStone extends ViewElement {
 						st.copyFrom(stone);
 						StoneRollEffect e = new StoneRollEffect(st, player, pos.x, pos.y, 0.5f, -13.0f);
 				
-						model.addEffect(e);
+						EffectSet set = new EffectSet();
+						set.add(e);
+						set.add(new StoneFadeEffect(st, player, pos.x, pos.y, 4.0f));
+						model.addEffect(set);
+						
 					}
 					status = Status.IDLE;
 					stone = null;
