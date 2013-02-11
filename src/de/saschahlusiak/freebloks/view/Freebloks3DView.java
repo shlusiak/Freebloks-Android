@@ -11,9 +11,11 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
+import de.saschahlusiak.freebloks.view.effects.StoneUndoEffect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import android.content.Context;
 import android.graphics.PointF;
@@ -206,6 +208,10 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
+		if (model.showAnimations) {
+			Effect e = new StoneUndoEffect(s, t.m_playernumber, t.m_x, t.m_y);
+			model.addEffect(e);
+		}
 		requestRender();
 	}
 

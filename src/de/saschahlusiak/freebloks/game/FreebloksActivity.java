@@ -435,6 +435,22 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			return true;
+		case R.id.undo:
+			if (client == null)
+				return true;
+			if (client.spiel == null)
+				return true;
+			if (!client.isConnected())
+				return true;
+			if (!client.spiel.is_local_player())
+				return true;
+			spielthread.post(new Runnable() {
+				@Override
+				public void run() {
+					client.request_undo();
+				}
+			});
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -559,7 +575,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		throw new IllegalStateException("undo not implemented yet");
+		
 	}
 
 	@Override
