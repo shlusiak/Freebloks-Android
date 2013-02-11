@@ -62,6 +62,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	SpielClientThread spielthread = null;
 	Vibrator vibrator;
 	boolean vibrate;
+	boolean undo_with_back;
 	NET_SERVER_STATUS lastStatus;
 	
 	static class RetainedConfig {
@@ -236,6 +237,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
+		undo_with_back = prefs.getBoolean("back_undo", false);
 	}
 
 	@Override
@@ -440,6 +442,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			return true;
+			
+		case R.id.exit:
+			if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
+				showDialog(DIALOG_QUIT);
+			else
+				finish();
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -618,6 +627,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	public void onBackPressed() {
+		if (undo_with_back && client != null && client.isConnected()) {
+			view.model.clearEffects();
+
+			spielthread.post(new Runnable() {
+				@Override
+				public void run() {
+					client.request_undo();
+				}
+			});
+			return;
+		}
 		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else

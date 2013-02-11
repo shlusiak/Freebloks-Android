@@ -43,6 +43,13 @@
 		    android:persistent="true"
 		    android:key="show_animations" />
 		
+		<CheckBoxPreference
+		    android:summary="Undo last move with back button"
+		    android:title="Undo with back"
+		    android:defaultValue="false"
+		    android:persistent="true"
+		    android:key="back_undo" />
+		
 	</PreferenceCategory>
     
     <PreferenceCategory android:title="About..." >
