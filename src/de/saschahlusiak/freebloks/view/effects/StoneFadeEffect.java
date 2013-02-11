@@ -7,7 +7,10 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 
 public class StoneFadeEffect extends AbsStoneEffect {
-	private static final float TIME_PER_PERIOD = 1.2f;
+	private static final float TIME_PER_PERIOD = 1.3f;
+	private static final float ALPHA_MIN = 0.15f;
+	private static final float ALPHA_MAX = 1.0f;
+	
 	private float NUMBER_OF_PERIODS;
 	
 	public StoneFadeEffect(Stone stone, int player, int x, int y, float cycles) {
@@ -25,6 +28,7 @@ public class StoneFadeEffect extends AbsStoneEffect {
 		float alpha;
 		/* every TIME_PER_PERIOD needs to match 2 * PI */
 		alpha = (float)Math.cos(time / TIME_PER_PERIOD * (float)Math.PI * 2.0f) / 2.0f + 0.5f;
+		alpha = ALPHA_MIN + alpha * (ALPHA_MAX - ALPHA_MIN);
 		
 		gl.glPushMatrix();
 		

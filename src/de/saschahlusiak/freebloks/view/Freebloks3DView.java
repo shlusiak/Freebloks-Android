@@ -11,6 +11,8 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.view.effects.EffectSet;
+import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import android.content.Context;
@@ -156,7 +158,10 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
 			StoneRollEffect e = new StoneRollEffect(st, s.player, s.x, s.y, 4.0f, -7.0f);
 		
-			model.addEffect(e);
+			EffectSet set = new EffectSet();
+			set.add(e);
+			set.add(new StoneFadeEffect(st, s.player, s.x, s.y, 4.0f));
+			model.addEffect(set);
 		}
 		requestRender();
 	}
