@@ -358,7 +358,7 @@ public class CurrentStone extends ViewElement {
 		return false;
 	}
 	
-	synchronized void startDragging(PointF fieldPoint, Stone stone) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone) {
 		this.stone = stone;
 		if (stone == null) {
 			status = Status.IDLE;
