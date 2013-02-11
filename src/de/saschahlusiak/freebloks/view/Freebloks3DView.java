@@ -51,16 +51,18 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	public void setSpiel(SpielClient client, Spielleiter spiel) {
-		model.setSpiel(spiel);
-		if (spiel != null) {
-			client.addClientInterface(this);
-			for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
-				model.showPlayer = i;
-				renderer.updateModelViewMatrix = true;
-				break;
+		synchronized (renderer) {
+			model.setSpiel(spiel);
+			if (spiel != null) {
+				client.addClientInterface(this);
+				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
+					model.showPlayer = i;
+					renderer.updateModelViewMatrix = true;
+					break;
+				}
+				renderer.currentPlayer = spiel.current_player();
+				model.wheel.update(model.showOpponents ? renderer.currentPlayer : model.showPlayer);
 			}
-			renderer.currentPlayer = spiel.current_player();
-			model.wheel.update(model.showOpponents ? renderer.currentPlayer : model.showPlayer);
 		}
 		
 		queueEvent(new Runnable() {
