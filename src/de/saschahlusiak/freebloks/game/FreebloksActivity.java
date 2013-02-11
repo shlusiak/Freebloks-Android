@@ -67,6 +67,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	boolean undo_with_back;
 	boolean hasActionBar;
 	NET_SERVER_STATUS lastStatus;
+	Menu optionsMenu;
 	
 	static class RetainedConfig {
 		SpielClientThread clientThread;
@@ -254,6 +255,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
+
+		if (optionsMenu != null)
+			optionsMenu.findItem(R.id.exit).setVisible(undo_with_back);
+
 	}
 
 	@Override
@@ -353,8 +358,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.game_optionsmenu, menu);
+		optionsMenu = menu;
+		
+		menu.findItem(R.id.exit).setVisible(undo_with_back);
+		
 		return true;
 	}
+	
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -481,6 +491,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				boolean local = false;
 				if (client != null && client.spiel != null)
 					local = client.spiel.is_local_player(player);
+				
+				if (optionsMenu != null) {
+					optionsMenu.findItem(R.id.hint).setEnabled(local);
+					optionsMenu.findItem(R.id.undo).setEnabled(local);
+				}
+
 				
 				/* TODO: generalize */
 				final int colors[] = {
