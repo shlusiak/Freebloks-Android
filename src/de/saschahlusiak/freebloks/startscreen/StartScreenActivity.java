@@ -38,12 +38,11 @@ public class StartScreenActivity extends Activity {
 	SharedPreferences prefs;
 	
 	private static final String WHATS_NEW = 
-			"* improved speed\n" + 
-			"* smoother animations\n" + 
-			"* basic horizontal layout\n" +
-			"* improved result dialog\n" +
-			"* remember user zoom\n" +
-			"* fixed some crashes";
+			"* GREATLY improved AI speed using JNI\n" +
+			"* never hide current player message\n" +
+			"* improved rendering speed and quality\n" +
+			"* support for undo\n" +
+			"* support for hint";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
