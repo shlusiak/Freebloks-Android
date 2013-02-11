@@ -109,6 +109,12 @@ public class SpielClient {
 	}
 	
 	public void request_hint(int player) {
+		if (spiel == null)
+			return;
+		if (!isConnected())
+			return;
+		if (!spiel.is_local_player())
+			return;
 		new NET_REQUEST_HINT(player).send(client_socket);
 	}
 
@@ -287,6 +293,12 @@ public class SpielClient {
 	 * Erbittet eine Zugzuruecknahme beim Server
 	 **/
 	public void request_undo() {
+		if (spiel == null)
+			return;
+		if (!isConnected())
+			return;
+		if (!spiel.is_local_player())
+			return;
 		new NET_REQUEST_UNDO().send(client_socket);
 	}
 
