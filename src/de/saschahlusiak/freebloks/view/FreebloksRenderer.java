@@ -10,7 +10,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.view.effects.AbsEffect;
+import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
@@ -117,7 +117,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		    		int field = model.spiel.get_game_field(y, x);
 		    		if (field != Stone.FIELD_FREE) {
 		    			boolean effected = false;
-		    			for (AbsEffect effect: model.effects)
+		    			for (Effect effect: model.effects)
 		    				if (effect.isEffected(x, y)) {
 		    					effected = true;
 		    					break;
@@ -143,7 +143,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		/* render all effects */
 		synchronized (model.effects) {
-			for (AbsEffect effect: model.effects) {
+			for (Effect effect: model.effects) {
 				effect.render(gl, model.spiel, board);
 			}
 		}

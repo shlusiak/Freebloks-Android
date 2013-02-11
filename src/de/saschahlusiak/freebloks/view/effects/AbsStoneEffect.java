@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import de.saschahlusiak.freebloks.model.Stone;
 
-public abstract class AbsStoneEffect extends AbsEffect {
+public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	Stone stone;
 	int player, x, y;
 	AbsStoneEffect(Stone stone, int player, int x, int y) {
