@@ -52,6 +52,8 @@ public class Network {
 			return new NET_UNDO_STONE(p);
 		case MSG_REQUEST_HINT:
 			return new NET_REQUEST_HINT(p);
+		case MSG_STONE_HINT:
+			return new NET_SET_STONE(p);
 		
 		default:
 			//throw new Exception("Unhandled message type " + p.msg_type);

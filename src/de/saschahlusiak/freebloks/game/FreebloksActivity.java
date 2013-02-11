@@ -541,7 +541,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		
+		throw new IllegalStateException("undo not implemented yet");
 	}
 
 	@Override
