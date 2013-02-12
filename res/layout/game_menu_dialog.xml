@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffff2f2f"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/new_game"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+		android:minWidth="180dp"
+        android:text="@string/new_local_game"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/resume_game"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Resume"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/join_game"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/join_game"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/preferences"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/preferences"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
