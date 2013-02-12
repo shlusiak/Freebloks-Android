@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import de.saschahlusiak.freebloks.R;
@@ -18,6 +20,7 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
+import de.saschahlusiak.freebloks.startscreen.StartScreenActivity;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,6 +55,7 @@ import android.widget.Toast;
 public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
+	static final int DIALOG_GAME_MENU = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
@@ -179,20 +183,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			newCurrentPlayer(client.spiel.current_player());
 		} else {
 			if (savedInstanceState == null) {
-				Bundle b;
-				b = getIntent().getBundleExtra("gamestate");
-				if (b != null) {
-					if (readStateFromBundle(b)) {
-						
-					} else {
-						Toast.makeText(this, "Could not restore game ", Toast.LENGTH_LONG).show();
-						startNewGame();
-					}
-				} else /* without a game state, start a new game */
-					startNewGame();				
+				if (restoreOldGame()) {
+					
+				} else {
+					/* TODO: translate */
+					Toast.makeText(this, "Could not restore game ", Toast.LENGTH_LONG).show();
+					startNewGame();
+				}			
 			} else /* TODO: we should resume from previously saved data; don't just start a new game */
 				startNewGame();
 		}
+		
+		if (savedInstanceState == null)
+			showDialog(DIALOG_GAME_MENU);
 	}
 
 	@Override
@@ -309,6 +312,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (spielthread != null)
 			spielthread.client.disconnect();
 		
+		view.model.clearEffects();
 		Spielleiter spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
 		final SpielClient client = new SpielClient(spiel);
 		spiel.start_new_game();
@@ -324,6 +328,42 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			}
 		});
 		task.execute(server);
+	}
+	
+	boolean restoreOldGame() {
+		try {
+			FileInputStream fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			Parcel p = Parcel.obtain();
+			byte[] b = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = fis.read(b)) != -1) {
+			   bos.write(b, 0, bytesRead);
+			}
+			fis.close();
+			fis = null;
+			
+			byte[] bytes = bos.toByteArray();
+			bos.close();
+			bos = null;
+			
+			Bundle bundle;
+			p.unmarshall(bytes, 0, bytes.length);
+			p.setDataPosition(0);
+			bundle = p.readBundle(FreebloksActivity.class.getClassLoader());
+
+			deleteFile(GAME_STATE_FILE);
+			
+			if (readStateFromBundle(bundle)) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	private void saveGameState(String filename) {
@@ -385,6 +425,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case DIALOG_GAME_FINISH:
 			return new GameFinishDialog(this);
 			
+		case DIALOG_GAME_MENU:
+			return new GameMenu(this);
+			
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -407,6 +450,36 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					startNewGame();
 				}
 			});
+			break;
+			
+		case DIALOG_GAME_MENU:
+			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					startNewGame();
+				}
+			});
+			dialog.findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					
+				}
+			});
+			dialog.findViewById(R.id.preferences).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(FreebloksActivity.this, FreebloksPreferences.class);
+					startActivity(intent);
+				}
+			});
+			
 			break;
 		}
 		super.onPrepareDialog(id, dialog, args);
@@ -640,6 +713,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else
-			super.onBackPressed();
+			showDialog(DIALOG_GAME_MENU);
 	}
 }
