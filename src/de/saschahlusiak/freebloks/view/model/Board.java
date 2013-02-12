@@ -3,11 +3,12 @@ package de.saschahlusiak.freebloks.view.model;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
-public class Board extends ViewElement {
-	public Board(ViewModel model) {
-		super(model);
-	}
+public class Board {
+	ViewModel model;
 	
+	public Board(ViewModel model) {
+		this.model = model;
+	}	
 	
 	/**
 	 * Converts a point from model coordinates to (non-uniformed) board coordinates.

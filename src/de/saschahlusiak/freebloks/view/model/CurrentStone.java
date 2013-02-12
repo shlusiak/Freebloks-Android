@@ -17,7 +17,7 @@ import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 
-public class CurrentStone extends ViewElement {
+public class CurrentStone implements ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
 	
 	enum Status {
@@ -33,10 +33,11 @@ public class CurrentStone extends ViewElement {
 	int texture[];
 	SimpleModel overlay;
 	Status status;
+	ViewModel model;
 	
 	
 	CurrentStone(ViewModel model) {
-		super(model);
+		this.model = model;
 		
 		status = Status.IDLE;
 		
@@ -381,5 +382,11 @@ public class CurrentStone extends ViewElement {
 		int y = (int)(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 
 		moveTo(x, y);
+	}
+
+	@Override
+	public boolean execute(float elapsed) {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 }

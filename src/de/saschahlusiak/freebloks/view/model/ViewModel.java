@@ -10,7 +10,7 @@ import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 
 @SuppressWarnings("serial")
-public class ViewModel extends ArrayList<ViewElement> {
+public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public Wheel wheel;
 	public CurrentStone currentStone;
 	public Spielleiter spiel;
@@ -36,7 +36,6 @@ public class ViewModel extends ArrayList<ViewElement> {
 		
 		add(currentStone);
 		add(wheel);
-		add(board);
 	}
 
 	public void setSpiel(Spielleiter spiel) {
@@ -64,6 +63,14 @@ public class ViewModel extends ArrayList<ViewElement> {
 		for (ViewElement e: this)
 			if (e.handlePointerUp(m))
 				return redraw;
+		return redraw;
+	}
+	
+	@Override
+	public boolean execute(float elapsed) {
+		boolean redraw = false;
+		for (ViewElement e: this)
+			redraw |= e.execute(elapsed);
 		return redraw;
 	}
 	
