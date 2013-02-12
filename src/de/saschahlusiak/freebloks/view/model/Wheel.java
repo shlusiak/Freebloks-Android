@@ -122,6 +122,8 @@ public class Wheel implements ViewElement {
 							
 							Log.d(tag, "timer expire, start moving stone");
 							model.activity.vibrate(100);
+							if (!model.showAnimations)
+								currentAngle = lastAngle;
 							model.currentStone.startDragging(tmp, highlightStone, true);
 							spinning = false;
 							model.view.requestRender();
@@ -173,12 +175,12 @@ public class Wheel implements ViewElement {
 
 		if (highlightStone != null && tmp.y >= 0) {
 			if (Math.abs(currentAngle - lastAngle) < 90.0f) {
-				/* TODO: animate currentAngle back to originalAngle */
-			//	currentAngle = originalAngle;
 				model.activity.vibrate(100);
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
+				if (!model.showAnimations)
+					currentAngle = lastAngle;
 				model.currentStone.startDragging(tmp, highlightStone, false);
 				spinning = false;
 			}
