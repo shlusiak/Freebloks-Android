@@ -235,11 +235,13 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	
 	class UpdateThread extends Thread {
 		boolean goDown = false;
-		private static final int FPS = 30;
-		private static final int DELAY = 1000 / FPS;
+		private static final int FPS_ANIMATIONS = 30;
+		private static final int FPS_NO_ANIMATIONS = 5;
 		
 		@Override
 		public void run() {
+			long delay;
+			
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e1) {
@@ -247,10 +249,12 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				return;
 			}
 			
+			delay = 1000 / (model.showAnimations ? FPS_ANIMATIONS : FPS_NO_ANIMATIONS);
+			
 			long time = System.currentTimeMillis(), tmp;
 			while (!goDown) {
 				try {
-					Thread.sleep(DELAY);
+					Thread.sleep(delay);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					break;
@@ -304,6 +308,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	@Override
 	public void onResume() {
 		super.onResume();
+		model.clearEffects();
 		if (thread == null) {
 			thread = new UpdateThread();
 			thread.start();
