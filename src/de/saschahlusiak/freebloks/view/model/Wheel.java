@@ -19,8 +19,8 @@ public class Wheel implements ViewElement {
 	
 	Stone highlightStone;
 	float currentAngle = 0.0f;
-	float originalAngle;
-	float originalX;
+	float lastAngle;
+	float originalX, originalY;
 	boolean spinning = false;
 	ArrayList<Stone> stones;
 	int lastPlayer;
@@ -54,7 +54,7 @@ public class Wheel implements ViewElement {
 	synchronized public boolean handlePointerDown(final PointF m) {
 		spinning = false;
 		
-		originalAngle = currentAngle;
+		lastAngle = currentAngle;
 		
 		tmp.x = m.x;
 		tmp.y = m.y;
@@ -67,13 +67,14 @@ public class Wheel implements ViewElement {
 		}
 		
 		originalX = tmp.x;
+		originalY = tmp.y;
 
 		if (tmp.y > 0)
 			return false;
 		
 		/* TODO: remove or understand magic numbers */
 		int row = (int) (-(tmp.y + 2.0f) / 5.5f);
-		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.6f + originalAngle / 17.0f);
+		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.6f + lastAngle / 17.0f);
 
 //		Log.d(tag, "currentWheelAngle = " + originalAngle);
 //		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
@@ -104,7 +105,7 @@ public class Wheel implements ViewElement {
 						return;
 					if (highlightStone == null)
 						return;
-					if (Math.abs(currentAngle - originalAngle) > 10.0f)
+					if (Math.abs(currentAngle - lastAngle) > 10.0f)
 						return;
 					if (!model.spiel.is_local_player())
 						return;
@@ -156,7 +157,9 @@ public class Wheel implements ViewElement {
 		}
 		
 		/* everything underneath row 0 spins the wheel */
-		currentAngle += 8.0f * (originalX - tmp.x);
+		float offset = 8.0f * (originalX - tmp.x);
+		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 3.0f);
+		currentAngle += offset;
 		while (currentAngle > 180)
 			currentAngle -= 360.0f;
 		while (currentAngle < -180)
@@ -164,12 +167,13 @@ public class Wheel implements ViewElement {
 
 		originalX = tmp.x;
 
-		if (Math.abs(currentAngle - originalAngle) >= 90.0f) {
+
+		if (Math.abs(currentAngle - lastAngle) >= 90.0f) {
 			highlightStone = null;
 		}
 
 		if (highlightStone != null && tmp.y >= 0) {
-			if (Math.abs(currentAngle - originalAngle) < 90.0f) {
+			if (Math.abs(currentAngle - lastAngle) < 90.0f) {
 				/* TODO: animate currentAngle back to originalAngle */
 			//	currentAngle = originalAngle;
 				model.activity.vibrate(100);
@@ -187,7 +191,11 @@ public class Wheel implements ViewElement {
 	
 	@Override
 	public boolean handlePointerUp(PointF m) {
-		spinning = false;
+		if (spinning) {
+			lastAngle = currentAngle;
+			spinning = false;
+			return true;
+		}
 		return false;
 	}
 
@@ -244,7 +252,20 @@ public class Wheel implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		// TODO Auto-generated method stub
+		final float EPSILON = 1.0f;
+		final float ROTSPEED = 130.0f;
+		if (spinning == false && (Math.abs(currentAngle - lastAngle) > EPSILON)) {
+			if (currentAngle < lastAngle) {
+				currentAngle += elapsed * ROTSPEED;
+				if (currentAngle > lastAngle)
+					currentAngle = lastAngle;
+			} else {
+				currentAngle -= elapsed * ROTSPEED;
+				if (currentAngle < lastAngle)
+					currentAngle = lastAngle;				
+			}
+			return true;
+		}
 		return false;
 	}
 }
