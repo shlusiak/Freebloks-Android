@@ -14,7 +14,7 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 
-public class Wheel extends ViewElement {
+public class Wheel implements ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
 	
 	Stone highlightStone;
@@ -24,9 +24,10 @@ public class Wheel extends ViewElement {
 	boolean spinning = false;
 	ArrayList<Stone> stones;
 	int lastPlayer;
+	ViewModel model;
 	
 	public Wheel(ViewModel model) {
-		super(model);
+		this.model = model;
 		stones = new ArrayList<Stone>();
 	}
 	
@@ -50,7 +51,7 @@ public class Wheel extends ViewElement {
 	}
 
 	@Override
-	synchronized boolean handlePointerDown(final PointF m) {
+	synchronized public boolean handlePointerDown(final PointF m) {
 		spinning = false;
 		
 		originalAngle = currentAngle;
@@ -139,7 +140,7 @@ public class Wheel extends ViewElement {
 	}
 
 	@Override
-	synchronized boolean handlePointerMove(PointF m) {
+	synchronized public boolean handlePointerMove(PointF m) {
 		if (!spinning)
 			return false;
 		
@@ -169,7 +170,8 @@ public class Wheel extends ViewElement {
 
 		if (highlightStone != null && tmp.y >= 0) {
 			if (Math.abs(currentAngle - originalAngle) < 90.0f) {
-				// renderer.currentWheelAngle = originalWheelAngle;
+				/* TODO: animate currentAngle back to originalAngle */
+			//	currentAngle = originalAngle;
 				model.activity.vibrate(100);
 				tmp.x = m.x;
 				tmp.y = m.y;
@@ -184,7 +186,7 @@ public class Wheel extends ViewElement {
 	}
 	
 	@Override
-	boolean handlePointerUp(PointF m) {
+	public boolean handlePointerUp(PointF m) {
 		spinning = false;
 		return false;
 	}
@@ -238,5 +240,11 @@ public class Wheel extends ViewElement {
 		}
 		
 		gl.glPopMatrix();
+	}
+
+	@Override
+	public boolean execute(float elapsed) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

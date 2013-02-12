@@ -2,14 +2,9 @@ package de.saschahlusiak.freebloks.view.model;
 
 import android.graphics.PointF;
 
-public class ViewElement {
-	ViewModel model;
-	
-	ViewElement(ViewModel model) {
-		this.model = model;
-	}
-	
-	boolean handlePointerDown(PointF m) { return false; }
-	boolean handlePointerMove(PointF m) { return false; }
-	boolean handlePointerUp(PointF m)   { return false; }
+public interface ViewElement {
+	boolean handlePointerDown(PointF m);
+	boolean handlePointerMove(PointF m);
+	boolean handlePointerUp(PointF m);
+	boolean execute(float elapsed);
 }
