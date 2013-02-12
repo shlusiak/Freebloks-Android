@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import de.saschahlusiak.freebloks.R;
@@ -20,7 +21,6 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
-import de.saschahlusiak.freebloks.startscreen.StartScreenActivity;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -59,6 +59,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
+	static final int DIALOG_JOIN = 5;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
@@ -163,6 +164,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+		newCurrentPlayer(-1);
+		
 		RetainedConfig config = (RetainedConfig)getLastNonConfigurationInstance();
 		if (config != null) {
 			spielthread = config.clientThread;
@@ -181,17 +184,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			client.addClientInterface(this);
 			view.setSpiel(client, client.spiel);
 			newCurrentPlayer(client.spiel.current_player());
+		} else if (savedInstanceState != null) {
+			/* TODO: we should resume from previously saved data; don't just start a new game */
+			startNewGame(null, true);
 		} else {
-			if (savedInstanceState == null) {
-				if (restoreOldGame()) {
-					
-				} else {
-					/* TODO: translate */
-					Toast.makeText(this, "Could not restore game ", Toast.LENGTH_LONG).show();
-					startNewGame();
-				}			
-			} else /* TODO: we should resume from previously saved data; don't just start a new game */
-				startNewGame();
+			if (restoreOldGame()) {
+				
+			} else {
+				/* TODO: translate */
+				Toast.makeText(this, "Could not restore game ", Toast.LENGTH_LONG).show();
+			//	startNewGame(null, true);
+			}			
 		}
 		
 		if (savedInstanceState == null)
@@ -209,14 +212,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		client.removeClientInterface(this);
+		if (client != null)
+			client.removeClientInterface(this);
 		super.onDestroy();
 	}
 	
 	@Override
 	protected void onPause() {
 		view.onPause();
-		if (client.spiel.current_player() >= 0)
+		if (client != null && client.spiel.current_player() >= 0)
 			saveGameState(GAME_STATE_FILE);
 		else
 			deleteFile(FreebloksActivity.GAME_STATE_FILE);
@@ -300,10 +304,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	long gameStartTime = 0;
-	public void startNewGame() {
-		final String server = getIntent().getStringExtra("server");
-		final boolean request_player = getIntent().getBooleanExtra("request_player", true);
-		
+	public void startNewGame(final String server, final boolean request_player) {
 		newCurrentPlayer(-1);
 		if (server == null) {
 			JNIServer.runServer(null, Ki.HARD);
@@ -359,6 +360,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			} else {
 				return false;
 			}
+		} catch (FileNotFoundException fe) {
+			/* signal non-failure if game state file is missing */
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -427,6 +431,18 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		case DIALOG_GAME_MENU:
 			return new GameMenu(this);
+
+		case DIALOG_JOIN:
+			final Dialog addDialog = new JoinDialog(this, new JoinDialog.OnJoinListener() {
+				@Override
+				public boolean OnJoin(String server, boolean request_player) {
+					startNewGame(server, request_player);
+					dismissDialog(DIALOG_GAME_MENU);
+					return true;
+				}
+			});
+			
+			return addDialog;
 			
 		default:
 			return super.onCreateDialog(id);
@@ -447,7 +463,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					startNewGame();
+					startNewGame(client.getLastHost(), true);
 				}
 			});
 			break;
@@ -457,7 +473,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					startNewGame();
+					startNewGame(null, true);
 				}
 			});
 			dialog.findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
@@ -477,6 +493,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				public void onClick(View v) {
 					Intent intent = new Intent(FreebloksActivity.this, FreebloksPreferences.class);
 					startActivity(intent);
+				}
+			});
+			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showDialog(DIALOG_JOIN);
 				}
 			});
 			
