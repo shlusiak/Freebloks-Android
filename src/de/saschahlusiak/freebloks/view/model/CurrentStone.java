@@ -377,7 +377,7 @@ public class CurrentStone extends ViewElement {
 		stone_rel_y = 0;
 		
 		int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-		int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+		int y = (int)(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 
 		moveTo(x, y);
 	}	
