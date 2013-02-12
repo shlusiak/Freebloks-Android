@@ -121,7 +121,7 @@ public class Wheel implements ViewElement {
 							model.board.modelToBoard(tmp);
 							
 							Log.d(tag, "timer expire, start moving stone");
-							model.activity.vibrate(100);
+							model.activity.vibrate(90);
 							if (!model.showAnimations)
 								currentAngle = lastAngle;
 							model.currentStone.startDragging(tmp, highlightStone, true);
