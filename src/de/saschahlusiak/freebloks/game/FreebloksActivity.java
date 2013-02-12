@@ -31,6 +31,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -60,6 +62,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
 	static final int DIALOG_JOIN = 5;
+	static final int DIALOG_DEV = 6;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
@@ -197,8 +200,26 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			}			
 		}
 		
-		if (savedInstanceState == null)
+		if (savedInstanceState == null) {
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			showDialog(DIALOG_GAME_MENU);
+			
+			PackageInfo pinfo;
+			try {
+				pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+				
+				if (prefs.getInt("lastVersion", 0) != pinfo.versionCode) {
+					showDialog(DIALOG_DEV);
+					
+					Editor editor = prefs.edit();
+					editor.putInt("lastVersion", pinfo.versionCode);
+					editor.commit();
+				}
+			} catch (NameNotFoundException e) {
+				((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -279,6 +300,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 	
 	private void writeStateToBundle(Bundle outState) {
+		if (client == null)
+			return;
+		if (client.spiel == null)
+			return;
 		Spielleiter l = client.spiel;
 		outState.putSerializable("game", l);
 	}
@@ -433,7 +458,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new GameMenu(this);
 
 		case DIALOG_JOIN:
-			final Dialog addDialog = new JoinDialog(this, new JoinDialog.OnJoinListener() {
+			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
 				@Override
 				public boolean OnJoin(String server, boolean request_player) {
 					startNewGame(server, request_player);
@@ -442,7 +467,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			
-			return addDialog;
+		case DIALOG_DEV:
+			return WhatsNewDialog.create(this);
 			
 		default:
 			return super.onCreateDialog(id);

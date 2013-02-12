@@ -18,7 +18,7 @@ public class GameMenu extends Dialog {
 		
 		try {
 			PackageInfo pinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-			((TextView)findViewById(R.id.version)).setText("v" + pinfo.versionName);
+			((TextView)findViewById(R.id.version)).setText("" + pinfo.versionName);
 		} catch (NameNotFoundException e) {
 			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
 			e.printStackTrace();
