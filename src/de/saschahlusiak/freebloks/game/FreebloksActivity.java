@@ -52,11 +52,10 @@ import android.widget.Toast;
 public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
-	static final int DIALOG_CONNECTION_LOST = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_GAME_FINISH = 4;
-	
+
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
 	Freebloks3DView view;
@@ -68,11 +67,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	boolean hasActionBar;
 	NET_SERVER_STATUS lastStatus;
 	Menu optionsMenu;
-	
-	static class RetainedConfig {
-		SpielClientThread clientThread;
-		NET_SERVER_STATUS lastStatus;
-	}
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -218,13 +212,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected void onPause() {
-		Log.d(tag, "onPause1");
 		view.onPause();
 		if (client.spiel.current_player() >= 0)
 			saveGameState(GAME_STATE_FILE);
 		else
 			deleteFile(FreebloksActivity.GAME_STATE_FILE);
-		Log.d(tag, "onPause2");
 		super.onPause();
 	}
 
@@ -293,11 +285,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
 			SpielClient client = new SpielClient(spiel1);
-			ConnectTask task = new ConnectTask(client, false, new Runnable() {
-				@Override
-				public void run() {
-				}
-			});
+			ConnectTask task = new ConnectTask(client, false, null);
 			task.execute((String)null);
 
 			return true;
@@ -393,20 +381,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			return builder.create();
-		
-		case DIALOG_CONNECTION_LOST:
-			builder = new AlertDialog.Builder(this);
-			builder.setTitle("Connection lost");
-			builder.setMessage("The connection to the server has been lost.");
-			builder.setIcon(android.R.drawable.ic_dialog_alert);
-			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-//					finish();
-				}
-			});
-			return builder.create();
-
 			
 		case DIALOG_GAME_FINISH:
 			return new GameFinishDialog(this);
@@ -422,6 +396,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case DIALOG_LOBBY:
 			((LobbyDialog)dialog).setSpiel(client);
 			break;
+			
 		case DIALOG_GAME_FINISH:
 			((GameFinishDialog)dialog).setData(client);
 			((GameFinishDialog)dialog).setOnNewGameListener(new OnClickListener() {
@@ -445,8 +420,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			intent = new Intent(this, FreebloksPreferences.class);
 			startActivity(intent);
 			return true;
-			
-		
+
 		case R.id.hint:
 			if (client == null)
 				return true;
@@ -457,6 +431,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			return true;
+			
 		case R.id.undo:
 			if (client == null)
 				return true;
@@ -483,8 +458,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void newCurrentPlayer(final int player) {
-//		Log.d(tag, "newCurrentPlayer(" + player + ")");
-
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -549,7 +522,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void stoneWasSet(NET_SET_STONE s) {
-//		Log.d(tag, "stoneWasSet(...)");
+
 	}
 
 	@Override
@@ -577,7 +550,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void chatReceived(final NET_CHAT c) {
-		Log.d(tag, "chatReceived");
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -590,13 +562,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							Toast.LENGTH_LONG).show();
 			}
 		});
-		
 	}
 
 	@Override
 	public void gameStarted() {
 		gameStartTime = System.currentTimeMillis();
-			
+
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
 			if (client.spiel.is_local_player(i))
@@ -605,18 +576,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		
+
 	}
 
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
-		Log.d(tag, "serverStatus()");
 		lastStatus = status;
 	}
 
 	@Override
 	public void onConnected(Spiel spiel) {
-		Log.w(tag, "onConnected()");
+
 	}
 
 	@Override
@@ -628,14 +598,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void run() {
 				newCurrentPlayer(-1);
-//				showDialog(DIALOG_CONNECTION_LOST);
 			}
 		});
 	}
 
 	@Override
 	public boolean commitCurrentStone(final Stone stone, final int x, final int y) {
-		Log.w(tag, "commitCurrentStone(" + x + ", " + y + ")");
 		if (!client.spiel.is_local_player())
 			return false;
 		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
@@ -647,8 +615,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				client.set_stone(stone, y, x);
 			}
 		});
-		if (vibrate)
-			vibrator.vibrate(100);
+		vibrate(90);
 		return true;
 	}
 	
