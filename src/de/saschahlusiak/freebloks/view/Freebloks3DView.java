@@ -183,7 +183,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		PointF p = new PointF();
 		p.x = s.x - 0.5f + st.get_stone_size() / 2;
 		p.y = s.y - 0.5f - st.get_stone_size() / 2;
-		model.currentStone.startDragging(p, st);
+		model.currentStone.startDragging(p, st, false);
 		requestRender();
 	}
 
