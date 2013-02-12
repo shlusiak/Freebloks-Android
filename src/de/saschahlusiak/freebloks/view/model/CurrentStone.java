@@ -27,6 +27,7 @@ public class CurrentStone extends ViewElement {
 	Stone stone;
 	Point pos = new Point();
 	boolean hasMoved;
+	boolean startedFromBelow;
 	float stone_rel_x, stone_rel_y;
 	float rotate_angle;
 	int texture[];
@@ -210,6 +211,7 @@ public class CurrentStone extends ViewElement {
 					rotate_angle = 0.0f;
 				} else {
 					status = Status.DRAGGING;
+					startedFromBelow = false;
 				}
 				return true;
 			}
@@ -299,7 +301,23 @@ public class CurrentStone extends ViewElement {
 	@Override
 	synchronized public boolean handlePointerUp(PointF m) {
 		if (status == Status.DRAGGING) {
-			if (!hasMoved) {
+			fieldPoint.x = m.x;
+			fieldPoint.y = m.y;
+			model.board.modelToBoard(fieldPoint);
+
+			int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+			int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+			fieldPoint.x = x;
+			fieldPoint.y = y;
+			model.board.boardToUnified(fieldPoint);
+			if (!model.vertical_layout)
+				fieldPoint.y = fieldPoint.x;
+			
+			if (!startedFromBelow && fieldPoint.y < -2.0f) {
+				model.wheel.highlightStone = stone;
+				status = Status.IDLE;
+				stone = null;
+			} else	if (!hasMoved) {
 				int player = model.spiel.current_player();
 				if (model.activity.commitCurrentStone(stone, pos.x, pos.y)) {
 					if (model.showAnimations) {
@@ -317,24 +335,6 @@ public class CurrentStone extends ViewElement {
 					stone = null;
 					model.wheel.highlightStone = null;
 				}
-			} else {
-				fieldPoint.x = m.x;
-				fieldPoint.y = m.y;
-				model.board.modelToBoard(fieldPoint);
-
-				int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-				int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
-				fieldPoint.x = x;
-				fieldPoint.y = y;
-				model.board.boardToUnified(fieldPoint);
-				if (!model.vertical_layout)
-					fieldPoint.y = fieldPoint.x;
-				if (fieldPoint.y < -2.0f) {
-					model.wheel.highlightStone = stone;
-					status = Status.IDLE;
-					stone = null;
-				}
-
 			}
 		}
 		if (status == Status.ROTATING) {
@@ -364,7 +364,7 @@ public class CurrentStone extends ViewElement {
 		return false;
 	}
 	
-	synchronized public void startDragging(PointF fieldPoint, Stone stone) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone, boolean startedFromBelow) {
 		this.stone = stone;
 		if (stone == null) {
 			status = Status.IDLE;
@@ -372,6 +372,7 @@ public class CurrentStone extends ViewElement {
 		}
 
 		status = Status.DRAGGING;
+		this.startedFromBelow = startedFromBelow;
 		hasMoved = false;
 		stone_rel_x = 0;
 		stone_rel_y = 0;

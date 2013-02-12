@@ -120,7 +120,7 @@ public class Wheel extends ViewElement {
 							
 							Log.d(tag, "timer expire, start moving stone");
 							model.activity.vibrate(100);
-							model.currentStone.startDragging(tmp, highlightStone);
+							model.currentStone.startDragging(tmp, highlightStone, true);
 							highlightStone = null;
 							spinning = false;
 							model.view.requestRender();
@@ -174,7 +174,7 @@ public class Wheel extends ViewElement {
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
-				model.currentStone.startDragging(tmp, highlightStone);
+				model.currentStone.startDragging(tmp, highlightStone, false);
 				highlightStone = null;
 				spinning = false;
 			}
