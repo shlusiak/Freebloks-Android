@@ -123,7 +123,6 @@ public class Wheel implements ViewElement {
 							Log.d(tag, "timer expire, start moving stone");
 							model.activity.vibrate(100);
 							model.currentStone.startDragging(tmp, highlightStone, true);
-							highlightStone = null;
 							spinning = false;
 							model.view.requestRender();
 						}
@@ -181,7 +180,6 @@ public class Wheel implements ViewElement {
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
 				model.currentStone.startDragging(tmp, highlightStone, false);
-				highlightStone = null;
 				spinning = false;
 			}
 		}
@@ -226,7 +224,9 @@ public class Wheel implements ViewElement {
 			if (model.currentStone.stone != null)
 				alpha *= 0.7f;
 
-			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+//			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+			/* always show selected stone, even when dragging */
+			{
 				gl.glPushMatrix();
 				gl.glRotatef(90 * lastPlayer, 0, 1, 0);
 				if (!model.vertical_layout)
