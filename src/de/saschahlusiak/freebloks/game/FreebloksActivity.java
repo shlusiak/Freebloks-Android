@@ -28,6 +28,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -480,16 +481,27 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		switch (id) {
 		case DIALOG_LOBBY:
 			((LobbyDialog)dialog).setSpiel(client);
+			dialog.setOnCancelListener(new OnCancelListener() {				
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					showDialog(DIALOG_GAME_MENU);
+				}
+			});
 			break;
 			
 		case DIALOG_GAME_FINISH:
 			((GameFinishDialog)dialog).setData(client);
-			((GameFinishDialog)dialog).setOnNewGameListener(new OnClickListener() {
-				
+			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
 					startNewGame(client.getLastHost(), true);
+				}
+			});
+			dialog.setOnCancelListener(new OnCancelListener() {				
+				@Override
+				public void onCancel(DialogInterface arg0) {
+					showDialog(DIALOG_GAME_MENU);
 				}
 			});
 			break;

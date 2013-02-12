@@ -31,10 +31,6 @@ public class GameFinishDialog extends Dialog {
 		setTitle(R.string.game_finished);
 	}
 	
-	public void setOnNewGameListener(android.view.View.OnClickListener listener) {
-		findViewById(R.id.new_game).setOnClickListener(listener);
-	}
-	
 	public void setData(SpielClient spiel) {
 		int place[] = { 0, 1, 2, 3 };
 		ViewGroup t[] = new ViewGroup[4];
