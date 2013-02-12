@@ -761,6 +761,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else
-			showDialog(DIALOG_GAME_MENU);
+			super.onBackPressed();
 	}
 }

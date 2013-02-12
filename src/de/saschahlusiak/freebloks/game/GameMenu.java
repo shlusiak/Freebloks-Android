@@ -26,9 +26,4 @@ public class GameMenu extends Dialog {
 		
 		setCanceledOnTouchOutside(true);
 	}
-	
-	@Override
-	public void onBackPressed() {
-		getOwnerActivity().finish();
-	}
 }
