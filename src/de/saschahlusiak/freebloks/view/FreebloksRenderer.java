@@ -14,15 +14,15 @@ import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
-	final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
-	final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
-	final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
-	float width = 1, height = 1;
+	public final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
+	public final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
+	public final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	public final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
+	public float width = 1, height = 1;
 	int currentPlayer;
 	ViewModel model;
 	Context context;
-	float fixed_zoom;
+	public float fixed_zoom;
 	float density;
 	float mAngleX;
 	float zoom;
@@ -75,8 +75,16 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		long t = System.currentTimeMillis();
 		float angle = getAngleY();
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
+		
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		if (model.intro != null) {
+			model.intro.render(gl, this);
+			return;
+		}
+		
 		gl.glLoadIdentity();
 		if (height > width)
 			gl.glTranslatef(0, 7.4f, 0);
@@ -96,10 +104,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
-
-
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 		
 		if (model.spiel == null)
 			return;
@@ -144,7 +148,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		/* render all effects */
 		synchronized (model.effects) {
 			for (Effect effect: model.effects) {
-				effect.render(gl, model.spiel, board);
+				effect.render(gl, board);
 			}
 		}
 		

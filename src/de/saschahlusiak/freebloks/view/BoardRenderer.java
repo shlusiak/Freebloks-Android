@@ -10,7 +10,7 @@ import de.saschahlusiak.freebloks.model.Stone;
 
 public class BoardRenderer {
 	final static float bevel_size = 0.18f;
-	final static float bevel_height = 0.25f;
+	final public static float bevel_height = 0.25f;
 	final static float border_bottom = -1.2f;
 	final public static float stone_size = 0.45f;
 	
@@ -134,14 +134,17 @@ public class BoardRenderer {
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, field.getNormalBuffer());
 
-	    if (spiel == null)
-	    	return;
+	    int w = 20, h = 20;
+	    if (spiel != null) {
+	    	w = spiel.m_field_size_x;
+	    	h = spiel.m_field_size_y;
+	    }
 	    
 	    gl.glPushMatrix();
-	    gl.glTranslatef(-stone_size * (float)(spiel.m_field_size_x - 1), 0, -stone_size * (float)(spiel.m_field_size_x - 1) );
-	    for (int y = 0; y < spiel.m_field_size_y; y++) {
+	    gl.glTranslatef(-stone_size * (float)(w - 1), 0, -stone_size * (float)(h - 1) );
+	    for (int y = 0; y < h; y++) {
 	    	int x;
-	    	for (x = 0; x < spiel.m_field_size_y; x++) {
+	    	for (x = 0; x < w; x++) {
 	    		if (currentPlayer >= 0) {
 	    			if (spiel.get_game_field(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);

@@ -53,6 +53,8 @@ public class Wheel implements ViewElement {
 	@Override
 	synchronized public boolean handlePointerDown(final PointF m) {
 		spinning = false;
+		if (model.spiel == null)
+			return false;
 		
 		lastAngle = currentAngle;
 		

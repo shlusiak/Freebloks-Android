@@ -19,7 +19,7 @@ public class StoneUndoEffect extends AbsStoneEffect {
 	}
 
 	@Override
-	public void render(GL10 gl, Spiel spiel, BoardRenderer renderer) {
+	public void render(GL10 gl, BoardRenderer renderer) {
 		float z;
 		float alpha;
 		float rot;
@@ -34,9 +34,9 @@ public class StoneUndoEffect extends AbsStoneEffect {
 		gl.glTranslatef(0, z, 0);
 		
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_X - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
-	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_Y- 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
 	    gl.glRotatef(rot, 0, 1, 0);
 		renderer.renderPlayerStone(gl, player, stone, alpha * BoardRenderer.DEFAULT_ALPHA);

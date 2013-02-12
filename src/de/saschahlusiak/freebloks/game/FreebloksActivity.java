@@ -22,6 +22,8 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
+import de.saschahlusiak.freebloks.view.model.Intro;
+import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -55,7 +57,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface {
+public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -192,34 +194,38 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			/* TODO: we should resume from previously saved data; don't just start a new game */
 			startNewGame(null, true);
 		} else {
-			if (restoreOldGame()) {
-				
-			} else {
-				/* TODO: translate */
-				Toast.makeText(this, "Could not restore game ", Toast.LENGTH_LONG).show();
-			//	startNewGame(null, true);
-			}			
+			view.model.intro = new Intro(view.model, this);
+			newCurrentPlayer(-1);
 		}
+	}
 		
-		if (savedInstanceState == null) {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			showDialog(DIALOG_GAME_MENU);
+	@Override
+	public void OnIntroCompleted() {
+		newCurrentPlayer(-1);
+		if (restoreOldGame()) {
 			
-			PackageInfo pinfo;
-			try {
-				pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+		} else {
+			/* TODO: translate */
+			Toast.makeText(FreebloksActivity.this, "Could not restore game ", Toast.LENGTH_LONG).show();
+			//	startNewGame(null, true);
+		}			
+		showDialog(DIALOG_GAME_MENU);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);					
+		PackageInfo pinfo;
+		try {
+			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			
+			if (prefs.getInt("lastVersion", 0) != pinfo.versionCode) {
+				showDialog(DIALOG_DEV);
 				
-				if (prefs.getInt("lastVersion", 0) != pinfo.versionCode) {
-					showDialog(DIALOG_DEV);
-					
-					Editor editor = prefs.edit();
-					editor.putInt("lastVersion", pinfo.versionCode);
-					editor.commit();
-				}
-			} catch (NameNotFoundException e) {
-				((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
-				e.printStackTrace();
+				Editor editor = prefs.edit();
+				editor.putInt("lastVersion", pinfo.versionCode);
+				editor.commit();
 			}
+		} catch (NameNotFoundException e) {
+			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
+			e.printStackTrace();
 		}
 	}
 
@@ -630,7 +636,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				t.clearAnimation();
 				if (player < 0) { 
 					v.setBackgroundColor(Color.rgb(128, 128, 128));
-					if (client == null || !client.isConnected())
+					if (view.model.intro != null)
+						t.setText("touch to skip");
+					else if (client == null || !client.isConnected())
 						t.setText("not connected");
 					else
 						t.setText("no player");

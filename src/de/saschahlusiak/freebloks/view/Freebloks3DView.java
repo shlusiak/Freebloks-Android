@@ -89,9 +89,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
-		if (model.spiel == null)
-			return true;
-		
 		modelPoint.x = event.getX();
 		modelPoint.y = event.getY();
 		
