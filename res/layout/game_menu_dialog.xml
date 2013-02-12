@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="4dp"
+    android:padding="6dp"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -13,17 +13,30 @@
             android:id="@+id/imageView1"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:padding="1dp"
             android:src="@drawable/freebloks" />
 
         <TextView
-            android:id="@+id/version"
+            android:id="@+id/textView1"
+            android:paddingLeft="4dp"
+            android:paddingRight="8dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:layout_weight="1"
+            android:text="Freebloks"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:gravity="right"
             android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#ffff2f2f"
             android:textStyle="bold" />
         
