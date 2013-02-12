@@ -22,10 +22,6 @@
         android:icon="@drawable/freebloks"
         android:label="@string/app_name" >
         <activity
-            android:name=".startscreen.StartScreenActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name=".game.FreebloksActivity"
             android:label="@string/app_name" >
             <intent-filter>
