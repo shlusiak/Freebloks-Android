@@ -198,7 +198,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			newCurrentPlayer(-1);
 		}
 	}
-		
+
 	@Override
 	public void OnIntroCompleted() {
 		newCurrentPlayer(-1);
@@ -250,8 +250,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.onPause();
 		if (client != null && client.spiel.current_player() >= 0)
 			saveGameState(GAME_STATE_FILE);
-		else
-			deleteFile(FreebloksActivity.GAME_STATE_FILE);
 		super.onPause();
 	}
 
@@ -780,7 +778,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
-		else
-			super.onBackPressed();
+		else {
+			if (view.model.intro != null) {
+				view.model.intro.cancel();
+				view.requestRender();
+			}
+			else
+				super.onBackPressed();
+		}
 	}
 }
