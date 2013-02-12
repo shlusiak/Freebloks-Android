@@ -428,9 +428,9 @@ public class Intro implements ViewElement {
 		}
 
 		if (anim < MATRIX_START)
-			gl.glTranslatef(0.0f, -17.0f+(anim/MATRIX_START)*4.0f, 0.0f);
+			gl.glTranslatef(0.0f, -14.0f+(anim/MATRIX_START)*4.0f, 0.0f);
 		else if (anim<MATRIX_STOP) {
-	 		gl.glTranslatef(0, -13+13*(matrix_anim*matrix_anim), 0);
+	 		gl.glTranslatef(0, -10+10*(matrix_anim*matrix_anim), 0);
 		}
 
 		/* Licht setzen der neuen Kameraposition anpassen*/
