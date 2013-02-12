@@ -79,9 +79,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		if (height > width)
-			gl.glTranslatef(0, 8.0f, 0);
+			gl.glTranslatef(0, 7.4f, 0);
 		else
-			gl.glTranslatef(5.0f, 1.2f, 0);
+			gl.glTranslatef(5.0f, 0.6f, 0);
 		GLU.gluLookAt(gl, 
 				(float) (fixed_zoom/camera_distance*Math.sin(angle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 				(float) (fixed_zoom/camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
