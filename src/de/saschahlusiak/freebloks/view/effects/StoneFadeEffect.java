@@ -24,7 +24,7 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	}
 
 	@Override
-	public void render(GL10 gl, Spiel spiel, BoardRenderer renderer) {
+	public void render(GL10 gl, BoardRenderer renderer) {
 		float alpha;
 		/* every TIME_PER_PERIOD needs to match 2 * PI */
 		alpha = (float)Math.cos(time / TIME_PER_PERIOD * (float)Math.PI * 2.0f) / 2.0f + 0.5f;
@@ -33,9 +33,9 @@ public class StoneFadeEffect extends AbsStoneEffect {
 		gl.glPushMatrix();
 		
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_X - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
-	    		-BoardRenderer.stone_size * (float)(spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_Y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
 		renderer.renderPlayerStone(gl, player, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();

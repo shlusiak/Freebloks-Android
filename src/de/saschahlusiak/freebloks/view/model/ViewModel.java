@@ -18,6 +18,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public ActivityInterface activity;
 	public Freebloks3DView view;
 	public ArrayList<Effect> effects;
+	public Intro intro;
 
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
 	public int showPlayer;
@@ -44,6 +45,10 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 
 	public boolean handlePointerDown(PointF m) {
 		redraw = false;
+		if (intro != null) {
+			redraw = intro.handlePointerDown(m);
+			return redraw;
+		}
 		for (ViewElement e: this)
 			if (e.handlePointerDown(m))
 				return redraw;
@@ -69,6 +74,9 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		boolean redraw = false;
+		if (intro != null)
+			redraw |= intro.execute(elapsed);
+		
 		for (ViewElement e: this)
 			redraw |= e.execute(elapsed);
 		return redraw;
