@@ -95,6 +95,7 @@ public class GameFinishDialog extends Dialog {
 			a.setDuration(600);
 			a.setFillBefore(true);
 			set.addAnimation(a);
+			t[i].startAnimation(set);
 			
 			if (spiel.spiel.is_local_player(place[i])) {
 				a = new TranslateAnimation(
@@ -114,10 +115,9 @@ public class GameFinishDialog extends Dialog {
 				((TextView)t[i].findViewById(R.id.name)).setTextColor(Color.WHITE);
 				((TextView)t[i].findViewById(R.id.name)).setTypeface(Typeface.DEFAULT_BOLD);
 
-				(t[i].findViewById(R.id.name)).startAnimation(a);
+				t[i].findViewById(R.id.name).startAnimation(a);
+				setTitle(String.format("Place %d", i + 1));
 			}
-			t[i].startAnimation(set);
-			setTitle(String.format("Place %d", i + 1));
 		}
 	}
 }
