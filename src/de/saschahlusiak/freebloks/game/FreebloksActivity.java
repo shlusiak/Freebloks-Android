@@ -791,8 +791,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			showDialog(DIALOG_QUIT);
 		else {
 			if (view.model.intro != null) {
-				view.model.intro.cancel();
-				view.requestRender();
+				finish();
 			}
 			else {
 				if (client != null && client.isConnected())
