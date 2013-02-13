@@ -65,15 +65,11 @@ public class GameFinishDialog extends Dialog {
 		t[2] = (ViewGroup) findViewById(R.id.place3);
 		t[3] = (ViewGroup) findViewById(R.id.place4);
 		
-		int myplace = -1;
 		for (i = 0; i < 4; i++) {
 			String name;
 			Player p = spiel.spiel.get_player(place[i]);
 			/* TODO: translate */
 			name = names[place[i]];
-			if (spiel.spiel.is_local_player(place[i])) {
-				myplace = i;
-			}
 			
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			((TextView)t[i].findViewById(R.id.points)).setText(String.format("-%d points", p.m_stone_points_left));
@@ -100,7 +96,7 @@ public class GameFinishDialog extends Dialog {
 			a.setFillBefore(true);
 			set.addAnimation(a);
 			
-			if (myplace == i) {
+			if (spiel.spiel.is_local_player(place[i])) {
 				a = new TranslateAnimation(
 						TranslateAnimation.RELATIVE_TO_SELF, 
 						0, 
@@ -121,9 +117,7 @@ public class GameFinishDialog extends Dialog {
 				(t[i].findViewById(R.id.name)).startAnimation(a);
 			}
 			t[i].startAnimation(set);
-		}
-		if (myplace >= 0) {
-			setTitle(String.format("Place %d", myplace + 1));
+			setTitle(String.format("Place %d", i + 1));
 		}
 	}
 }
