@@ -172,6 +172,7 @@ public class SpielClient {
 
 		/* Server hat entschlossen, dass das Spiel vorbei ist */
 		case Network.MSG_GAME_FINISH: {
+			spiel.setFinished(true);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.gameFinished();
 			break;
@@ -218,6 +219,7 @@ public class SpielClient {
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
 			spiel.start_new_game();
+			spiel.setFinished(false);
 			/* Unbedingt history leeren. */
 			if (spiel.history != null)
 				spiel.history.delete_all_turns();

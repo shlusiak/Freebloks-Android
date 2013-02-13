@@ -21,6 +21,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	int m_current_player;
 	int spieler[] = new int[Spiel.PLAYER_MAX];
 	int m_gamemode;
+	boolean finished = false;
 	
 	Turnpool history;
 
@@ -92,5 +93,13 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	
 	public boolean is_local_player() {
 		return is_local_player(m_current_player);
+	}
+	
+	public boolean is_finished() {
+		return finished;
+	}
+	
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 }

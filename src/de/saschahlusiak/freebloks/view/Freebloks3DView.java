@@ -31,7 +31,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	
 	
 	FreebloksRenderer renderer;
-	ActivityInterface activity;
 	private float scale = 1.0f;
 
 	
@@ -96,6 +95,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
+			if (model.spiel != null && model.spiel.is_finished())
+				model.activity.gameFinished();
 			model.handlePointerDown(modelPoint);
 			requestRender();
 			break;
