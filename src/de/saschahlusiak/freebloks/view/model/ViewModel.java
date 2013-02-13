@@ -31,7 +31,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
 		board = new Board(this);
-		showPlayer = -1;
+		showPlayer = 0;
 		
 		effects = new ArrayList<Effect>();
 		
