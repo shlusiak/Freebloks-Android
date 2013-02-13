@@ -519,14 +519,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					startNewGame(client.getLastHost(), true);
 				}
 			});
-			dialog.setOnCancelListener(new OnCancelListener() {				
-				@Override
-				public void onCancel(DialogInterface arg0) {
-					canresume = false;
-					/* TODO: don't do this */
-					showDialog(DIALOG_GAME_MENU);
-				}
-			});
 			break;
 			
 		case DIALOG_GAME_MENU:
@@ -702,19 +694,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void hintReceived(NET_SET_STONE s) {
-		
+
 	}
 
 	@Override
 	public void gameFinished() {
-		int i;
-		Log.i(tag, "-- Game finished! -- took " + (System.currentTimeMillis() - gameStartTime)/1000 + " s");
-		for (i = 0; i < Spiel.PLAYER_MAX; i++) {
-			Player player = client.spiel.get_player(i);
-			Log.i(tag, (client.spiel.is_local_player(i) ? "*" : " ") + "Player " + i
-					+ " has " + player.m_stone_count + " stones left and "
-					+ -player.m_stone_points_left + " points.");
-		}
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
