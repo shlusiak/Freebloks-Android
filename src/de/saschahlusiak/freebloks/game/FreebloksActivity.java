@@ -287,10 +287,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
-
-		if (optionsMenu != null)
-			optionsMenu.findItem(R.id.exit).setVisible(undo_with_back);
-
 	}
 
 	@Override
@@ -427,9 +423,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.game_optionsmenu, menu);
 		optionsMenu = menu;
-		
-		menu.findItem(R.id.exit).setVisible(undo_with_back);
-		
+				
 		return true;
 	}
 	
@@ -589,11 +583,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			});
 			return true;
 			
-		case R.id.exit:
+		case R.id.show_main_menu:
 			if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 				showDialog(DIALOG_QUIT);
 			else
-				finish();
+				showDialog(DIALOG_GAME_MENU);
 			return true;
 
 		default:
