@@ -114,6 +114,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		/* render player stones on board, unless they are "effected" */
 	    gl.glPushMatrix();
 	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	    synchronized (model.effects) {
 		    for (int y = 0; y < model.spiel.m_field_size_y; y++) {
 		    	int x;
@@ -134,6 +136,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		    	gl.glTranslatef(- x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
 		    }
 	    }
+	    gl.glDisable(GL10.GL_BLEND);
 	    gl.glPopMatrix();
 		
 		if (currentPlayer >= 0 && model.showPlayer >= 0) {
