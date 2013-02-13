@@ -198,17 +198,24 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			newCurrentPlayer(-1);
 		}
 	}
+	
+	boolean canresume = false;
 
 	@Override
 	public void OnIntroCompleted() {
 		newCurrentPlayer(-1);
+		try {
 		if (restoreOldGame()) {
-			
+			canresume = true;
 		} else {
+			canresume = false;
 			/* TODO: translate */
-			Toast.makeText(FreebloksActivity.this, "Could not restore game ", Toast.LENGTH_LONG).show();
 			//	startNewGame(null, true);
-		}			
+		}
+		} catch (Exception e) {
+			canresume = false;
+			Toast.makeText(FreebloksActivity.this, "Could not restore game ", Toast.LENGTH_LONG).show();
+		}
 		showDialog(DIALOG_GAME_MENU);
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);					
@@ -361,7 +368,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		task.execute(server);
 	}
 	
-	boolean restoreOldGame() {
+	boolean restoreOldGame() throws Exception {
 		try {
 			FileInputStream fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -392,12 +399,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			}
 		} catch (FileNotFoundException fe) {
 			/* signal non-failure if game state file is missing */
-			return true;
+			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		return false;
+			throw e;
+		}		
 	}
 	
 	private void saveGameState(String filename) {
@@ -460,7 +466,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new GameFinishDialog(this);
 			
 		case DIALOG_GAME_MENU:
-			return new GameMenu(this);
+			return new GameMenu(this, canresume);
 
 		case DIALOG_JOIN:
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {

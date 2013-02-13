@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class GameMenu extends Dialog {
 
-	public GameMenu(Context context) {
+	public GameMenu(Context context, boolean canresume) {
 		super(context);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);		
 		setContentView(R.layout.game_menu_dialog);
@@ -24,6 +24,11 @@ public class GameMenu extends Dialog {
 			e.printStackTrace();
 		}
 		
-		setCanceledOnTouchOutside(true);
+		if (canresume) {
+			setCanceledOnTouchOutside(true);
+			findViewById(R.id.resume_game).setEnabled(true);
+		} else {
+			findViewById(R.id.resume_game).setEnabled(false);
+		}
 	}
 }
