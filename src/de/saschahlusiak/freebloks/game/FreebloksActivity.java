@@ -457,7 +457,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					finish();
+					showDialog(DIALOG_GAME_MENU);
 				}
 			});
 			builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {				
