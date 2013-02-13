@@ -144,11 +144,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			super.onPostExecute(result);
 		}
 	}
-	
+
+	SharedPreferences prefs;					
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(tag, "onCreate");
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
 		
 		hasActionBar = false;
 		/* by default, don't show title bar */
@@ -184,8 +188,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
 		} else {
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-			view.setScale(pref.getFloat("view_scale", 1.0f));
+			view.setScale(prefs.getFloat("view_scale", 1.0f));
 		}
 		
 		if (spielthread != null) {
@@ -198,8 +201,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			/* TODO: we should resume from previously saved data; don't just start a new game */
 			startNewGame(null, true);
 		} else {
-			view.model.intro = new Intro(view.model, this);
-			newCurrentPlayer(-1);
+			if (! prefs.getBoolean("skip_intro", false)) {
+				view.model.intro = new Intro(view.model, this);
+				newCurrentPlayer(-1);
+			} else
+				OnIntroCompleted();
 		}
 		
 		statusView.setOnClickListener(new OnClickListener() {
@@ -228,9 +234,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			canresume = false;
 			Toast.makeText(FreebloksActivity.this, "Could not restore game ", Toast.LENGTH_LONG).show();
 		}
-		showDialog(DIALOG_GAME_MENU);
+		if (!canresume || ! prefs.getBoolean("auto_resume", false))
+			showDialog(DIALOG_GAME_MENU);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);					
 		PackageInfo pinfo;
 		try {
 			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -280,8 +286,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected void onStop() {
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-		Editor editor = pref.edit();
+		Editor editor = prefs.edit();
 		editor.putFloat("view_scale", view.getScale());
 		editor.commit();
 		super.onStop();
@@ -290,8 +295,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onStart() {
 		super.onStart();
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
+		
 		vibrate = prefs.getBoolean("vibrate", true);
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		/* TODO: update wheel when changing show_opponents preference */

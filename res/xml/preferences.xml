@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="first_preferencescreen" >
 
-    <PreferenceCategory android:title="@string/preferences_view" >
+    <PreferenceCategory android:title="Interface" >
 		<CheckBoxPreference
 		    android:summary="Vibrate when moving stones"
 		    android:title="Vibrate"
@@ -14,34 +14,13 @@
 		    android:summary="Play sound effects"
 		    android:title="Sounds" 
 		    android:enabled="false" />
-
-		<CheckBoxPreference
-		    android:summary="Show possible corners of your stones"
-		    android:title="Show corners" 
-		    android:defaultValue="true"
-		    android:persistent="true"
-		    android:key="show_seeds" />
-
+		
 		<CheckBoxPreference
 		    android:summary="Help by snapping pieces to close valid positions"
 		    android:title="Snap to corners" 
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="snap_aid" />
-		
-		<CheckBoxPreference
-		    android:summary="Show stones of opponents"
-		    android:title="Show opponents"
-		    android:defaultValue="true"
-		    android:persistent="true"
-		    android:key="show_opponents" />
-
-		<CheckBoxPreference
-		    android:summary="Show animations when placing stones"
-		    android:title="Show Animations"
-		    android:defaultValue="true"
-		    android:persistent="true"
-		    android:key="show_animations" />
 		
 		<CheckBoxPreference
 		    android:summary="Undo last move with back button"
@@ -51,6 +30,47 @@
 		    android:key="back_undo" />
 		
 	</PreferenceCategory>
+
+    
+    <PreferenceCategory android:title="Display" >
+    	<CheckBoxPreference
+		    android:summary="Show possible corners of your stones"
+		    android:title="Corners" 
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="show_seeds" />
+
+		<CheckBoxPreference
+		    android:summary="Show stones of opponents"
+		    android:title="Opponents"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="show_opponents" />
+
+		<CheckBoxPreference
+		    android:summary="Show animations"
+		    android:title="Animations"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="show_animations" />		
+	</PreferenceCategory>
+	
+    <PreferenceCategory android:title="Application" >
+		<CheckBoxPreference
+		    android:summary="Skip intro animation on app start"
+		    android:title="Skip intro"
+		    android:defaultValue="false"
+		    android:persistent="true"
+		    android:key="skip_intro" />
+				
+        <CheckBoxPreference
+		    android:summary="Automatically resume last game"
+		    android:title="Auto-resume"
+		    android:defaultValue="false"
+		    android:persistent="true"
+		    android:key="auto_resume" />
+		
+    </PreferenceCategory>
     
     <PreferenceCategory android:title="About..." >
 
