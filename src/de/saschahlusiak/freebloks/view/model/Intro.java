@@ -221,13 +221,13 @@ public class Intro implements ViewElement {
 				if (phase==5)
 				{
 					anim=8.5f;
-					addChar('h',3,0,12);
-					addChar('l',2,3,12);
-					addChar('u',0,6,12);
-					addChar('s',1,9,12);
-					addChar('i',2,11,12);
-					addChar('a',0,13,12);
-					addChar('k',3,16,12);
+					addChar('h',3,0,11);
+					addChar('l',2,3,11);
+					addChar('u',0,6,11);
+					addChar('s',1,9,11);
+					addChar('i',2,11,11);
+					addChar('a',0,13,11);
+					addChar('k',3,16,11);
 				}
 				/* Nach der 7. Phase ist das Intro vorrueber */
 				if (phase==7)cancel();
