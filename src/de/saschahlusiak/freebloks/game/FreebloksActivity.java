@@ -176,6 +176,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (config != null) {
 			spielthread = config.clientThread;
 			lastStatus = config.lastStatus;
+			canresume = true;
 		}
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
