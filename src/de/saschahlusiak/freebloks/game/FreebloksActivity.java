@@ -49,6 +49,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -78,6 +79,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	boolean hasActionBar;
 	NET_SERVER_STATUS lastStatus;
 	Menu optionsMenu;
+	ViewGroup statusView;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -168,6 +170,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view = (Freebloks3DView)findViewById(R.id.board);
 		view.setActivity(this);
 		
+		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
 		newCurrentPlayer(-1);
@@ -198,6 +201,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			view.model.intro = new Intro(view.model, this);
 			newCurrentPlayer(-1);
 		}
+		
+		statusView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (view.model.intro != null)
+					view.model.intro.cancel();
+			}
+		});
 	}
 	
 	boolean canresume = false;
@@ -630,13 +641,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				v = findViewById(R.id.progressBar);
 				v.setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
 				
-				v = findViewById(R.id.currentPlayerLayout);
-				v.setVisibility(View.VISIBLE);
-				v.clearAnimation();
 				TextView t = (TextView)findViewById(R.id.currentPlayer);
 				t.clearAnimation();
 				if (player < 0) { 
-					v.setBackgroundColor(Color.rgb(128, 128, 128));
+					statusView.setBackgroundColor(Color.rgb(128, 128, 128));
 					if (view.model.intro != null)
 						t.setText("touch to skip");
 					else if (client == null || !client.isConnected())
@@ -644,7 +652,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					else
 						t.setText("no player");
 				} else {
-					v.setBackgroundColor(colors[player]);
+					statusView.setBackgroundColor(colors[player]);
 					if (!local) 
 						t.setText(String.format("Waiting for %s", names[player]));
 					else {
