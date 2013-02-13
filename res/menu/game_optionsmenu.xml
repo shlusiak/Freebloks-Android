@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/preferences"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/preferences">
+        android:id="@id/new_game"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="@string/new_local_game" >
     </item>
     <item
         android:id="@+id/hint"
@@ -15,6 +15,11 @@
         android:icon="@android:drawable/ic_menu_revert"
         android:showAsAction="ifRoom"
         android:title="@string/undo">
+    </item>
+    <item
+        android:id="@+id/preferences"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/preferences">
     </item>
     <item
         android:id="@+id/show_main_menu"
