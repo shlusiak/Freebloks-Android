@@ -128,7 +128,7 @@ public class Intro implements ViewElement {
 		return false;
 	}
 	
-	public synchronized void cancel() {
+	public void cancel() {
 		model.intro = null;
 		model.view.post(new Runnable() {
 			@Override
@@ -139,7 +139,7 @@ public class Intro implements ViewElement {
 	}
 
 	@Override
-	public synchronized boolean execute(float elapsed) {
+	public boolean execute(float elapsed) {
 		elapsed *= 1.2;
 		anim += elapsed;
 
@@ -177,7 +177,7 @@ public class Intro implements ViewElement {
 				phase=1;
 				wipe();
 			}
-		}else{
+		}else synchronized(effects) {
 			/* Effekte animieren */
 			executeEffects(elapsed);
 			/* Bei den Phasen fallen Steine vom Himmel, diese sollen zuegig fallen */
@@ -397,7 +397,7 @@ public class Intro implements ViewElement {
 			e.execute(elapsed);
 	}
 	
-	public synchronized void render(GL10 gl, FreebloksRenderer renderer) {
+	public void render(GL10 gl, FreebloksRenderer renderer) {
 		gl.glLoadIdentity();
 		/* Kamera positionieren */
 		if (model.vertical_layout) {
@@ -447,7 +447,9 @@ public class Intro implements ViewElement {
 
 		gl.glPopMatrix();
 		/* Alle Steine rendern. */
-		for (Effect e: effects)
-			e.render(gl, renderer.board);
+		synchronized(effects) {
+			for (Effect e: effects)
+				e.render(gl, renderer.board);
+		}
 	}
 }

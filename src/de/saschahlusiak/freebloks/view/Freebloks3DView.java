@@ -265,23 +265,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		}
 	}
 	
-	public void execute(float elapsed) {
-		boolean animated = false;
-		
-		synchronized (model.effects) {
-			int i = 0;
-			while (i < model.effects.size()) {
-				animated |= model.effects.get(i).execute(elapsed);
-				if (model.effects.get(i).isDone()) {
-					model.effects.remove(i);
-				} else
-					i++;
-			}
-		}
-		
-		animated |= model.execute(elapsed);
-		
-		if (animated) {
+	public final void execute(float elapsed) {
+		if (model.execute(elapsed)) {
 			requestRender();
 		}
 	}
@@ -318,7 +303,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		renderer.updateModelViewMatrix = true;
 	}
 	
-	public float getScale() {
+	public final float getScale() {
 		return scale;
 	}
 }

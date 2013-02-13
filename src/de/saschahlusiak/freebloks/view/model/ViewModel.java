@@ -74,11 +74,25 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		boolean redraw = false;
-		if (intro != null)
+		if (intro != null) {
 			redraw |= intro.execute(elapsed);
+			return redraw;
+		}
+		
+		synchronized (effects) {
+			int i = 0;
+			while (i < effects.size()) {
+				redraw |= effects.get(i).execute(elapsed);
+				if (effects.get(i).isDone()) {
+					effects.remove(i);
+				} else
+					i++;
+			}
+		}
 		
 		for (ViewElement e: this)
 			redraw |= e.execute(elapsed);
+		
 		return redraw;
 	}
 	
