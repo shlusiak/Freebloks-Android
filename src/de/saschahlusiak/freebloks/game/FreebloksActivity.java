@@ -644,7 +644,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				TextView t = (TextView)findViewById(R.id.currentPlayer);
 				t.clearAnimation();
 				if (player < 0) { 
-					statusView.setBackgroundColor(Color.rgb(128, 128, 128));
+					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
 					if (view.model.intro != null)
 						t.setText("touch to skip");
 					else if (client == null || !client.isConnected())
