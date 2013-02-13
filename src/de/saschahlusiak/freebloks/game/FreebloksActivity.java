@@ -460,6 +460,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
+					canresume = true;
 					showDialog(DIALOG_GAME_MENU);
 				}
 			});
@@ -503,6 +504,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			dialog.setOnCancelListener(new OnCancelListener() {				
 				@Override
 				public void onCancel(DialogInterface arg0) {
+					canresume = false;
 					showDialog(DIALOG_GAME_MENU);
 				}
 			});
@@ -520,6 +522,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			dialog.setOnCancelListener(new OnCancelListener() {				
 				@Override
 				public void onCancel(DialogInterface arg0) {
+					canresume = false;
+					/* TODO: don't do this */
 					showDialog(DIALOG_GAME_MENU);
 				}
 			});
@@ -612,6 +616,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 				showDialog(DIALOG_QUIT);
 			else {
+				if (client != null && client.isConnected())
+					canresume = true;
+				else
+					canresume = false;
+
 				showDialog(DIALOG_GAME_MENU);
 				if (view.model.intro != null)
 					view.model.intro.cancel();
