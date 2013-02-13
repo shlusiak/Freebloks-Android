@@ -435,6 +435,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.game_optionsmenu, menu);
 		optionsMenu = menu;
+		
+		menu.findItem(R.id.undo).setEnabled(false);
+		menu.findItem(R.id.hint).setEnabled(false);
 				
 		return true;
 	}
@@ -567,6 +570,16 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
+		case R.id.new_game:
+			if (view.model.intro != null)
+				view.model.intro.cancel();
+			else
+				startNewGame(null, true);
+			/* TODO: OnIntroCompleted will start a new game, we can't start a game here
+			 * without going into a race
+			 */
+			return true;
+			
 		case R.id.preferences:
 			intent = new Intent(this, FreebloksPreferences.class);
 			startActivity(intent);
@@ -598,8 +611,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.show_main_menu:
 			if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
 				showDialog(DIALOG_QUIT);
-			else
+			else {
 				showDialog(DIALOG_GAME_MENU);
+				if (view.model.intro != null)
+					view.model.intro.cancel();
+			}
 			return true;
 
 		default:
