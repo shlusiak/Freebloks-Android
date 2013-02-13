@@ -47,13 +47,16 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 	private float outputfar[] = new float[4];
 	private float outputnear[] = new float[4];
-	public synchronized PointF windowToModel(PointF point) {
+	
+	public PointF windowToModel(PointF point) {
 		float x1, y1, z1, x2, y2, z2, u;
 		
-		GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputnear, 0);
-		GLU.gluUnProject(point.x, viewport[3] - point.y, 1.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputfar, 0);
-//			Log.d("windowToModel", "(" + point.x + "/" + point.y + ")  => far  (" + outputfar[0] + "/" + outputfar[1] + "/" + outputfar[2] + "/" + outputfar[3] + ")");
-//			Log.d("windowToModel", "(" + point.x + "/" + point.y + ")  => near (" + outputnear[0] + "/" + outputnear[1] + "/" + outputnear[2] + "/" + outputnear[3] + ")");
+		synchronized(outputfar) {		
+			GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputnear, 0);
+			GLU.gluUnProject(point.x, viewport[3] - point.y, 1.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputfar, 0);
+		}
+//		Log.d("windowToModel", "(" + point.x + "/" + point.y + ")  => far  (" + outputfar[0] + "/" + outputfar[1] + "/" + outputfar[2] + "/" + outputfar[3] + ")");
+//		Log.d("windowToModel", "(" + point.x + "/" + point.y + ")  => near (" + outputnear[0] + "/" + outputnear[1] + "/" + outputnear[2] + "/" + outputnear[3] + ")");
 		
 		x1 = (outputfar[0] / outputfar[3]);
 		y1 = (outputfar[1] / outputfar[3]);
@@ -90,13 +93,14 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 			gl.glTranslatef(0, 7.4f, 0);
 		else
 			gl.glTranslatef(5.0f, 0.6f, 0);
+		
 		GLU.gluLookAt(gl, 
 				(float) (fixed_zoom/camera_distance*Math.sin(angle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 				(float) (fixed_zoom/camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
 				(float) (fixed_zoom/camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-angle*Math.PI/180.0)),
 				0.0f, 0.0f, 0.0f,
 				0.0f, 1.0f, 0.0f);
-		if (updateModelViewMatrix) {
+		if (updateModelViewMatrix) synchronized(outputfar) {
 			GL11 gl11 = (GL11)gl;
 //				Log.w("onDrawFrame", "updating modelViewMatrix");
 			gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
@@ -195,7 +199,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		GLU.gluPerspective(gl, fovy, this.width / this.height, 1.0f, 300.0f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
-		gl11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+		synchronized(outputfar) {
+			gl11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+		}
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
