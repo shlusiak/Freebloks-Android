@@ -17,8 +17,8 @@
         android:title="@string/undo">
     </item>
     <item
-        android:id="@+id/exit"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="@string/exit_game">
+        android:id="@+id/show_main_menu"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="@string/show_main_menu">
     </item>
 </menu>
