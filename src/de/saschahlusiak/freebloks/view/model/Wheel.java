@@ -75,8 +75,8 @@ public class Wheel implements ViewElement {
 			return false;
 		
 		/* TODO: remove or understand magic numbers */
-		int row = (int) (-(tmp.y + 2.0f) / 5.5f);
-		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 7.0f + 5.6f + lastAngle / 17.0f);
+		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
+		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 5.5f + 5.3f + lastAngle / 17.0f);
 
 //		Log.d(tag, "currentWheelAngle = " + originalAngle);
 //		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
