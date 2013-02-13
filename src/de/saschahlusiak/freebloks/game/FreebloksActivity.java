@@ -466,7 +466,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new GameFinishDialog(this);
 			
 		case DIALOG_GAME_MENU:
-			return new GameMenu(this, canresume);
+			return new GameMenu(this);
 
 		case DIALOG_JOIN:
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
@@ -530,6 +530,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					dialog.dismiss();
 				}
 			});
+			dialog.findViewById(R.id.resume_game).setEnabled(canresume);
+			dialog.setCanceledOnTouchOutside(canresume);
 			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -789,8 +791,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				view.model.intro.cancel();
 				view.requestRender();
 			}
-			else
-				super.onBackPressed();
+			else {
+				if (client != null && client.isConnected())
+					canresume = true;
+				else
+					canresume = false;
+				showDialog(DIALOG_GAME_MENU);
+			}
 		}
 	}
 }
