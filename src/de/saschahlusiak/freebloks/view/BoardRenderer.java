@@ -181,33 +181,41 @@ public class BoardRenderer {
 		final float c[] = stone_color_a[color + 1];
 		c[3] = alpha;
 		
-		gl.glEnable(GL10.GL_BLEND);
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
 		
-	 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, stone.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, stone.getNormalBuffer());
 	    
 	    stone.drawElements(gl);
-    	
-    	gl.glDisable(GL10.GL_BLEND);
 	}
 	
 	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {
 		int i;
+		final float c[] = stone_color_a[player + 1];
+		c[3] = alpha;
+
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
+	 
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, this.stone.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, this.stone.getNormalBuffer());
+
 		for (i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {				
 				if (stone.get_stone_field(i, j) != Stone.STONE_FIELD_FREE)
-					renderStone(gl, player, alpha);
+					this.stone.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
 		}
+    	gl.glDisable(GL10.GL_BLEND);
 	}
 	
 	public static void myTexImage2D(GL10 gl, Bitmap bitmap) {
