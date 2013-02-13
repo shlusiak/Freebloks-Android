@@ -30,25 +30,17 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 
 	@Override
 	public void render(GL10 gl, BoardRenderer renderer) {
-		int i,j;
-
 		/* Stein in Position bringen, und normal rendern, wie alle anderen auch. */
 		gl.glPushMatrix();
 		gl.glTranslatef(x,y,z);
 		gl.glRotatef(ang, ax, ay, az);
+		
+		gl.glTranslatef(
+ 				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
+ 				0.0f,
+			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);
 
-		for (i=0;i<stone.get_stone_size();i++)
-		for (j=0;j<stone.get_stone_size();j++)
-		if (stone.get_stone_field(j, i) != Stone.STONE_FIELD_FREE)
-		{
-			gl.glPushMatrix();
-	 		gl.glTranslatef(
-	 				+BoardRenderer.stone_size+((float)i-(float)stone.get_stone_size()/2.0f)*BoardRenderer.stone_size*2.0f,
-	 				0.0f,
-				    +BoardRenderer.stone_size+((float)j-(float)stone.get_stone_size()/2.0f)*BoardRenderer.stone_size*2.0f);
-			renderer.renderStone(gl, player, BoardRenderer.DEFAULT_ALPHA);
-			gl.glPopMatrix();
-		}
+		renderer.renderPlayerStone(gl, player, stone, BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 
