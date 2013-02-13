@@ -348,18 +348,55 @@ public class CurrentStone implements ViewElement {
 				stone.rotate_left();
 			}
 			rotate_angle = 0.0f;
+			/* TODO: generalize snap code */
+			if (model.snapAid && model.spiel.is_valid_turn(stone, model.showPlayer, pos.y, pos.x) != Stone.FIELD_ALLOWED)
+				for (int i = -1; i <= 1; i++)
+					for (int j = -1; j <= 1; j++)
+				{
+					if (model.spiel.is_valid_turn(stone, model.showPlayer, pos.y + j, pos.x + i) == Stone.FIELD_ALLOWED)
+					{
+						boolean mv = moveTo(pos.x + i, pos.y + j);
+						model.redraw |= mv;
+						status = Status.IDLE;						
+						return true;
+					}
+				}
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
 				stone.mirror_over_y();
 			
 			rotate_angle = 0.0f;
+			if (model.snapAid && model.spiel.is_valid_turn(stone, model.showPlayer, pos.y, pos.x) != Stone.FIELD_ALLOWED)
+				for (int i = -1; i <= 1; i++)
+					for (int j = -1; j <= 1; j++)
+				{
+					if (model.spiel.is_valid_turn(stone, model.showPlayer, pos.y + j, pos.x + i) == Stone.FIELD_ALLOWED)
+					{
+						boolean mv = moveTo(pos.x + i, pos.y + j);
+						model.redraw |= mv;
+						status = Status.IDLE;						
+						return true;
+					}
+				}
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
 				stone.mirror_over_x();
 			
 			rotate_angle = 0.0f;
+			if (model.snapAid && model.spiel.is_valid_turn(stone, model.showPlayer, pos.y, pos.x) != Stone.FIELD_ALLOWED)
+				for (int i = -1; i <= 1; i++)
+					for (int j = -1; j <= 1; j++)
+				{
+					if (model.spiel.is_valid_turn(stone, model.showPlayer, pos.y + j, pos.x + i) == Stone.FIELD_ALLOWED)
+					{
+						boolean mv = moveTo(pos.x + i, pos.y + j);
+						model.redraw |= mv;
+						status = Status.IDLE;						
+						return true;
+					}
+				}
 		}
 		status = Status.IDLE;
 		return false;
