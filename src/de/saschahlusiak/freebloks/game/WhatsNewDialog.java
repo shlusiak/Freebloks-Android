@@ -12,11 +12,11 @@ import de.saschahlusiak.freebloks.R;
 
 public class WhatsNewDialog {
 	private static final String WHATS_NEW = 
-			"* GREATLY improved AI speed using JNI\n" +
-			"* never hide current player message\n" +
-			"* improved rendering speed and quality\n" +
-			"* support for undo\n" +
-			"* support for hint";
+			"* intro sequence\n" +
+			"* new main menu\n" +
+			"* new options: auto resume, skip intro\n" +
+			"* general optimiziations\n" +
+			"* bugs fixed";
 
 
 	
