@@ -273,7 +273,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onPause() {
 		view.onPause();
-		if (client != null && client.spiel.current_player() >= 0)
+		if (client != null && client.spiel.current_player() >= 0 && !client.spiel.is_finished())
 			saveGameState(GAME_STATE_FILE);
 		super.onPause();
 	}
@@ -703,6 +703,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void gameFinished() {
+		deleteFile(GAME_STATE_FILE);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
