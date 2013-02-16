@@ -110,7 +110,10 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
 		
 		/* render board */
-		board.renderBoard(gl, model.spiel, (model.spiel != null && model.spiel.is_local_player() && model.showSeeds) ? model.showPlayer : -1);
+		int player = -1;
+		if (model.spiel != null && model.spiel.is_local_player() && model.showSeeds)
+			player = model.spiel.current_player();
+		board.renderBoard(gl, model.spiel, player);
 		
 		if (model.spiel == null)
 			return;

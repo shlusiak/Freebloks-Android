@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp" >
+
+        <Button
+            android:id="@+id/new_game"
+            android:layout_width="150dp"
+            android:layout_height="54dp"
+            android:layout_below="@+id/difficulty"
+            android:layout_centerHorizontal="true"
+            android:text="Start"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Players"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView1"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blue" />
+
+            <CheckBox
+                android:id="@+id/player2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yellow" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView1"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/player3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Red" />
+
+            <CheckBox
+                android:id="@+id/player4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Green" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView2"
+            android:max="10" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_marginTop="8dp"
+            android:text="Difficulty"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/difficulty_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView2"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:typeface="monospace" />
+    </RelativeLayout>
+
+</ScrollView>
