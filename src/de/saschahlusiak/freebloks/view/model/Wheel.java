@@ -49,6 +49,10 @@ public class Wheel implements ViewElement {
 				stones.add(s);
 		}
 	}
+	
+	public void update() {
+		update(lastPlayer);
+	}
 
 	@Override
 	synchronized public boolean handlePointerDown(final PointF m) {
@@ -170,6 +174,8 @@ public class Wheel implements ViewElement {
 
 		originalX = tmp.x;
 
+		if (!model.spiel.is_local_player())
+			return true;
 
 		if (Math.abs(currentAngle - lastAngle) >= 90.0f) {
 			highlightStone = null;

@@ -38,6 +38,10 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		add(currentStone);
 		add(wheel);
 	}
+	
+	public void reset() {
+		currentStone.stone = null;		
+	}
 
 	public void setSpiel(Spielleiter spiel) {
 		this.spiel = spiel;
