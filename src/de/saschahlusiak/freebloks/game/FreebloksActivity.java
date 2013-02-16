@@ -439,13 +439,22 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.game_optionsmenu, menu);
 		optionsMenu = menu;
-		
-		menu.findItem(R.id.undo).setEnabled(false);
-		menu.findItem(R.id.hint).setEnabled(false);
-				
+
 		return true;
 	}
 	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean local = false;
+		if (client != null && client.spiel != null)
+			local = client.spiel.is_local_player();
+
+		menu.findItem(R.id.undo).setEnabled(local);
+		menu.findItem(R.id.hint).setEnabled(local);
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
