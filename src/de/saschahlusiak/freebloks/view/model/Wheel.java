@@ -193,6 +193,9 @@ public class Wheel implements ViewElement {
 	
 	@Override
 	public boolean handlePointerUp(PointF m) {
+		if (task != null)
+			task.cancel();
+		task = null;
 		if (spinning) {
 			lastAngle = currentAngle;
 			spinning = false;
