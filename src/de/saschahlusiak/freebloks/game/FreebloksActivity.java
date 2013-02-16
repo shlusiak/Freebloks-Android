@@ -11,8 +11,6 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
-import de.saschahlusiak.freebloks.model.Ki;
-import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -70,6 +68,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_CUSTOM_GAME = 7;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
+	
+//	public static final int KI_PERFECT = 0;
+	public static final int KI_HARD = 5;
+//	public static final int KI_MEDIUM = 50;
+//	public static final int KI_EASY = 120;
+	public static final int KI_DEFAULT = KI_HARD;
+
 
 	Freebloks3DView view;
 	SpielClient client = null;
@@ -200,7 +205,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			newCurrentPlayer(client.spiel.current_player());
 		} else if (savedInstanceState != null) {
 			/* TODO: we should resume from previously saved data; don't just start a new game */
-			startNewGame(null, null, Ki.HARD);
+			startNewGame(null, null, KI_DEFAULT);
 		} else {
 			if (! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(view.model, this);
@@ -338,7 +343,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 			
-			JNIServer.runServer(spiel1, Ki.HARD);
+			JNIServer.runServer(spiel1, KI_DEFAULT);
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
@@ -505,7 +510,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
 				@Override
 				public boolean OnJoin(String server, boolean request_player) {
-					startNewGame(server, request_player ? null : new boolean[4], Ki.HARD);
+					startNewGame(server, request_player ? null : new boolean[4], KI_DEFAULT);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
 				}
@@ -549,7 +554,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					startNewGame(null, null, Ki.HARD);
+					startNewGame(null, null, KI_DEFAULT);
 				}
 			});
 			dialog.findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
@@ -613,7 +618,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (view.model.intro != null)
 				view.model.intro.cancel();
 			else
-				startNewGame(null, null, Ki.HARD);
+				startNewGame(null, null, KI_DEFAULT);
 			/* TODO: OnIntroCompleted will start a new game, we can't start a game here
 			 * without going into a race
 			 */

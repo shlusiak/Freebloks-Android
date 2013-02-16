@@ -1,5 +1,5 @@
 package de.saschahlusiak.freebloks;
 
-public class Config {
+public class Global {
 
 }
