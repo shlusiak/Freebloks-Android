@@ -232,7 +232,7 @@ public class Wheel implements ViewElement {
 			/* always show selected stone, even when dragging */
 			{
 				gl.glPushMatrix();
-				gl.glRotatef(90 * lastPlayer, 0, 1, 0);
+				gl.glRotatef(90 * model.showPlayer, 0, 1, 0);
 				if (!model.vertical_layout)
 					gl.glRotatef(90.0f, 0, 1, 0);
 				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);

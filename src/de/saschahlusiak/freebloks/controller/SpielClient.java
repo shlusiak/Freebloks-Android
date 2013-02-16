@@ -18,9 +18,11 @@ public class SpielClient {
 	Socket client_socket;
 	String lastHost;
 	public Spielleiter spiel;
+	int lastDifficulty;
 
 	
-	public SpielClient(Spielleiter leiter) {
+	public SpielClient(Spielleiter leiter, int difficulty) {
+		this.lastDifficulty = difficulty;
 		if (leiter == null) {
 			spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
 			spiel.start_new_game();			
@@ -29,12 +31,15 @@ public class SpielClient {
 			this.spiel = leiter;
 		client_socket = null;
 	}
-
 	
 	@Override
 	protected void finalize() throws Throwable {
 		disconnect();
 		super.finalize();
+	}
+	
+	public int getLastDifficulty() {
+		return lastDifficulty;
 	}
 	
 	public boolean isConnected() {
@@ -104,8 +109,8 @@ public class SpielClient {
 		return true;
 	}
 
-	public void request_player() {
-		new NET_REQUEST_PLAYER().send(client_socket);
+	public void request_player(int player) {
+		new NET_REQUEST_PLAYER(player).send(client_socket);
 	}
 	
 	public void request_hint(int player) {

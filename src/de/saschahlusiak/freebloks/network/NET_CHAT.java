@@ -39,6 +39,7 @@ public class NET_CHAT extends NET_HEADER {
 		super.prepare(bos);
 		bos.write(client);
 		bos.write(length);
+		/* TODO: fix encoding */
 		for (int i = 0; i < text.length(); i++)
 			bos.write((int)text.charAt(i));
 		bos.write(0);
