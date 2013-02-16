@@ -25,7 +25,7 @@ public class CurrentStone implements ViewElement {
 	}
 	
 	Stone stone;
-	Point pos = new Point();
+	PointF pos = new PointF();
 	boolean hasMoved;
 	boolean startedFromBelow;
 	float stone_rel_x, stone_rel_y;
@@ -105,7 +105,7 @@ public class CurrentStone implements ViewElement {
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 		
 		/* TODO: cache result of is_valid_turn when moved */
-		boolean isvalid = model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y, pos.x) == Stone.FIELD_ALLOWED;
+		boolean isvalid = model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f)) == Stone.FIELD_ALLOWED;
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
 
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -160,10 +160,40 @@ public class CurrentStone implements ViewElement {
 		gl.glPopMatrix();
 	}
 
-	boolean moveTo(int x, int y) {
+	boolean moveTo(float x, float y) {
 		if (stone == null)
 			return false;
 		
+		/* provide a weird but nice pseudo snapping feeling */
+		float r = x - (float)Math.floor(x);
+		if (r < 0.5f) {
+			r *= 2.0f;
+			r = r * r * r * r;
+			r /= 2.0f;
+		} else {
+			r = 1.0f - r;
+			r *= 2.0f;
+			r = r * r * r * r;
+			r /= 2.0f;
+			r = 1.0f - r;
+		}
+		x = (float)(Math.floor(x) + r);
+		
+		r = y - (float)Math.floor(y);
+		if (r < 0.5f) {
+			r *= 2.0f;
+			r = r * r * r;
+			r /= 2.0f;
+		} else {
+			r = 1.0f - r;
+			r *= 2.0f;
+			r = r * r * r;
+			r /= 2.0f;
+			r = 1.0f - r;
+		}
+		y = (float)(Math.floor(y) + r);
+
+
 		for (int i = 0; i < stone.get_stone_size(); i++)
 			for (int j = 0; j < stone.get_stone_size(); j++) {
 				if (stone.get_stone_field(j, i) == Stone.STONE_FIELD_ALLOWED) {
@@ -172,18 +202,20 @@ public class CurrentStone implements ViewElement {
 					if (y + j < 0)
 						y = -j;
 					
-					if (x + i >= model.spiel.m_field_size_x)
+					if (x + i + 1 >= model.spiel.m_field_size_x)
 						x = model.spiel.m_field_size_x - i - 1;
-					if (y + j >= model.spiel.m_field_size_y)
+					if (y + j + 1 >= model.spiel.m_field_size_y)
 						y = model.spiel.m_field_size_y - j - 1;
 				}
 			}
 		
-		if (pos.x != x || pos.y != y) {
+		if (Math.floor(0.5f + pos.x) != Math.floor(0.5f + x) || Math.floor(pos.y + 0.5f) != Math.floor(0.5f + y)) {
 			pos.x = x;
 			pos.y = y;
 			return true;
 		}
+		pos.x = x;
+		pos.y = y;
 		return false;
 	}
 	
@@ -219,7 +251,7 @@ public class CurrentStone implements ViewElement {
 		}
 		return false;
 	}
-	
+
 	@Override
 	synchronized public boolean handlePointerMove(PointF m) {
 		if (status == Status.IDLE)
@@ -233,28 +265,13 @@ public class CurrentStone implements ViewElement {
 		
 		if (status == Status.DRAGGING) {
 			final float THRESHOLD = 1.0f;
-			int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-			int y = (int)(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
+			float x = (fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+			float y = (fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
 				return true;
 			
-			if (model.snapAid && model.spiel.is_valid_turn(stone, model.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
-				for (int i = -1; i <= 1; i++)
-					for (int j = -1; j <= 1; j++)
-				{
-					if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), y + j, x + i) == Stone.FIELD_ALLOWED)
-					{
-						boolean mv = moveTo(x + i, y + j);
-						model.redraw |= mv;
-						hasMoved |= mv;
-						
-						return true;
-					}
-				}
-
-			boolean mv = moveTo(x, y);
-			model.redraw |= mv;
-			hasMoved |= mv;
+			hasMoved |= snap(x, y);
+			model.redraw = true;
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
@@ -299,6 +316,34 @@ public class CurrentStone implements ViewElement {
 		return true;
 	}
 	
+	public boolean is_valid_turn(float x, float y) {
+		if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f)) == Stone.FIELD_ALLOWED)
+			return true;
+		return false;
+	}
+
+	boolean snap(float x, float y) {
+		boolean hasMoved = false;
+		if (!model.snapAid) {
+			hasMoved = moveTo(x, y);
+			model.redraw = true;
+			return hasMoved;
+		}
+		if (is_valid_turn(x, y)) {
+			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
+			return hasMoved;
+		}
+		for (int i = -1; i <= 1; i++)
+			for (int j = -1; j <= 1; j++)
+		{
+			if (is_valid_turn(x + i, y + j))
+			{
+				return moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
+			}
+		}
+		return moveTo(x, y);
+	}
+
 	@Override
 	synchronized public boolean handlePointerUp(PointF m) {
 		if (status == Status.DRAGGING) {
@@ -306,8 +351,8 @@ public class CurrentStone implements ViewElement {
 			fieldPoint.y = m.y;
 			model.board.modelToBoard(fieldPoint);
 
-			int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-			int y = (int)(0.5f + fieldPoint.y + stone_rel_y + stone.get_stone_size() / 2);
+			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 			fieldPoint.x = x;
 			fieldPoint.y = y;
 			model.board.boardToUnified(fieldPoint);
@@ -320,15 +365,15 @@ public class CurrentStone implements ViewElement {
 				stone = null;
 			} else	if (!hasMoved) {
 				int player = model.spiel.current_player();
-				if (model.activity.commitCurrentStone(stone, pos.x, pos.y)) {
+				if (model.activity.commitCurrentStone(stone, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f))) {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);
-						StoneRollEffect e = new StoneRollEffect(st, player, pos.x, pos.y, 0.5f, -13.0f);
+						StoneRollEffect e = new StoneRollEffect(st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 0.5f, -13.0f);
 				
 						EffectSet set = new EffectSet();
 						set.add(e);
-						set.add(new StoneFadeEffect(st, player, pos.x, pos.y, 4.0f));
+						set.add(new StoneFadeEffect(st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 4.0f));
 						model.addEffect(set);
 						
 					}
@@ -336,6 +381,8 @@ public class CurrentStone implements ViewElement {
 					stone = null;
 					model.wheel.highlightStone = null;
 				}
+			} else {
+				snap(pos.x, pos.y);
 			}
 		}
 		if (status == Status.ROTATING) {
@@ -348,55 +395,21 @@ public class CurrentStone implements ViewElement {
 				stone.rotate_left();
 			}
 			rotate_angle = 0.0f;
-			/* TODO: generalize snap code */
-			if (model.snapAid && model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y, pos.x) != Stone.FIELD_ALLOWED)
-				for (int i = -1; i <= 1; i++)
-					for (int j = -1; j <= 1; j++)
-				{
-					if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y + j, pos.x + i) == Stone.FIELD_ALLOWED)
-					{
-						boolean mv = moveTo(pos.x + i, pos.y + j);
-						model.redraw |= mv;
-						status = Status.IDLE;						
-						return true;
-					}
-				}
+			snap(pos.x, pos.y);
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
 				stone.mirror_over_y();
 			
 			rotate_angle = 0.0f;
-			if (model.snapAid && model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y, pos.x) != Stone.FIELD_ALLOWED)
-				for (int i = -1; i <= 1; i++)
-					for (int j = -1; j <= 1; j++)
-				{
-					if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y + j, pos.x + i) == Stone.FIELD_ALLOWED)
-					{
-						boolean mv = moveTo(pos.x + i, pos.y + j);
-						model.redraw |= mv;
-						status = Status.IDLE;						
-						return true;
-					}
-				}
+			snap(pos.x, pos.y);
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
 				stone.mirror_over_x();
 			
 			rotate_angle = 0.0f;
-			if (model.snapAid && model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y, pos.x) != Stone.FIELD_ALLOWED)
-				for (int i = -1; i <= 1; i++)
-					for (int j = -1; j <= 1; j++)
-				{
-					if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), pos.y + j, pos.x + i) == Stone.FIELD_ALLOWED)
-					{
-						boolean mv = moveTo(pos.x + i, pos.y + j);
-						model.redraw |= mv;
-						status = Status.IDLE;						
-						return true;
-					}
-				}
+			snap(pos.x, pos.y);
 		}
 		status = Status.IDLE;
 		return false;
@@ -415,8 +428,8 @@ public class CurrentStone implements ViewElement {
 		stone_rel_x = 0;
 		stone_rel_y = 0;
 		
-		int x = (int)(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-		int y = (int)(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
+		int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+		int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 
 		moveTo(x, y);
 	}
