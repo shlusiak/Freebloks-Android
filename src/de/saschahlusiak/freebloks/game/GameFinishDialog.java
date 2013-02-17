@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.SpielClient;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import android.app.Dialog;
@@ -31,7 +31,7 @@ public class GameFinishDialog extends Dialog {
 		setTitle(R.string.game_finished);
 	}
 	
-	public void setData(SpielClient spiel) {
+	public void setData(Spielleiter spiel) {
 		int place[] = { 0, 1, 2, 3 };
 		ViewGroup t[] = new ViewGroup[4];
 		/* TODO: generalize */
@@ -52,7 +52,7 @@ public class GameFinishDialog extends Dialog {
 		int i = 0;
 		while ( i < Spiel.PLAYER_MAX - 1)
 		{
-			if (spiel.spiel.get_player(place[i]).m_stone_points_left > spiel.spiel.get_player(place[i + 1]).m_stone_points_left) {
+			if (spiel.get_player(place[i]).m_stone_points_left > spiel.get_player(place[i + 1]).m_stone_points_left) {
 				int bla = place[i];
 				place[i] = place[i + 1];
 				place[i + 1] = bla;
@@ -67,7 +67,7 @@ public class GameFinishDialog extends Dialog {
 		
 		for (i = 0; i < 4; i++) {
 			String name;
-			Player p = spiel.spiel.get_player(place[i]);
+			Player p = spiel.get_player(place[i]);
 			/* TODO: translate */
 			name = names[place[i]];
 			
@@ -97,7 +97,7 @@ public class GameFinishDialog extends Dialog {
 			set.addAnimation(a);
 			t[i].startAnimation(set);
 			
-			if (spiel.spiel.is_local_player(place[i])) {
+			if (spiel.is_local_player(place[i])) {
 				a = new TranslateAnimation(
 						TranslateAnimation.RELATIVE_TO_SELF, 
 						0, 
