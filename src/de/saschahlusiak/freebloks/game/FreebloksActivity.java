@@ -539,7 +539,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			break;
 			
 		case DIALOG_GAME_FINISH:
-			((GameFinishDialog)dialog).setData(client);
+			((GameFinishDialog)dialog).setData(client.spiel);
 			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
