@@ -11,7 +11,9 @@ import de.saschahlusiak.freebloks.model.Stone;
 public class BoardRenderer {
 	final static float bevel_size = 0.18f;
 	final public static float bevel_height = 0.25f;
-	final static float border_bottom = -1.2f;
+	final static float border_bottom = -1.1f;
+	final static float border_top = 0.4f;
+	final static float border_width = 0.5f;
 	final public static float stone_size = 0.45f;
 	
 	final public static float DEFAULT_ALPHA = 0.75f;
@@ -102,16 +104,38 @@ public class BoardRenderer {
 	}
 	
 	private void initBorder() {
-		border = new SimpleModel(4, 2);
-		float w;	    
-		w = stone_size * 20;
+		border = new SimpleModel(12, 6);
+		float w1, w2;
+		w1 = stone_size * 20;
+		w2 = w1 + border_width;
 
-		border.addVertex(w, 0, w, 0, 0, 1, 0, 0);
-		border.addVertex(-w, 0, w, 0, 0, 1, 0, 0);
-		border.addVertex(-w, border_bottom, w, 0, 0, 1, 0, 0);
-		border.addVertex(w, border_bottom, w, 0, 0, 1, 0, 0);
+		/* front */
+		border.addVertex(w2, border_top, w2, 0, 0, 1, 0, 0);
+		border.addVertex(-w2, border_top, w2, 0, 0, 1, 0, 0);
+		border.addVertex(-w2, border_bottom, w2, 0, 0, 1, 0, 0);
+		border.addVertex(w2, border_bottom, w2, 0, 0, 1, 0, 0);
+		
+		/* top */
+		border.addVertex(w2, border_top, w2, 0, 1, 0, 0, 0);
+		border.addVertex(-w2, border_top, w2, 0, 1, 0, 0, 0);
+		border.addVertex(-w1, border_top, w1, 0, 1, 0, 0, 0);
+		border.addVertex(w1, border_top, w1, 0, 1, 0, 0, 0);
+		
+		/* inner */
+		border.addVertex(w1, border_top, w1, 0, 0, -1, 0, 0);
+		border.addVertex(-w1, border_top, w1, 0, 0, -1, 0, 0);
+		border.addVertex(-w1, 0, w1, 0, 0, -1, 0, 0);
+		border.addVertex(w1, 0, w1, 0, 0, -1, 0, 0);
+		
 		border.addIndex(0, 1, 2);
 		border.addIndex(0, 2, 3);
+		
+		border.addIndex(7, 6, 4);
+		border.addIndex(4, 6, 5);
+
+		border.addIndex(9, 8, 10);
+		border.addIndex(8, 11, 10);
+		
 		border.commit();
 	}
 	
