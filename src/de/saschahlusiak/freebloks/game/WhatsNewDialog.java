@@ -12,11 +12,11 @@ import de.saschahlusiak.freebloks.R;
 
 public class WhatsNewDialog {
 	private static final String WHATS_NEW = 
-			"* intro sequence\n" +
-			"* new main menu\n" +
-			"* new options: auto resume, skip intro\n" +
-			"* general optimiziations\n" +
-			"* bugs fixed";
+			"* new app icon\n" +
+			"* custom game options (difficulty, player colors)\n" +
+			"* allow for multiple local players\n" +
+			"* improved animations, graphics\n" +
+			"* old bugs fixed, new bugs added";
 
 
 	
