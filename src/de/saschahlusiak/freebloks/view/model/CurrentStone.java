@@ -165,34 +165,38 @@ public class CurrentStone implements ViewElement {
 			return false;
 		
 		/* provide a weird but nice pseudo snapping feeling */
-		float r = x - (float)Math.floor(x);
-		if (r < 0.5f) {
-			r *= 2.0f;
-			r = r * r * r * r;
-			r /= 2.0f;
+		if (model.showAnimations) {
+			float r = x - (float)Math.floor(x);
+			if (r < 0.5f) {
+				r *= 2.0f;
+				r = r * r * r * r;
+				r /= 2.0f;
+			} else {
+				r = 1.0f - r;
+				r *= 2.0f;
+				r = r * r * r * r;
+				r /= 2.0f;
+				r = 1.0f - r;
+			}
+			x = (float)(Math.floor(x) + r);
+			
+			r = y - (float)Math.floor(y);
+			if (r < 0.5f) {
+				r *= 2.0f;
+				r = r * r * r;
+				r /= 2.0f;
+			} else {
+				r = 1.0f - r;
+				r *= 2.0f;
+				r = r * r * r;
+				r /= 2.0f;
+				r = 1.0f - r;
+			}
+			y = (float)(Math.floor(y) + r);
 		} else {
-			r = 1.0f - r;
-			r *= 2.0f;
-			r = r * r * r * r;
-			r /= 2.0f;
-			r = 1.0f - r;
+			x = (float)Math.floor(x + 0.5f);
+			y = (float)Math.floor(y + 0.5f);
 		}
-		x = (float)(Math.floor(x) + r);
-		
-		r = y - (float)Math.floor(y);
-		if (r < 0.5f) {
-			r *= 2.0f;
-			r = r * r * r;
-			r /= 2.0f;
-		} else {
-			r = 1.0f - r;
-			r *= 2.0f;
-			r = r * r * r;
-			r /= 2.0f;
-			r = 1.0f - r;
-		}
-		y = (float)(Math.floor(y) + r);
-
 
 		for (int i = 0; i < stone.get_stone_size(); i++)
 			for (int j = 0; j < stone.get_stone_size(); j++) {
@@ -216,7 +220,7 @@ public class CurrentStone implements ViewElement {
 		}
 		pos.x = x;
 		pos.y = y;
-		return false;
+		return model.showAnimations;
 	}
 	
 	PointF fieldPoint = new PointF();
@@ -270,8 +274,9 @@ public class CurrentStone implements ViewElement {
 			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
 				return true;
 			
-			hasMoved |= snap(x, y);
-			model.redraw = true;
+			boolean mv = snap(x, y);
+			hasMoved |= mv;
+			model.redraw |= mv;
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
@@ -326,7 +331,6 @@ public class CurrentStone implements ViewElement {
 		boolean hasMoved = false;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
-			model.redraw = true;
 			return hasMoved;
 		}
 		if (is_valid_turn(x, y)) {
