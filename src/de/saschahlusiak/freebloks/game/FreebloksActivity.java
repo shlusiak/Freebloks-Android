@@ -51,6 +51,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
@@ -221,6 +222,27 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					view.model.intro.cancel();
 			}
 		});
+		
+		final Animation a = new TranslateAnimation(0, 8, 0, 0);
+		a.setInterpolator(new CycleInterpolator(2));
+		a.setDuration(500);
+		Runnable r = new Runnable() {	
+			@Override
+			public void run() {
+				boolean local = false;
+				View t = findViewById(R.id.currentPlayer);
+				t.postDelayed(this, 5000);
+				
+				if (client != null && client.spiel != null)
+					local = client.spiel.is_local_player();
+				if (!local)
+					return;
+				
+				t.startAnimation(a);
+			}
+		};
+		findViewById(R.id.currentPlayer).postDelayed(r, 1000);
+
 	}
 	
 	boolean canresume = false;
@@ -722,13 +744,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						t.setText(String.format("Waiting for %s", names[player]));
 					else {
 						t.setText("It's your turn!");
-						Animation a = new TranslateAnimation(0, 8, 0, 0);
-						a.setInterpolator(new CycleInterpolator(2));
-						a.setDuration(500);
-						a.setStartOffset(5000);
-						a.setRepeatCount(Animation.INFINITE);
-//						a.setRepeatMode(Animation.REVERSE);
-						t.startAnimation(a);
 					}
 				}
 			}
