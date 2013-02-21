@@ -561,7 +561,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			break;
 			
 		case DIALOG_GAME_FINISH:
-			((GameFinishDialog)dialog).setData(client.spiel);
+			if (client != null)
+				((GameFinishDialog)dialog).setData(client.spiel);
 			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -621,7 +622,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					CustomGameDialog d = (CustomGameDialog) dialog;
-					/* FIXME: set correct parameters */
 					startNewGame(null, d.getPlayers(), d.getDifficulty());
 					dismissDialog(DIALOG_CUSTOM_GAME);
 					dismissDialog(DIALOG_GAME_MENU);

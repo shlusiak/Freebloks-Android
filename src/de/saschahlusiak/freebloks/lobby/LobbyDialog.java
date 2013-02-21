@@ -60,8 +60,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	
 	public void setSpiel(SpielClient spiel) {
 		this.spiel = spiel;
-		spiel.addClientInterface(this);
-
+		if (spiel != null)
+			spiel.addClientInterface(this);
 	}
 	
 	void sendChat() {

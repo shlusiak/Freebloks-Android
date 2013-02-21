@@ -49,6 +49,9 @@ public class GameFinishDialog extends Dialog {
 				"Green"
 		};
 		
+		if (spiel == null)
+			return;
+		
 		int i = 0;
 		while ( i < Spiel.PLAYER_MAX - 1)
 		{
