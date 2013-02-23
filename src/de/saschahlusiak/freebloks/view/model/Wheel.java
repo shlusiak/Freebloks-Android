@@ -59,6 +59,8 @@ public class Wheel implements ViewElement {
 		spinning = false;
 		if (model.spiel == null)
 			return false;
+		if (lastPlayer < 0)
+			return false;
 		
 		lastAngle = currentAngle;
 		
@@ -215,6 +217,8 @@ public class Wheel implements ViewElement {
 		float angle = currentAngle + 9.5f * 0.5f * da;
 		
 		if (model.spiel == null)
+			return;
+		if (lastPlayer < 0)
 			return;
 		
 		
