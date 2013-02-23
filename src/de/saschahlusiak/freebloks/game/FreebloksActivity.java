@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
@@ -63,10 +64,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_GAME_MENU = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
-	static final int DIALOG_GAME_FINISH = 4;
 	static final int DIALOG_JOIN = 5;
 	static final int DIALOG_DEV = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
+	
+	static final int REQUEST_FINISH_GAME = 1;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 	
@@ -519,9 +521,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			});
 			return builder.create();
 			
-		case DIALOG_GAME_FINISH:
-			return new GameFinishDialog(this);
-			
 		case DIALOG_GAME_MENU:
 			return new GameMenu(this);
 			
@@ -556,18 +555,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				public void onCancel(DialogInterface arg0) {
 					canresume = false;
 					showDialog(DIALOG_GAME_MENU);
-				}
-			});
-			break;
-			
-		case DIALOG_GAME_FINISH:
-			if (client != null)
-				((GameFinishDialog)dialog).setData(client.spiel);
-			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-					startNewGame(client.getLastHost(), null, client.getLastDifficulty());
 				}
 			});
 			break;
@@ -693,6 +680,23 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case REQUEST_FINISH_GAME:
+			if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
+				/* TODO: getLastPlayers */
+				startNewGame(client.getLastHost(), null, client.getLastDifficulty());
+			}
+			if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
+				showDialog(DIALOG_GAME_MENU);
+			}
+			break;
+			
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	public void newCurrentPlayer(final int player) {
@@ -766,7 +770,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				showDialog(DIALOG_GAME_FINISH);
+				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
+				intent.putExtra("game", (Serializable)client.spiel);
+				startActivityForResult(intent, REQUEST_FINISH_GAME);
 			}
 		});
 	}
