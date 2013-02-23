@@ -174,6 +174,7 @@ public class Wheel implements ViewElement {
 
 		originalX = tmp.x;
 
+		model.redraw = true;
 		if (!model.spiel.is_local_player())
 			return true;
 
@@ -193,7 +194,6 @@ public class Wheel implements ViewElement {
 				spinning = false;
 			}
 		}
-		model.redraw = true;
 		return true;
 	}
 	
