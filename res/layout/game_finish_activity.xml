@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#B0000000" >
 
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:id="@+id/places"
+        android:layout_centerVertical="true" >
     <LinearLayout
         android:id="@+id/place1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
         <TextView
@@ -151,14 +157,31 @@
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
+	</RelativeLayout>
     <Button
         android:id="@+id/new_game"
-        android:layout_margin="4dp"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/place4"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/new_local_game" />
+	<Button
+        android:id="@+id/show_main_menu"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Menu" />
+
+	<TextView
+	    android:id="@+id/place"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/places"
+	    android:layout_centerHorizontal="true"
+	    android:text="Large Text"
+	    android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
