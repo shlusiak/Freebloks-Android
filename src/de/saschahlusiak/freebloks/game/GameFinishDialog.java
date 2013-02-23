@@ -75,6 +75,7 @@ public class GameFinishDialog extends Dialog {
 			name = names[place[i]];
 			
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
+			t[i].findViewById(R.id.name).clearAnimation();
 			((TextView)t[i].findViewById(R.id.points)).setText(String.format("-%d points", p.m_stone_points_left));
 			((TextView)t[i].findViewById(R.id.stones)).setText(String.format("%d stones", p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);
