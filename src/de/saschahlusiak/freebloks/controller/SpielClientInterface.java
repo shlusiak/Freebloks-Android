@@ -12,7 +12,8 @@ public interface SpielClientInterface {
 	void onDisconnected(Spiel spiel);
 	
 	void newCurrentPlayer(int player);
-	void stoneWasSet(NET_SET_STONE s);
+	void stoneWillBeSet(NET_SET_STONE s);
+	void stoneHasBeenSet(NET_SET_STONE s);
 	void hintReceived(NET_SET_STONE s);
 	void gameFinished();
 	void chatReceived(NET_CHAT c);

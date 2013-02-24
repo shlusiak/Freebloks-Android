@@ -88,7 +88,13 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	}
 
 	@Override
-	public void stoneWasSet(NET_SET_STONE s) {
+	public void stoneWillBeSet(NET_SET_STONE s) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void stoneHasBeenSet(NET_SET_STONE s) {
 		// TODO Auto-generated method stub
 		
 	}

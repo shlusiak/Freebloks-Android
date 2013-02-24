@@ -12,6 +12,7 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
+import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -71,6 +72,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int REQUEST_FINISH_GAME = 1;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
+	
+	/* TODO: generalize */
+	public static final String PLAYER_NAMES[] = {
+			"Blue",
+			"Yellow",
+			"Red",
+			"Green"
+	};
+
 	
 //	public static final int KI_PERFECT = 0;
 	public static final int KI_HARD = 5;
@@ -720,13 +730,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						Color.rgb(96, 0, 0),
 						Color.rgb(0, 96, 0),
 				};
-				/* TODO: generalize */
-				final String names[] = {
-						"Blue",
-						"Yellow",
-						"Red",
-						"Green"
-				};
 
 				View v;
 				v = findViewById(R.id.progressBar);
@@ -745,7 +748,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				} else {
 					statusView.setBackgroundColor(colors[player]);
 					if (!local) 
-						t.setText(String.format("Waiting for %s", names[player]));
+						t.setText(String.format("Waiting for %s", PLAYER_NAMES[player]));
 					else {
 						t.setText("It's your turn!");
 					}
@@ -755,8 +758,21 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 
 	@Override
-	public void stoneWasSet(NET_SET_STONE s) {
+	public void stoneWillBeSet(NET_SET_STONE s) {
 
+	}
+	
+	@Override
+	public void stoneHasBeenSet(final NET_SET_STONE s) {
+		Player p = client.spiel.get_player(s.player);
+		if (p.m_number_of_possible_turns <= 0) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(FreebloksActivity.this, String.format("%s is out of moves", PLAYER_NAMES[s.player]), Toast.LENGTH_SHORT).show();	
+				}
+			});
+		}
 	}
 
 	@Override
