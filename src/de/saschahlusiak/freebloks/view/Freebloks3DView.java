@@ -159,10 +159,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void stoneWasSet(NET_SET_STONE s) {
-		if (model.showOpponents || model.spiel.is_local_player())
-			model.wheel.update(model.spiel.current_player());
-		
+	public void stoneWillBeSet(NET_SET_STONE s) {
 		if (model.showAnimations && !model.spiel.is_local_player(s.player)) {
 			Stone st = new Stone();
 			st.init(s.stone);
@@ -174,6 +171,12 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			set.add(new StoneFadeEffect(st, s.player, s.x, s.y, 4.0f));
 			model.addEffect(set);
 		}
+	}
+	
+	public void stoneHasBeenSet(NET_SET_STONE s) {
+		if (model.showOpponents || model.spiel.is_local_player())
+			model.wheel.update(model.spiel.current_player());
+		
 		requestRender();
 	}
 

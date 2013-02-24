@@ -157,7 +157,7 @@ public class SpielClient {
 			 * effect hasn't been added yet
 			 */
 			for (SpielClientInterface sci : spielClientInterface)
-				sci.stoneWasSet(s);
+				sci.stoneWillBeSet(s);
 			
 			if ((spiel.is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
 			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
@@ -166,6 +166,9 @@ public class SpielClient {
 				throw new Exception("Game not in sync!");
 			}
 
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.stoneHasBeenSet(s);
+			
 			break;
 		}
 		
