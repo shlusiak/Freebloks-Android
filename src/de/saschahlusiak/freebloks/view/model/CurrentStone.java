@@ -5,7 +5,6 @@ import javax.microedition.khronos.opengles.GL11;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
 import de.saschahlusiak.freebloks.R;
@@ -57,12 +56,11 @@ public class CurrentStone implements ViewElement {
 	
 	public void updateTexture(Context context, GL10 gl) {
 		if (texture == null)
-			texture = new int[1];
+			texture = new int[2];
 
-		gl.glGenTextures(1, texture, 0);
-		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay);
-
+		gl.glGenTextures(2, texture, 0);
 		
+		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_green);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);		
 		if (gl instanceof GL11) {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
@@ -72,12 +70,24 @@ public class CurrentStone implements ViewElement {
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 		BoardRenderer.myTexImage2D(gl, bitmap);
-
 		bitmap.recycle();
+		
+		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_red);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);		
+		if (gl instanceof GL11) {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
+			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+		} else {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+		}
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		BoardRenderer.myTexImage2D(gl, bitmap);
+		bitmap.recycle();		
 	}
 	
-	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
-	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
+//	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
+//	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
+	final float diffuse_white[] = { 0.6f, 0.6f, 0.6f, 0.6f };
 	
 	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		if (stone == null)
@@ -99,14 +109,16 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
 
-	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
+		/* TODO: cache result of is_valid_turn when moved */
+		boolean isvalid = model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f)) == Stone.FIELD_ALLOWED;
+		
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isvalid ? texture[0] : texture[1]);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glDisable(GL10.GL_LIGHTING);
 		
-		/* TODO: cache result of is_valid_turn when moved */
-		boolean isvalid = model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f)) == Stone.FIELD_ALLOWED;
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, isvalid ? diffuse_green : diffuse_red, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_white, 0);
 
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
@@ -120,6 +132,7 @@ public class CurrentStone implements ViewElement {
 	    gl.glRotatef(180.0f, 1, 0, 0);
 
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnable(GL10.GL_LIGHTING);
 	    
 	    
 	    gl.glPopMatrix();
