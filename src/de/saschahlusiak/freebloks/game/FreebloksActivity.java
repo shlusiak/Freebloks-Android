@@ -151,7 +151,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			progress.dismiss();
 			if (result != null) {
 				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
-				FreebloksActivity.this.finish();
+				showDialog(DIALOG_GAME_MENU);
 			} else {
 				if (show_lobby)
 					showDialog(DIALOG_LOBBY);
