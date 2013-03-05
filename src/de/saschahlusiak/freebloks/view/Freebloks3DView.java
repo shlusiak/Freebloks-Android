@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view;
 
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
@@ -164,7 +165,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			Stone st = new Stone();
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
-			StoneRollEffect e = new StoneRollEffect(model.soundPool, st, s.player, s.x, s.y, 4.0f, -7.0f);
+			StoneRollEffect e = new StoneRollEffect(model, st, s.player, s.x, s.y, 4.0f, -7.0f);
 		
 			EffectSet set = new EffectSet();
 			set.add(e);
@@ -177,8 +178,10 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		if (model.showOpponents || model.spiel.is_local_player())
 			model.wheel.update(model.spiel.current_player());
 		
-		if (!model.showAnimations)
+		if (!model.showAnimations) {
 			model.soundPool.play(model.soundPool.SOUND_CLICK, 0.7f, 0.9f + (float)Math.random() * 0.2f);
+			model.activity.vibrate_on_place(Global.VIBRATE_SET_STONE);
+		}
 		
 		requestRender();
 	}
