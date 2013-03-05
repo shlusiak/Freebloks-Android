@@ -211,6 +211,7 @@ public class CurrentStone implements ViewElement {
 			y = (float)Math.floor(y + 0.5f);
 		}
 
+		/*
 		for (int i = 0; i < stone.get_stone_size(); i++)
 			for (int j = 0; j < stone.get_stone_size(); j++) {
 				if (stone.get_stone_field(j, i) == Stone.STONE_FIELD_ALLOWED) {
@@ -225,6 +226,7 @@ public class CurrentStone implements ViewElement {
 						y = model.spiel.m_field_size_y - j - 1;
 				}
 			}
+		*/
 		
 		if (Math.floor(0.5f + pos.x) != Math.floor(0.5f + x) || Math.floor(pos.y + 0.5f) != Math.floor(0.5f + y)) {
 			pos.x = x;
