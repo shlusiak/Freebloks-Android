@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B0000000" >
+    android:background="#D0000000" >
 
     <RelativeLayout 
         android:layout_width="fill_parent"
@@ -164,14 +164,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/new_local_game" />
+
 	<Button
         android:id="@+id/show_main_menu"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Menu" />
 
