@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Freebloks" parent="android:Theme.Black"></style>
+    <style name="Theme.Freebloks.Dialog" parent="android:Theme.Dialog"></style>
+    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Dialog"></style>
+    <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.Black.NoTitleBar"></style>
+    <style name="Theme.Freebloks.Translucent.NoTitleBar" parent="android:Theme.Translucent.NoTitleBar"></style>
+</resources>

@@ -10,13 +10,11 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-	<uses-feature android:name="android.hardware.screen.portrait" android:required="true"/>
-
 	<supports-screens
 	    android:smallScreens="true"
 	    android:normalScreens="true"
 	    android:largeScreens="true" 
-	    android:xlargeScreens="true"/>
+	    android:xlargeScreens="true" />
 
     <application
         android:icon="@drawable/freebloks"
@@ -42,7 +40,7 @@
             android:name=".AboutActivity"
             android:label="@string/about_freebloks"
             android:exported="false"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@style/Theme.Freebloks.Dialog" >
             <intent-filter>
                 <action android:name="de.saschahlusiak.freebloks.SHOW_ABOUT" />
                 <category android:name="android.intent.category.DEFAULT" />
