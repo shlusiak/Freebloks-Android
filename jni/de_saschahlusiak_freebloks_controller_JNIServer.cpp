@@ -50,7 +50,6 @@ void* gameRunThread(void* param)
 
 
 static int max_humans = 4;
-static GAMEMODE gamemode = GAMEMODE_4_COLORS_4_PLAYERS;
 static int ki_threads = 2;
 static int force_delay = 1;
 static int port = 59995;
@@ -58,7 +57,7 @@ static char* _interface = NULL;
 
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1resume_1server
-  (JNIEnv *je, jclass jc, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint ki_mode)
+  (JNIEnv *je, jclass jc, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode)
 {
 	int ret;
 	pthread_t pt;
@@ -73,7 +72,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	{
 	    return -1;
 	}
-	listener->new_game(max_humans, ki_mode, gamemode, ki_threads, force_delay);
+	listener->new_game(max_humans, ki_mode, (GAMEMODE)(int)gamemode, ki_threads, force_delay);
 	game = listener->get_game();
 
 	/* copy spieler to game, map local players to client 0 */
@@ -108,7 +107,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1run_1server
-  (JNIEnv * je, jclass jc, jint ki_mode)
+  (JNIEnv * je, jclass jc, jint gamemode, jint ki_mode)
 {
 	int ret;
 	pthread_t pt;
@@ -120,7 +119,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	    return -1;
 	}
 
-	listener->new_game(max_humans, ki_mode, gamemode, ki_threads, force_delay);
+	listener->new_game(max_humans, ki_mode, (GAMEMODE)gamemode, ki_threads, force_delay);
 
 	if (pthread_create(&pt,NULL,gameRunThread,(void*)listener))
 		perror("pthread_create");

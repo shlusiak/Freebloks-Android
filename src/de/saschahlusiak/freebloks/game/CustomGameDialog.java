@@ -1,22 +1,34 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener {
 	SeekBar difficulty;
 	TextView difficulty_label;
+	Spinner game_mode;
 
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
 	final static int DIFFICULTY_DEFAULT = 8; /* TODO: maybe save and restore default value */
 	final static int DIFFICULTY_VALUES[] = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
+
+	CheckBox player1;
+	CheckBox player2;
+	CheckBox player3;
+	CheckBox player4;
 
 	public CustomGameDialog(Context context) {
 		super(context);
@@ -27,6 +39,75 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		difficulty.setOnSeekBarChangeListener(this);
 		difficulty.setMax(DIFFICULTY_MAX);
 		difficulty.setProgress(DIFFICULTY_DEFAULT);
+		
+		player1 = (CheckBox)findViewById(R.id.player1);
+		player2 = (CheckBox)findViewById(R.id.player2);
+		player3 = (CheckBox)findViewById(R.id.player3);
+		player4 = (CheckBox)findViewById(R.id.player4);
+		
+		game_mode = (Spinner) findViewById(R.id.game_mode);
+		game_mode.setSelection(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		game_mode.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {				
+				if (position == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {	
+					player1.setEnabled(true);
+					player3.setEnabled(true);
+					player2.setEnabled(false);
+					player4.setEnabled(false);
+
+					if (player2.isChecked())
+						player1.setChecked(true);
+					if (player4.isChecked())
+						player3.setChecked(true);
+					player2.setChecked(false);
+					player4.setChecked(false);					
+				} else if (position == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
+					player1.setEnabled(true);
+					player2.setEnabled(true);
+					player3.setEnabled(false);
+					player4.setEnabled(false);
+
+					boolean e;
+					e = player1.isChecked() || player3.isChecked();
+					player1.setChecked(e);
+					player3.setChecked(e);
+
+					e = player2.isChecked() || player4.isChecked();
+					player2.setChecked(e);
+					player4.setChecked(e);
+				} else {
+					player1.setEnabled(true);
+					player2.setEnabled(true);
+					player3.setEnabled(true);
+					player4.setEnabled(true);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
+		
+		player1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
+					player3.setChecked(player1.isChecked());
+				}
+			}
+		});
+		player2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
+					player4.setChecked(player2.isChecked());
+				}
+			}
+		});
+		
 		setLabel();
 		
 		/* TODO: translate */
@@ -35,10 +116,20 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	
 	public void prepare() {
 		int p = (int)(Math.random() * 4.0);
-		((CheckBox)findViewById(R.id.player1)).setChecked(p == 0);
-		((CheckBox)findViewById(R.id.player2)).setChecked(p == 1);
-		((CheckBox)findViewById(R.id.player3)).setChecked(p == 2);
-		((CheckBox)findViewById(R.id.player4)).setChecked(p == 3);
+		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+			p = (int)(Math.random() * 2.0) * 2;
+		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+			p = (int)(Math.random() * 2.0);
+		
+		player1.setChecked(p == 0);
+		player2.setChecked(p == 1);
+		player3.setChecked(p == 2);
+		player4.setChecked(p == 3);
+		
+		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
+			player3.setChecked(player1.isChecked());
+			player4.setChecked(player2.isChecked());
+		}
 	}
 	
 	void setLabel() {
@@ -63,12 +154,21 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		return DIFFICULTY_VALUES[difficulty.getProgress()];
 	}
 	
+	public int getGameMode() {
+		return (int)game_mode.getSelectedItemPosition();
+	}
+	
 	public boolean[] getPlayers() {
 		boolean p[] = new boolean[4];
 		p[0] = ((CheckBox)findViewById(R.id.player1)).isChecked();
 		p[1] = ((CheckBox)findViewById(R.id.player2)).isChecked();
 		p[2] = ((CheckBox)findViewById(R.id.player3)).isChecked();
 		p[3] = ((CheckBox)findViewById(R.id.player4)).isChecked();
+		
+		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
+			/* this would otherwise request players two times, the server would hand out 2x2 = 4 players */
+			p[2] = p[3] = false;
+		}
 		return p;
 	}
 

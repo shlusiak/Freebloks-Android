@@ -72,7 +72,13 @@ public class GameFinishActivity extends Activity {
 			return;
 		
 		int i = 0;
-		while ( i < Spiel.PLAYER_MAX - 1)
+		int max = Spiel.PLAYER_MAX - 1;
+		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {
+			place[1] = 2;
+			place[2] = 1;
+			max = 1;
+		}
+		while ( i < max )
 		{
 			if (spiel.get_player(place[i]).m_stone_points_left > spiel.get_player(place[i + 1]).m_stone_points_left) {
 				int bla = place[i];
@@ -86,6 +92,15 @@ public class GameFinishActivity extends Activity {
 		t[1] = (ViewGroup) findViewById(R.id.place2);
 		t[2] = (ViewGroup) findViewById(R.id.place3);
 		t[3] = (ViewGroup) findViewById(R.id.place4);
+		
+		/* TODO: combine yellow/green, blue/red on 4_COLORS_2_PLAYERS */
+		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {
+			t[2].setVisibility(View.GONE);
+			t[3].setVisibility(View.GONE);
+		} else {
+			t[2].setVisibility(View.VISIBLE);
+			t[3].setVisibility(View.VISIBLE);
+		}
 
 		this.place.setText(R.string.game_finished);
 

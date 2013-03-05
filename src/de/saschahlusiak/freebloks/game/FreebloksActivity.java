@@ -392,7 +392,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 			
-			JNIServer.runServer(spiel1, KI_DEFAULT);
+			JNIServer.runServer(spiel1, spiel1.m_gamemode, KI_DEFAULT);
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
@@ -409,10 +409,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 	
 	long gameStartTime = 0;
-	public void startNewGame(final String server, final boolean[] request_player, int difficulty) {
+	public void startNewGame(final String server, final boolean[] request_player, int gamemode, int difficulty) {
 		newCurrentPlayer(-1);
 		if (server == null) {
-			JNIServer.runServer(null, difficulty);
+			JNIServer.runServer(null, gamemode, difficulty);
 		}
 		
 		if (spielthread != null)
@@ -556,7 +556,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
 				@Override
 				public boolean OnJoin(String server, boolean request_player) {
-					startNewGame(server, request_player ? null : new boolean[4], KI_DEFAULT);
+					startNewGame(
+							server,
+							request_player ? null : new boolean[4],
+							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, 
+							KI_DEFAULT);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
 				}
@@ -589,7 +593,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					startNewGame(null, null, KI_DEFAULT);
+					startNewGame(
+							null,
+							null, 
+							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, 
+							KI_DEFAULT);
 				}
 			});
 			dialog.findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
@@ -634,7 +642,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					CustomGameDialog d = (CustomGameDialog) dialog;
-					startNewGame(null, d.getPlayers(), d.getDifficulty());
+					startNewGame(null, d.getPlayers(), d.getGameMode(), d.getDifficulty());
 					dismissDialog(DIALOG_CUSTOM_GAME);
 					dismissDialog(DIALOG_GAME_MENU);
 				}
@@ -651,11 +659,16 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.new_game:
 			if (view.model.intro != null)
 				view.model.intro.cancel();
-			else
-				startNewGame(null, null, KI_DEFAULT);
-			/* TODO: OnIntroCompleted will start a new game, we can't start a game here
-			 * without going into a race
-			 */
+			else {
+				int ki = KI_DEFAULT;
+				int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
+				
+				if (client != null && client.spiel != null) {
+					ki = client.getLastDifficulty();
+					gamemode = client.spiel.m_gamemode;
+				}
+				startNewGame(null, null, gamemode, ki);
+			}
 			return true;
 			
 		case R.id.preferences:
@@ -712,7 +725,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case REQUEST_FINISH_GAME:
 			if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
 				/* TODO: getLastPlayers */
-				startNewGame(client.getLastHost(), null, client.getLastDifficulty());
+				startNewGame(client.getLastHost(), null, client.spiel.m_gamemode, client.getLastDifficulty());
 			}
 			if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
 				showDialog(DIALOG_GAME_MENU);
