@@ -4,6 +4,13 @@
 
     <PreferenceCategory android:title="Interface" >
 		<CheckBoxPreference
+		    android:summary="Play sound effects"
+		    android:title="Sounds" 
+		    android:key="sounds"
+		    android:persistent="true"
+		    android:defaultValue="true" />
+		
+        <CheckBoxPreference
 		    android:summary="Vibrate when moving stones"
 		    android:title="Vibrate when moving"
 		    android:defaultValue="true"
@@ -15,14 +22,7 @@
 		    android:title="Vibrate when placing"
 		    android:defaultValue="true"
 		    android:persistent="true"
-		    android:key="vibrate_on_place" />
-		
-		<CheckBoxPreference
-		    android:summary="Play sound effects"
-		    android:title="Sounds" 
-		    android:key="sounds"
-		    android:persistent="true"
-		    android:defaultValue="true" />
+		    android:key="vibrate_on_place" />		
 		
 		<CheckBoxPreference
 		    android:summary="Help by snapping pieces to close valid positions"
