@@ -91,6 +91,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 				redraw |= effects.get(i).execute(elapsed);
 				if (effects.get(i).isDone()) {
 					effects.remove(i);
+					redraw = true;
 				} else
 					i++;
 			}
