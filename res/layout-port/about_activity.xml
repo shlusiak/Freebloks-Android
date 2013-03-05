@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal" >
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:src="@drawable/freebloks" />
-
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView1"
-            android:layout_centerHorizontal="true"
-            android:paddingRight="8dp"
-            android:text="version"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    </RelativeLayout>
-
-    <ScrollView
+    android:layout_height="wrap_content" >
+    
+    
+        <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-
+ 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" 
             android:orientation="vertical" >
+            
+            <RelativeLayout
+                android:id="@+id/relativeLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
 
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:src="@drawable/freebloks" />
+
+                <TextView
+                    android:id="@+id/version"
+                    android:paddingRight="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="version"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </RelativeLayout>
+            
             <TextView
                 android:id="@+id/url1"
                 android:layout_width="fill_parent"
@@ -62,13 +61,13 @@
                 android:linksClickable="true"
                 android:text="https://github.com/shlusiak/Freebloks-Android"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
+            
+			<TextView
                 android:id="@+id/textView2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:paddingTop="12dp"
+                android:gravity="center"
                 android:singleLine="true"
                 android:text="Copyright (c) Sascha Hlusiak, 2012-2013."
                 android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -80,20 +79,20 @@
                 android:autoLink="email"
                 android:gravity="center"
                 android:linksClickable="true"
-                android:text="wordmix@saschahlusiak.de"
+                android:text="mail@saschahlusiak.de"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/textView42"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Special thanks to"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-
+            
             <TextView
                 android:id="@+id/textView72"
                 android:layout_width="fill_parent"
@@ -102,8 +101,8 @@
                 android:singleLine="true"
                 android:text="Alina Bilciurescu"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-            
-			<TextView
+
+            <TextView
                 android:id="@+id/textView72"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -111,16 +110,16 @@
                 android:singleLine="true"
                 android:text="Martin Hollingsworth"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-			
+            
             <Button
                 android:id="@+id/ok"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:layout_width="124dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp"
                 android:text="@android:string/ok" />
+
         </LinearLayout>
     </ScrollView>
-
-</LinearLayout>
+</FrameLayout>
