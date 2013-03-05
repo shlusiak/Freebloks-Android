@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.util.Log;
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -235,7 +236,7 @@ public class CurrentStone implements ViewElement {
 		}
 		pos.x = x;
 		pos.y = y;
-		return model.showAnimations;
+		return false;
 	}
 	
 	PointF fieldPoint = new PointF();
@@ -292,6 +293,7 @@ public class CurrentStone implements ViewElement {
 			boolean mv = snap(x, y);
 			hasMoved |= mv;
 			model.redraw |= mv;
+			model.redraw |= model.showAnimations;
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
@@ -346,10 +348,14 @@ public class CurrentStone implements ViewElement {
 		boolean hasMoved = false;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
+			if (is_valid_turn(x, y) && hasMoved)
+				model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
 			return hasMoved;
 		}
 		if (is_valid_turn(x, y)) {
 			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
+			if (hasMoved)
+				model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
 			return hasMoved;
 		}
 		for (int i = -1; i <= 1; i++)
@@ -357,7 +363,10 @@ public class CurrentStone implements ViewElement {
 		{
 			if (is_valid_turn(x + i, y + j))
 			{
-				return moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
+				hasMoved = moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
+				if (hasMoved)
+					model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+				return hasMoved;
 			}
 		}
 		return moveTo(x, y);

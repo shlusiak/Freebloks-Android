@@ -5,11 +5,18 @@
     <PreferenceCategory android:title="Interface" >
 		<CheckBoxPreference
 		    android:summary="Vibrate when moving stones"
-		    android:title="Vibrate"
+		    android:title="Vibrate when moving"
 		    android:defaultValue="true"
 		    android:persistent="true"
-		    android:key="vibrate" />
-
+		    android:key="vibrate_on_move" />
+		
+		<CheckBoxPreference
+		    android:summary="Vibrate when placing a stone"
+		    android:title="Vibrate when placing"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="vibrate_on_place" />
+		
 		<CheckBoxPreference
 		    android:summary="Play sound effects"
 		    android:title="Sounds" 
