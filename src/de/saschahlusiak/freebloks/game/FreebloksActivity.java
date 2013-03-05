@@ -218,7 +218,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			newCurrentPlayer(client.spiel.current_player());
 		} else if (savedInstanceState != null) {
 			/* TODO: we should resume from previously saved data; don't just start a new game */
-			startNewGame(null, null, KI_DEFAULT);
+		//	startNewGame(null, null, KI_DEFAULT);
+			OnIntroCompleted();
 		} else {
 			if (! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(view.model, this);
@@ -254,7 +255,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			}
 		};
 		findViewById(R.id.currentPlayer).postDelayed(r, 1000);
-
 	}
 	
 	boolean canresume = false;
