@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -765,6 +766,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void stoneHasBeenSet(final NET_SET_STONE s) {
 		Player p = client.spiel.get_player(s.player);
+		vibrate(Global.VIBRATE_SET_STONE);
 		if (p.m_number_of_possible_turns <= 0) {
 			runOnUiThread(new Runnable() {
 				@Override
@@ -860,7 +862,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				client.set_stone(stone, y, x);
 			}
 		});
-		vibrate(90);
 		return true;
 	}
 	

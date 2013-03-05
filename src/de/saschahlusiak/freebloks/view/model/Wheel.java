@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.util.Log;
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -129,7 +130,7 @@ public class Wheel implements ViewElement {
 							model.board.modelToBoard(tmp);
 							
 							Log.d(tag, "timer expire, start moving stone");
-							model.activity.vibrate(90);
+							model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 							if (!model.showAnimations)
 								currentAngle = lastAngle;
 							model.currentStone.startDragging(tmp, highlightStone, true);
@@ -186,7 +187,7 @@ public class Wheel implements ViewElement {
 
 		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
 			if (Math.abs(currentAngle - lastAngle) < 90.0f) {
-				model.activity.vibrate(100);
+				model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
