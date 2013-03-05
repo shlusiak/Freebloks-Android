@@ -61,7 +61,10 @@
 		    android:id="@+id/new_game_custom"
 		    android:layout_width="52dp"
 		    android:layout_height="52dp"
-		    android:src="@android:drawable/ic_menu_more" />
+		    android:layout_weight="0"
+		    android:layout_marginLeft="4dp"
+		    style="?android:attr/buttonStyle"
+		    android:src="@drawable/gears" />
 		
 	</LinearLayout>
     <Button
