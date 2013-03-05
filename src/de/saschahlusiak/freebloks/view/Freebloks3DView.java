@@ -56,6 +56,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			if (spiel != null) {
 				client.addClientInterface(this);
 				renderer.currentPlayer = spiel.current_player();
+				model.board.last_size = spiel.m_field_size_x;
 				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
 					model.showPlayer = i;
 					if (!model.showOpponents)
@@ -73,7 +74,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
-				renderer.init();
+				renderer.init(model.board.last_size);
 				requestRender();
 			}
 		});
@@ -169,7 +170,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		
 			EffectSet set = new EffectSet();
 			set.add(e);
-			set.add(new StoneFadeEffect(st, s.player, s.x, s.y, 4.0f));
+			set.add(new StoneFadeEffect(model, st, s.player, s.x, s.y, 4.0f));
 			model.addEffect(set);
 		}
 	}
@@ -224,8 +225,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			renderer.updateModelViewMatrix = true;
 			break;
 		}
-		model.reset();
-		
+		model.reset();		
 		requestRender();
 	}
 
@@ -240,7 +240,17 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
-		
+		if (status.width != model.board.last_size) {
+			model.board.last_size = status.width;
+			queueEvent(new Runnable() {				
+				@Override
+				public void run() {
+					renderer.board.initBorder(model.spiel.m_field_size_x);
+					requestRender();
+				}
+			});
+
+		}
 	}
 
 	@Override

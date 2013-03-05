@@ -131,6 +131,7 @@ public class Spiel implements Serializable, Cloneable {
 		m_field_size_y = y;
 		m_game_field = new int[m_field_size_x * m_field_size_y];
 		start_new_game();
+		init_field();
 	}
 
 

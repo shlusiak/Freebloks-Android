@@ -1,10 +1,9 @@
 package de.saschahlusiak.freebloks.controller;
 
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class JNIServer {
-	private static native int native_run_server(int game_mode, int ki_mode);
+	private static native int native_run_server(int game_mode, int field_size_x, int field_size_y, int ki_mode);
 	
 	private static native int native_resume_server(
 			int field_size_x,
@@ -17,9 +16,9 @@ public class JNIServer {
 			int ki_mode);
 	
 	
-	public static void runServer(Spielleiter spiel, int game_mode, int ki_mode) {
+	public static void runServer(Spielleiter spiel, int game_mode, int field_size, int ki_mode) {
 		if (spiel == null)
-			native_run_server(game_mode, ki_mode);
+			native_run_server(game_mode, field_size, field_size, ki_mode);
 		else {
 			int player_stones_available[] = new int[Stone.STONE_COUNT_ALL_SHAPES * 4];
 			int i, j;

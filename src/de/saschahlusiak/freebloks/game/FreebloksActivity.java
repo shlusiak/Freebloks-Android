@@ -392,7 +392,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 			
-			JNIServer.runServer(spiel1, spiel1.m_gamemode, KI_DEFAULT);
+			JNIServer.runServer(spiel1, spiel1.m_gamemode, spiel1.m_field_size_x, KI_DEFAULT);
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
@@ -409,10 +409,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 	
 	long gameStartTime = 0;
-	public void startNewGame(final String server, final boolean[] request_player, int gamemode, int difficulty) {
+	public void startNewGame(final String server, final boolean[] request_player, int gamemode, int field_size, int difficulty) {
 		newCurrentPlayer(-1);
 		if (server == null) {
-			JNIServer.runServer(null, gamemode, difficulty);
+			JNIServer.runServer(null, gamemode, field_size, difficulty);
 		}
 		
 		if (spielthread != null)
@@ -559,7 +559,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					startNewGame(
 							server,
 							request_player ? null : new boolean[4],
-							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, 
+							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
+							Spiel.DEFAULT_FIELD_SIZE_X,
 							KI_DEFAULT);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
@@ -597,6 +598,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							null,
 							null, 
 							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, 
+							Spiel.DEFAULT_FIELD_SIZE_X,
 							KI_DEFAULT);
 				}
 			});
@@ -642,7 +644,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					CustomGameDialog d = (CustomGameDialog) dialog;
-					startNewGame(null, d.getPlayers(), d.getGameMode(), d.getDifficulty());
+					startNewGame(
+							null,
+							d.getPlayers(),
+							d.getGameMode(),
+							d.getFieldSize(),
+							d.getDifficulty());
 					dismissDialog(DIALOG_CUSTOM_GAME);
 					dismissDialog(DIALOG_GAME_MENU);
 				}
@@ -662,12 +669,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			else {
 				int ki = KI_DEFAULT;
 				int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
+				int fieldsize = Spiel.DEFAULT_FIELD_SIZE_X;
 				
 				if (client != null && client.spiel != null) {
 					ki = client.getLastDifficulty();
 					gamemode = client.spiel.m_gamemode;
+					fieldsize = client.spiel.m_field_size_x;
 				}
-				startNewGame(null, null, gamemode, ki);
+				startNewGame(null, null, gamemode, fieldsize, ki);
 			}
 			return true;
 			
@@ -725,7 +734,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case REQUEST_FINISH_GAME:
 			if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
 				/* TODO: getLastPlayers */
-				startNewGame(client.getLastHost(), null, client.spiel.m_gamemode, client.getLastDifficulty());
+				startNewGame(client.getLastHost(),
+						null,
+						client.spiel.m_gamemode,
+						client.spiel.m_field_size_x,
+						client.getLastDifficulty());
 			}
 			if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
 				showDialog(DIALOG_GAME_MENU);

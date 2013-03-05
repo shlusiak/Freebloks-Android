@@ -64,9 +64,9 @@ public class StoneRollEffect extends AbsStoneEffect {
 		gl.glTranslatef(0, z, 0);
 		
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_X - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
-	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_Y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
 		renderer.renderPlayerStone(gl, player, stone, BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
