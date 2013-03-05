@@ -184,7 +184,7 @@ public class Wheel implements ViewElement {
 			highlightStone = null;
 		}
 
-		if (highlightStone != null && tmp.y >= 0) {
+		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
 			if (Math.abs(currentAngle - lastAngle) < 90.0f) {
 				model.activity.vibrate(100);
 				tmp.x = m.x;
@@ -241,7 +241,7 @@ public class Wheel implements ViewElement {
 			if (model.currentStone.stone != null)
 				alpha *= 0.7f;
 
-//			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0)
 			/* always show selected stone, even when dragging */
 			{
 				gl.glPushMatrix();
