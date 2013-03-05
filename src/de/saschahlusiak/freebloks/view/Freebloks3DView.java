@@ -164,7 +164,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			Stone st = new Stone();
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
-			StoneRollEffect e = new StoneRollEffect(st, s.player, s.x, s.y, 4.0f, -7.0f);
+			StoneRollEffect e = new StoneRollEffect(model.soundPool, st, s.player, s.x, s.y, 4.0f, -7.0f);
 		
 			EffectSet set = new EffectSet();
 			set.add(e);
@@ -176,6 +176,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	public void stoneHasBeenSet(NET_SET_STONE s) {
 		if (model.showOpponents || model.spiel.is_local_player())
 			model.wheel.update(model.spiel.current_player());
+		
+		if (!model.showAnimations)
+			model.soundPool.play(model.soundPool.SOUND_CLICK, 0.7f, 0.9f + (float)Math.random() * 0.2f);
 		
 		requestRender();
 	}

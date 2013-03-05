@@ -19,6 +19,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public Freebloks3DView view;
 	public ArrayList<Effect> effects;
 	public Intro intro;
+	public Sounds soundPool;
 
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
 	public int showPlayer;

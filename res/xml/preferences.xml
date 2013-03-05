@@ -20,7 +20,9 @@
 		<CheckBoxPreference
 		    android:summary="Play sound effects"
 		    android:title="Sounds" 
-		    android:enabled="false" />
+		    android:key="sounds"
+		    android:persistent="true"
+		    android:defaultValue="true" />
 		
 		<CheckBoxPreference
 		    android:summary="Help by snapping pieces to close valid positions"
