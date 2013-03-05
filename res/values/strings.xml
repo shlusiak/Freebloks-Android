@@ -18,4 +18,9 @@
     <string name="start_now_button">Start now</string>
     	
 	<string name="game_finished">Game finished</string>
+	<string-array name="game_modes">
+	    <item>2 Players, 2 Colors</item>
+	    <item>2 Players, 4 Colors</item>
+	    <item>4 Players, 4 Colors</item>
+	</string-array>
 </resources>
