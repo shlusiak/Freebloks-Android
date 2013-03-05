@@ -2,16 +2,21 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.util.Log;
+
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
+import de.saschahlusiak.freebloks.view.model.Sounds;
 
 public class StoneRollEffect extends AbsStoneEffect {
 	float z, vz;
 	boolean done = false;
+	Sounds sounds;
 	
-	public StoneRollEffect(Stone stone, int player, int x, int y, float z, float vz) {
+	public StoneRollEffect(Sounds sounds, Stone stone, int player, int x, int y, float z, float vz) {
 		super(stone, player, x, y);
+		this.sounds = sounds;
 		this.z = z;
 		this.vz = vz;
 	}
@@ -28,10 +33,13 @@ public class StoneRollEffect extends AbsStoneEffect {
 			z -= vz * elapsed;
 			vz += elapsed * 62.0f;
 			if (z < 0.0f) {
+				/* impact */
 				vz *= -0.55f;
 				z = 0.0f;
+				float volume = 0.7f * (float)Math.pow(-vz / 16.0f, 1.8f);
 				if (vz > -6.0f)
 					vz = 0.0f;
+				sounds.play(sounds.SOUND_CLICK, volume, 0.90f + (float)Math.random() * 0.2f);
 			}
 		} else {
 			z = 0.0f;

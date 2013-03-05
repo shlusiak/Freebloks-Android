@@ -397,7 +397,7 @@ public class CurrentStone implements ViewElement {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);
-						StoneRollEffect e = new StoneRollEffect(st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 0.5f, -13.0f);
+						StoneRollEffect e = new StoneRollEffect(model.soundPool, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 0.5f, -13.0f);
 				
 						EffectSet set = new EffectSet();
 						set.add(e);

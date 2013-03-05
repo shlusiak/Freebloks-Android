@@ -24,6 +24,7 @@ import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.model.Intro;
+import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,6 +39,8 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -196,6 +199,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		newCurrentPlayer(-1);
 		
@@ -203,6 +207,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (config != null) {
 			spielthread = config.clientThread;
 			lastStatus = config.lastStatus;
+			view.model.soundPool = config.soundPool;
 			canresume = true;
 		}
 		if (savedInstanceState != null) {
@@ -210,6 +215,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		} else {
 			view.setScale(prefs.getFloat("view_scale", 1.0f));
 		}
+		if (view.model.soundPool == null)
+			view.model.soundPool = new Sounds(this);
 		
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
@@ -308,6 +315,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (client != null)
 			client.removeClientInterface(this);
+		if (view.model.soundPool != null)
+			view.model.soundPool.release();
+		view.model.soundPool = null;
 		super.onDestroy();
 	}
 	
@@ -339,6 +349,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		vibrate_on_move = prefs.getBoolean("vibrate_on_move", true);
 		vibrate_on_place = prefs.getBoolean("vibrate_on_place", true);
+		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		/* TODO: update wheel when changing show_opponents preference */
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
@@ -353,6 +364,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		RetainedConfig config = new RetainedConfig();
 		config.clientThread = spielthread;
 		config.lastStatus = lastStatus;
+		config.soundPool = view.model.soundPool;
+		view.model.soundPool = null;
 		spielthread = null;
 		return config;
 	}
@@ -394,7 +407,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return false;
 		}
 	}
-
+	
 	long gameStartTime = 0;
 	public void startNewGame(final String server, final boolean[] request_player, int difficulty) {
 		newCurrentPlayer(-1);
