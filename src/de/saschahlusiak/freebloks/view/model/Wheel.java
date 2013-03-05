@@ -187,7 +187,7 @@ public class Wheel implements ViewElement {
 
 		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
 			if (Math.abs(currentAngle - lastAngle) < 90.0f) {
-				model.activity.vibrate_on_move(Global.VIBRATE_START_DRAGGING);
+//				model.activity.vibrate_on_move(Global.VIBRATE_START_DRAGGING);
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
