@@ -232,7 +232,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
 		if (model.showAnimations) {
-			Effect e = new StoneUndoEffect(s, t.m_playernumber, t.m_x, t.m_y);
+			Effect e = new StoneUndoEffect(model, s, t.m_playernumber, t.m_x, t.m_y);
 			model.addEffect(e);
 		}
 		requestRender();
