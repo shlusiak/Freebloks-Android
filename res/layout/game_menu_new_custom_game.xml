@@ -17,21 +17,31 @@
             android:text="Start"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Spinner
-            android:id="@+id/game_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:entries="@array/game_modes" />
-
+        <LinearLayout android:orientation="horizontal"
+            android:id="@+id/spinners"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            
+	        <Spinner
+	            android:id="@+id/game_mode"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:entries="@array/game_modes" />
+	
+			<Spinner
+	            android:id="@+id/field_size"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:entries="@array/game_field_sizes" />
+		</LinearLayout>
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/game_mode"
+            android:layout_below="@+id/spinners"
             android:orientation="vertical" >
 
             <CheckBox
@@ -52,7 +62,7 @@
             android:layout_height="wrap_content"
             android:paddingRight="16dp"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/game_mode"
+            android:layout_below="@+id/spinners"
             android:orientation="vertical" >
 
             <CheckBox

@@ -5,9 +5,11 @@ import android.graphics.PointF;
 
 public class Board {
 	ViewModel model;
+	public int last_size;
 	
-	public Board(ViewModel model) {
+	public Board(ViewModel model, int size) {
 		this.model = model;
+		this.last_size = size;
 	}	
 	
 	/**

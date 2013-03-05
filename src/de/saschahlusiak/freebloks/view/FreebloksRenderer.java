@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.Log;
+import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
@@ -37,12 +38,12 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
-		init();
+		init(Spiel.DEFAULT_FIELD_SIZE_X);
 		currentPlayer = -1;
 	}
 
-	public void init() {
-		board = new BoardRenderer();
+	public void init(int field_size) {
+		board = new BoardRenderer(field_size);
 	}
 
 	private float outputfar[] = new float[4];

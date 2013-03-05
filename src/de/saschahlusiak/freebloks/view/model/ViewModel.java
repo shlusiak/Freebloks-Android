@@ -6,6 +6,7 @@ import android.graphics.PointF;
 
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
+import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 
@@ -31,7 +32,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
-		board = new Board(this);
+		board = new Board(this, Spiel.DEFAULT_FIELD_SIZE_X);
 		showPlayer = 0;
 		
 		effects = new ArrayList<Effect>();
@@ -41,7 +42,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	}
 	
 	public void reset() {
-		currentStone.stone = null;		
+		currentStone.stone = null;
 	}
 
 	public void setSpiel(Spielleiter spiel) {

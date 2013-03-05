@@ -74,6 +74,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	}
 	listener->new_game(max_humans, ki_mode, (GAMEMODE)(int)gamemode, ki_threads, force_delay);
 	game = listener->get_game();
+	game->set_field_size_and_new(field_size_y, field_size_x);
 
 	/* copy spieler to game, map local players to client 0 */
 	jint *tmp = je->GetIntArrayElements(spieler, 0);
@@ -107,7 +108,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1run_1server
-  (JNIEnv * je, jclass jc, jint gamemode, jint ki_mode)
+  (JNIEnv * je, jclass jc, jint gamemode, jint field_size_x, jint field_size_y, jint ki_mode)
 {
 	int ret;
 	pthread_t pt;
@@ -120,6 +121,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	}
 
 	listener->new_game(max_humans, ki_mode, (GAMEMODE)gamemode, ki_threads, force_delay);
+	listener->get_game()->set_field_size_and_new(field_size_y, field_size_x);
 
 	if (pthread_create(&pt,NULL,gameRunThread,(void*)listener))
 		perror("pthread_create");

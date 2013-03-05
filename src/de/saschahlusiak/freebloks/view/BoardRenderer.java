@@ -103,10 +103,10 @@ public class BoardRenderer {
 		stone.commit();
 	}
 	
-	private void initBorder() {
+	public void initBorder(int field_size) {
 		border = new SimpleModel(12, 6);
 		float w1, w2;
-		w1 = stone_size * 20;
+		w1 = stone_size * field_size;
 		w2 = w1 + border_width;
 
 		/* front */
@@ -139,9 +139,9 @@ public class BoardRenderer {
 		border.commit();
 	}
 	
-	BoardRenderer() {
+	BoardRenderer(int field_size) {
 		initField();
-		initBorder();
+		initBorder(field_size);
 		initStone();
 	}
 	

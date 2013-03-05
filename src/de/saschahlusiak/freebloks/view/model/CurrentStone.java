@@ -401,7 +401,7 @@ public class CurrentStone implements ViewElement {
 				
 						EffectSet set = new EffectSet();
 						set.add(e);
-						set.add(new StoneFadeEffect(st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 4.0f));
+						set.add(new StoneFadeEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 4.0f));
 						model.addEffect(set);
 						
 					}

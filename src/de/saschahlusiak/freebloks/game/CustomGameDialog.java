@@ -4,7 +4,6 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -17,12 +16,15 @@ import android.widget.TextView;
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener {
 	SeekBar difficulty;
 	TextView difficulty_label;
-	Spinner game_mode;
+	Spinner game_mode, field_size;
 
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
 	final static int DIFFICULTY_DEFAULT = 8; /* TODO: maybe save and restore default value */
 	final static int DIFFICULTY_VALUES[] = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
+	};
+	final static int FIELD_SIZES[] = {
+		13, 15, 17, 20, 23
 	};
 
 	CheckBox player1;
@@ -45,6 +47,9 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player3 = (CheckBox)findViewById(R.id.player3);
 		player4 = (CheckBox)findViewById(R.id.player4);
 		
+		field_size = (Spinner) findViewById(R.id.field_size);
+		field_size.setSelection(3);
+		
 		game_mode = (Spinner) findViewById(R.id.game_mode);
 		game_mode.setSelection(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 		game_mode.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -62,7 +67,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 					if (player4.isChecked())
 						player3.setChecked(true);
 					player2.setChecked(false);
-					player4.setChecked(false);					
+					player4.setChecked(false);
+					field_size.setSelection(1); /* 15x15 */
 				} else if (position == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 					player1.setEnabled(true);
 					player2.setEnabled(true);
@@ -156,6 +162,10 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	
 	public int getGameMode() {
 		return (int)game_mode.getSelectedItemPosition();
+	}
+	
+	public int getFieldSize() {
+		return FIELD_SIZES[field_size.getSelectedItemPosition()];
 	}
 	
 	public boolean[] getPlayers() {

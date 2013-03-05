@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
+import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class StoneFadeEffect extends AbsStoneEffect {
 	private static final float TIME_PER_PERIOD = 1.15f;
@@ -12,10 +13,12 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	private static final float ALPHA_MAX = 1.0f;
 	
 	private float NUMBER_OF_PERIODS;
+	ViewModel model;
 	
-	public StoneFadeEffect(Stone stone, int player, int x, int y, float cycles) {
+	public StoneFadeEffect(ViewModel model, Stone stone, int player, int x, int y, float cycles) {
 		super(stone, player, x, y);
 		this.NUMBER_OF_PERIODS = cycles;
+		this.model = model;
 	}
 	
 	@Override
@@ -33,9 +36,9 @@ public class StoneFadeEffect extends AbsStoneEffect {
 		gl.glPushMatrix();
 		
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_X - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
-	    		-BoardRenderer.stone_size * (float)(Spiel.DEFAULT_FIELD_SIZE_Y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
 		renderer.renderPlayerStone(gl, player, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
