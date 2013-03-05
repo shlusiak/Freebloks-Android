@@ -410,7 +410,7 @@ public class CurrentStone implements ViewElement {
 					model.wheel.highlightStone = null;
 				}
 			} else {
-				snap(pos.x, pos.y);
+				snap(x, y);
 			}
 		}
 		if (status == Status.ROTATING) {
