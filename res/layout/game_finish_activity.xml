@@ -176,7 +176,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Menu" />
+        android:text="@string/main_menu" />
 
 	<TextView
 	    android:id="@+id/place"

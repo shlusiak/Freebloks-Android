@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Address: " />
+        android:text="@string/join_address" />
 
     <EditText
         android:id="@+id/server"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:checked="true"
-        android:text="Request Player" />
+        android:text="@string/join_request_player" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"

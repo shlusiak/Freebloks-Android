@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 
-import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -40,7 +39,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,7 +55,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
@@ -76,14 +73,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int REQUEST_FINISH_GAME = 1;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
-	
-	/* TODO: generalize */
-	public static final String PLAYER_NAMES[] = {
-			"Blue",
-			"Yellow",
-			"Red",
-			"Green"
-	};
 
 	
 //	public static final int KI_PERFECT = 0;
@@ -121,6 +110,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		protected void onPreExecute() {
 			view.setSpiel(null, null);
 			progress = new ProgressDialog(FreebloksActivity.this);
+			/* TODO: translate */
 			progress.setMessage("Connecting...");
 			progress.setIndeterminate(true);
 			progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -280,6 +270,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		} catch (Exception e) {
 			canresume = false;
+			/* TODO: translate */
 			Toast.makeText(FreebloksActivity.this, "Could not restore game ", Toast.LENGTH_LONG).show();
 		}
 		if (!canresume || ! prefs.getBoolean("auto_resume", false))
@@ -290,6 +281,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			
 			if (prefs.getInt("lastVersion", 0) != pinfo.versionCode) {
+				/* TODO: remove this */
 				showDialog(DIALOG_DEV);
 				
 				Editor editor = prefs.edit();
@@ -530,6 +522,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			/* TODO: translate */
 			builder.setMessage("Do you want to quit the current game? The game can be resumed, but all other players will be replaced by computers.");
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
@@ -688,6 +681,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.hint:
 			if (client == null)
 				return true;
+			/* TODO: indicate progress somehow (progressbar, ...) */
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
@@ -781,17 +775,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				if (player < 0) { 
 					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
 					if (view.model.intro != null)
-						t.setText("touch to skip");
+						t.setText(R.string.touch_to_skip);
 					else if (client == null || !client.isConnected())
-						t.setText("not connected");
+						t.setText(R.string.not_connected);
 					else
-						t.setText("no player");
+						t.setText(R.string.no_player);
 				} else {
 					statusView.setBackgroundColor(colors[player]);
 					if (!local) 
-						t.setText(String.format("Waiting for %s", PLAYER_NAMES[player]));
+						t.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
 					else {
-						t.setText("It's your turn!");
+						t.setText(R.string.your_turn);
 					}
 				}
 			}
@@ -810,7 +804,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(FreebloksActivity.this, String.format("%s is out of moves", PLAYER_NAMES[s.player]), Toast.LENGTH_SHORT).show();	
+					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[s.player]), Toast.LENGTH_SHORT).show();	
 				}
 			});
 		}
@@ -843,6 +837,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					Toast.makeText(FreebloksActivity.this, "* " + c.text,
 							Toast.LENGTH_LONG).show();
 				else
+					/* TODO: translate */
 					Toast.makeText(FreebloksActivity.this,
 							"Client " + c.client + ": " + c.text,
 							Toast.LENGTH_LONG).show();

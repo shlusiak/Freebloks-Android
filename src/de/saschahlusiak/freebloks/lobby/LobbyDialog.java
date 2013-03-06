@@ -83,31 +83,26 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
 	public void stoneHasBeenSet(NET_SET_STONE s) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void hintReceived(NET_SET_STONE s) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void gameFinished() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -129,7 +124,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -142,11 +136,11 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				
 				((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, status.clients));
 				
-				/* TODO: Translate texts */
 				TextView v = (TextView)findViewById(R.id.your_color);
-				String colorNames[] = { "Blue","Yellow", "Red", "Green" };
+				String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
 				int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
-				
+
+				/* TODO: translate */
 				v.setText("None");
 				v.setTextColor(Color.WHITE);
 				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
@@ -159,7 +153,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void onConnected(Spiel spiel) {
-		// TODO Auto-generated method stub
 		
 	}
 

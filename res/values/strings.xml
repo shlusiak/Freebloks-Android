@@ -8,16 +8,52 @@
     <string name="preferences">Preferences</string>
     <string name="hint">Hint</string>
     <string name="undo">Undo</string>
-    <string name="show_main_menu">Main menu</string>
+    <string name="resume">Resume</string>
+    <string name="main_menu">Main menu</string>
     <string name="about">About...</string>
-    <string name="about_freebloks">About FreeBloks 3D</string>
+    <string name="about_freebloks">About Freebloks 3D</string>
+    <string name="special_thanks_to">Special thanks to</string>
+    
+    <string name="your_color">Your color:</string>
+    <string name="waiting_for_color">Waiting for %1$s</string>
+    <string name="color_is_out_of_moves">%1$s is out of moves</string>
+    <string name="touch_to_skip">touch to skip</string>
+    <string name="no_player">no player</string>
+    <string name="not_connected">not connected</string>
+    <string name="your_turn">It\'s your turn!</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="start">Start</string>
+    <string name="custom_game_title">Custom game</string>
     
     <string name="lobby_waiting_for_players">Waiting for players</string>
     <string name="connected_clients">%1$d clients</string>
     <string name="chat_button">Chat</string>
-    <string name="start_now_button">Start now</string>
-    	
+    <string name="join_address">Address:</string>
+    <string name="join_request_player">Request player</string>
+   
+    <plurals name="number_of_stones_left">
+        <item quantity="one">%1$d stone</item>
+        <item quantity="other">%1$d stones</item>
+	</plurals>
+    <plurals name="number_of_points_left">
+        <item quantity="one">%1$d point</item>
+        <item quantity="other">%1$d points</item>
+	</plurals>
+    <string name="place">Place %1$d</string>
 	<string name="game_finished">Game finished</string>
+	<string-array name="color_names">
+	    <item>Blue</item>
+	    <item>Yellow</item>
+	   	<item>Red</item>
+   	    <item>Green</item>
+	</string-array>
+	<string-array name="difficulties">
+	    <item>nuts</item>
+	    <item>hard</item>
+   	    <item>medium</item>
+   	    <item>easy</item>
+ 	    <item>very easy</item>
+	</string-array>
 	<string-array name="game_modes">
 	    <item>2 Players, 2 Colors</item>
 	    <item>2 Players, 4 Colors</item>

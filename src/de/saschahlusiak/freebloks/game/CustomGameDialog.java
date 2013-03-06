@@ -47,6 +47,11 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player3 = (CheckBox)findViewById(R.id.player3);
 		player4 = (CheckBox)findViewById(R.id.player4);
 		
+		player1.setText(context.getResources().getStringArray(R.array.color_names)[0]);
+		player2.setText(context.getResources().getStringArray(R.array.color_names)[1]);
+		player3.setText(context.getResources().getStringArray(R.array.color_names)[2]);
+		player4.setText(context.getResources().getStringArray(R.array.color_names)[3]);
+		
 		field_size = (Spinner) findViewById(R.id.field_size);
 		field_size.setSelection(3);
 		
@@ -116,8 +121,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		
 		setLabel();
 		
-		/* TODO: translate */
-		setTitle("New game");
+		setTitle(R.string.custom_game_title);
 	}
 	
 	public void prepare() {
@@ -139,8 +143,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	}
 	
 	void setLabel() {
-		/* TODO: translate */
-		final String labels[] = { "nuts", "hard", "medium", "easy", "very easy" };
+		final String labels[] = getContext().getResources().getStringArray(R.array.difficulties);
 		int value = getDifficulty();
 		int text = 0;
 		
@@ -152,7 +155,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 			text = 3;
 		if (value >= 160)
 			text = 4;
-		/* TODO: localize */
 		difficulty_label.setText(String.format("%s (%d)", labels[text], difficulty.getProgress()));
 	}
 	

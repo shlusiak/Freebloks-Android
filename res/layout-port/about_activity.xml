@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Special thanks to"
+                android:text="@string/special_thanks_to"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="4dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
