@@ -84,7 +84,7 @@
     <PreferenceCategory android:title="About..." >
 
         <PreferenceScreen
-            android:summary="Please fork me!"
+            android:summary="Fork me!"
             android:title="Freebloks on GitHub..." >
 
             <intent

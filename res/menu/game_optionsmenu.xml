@@ -24,6 +24,6 @@
     <item
         android:id="@+id/show_main_menu"
         android:icon="@android:drawable/ic_menu_more"
-        android:title="@string/show_main_menu">
+        android:title="@string/main_menu">
     </item>
 </menu>

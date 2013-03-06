@@ -464,7 +464,6 @@ public class CurrentStone implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		// TODO Auto-generated method stub
 		return false;
 	}	
 }

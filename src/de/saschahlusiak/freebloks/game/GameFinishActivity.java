@@ -60,13 +60,6 @@ public class GameFinishActivity extends Activity {
 				Color.rgb(96, 0, 0),
 				Color.rgb(0, 96, 0),
 		};
-		/* TODO: translate */
-		final String names[] = {
-				"Blue",
-				"Yellow",
-				"Red",
-				"Green"
-		};
 		
 		if (spiel == null)
 			return;
@@ -107,13 +100,14 @@ public class GameFinishActivity extends Activity {
 		for (i = 0; i < 4; i++) {
 			String name;
 			Player p = spiel.get_player(place[i]);
-			/* TODO: translate */
-			name = names[place[i]];
+			name = getResources().getStringArray(R.array.color_names)[place[i]];
 			
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
-			((TextView)t[i].findViewById(R.id.points)).setText(String.format("-%d points", p.m_stone_points_left));
-			((TextView)t[i].findViewById(R.id.stones)).setText(String.format("%d stones", p.m_stone_count));
+			((TextView)t[i].findViewById(R.id.points)).setText(
+					getResources().getQuantityString(R.plurals.number_of_points_left, p.m_stone_points_left, -p.m_stone_points_left));
+			((TextView)t[i].findViewById(R.id.stones)).setText(
+					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);
 			
 			AnimationSet set = new AnimationSet(false);
@@ -156,7 +150,7 @@ public class GameFinishActivity extends Activity {
 				((TextView)t[i].findViewById(R.id.name)).setTypeface(Typeface.DEFAULT_BOLD);
 
 				t[i].findViewById(R.id.name).startAnimation(a);
-				this.place.setText(String.format("Place %d", i + 1));
+				this.place.setText(getString(R.string.place, i + 1));
 			}
 		}
 	}

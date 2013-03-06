@@ -80,7 +80,7 @@
                 android:autoLink="email"
                 android:gravity="center"
                 android:linksClickable="true"
-                android:text="wordmix@saschahlusiak.de"
+                android:text="mail@saschahlusiak.de"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
@@ -91,7 +91,7 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Special thanks to"
+                android:text="@string/special_thanks_to"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView

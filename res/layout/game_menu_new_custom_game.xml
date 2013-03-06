@@ -14,7 +14,7 @@
             android:layout_height="54dp"
             android:layout_below="@+id/difficulty"
             android:layout_centerHorizontal="true"
-            android:text="Start"
+            android:text="@string/start"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout android:orientation="horizontal"
@@ -48,7 +48,7 @@
                 android:id="@+id/player1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Blue" />
+                android:text="@array/color_names" />
 
             <CheckBox
                 android:id="@+id/player2"
@@ -69,7 +69,7 @@
                 android:id="@+id/player3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Red" />
+                android:text="Color 2" />
 
             <CheckBox
                 android:id="@+id/player4"
@@ -93,7 +93,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/linearLayout1"
             android:layout_marginTop="8dp"
-            android:text="Difficulty"
+            android:text="@string/difficulty"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
