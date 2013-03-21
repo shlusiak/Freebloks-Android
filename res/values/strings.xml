@@ -3,12 +3,11 @@
     <string name="app_name">Freebloks</string>
 
     <string name="new_local_game">New game</string>
-    <string name="continue_local_game">Continue</string>
+    <string name="resume">Resume</string>
     <string name="join_game">Join</string>
     <string name="preferences">Preferences</string>
     <string name="hint">Hint</string>
     <string name="undo">Undo</string>
-    <string name="resume">Resume</string>
     <string name="main_menu">Main menu</string>
     <string name="about">About...</string>
     <string name="about_freebloks">About Freebloks 3D</string>
@@ -70,4 +69,30 @@
 	    <item>20x20</item>
 	    <item>23x23</item>
 	</string-array>
+	
+	<string name="prefs_interface">Interface</string>
+	<string name="prefs_display">Display</string>
+	<string name="prefs_misc">Miscellaneous</string>	
+	<string name="prefs_sounds_long">Play sound effects</string>
+	<string name="prefs_sounds">Sounds</string>
+	<string name="prefs_vibrate_when_moving_long">Vibrate when moving stones</string>
+	<string name="prefs_vibrate_when_moving">Vibrate when moving</string>
+	<string name="prefs_vibrate_when_placing_long">Vibrate when placing a stone</string>
+	<string name="prefs_vibrate_when_placing">Vibrate when placing</string>
+	<string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
+	<string name="prefs_snap_to_corners">Snap to corners</string>	
+	<string name="prefs_undo_long">Undo last move with back button</string>	
+	<string name="prefs_undo">Undo with back</string>	
+	<string name="prefs_show_corners_long">Show possible corners of your stones</string>	
+	<string name="prefs_show_corners">Corners</string>	
+	<string name="prefs_show_opponents_long">Show stones of opponents</string>
+	<string name="prefs_show_opponents">Opponents</string>
+	<string name="prefs_show_animations_long">Show animations</string>
+	<string name="prefs_show_animations">Animations</string>
+	<string name="prefs_skip_intro_long">Skip intro animation on app start</string>
+	<string name="prefs_skip_intro">Skip intro</string>
+	<string name="prefs_auto_resume_long">Automatically resume last game</string>
+	<string name="prefs_auto_resume">Auto-resume</string>
+	<string name="prefs_rate_review_long">Please rate or leave a comment</string>
+	<string name="prefs_rate_review">Freebloks in Google Play...</string>
 </resources>
