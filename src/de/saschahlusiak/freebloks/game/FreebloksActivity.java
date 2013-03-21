@@ -218,7 +218,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		//	startNewGame(null, null, KI_DEFAULT);
 			OnIntroCompleted();
 		} else {
-			if (! prefs.getBoolean("skip_intro", false)) {
+			if (prefs.getBoolean("show_animations", true) && ! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(view.model, this);
 				newCurrentPlayer(-1);
 			} else

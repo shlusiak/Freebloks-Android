@@ -2,88 +2,87 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="first_preferencescreen" >
 
-    <PreferenceCategory android:title="Interface" >
+    <PreferenceCategory android:title="@string/prefs_interface" >
 		<CheckBoxPreference
-		    android:summary="Play sound effects"
-		    android:title="Sounds" 
+		    android:summary="@string/prefs_sounds_long"
+		    android:title="@string/prefs_sounds"
 		    android:key="sounds"
 		    android:persistent="true"
 		    android:defaultValue="true" />
 		
         <CheckBoxPreference
-		    android:summary="Vibrate when moving stones"
-		    android:title="Vibrate when moving"
+		    android:summary="@string/prefs_vibrate_when_moving_long"
+		    android:title="@string/prefs_vibrate_when_moving"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="vibrate_on_move" />
 		
 		<CheckBoxPreference
-		    android:summary="Vibrate when placing a stone"
-		    android:title="Vibrate when placing"
+		    android:summary="@string/prefs_vibrate_when_placing_long"
+		    android:title="@string/prefs_vibrate_when_placing"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="vibrate_on_place" />		
 		
 		<CheckBoxPreference
-		    android:summary="Help by snapping pieces to close valid positions"
-		    android:title="Snap to corners" 
+		    android:summary="@string/prefs_snap_to_corners_long"
+		    android:title="@string/prefs_snap_to_corners"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="snap_aid" />
 		
 		<CheckBoxPreference
-		    android:summary="Undo last move with back button"
-		    android:title="Undo with back"
+		    android:summary="@string/prefs_undo_long"
+		    android:title="@string/prefs_undo"
 		    android:defaultValue="false"
 		    android:persistent="true"
 		    android:key="back_undo" />
-		
 	</PreferenceCategory>
 
     
-    <PreferenceCategory android:title="Display" >
+    <PreferenceCategory android:title="@string/prefs_display" >
     	<CheckBoxPreference
-		    android:summary="Show possible corners of your stones"
-		    android:title="Corners" 
+		    android:summary="@string/prefs_show_corners_long"
+		    android:title="@string/prefs_show_corners" 
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="show_seeds" />
 
 		<CheckBoxPreference
-		    android:summary="Show stones of opponents"
-		    android:title="Opponents"
+		    android:summary="@string/prefs_show_opponents_long"
+		    android:title="@string/prefs_show_opponents"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="show_opponents" />
 
 		<CheckBoxPreference
-		    android:summary="Show animations"
-		    android:title="Animations"
+		    android:summary="@string/prefs_show_animations_long"
+		    android:title="@string/prefs_show_animations"
 		    android:defaultValue="true"
 		    android:persistent="true"
-		    android:key="show_animations" />		
+		    android:key="show_animations" />
 	</PreferenceCategory>
 	
-    <PreferenceCategory android:title="Application" >
+    <PreferenceCategory android:title="@string/prefs_misc" >
 		<CheckBoxPreference
-		    android:summary="Skip intro animation on app start"
-		    android:title="Skip intro"
+		    android:summary="@string/prefs_skip_intro_long"
+		    android:title="@string/prefs_skip_intro"
 		    android:defaultValue="false"
+		    android:dependency="show_animations"
 		    android:persistent="true"
 		    android:key="skip_intro" />
 				
         <CheckBoxPreference
-		    android:summary="Automatically resume last game"
-		    android:title="Auto-resume"
+		    android:summary="@string/prefs_auto_resume_long"
+		    android:title="@string/prefs_auto_resume"
 		    android:defaultValue="false"
 		    android:persistent="true"
 		    android:key="auto_resume" />
 		
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="About..." >
-
-        <PreferenceScreen
+    <PreferenceCategory android:title="@string/about" >
+<!--         <PreferenceScreen
             android:summary="Fork me!"
             android:title="Freebloks on GitHub..." >
 
@@ -91,10 +90,10 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/shlusiak/Freebloks-Android" />
         </PreferenceScreen>
-        
+     -->   
         <PreferenceScreen
-            android:summary="Please rate or leave a comment"
-            android:title="Freebloks in Google Play..." >
+            android:summary="@string/prefs_rate_review_long"
+            android:title="@string/prefs_rate_review" >
 
             <intent
                 android:action="android.intent.action.VIEW"
@@ -103,7 +102,7 @@
 
         <PreferenceScreen
             android:summary="Copyright (c) by Sascha Hlusiak, 2012-2013."
-            android:title="About Freebloks..." >
+            android:title="@string/about_freebloks" >
             <intent android:action="de.saschahlusiak.freebloks.SHOW_ABOUT" />
         </PreferenceScreen>
     </PreferenceCategory>    
