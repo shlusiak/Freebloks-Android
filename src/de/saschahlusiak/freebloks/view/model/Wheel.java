@@ -133,7 +133,7 @@ public class Wheel implements ViewElement {
 							model.activity.vibrate_on_move(Global.VIBRATE_START_DRAGGING);
 							if (!model.showAnimations)
 								currentAngle = lastAngle;
-							model.currentStone.startDragging(tmp, highlightStone, true);
+							model.currentStone.startDragging(tmp, highlightStone);
 							spinning = false;
 							model.view.requestRender();
 						}
@@ -193,7 +193,7 @@ public class Wheel implements ViewElement {
 				model.board.modelToBoard(tmp);
 				if (!model.showAnimations)
 					currentAngle = lastAngle;
-				model.currentStone.startDragging(tmp, highlightStone, false);
+				model.currentStone.startDragging(tmp, highlightStone);
 				spinning = false;
 			}
 		}

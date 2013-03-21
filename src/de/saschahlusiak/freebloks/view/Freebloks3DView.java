@@ -179,11 +179,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		if (model.showOpponents || model.spiel.is_local_player())
 			model.wheel.update(model.spiel.current_player());
 		
-		if (!model.showAnimations) {
-			model.soundPool.play(model.soundPool.SOUND_CLICK, 0.7f, 0.9f + (float)Math.random() * 0.2f);
-			model.activity.vibrate_on_place(Global.VIBRATE_SET_STONE);
-		}
-		
+		model.soundPool.play(model.soundPool.SOUND_CLICK, 0.7f, 0.9f + (float)Math.random() * 0.2f);
+		model.activity.vibrate_on_place(Global.VIBRATE_SET_STONE);
+
 		requestRender();
 	}
 
@@ -200,7 +198,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		PointF p = new PointF();
 		p.x = s.x - 0.5f + st.get_stone_size() / 2;
 		p.y = s.y - 0.5f + st.get_stone_size() / 2;
-		model.currentStone.startDragging(p, st, false);
+		model.currentStone.startDragging(p, st);
 		requestRender();
 	}
 

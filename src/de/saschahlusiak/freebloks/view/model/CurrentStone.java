@@ -27,7 +27,6 @@ public class CurrentStone implements ViewElement {
 	Stone stone;
 	PointF pos = new PointF();
 	boolean hasMoved;
-	boolean startedFromBelow;
 	float stone_rel_x, stone_rel_y;
 	float rotate_angle;
 	int texture[];
@@ -264,7 +263,6 @@ public class CurrentStone implements ViewElement {
 					rotate_angle = 0.0f;
 				} else {
 					status = Status.DRAGGING;
-					startedFromBelow = false;
 				}
 				return true;
 			}
@@ -387,7 +385,7 @@ public class CurrentStone implements ViewElement {
 			if (!model.vertical_layout)
 				fieldPoint.y = fieldPoint.x;
 			
-			if (!startedFromBelow && fieldPoint.y < -2.0f) {
+			if (fieldPoint.y < -2.0f) {
 				model.wheel.highlightStone = stone;
 				status = Status.IDLE;
 				stone = null;
@@ -443,7 +441,7 @@ public class CurrentStone implements ViewElement {
 		return false;
 	}
 	
-	synchronized public void startDragging(PointF fieldPoint, Stone stone, boolean startedFromBelow) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone) {
 		this.stone = stone;
 		if (stone == null) {
 			status = Status.IDLE;
@@ -451,7 +449,6 @@ public class CurrentStone implements ViewElement {
 		}
 
 		status = Status.DRAGGING;
-		this.startedFromBelow = startedFromBelow;
 		hasMoved = false;
 		stone_rel_x = 0;
 		stone_rel_y = 0;
