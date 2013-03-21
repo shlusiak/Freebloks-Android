@@ -13,6 +13,9 @@
     <string name="about">About...</string>
     <string name="about_freebloks">About Freebloks 3D</string>
     <string name="special_thanks_to">Special thanks to</string>
+    <string name="connecting">Connecting...</string>
+    <string name="could_not_restore_game">Could not restore game</string>
+    <string name="do_you_want_to_leave_current_game">Are you sure you want to leave the current game?</string>
     
     <string name="your_color">Your color:</string>
     <string name="waiting_for_color">Waiting for %1$s</string>
@@ -47,6 +50,7 @@
 	   	<item>Red</item>
    	    <item>Green</item>
 	</string-array>
+	<string name="lobby_no_color">None</string>
 	<string-array name="difficulties">
 	    <item>nuts</item>
 	    <item>hard</item>

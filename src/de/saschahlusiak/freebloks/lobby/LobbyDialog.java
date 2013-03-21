@@ -140,8 +140,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
 				int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
 
-				/* TODO: translate */
-				v.setText("None");
+				v.setText(R.string.lobby_no_color);
 				v.setTextColor(Color.WHITE);
 				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
 					v.setText(colorNames[i]);

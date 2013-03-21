@@ -110,8 +110,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		protected void onPreExecute() {
 			view.setSpiel(null, null);
 			progress = new ProgressDialog(FreebloksActivity.this);
-			/* TODO: translate */
-			progress.setMessage("Connecting...");
+			progress.setMessage(getString(R.string.connecting));
 			progress.setIndeterminate(true);
 			progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			progress.setCancelable(true);
@@ -265,13 +264,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			canresume = true;
 		} else {
 			canresume = false;
-			/* TODO: translate */
 			//	startNewGame(null, true);
 		}
 		} catch (Exception e) {
 			canresume = false;
-			/* TODO: translate */
-			Toast.makeText(FreebloksActivity.this, "Could not restore game ", Toast.LENGTH_LONG).show();
+			Toast.makeText(FreebloksActivity.this, R.string.could_not_restore_game, Toast.LENGTH_LONG).show();
 		}
 		if (!canresume || ! prefs.getBoolean("auto_resume", false))
 			showDialog(DIALOG_GAME_MENU);
@@ -522,8 +519,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			/* TODO: translate */
-			builder.setMessage("Do you want to quit the current game? The game can be resumed, but all other players will be replaced by computers.");
+			builder.setMessage(R.string.do_you_want_to_leave_current_game);
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
