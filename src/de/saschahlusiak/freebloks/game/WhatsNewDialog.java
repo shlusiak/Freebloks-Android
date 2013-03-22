@@ -12,11 +12,15 @@ import de.saschahlusiak.freebloks.R;
 
 public class WhatsNewDialog {
 	private static final String WHATS_NEW = 
-			"* changed finish dialog\n" +
-			"* button in finish window to open menu\n" +
-			"* show message when players are out of moves\n" +
-			"* new selection graphics\n" +
-			"* some bugs fixed";
+			"* more natural stone placement\n" +
+			"* finer vibration control\n" +
+			"* sound effect for placing stone\n" +
+			"* support for Blokus Duo\n" +
+			"* custom field sizes\n" +
+			"* layout updates\n" +
+			"* German translation\n" +
+			"* minor improvements\n" +
+			"* some bugs fixed, others added";
 
 
 	
