@@ -302,8 +302,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (client != null)
+		if (client != null) {
 			client.removeClientInterface(this);
+			/* TODO: make attach/detach of view symmetric */
+			client.removeClientInterface(view);
+		}
 		if (view.model.soundPool != null)
 			view.model.soundPool.release();
 		view.model.soundPool = null;
