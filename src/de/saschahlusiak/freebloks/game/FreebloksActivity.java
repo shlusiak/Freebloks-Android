@@ -388,7 +388,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
-			SpielClient client = new SpielClient(spiel1, in.getInt("last_difficulty"));
+			SpielClient client = new SpielClient(spiel1, in.getInt("last_difficulty"), null);
 			ConnectTask task = new ConnectTask(client, false, null);
 			task.execute((String)null);
 
@@ -412,7 +412,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		view.model.clearEffects();
 		Spielleiter spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
-		final SpielClient client = new SpielClient(spiel, difficulty);
+		final SpielClient client = new SpielClient(spiel, difficulty, request_player);
 		spiel.start_new_game();
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
@@ -586,6 +586,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+					/* starting new game from dialog creates game with default settings */
 					startNewGame(
 							null,
 							null, 
@@ -662,16 +663,21 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				int ki = KI_DEFAULT;
 				int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
 				int fieldsize = Spiel.DEFAULT_FIELD_SIZE_X;
+				boolean players[] = null;
 				
+				/* when starting a new game from the options menu, keep previous
+				 * selected settings / players, etc.
+				 */
 				if (client != null && client.spiel != null) {
 					ki = client.getLastDifficulty();
 					gamemode = client.spiel.m_gamemode;
 					fieldsize = client.spiel.m_field_size_x;
+					players = client.getLastPlayers();
 				}
-				startNewGame(null, null, gamemode, fieldsize, ki);
+				startNewGame(null, players, gamemode, fieldsize, ki);
 			}
 			return true;
-			
+
 		case R.id.preferences:
 			intent = new Intent(this, FreebloksPreferences.class);
 			startActivity(intent);
@@ -726,9 +732,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		switch (requestCode) {
 		case REQUEST_FINISH_GAME:
 			if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
-				/* TODO: getLastPlayers */
 				startNewGame(client.getLastHost(),
-						null,
+						client.getLastPlayers(),
 						client.spiel.m_gamemode,
 						client.spiel.m_field_size_x,
 						client.getLastDifficulty());
