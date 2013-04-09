@@ -120,8 +120,6 @@ public class CurrentStone implements ViewElement {
 		
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_white, 0);
 
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
 	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
@@ -131,7 +129,6 @@ public class CurrentStone implements ViewElement {
 	    overlay.drawElements(gl);
 	    gl.glRotatef(180.0f, 1, 0, 0);
 
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glEnable(GL10.GL_LIGHTING);
 	    
 	    
