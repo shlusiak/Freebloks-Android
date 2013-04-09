@@ -19,10 +19,12 @@ public class SpielClient {
 	String lastHost;
 	public Spielleiter spiel;
 	int lastDifficulty;
+	boolean lastPlayers[];
 
 	
-	public SpielClient(Spielleiter leiter, int difficulty) {
+	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers) {
 		this.lastDifficulty = difficulty;
+		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
 			spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
 			spiel.start_new_game();			
@@ -40,6 +42,10 @@ public class SpielClient {
 	
 	public int getLastDifficulty() {
 		return lastDifficulty;
+	}
+	
+	public boolean[] getLastPlayers() {
+		return lastPlayers;
 	}
 	
 	public boolean isConnected() {
