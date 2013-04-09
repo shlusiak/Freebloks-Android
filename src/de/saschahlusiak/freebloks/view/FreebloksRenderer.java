@@ -38,12 +38,12 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
-		init(Spiel.DEFAULT_FIELD_SIZE_X);
+		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
 		currentPlayer = -1;
 	}
 
 	public void init(int field_size) {
-		board = new BoardRenderer(field_size);
+		board.initBorder(field_size);
 	}
 
 	private float outputfar[] = new float[4];
@@ -82,6 +82,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		if (model.intro != null) {
@@ -225,8 +226,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, light0_ambient, 0);
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light0_diffuse, 0);
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light0_specular, 0);
-		
+
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
+		board.updateTexture(context, gl);
 	}
 }

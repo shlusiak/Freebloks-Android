@@ -3,7 +3,12 @@ package de.saschahlusiak.freebloks.view;
 import java.nio.ByteBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 
@@ -27,20 +32,30 @@ public class BoardRenderer {
     final float y1 = -bevel_height;
     final float y2 = 0.0f;
     
+    final float texture_scale = 0.12f;
+    final float texture_rotation = 0.5f;
+    
+    int texture[];
+    
+	BoardRenderer(int field_size) {
+		initField();
+		initBorder(field_size);
+		initStone();
+	}
 
 	private void initField() {
 		field = new SimpleModel(8, 10);
 		/* bottom, inner */
-		field.addVertex(-r2, y1, +r2,  0, 1, 0,  0, 0);
-		field.addVertex(+r2, y1, +r2,  0, 1, 0,  0, 0);
-		field.addVertex(+r2, y1, -r2,  0, 1, 0,  0, 0);
-		field.addVertex(-r2, y1, -r2,  0, 1, 0,  0, 0);
+		field.addVertex(-r2, y1, +r2,  0, 1, 0,  -r2, r2);
+		field.addVertex(+r2, y1, +r2,  0, 1, 0,  r2, r2);
+		field.addVertex(+r2, y1, -r2,  0, 1, 0,  r2, -r2);
+		field.addVertex(-r2, y1, -r2,  0, 1, 0,  -r2, -r2);
 
 		/* top, outer */
-		field.addVertex(-r1, y2, +r1, +1, 1, -1,  0, 0);
-		field.addVertex(+r1, y2, +r1, -1, 1, -1,  0, 0);
-		field.addVertex(+r1, y2, -r1, -1, 1, +1,  0, 0);
-		field.addVertex(-r1, y2, -r1, +1, 1, +1,  0, 0);
+		field.addVertex(-r1, y2, +r1, +1, 1, -1,  -r1, r1);
+		field.addVertex(+r1, y2, +r1, -1, 1, -1,  r1, r1);
+		field.addVertex(+r1, y2, -r1, -1, 1, +1,  r1, -r1);
+		field.addVertex(-r1, y2, -r1, +1, 1, +1,  -r1, -r1);
 		
 		field.addIndex(0, 1, 2);
 		field.addIndex(0, 2, 3);
@@ -110,22 +125,22 @@ public class BoardRenderer {
 		w2 = w1 + border_width;
 
 		/* front */
-		border.addVertex(w2, border_top, w2, 0, 0, 1, 0, 0);
-		border.addVertex(-w2, border_top, w2, 0, 0, 1, 0, 0);
-		border.addVertex(-w2, border_bottom, w2, 0, 0, 1, 0, 0);
-		border.addVertex(w2, border_bottom, w2, 0, 0, 1, 0, 0);
+		border.addVertex(w2, border_top, w2, 0, 0, 1, w2, border_top);
+		border.addVertex(-w2, border_top, w2, 0, 0, 1, -w2, border_top);
+		border.addVertex(-w2, border_bottom, w2, 0, 0, 1, -w2, border_bottom);
+		border.addVertex(w2, border_bottom, w2, 0, 0, 1, w2, border_bottom);
 		
 		/* top */
-		border.addVertex(w2, border_top, w2, 0, 1, 0, 0, 0);
-		border.addVertex(-w2, border_top, w2, 0, 1, 0, 0, 0);
-		border.addVertex(-w1, border_top, w1, 0, 1, 0, 0, 0);
-		border.addVertex(w1, border_top, w1, 0, 1, 0, 0, 0);
+		border.addVertex(w2, border_top, w2, 0, 1, 0, w2, w2);
+		border.addVertex(-w2, border_top, w2, 0, 1, 0, -w2, w2);
+		border.addVertex(-w1, border_top, w1, 0, 1, 0, -w1, w1);
+		border.addVertex(w1, border_top, w1, 0, 1, 0, w1, w1);
 		
 		/* inner */
-		border.addVertex(w1, border_top, w1, 0, 0, -1, 0, 0);
-		border.addVertex(-w1, border_top, w1, 0, 0, -1, 0, 0);
-		border.addVertex(-w1, 0, w1, 0, 0, -1, 0, 0);
-		border.addVertex(w1, 0, w1, 0, 0, -1, 0, 0);
+		border.addVertex(w1, border_top, w1, 0, 0, -1, w1, border_top);
+		border.addVertex(-w1, border_top, w1, 0, 0, -1, -w1, border_top);
+		border.addVertex(-w1, 0, w1, 0, 0, -1, -w1, w1);
+		border.addVertex(w1, 0, w1, 0, 0, -1, w1, w1);
 		
 		border.addIndex(0, 1, 2);
 		border.addIndex(0, 2, 3);
@@ -139,24 +154,46 @@ public class BoardRenderer {
 		border.commit();
 	}
 	
-	BoardRenderer(int field_size) {
-		initField();
-		initBorder(field_size);
-		initStone();
-	}
-	
 	final float board_diffuse_normal[] = {0.47f,0.47f,0.44f,1.0f};
 	final float board_diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
 	final float board_specular[] = {0.24f,0.22f,0.22f,1.0f};
 	final float board_shininess[] = {35.0f};
 
+	void updateTexture(Context context, GL10 gl) {
+		texture = new int[1];
+		
+		gl.glGenTextures(1, texture, 0);
+		
+		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.field_wood);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);		
+		if (gl instanceof GL11) {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
+			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+		} else {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+		}
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		BoardRenderer.myTexImage2D(gl, bitmap);
+	}
+
 	public void renderBoard(GL10 gl, Spiel spiel, int currentPlayer) {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board_shininess, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
+		
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 	 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, field.getNormalBuffer());
+	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, field.getTextureBuffer());
+	    
+	    gl.glMatrixMode(GL10.GL_TEXTURE);
+	    gl.glLoadIdentity();
+	    gl.glScalef(texture_scale, texture_scale, 1);
+	    gl.glRotatef(texture_rotation, 0, 0, 1);
+	    gl.glPushMatrix();
+	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 
 	    int w = 20, h = 20;
 	    if (spiel != null) {
@@ -177,8 +214,15 @@ public class BoardRenderer {
 	    		}
 
 	    		field.drawElements(gl);
+	    		
+	    	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
+	    	    gl.glMatrixMode(GL10.GL_MODELVIEW);
+	    	    gl.glTranslatef(stone_size * 2.0f, 0, 0);
 	    	}
+    	    gl.glMatrixMode(GL10.GL_TEXTURE);
+	    	gl.glTranslatef(- x * stone_size * 2.0f, stone_size * 2.0f, 0);
+    	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 	    	gl.glTranslatef(- x * stone_size * 2.0f, 0, stone_size * 2.0f);
 	    }
 	    gl.glPopMatrix();
@@ -186,10 +230,20 @@ public class BoardRenderer {
 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, border.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, border.getNormalBuffer());
+	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, border.getTextureBuffer());
+	    gl.glMatrixMode(GL10.GL_TEXTURE);
+    	gl.glPopMatrix();
+	    gl.glMatrixMode(GL10.GL_MODELVIEW);
+	    
 	    for (int i = 0; i < 4; i++) {
 	    	border.drawElements(gl);
 	    	gl.glRotatef(90, 0, 1, 0);
 	    }
+	    gl.glMatrixMode(GL10.GL_TEXTURE);
+	    gl.glLoadIdentity();
+	    gl.glMatrixMode(GL10.GL_MODELVIEW);
+	    
+		gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 	
 	final float stone_red[]={0.75f, 0, 0, 0};
