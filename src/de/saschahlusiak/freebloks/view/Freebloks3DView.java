@@ -192,6 +192,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		if (!model.spiel.is_local_player())
 			return;
 		
+		/* TODO: play sound when hint is shown */
+		
 		Stone st = model.spiel.get_current_player().get_stone(s.stone);
 		st.mirror_rotate_to(s.mirror_count, s.rotate_count);
 		
@@ -233,6 +235,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			Effect e = new StoneUndoEffect(model, s, t.m_playernumber, t.m_x, t.m_y);
 			model.addEffect(e);
 		}
+		/* TODO: play sound on undo */
 		requestRender();
 	}
 
