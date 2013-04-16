@@ -822,6 +822,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void gameFinished() {
 		deleteFile(GAME_STATE_FILE);
+		/* TODO: play sound on game finish */
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -877,6 +878,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
+		/* TODO: figure out, if error or gracefully; show message on error */
+		/* TODO: add sound on disconnect on error */
 		
 		runOnUiThread(new Runnable() {
 			
