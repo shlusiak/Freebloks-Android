@@ -235,6 +235,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			Effect e = new StoneUndoEffect(model, s, t.m_playernumber, t.m_x, t.m_y);
 			model.addEffect(e);
 		}
+		model.currentStone.startDragging(null, null);
 		/* TODO: play sound on undo */
 		requestRender();
 	}
