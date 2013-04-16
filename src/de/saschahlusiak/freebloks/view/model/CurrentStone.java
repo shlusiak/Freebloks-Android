@@ -93,8 +93,46 @@ public class CurrentStone implements ViewElement {
 		if (stone == null)
 			return;
 		
+		float offset = (float)(stone.get_stone_size()) - 1.0f;
+		final float z = 0.35f;
+		
 		gl.glPushMatrix();
-		gl.glTranslatef(0, 0.3f, 0.0f);
+		
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+
+	    gl.glPushMatrix();
+	    /* TODO: optimize the following 3 groups of glTranslatef */
+	    gl.glTranslatef(
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
+	    		0,
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.y);
+		gl.glTranslatef(
+				BoardRenderer.stone_size * offset,
+				0,
+				BoardRenderer.stone_size * offset);
+		
+	    gl.glTranslatef(-2.5f * z * 0.11f, 0, 2.0f * z * 0.11f);
+		
+		if (status == Status.ROTATING)
+			gl.glRotatef(rotate_angle, 0, 1, 0);
+		if (status == Status.FLIPPING_HORIZONTAL)
+			gl.glRotatef(rotate_angle, 0, 0, 1);
+		if (status == Status.FLIPPING_VERTICAL)
+			gl.glRotatef(rotate_angle, 1, 0, 0);
+		gl.glScalef(1, 0, 1);
+
+	    gl.glTranslatef(
+				-BoardRenderer.stone_size * offset,
+				0,
+				-BoardRenderer.stone_size * offset);
+
+	    gl.glDisable(GL10.GL_CULL_FACE);
+		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.45f);
+	    gl.glEnable(GL10.GL_CULL_FACE);
+		gl.glPopMatrix();
+		
+		
+		gl.glTranslatef(0, z, 0);
 		
 		gl.glPushMatrix();
 	    gl.glTranslatef(
@@ -115,7 +153,6 @@ public class CurrentStone implements ViewElement {
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isvalid ? texture[0] : texture[1]);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glEnable(GL10.GL_BLEND);
-		gl.glDisable(GL10.GL_DEPTH_TEST);
 		gl.glDisable(GL10.GL_LIGHTING);
 		
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_white, 0);
@@ -134,22 +171,17 @@ public class CurrentStone implements ViewElement {
 	    
 	    gl.glPopMatrix();
 	    
-		gl.glDisable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_TEXTURE_2D);
 		
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.y);
-		
-		
-		float offset = (float)(stone.get_stone_size())/ 2.0f;
-		offset -= 0.5f;
-	    	
+
 		gl.glTranslatef(
-				BoardRenderer.stone_size * 2.0f * offset,
+				BoardRenderer.stone_size * offset,
 				0,
-				BoardRenderer.stone_size * 2.0f * offset);
+				BoardRenderer.stone_size * offset);
 
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
@@ -159,12 +191,11 @@ public class CurrentStone implements ViewElement {
 			gl.glRotatef(rotate_angle, 1, 0, 0);
 	    	
 	    gl.glTranslatef(
-				-BoardRenderer.stone_size * 2.0f * offset,
+				-BoardRenderer.stone_size * offset,
 				0,
-				-BoardRenderer.stone_size * 2.0f * offset);
+				-BoardRenderer.stone_size * offset);
 	    
 		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, BoardRenderer.DEFAULT_ALPHA);
-		
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		
 		gl.glPopMatrix();
