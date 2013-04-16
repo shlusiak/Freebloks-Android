@@ -26,6 +26,7 @@ public class BoardRenderer {
 	SimpleModel field;
 	SimpleModel border;
 	SimpleModel stone;
+	SimpleModel shadow;
 	
     final float r1 = stone_size;
     final float r2 = stone_size - bevel_size;
@@ -41,6 +42,7 @@ public class BoardRenderer {
 		initField();
 		initBorder(field_size);
 		initStone();
+		initShadow();
 	}
 
 	private void initField() {
@@ -69,6 +71,20 @@ public class BoardRenderer {
 		field.addIndex(3, 4, 0);
 		
 		field.commit();
+	}
+	
+	void initShadow() {
+		shadow = new SimpleModel(4, 2);
+		
+		shadow.addVertex(-r1, 0, +r1, 0, 1, 0, 0, 0);
+		shadow.addVertex(+r1, 0, +r1, 0, 1, 0, 1, 0);
+		shadow.addVertex(+r1, 0, -r1, 0, 1, 0, 1, 1);
+		shadow.addVertex(-r1, 0, -r1, 0, 1, 0, 0, 1);
+		
+		shadow.addIndex(0, 1, 2);
+		shadow.addIndex(0, 2, 3);
+		
+		shadow.commit();
 	}
 
 	private void initStone() {
@@ -160,12 +176,23 @@ public class BoardRenderer {
 	final float board_shininess[] = {35.0f};
 
 	void updateTexture(Context context, GL10 gl) {
-		texture = new int[1];
+		texture = new int[2];
 		
-		gl.glGenTextures(1, texture, 0);
+		gl.glGenTextures(texture.length, texture, 0);
 		
 		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.field_wood);
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);		
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
+		if (gl instanceof GL11) {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
+			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+		} else {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+		}
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		BoardRenderer.myTexImage2D(gl, bitmap);
+		
+		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_shadow);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);
 		if (gl instanceof GL11) {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
 			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
@@ -267,6 +294,45 @@ public class BoardRenderer {
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, stone.getNormalBuffer());
 	    
 	    stone.drawElements(gl);
+	}
+
+	final float stone_red_dark[]={0.065f, 0, 0, 0};
+	final float stone_blue_dark[]={0.0f, 0.005f, 0.07f, 0};
+	final float stone_green_dark[]={0.0f, 0.065f, 0, 0};
+	final float stone_yellow_dark[]={0.070f, 0.070f, 0, 0};
+	final float stone_white_dark[]={0.06f, 0.06f, 0.06f, 0};
+	final float stone_shadow[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark };
+
+	public void renderStoneShadow(GL10 gl, int color, Stone stone, float alpha) {
+		final float c[] = stone_shadow[color + 1];
+		c[3] = alpha;
+		
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
+		
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, shadow.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, shadow.getNormalBuffer());
+	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, shadow.getTextureBuffer());
+	    
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);
+
+		for (int i = 0; i < stone.get_stone_size(); i++) {
+			int j;
+			for (j = 0; j < stone.get_stone_size(); j++) {				
+				if (stone.get_stone_field(i, j) != Stone.STONE_FIELD_FREE)
+					shadow.drawElements(gl);
+				gl.glTranslatef(stone_size * 2.0f, 0, 0);
+			}
+			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
+		}
+
+	    gl.glDisable(GL10.GL_TEXTURE_2D);
+	    gl.glDisable(GL10.GL_BLEND);
 	}
 	
 	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {
