@@ -33,6 +33,8 @@ public class StoneUndoEffect extends AbsStoneEffect {
 		z = 13.0f * phase;
 		rot = phase * 65.0f;
 		
+		/* TODO: render drop shadow for undo effect */
+		
 		gl.glPushMatrix();
 		gl.glTranslatef(0, z, 0);
 		

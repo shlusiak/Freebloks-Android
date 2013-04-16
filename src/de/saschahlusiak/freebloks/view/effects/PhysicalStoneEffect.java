@@ -30,7 +30,8 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 
 	@Override
 	public void render(GL10 gl, BoardRenderer renderer) {
-		/* Stein in Position bringen, und normal rendern, wie alle anderen auch. */
+		/* TODO: render drop shadow for physical stone effect (intro) */
+		
 		gl.glPushMatrix();
 		gl.glTranslatef(x,y,z);
 		gl.glRotatef(ang, ax, ay, az);
