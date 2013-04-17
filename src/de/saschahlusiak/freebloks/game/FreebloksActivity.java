@@ -67,7 +67,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_JOIN = 5;
-	static final int DIALOG_DEV = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	
 	static final int REQUEST_FINISH_GAME = 1;
@@ -272,23 +271,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (!canresume || ! prefs.getBoolean("auto_resume", false))
 			showDialog(DIALOG_GAME_MENU);
-		
-		PackageInfo pinfo;
-		try {
-			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			
-			if (prefs.getInt("lastVersion", 0) != pinfo.versionCode) {
-				/* TODO: remove this */
-				showDialog(DIALOG_DEV);
-				
-				Editor editor = prefs.edit();
-				editor.putInt("lastVersion", pinfo.versionCode);
-				editor.commit();
-			}
-		} catch (NameNotFoundException e) {
-			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -558,9 +540,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					return true;
 				}
 			});
-			
-		case DIALOG_DEV:
-			return WhatsNewDialog.create(this);
 			
 		default:
 			return super.onCreateDialog(id);
