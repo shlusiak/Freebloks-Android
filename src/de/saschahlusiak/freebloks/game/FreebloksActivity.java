@@ -732,11 +732,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		switch (requestCode) {
 		case REQUEST_FINISH_GAME:
 			if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
-				startNewGame(client.getLastHost(),
+				if (client == null) {
+					/* TODO: find out why client can be null here */
+					/* if we don't have a previous client object, start new game with default values */
+					startNewGame(null, null, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, Spiel.DEFAULT_FIELD_SIZE_X, KI_DEFAULT);
+				} else {
+					startNewGame(client.getLastHost(),
 						client.getLastPlayers(),
 						client.spiel.m_gamemode,
 						client.spiel.m_field_size_x,
 						client.getLastDifficulty());
+				}
 			}
 			if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
 				showDialog(DIALOG_GAME_MENU);
