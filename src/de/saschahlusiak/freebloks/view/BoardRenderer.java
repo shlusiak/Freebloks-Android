@@ -34,7 +34,7 @@ public class BoardRenderer {
     final float y2 = 0.0f;
     
     final float texture_scale = 0.12f;
-    final float texture_rotation = 0.5f;
+    final float texture_rotation = 1.0f;
     
     int texture[];
     
@@ -170,9 +170,9 @@ public class BoardRenderer {
 		border.commit();
 	}
 	
-	final float board_diffuse_normal[] = {0.47f,0.47f,0.44f,1.0f};
-	final float board_diffuse_available[] = {0.5f,0.65f,0.5f,1.0f};
-	final float board_specular[] = {0.24f,0.22f,0.22f,1.0f};
+	final float board_diffuse_normal[] = {0.6f,0.6f,0.6f,1.0f};
+	final float board_diffuse_available[] = {0.55f,0.8f,0.55f,1.0f};
+	final float board_specular[] = {0.25f,0.24f,0.24f,1.0f};
 	final float board_shininess[] = {35.0f};
 
 	void updateTexture(Context context, GL10 gl) {

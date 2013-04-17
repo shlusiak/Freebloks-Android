@@ -61,7 +61,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    gl.glPushMatrix();
 	    
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		float alpha = 0.55f - z / 19.0f;
+		float alpha = 0.65f - z / 19.0f;
 	    gl.glTranslatef(-2.5f * z * 0.11f, 0, 2.0f * z * 0.11f);
 
 	    gl.glTranslatef(
