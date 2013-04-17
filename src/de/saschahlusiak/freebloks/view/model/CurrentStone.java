@@ -33,7 +33,8 @@ public class CurrentStone implements ViewElement {
 	SimpleModel overlay;
 	Status status;
 	ViewModel model;
-	
+
+	final float hover_height = 0.45f;
 	
 	CurrentStone(ViewModel model) {
 		this.model = model;
@@ -94,7 +95,6 @@ public class CurrentStone implements ViewElement {
 			return;
 		
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		final float z = 0.35f;
 		
 		gl.glPushMatrix();
 		
@@ -111,7 +111,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				BoardRenderer.stone_size * offset);
 		
-	    gl.glTranslatef(-2.5f * z * 0.11f, 0, 2.0f * z * 0.11f);
+	    gl.glTranslatef(-2.5f * hover_height * 0.11f, 0, 2.0f * hover_height * 0.11f);
 		
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
@@ -119,7 +119,7 @@ public class CurrentStone implements ViewElement {
 			gl.glRotatef(rotate_angle, 0, 0, 1);
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
-		gl.glScalef(1, 0, 1);
+		gl.glScalef(1.09f, 0, 1.09f);
 
 	    gl.glTranslatef(
 				-BoardRenderer.stone_size * offset,
@@ -127,12 +127,12 @@ public class CurrentStone implements ViewElement {
 				-BoardRenderer.stone_size * offset);
 
 	    gl.glDisable(GL10.GL_CULL_FACE);
-		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.45f);
+		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.40f);
 	    gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glPopMatrix();
 		
 		
-		gl.glTranslatef(0, z, 0);
+		gl.glTranslatef(0, hover_height, 0);
 		
 		gl.glPushMatrix();
 	    gl.glTranslatef(
@@ -423,7 +423,7 @@ public class CurrentStone implements ViewElement {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);
-						StoneRollEffect e = new StoneRollEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 0.5f, -13.0f);
+						StoneRollEffect e = new StoneRollEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), hover_height, -15.0f);
 				
 						EffectSet set = new EffectSet();
 						set.add(e);
