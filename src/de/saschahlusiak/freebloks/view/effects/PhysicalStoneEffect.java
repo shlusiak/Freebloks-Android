@@ -28,13 +28,36 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 		ax = az = speedx = speedy = speedz = 0.0f;
 		ay = 1.0f;
 	}
+	
+	@Override
+	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+		gl.glPushMatrix();
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glDepthMask(false);
+		gl.glScalef(1, 0.01f, 1);
+		gl.glTranslatef(x, 0, z);
+	    
+		float m_alpha = 0.60f - y / 20.0f;
+	    gl.glTranslatef(-2.5f * y * 0.11f, 0, 2.0f * y * 0.11f);
+
+		gl.glRotatef(ang, ax, ay, az);
+		gl.glScalef(1.0f + y / 18.0f, 1, 1.0f + y / 18.0f);
+
+
+	    gl.glTranslatef(
+ 				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
+ 				0.0f,
+			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);	    
+		renderer.renderStoneShadow(gl, player, stone, m_alpha);
+		gl.glDepthMask(true);
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glPopMatrix();
+	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {
-		/* TODO: render drop shadow for physical stone effect (intro) */
-		
+	public void render(GL10 gl, BoardRenderer renderer) {		
 		gl.glPushMatrix();
-		gl.glTranslatef(x,y,z);
+		gl.glTranslatef(x, y, z);
 		gl.glRotatef(ang, ax, ay, az);
 		
 		gl.glTranslatef(

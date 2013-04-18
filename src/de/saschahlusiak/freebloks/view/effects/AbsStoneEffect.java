@@ -38,33 +38,25 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	}
 	
 	public void renderShadow(GL10 gl, BoardRenderer renderer, 
-			float x, float y, float z,
-			float rotx, float roty, float rotz,
+			float height,
+			float ang, float ax, float ay, float az,
 			float alpha, float scale) {
-		gl.glPushMatrix();
-		
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * x,
-	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * y);
-	    
 	    gl.glDisable(GL10.GL_DEPTH_TEST);
 	    
+	    gl.glScalef(scale, 0.01f, scale);
+
+	    
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		float m_alpha = 0.65f - z / 19.0f;
-	    gl.glTranslatef(-2.5f * z * 0.11f, 0, 2.0f * z * 0.11f);
+		float m_alpha = 0.65f - height / 19.0f;
+	    gl.glTranslatef(-2.5f * height * 0.11f, 0, 2.0f * height * 0.11f);
 
 	    gl.glTranslatef(
 	    		BoardRenderer.stone_size * offset,
 	    		0,
 	    		BoardRenderer.stone_size * offset);
-		gl.glRotatef(roty, 0, 1, 0);
-		gl.glRotatef(rotz, 0, 0, 1);
-		gl.glRotatef(rotx, 1, 0, 0);
-		gl.glScalef(1.09f, 0, 1.09f);
+		gl.glRotatef(ang, ax, ay, az);
 
-	    gl.glScalef(1.0f + z / 18.0f, 1, 1.0f + z / 18.0f);
-	    gl.glScalef(scale, 0, scale);
+	    gl.glScalef(1.0f + height / 16.0f, 1, 1.0f + height / 16.0f);
 
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * offset,
@@ -73,7 +65,6 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	    
 		renderer.renderStoneShadow(gl, player, stone, m_alpha * alpha);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
-		gl.glPopMatrix();
 	}
 	
 	@Override

@@ -48,10 +48,19 @@ public class StoneRollEffect extends AbsStoneEffect {
 
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+		gl.glPushMatrix();
+		
+	    gl.glTranslatef(
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * x,
+	    		0,
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * y);
+
 		renderShadow(gl, renderer, 
-				x, y, z, 
-				0, 0, 0,
+				z, 
+				0, 0, 0, 0,
 				1.0f, 1.0f);
+		
+		gl.glPopMatrix();
 	}
 
 	@Override

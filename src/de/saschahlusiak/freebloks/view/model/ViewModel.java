@@ -30,6 +30,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public ViewModel(Freebloks3DView view) {
 		this.view = view;
 		
+		this.spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
+		
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
 		board = new Board(this, Spiel.DEFAULT_FIELD_SIZE_X);
