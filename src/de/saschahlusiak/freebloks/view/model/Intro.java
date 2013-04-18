@@ -140,7 +140,7 @@ public class Intro implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		elapsed *= 1.2;
+		elapsed *= 1.2f;
 		anim += elapsed;
 
 		if (field_up || field_anim > 0.000001f)
@@ -448,6 +448,8 @@ public class Intro implements ViewElement {
 		gl.glPopMatrix();
 		/* Alle Steine rendern. */
 		synchronized(effects) {
+			for (Effect e: effects)
+				e.renderShadow(gl, renderer.board);
 			for (Effect e: effects)
 				e.render(gl, renderer.board);
 		}
