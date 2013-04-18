@@ -47,9 +47,9 @@ public class StoneRollEffect extends AbsStoneEffect {
 		super.execute(elapsed);
 		return true;
 	}
-
+	
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {		
+	public void renderShadow(GL10 gl, BoardRenderer renderer) {		
 		gl.glPushMatrix();
 		
 	    gl.glTranslatef(
@@ -58,7 +58,6 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 	    
 	    gl.glDisable(GL10.GL_DEPTH_TEST);
-	    gl.glPushMatrix();
 	    
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
 		float alpha = 0.65f - z / 19.0f;
@@ -75,11 +74,20 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * offset);
 	    
 		renderer.renderStoneShadow(gl, player, stone, alpha);
-		gl.glPopMatrix();
 		gl.glEnable(GL10.GL_DEPTH_TEST);
-	    
-		gl.glTranslatef(0, z, 0);
+		gl.glPopMatrix();
+	}
+
+
+	@Override
+	public void render(GL10 gl, BoardRenderer renderer) {		
+		gl.glPushMatrix();
 		
+	    gl.glTranslatef(
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		z,
+	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    
 		renderer.renderPlayerStone(gl, player, stone, BoardRenderer.DEFAULT_ALPHA);
 		
 		gl.glPopMatrix();
