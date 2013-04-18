@@ -165,6 +165,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		/* render all effects */
 		synchronized (model.effects) {
 			for (Effect effect: model.effects) {
+				effect.renderShadow(gl, board);
+			}
+			for (Effect effect: model.effects) {
 				effect.render(gl, board);
 			}
 		}

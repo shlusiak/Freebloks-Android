@@ -1,6 +1,9 @@
 package de.saschahlusiak.freebloks.view.effects;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.BoardRenderer;
 
 public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	Stone stone;
@@ -29,4 +32,10 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 		
 		return true;			
 	}
+	
+	@Override
+	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+		
+	}
+
 }
