@@ -9,11 +9,9 @@ import de.saschahlusiak.freebloks.view.model.ViewModel;
 public class StoneRollEffect extends AbsStoneEffect {
 	float z, vz;
 	boolean done = false;
-	ViewModel model;
 	
 	public StoneRollEffect(ViewModel model, Stone stone, int player, int x, int y, float z, float vz) {
-		super(stone, player, x, y);
-		this.model = model;
+		super(model, stone, player, x, y);
 		this.z = z;
 		this.vz = vz;
 	}
@@ -47,37 +45,14 @@ public class StoneRollEffect extends AbsStoneEffect {
 		super.execute(elapsed);
 		return true;
 	}
-	
+
 	@Override
-	public void renderShadow(GL10 gl, BoardRenderer renderer) {		
-		gl.glPushMatrix();
-		
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
-	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
-	    
-	    gl.glDisable(GL10.GL_DEPTH_TEST);
-	    
-		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		float alpha = 0.65f - z / 19.0f;
-	    gl.glTranslatef(-2.5f * z * 0.11f, 0, 2.0f * z * 0.11f);
-
-	    gl.glTranslatef(
-	    		BoardRenderer.stone_size * offset,
-	    		0,
-	    		BoardRenderer.stone_size * offset);
-	    gl.glScalef(1.0f + z / 18.0f, 1, 1.0f + z / 18.0f);
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * offset,
-	    		0,
-	    		-BoardRenderer.stone_size * offset);
-	    
-		renderer.renderStoneShadow(gl, player, stone, alpha);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-		gl.glPopMatrix();
+	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+		renderShadow(gl, renderer, 
+				x, y, z, 
+				0, 0, 0,
+				1.0f, 1.0f);
 	}
-
 
 	@Override
 	public void render(GL10 gl, BoardRenderer renderer) {		

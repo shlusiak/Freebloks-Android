@@ -9,32 +9,40 @@ import de.saschahlusiak.freebloks.view.model.ViewModel;
 public class StoneUndoEffect extends AbsStoneEffect {
 	static private final float TIME = 1.1f;
 	
-	ViewModel model;
-	
+	float phase, z, alpha, rot;
+		
 	public StoneUndoEffect(ViewModel model, Stone stone, int player, int x, int y) {
-		super(stone, player, x, y);
-		this.model = model;
+		super(model, stone, player, x, y);
 	}
 	
 	@Override
 	public boolean isDone() {
 		return time > TIME;
 	}
-
+	
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {
-		float z;
-		float alpha;
-		float rot;
+	public boolean execute(float elapsed) {
+		super.execute(elapsed);
 		
-		float phase = (float) Math.pow(time / TIME, 0.8);
-		
+		phase = (float) Math.pow(time / TIME, 0.8);
+
 		alpha = 1.0f - phase;
 		z = 13.0f * phase;
 		rot = phase * 65.0f;
-		
-		/* TODO: render drop shadow for undo effect */
-		
+
+		return true;
+	}
+	
+	@Override
+	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+		renderShadow(gl, renderer, 
+				x, y, z,
+				0.0f, rot, 0.0f,
+				alpha, 1.0f);
+	}
+
+	@Override
+	public void render(GL10 gl, BoardRenderer renderer) {		
 		gl.glPushMatrix();
 		gl.glTranslatef(0, z, 0);
 		

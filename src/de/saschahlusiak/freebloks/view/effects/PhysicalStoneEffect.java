@@ -4,6 +4,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
+import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class PhysicalStoneEffect extends AbsStoneEffect {
 	public static final float GRAVITY = 17.0f;
@@ -19,8 +20,8 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	   um kleine Rechenungenauigkeiten waehrend der Animation auszugleichen. */
 	float dx,dy,dz;
 
-	public PhysicalStoneEffect(Stone stone, int player) {
-		super(stone, player, 0, 0);
+	public PhysicalStoneEffect(ViewModel model, Stone stone, int player) {
+		super(model, stone, player, 0, 0);
 		this.x = this.y = this.z = 0.0f;
 		ang = 0.0f;
 		angspeed = 0.0f;

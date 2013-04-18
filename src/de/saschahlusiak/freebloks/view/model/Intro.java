@@ -247,7 +247,7 @@ public class Intro implements ViewElement {
 
 		/* CPhysicalStone erstellen, aus stones[stone] */
 		Stone st = stones[stone];
-		PhysicalStoneEffect s=new PhysicalStoneEffect(st, color);
+		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, color);
 		
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
 		x=(float)(-(Spiel.DEFAULT_FIELD_SIZE_X-1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
