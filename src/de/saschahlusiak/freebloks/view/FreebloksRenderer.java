@@ -31,6 +31,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	int viewport[] = new int[4];
 	float projectionMatrix[] = new float[16];
 	float modelViewMatrix[] = new float[16];
+	public boolean isSoftwareRenderer;
 
 	public BoardRenderer board;
 
@@ -105,7 +106,11 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		if (updateModelViewMatrix) synchronized(outputfar) {
 			GL11 gl11 = (GL11)gl;
 //				Log.w("onDrawFrame", "updating modelViewMatrix");
-			gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
+			if (isSoftwareRenderer) {
+				/* FIXME: add path for software renderer */
+			} else {
+				gl11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
+			}
 			updateModelViewMatrix = false;
 		}
 
@@ -205,11 +210,18 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
 		synchronized(outputfar) {
-			gl11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+			if (isSoftwareRenderer) {
+				/* FIXME: add path for software renderer */
+			} else {
+				gl11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+			}
 		}
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		String renderer = gl.glGetString(GL10.GL_RENDERER);
+		isSoftwareRenderer = renderer.contains("PixelFlinger");
+		
 		gl.glDisable(GL10.GL_DITHER);
 
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
