@@ -13,12 +13,10 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	private static final float ALPHA_MAX = 1.0f;
 	
 	private float NUMBER_OF_PERIODS;
-	ViewModel model;
 	
 	public StoneFadeEffect(ViewModel model, Stone stone, int player, int x, int y, float cycles) {
-		super(stone, player, x, y);
+		super(model, stone, player, x, y);
 		this.NUMBER_OF_PERIODS = cycles;
-		this.model = model;
 	}
 	
 	@Override
