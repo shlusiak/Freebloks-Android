@@ -11,13 +11,13 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:src="@drawable/freebloks" />
+            android:src="@drawable/freebloks_big" />
 
         <TextView
             android:id="@+id/version"
