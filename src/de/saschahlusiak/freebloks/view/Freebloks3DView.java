@@ -58,7 +58,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				renderer.currentPlayer = spiel.current_player();
 				model.board.last_size = spiel.m_field_size_x;
 				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
-					model.showPlayer = i;
+					model.board.centerPlayer = i;
 					if (!model.showOpponents)
 						renderer.currentPlayer = i;
 					renderer.updateModelViewMatrix = true;
@@ -67,7 +67,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				if (spiel.is_local_player())
 					renderer.currentPlayer = spiel.current_player();
 				/* TODO: show currentPlayer, if local, otherwise show showPlayer */
-				model.wheel.update(renderer.currentPlayer);
+				model.wheel.setCurrentPlayer(renderer.currentPlayer);
+				model.wheel.setShowPlayer(renderer.currentPlayer, true);
 			}
 		}
 		
@@ -154,7 +155,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	public void newCurrentPlayer(int player) {
 		renderer.currentPlayer = player;
 		if (model.showOpponents || model.spiel.is_local_player(player))
-			model.wheel.update(player);
+			model.wheel.setCurrentPlayer(player);
 		else
 			model.wheel.update();
 		requestRender();
@@ -177,7 +178,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	
 	public void stoneHasBeenSet(NET_SET_STONE s) {
 		if (model.showOpponents || model.spiel.is_local_player())
-			model.wheel.update(model.spiel.current_player());
+			model.wheel.setCurrentPlayer(model.spiel.current_player());
 		
 		model.soundPool.play(model.soundPool.SOUND_CLICK, 0.7f, 0.9f + (float)Math.random() * 0.2f);
 		model.activity.vibrate_on_place(Global.VIBRATE_SET_STONE);
@@ -217,11 +218,12 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	@Override
 	public void gameStarted() {
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (model.spiel.is_local_player(i)) {
-			model.showPlayer = i;
+			model.board.centerPlayer = i;
 			if (!model.showOpponents) {
 				renderer.currentPlayer = i;
-				model.wheel.update(i);
+				model.wheel.setCurrentPlayer(i);
 			}
+			model.wheel.setShowPlayer(renderer.currentPlayer, true);
 			renderer.updateModelViewMatrix = true;
 			break;
 		}
