@@ -78,7 +78,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public synchronized void onDrawFrame(GL10 gl) {
 		final float camera_distance = zoom;
 		long t = System.currentTimeMillis();
-		float angle = getAngleY();
+		float cameraAngle = model.board.getCameraAngle();
+		float boardAngle = model.board.mAngleY;
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -90,7 +91,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 			model.intro.render(gl, this);
 			return;
 		}
-		
+
 		gl.glLoadIdentity();
 		if (height > width)
 			gl.glTranslatef(0, 7.4f, 0);
@@ -98,9 +99,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 			gl.glTranslatef(5.0f, 0.6f, 0);
 		
 		GLU.gluLookAt(gl, 
-				(float) (fixed_zoom/camera_distance*Math.sin(angle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
+				(float) (fixed_zoom/camera_distance*Math.sin(cameraAngle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
 				(float) (fixed_zoom/camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
-				(float) (fixed_zoom/camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-angle*Math.PI/180.0)),
+				(float) (fixed_zoom/camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-cameraAngle*Math.PI/180.0)),
 				0.0f, 0.0f, 0.0f,
 				0.0f, 1.0f, 0.0f);
 		if (updateModelViewMatrix) synchronized(outputfar) {
@@ -120,6 +121,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		int player = -1;
 		if (model.spiel != null && model.spiel.is_local_player() && model.showSeeds)
 			player = model.spiel.current_player();
+		gl.glRotatef(boardAngle, 0, 1, 0);
 		board.renderBoard(gl, model.spiel, player);
 		
 		if (model.spiel == null)
@@ -152,15 +154,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	    }
 	    gl.glDisable(GL10.GL_BLEND);
 	    gl.glPopMatrix();
-		
-		if (currentPlayer >= 0 && model.showPlayer >= 0) {
-			gl.glPushMatrix();
-			gl.glRotatef(angle, 0, 1, 0);
-			if (width > height)
-				gl.glRotatef(-90.0f, 0, 1, 0);
-			model.wheel.render(this, gl);
-			gl.glPopMatrix();
-		}
+
 		
 		/* render all effects */
 		synchronized (model.effects) {
@@ -171,18 +165,24 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 				effect.render(gl, board);
 			}
 		}
+		gl.glRotatef(-boardAngle, 0, 1, 0);
+
+		if (currentPlayer >= 0 && model.board.centerPlayer >= 0) {
+			gl.glPushMatrix();
+			/* reverse the cameraAngle to always fix wheel in front of camera */
+			gl.glRotatef(cameraAngle, 0, 1, 0);
+			if (width > height)
+				gl.glRotatef(-90.0f, 0, 1, 0);
+			model.wheel.render(this, gl);
+			gl.glPopMatrix();
+		}
+		
 		
 		/* render current player stone on the field */
 		if (model.spiel.is_local_player())
 			model.currentStone.render(this, gl);
 		
 //		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");
-	}
-	
-	final float getAngleY() {
-		if (model.showPlayer < 0)
-			return 0.0f;
-		return -90.0f * (float)model.showPlayer;
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {

@@ -23,7 +23,6 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public Sounds soundPool;
 
 	public boolean showSeeds, showOpponents, showAnimations, snapAid;
-	public int showPlayer;
 	public boolean vertical_layout = true;
 	boolean redraw;
 
@@ -35,16 +34,17 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
 		board = new Board(this, Spiel.DEFAULT_FIELD_SIZE_X);
-		showPlayer = 0;
 		
 		effects = new ArrayList<Effect>();
 		
 		add(currentStone);
 		add(wheel);
+		add(board);
 	}
 	
 	public void reset() {
 		currentStone.stone = null;
+		board.resetRotation();
 	}
 
 	public void setSpiel(Spielleiter spiel) {
