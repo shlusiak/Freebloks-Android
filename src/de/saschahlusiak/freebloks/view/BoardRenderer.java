@@ -171,7 +171,7 @@ public class BoardRenderer {
 	}
 	
 	final float board_diffuse_normal[] = {0.6f,0.6f,0.6f,1.0f};
-	final float board_diffuse_available[] = {0.55f,0.8f,0.55f,1.0f};
+	final float board_diffuse_available[] = {0.50f,0.8f,0.60f,1.0f};
 	final float board_specular[] = {0.25f,0.24f,0.24f,1.0f};
 	final float board_shininess[] = {35.0f};
 
