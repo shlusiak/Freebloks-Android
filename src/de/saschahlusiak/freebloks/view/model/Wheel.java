@@ -63,6 +63,10 @@ public class Wheel implements ViewElement {
 		return currentPlayer;
 	}
 	
+	public int getShowPlayer() {
+		return showPlayer;
+	}
+	
 	public void setShowPlayer(int showPlayer, boolean force) {
 		if (force || showPlayer != this.showPlayer)
 			update(showPlayer);
