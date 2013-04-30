@@ -112,7 +112,7 @@ public class Board implements ViewElement {
 			mAngleY += 360.0f;
 		
 		int s = getShowPlayer();
-		model.wheel.setShowPlayer(s < 0 ? model.wheel.currentPlayer : s, false);
+		model.wheel.setShowPlayer(s);
 
 		model.redraw = true;
 		return true;
@@ -143,7 +143,7 @@ public class Board implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
-			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.6f) * 25.0f;
+			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.65f) * 30.0f;
 			
 			/* TODO: cleanup / refactor */
 			if (mAngleY - ta > 0.1f) {
@@ -151,7 +151,7 @@ public class Board implements ViewElement {
 				if (mAngleY - ta <= 0.1f) {
 					mAngleY = ta;
 					int s = getShowPlayer();
-					model.wheel.setShowPlayer(s < 0 ? model.wheel.currentPlayer : s, false);
+					model.wheel.setShowPlayer(s);
 				}
 				return true;
 			}
@@ -160,7 +160,7 @@ public class Board implements ViewElement {
 				if (mAngleY - ta >= -0.1f) {
 					mAngleY = ta;
 					int s = getShowPlayer();
-					model.wheel.setShowPlayer(s < 0 ? model.wheel.currentPlayer : s, false);
+					model.wheel.setShowPlayer(s);
 				}
 				return true;
 			}			

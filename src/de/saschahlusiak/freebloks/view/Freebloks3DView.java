@@ -68,7 +68,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 					renderer.currentPlayer = spiel.current_player();
 				/* TODO: show currentPlayer, if local, otherwise show showPlayer */
 				model.wheel.setCurrentPlayer(renderer.currentPlayer);
-				model.wheel.setShowPlayer(renderer.currentPlayer, true);
+				model.wheel.setShowPlayer(-1);
+				model.wheel.update();
 			}
 		}
 		
@@ -223,7 +224,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				renderer.currentPlayer = i;
 				model.wheel.setCurrentPlayer(i);
 			}
-			model.wheel.setShowPlayer(renderer.currentPlayer, true);
+			model.wheel.setShowPlayer(-1);
 			renderer.updateModelViewMatrix = true;
 			break;
 		}

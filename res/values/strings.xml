@@ -19,6 +19,8 @@
     <string name="your_color">Your color:</string>
     <string name="waiting_for_color">Waiting for %1$s</string>
     <string name="color_is_out_of_moves">%1$s is out of moves</string>
+    <string name="player_status_points">-%1$d points</string>
+    <string name="player_status_moves">%1$d moves</string>
     <string name="touch_to_skip">touch to skip</string>
     <string name="no_player">no player</string>
     <string name="not_connected">not connected</string>
