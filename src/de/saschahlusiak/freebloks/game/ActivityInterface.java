@@ -7,4 +7,5 @@ public interface ActivityInterface {
 	public void vibrate_on_move(int ms);
 	public void vibrate_on_place(int ms);
 	public void gameFinished();
+	public void showPlayer(int player);
 }

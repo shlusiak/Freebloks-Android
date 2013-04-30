@@ -121,7 +121,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		int player = -1;
 		if (model.spiel != null && model.spiel.is_local_player() && model.showSeeds)
 			player = model.spiel.current_player();
-		if (model.showSeeds && model.wheel.getCurrentPlayer() != model.wheel.getShowPlayer())
+		if (model.spiel != null && model.showSeeds && model.wheel.getShowPlayer() >= 0)
 			player = model.wheel.getShowPlayer();
 		gl.glRotatef(boardAngle, 0, 1, 0);
 		board.renderBoard(gl, model.spiel, player);

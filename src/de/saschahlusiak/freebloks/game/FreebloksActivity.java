@@ -232,6 +232,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			}
 		});
 		
+		findViewById(R.id.myLocation).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				view.model.board.resetRotation();
+			}
+		});
+		
 		final Animation a = new TranslateAnimation(0, 8, 0, 0);
 		a.setInterpolator(new CycleInterpolator(2));
 		a.setDuration(500);
@@ -731,18 +738,21 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
+	
 	@Override
 	public void newCurrentPlayer(final int player) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				boolean local = false;
+				int showPlayer = view.model.board.getShowPlayer();
 				if (client != null && client.spiel != null)
 					local = client.spiel.is_local_player(player);
+				else
+					showPlayer = player;
 				
 				if (optionsMenu != null) {
-					optionsMenu.findItem(R.id.hint).setEnabled(local);
+					optionsMenu.findItem(R.id.hint).setEnabled(local && showPlayer == -1);
 					optionsMenu.findItem(R.id.undo).setEnabled(local);
 				}
 
@@ -759,8 +769,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				v = findViewById(R.id.progressBar);
 				v.setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
 				
-				TextView t = (TextView)findViewById(R.id.currentPlayer);
+				TextView t;
+				t = (TextView)findViewById(R.id.movesLeft);
+				t.setVisibility(View.INVISIBLE);
+
+				t = (TextView)findViewById(R.id.currentPlayer);
 				t.clearAnimation();
+				findViewById(R.id.myLocation).setVisibility((player >= 0 && showPlayer >= 0) ? View.VISIBLE : View.INVISIBLE);
 				if (player < 0) { 
 					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
 					if (view.model.intro != null)
@@ -770,11 +785,26 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					else
 						t.setText(R.string.no_player);
 				} else {
-					statusView.setBackgroundColor(colors[player]);
-					if (!local) 
-						t.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
-					else {
-						t.setText(R.string.your_turn);
+					if (showPlayer < 0) {
+						statusView.setBackgroundColor(colors[player]);
+						if (!local) 
+							t.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
+						else {
+							t.setText(R.string.your_turn);
+						}
+					} else {
+						statusView.setBackgroundColor(colors[showPlayer]);
+						Player p = client.spiel.get_player(showPlayer);
+						if (p.m_number_of_possible_turns <= 0) {
+							t.setText("[" + getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[showPlayer]) + "]");
+						}
+						else {
+							t.setText(getString(R.string.player_status_points, p.m_stone_points_left));
+
+							t = (TextView)findViewById(R.id.movesLeft);
+							t.setVisibility(View.VISIBLE);
+							t.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
+						}
 					}
 				}
 			}
@@ -929,5 +959,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				showDialog(DIALOG_GAME_MENU);
 			}
 		}
+	}
+
+	@Override
+	public void showPlayer(int player) {
+		Log.d(tag, "showing current player: " + player);
+		if (client == null)
+			return;
+		if (client.spiel == null)
+			return;
+		newCurrentPlayer(client.spiel.current_player());
 	}
 }
