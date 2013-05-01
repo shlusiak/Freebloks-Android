@@ -92,8 +92,8 @@ public class Wheel implements ViewElement {
 		model.board.boardToUnified(tmp);
 		if (!model.vertical_layout) {
 			float t = tmp.x;
-			tmp.x = model.spiel.m_field_size_y - tmp.y - 1;
-			tmp.y = t;
+			tmp.x = tmp.y;
+			tmp.y = model.spiel.m_field_size_x - t - 1;
 		}
 		
 		originalX = tmp.x;
@@ -187,8 +187,8 @@ public class Wheel implements ViewElement {
 		
 		if (!model.vertical_layout) {
 			float t = tmp.x;
-			tmp.x = model.spiel.m_field_size_y - tmp.y - 1;
-			tmp.y = t;
+			tmp.x = tmp.y;
+			tmp.y = model.spiel.m_field_size_x - t - 1;
 		}
 		
 		/* everything underneath row 0 spins the wheel */
@@ -284,7 +284,7 @@ public class Wheel implements ViewElement {
 				gl.glPushMatrix();
 				gl.glRotatef(90 * model.board.centerPlayer, 0, 1, 0);
 				if (!model.vertical_layout)
-					gl.glRotatef(90.0f, 0, 1, 0);
+					gl.glRotatef(-90.0f, 0, 1, 0);
 				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
 				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : getPlayer(), s, alpha);
 				gl.glPopMatrix();

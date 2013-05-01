@@ -411,7 +411,7 @@ public class CurrentStone implements ViewElement {
 			fieldPoint.y = y;
 			model.board.boardToUnified(fieldPoint);
 			if (!model.vertical_layout)
-				fieldPoint.y = fieldPoint.x;
+				fieldPoint.y = model.spiel.m_field_size_x - fieldPoint.x - 1;
 			
 			if (fieldPoint.y < -2.0f) {
 				model.wheel.highlightStone = stone;
