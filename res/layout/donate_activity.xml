@@ -2,19 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:gravity="center_horizontal"
+        android:text="@string/donation_text_long"
+        android:paddingBottom="16dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
-
+    <Button
+        android:id="@+id/donation_001"
+        android:layout_width="190dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:text="Button" />
+    <Button
+        android:id="@+id/donation_002"
+        android:layout_width="190dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:text="Button" />
+    <Button
+        android:id="@+id/donation_003"
+        android:layout_width="190dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:text="Button" />
+    <Button
+        android:id="@+id/donation_004"
+        android:layout_width="190dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:text="Button" />
+    
 </LinearLayout>
