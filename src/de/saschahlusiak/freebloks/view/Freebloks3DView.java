@@ -194,6 +194,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		if (!model.spiel.is_local_player())
 			return;
 		
+		model.board.resetRotation();
+		
 		/* TODO: play sound when hint is shown */
 		
 		Stone st = model.spiel.get_current_player().get_stone(s.stone);
