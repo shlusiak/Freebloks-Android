@@ -70,6 +70,9 @@
 	    <item>23x23</item>
 	</string-array>
 	
+	<string name="please_donate">Please donate</string>
+	<string name="donation_text_long">Freebloks 3D is free open source software. You can use and modify it completely free of charge!\n\nIf you want to support the developers of Freebloks 3D, you can make a donation through Google Play.</string>
+	
 	<string name="prefs_interface">Interface</string>
 	<string name="prefs_display">Display</string>
 	<string name="prefs_misc">Miscellaneous</string>	
@@ -95,5 +98,5 @@
 	<string name="prefs_auto_resume">Auto-resume</string>
 	<string name="prefs_rate_review_long">Please rate or leave a comment</string>
 	<string name="prefs_rate_review">Freebloks in Google Play...</string>
-	<string name="prefs_donation_long">Support the developers by donating</string>
-	<string name="prefs_donation">Donations</string></resources>
+	<string name="prefs_donation_long">Please support the development with a donation</string>
+	<string name="prefs_donation">Support developers</string></resources>

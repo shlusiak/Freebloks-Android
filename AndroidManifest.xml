@@ -39,7 +39,8 @@
         </activity>
         <activity 
             android:name=".donate.DonateActivity"
-            android:label="Donate"
+            android:label="@string/please_donate"
+            android:icon="@drawable/coin"
             android:exported="false" >
             <intent-filter>
                 <action android:name="de.saschahlusiak.freebloks.SHOW_DONATE" />
