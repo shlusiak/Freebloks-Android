@@ -36,6 +36,12 @@ class SpielClientThread extends Thread {
 	public synchronized void goDown() {
 		godown = true;
 	}
+	
+	Exception error = null;
+	
+	public Exception getError() {
+		return error;
+	}
 
 	@Override
 	public void run() {
@@ -51,13 +57,24 @@ class SpielClientThread extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		do {
-			if (!client.poll(true))
-				break;
-			if (getGoDown()) {
-				return;
+		try {
+			do {
+				if (!client.poll(true))
+					break;
+				if (getGoDown()) {
+					return;
+				}
+			} while (client.isConnected());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			/* the disconnect method in client is synchronized and will call the
+			 * onDisconnected listener. Make sure, that is run before we store the error
+			 */
+			synchronized(client) {
+				error = e;
 			}
-		} while (client.isConnected());
+		}
 		client.disconnect();
 		if (sendThread.looper != null)
 			sendThread.looper.quit();

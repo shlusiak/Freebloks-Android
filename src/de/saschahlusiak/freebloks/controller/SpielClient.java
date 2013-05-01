@@ -96,21 +96,16 @@ public class SpielClient {
 		client_socket = null;
 	}
 
-	public boolean poll(boolean block) {
+	public boolean poll(boolean block) throws Exception {
 		NET_HEADER pkg;
 		/* Puffer fuer eine Netzwerknachricht. */
 		do {
 			/* Lese eine Nachricht komplett aus dem Socket in buffer */
-			try {
-				pkg = Network.read_package(client_socket, block);
-				if (pkg != null)
-					process_message(pkg);
-				if (block)
-					return (pkg != null);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
+			pkg = Network.read_package(client_socket, block);
+			if (pkg != null)
+				process_message(pkg);
+			if (block)
+				return (pkg != null);
 		} while (pkg != null);
 		return true;
 	}
@@ -169,7 +164,7 @@ public class SpielClient {
 			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
 				// GAANZ schlecht!!
-				throw new Exception("Game not in sync!");
+				throw new Exception("game not in sync");
 			}
 
 			for (SpielClientInterface sci : spielClientInterface)

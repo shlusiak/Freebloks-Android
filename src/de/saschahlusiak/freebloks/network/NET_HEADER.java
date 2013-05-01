@@ -51,7 +51,7 @@ public class NET_HEADER {
 
 		r = is.read(buffer, 0, HEADER_SIZE);
 		if (r < HEADER_SIZE)
-			throw new Exception("Short read for header");
+			throw new Exception("read error");
 
 		check1 = unsigned(buffer[0]);
 		data_length = unsigned(buffer[1]) << 8 | unsigned(buffer[2]);
@@ -59,7 +59,7 @@ public class NET_HEADER {
 		check2 = unsigned(buffer[4]);
 
 		if (data_length < HEADER_SIZE)
-			throw new Exception("Invalid length in header data");
+			throw new Exception("invalid header data length");
 
 		/* Beiden Checksums erneut berechnen */
 		int c1 = (byte) (data_length & 0x0055) ^ msg_type;
@@ -71,12 +71,12 @@ public class NET_HEADER {
 		data_length -= HEADER_SIZE;
 
 		if (is.available() < data_length)
-			throw new Exception("short read for remaining package payload");
+			throw new Exception("short read for package payload");
 		buffer = new byte[data_length];
 
 		r = is.read(buffer, 0, data_length);
 		if (r < data_length)
-			throw new Exception("short read for remaining package payload");
+			throw new Exception("short read for package payload");
 
 		return true;
 

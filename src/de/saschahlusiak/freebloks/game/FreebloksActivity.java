@@ -893,14 +893,25 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
-		/* TODO: figure out, if error or gracefully; show message on error */
-		/* TODO: add sound on disconnect on error */
-		
+		final Exception error = spielthread.getError();
 		runOnUiThread(new Runnable() {
-			
 			@Override
 			public void run() {
 				newCurrentPlayer(-1);
+
+				if (error != null) {
+					/* TODO: add sound on disconnect on error */
+					AlertDialog.Builder builder = new AlertDialog.Builder(FreebloksActivity.this);
+					builder.setTitle(android.R.string.dialog_alert_title);
+					builder.setMessage(getString(R.string.disconnect_error, error.getMessage()));
+					builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					builder.create().show();
+				}
 			}
 		});
 	}
