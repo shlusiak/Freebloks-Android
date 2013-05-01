@@ -672,7 +672,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.hint:
 			if (client == null)
 				return true;
-			/* TODO: indicate progress somehow (progressbar, ...) */
+			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
@@ -831,7 +831,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void hintReceived(NET_SET_STONE s) {
-
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {				
+				findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+			}
+		});
 	}
 
 	@Override
