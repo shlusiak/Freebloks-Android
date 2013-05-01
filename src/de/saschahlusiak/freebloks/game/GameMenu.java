@@ -1,8 +1,10 @@
 package de.saschahlusiak.freebloks.game;
 
+import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.R;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.view.View;
@@ -23,6 +25,13 @@ public class GameMenu extends Dialog {
 			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
 			e.printStackTrace();
 		}
+		findViewById(R.id.imageView1).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getContext(), AboutActivity.class);
+				getContext().startActivity(intent);
+			}
+		});
 	}
 
 	@Override
