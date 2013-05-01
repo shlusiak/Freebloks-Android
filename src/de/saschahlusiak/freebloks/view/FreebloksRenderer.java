@@ -93,10 +93,10 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 
 		gl.glLoadIdentity();
-		if (height > width)
+		if (model.vertical_layout)
 			gl.glTranslatef(0, 7.4f, 0);
 		else
-			gl.glTranslatef(5.0f, 0.6f, 0);
+			gl.glTranslatef(-5.0f, 0.6f, 0);
 		
 		GLU.gluLookAt(gl, 
 				(float) (fixed_zoom/camera_distance*Math.sin(cameraAngle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
@@ -173,8 +173,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 			gl.glPushMatrix();
 			/* reverse the cameraAngle to always fix wheel in front of camera */
 			gl.glRotatef(cameraAngle, 0, 1, 0);
-			if (width > height)
-				gl.glRotatef(-90.0f, 0, 1, 0);
+			if (!model.vertical_layout)
+				gl.glRotatef(90.0f, 0, 1, 0);
 			model.wheel.render(this, gl);
 			gl.glPopMatrix();
 		}
@@ -202,7 +202,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		model.vertical_layout = (height >= width);
 		
 		float fovy;
-		if (height > width) {
+		if (model.vertical_layout) {
 			fovy = 35.0f;
 		} else {
 			fovy = 21.0f;
