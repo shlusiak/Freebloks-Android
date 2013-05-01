@@ -65,6 +65,7 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 		
 		b.setText(details.getPrice());
 		b.setTag(details);
+		b.setEnabled(true);
 		
 		b.setOnClickListener(new OnClickListener() {
 			@Override
@@ -80,10 +81,6 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 	public void onIabSetupFinished(IabResult result) {
 		if (!result.isSuccess()) {
 			Log.d(tag, "Problem setting up In-app Billing: " + result);
-			setupButton(R.id.donation_001, null);
-			setupButton(R.id.donation_002, null);
-			setupButton(R.id.donation_003, null);
-			setupButton(R.id.donation_004, null);
 		} else {
 			List<String> more = new ArrayList<String>();
 			more.add("donation_001");

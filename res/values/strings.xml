@@ -71,7 +71,7 @@
 	</string-array>
 	
 	<string name="please_donate">Please donate</string>
-	<string name="donation_text_long">Freebloks 3D is free open source software. You can use and modify it completely free of charge!\n\nIf you want to support the developers of Freebloks 3D, you can make a donation through Google Play.</string>
+	<string name="donation_text_long">Freebloks 3D is open source. You can use and modify it completely free of charge!\n\nIf you want to support the developers of Freebloks 3D, please make a donation through Google Play.</string>
 	
 	<string name="prefs_interface">Interface</string>
 	<string name="prefs_display">Display</string>
@@ -99,4 +99,4 @@
 	<string name="prefs_rate_review_long">Please rate or leave a comment</string>
 	<string name="prefs_rate_review">Freebloks in Google Play...</string>
 	<string name="prefs_donation_long">Please support the development with a donation</string>
-	<string name="prefs_donation">Support developers</string></resources>
+	<string name="prefs_donation">Donate...</string></resources>
