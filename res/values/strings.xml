@@ -10,7 +10,7 @@
     <string name="undo">Undo</string>
     <string name="main_menu">Main menu</string>
     <string name="about">About...</string>
-    <string name="about_freebloks">About Freebloks 3D</string>
+    <string name="about_freebloks">About Freebloks...</string>
     <string name="special_thanks_to">Special thanks to</string>
     <string name="connecting">Connecting...</string>
     <string name="could_not_restore_game">Could not restore game</string>
@@ -70,8 +70,8 @@
 	    <item>23x23</item>
 	</string-array>
 	
-	<string name="please_donate">Please donate</string>
-	<string name="donation_text_long">Freebloks 3D is open source. You can use and modify it completely free of charge!\n\nIf you want to support the developers of Freebloks 3D, please make a donation through Google Play.</string>
+	<string name="please_donate">Please support the developers</string>
+	<string name="donation_text_long">Freebloks is open source software. You can use and modify it completely free of charge!\n\nIf you want to support the developers of Freebloks, please make a donation through Google Play.</string>
 	
 	<string name="prefs_interface">Interface</string>
 	<string name="prefs_display">Display</string>

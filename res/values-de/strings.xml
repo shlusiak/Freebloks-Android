@@ -10,7 +10,7 @@
     <string name="undo">Rückgängig</string>
     <string name="main_menu">Hauptmenü</string>
     <string name="about">Über...</string>
-    <string name="about_freebloks">Über Freebloks 3D</string>
+    <string name="about_freebloks">Über Freebloks...</string>
     <string name="special_thanks_to">Besonderer Dank an</string>
     <string name="connecting">Verbinde...</string>
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
@@ -70,6 +70,10 @@
 	    <item>23x23</item>
 	</string-array>
 	
+	<string name="please_donate">Unterstütze die Entwickler</string>
+	<string name="donation_text_long">Freebloks ist Open Source Software. Du kannst sie verwenden und verändern, wie du möchtest, völlig umsonst!\n\nWenn du die Entwickler von Freebloks unterstützen möchtest, spende einen Betrag deiner Wahl in Google Play.</string>
+	
+	
 	<string name="prefs_interface">Oberfläche</string>
 	<string name="prefs_display">Anzeige</string>
 	<string name="prefs_misc">Verschiedenes</string>	
@@ -95,4 +99,6 @@
 	<string name="prefs_auto_resume">Auto-Fortsetzen</string>
 	<string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
 	<string name="prefs_rate_review">Freebloks in Google Play...</string>
+	<string name="prefs_donation_long">Unterstütze die Entwickler durch eine freiwillige Spende</string>
+	<string name="prefs_donation">Spenden...</string>
 </resources>
