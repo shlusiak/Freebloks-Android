@@ -17,30 +17,34 @@
     <Button
         android:id="@+id/donation_001"
         android:layout_width="190dp"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:text="Button" />
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
     <Button
         android:id="@+id/donation_002"
         android:layout_width="190dp"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:text="Button" />
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
     <Button
         android:id="@+id/donation_003"
         android:layout_width="190dp"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:text="Button" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
     <Button
         android:id="@+id/donation_004"
         android:layout_width="190dp"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:text="Button" />
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
     
 </LinearLayout>
