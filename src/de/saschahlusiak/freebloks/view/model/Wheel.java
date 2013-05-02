@@ -130,7 +130,10 @@ public class Wheel implements ViewElement {
 			/* we tapped on a stone; start timer */
 			if (task != null)
 				task.cancel();
-			timer.schedule(task = new TimerTask() {
+			if (model.currentStone.stone != null && model.currentStone.stone != highlightStone) {
+				model.currentStone.stone = highlightStone;
+				model.soundPool.play(model.soundPool.SOUND_CLICK2, 0.3f, 1);
+			} else timer.schedule(task = new TimerTask() {
 				
 				@Override
 				public void run() {
@@ -158,6 +161,7 @@ public class Wheel implements ViewElement {
 							if (!model.showAnimations)
 								currentAngle = lastAngle;
 							model.currentStone.startDragging(tmp, highlightStone);
+							model.soundPool.play(model.soundPool.SOUND_CLICK2, 0.3f, 1);
 							model.board.resetRotation();
 							spinning = false;
 							model.view.requestRender();
@@ -166,9 +170,6 @@ public class Wheel implements ViewElement {
 					spinning = false;
 				}
 			}, 500);
-			if (model.currentStone.stone != null) {
-				model.currentStone.stone = highlightStone;
-			}
 		}
 
 		spinning = true;
@@ -222,6 +223,8 @@ public class Wheel implements ViewElement {
 				model.board.modelToBoard(tmp);
 				if (!model.showAnimations)
 					currentAngle = lastAngle;
+				if (model.currentStone.stone != highlightStone)
+					model.soundPool.play(model.soundPool.SOUND_CLICK2, 0.3f, 1);
 				model.currentStone.startDragging(tmp, highlightStone);
 				spinning = false;
 				model.board.resetRotation();
