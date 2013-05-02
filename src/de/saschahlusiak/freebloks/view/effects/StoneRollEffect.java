@@ -35,7 +35,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 				if (vz > -6.0f)
 					vz = 0.0f;
 				
-				model.soundPool.play(model.soundPool.SOUND_CLICK, volume, 0.90f + (float)Math.random() * 0.2f);
+				model.soundPool.play(model.soundPool.SOUND_CLICK1, volume, 0.90f + (float)Math.random() * 0.2f);
 			}
 		} else {
 			z = 0.0f;
