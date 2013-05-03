@@ -11,18 +11,11 @@
 		    android:defaultValue="true" />
 		
         <CheckBoxPreference
-		    android:summary="@string/prefs_vibrate_when_moving_long"
-		    android:title="@string/prefs_vibrate_when_moving"
+		    android:summary="@string/prefs_vibrate_long"
+		    android:title="@string/prefs_vibrate"
 		    android:defaultValue="true"
 		    android:persistent="true"
-		    android:key="vibrate_on_move" />
-		
-		<CheckBoxPreference
-		    android:summary="@string/prefs_vibrate_when_placing_long"
-		    android:title="@string/prefs_vibrate_when_placing"
-		    android:defaultValue="true"
-		    android:persistent="true"
-		    android:key="vibrate_on_place" />		
+		    android:key="vibrate" />
 		
 		<CheckBoxPreference
 		    android:summary="@string/prefs_snap_to_corners_long"

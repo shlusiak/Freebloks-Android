@@ -84,7 +84,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	SpielClient client = null;
 	SpielClientThread spielthread = null;
 	Vibrator vibrator;
-	boolean vibrate_on_move, vibrate_on_place;
+	boolean vibrate_on_move;
 	boolean undo_with_back;
 	boolean hasActionBar;
 	NET_SERVER_STATUS lastStatus;
@@ -344,8 +344,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	protected void onStart() {
 		super.onStart();
 		
-		vibrate_on_move = prefs.getBoolean("vibrate_on_move", true);
-		vibrate_on_place = prefs.getBoolean("vibrate_on_place", true);
+		vibrate_on_move = prefs.getBoolean("vibrate", true);
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		/* TODO: update wheel when changing show_opponents preference */
@@ -954,16 +953,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		return true;
 	}
 	
-	public void vibrate_on_move(int ms) {
+	@Override
+	public void vibrate(int ms) {
 		if (vibrate_on_move)
 			vibrator.vibrate(ms);
 	}
-	
-	public void vibrate_on_place(int ms) {
-		if (vibrate_on_place)
-			vibrator.vibrate(ms);
-	}
-
 	
 	@Override
 	public void onBackPressed() {
