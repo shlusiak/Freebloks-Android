@@ -376,7 +376,7 @@ public class CurrentStone implements ViewElement {
 			hasMoved = moveTo(x, y);
 			if (is_valid_turn(x, y) && hasMoved) {
 				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
-					model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
 			return hasMoved;
 		}
@@ -384,7 +384,7 @@ public class CurrentStone implements ViewElement {
 			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
 			if (hasMoved) {
 				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
-					model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
 			return hasMoved;
 		}
@@ -396,7 +396,7 @@ public class CurrentStone implements ViewElement {
 				hasMoved = moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
 				if (hasMoved) {
 					if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
-						model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+						model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 				}
 				return hasMoved;
 			}

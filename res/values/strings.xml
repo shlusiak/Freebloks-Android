@@ -82,10 +82,8 @@
 	<string name="prefs_misc">Miscellaneous</string>	
 	<string name="prefs_sounds_long">Play sound effects</string>
 	<string name="prefs_sounds">Sounds</string>
-	<string name="prefs_vibrate_when_moving_long">Vibrate when moving stones</string>
-	<string name="prefs_vibrate_when_moving">Vibrate when moving</string>
-	<string name="prefs_vibrate_when_placing_long">Vibrate when placing a stone</string>
-	<string name="prefs_vibrate_when_placing">Vibrate when placing</string>
+	<string name="prefs_vibrate_long">Vibrate when moving stones</string>
+	<string name="prefs_vibrate">Vibrate</string>
 	<string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
 	<string name="prefs_snap_to_corners">Snap to corners</string>	
 	<string name="prefs_undo_long">Undo last move with back button</string>	

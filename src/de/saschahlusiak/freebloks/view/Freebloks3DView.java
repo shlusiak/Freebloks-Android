@@ -182,7 +182,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			model.wheel.setCurrentPlayer(model.spiel.current_player());
 		
 		model.soundPool.play(model.soundPool.SOUND_CLICK1, 0.7f, 0.9f + (float)Math.random() * 0.2f);
-		model.activity.vibrate_on_place(Global.VIBRATE_SET_STONE);
+		model.activity.vibrate(Global.VIBRATE_SET_STONE);
 
 		requestRender();
 	}

@@ -80,10 +80,8 @@
 	<string name="prefs_misc">Verschiedenes</string>	
 	<string name="prefs_sounds_long">Töne abspielen, wenn Steine gelegt werden</string>
 	<string name="prefs_sounds">Töne</string>
-	<string name="prefs_vibrate_when_moving_long">Vibrieren, wenn Stein bewegt wird</string>
-	<string name="prefs_vibrate_when_moving">Vibration beim Bewegen</string>
-	<string name="prefs_vibrate_when_placing_long">Vibrieren, wenn Stein gesetzt wird</string>
-	<string name="prefs_vibrate_when_placing">Vibration beim Setzen</string>
+	<string name="prefs_vibrate_long">Vibrieren, wenn Stein bewegt wird</string>
+	<string name="prefs_vibrate">Vibrationen</string>
 	<string name="prefs_snap_to_corners_long">Steine an gültigen Positionen einrasten lassen</string>
 	<string name="prefs_snap_to_corners">Einrasten</string>
 	<string name="prefs_undo_long">\"Back\"-Taste macht letzten Zug rückgängig</string>	

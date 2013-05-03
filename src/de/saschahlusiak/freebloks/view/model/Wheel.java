@@ -158,7 +158,7 @@ public class Wheel implements ViewElement {
 							
 							Log.d(tag, "timer expire, start moving stone");
 							if (!model.soundPool.play(model.soundPool.SOUND_CLICK2, 0.3f, 1))
-								model.activity.vibrate_on_move(Global.VIBRATE_START_DRAGGING);
+								model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 							if (!model.showAnimations)
 								currentAngle = lastAngle;
 							model.currentStone.startDragging(tmp, highlightStone);
