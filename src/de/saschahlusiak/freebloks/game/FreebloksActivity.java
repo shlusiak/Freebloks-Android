@@ -32,6 +32,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -118,7 +119,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				this.myclient.connect(params[0], Network.DEFAULT_PORT);
+				this.myclient.connect(FreebloksActivity.this, params[0], Network.DEFAULT_PORT);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return e.getMessage();
@@ -140,8 +141,25 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			FreebloksActivity.this.client = this.myclient;
 			progress.dismiss();
 			if (result != null) {
-				Toast.makeText(FreebloksActivity.this, result, Toast.LENGTH_LONG).show();
-				showDialog(DIALOG_GAME_MENU);
+				AlertDialog.Builder builder = new AlertDialog.Builder(FreebloksActivity.this);
+				builder.setTitle(android.R.string.dialog_alert_title);
+				builder.setMessage(result);
+				builder.setIcon(android.R.drawable.ic_dialog_alert);
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						showDialog(DIALOG_GAME_MENU);
+					}
+				});
+				builder.setOnCancelListener(new OnCancelListener() {
+					
+					@Override
+					public void onCancel(DialogInterface dialog) {						
+						showDialog(DIALOG_GAME_MENU);
+					}
+				});
+				builder.create().show();
 			} else {
 				if (show_lobby)
 					showDialog(DIALOG_LOBBY);
@@ -907,6 +925,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					AlertDialog.Builder builder = new AlertDialog.Builder(FreebloksActivity.this);
 					builder.setTitle(android.R.string.dialog_alert_title);
 					builder.setMessage(getString(R.string.disconnect_error, error.getMessage()));
+					builder.setIcon(android.R.drawable.ic_dialog_alert);
 					builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
