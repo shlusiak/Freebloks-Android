@@ -13,6 +13,7 @@
     <string name="about_freebloks">About Freebloks...</string>
     <string name="special_thanks_to">Special thanks to</string>
     <string name="connecting">Connecting...</string>
+    <string name="connection_refused">Connection refused</string>
     <string name="could_not_restore_game">Could not restore game</string>
     <string name="do_you_want_to_leave_current_game">Are you sure you want to leave the current game?</string>
     <string name="disconnect_error">Connection closed: %1$s</string>

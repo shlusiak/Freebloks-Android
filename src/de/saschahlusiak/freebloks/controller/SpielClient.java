@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.util.Log;
 
+import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -66,13 +68,13 @@ public class SpielClient {
 
 
 
-	public void connect(String host, int port) throws Exception {
+	public void connect(Context context, String host, int port) throws Exception {
 		this.lastHost = host;
 		try {
 			client_socket = new Socket(host, port);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Connection refused");
+			throw new Exception(context.getString(R.string.connection_refused));
 		}
 		for (SpielClientInterface sci : spielClientInterface)
 			sci.onConnected(spiel);		
