@@ -374,14 +374,18 @@ public class CurrentStone implements ViewElement {
 		boolean hasMoved = false;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
-			if (is_valid_turn(x, y) && hasMoved)
-				model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+			if (is_valid_turn(x, y) && hasMoved) {
+				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
+					model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+			}
 			return hasMoved;
 		}
 		if (is_valid_turn(x, y)) {
 			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
-			if (hasMoved)
-				model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+			if (hasMoved) {
+				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
+					model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+			}
 			return hasMoved;
 		}
 		for (int i = -1; i <= 1; i++)
@@ -390,8 +394,10 @@ public class CurrentStone implements ViewElement {
 			if (is_valid_turn(x + i, y + j))
 			{
 				hasMoved = moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
-				if (hasMoved)
-					model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+				if (hasMoved) {
+					if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
+						model.activity.vibrate_on_move(Global.VIBRATE_STONE_SNAP);
+				}
 				return hasMoved;
 			}
 		}
