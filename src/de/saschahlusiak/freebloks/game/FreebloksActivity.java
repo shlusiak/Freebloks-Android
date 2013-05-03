@@ -35,8 +35,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.AsyncTask;
@@ -156,7 +154,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 	}
 
-	SharedPreferences prefs;					
+	SharedPreferences prefs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
