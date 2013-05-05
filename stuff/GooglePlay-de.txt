@@ -1,0 +1,41 @@
+Dies ist die Android-Version von Freebloks 3D, einem Klon des bekannten Brettspiels "Blokus" von Sekkoia. Versuche so viele Steine wie möglich auf das Spielfeld zu legen, mit nur zwei einfachen Regeln: jeder Stein muss mindestens eine Ecke eines bereits gelegten Steins berühren, aber nie eine Kante. Kannst du mehr Steine ablegen, als deine Gegenspieler?
+
+== SPIELREGELN ==
+Jeder Spieler besitzt 21 tetris-ähnliche Steine: 12 Steine mit 5 Quadraten, 5 mit 4 Quadraten, 2 mit 3 Quadraten, 1 mit 2 Quadraten und einen einzelnen Stein.
+
+Die Spieler legen der Reihe nach einen Stein auf das 20 x 20 Spielbrett ab. Der erste Stein muss in der jeweiligen Ecke des Spielers gelegt werden. Jeder Stein muss eine Ecke eines zuvor gelegten Steins berühren aber darf nie eine Kante teilen. Kanten mit Steinen des Gegners dürfen aber geteilt werden.
+
+Wenn ein Spieler keine Züge mehr hat, muss er aussetzen. Das Spiel ist vorbei, wenn kein Spieler mehr legen kann.
+
+Die Anzahl der einzelnen Quadrate der Spielsteine wird aufaddiert. Der Spieler mit den wenigsten Quadraten übrig, hat gewonnen.
+
+== BEDIENUNG ==
+- Durchscrolle die Liste deiner Steine mit dem Finger
+- Ziehe einen Stein deiner Wahl auf das Spielfeld
+- Der Stein kann auf dem Spielfeld mit den 4 "Griffen" gedreht und gespiegelt werden
+- Schiebe den Stein auf eine gültige Position. Gültige Positionen werden grün dargestellt, ungültige rot. Mögliche Ecken auf dem Spielfeld werden hervorgehoben um gültige Züge schneller finden zu können.
+- Ist der Stein in einer gültigen Position, einfach auf dem Stein tippen, um ihn zu legen.
+- Du kannst jederzeit das Spielbrett mit dem Finger drehen, um die Steine des Gegners zu sehen
+
+Das Spiel kann jederzeit beendet werden, der aktuelle Spielstand wird beim nächsten Start fortgesetzt.
+
+== FUNKTIONEN ==
+- Unterstützung für 2 Spieler: entweder mit nur 2 Farben (Blokus Duo), oder mit 4 Farben und pro Spieler 2
+- Unterschiedliche Feldgrößen
+- Spiele gegen Computergegner oder mit bis zu 4 lokalen Spielern an einem Gerät
+- Onlinemodus (beta)
+- Hinweise und Rückgängig-Funktion
+- Macht auch auf Tablets Spass!
+
+Das Spiel ist netzwerkkompatibel mit "Freebloks 3D" für Windows und Linux: http://www.saschahlusiak.de/freebloks-3d/
+
+
+== SPENDEN ==
+Wenn dir Freebloks 3D gefällt, unterstütze bitte die Entwickler durch Kauf einer In-App Spende deiner Wahl.
+
+Das Spiel ist frei, Open Source und vollständig ohne Werbung. Der vollständige Quelltext ist auf GitHub verfügbar: https://github.com/shlusiak/Freebloks-Android
+
+Wenn du eine Idee oder einen Wunsch hast, schreib mir einfach eine E-Mail: mail@saschahlusiak.de
+
+
+Ähnlich Blokish
