@@ -1,12 +1,14 @@
 This is the android version of Freebloks 3D, an implementation of the famous board game Blokus by Sekkoia. Try to place as many pieces on the board, with only two simple rules: your stones must touch a corner of one of your previously places stones, but it must not share an edge. Can you play more stones than your opponents?
 
-== RULES ==
+
+RULES:
 Each player has 21 tetris-like tiles: 12 tiles with 5 squares, 5 tiles with 4 squares, 2 tiles with 3 squares, 1 tile with 2 squares and 1 tile with 1 square.
 Players take turn in placing one tile onto the 20 x 20 board. The first stone for each player has to be placed in his corner of the board. Each following tile has to touch a corner of one of your previous tiles, but it must never share an edge. It may share an edge with stones from the opponents though.
 If a player has no more possible move, he passes. The game is over, when no player can place a tile.
 The number of squares for each piece are added up. The player with the fewest squares left wins.
 
-== HOW TO PLAY ==
+
+HOW TO PLAY:
 - swipe the list of available stones with your finger
 - select and drag a stone onto the board
 - rotate or flip the stone using the 4 handles
@@ -16,7 +18,8 @@ The number of squares for each piece are added up. The player with the fewest sq
 
 Quit the app at any time, your current game will be saved and restored on next start.
 
-== FEATURES ==
+
+FEATURES:
 - supports 2-player mode, either with 2 colors (Blokus Duo) or 4 colors (2 each)
 - support for different board sized other than 20x20
 - play against the computer or humans on the same device
@@ -27,8 +30,7 @@ Quit the app at any time, your current game will be saved and restored on next s
 The game is network compatible with Freebloks 3D for Windows and Linux: http://www.saschahlusiak.de/freebloks-3d/
 
 
-
-== PLEASE DONATE ==
+PLEASE DONATE:
 If you like Freebloks 3D, please support the developers by purchasing an in-app donation of your choice!
 
 The game is completely free, without advertisement and the complete source code is available on GitHub: https://github.com/shlusiak/Freebloks-Android
@@ -36,5 +38,4 @@ The game is completely free, without advertisement and the complete source code 
 If you have any idea, feature request or wish for the game, just drop me an email: mail@saschahlusiak.de
 
 
-Similar to Blokish
-
+Similar to Blokish and Blokr!
