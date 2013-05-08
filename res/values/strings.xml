@@ -44,7 +44,7 @@
     <string name="rate_later">Later</string>
     <string name="rate_never">No</string>
     <string name="rate_freebloks_title">Rate Freebloks</string>
-    <string name="rate_freebloks_text">If you enjoy playing Freebloks, would you like to take a minute and rate it?</string>
+    <string name="rate_freebloks_text">If you enjoy Freebloks, would you like to take a minute and rate it?</string>
     <string name="rate_freebloks_donate_link"><u>Please support Freebloks</u></string>
     
    
@@ -86,7 +86,7 @@
 	</string-array>
 	
 	<string name="please_donate">Support the developers</string>
-	<string name="donation_text_long">Freebloks is free and open source. You can use and modify it completely free of charge!\n\nIf you want to support the developers of Freebloks, please make a donation through Google Play.</string>
+	<string name="donation_text_long">Freebloks is free and open source software. You can use and modify it completely free of charge!\n\nIf you want to support the developers, feel free to make a donation of your choice through Google Play.\n\nThank you!</string>
 	
 	<string name="prefs_interface">Interface</string>
 	<string name="prefs_display">Display</string>

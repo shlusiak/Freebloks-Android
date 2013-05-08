@@ -72,7 +72,7 @@
 	</string-array>
 	
 	<string name="please_donate">Unterstütze die Entwickler</string>
-	<string name="donation_text_long">Freebloks ist Open Source Software. Du kannst sie verwenden und verändern, wie du möchtest, völlig umsonst!\n\nWenn du die Entwickler von Freebloks unterstützen möchtest, spende einen Betrag deiner Wahl in Google Play.</string>
+	<string name="donation_text_long">Freebloks ist Open Source Software. Du kannst sie verwenden und verändern, wie du möchtest, völlig umsonst!\n\nWenn du die Entwickler von Freebloks unterstützen möchtest, kannst du über Google Play einen Betrag deiner Wahl spenden.\n\nVielen Dank!</string>
 	
 	
 	<string name="prefs_interface">Oberfläche</string>

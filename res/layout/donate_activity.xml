@@ -1,50 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:gravity="center_vertical">
+    android:orientation="horizontal" >
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
         android:gravity="center_horizontal"
         android:text="@string/donation_text_long"
-        android:paddingBottom="16dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Button
-        android:id="@+id/donation_001"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
-    <Button
-        android:id="@+id/donation_002"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
-    <Button
-        android:id="@+id/donation_003"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
-    <Button
-        android:id="@+id/donation_004"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
     
+    <LinearLayout
+    	android:layout_width="0dp"
+    	android:layout_height="wrap_content"
+    	android:layout_weight="0.5"
+    	android:layout_gravity="center_vertical"
+    	android:orientation="vertical" >
+	
+	    <Button
+	        android:id="@+id/donation_001"
+	        android:layout_width="190dp"
+	        android:layout_height="56dp"
+	        android:layout_gravity="center_horizontal"
+	        android:textAppearance="?android:attr/textAppearanceLarge" 
+	        android:enabled="false"
+	        android:text="@android:string/unknownName" />
+	    <Button
+	        android:id="@+id/donation_002"
+	        android:layout_width="190dp"
+	        android:layout_height="56dp"
+	        android:layout_gravity="center_horizontal"
+	        android:textAppearance="?android:attr/textAppearanceLarge" 
+	        android:enabled="false"
+	        android:text="@android:string/unknownName" />
+	    <Button
+	        android:id="@+id/donation_003"
+	        android:layout_width="190dp"
+	        android:layout_height="56dp"
+	        android:layout_gravity="center_horizontal"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:enabled="false"
+	        android:text="@android:string/unknownName" />
+	    <Button
+	        android:id="@+id/donation_004"
+	        android:layout_width="190dp"
+	        android:layout_height="56dp"
+	        android:layout_gravity="center_horizontal"
+	        android:textAppearance="?android:attr/textAppearanceLarge" 
+	        android:enabled="false"
+	        android:text="@android:string/unknownName" />
+	    
+	</LinearLayout>
 </LinearLayout>
