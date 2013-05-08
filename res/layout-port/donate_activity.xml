@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+    > 
+   <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/donation_text_long"
+        android:paddingBottom="16dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/donation_001"
+        android:layout_width="190dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
+    <Button
+        android:id="@+id/donation_002"
+        android:layout_width="190dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
+    <Button
+        android:id="@+id/donation_003"
+        android:layout_width="190dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
+    <Button
+        android:id="@+id/donation_004"
+        android:layout_width="190dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:enabled="false"
+        android:text="@android:string/unknownName" />
+    
+</LinearLayout>
+</ScrollView>
