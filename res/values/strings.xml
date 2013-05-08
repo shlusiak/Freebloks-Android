@@ -36,6 +36,14 @@
     <string name="chat_button">Chat</string>
     <string name="join_address">Address:</string>
     <string name="join_request_player">Request player</string>
+    
+    <string name="rate_now">Yes</string>
+    <string name="rate_later">Later</string>
+    <string name="rate_never">No</string>
+    <string name="rate_freebloks_title">Rate Freebloks</string>
+    <string name="rate_freebloks_text">If you enjoy playing Freebloks, would you like to take a minute and rate it?</string>
+    <string name="rate_freebloks_donate_link"><u>Please support Freebloks</u></string>
+    
    
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d stone</item>

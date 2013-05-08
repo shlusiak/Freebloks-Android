@@ -32,7 +32,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -65,6 +64,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_GAME_MENU = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
+	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	
@@ -282,18 +282,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void OnIntroCompleted() {
 		newCurrentPlayer(-1);
 		try {
-		if (restoreOldGame()) {
-			canresume = true;
-		} else {
-			canresume = false;
-			//	startNewGame(null, true);
-		}
+			if (restoreOldGame()) {
+				canresume = true;
+			} else {
+				canresume = false;
+			}
 		} catch (Exception e) {
 			canresume = false;
 			Toast.makeText(FreebloksActivity.this, R.string.could_not_restore_game, Toast.LENGTH_LONG).show();
 		}
 		if (!canresume || ! prefs.getBoolean("auto_resume", false))
 			showDialog(DIALOG_GAME_MENU);
+		
+		if (RateAppDialog.checkShowRateDialog(this))
+			showDialog(DIALOG_RATE_ME);
 	}
 
 	@Override
@@ -541,6 +543,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			return builder.create();
+			
+		case DIALOG_RATE_ME:
+			return new RateAppDialog(this);
 			
 		case DIALOG_GAME_MENU:
 			return new GameMenu(this);
