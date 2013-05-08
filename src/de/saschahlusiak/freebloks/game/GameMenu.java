@@ -42,6 +42,7 @@ public class GameMenu extends Dialog {
 						0,
 						0);
 				activity.view.model.soundPool.setEnabled(isChecked);
+				activity.updateSoundMenuEntry();
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 				Editor editor = prefs.edit();
 				editor.putBoolean("sounds", isChecked);
