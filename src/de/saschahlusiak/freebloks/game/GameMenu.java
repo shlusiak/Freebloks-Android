@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class GameMenu extends Dialog {
@@ -45,6 +46,8 @@ public class GameMenu extends Dialog {
 				Editor editor = prefs.edit();
 				editor.putBoolean("sounds", isChecked);
 				editor.commit();
+
+				Toast.makeText(getContext(), getContext().getString(isChecked ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			}
 		});
 		
