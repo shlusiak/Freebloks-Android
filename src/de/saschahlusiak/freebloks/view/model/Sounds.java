@@ -27,6 +27,14 @@ public class Sounds extends SoundPool {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void toggle() {
+		enabled = !enabled;
+	}
 
 	public boolean play(int id, float volume, float rate) {
 		if (!enabled)

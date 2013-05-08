@@ -57,6 +57,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
@@ -355,6 +356,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
+		
+		updateSoundMenuEntry();
 	}
 
 	@Override
@@ -511,8 +514,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 		menu.findItem(R.id.undo).setEnabled(local);
 		menu.findItem(R.id.hint).setEnabled(local);
+		menu.findItem(R.id.sound_toggle_button).setVisible(hasActionBar);
+		updateSoundMenuEntry();
 
 		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	void updateSoundMenuEntry() {
+		boolean on = true;
+		if (optionsMenu == null)
+			return;
+		if (view != null && view.model != null && view.model.soundPool != null)
+			on = view.model.soundPool.isEnabled();
+		optionsMenu.findItem(R.id.sound_toggle_button).setTitle(on ? R.string.sound_on : R.string.sound_off);
+		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode);
 	}
 
 	
@@ -614,6 +629,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					showDialog(DIALOG_RATE_ME);
 				}
 			});
+//			dialog.findViewById(R.id.sound_toggle_button).setVisibility(hasActionBar ? View.GONE : View.VISIBLE);
 			dialog.findViewById(R.id.resume_game).setEnabled(canresume);
 			dialog.setCanceledOnTouchOutside(canresume);
 			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
@@ -694,6 +710,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case R.id.preferences:
 			intent = new Intent(this, FreebloksPreferences.class);
 			startActivity(intent);
+			return true;
+			
+		case R.id.sound_toggle_button:
+			Editor editor = prefs.edit();
+			view.model.soundPool.toggle();
+			editor.putBoolean("sounds", view.model.soundPool.isEnabled());
+			editor.commit();
+			updateSoundMenuEntry();
+			Toast.makeText(this, getString(view.model.soundPool.isEnabled() ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			return true;
 
 		case R.id.hint:
