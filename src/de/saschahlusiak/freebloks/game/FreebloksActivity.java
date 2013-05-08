@@ -607,6 +607,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					dialog.dismiss();
 				}
 			});
+			dialog.findViewById(R.id.star).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showDialog(DIALOG_RATE_ME);
+				}
+			});
 			dialog.findViewById(R.id.resume_game).setEnabled(canresume);
 			dialog.setCanceledOnTouchOutside(canresume);
 			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
