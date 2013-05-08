@@ -26,7 +26,7 @@ public class CurrentStone implements ViewElement {
 	
 	Stone stone;
 	PointF pos = new PointF();
-	boolean hasMoved;
+	boolean hasMoved, isValid;
 	float stone_rel_x, stone_rel_y;
 	float rotate_angle;
 	int texture[];
@@ -146,11 +146,8 @@ public class CurrentStone implements ViewElement {
 			gl.glRotatef(rotate_angle, 0, 0, 1);
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
-
-		/* TODO: cache result of is_valid_turn when moved */
-		boolean isvalid = model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f)) == Stone.FIELD_ALLOWED;
 		
-	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isvalid ? texture[0] : texture[1]);
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isValid ? texture[0] : texture[1]);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_LIGHTING);
@@ -374,13 +371,15 @@ public class CurrentStone implements ViewElement {
 		boolean hasMoved = false;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
-			if (is_valid_turn(x, y) && (hasMoved || forceSound)) {
+			isValid = is_valid_turn(x, y);
+			if (isValid && (hasMoved || forceSound)) {
 				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
 					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
 			return hasMoved;
 		}
 		if (is_valid_turn(x, y)) {
+			isValid = true;
 			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
 			if (hasMoved || forceSound) {
 				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
@@ -393,6 +392,7 @@ public class CurrentStone implements ViewElement {
 		{
 			if (is_valid_turn(x + i, y + j))
 			{
+				isValid = true;
 				hasMoved = moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
 				if (hasMoved) {
 					if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
@@ -401,6 +401,7 @@ public class CurrentStone implements ViewElement {
 				return hasMoved;
 			}
 		}
+		isValid = false;
 		return moveTo(x, y);
 	}
 
