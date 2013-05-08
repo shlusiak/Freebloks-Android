@@ -17,10 +17,14 @@
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
     <string name="do_you_want_to_leave_current_game">Aktuelles Spiel wirklich beenden?</string>
     
+    <string name="sound_on">Töne an</string>
+    <string name="sound_off">Töne aus</string>
     <string name="your_color">Deine Farbe:</string>
     <string name="waiting_for_color">Warte auf %1$s</string>
     <string name="color_is_out_of_moves">%1$s hat keine Züge mehr</string>
-    <string name="touch_to_skip">überspringe</string>
+    <string name="player_status_points">-%1$d Punkte</string>
+    <string name="player_status_moves">%1$d Züge</string>
+    <string name="touch_to_skip">intro überspringen</string>
     <string name="no_player">kein Spieler</string>
     <string name="not_connected">nicht verbunden</string>
     <string name="your_turn">Du bist dran!</string>
@@ -33,6 +37,14 @@
     <string name="chat_button">Chat</string>
     <string name="join_address">Adresse:</string>
     <string name="join_request_player">Spieler anfordern</string>
+    
+    <string name="rate_now">Ja</string>
+    <string name="rate_later">Später</string>
+    <string name="rate_never">Nein</string>
+    <string name="rate_freebloks_title">Freebloks bewerten</string>
+    <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, nimm dir doch bitte eine Minute Zeit, es zu bewerten.</string>
+    <string name="rate_freebloks_donate_link"><u>Freebloks unterstützen</u></string>
+    
    
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d Stein</item>
@@ -80,19 +92,19 @@
 	<string name="prefs_misc">Verschiedenes</string>	
 	<string name="prefs_sounds_long">Töne abspielen, wenn Steine gelegt werden</string>
 	<string name="prefs_sounds">Töne</string>
-	<string name="prefs_vibrate_long">Vibrieren, wenn Stein bewegt wird</string>
+	<string name="prefs_vibrate_long">Vibrieren, wenn Steine gelegt wird</string>
 	<string name="prefs_vibrate">Vibrationen</string>
 	<string name="prefs_snap_to_corners_long">Steine an gültigen Positionen einrasten lassen</string>
-	<string name="prefs_snap_to_corners">Einrasten</string>
-	<string name="prefs_undo_long">\"Back\"-Taste macht letzten Zug rückgängig</string>	
-	<string name="prefs_undo">Rückgängig mit \"Back\"</string>	
+	<string name="prefs_snap_to_corners">Einrasthilfe</string>
+	<string name="prefs_undo_long">\"Zurück\"-Taste macht letzten Zug rückgängig</string>	
+	<string name="prefs_undo">Rückgängig mit \"Zurück\"</string>	
 	<string name="prefs_show_corners_long">Verfügbare Ecken eigener Steine hervorheben</string>	
-	<string name="prefs_show_corners">Ecken zeigen</string>
-	<string name="prefs_show_opponents_long">Verfügbare Steine der Gegner zeigen</string>
+	<string name="prefs_show_corners">Ecken hervorheben</string>
+	<string name="prefs_show_opponents_long">Steine der Gegenspieler zeigen, wenn am Zug</string>
 	<string name="prefs_show_opponents">Gegner zeigen</string>
 	<string name="prefs_show_animations_long">Verschiedene Animationen anzeigen</string>
 	<string name="prefs_show_animations">Animationen</string>
-	<string name="prefs_skip_intro_long">Intro beim Start immer überspringen</string>
+	<string name="prefs_skip_intro_long">Intro beim Start nicht zeigen</string>
 	<string name="prefs_skip_intro">Intro überspringen</string>
 	<string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
 	<string name="prefs_auto_resume">Auto-Fortsetzen</string>
