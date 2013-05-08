@@ -66,7 +66,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				}
 				if (spiel.is_local_player())
 					renderer.currentPlayer = spiel.current_player();
-				/* TODO: show currentPlayer, if local, otherwise show showPlayer */
 				model.wheel.setCurrentPlayer(renderer.currentPlayer);
 				model.wheel.setShowPlayer(-1);
 				model.wheel.update();
