@@ -10,8 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -32,15 +30,16 @@ public class GameMenu extends Dialog {
 			}
 		});
 		soundButton = (ToggleButton)findViewById(R.id.sound_toggle_button);
-		soundButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		soundButton.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onClick(View v) {
+				boolean isChecked = soundButton.isChecked();
 				activity = (FreebloksActivity)getOwnerActivity();
 				soundButton.setCompoundDrawablesWithIntrinsicBounds(
 						isChecked ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode,
-						0,
-						0,
-						0);
+								0,
+								0,
+								0);
 				activity.view.model.soundPool.setEnabled(isChecked);
 				activity.updateSoundMenuEntry();
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -63,6 +62,11 @@ public class GameMenu extends Dialog {
 		activity = (FreebloksActivity)getOwnerActivity();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 		soundButton.setChecked(prefs.getBoolean("sounds", true));
+		soundButton.setCompoundDrawablesWithIntrinsicBounds(
+				prefs.getBoolean("sounds", true) ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode,
+				0,
+				0,
+				0);
 	}
 
 	@Override
