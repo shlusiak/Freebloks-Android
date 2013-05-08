@@ -316,7 +316,7 @@ public class CurrentStone implements ViewElement {
 			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
 				return true;
 			
-			boolean mv = snap(x, y);
+			boolean mv = snap(x, y, false);
 			hasMoved |= mv;
 			model.redraw |= mv;
 			model.redraw |= model.showAnimations;
@@ -370,11 +370,11 @@ public class CurrentStone implements ViewElement {
 		return false;
 	}
 
-	boolean snap(float x, float y) {
+	boolean snap(float x, float y, boolean forceSound) {
 		boolean hasMoved = false;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
-			if (is_valid_turn(x, y) && hasMoved) {
+			if (is_valid_turn(x, y) && (hasMoved || forceSound)) {
 				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
 					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
@@ -382,7 +382,7 @@ public class CurrentStone implements ViewElement {
 		}
 		if (is_valid_turn(x, y)) {
 			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
-			if (hasMoved) {
+			if (hasMoved || forceSound) {
 				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
 					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
@@ -442,7 +442,7 @@ public class CurrentStone implements ViewElement {
 					model.wheel.highlightStone = null;
 				}
 			} else {
-				snap(x, y);
+				snap(x, y, false);
 			}
 		}
 		if (status == Status.ROTATING) {
@@ -455,21 +455,21 @@ public class CurrentStone implements ViewElement {
 				stone.rotate_left();
 			}
 			rotate_angle = 0.0f;
-			snap(pos.x, pos.y);
+			snap(pos.x, pos.y, true);
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
 				stone.mirror_over_y();
 			
 			rotate_angle = 0.0f;
-			snap(pos.x, pos.y);
+			snap(pos.x, pos.y, true);
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
 				stone.mirror_over_x();
 			
 			rotate_angle = 0.0f;
-			snap(pos.x, pos.y);
+			snap(pos.x, pos.y, true);
 		}
 		status = Status.IDLE;
 		return false;
