@@ -47,6 +47,10 @@ public class GameMenu extends Dialog {
 				editor.commit();
 			}
 		});
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (!prefs.getBoolean("rate_show_again", true))
+			findViewById(R.id.star).setVisibility(View.GONE);
 	}
 	
 	@Override
