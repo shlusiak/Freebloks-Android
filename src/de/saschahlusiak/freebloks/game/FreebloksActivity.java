@@ -229,9 +229,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			view.setSpiel(client, client.spiel);
 			newCurrentPlayer(client.spiel.current_player());
 		} else if (savedInstanceState != null) {
-			/* TODO: we should resume from previously saved data; don't just start a new game */
-		//	startNewGame(null, null, KI_DEFAULT);
-			OnIntroCompleted();
+			/* this can happen, when there is no game running and we rotate the device */
+			canresume = false;
+			newCurrentPlayer(-1);
 		} else {
 			if (prefs.getBoolean("show_animations", true) && ! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(view.model, this);
@@ -254,6 +254,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				view.model.board.resetRotation();
 			}
 		});
+		
 		
 		final Animation a = new TranslateAnimation(0, 8, 0, 0);
 		a.setInterpolator(new CycleInterpolator(2));
