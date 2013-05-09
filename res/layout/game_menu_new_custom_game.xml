@@ -45,16 +45,16 @@
             android:orientation="vertical" >
 
             <CheckBox
-                android:id="@+id/player1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@array/color_names" />
-
-            <CheckBox
                 android:id="@+id/player2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Yellow" />
+            
+            <CheckBox
+                android:id="@+id/player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blue" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,7 +69,7 @@
                 android:id="@+id/player3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Color 2" />
+                android:text="Red" />
 
             <CheckBox
                 android:id="@+id/player4"
