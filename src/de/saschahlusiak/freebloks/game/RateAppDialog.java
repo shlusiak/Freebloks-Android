@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.game;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -66,8 +65,8 @@ public class RateAppDialog extends Dialog {
 		});
 	}
 	
-	public static boolean checkShowRateDialog(Activity context) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getBaseContext());
+	public static boolean checkShowRateDialog(Context context) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		if (prefs.getBoolean("rate_show_again", true)) {
 			long starts = prefs.getLong("rate_number_of_starts", 0);

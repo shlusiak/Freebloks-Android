@@ -50,10 +50,6 @@ public class GameMenu extends Dialog {
 				Toast.makeText(getContext(), getContext().getString(isChecked ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			}
 		});
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (!prefs.getBoolean("rate_show_again", true))
-			findViewById(R.id.star).setVisibility(View.GONE);
 	}
 	
 	@Override

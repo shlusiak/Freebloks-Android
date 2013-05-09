@@ -216,8 +216,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
+			showRateDialog = savedInstanceState.getBoolean("showRateDialog", false);
 		} else {
 			view.setScale(prefs.getFloat("view_scale", 1.0f));
+			showRateDialog = RateAppDialog.checkShowRateDialog(this);
 		}
 		if (view.model.soundPool == null)
 			view.model.soundPool = new Sounds(this);
@@ -278,6 +280,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 	
 	boolean canresume = false;
+	boolean showRateDialog = false;
 
 	@Override
 	public void OnIntroCompleted() {
@@ -292,10 +295,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			canresume = false;
 			Toast.makeText(FreebloksActivity.this, R.string.could_not_restore_game, Toast.LENGTH_LONG).show();
 		}
+		
 		if (!canresume || ! prefs.getBoolean("auto_resume", false))
 			showDialog(DIALOG_GAME_MENU);
 		
-		if (RateAppDialog.checkShowRateDialog(this))
+		if (showRateDialog)
 			showDialog(DIALOG_RATE_ME);
 	}
 
@@ -376,6 +380,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		Log.d(tag, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 		outState.putFloat("view_scale", view.getScale());
+		outState.putBoolean("showRateDialog", showRateDialog);
 		writeStateToBundle(outState);
 	}
 	
@@ -622,6 +627,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					dialog.dismiss();
 				}
 			});
+			dialog.findViewById(R.id.star).setVisibility(showRateDialog ? View.VISIBLE : View.GONE);
 			dialog.findViewById(R.id.star).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
