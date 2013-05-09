@@ -19,6 +19,8 @@ public class Intro implements ViewElement {
 	public interface OnIntroCompleteListener {
 		public void OnIntroCompleted();
 	}
+	
+	final static float INTRO_SPEED = 1.0f;
 
 	final static float WIPE_SPEED = 14.0f;	
 	final static float WIPE_ANGLE = 28.0f;
@@ -140,7 +142,7 @@ public class Intro implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		elapsed *= 1.2f;
+		elapsed *= 1.2f * INTRO_SPEED;
 		anim += elapsed;
 
 		if (field_up || field_anim > 0.000001f)
