@@ -1,0 +1,35 @@
+Esta é a versão para Android de Freebloks 3D, uma implementação do famoso jogo de mesa Blokus por Sekkoïa. Tenta colocar o maior número de peças que possas no tabuleiro, levando em conta apenas duas regras simples: as pedras devem tocar um canto de uma das tuas pedras colocadas previamente, mas não devem compartilhar uma borda. Podes colocar mais pedras do que os teus adversários?
+
+REGRAS
+Cada jogador tem 21 peças parecidas com aquelas de Tetris: 12 pedras de 5 quadrados, 5 pedras de 4 quadrados, 2 pedras de 3 quadrados, uma pedra de dos quadrados e uma pedra de um quadrado.
+Os jogadores se revezam em colocar pedras no tabuleiro de 20x20 quadrados. A primeira pedra do cada jogador tem que ser colocada no seu canto do tabuleiro. Cada pedra seguinte tem que tocar um canto de uma das tuas pedras anteriores, mas pedras da mesma cor nunca devem compartilhar uma borda. Porém podem compartilhar bordas com as pedras dos adversários.
+Se um jogador não tem mais movimento possível, ele deve passar. O jogo termina quando nenhum jogador pode colocar uma pedra.
+Para cada jogador os quadrados de cada pedra restante são somados. O jogador com o menor número de quadrados restantes é o vencedor.
+
+COMO JOGAR
+- Passa com o dedo pela lista de pedras disponíveis.
+- Seleciona e arrasta uma pedra em cima do tabuleiro.
+- Girar ou inverter a pedra usando o 4 alças.
+- Coloca a pedra na posição desejada. A pedra aparecerá verde se a posição é válida, e vermelha do contrário. Os cantos possíveis são ressaltados no tabuleiro para mais conveniência.
+- Toca a pedra que fica numa posição válida para colocá-la.
+- Podes girar o tabuleiro em qualquer momento para ver as pedras dos adversários.
+
+Saia do aplicativo a qualquer momento e o teu jogo atual será guardado e restaurado na próxima inicialização.
+
+FUNÇÕES
+- Se pode jogar também com 2 adversários, com 2 cores (Blokus Duo) ou 4 cores (2 para cada jogador).
+- Tabuleiro de tamanho variável (outro que 20x20).
+- Joga contra o computador ou os seres humanos no mesmo dispositivo.
+- Jogar online contra os teus amigos (beta).
+- Oferecer dicas; desfazer o último movimento. 
+
+O aplicativo é compatível para jogar em rede com Freebloks 3D para Windows e Linux: http://www.saschahlusiak.de/freebloks-3d/
+
+POR FAVOR, FAZ UMA DOAÇÃO
+Se gostas de Freebloks 3D, por favor apoia os programadores através de uma doação de tua escolha pelo aplicativo!
+
+O jogo é totalmente gratuito e sem publicidade. O código fonte completo está disponível em GitHub: https://github.com/shlusiak/Freebloks-Android
+
+Se tens alguma idéia ou pedido com respeito ao jogo, manda um e-mail: mail@saschahlusiak.de
+
+Semelhante a Blokish e Blokr!
