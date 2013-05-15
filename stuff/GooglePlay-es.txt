@@ -1,0 +1,35 @@
+Esta es la versión para Android de Freebloks 3D, una implementación del famoso juego de mesa Blokus por Sekkoïa. Trata de colocar tantas piezas que puedas en el tablero, teniendo en cuenta sólo dos reglas simples: tus piezas deben tocar por lo menos una esquina de tus piezas colocadas previamente, pero no deben tocar un borde. ¿Puedes colocar más piezas que tus adversarios?
+
+REGLAS
+Cada jugador dispone de 21 fichas que se parecen a las de Tetris: 12 piezas de 5 casillas, 5 piezas de 4 casillas, 2 piezas de 3 casillas, una pieza de 2 plazas y una pieza de una casilla.
+Los jugadores van colocando por turnos sus piezas en el tablero de 20x20 casillas. La primera pieza de cada jugador tiene que ser colocada en su esquina del tablero. Cada pieza siguiente que coloques debe tocar por alguna esquina a alguna de tus piezas ya colocadas, nunca de forma adyacente con las piezas del mismo color. Sin embargo, puede compartir bordes con las piezas de los opositores.
+Si un jugador no tiene ninguna movida posible, tiene que pasar. El partido finaliza cuando ningún jugador puede colocar ninguna ficha más.
+Al final se suman las casillas de las piezas que le quedan a cada jugador. El jugador con el menor número de casillas restantes es el ganador del partido.
+
+CÓMO JUGAR
+- Pasa tu dedo sobre la lista de piezas disponibles.
+- Selecciona y arrastra una pieza sobre el tablero.
+- Gira o voltea la pieza usando las 4 asas.
+- Coloca la pieza en la posición deseada. La pieza se pondrá verde si la posición es válida, y roja si no lo es. Las esquinas posibles son resaltadas en el tablero para mayor comodidad.
+- Toca la pieza que se encuentra en una posición válida para colocarla.
+- Se puede girar el tablero en cualquier momento para ver las piezas de los opositores.
+
+Sal de la aplicación en cualquier momento, la partida actual se guardará y se restaurará al próximo inicio.
+
+CARACTERÍSTICAS
+- Se pueden jugar también partidos de 2 jugadores, con 2 colores (Blokus Duo) o 4 colores (2 colores para cada jugador).
+- Tamaño variable del tablero (otros que 20x20 casillas)
+- Jugar contra el ordenador o seres humanos en el mismo aparato.
+- Jugar en línea contra tus amigos (beta).
+- Opciones de ofrecer pistas y de deshacer la última movida.
+
+El juego es compatible para jugar en red con Freebloks 3D para Windows y Linux: http://www.saschahlusiak.de/freebloks-3d/
+
+POR FAVOR, HAZ UNA DONACIÓN
+Si te gusta Freebloks 3D, por favor apoya a los programadores mediante una donación de tu elección a través de la aplicación.
+
+El juego es absolutamente gratis y sin publicidad. El código fuente completo está disponible en GitHub: https://github.com/shlusiak/Freebloks-Android
+
+Si tienes alguna idea, solicitud de función o deseo con respecto al juego, simplemente envía un correo electrónico: mail@saschahlusiak.de
+
+Similar a Blokish y Blokr!

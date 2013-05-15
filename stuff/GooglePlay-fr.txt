@@ -1,0 +1,35 @@
+Il s'agit de la version pour Android de Freebloks 3D, une mise en œuvre du célèbre jeu de société Blokus par Sekkoïa. Essayez de placer autant de pièces que possible sur le tablier, en tenant compte seulement de deux règles simples: vos pièces doivent toucher par au moins un angle d'une pièce de même couleur, mais elles ne peuvent jamais se toucher par un côté. Pouvez-vous placer plus de pièces que vos adversaires?
+
+RÈGLES
+Chaque joueur dispose de 21 pièces similaires à celles du jeu de Tetris: 12 pièces à 5 carrés, 5 pièces à 4 carrés, 2 pièces à 3 carrés, 1 pièce à 2 carrés et une pièce à un seul carré.
+Chaque joueur place à son tour une pièce sur le tablier de 20x20 carrés. La première pièce du chaque joueur doit être placée dans son coin du tablier. Chaque pièce posée par la suite doit toucher un angle de l'une de vos pièces précédentes, mais elles ne doivent jamais partager une arête, bien qu'il est permis de toucher les arêtes des pièces de vos adversaires. 
+Si un joueur n'a aucun mouvement possible, il passe son tour. Lorsque tous les joueurs ont abandonné, la partie est terminée. 
+À la fin de la partie on additionne le nombre des carrés de toutes les pièces restantes de chaque joueur. Le joueur avec le moins de pièces restantes est le gagnant.
+
+COMMENT JOUER
+- Faites glisser la liste des pièces disponibles avec votre doigt.
+- Sélectionnez et faites glisser une pièce sur le tablier.
+- Faites pivoter ou retournez la pièce en utilisant les 4 poignées.
+- Placez la pièce dans la position souhaitée. La pièce deviendra verte si la position est valide, et rouge en cas contraire. Les angles possibles sont mis en valeur sur le tablier pour plus de commodité.
+- Touchez la pièce lorsqu'elle se trouve dans une position valide pour la placer.
+- Vous pouvez tourner le tablier à tout moment pour voir les pièces des adversaires.
+
+Quittez l'application à tout moment, la partie en cours sera sauvegardée et restaurée au prochain démarrage.
+
+CARACTÉRISTIQUES
+- Il est possible d'avoir une partie de 2 joueurs, soit avec 2 couleurs (Blokus Duo), soit avec 4 couleurs (2 couleurs pour chaque joueur)
+- Taille variable du tablier (20x20 ou autre)
+- Jouer contre l'ordinateur ou contre des humains sur le même appareil
+- Jouer en ligne contre vos amis (beta)
+- Donner une piste; annuler le dernier mouvement
+
+L'application est compatible à jouer en réseau avec Freebloks 3D pour Windows et Linux: http://www.saschahlusiak.de/freebloks-3d/
+
+FAITES UNE DONATION S'IL VOUS PLAÎT
+Si vous aimez Freebloks 3D, s'il vous plaît aidez les développeurs en faisant une donation de votre choix à travers l'application!
+
+Le jeu est entièrement gratuit et sans pub; le code source complet est disponible sur GitHub: https://github.com/shlusiak/Freebloks-Android
+
+Si vous avez une idée ou une demande de fonctionnalité concernant le jeu, il suffit de m'envoyer un e-mail: mail@saschahlusiak.de
+
+Similaire à Blokish et Blokr!
