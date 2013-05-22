@@ -33,7 +33,7 @@ public class RateAppDialog extends Dialog {
 		findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloks"));
+				Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(Global.getMarketURLString()));
 				Editor editor = prefs.edit();
 				editor.putBoolean("rate_show_again", false);
 				editor.commit();
