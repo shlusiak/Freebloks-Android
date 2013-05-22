@@ -85,12 +85,9 @@
         </PreferenceScreen>
      -->   
         <PreferenceScreen
+            android:key="rate_review"
             android:summary="@string/prefs_rate_review_long"
             android:title="@string/prefs_rate_review" >
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="market://details?id=de.saschahlusiak.freebloks" />
         </PreferenceScreen>
         
         <PreferenceScreen

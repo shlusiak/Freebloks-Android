@@ -110,6 +110,6 @@
 	<string name="prefs_auto_resume_long">Automatically resume last game</string>
 	<string name="prefs_auto_resume">Auto-resume</string>
 	<string name="prefs_rate_review_long">Please rate or leave a comment</string>
-	<string name="prefs_rate_review">Freebloks in Google Play...</string>
+	<string name="prefs_rate_review">Freebloks in %1$s...</string>
 	<string name="prefs_donation_long">Please support the development with a donation</string>
 	<string name="prefs_donation">Donate...</string></resources>

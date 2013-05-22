@@ -109,7 +109,7 @@
 	<string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
 	<string name="prefs_auto_resume">Auto-Fortsetzen</string>
 	<string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
-	<string name="prefs_rate_review">Freebloks in Google Play...</string>
+	<string name="prefs_rate_review">Freebloks in %1$s...</string>
 	<string name="prefs_donation_long">Unterstütze die Entwickler durch eine freiwillige Spende</string>
 	<string name="prefs_donation">Spenden...</string>
 </resources>

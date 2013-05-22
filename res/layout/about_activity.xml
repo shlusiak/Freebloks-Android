@@ -49,7 +49,6 @@
                 android:autoLink="web"
                 android:gravity="center"
                 android:linksClickable="true"
-                android:text="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloks"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
             
             <TextView
