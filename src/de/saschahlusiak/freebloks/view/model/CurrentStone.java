@@ -492,6 +492,7 @@ public class CurrentStone implements ViewElement {
 		int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 
 		moveTo(x, y);
+		isValid = is_valid_turn(x, y);
 	}
 
 	@Override
