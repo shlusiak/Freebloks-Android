@@ -74,7 +74,7 @@
 		
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="@string/about" >
+    <PreferenceCategory android:title="@string/about" android:key="about_category" >
 <!--         <PreferenceScreen
             android:summary="Fork me!"
             android:title="Freebloks on GitHub..." >
@@ -92,7 +92,8 @@
         
         <PreferenceScreen
             android:summary="@string/prefs_donation_long"
-            android:title="@string/prefs_donation" >
+            android:title="@string/prefs_donation"
+            android:key="donate" >
             <intent android:action="de.saschahlusiak.freebloks.SHOW_DONATE" />
         </PreferenceScreen>
 

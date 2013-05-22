@@ -68,6 +68,11 @@ public class RateAppDialog extends Dialog {
 	public static boolean checkShowRateDialog(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
+		/* TODO: enable this for Amazon, when donate feature is implemented */
+		if (Global.IS_AMAZON)
+			return false;
+		
+		
 		if (prefs.getBoolean("rate_show_again", true)) {
 			long starts = prefs.getLong("rate_number_of_starts", 0);
 			long first_started = prefs.getLong("rate_first_started", 0);

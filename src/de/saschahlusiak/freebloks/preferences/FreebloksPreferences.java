@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 
 public class FreebloksPreferences extends PreferenceActivity {
 	
@@ -30,5 +31,9 @@ public class FreebloksPreferences extends PreferenceActivity {
 			}
 		});
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
+		
+		/* TODO: implement Amazon specific donation activity and enable preference */
+		if (Global.IS_AMAZON)
+			((PreferenceCategory)findPreference("about_category")).removePreference(findPreference("donate"));
 	}
 }
