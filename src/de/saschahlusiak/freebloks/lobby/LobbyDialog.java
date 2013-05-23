@@ -77,7 +77,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	
 	@Override
 	protected void onStop() {
-		spiel.removeClientInterface(this);
+		if (spiel != null)
+			spiel.removeClientInterface(this);
 		super.onStop();
 	}
 
