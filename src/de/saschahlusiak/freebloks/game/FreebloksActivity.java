@@ -166,6 +166,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				
 				myclient.addClientInterface(FreebloksActivity.this);
 				newCurrentPlayer(myclient.spiel.current_player());
+				/* TODO: there is probably a race condition, when the device is
+				 * rotated, the task finishes and a new task is started while
+				 * the thread is running.
+				 */
 				spielthread.start();
 			}
 			super.onPostExecute(result);
