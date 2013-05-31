@@ -54,13 +54,12 @@ public class Wheel implements ViewElement {
 		}
 
 		{
-			float col = stones.size() / 2.0f - 3.3f;
+			float col = (stones.size() + 1) / 2 - 3.5f;
 			lastAngle = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + col) * 17.0f;
 			while (lastAngle > 180)
 				lastAngle -= 360.0f;
 			while (lastAngle < -180)
 				lastAngle += 360.0f;
-			Log.d(tag, "lastAngle = " + lastAngle + ", currentAngle = " + currentAngle);
 		}
 		this.lastPlayer = player;
 	}
@@ -285,7 +284,7 @@ public class Wheel implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		final float EPSILON = 1.0f;
-		final float ROTSPEED = 130.0f;
+		final float ROTSPEED = 90.0f;
 		if (spinning == false && (Math.abs(currentAngle - lastAngle) > EPSILON)) {
 			if (currentAngle < lastAngle) {
 				currentAngle += elapsed * ROTSPEED;

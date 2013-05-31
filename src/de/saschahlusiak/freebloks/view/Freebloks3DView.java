@@ -167,7 +167,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 	
 	public void stoneHasBeenSet(NET_SET_STONE s) {
-		if (model.spiel.is_local_player(s.player) || model.wheel.getLastPlayer() != model.board.getShowWheelPlayer())
+		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getLastPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 		
 		model.soundPool.play(model.soundPool.SOUND_CLICK1, 0.7f, 0.9f + (float)Math.random() * 0.2f);
@@ -259,7 +259,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	
 	class UpdateThread extends Thread {
 		boolean goDown = false;
-		private static final int FPS_ANIMATIONS = 30;
+		private static final int FPS_ANIMATIONS = 35;
 		private static final int FPS_NO_ANIMATIONS = 5;
 		
 		@Override
