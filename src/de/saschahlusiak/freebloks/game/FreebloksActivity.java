@@ -970,7 +970,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
-		final Exception error = spielthread.getError();
+		final Exception error = spielthread == null ? null : spielthread.getError();
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
