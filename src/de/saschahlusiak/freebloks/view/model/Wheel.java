@@ -24,14 +24,14 @@ public class Wheel implements ViewElement {
 	float originalX, originalY;
 	boolean spinning = false;
 	ArrayList<Stone> stones;
-	int currentPlayer; /* the current player to show in centered position*/
-	int showPlayer; /* the actual player to show, if -1 it's currentPlayer */
+	private int lastPlayer; /* the last shown player */
 	ViewModel model;
 	boolean moves_left;
 	
 	public Wheel(ViewModel model) {
 		this.model = model;
 		stones = new ArrayList<Stone>();
+		lastPlayer = -1;
 	}
 	
 	PointF tmp = new PointF();
@@ -39,11 +39,14 @@ public class Wheel implements ViewElement {
 	Timer timer = new Timer();
 	TimerTask task;
 	
-	public synchronized void update() {
-		if (showPlayer < 0 && currentPlayer < 0)
-			return;
-		Player p = model.spiel.get_player(showPlayer < 0 ? currentPlayer : showPlayer);
+	public synchronized void update(int player) {
 		stones.clear();
+		this.lastPlayer = player;
+		if (player < 0)
+			return;
+		if (model.spiel == null)
+			return;
+		Player p = model.spiel.get_player(player);
 		moves_left = p.m_number_of_possible_turns > 0;
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++) {
 			Stone s = p.get_stone(i);
@@ -51,33 +54,11 @@ public class Wheel implements ViewElement {
 				stones.add(s);
 		}
 	}
-	
-	public int getCurrentPlayer() {
-		return currentPlayer;
+
+	public final int getLastPlayer() {
+		return lastPlayer;
 	}
-	
-	public int getShowPlayer() {
-		return showPlayer;
-	}
-	
-	public void setCurrentPlayer(int currentPlayer) {
-		if (getShowPlayer() < 0 && this.currentPlayer != currentPlayer) {
-			this.currentPlayer = currentPlayer;
-			update();
-		} else
-			this.currentPlayer = currentPlayer;
-	}
-	
-	public void setShowPlayer(int showPlayer) {
-		if (showPlayer != this.showPlayer) {
-			this.showPlayer = showPlayer;
-			update();
-			
-			Log.d(tag, "setShowPlayer, showPlayer " + showPlayer + ", currentPlayer " + currentPlayer);
-			model.activity.showPlayer(showPlayer);
-		}
-	}
-	
+		
 	@Override
 	synchronized public boolean handlePointerDown(final PointF m) {
 		spinning = false;
@@ -110,11 +91,7 @@ public class Wheel implements ViewElement {
 //		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
 //		Log.d(tag, "row " + row + ", col " + col);
 		
-		if (!model.spiel.is_local_player()) {
-			spinning = true;
-			return true;
-		}
-		if (getCurrentPlayer() != getPlayer()) {
+		if (!model.spiel.is_local_player() || model.spiel.current_player() != lastPlayer) {
 			spinning = true;
 			return true;
 		}
@@ -204,10 +181,7 @@ public class Wheel implements ViewElement {
 		originalX = tmp.x;
 
 		model.redraw = true;
-		if (!model.spiel.is_local_player()) {
-			return true;
-		}
-		if (getCurrentPlayer() != getPlayer()) {
+		if (!model.spiel.is_local_player() || model.spiel.current_player() != lastPlayer) {
 			return true;
 		}
 
@@ -244,22 +218,15 @@ public class Wheel implements ViewElement {
 			return true;
 		}
 		return false;
-	}
-	
-	public final int getPlayer() {
-		return (showPlayer < 0 ? currentPlayer : showPlayer);
-	}
+	}	
 
 	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		final float da = 17.0f;
 		float angle = currentAngle + 9.5f * 0.5f * da;
 		
 		if (model.spiel == null)
-			return;
-		if (getPlayer() < 0)
-			return;
-		
-		
+			return;		
+
 		gl.glTranslatef(0, -BoardRenderer.stone_size * 33.0f, 0);
 		gl.glRotatef(currentAngle, 0, 0, 1);
 		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
@@ -278,18 +245,16 @@ public class Wheel implements ViewElement {
 			alpha = 0.8f / (1.0f + Math.abs(angle) / 47.0f);
 			if (model.currentStone.stone != null)
 				alpha *= 0.7f;
-			if (!moves_left)
+			if (!moves_left && !model.spiel.is_finished())
 				alpha *= 0.65f;
 
-			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0)
-			/* always show selected stone, even when dragging */
-			{
+			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
 				gl.glPushMatrix();
 				gl.glRotatef(90 * model.board.centerPlayer, 0, 1, 0);
 				if (!model.vertical_layout)
 					gl.glRotatef(-90.0f, 0, 1, 0);
 				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : getPlayer(), s, alpha);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : lastPlayer, s, alpha);
 				gl.glPopMatrix();
 			}
 			

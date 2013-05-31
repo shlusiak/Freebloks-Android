@@ -806,17 +806,16 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void run() {
 				boolean local = false;
-				int showPlayer = view.model.board.getShowPlayer();
+				int showPlayer = view.model.board.getShowDetailsPlayer();
 				if (client != null && client.spiel != null)
 					local = client.spiel.is_local_player(player);
 				else
 					showPlayer = player;
 				
 				if (optionsMenu != null) {
-					optionsMenu.findItem(R.id.hint).setEnabled(local && showPlayer == -1);
+					optionsMenu.findItem(R.id.hint).setEnabled(local);
 					optionsMenu.findItem(R.id.undo).setEnabled(local);
 				}
-
 				
 				/* TODO: generalize */
 				final int colors[] = {
@@ -833,25 +832,30 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				TextView t;
 				t = (TextView)findViewById(R.id.movesLeft);
 				t.setVisibility(View.INVISIBLE);
-
+ 
 				t = (TextView)findViewById(R.id.currentPlayer);
 				t.clearAnimation();
-				findViewById(R.id.myLocation).setVisibility((player >= 0 && showPlayer >= 0) ? View.VISIBLE : View.INVISIBLE);
-				if (player < 0) { 
+				findViewById(R.id.myLocation).setVisibility((showPlayer >= 0) ? View.VISIBLE : View.INVISIBLE);
+				if (player < 0)
 					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
-					if (view.model.intro != null)
-						t.setText(R.string.touch_to_skip);
-					else if (client == null || !client.isConnected())
-						t.setText(R.string.not_connected);
-					else
-						t.setText(R.string.no_player);
-				} else {
+				if (view.model.intro != null)
+					t.setText(R.string.touch_to_skip);
+				else if (client == null || !client.isConnected())
+					t.setText(R.string.not_connected);
+				else if (client.spiel.is_finished())
+					t.setText(R.string.game_over);
+				else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
 						statusView.setBackgroundColor(colors[player]);
 						if (!local) 
 							t.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
 						else {
 							t.setText(R.string.your_turn);
+							
+							Player p = client.spiel.get_player(player);
+							t = (TextView)findViewById(R.id.movesLeft);
+							t.setVisibility(View.VISIBLE);
+							t.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
 						}
 					} else {
 						statusView.setBackgroundColor(colors[showPlayer]);
@@ -867,7 +871,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							t.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
 						}
 					}
-				}
+
+				} else
+					t.setText(R.string.no_player);
+				
 			}
 		});
 	}
