@@ -842,9 +842,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					t.setText(R.string.touch_to_skip);
 				else if (client == null || !client.isConnected())
 					t.setText(R.string.not_connected);
-				else if (client.spiel.is_finished())
+				else if (client.spiel.is_finished()) {
 					t.setText(R.string.game_over);
-				else if (player >= 0 || showPlayer >= 0) {
+					Player p = client.spiel.get_player(view.model.board.getShowWheelPlayer());
+					t = (TextView)findViewById(R.id.movesLeft);
+					t.setVisibility(View.VISIBLE);
+					t.setText(getString(R.string.player_status_points, p.m_stone_points_left));
+				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
 						statusView.setBackgroundColor(colors[player]);
 						if (!local) 
