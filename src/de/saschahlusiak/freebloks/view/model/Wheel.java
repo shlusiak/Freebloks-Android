@@ -41,7 +41,6 @@ public class Wheel implements ViewElement {
 	
 	public synchronized void update(int player) {
 		stones.clear();
-		this.lastPlayer = player;
 		if (player < 0)
 			return;
 		if (model.spiel == null)
@@ -53,6 +52,17 @@ public class Wheel implements ViewElement {
 			if (s != null && s.get_available() > 0)
 				stones.add(s);
 		}
+
+		{
+			float col = stones.size() / 2.0f - 3.3f;
+			lastAngle = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + col) * 17.0f;
+			while (lastAngle > 180)
+				lastAngle -= 360.0f;
+			while (lastAngle < -180)
+				lastAngle += 360.0f;
+			Log.d(tag, "lastAngle = " + lastAngle + ", currentAngle = " + currentAngle);
+		}
+		this.lastPlayer = player;
 	}
 
 	public final int getLastPlayer() {
