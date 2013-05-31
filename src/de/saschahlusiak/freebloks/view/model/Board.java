@@ -1,6 +1,9 @@
 package de.saschahlusiak.freebloks.view.model;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import de.saschahlusiak.freebloks.view.BoardRenderer;
+import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import android.graphics.PointF;
 
 public class Board implements ViewElement {
@@ -71,8 +74,15 @@ public class Board implements ViewElement {
 		return -90.0f * (float)centerPlayer;
 	}
 	
-	public int getShowPlayer() {
+	/**
+	 * returns the player, whose details are to be shown, if board is rotated, -1 otherwise
+	 * @return player, the board is rotated to
+	 * @return -1, if board is not rotated
+	 */
+	public int getShowDetailsPlayer() {
 		int p;
+		if (model.spiel == null)
+			return -1;
 		if (mAngleY > 0)
 			p = ((int)mAngleY + 45) / 90;
 		else
@@ -80,6 +90,51 @@ public class Board implements ViewElement {
 		if (mAngleY < 10.0f && mAngleY >= - 10.0f)
 			return -1;
 		return (centerPlayer + p + 4) % 4;
+	}
+	
+	/**
+	 * returns the number of the player whose seeds are to be shown
+	 * 
+	 * @return -1 if seeds are disabled
+	 * @return detail player if board is rotated
+	 * @return current player, if local
+	 * @return -1 otherwise
+	 */
+	private int getShowSeedsPlayer() {
+		if (!model.showSeeds)
+			return -1;
+		if (model.spiel == null)
+			return -1;
+		if (getShowDetailsPlayer() >= 0)
+			return getShowDetailsPlayer();
+		if (model.spiel.is_finished())
+			return centerPlayer;
+		if (model.spiel.is_local_player())
+			return model.spiel.current_player();
+		return -1;
+	}
+	
+	/**
+	 * the player that should be shown on the wheel
+	 * @return
+	 */
+	public int getShowWheelPlayer() {
+		if (getShowDetailsPlayer() >= 0)
+			return getShowDetailsPlayer();
+		if (model.spiel == null)
+			return centerPlayer;
+		if (model.spiel.is_finished()) {
+			return centerPlayer;
+		}
+		if (model.spiel.is_local_player() || model.showOpponents)
+			return model.spiel.current_player();
+		/* TODO: would be nice to show the last current local player instead of the center one
+		 * needs caching of previous local player */
+		return centerPlayer;
+	}
+	
+	public final void render(FreebloksRenderer renderer, GL10 gl) {
+		renderer.board.renderBoard(gl, model.spiel, getShowSeedsPlayer());
 	}
 
 	float oa;
@@ -111,8 +166,13 @@ public class Board implements ViewElement {
 		while (mAngleY <= -180.0f)
 			mAngleY += 360.0f;
 		
-		int s = getShowPlayer();
-		model.wheel.setShowPlayer(s);
+		int s = getShowDetailsPlayer();
+		if (s < 0)
+			s = getShowWheelPlayer();
+		if (model.wheel.getLastPlayer() != s) {
+			model.wheel.update(s);
+			model.activity.showPlayer(s);
+		}
 
 		model.redraw = true;
 		return true;
@@ -145,13 +205,12 @@ public class Board implements ViewElement {
 		if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
 			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.65f) * 30.0f;
 			
-			/* TODO: cleanup / refactor */
 			if (mAngleY - ta > 0.1f) {
 				mAngleY -= elapsed * SNAPSPEED;
 				if (mAngleY - ta <= 0.1f) {
 					mAngleY = ta;
-					int s = getShowPlayer();
-					model.wheel.setShowPlayer(s);
+					model.wheel.update(getShowWheelPlayer());
+					model.activity.showPlayer(getShowWheelPlayer());
 				}
 				return true;
 			}
@@ -159,8 +218,8 @@ public class Board implements ViewElement {
 				mAngleY += elapsed * SNAPSPEED;
 				if (mAngleY - ta >= -0.1f) {
 					mAngleY = ta;
-					int s = getShowPlayer();
-					model.wheel.setShowPlayer(s);
+					model.wheel.update(getShowWheelPlayer());
+					model.activity.showPlayer(getShowWheelPlayer());
 				}
 				return true;
 			}			

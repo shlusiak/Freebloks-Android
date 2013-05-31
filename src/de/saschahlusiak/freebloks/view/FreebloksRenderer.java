@@ -20,7 +20,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	public final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
 	public float width = 1, height = 1;
-	int currentPlayer;
 	ViewModel model;
 	Context context;
 	public float fixed_zoom;
@@ -40,7 +39,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.model = model;
 		mAngleX = 70.0f;
 		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
-		currentPlayer = -1;
 	}
 
 	public void init(int field_size) {
@@ -118,13 +116,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
 		
 		/* render board */
-		int player = -1;
-		if (model.spiel != null && model.spiel.is_local_player() && model.showSeeds)
-			player = model.spiel.current_player();
-		if (model.spiel != null && model.showSeeds && model.wheel.getShowPlayer() >= 0)
-			player = model.wheel.getShowPlayer();
 		gl.glRotatef(boardAngle, 0, 1, 0);
-		board.renderBoard(gl, model.spiel, player);
+		model.board.render(this, gl);
 		
 		if (model.spiel == null)
 			return;
@@ -169,16 +162,13 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 		gl.glRotatef(-boardAngle, 0, 1, 0);
 
-		if (currentPlayer >= 0 && model.board.centerPlayer >= 0) {
-			gl.glPushMatrix();
-			/* reverse the cameraAngle to always fix wheel in front of camera */
-			gl.glRotatef(cameraAngle, 0, 1, 0);
-			if (!model.vertical_layout)
-				gl.glRotatef(90.0f, 0, 1, 0);
-			model.wheel.render(this, gl);
-			gl.glPopMatrix();
-		}
-		
+		gl.glPushMatrix();
+		/* reverse the cameraAngle to always fix wheel in front of camera */
+		gl.glRotatef(cameraAngle, 0, 1, 0);
+		if (!model.vertical_layout)
+			gl.glRotatef(90.0f, 0, 1, 0);
+		model.wheel.render(this, gl);
+		gl.glPopMatrix();
 		
 		/* render current player stone on the field */
 		if (model.spiel.is_local_player())

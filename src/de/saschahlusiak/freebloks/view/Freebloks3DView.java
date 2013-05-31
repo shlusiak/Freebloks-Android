@@ -55,20 +55,13 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			model.setSpiel(spiel);
 			if (spiel != null) {
 				client.addClientInterface(this);
-				renderer.currentPlayer = spiel.current_player();
 				model.board.last_size = spiel.m_field_size_x;
 				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
 					model.board.centerPlayer = i;
-					if (!model.showOpponents)
-						renderer.currentPlayer = i;
-					renderer.updateModelViewMatrix = true;
 					break;
 				}
-				if (spiel.is_local_player())
-					renderer.currentPlayer = spiel.current_player();
-				model.wheel.setCurrentPlayer(renderer.currentPlayer);
-				model.wheel.setShowPlayer(-1);
-				model.wheel.update();
+				renderer.updateModelViewMatrix = true;
+				model.wheel.update(model.board.getShowWheelPlayer());
 			}
 		}
 		
@@ -103,8 +96,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
-			if (model.spiel != null && model.spiel.is_finished())
-				model.activity.gameFinished();
+		//	if (model.spiel != null && model.spiel.is_finished())
+		//		model.activity.gameFinished();
 			model.handlePointerDown(modelPoint);
 			requestRender();
 			break;
@@ -153,11 +146,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		renderer.currentPlayer = player;
-		if (model.showOpponents || model.spiel.is_local_player(player))
-			model.wheel.setCurrentPlayer(player);
-		else
-			model.wheel.update();
+		model.wheel.update(model.board.getShowWheelPlayer());
 		requestRender();
 	}
 
@@ -177,8 +166,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 	
 	public void stoneHasBeenSet(NET_SET_STONE s) {
-		if (model.showOpponents || model.spiel.is_local_player())
-			model.wheel.setCurrentPlayer(model.spiel.current_player());
+		model.wheel.update(model.board.getShowWheelPlayer());
 		
 		model.soundPool.play(model.soundPool.SOUND_CLICK1, 0.7f, 0.9f + (float)Math.random() * 0.2f);
 		model.activity.vibrate(Global.VIBRATE_SET_STONE);
@@ -219,16 +207,13 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void gameStarted() {
+		model.board.centerPlayer = 0;
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (model.spiel.is_local_player(i)) {
 			model.board.centerPlayer = i;
-			if (!model.showOpponents) {
-				renderer.currentPlayer = i;
-				model.wheel.setCurrentPlayer(i);
-			}
-			model.wheel.setShowPlayer(-1);
-			renderer.updateModelViewMatrix = true;
 			break;
 		}
+		model.wheel.update(model.board.getShowWheelPlayer());
+		renderer.updateModelViewMatrix = true;
 		model.reset();		
 		requestRender();
 	}

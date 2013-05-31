@@ -27,6 +27,7 @@
     <string name="touch_to_skip">intro überspringen</string>
     <string name="no_player">kein Spieler</string>
     <string name="not_connected">nicht verbunden</string>
+    <string name="game_over">Spiel vorbei</string>
     <string name="your_turn">Du bist dran!</string>
     <string name="difficulty">Schwierigkeitsgrad</string>
     <string name="start">Start</string>
