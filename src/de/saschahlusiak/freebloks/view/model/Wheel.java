@@ -295,6 +295,10 @@ public class Wheel implements ViewElement {
 		final float EPSILON = 1.0f;
 		final float ROTSPEED = 90.0f;
 		if (spinning == false && (Math.abs(currentAngle - lastAngle) > EPSILON)) {
+			if (!model.showAnimations) {
+				currentAngle = lastAngle;
+				return true;
+			}
 			if (currentAngle < lastAngle) {
 				currentAngle += elapsed * ROTSPEED;
 				if (currentAngle > lastAngle)
