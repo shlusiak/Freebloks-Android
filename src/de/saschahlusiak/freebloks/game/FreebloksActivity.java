@@ -236,8 +236,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			newCurrentPlayer(client.spiel.current_player());
 		} else if (savedInstanceState != null) {
 			/* this can happen, when there is no game running and we rotate the device */
-			canresume = false;
-			newCurrentPlayer(-1);
+			if (!readStateFromBundle(savedInstanceState)) {
+				canresume = false;
+				newCurrentPlayer(-1);
+			}
 		} else {
 			if (prefs.getBoolean("show_animations", true) && ! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(view.model, this);
