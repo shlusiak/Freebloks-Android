@@ -53,15 +53,24 @@ public class Wheel implements ViewElement {
 				stones.add(s);
 		}
 
-		{
-			float col = (stones.size() + 1) / 2 - 3.5f;
-			lastAngle = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + col) * 17.0f;
-			while (lastAngle > 180)
-				lastAngle -= 360.0f;
-			while (lastAngle < -180)
-				lastAngle += 360.0f;
-		}
+		rotateTo((stones.size() + 1) / 2 - 2);
+		
 		this.lastPlayer = player;
+	}
+	
+	public void rotateTo(int column) {
+		lastAngle = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + (float)column - 1.5f) * 17.0f;
+		while (lastAngle > 180)
+			lastAngle -= 360.0f;
+		while (lastAngle < -180)
+			lastAngle += 360.0f;
+	}
+	
+	public int getStonePosition(int stone) {
+		for (int i = 0; i < stones.size(); i++)
+			if (stones.get(i).get_number() == stone)
+				return i;
+		return 0;
 	}
 
 	public final int getLastPlayer() {
