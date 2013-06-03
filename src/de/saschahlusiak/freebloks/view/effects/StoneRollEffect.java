@@ -18,7 +18,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 		
 		this.z = z;
 		this.vz = vz;
-		r = 15.0f;
+		r = 8.0f;
 		
 		final float angx=(float)(Math.random() * 2.0 *Math.PI);
 		final float angy=(float)(Math.random() * 2.0 *Math.PI);
