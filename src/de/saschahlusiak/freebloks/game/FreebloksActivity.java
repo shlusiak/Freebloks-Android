@@ -904,7 +904,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[s.player]), Toast.LENGTH_SHORT).show();	
+					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[s.player]), Toast.LENGTH_SHORT).show();
+					view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 				}
 			});
 		}
