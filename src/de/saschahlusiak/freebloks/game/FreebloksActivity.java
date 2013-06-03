@@ -37,6 +37,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -759,6 +760,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					client.request_undo();
 				}
 			});
+			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return true;
 			
 		case R.id.show_main_menu:
@@ -942,6 +944,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							Toast.LENGTH_LONG).show();
 				else
 					/* TODO: translate */
+					/* TODO: sound on chat message */
 					Toast.makeText(FreebloksActivity.this,
 							"Client " + c.client + ": " + c.text,
 							Toast.LENGTH_LONG).show();
@@ -1034,6 +1037,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					client.request_undo();
 				}
 			});
+			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
 		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
