@@ -52,7 +52,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 				/* reset rotation */
 				r = 0.0f;
 				vr = 0.0f;
-				float volume = 0.5f * (float)Math.pow(-vz / 16.0f, 2.0f);
+				float volume = (float)Math.pow(-vz / 16.0f, 2.0f);
 				if (vz > -6.0f)
 					vz = 0.0f;
 				

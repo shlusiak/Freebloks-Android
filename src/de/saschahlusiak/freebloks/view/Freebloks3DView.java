@@ -170,7 +170,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getLastPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 		
-		model.soundPool.play(model.soundPool.SOUND_CLICK1, 0.7f, 0.9f + (float)Math.random() * 0.2f);
+		model.soundPool.play(model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
 		model.activity.vibrate(Global.VIBRATE_SET_STONE);
 
 		requestRender();
@@ -186,7 +186,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		model.board.resetRotation();
 		model.wheel.rotateTo(model.wheel.getStonePosition(s.stone) / 2);
 
-		model.soundPool.play(model.soundPool.SOUND_HINT, 0.3f, 1.0f);
+		model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 		
 		Stone st = model.spiel.get_current_player().get_stone(s.stone);
 		st.mirror_rotate_to(s.mirror_count, s.rotate_count);

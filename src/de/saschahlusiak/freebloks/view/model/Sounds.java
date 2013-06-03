@@ -6,6 +6,8 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 public class Sounds extends SoundPool {
+	static float GLOBAL_VOLUME = 0.5f;
+	
 	boolean enabled;
 	
 	public int SOUND_CLICK1;
@@ -41,7 +43,7 @@ public class Sounds extends SoundPool {
 	public boolean play(int id, float volume, float rate) {
 		if (!enabled)
 			return false;
-		play(id, volume, volume, 1, 0, rate);
+		play(id, volume * GLOBAL_VOLUME, volume * GLOBAL_VOLUME, 1, 0, rate);
 		return true;
 	}
 }
