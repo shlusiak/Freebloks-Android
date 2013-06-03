@@ -229,7 +229,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			model.addEffect(e);
 		}
 		model.currentStone.startDragging(null, null);
-		/* TODO: play sound on undo */
 		requestRender();
 	}
 
