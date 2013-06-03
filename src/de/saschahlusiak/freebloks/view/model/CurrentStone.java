@@ -33,8 +33,9 @@ public class CurrentStone implements ViewElement {
 	SimpleModel overlay;
 	Status status;
 	ViewModel model;
-
-	final float hover_height = 0.45f;
+	
+	final float hover_height_low = 0.45f;
+	final float hover_height_high = 0.45f;
 	
 	CurrentStone(ViewModel model) {
 		this.model = model;
@@ -88,11 +89,13 @@ public class CurrentStone implements ViewElement {
 	
 //	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
 //	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
-	final float diffuse_white[] = { 0.6f, 0.6f, 0.6f, 0.6f };
+//	final float diffuse_white[] = { 1.0f, 1.0f, 1.0f, 0.6f };
 	
 	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		if (stone == null)
 			return;
+		
+		final float hover_height = (status == Status.IDLE) ? hover_height_low : hover_height_high;
 		
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
 		
@@ -132,7 +135,6 @@ public class CurrentStone implements ViewElement {
 		gl.glPopMatrix();
 		
 		
-		gl.glTranslatef(0, hover_height, 0);
 		
 		gl.glPushMatrix();
 	    gl.glTranslatef(
@@ -152,8 +154,6 @@ public class CurrentStone implements ViewElement {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_LIGHTING);
 		
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse_white, 0);
-
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
 	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
@@ -177,7 +177,7 @@ public class CurrentStone implements ViewElement {
 
 		gl.glTranslatef(
 				BoardRenderer.stone_size * offset,
-				0,
+				hover_height,
 				BoardRenderer.stone_size * offset);
 
 		if (status == Status.ROTATING)
@@ -192,7 +192,8 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 	    
-		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, BoardRenderer.DEFAULT_ALPHA);
+		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 
+				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		
 		gl.glPopMatrix();
@@ -430,7 +431,7 @@ public class CurrentStone implements ViewElement {
 					if (model.showAnimations) {
 						Stone st = new Stone();
 						st.copyFrom(stone);
-						StoneRollEffect e = new StoneRollEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), hover_height, -15.0f);
+						StoneRollEffect e = new StoneRollEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), hover_height_high, -15.0f);
 				
 						EffectSet set = new EffectSet();
 						set.add(e);
