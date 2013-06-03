@@ -184,6 +184,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			return;
 		
 		model.board.resetRotation();
+		model.wheel.update(s.player);
 		model.wheel.rotateTo(model.wheel.getStonePosition(s.stone) / 2);
 
 		model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);

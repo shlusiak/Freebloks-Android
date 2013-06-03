@@ -52,6 +52,7 @@ public class Wheel implements ViewElement {
 			if (s != null && s.get_available() > 0)
 				stones.add(s);
 		}
+		this.highlightStone = null;
 
 		rotateTo((stones.size() + 1) / 2 - 2);
 		
@@ -126,7 +127,7 @@ public class Wheel implements ViewElement {
 			if (task != null)
 				task.cancel();
 			if (model.currentStone.stone != null && model.currentStone.stone != highlightStone) {
-				model.currentStone.stone = highlightStone;
+				model.currentStone.startDragging(null, highlightStone);
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 			} else timer.schedule(task = new TimerTask() {
 				

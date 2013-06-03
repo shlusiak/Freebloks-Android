@@ -485,14 +485,16 @@ public class CurrentStone implements ViewElement {
 
 		status = Status.DRAGGING;
 		hasMoved = false;
-		stone_rel_x = 0;
-		stone_rel_y = 0;
-		
-		int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-		int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
-
-		moveTo(x, y);
-		isValid = is_valid_turn(x, y);
+		if (fieldPoint != null) {
+			stone_rel_x = 0;
+			stone_rel_y = 0;
+			
+			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
+			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
+	
+			moveTo(x, y);
+		}
+		isValid = is_valid_turn((int)pos.x, (int)pos.y);
 	}
 
 	@Override

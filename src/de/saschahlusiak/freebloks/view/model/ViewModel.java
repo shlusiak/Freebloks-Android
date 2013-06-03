@@ -43,7 +43,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	}
 	
 	public void reset() {
-		currentStone.stone = null;
+		currentStone.startDragging(null, null);
 		board.resetRotation();
 	}
 
