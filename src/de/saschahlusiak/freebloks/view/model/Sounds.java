@@ -11,6 +11,7 @@ public class Sounds extends SoundPool {
 	public int SOUND_CLICK1;
 	public int SOUND_CLICK2;
 	public int SOUND_CLICK3;
+	public int SOUND_HINT;
 
 	public Sounds(Context context) {
 		super(5, AudioManager.STREAM_MUSIC, 0);
@@ -22,6 +23,7 @@ public class Sounds extends SoundPool {
 		SOUND_CLICK1 = load(context, R.raw.click1, 1);
 		SOUND_CLICK2 = load(context, R.raw.click2, 1);
 		SOUND_CLICK3 = load(context, R.raw.click3, 1);
+		SOUND_HINT = load(context, R.raw.hint, 1);
 	}
 	
 	public void setEnabled(boolean enabled) {

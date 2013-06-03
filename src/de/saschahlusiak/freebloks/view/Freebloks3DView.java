@@ -186,8 +186,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		model.board.resetRotation();
 		model.wheel.rotateTo(model.wheel.getStonePosition(s.stone) / 2);
 
-		
-		/* TODO: play sound when hint is shown */
+		model.soundPool.play(model.soundPool.SOUND_HINT, 0.3f, 1.0f);
 		
 		Stone st = model.spiel.get_current_player().get_stone(s.stone);
 		st.mirror_rotate_to(s.mirror_count, s.rotate_count);
