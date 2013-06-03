@@ -18,7 +18,7 @@ public class Sounds extends SoundPool {
 	public int SOUND_PLAYER_OUT;
 
 	public Sounds(Context context) {
-		super(5, AudioManager.STREAM_MUSIC, 0);
+		super(10, AudioManager.STREAM_MUSIC, 0);
 		enabled = true;
 		loadSounds(context);
 	}
