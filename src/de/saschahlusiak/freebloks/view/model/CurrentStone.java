@@ -373,7 +373,7 @@ public class CurrentStone implements ViewElement {
 			hasMoved = moveTo(x, y);
 			isValid = is_valid_turn(x, y);
 			if (isValid && (hasMoved || forceSound)) {
-				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
+				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 1.0f, 1.0f))
 					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
 			return hasMoved;
