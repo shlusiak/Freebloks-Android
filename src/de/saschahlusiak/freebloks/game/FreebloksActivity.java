@@ -834,63 +834,65 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						Color.rgb(0, 96, 0),
 				};
 
-				View v;
-				v = findViewById(R.id.progressBar);
-				v.setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
+				findViewById(R.id.progressBar).setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
 				
-				TextView t;
-				t = (TextView)findViewById(R.id.movesLeft);
-				t.setVisibility(View.INVISIBLE);
+				TextView movesLeft, points, status;
+				movesLeft = (TextView)findViewById(R.id.movesLeft);
+				movesLeft.setVisibility(View.INVISIBLE);
+				points = (TextView)findViewById(R.id.points);
+				points.setVisibility(View.INVISIBLE);
  
-				t = (TextView)findViewById(R.id.currentPlayer);
-				t.clearAnimation();
+				status = (TextView)findViewById(R.id.currentPlayer);
+				status.clearAnimation();
 				findViewById(R.id.myLocation).setVisibility((showPlayer >= 0) ? View.VISIBLE : View.INVISIBLE);
 				if (player < 0)
 					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
 				if (view.model.intro != null)
-					t.setText(R.string.touch_to_skip);
+					status.setText(R.string.touch_to_skip);
 				else if (client == null || !client.isConnected())
-					t.setText(R.string.not_connected);
+					status.setText(R.string.not_connected);
 				else if (client.spiel.is_finished()) {
 					/* TODO: don't display player details in 2 player 2 color mode */
-					t.setText(R.string.game_over);
 					int pl = view.model.board.getShowWheelPlayer();
-					statusView.setBackgroundColor(colors[pl]);
 					Player p = client.spiel.get_player(pl);
-					t = (TextView)findViewById(R.id.movesLeft);
-					t.setVisibility(View.VISIBLE);
-					t.setText(getResources().getQuantityString(R.plurals.number_of_points_left, p.m_stone_points, p.m_stone_points));
+					status.setText("[" + getResources().getStringArray(R.array.color_names)[pl] + "]");
+					statusView.setBackgroundColor(colors[pl]);
+					points.setVisibility(View.VISIBLE);
+					points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+					movesLeft.setVisibility(View.VISIBLE);
+					movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
 						statusView.setBackgroundColor(colors[player]);
+						Player p = client.spiel.get_player(player);
+						points.setVisibility(View.VISIBLE);
+						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 						if (!local) 
-							t.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
+							status.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
 						else {
-							t.setText(R.string.your_turn);
+							status.setText(R.string.your_turn);
 							
-							Player p = client.spiel.get_player(player);
-							t = (TextView)findViewById(R.id.movesLeft);
-							t.setVisibility(View.VISIBLE);
-							t.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
+							movesLeft.setVisibility(View.VISIBLE);
+							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
 						}
 					} else {
 						statusView.setBackgroundColor(colors[showPlayer]);
 						Player p = client.spiel.get_player(showPlayer);
-						if (p.m_number_of_possible_turns <= 0) {
-							t.setText("[" + getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[showPlayer]) + "]");
-						}
+						points.setVisibility(View.VISIBLE);
+						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+						
+						if (p.m_number_of_possible_turns <= 0)
+							status.setText("[" + getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[showPlayer]) + "]");
 						else {
-							t.setText(getResources().getQuantityString(R.plurals.number_of_points_left, p.m_stone_points, p.m_stone_points));
-
-							t = (TextView)findViewById(R.id.movesLeft);
-							t.setVisibility(View.VISIBLE);
-							t.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
+							status.setText(getResources().getStringArray(R.array.color_names)[showPlayer]);
+							
+							movesLeft.setVisibility((local || player < 0) ? View.VISIBLE : View.INVISIBLE);
+							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
 						}
 					}
 
 				} else
-					t.setText(R.string.no_player);
-				
+					status.setText(R.string.no_player);
 			}
 		});
 	}
