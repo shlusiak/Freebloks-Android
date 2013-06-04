@@ -17,6 +17,7 @@ public class Board implements ViewElement {
 		this.last_size = size;
 		this.centerPlayer = 0;
 		mAngleY = 0.0f;
+		updateDetailsPlayer();
 	}
 
 	/**
@@ -74,22 +75,28 @@ public class Board implements ViewElement {
 		return -90.0f * (float)centerPlayer;
 	}
 	
+	int lastDetailsPlayer = -1;
+	private void updateDetailsPlayer() {
+		int p;
+		if (mAngleY > 0)
+			p = ((int)mAngleY + 45) / 90;
+		else
+			p = ((int)mAngleY - 45) / 90;
+		if (mAngleY < 10.0f && mAngleY >= - 10.0f)
+			lastDetailsPlayer = -1;
+		else
+			lastDetailsPlayer = (centerPlayer + p + 4) % 4;
+	}
+	
 	/**
 	 * returns the player, whose details are to be shown, if board is rotated, -1 otherwise
 	 * @return player, the board is rotated to
 	 * @return -1, if board is not rotated
 	 */
 	public int getShowDetailsPlayer() {
-		int p;
 		if (model.spiel == null)
 			return -1;
-		if (mAngleY > 0)
-			p = ((int)mAngleY + 45) / 90;
-		else
-			p = ((int)mAngleY - 45) / 90;
-		if (mAngleY < 10.0f && mAngleY >= - 10.0f)
-			return -1;
-		return (centerPlayer + p + 4) % 4;
+		return lastDetailsPlayer;
 	}
 	
 	/**
@@ -167,6 +174,7 @@ public class Board implements ViewElement {
 			mAngleY -= 360.0f;
 		while (mAngleY <= -180.0f)
 			mAngleY += 360.0f;
+		updateDetailsPlayer();
 		
 		int s = getShowDetailsPlayer();
 		if (s < 0)
@@ -215,6 +223,7 @@ public class Board implements ViewElement {
 			while (mAngleY <= -180.0f)
 				mAngleY += 360.0f;
 			
+			updateDetailsPlayer();
 			int s = getShowWheelPlayer();
 			if (model.wheel.getLastPlayer() != s) {
 				model.wheel.update(s);
@@ -238,7 +247,8 @@ public class Board implements ViewElement {
 					mAngleY = ta;
 					lp = -1;
 				}
-			}			
+			}
+			updateDetailsPlayer();
 			int s = getShowWheelPlayer();
 			if (lp != s) {
 				model.wheel.update(s);
