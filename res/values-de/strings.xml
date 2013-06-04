@@ -22,7 +22,7 @@
     <string name="your_color">Deine Farbe:</string>
     <string name="waiting_for_color">Warte auf %1$s</string>
     <string name="color_is_out_of_moves">%1$s hat keine Züge mehr</string>
-    <string name="player_status_points">-%1$d Punkte</string>
+    <string name="player_status_points">%1$d Punkte</string>
     <string name="player_status_moves">%1$d Züge</string>
     <string name="touch_to_skip">intro überspringen</string>
     <string name="no_player">kein Spieler</string>

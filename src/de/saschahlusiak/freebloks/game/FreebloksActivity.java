@@ -856,7 +856,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					Player p = client.spiel.get_player(view.model.board.getShowWheelPlayer());
 					t = (TextView)findViewById(R.id.movesLeft);
 					t.setVisibility(View.VISIBLE);
-					t.setText(getString(R.string.player_status_points, p.m_stone_points_left));
+					t.setText(getString(R.string.player_status_points, -p.m_stone_points_left));
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
 						statusView.setBackgroundColor(colors[player]);
@@ -877,7 +877,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							t.setText("[" + getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[showPlayer]) + "]");
 						}
 						else {
-							t.setText(getString(R.string.player_status_points, p.m_stone_points_left));
+							t.setText(getString(R.string.player_status_points, -p.m_stone_points_left));
 
 							t = (TextView)findViewById(R.id.movesLeft);
 							t.setVisibility(View.VISIBLE);
