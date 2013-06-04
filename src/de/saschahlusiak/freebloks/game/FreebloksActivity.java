@@ -335,7 +335,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onPause() {
 		Log.d(tag, "onPause");
-		view.onPause();
 		if (client != null && client.spiel.current_player() >= 0 && !client.spiel.is_finished())
 			saveGameState(GAME_STATE_FILE);
 		super.onPause();
@@ -344,12 +343,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onResume() {
 		Log.d(tag, "onResume");
-		view.onResume();
 		super.onResume();
 	}
 	
 	@Override
 	protected void onStop() {
+		view.onPause();
 		Editor editor = prefs.edit();
 		editor.putFloat("view_scale", view.getScale());
 		editor.commit();
@@ -361,6 +360,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	protected void onStart() {
 		Log.d(tag, "onStart");
 		super.onStart();
+		view.onResume();
 		
 		vibrate_on_move = prefs.getBoolean("vibrate", true);
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
