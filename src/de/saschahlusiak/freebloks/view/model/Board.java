@@ -207,22 +207,20 @@ public class Board implements ViewElement {
 			
 			if (mAngleY - ta > 0.1f) {
 				mAngleY -= elapsed * SNAPSPEED;
-				if (mAngleY - ta <= 0.1f) {
+				if (mAngleY - ta <= 0.1f)
 					mAngleY = ta;
-					model.wheel.update(getShowWheelPlayer());
-					model.activity.showPlayer(getShowWheelPlayer());
-				}
-				return true;
 			}
 			if (mAngleY - ta < -0.1f) {
 				mAngleY += elapsed * SNAPSPEED;
-				if (mAngleY - ta >= -0.1f) {
+				if (mAngleY - ta >= -0.1f)
 					mAngleY = ta;
-					model.wheel.update(getShowWheelPlayer());
-					model.activity.showPlayer(getShowWheelPlayer());
-				}
-				return true;
 			}			
+			int s = getShowWheelPlayer();
+			if (model.wheel.getLastPlayer() != s) {
+				model.wheel.update(s);
+				model.activity.showPlayer(s);
+			}
+			return true;
 		}
 		return false;
 	}
