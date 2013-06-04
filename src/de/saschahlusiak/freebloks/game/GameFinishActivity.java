@@ -107,7 +107,7 @@ public class GameFinishActivity extends Activity {
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
 			((TextView)t[i].findViewById(R.id.points)).setText(
-					getResources().getQuantityString(R.plurals.number_of_points_left, p.m_stone_points, p.m_stone_points));
+					getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);

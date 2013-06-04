@@ -50,10 +50,10 @@
     
    
     <plurals name="number_of_stones_left">
-        <item quantity="one">%1$d stone</item>
-        <item quantity="other">%1$d stones</item>
+        <item quantity="one">%1$d stone left</item>
+        <item quantity="other">%1$d stones left</item>
 	</plurals>
-    <plurals name="number_of_points_left">
+    <plurals name="number_of_points">
         <item quantity="one">%1$d point</item>
         <item quantity="other">%1$d points</item>
 	</plurals>

@@ -18,7 +18,7 @@
         android:padding="2dp" >
 
         <TextView
-            android:id="@+id/movesLeft"
+            android:id="@+id/points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -41,6 +41,20 @@
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffffff"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/movesLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:shadowRadius="4"
+            android:shadowDy="2"
+            android:shadowColor="#9f000000"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#b0ffffff"
             android:textStyle="bold" />
 
         <ProgressBar
