@@ -134,10 +134,10 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		    		int field = model.spiel.get_game_field(y, x);
 		    		if (field != Stone.FIELD_FREE) {
 		    			boolean effected = false;
-		    			for (Effect effect: model.effects)
-		    				if (effect.isEffected(x, y)) {
-		    					effected = true;
-		    					break;
+						for (int i = 0; i < model.effects.size(); i++)
+							if (model.effects.get(i).isEffected(x, y)) {
+								effected = true;
+								break;
 		    				}
 		    			if (!effected)
 		    				board.renderStone(gl, field, BoardRenderer.DEFAULT_ALPHA);
@@ -150,16 +150,16 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	    gl.glDisable(GL10.GL_BLEND);
 	    gl.glPopMatrix();
 
-		
 		/* render all effects */
 		synchronized (model.effects) {
-			for (Effect effect: model.effects) {
-				effect.renderShadow(gl, board);
+			for (int i = 0; i < model.effects.size(); i++) {
+				model.effects.get(i).renderShadow(gl, board);
 			}
-			for (Effect effect: model.effects) {
-				effect.render(gl, board);
+			for (int i = 0; i < model.effects.size(); i++) {
+				model.effects.get(i).render(gl, board);
 			}
 		}
+
 		gl.glRotatef(-boardAngle, 0, 1, 0);
 
 		gl.glPushMatrix();

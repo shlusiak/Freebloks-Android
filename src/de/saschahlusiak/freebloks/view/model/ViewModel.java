@@ -57,24 +57,24 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 			redraw = intro.handlePointerDown(m);
 			return redraw;
 		}
-		for (ViewElement e: this)
-			if (e.handlePointerDown(m))
+		for (int i = 0; i < size(); i++)
+			if (get(i).handlePointerDown(m))
 				return redraw;
 		return redraw;
 	}
 
 	public boolean handlePointerMove(PointF m) {
 		redraw = false;
-		for (ViewElement e: this)
-			if (e.handlePointerMove(m))
+		for (int i = 0; i < size(); i++)
+			if (get(i).handlePointerMove(m))
 				return redraw;
 		return redraw;
 	}
 
 	public boolean handlePointerUp(PointF m) {
 		redraw = false;
-		for (ViewElement e: this)
-			if (e.handlePointerUp(m))
+		for (int i = 0; i < size(); i++)
+			if (get(i).handlePointerUp(m))
 				return redraw;
 		return redraw;
 	}
@@ -99,8 +99,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 			}
 		}
 		
-		for (ViewElement e: this)
-			redraw |= e.execute(elapsed);
+		for (int i = 0; i < size(); i++)
+			redraw |= get(i).execute(elapsed);
 		
 		return redraw;
 	}
