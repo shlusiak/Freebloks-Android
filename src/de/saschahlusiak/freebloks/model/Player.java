@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Player implements Serializable, Cloneable {
 	private static final long serialVersionUID = -7320011705508155304L;
 	
-	public int m_stone_points_left;
+	public int m_stone_points;
 	public int m_stone_count;
 	public int m_number_of_possible_turns;
 	int m_position_points;
@@ -40,7 +40,7 @@ public class Player implements Serializable, Cloneable {
 	}
 	
 	public final void copyFrom(Player from) {
-		this.m_stone_points_left = from.m_stone_points_left;
+		this.m_stone_points = from.m_stone_points;
 		this.m_stone_count = from.m_stone_count;
 		this.m_number_of_possible_turns = from.m_number_of_possible_turns;
 		this.m_position_points = from.m_position_points;
@@ -72,7 +72,7 @@ public class Player implements Serializable, Cloneable {
 	
 	 
 	void refresh_data(Spiel spiel){
-		m_stone_points_left = 0;
+		m_stone_points = 0;
 		m_number_of_possible_turns = 0;
 		m_position_points = 0;
 		m_stone_count = 0;
@@ -80,7 +80,6 @@ public class Player implements Serializable, Cloneable {
 		for (int n = 0; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 			Stone stone = m_stone[n];
 			m_stone_count += stone.get_available();
-			m_stone_points_left += stone.get_stone_points() * stone.get_available();
 		}
 
 		for (int x = 0; x < spiel.m_field_size_x; x++){
@@ -96,7 +95,8 @@ public class Player implements Serializable, Cloneable {
 							m_position_points += pos_turns * stone.get_stone_position_points() * stone.get_stone_points();
 						}
 					}
-				}
+				} else if (spiel.get_game_field(y, x) == m_number)
+					m_stone_points++;
 			}	
 		}
 	}
