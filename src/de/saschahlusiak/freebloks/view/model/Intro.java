@@ -395,8 +395,8 @@ public class Intro implements ViewElement {
 	}
 	
 	void executeEffects(float elapsed) {
-		for (Effect e: effects)
-			e.execute(elapsed);
+		for (int i = 0; i < effects.size(); i++)
+			effects.get(i).execute(elapsed);
 	}
 	
 	public void render(GL10 gl, FreebloksRenderer renderer) {
@@ -450,10 +450,10 @@ public class Intro implements ViewElement {
 		gl.glPopMatrix();
 		/* Alle Steine rendern. */
 		synchronized(effects) {
-			for (Effect e: effects)
-				e.renderShadow(gl, renderer.board);
-			for (Effect e: effects)
-				e.render(gl, renderer.board);
+			for (int i = 0; i < effects.size(); i++)
+				effects.get(i).renderShadow(gl, renderer.board);
+			for (int i = 0; i < effects.size(); i++)
+				effects.get(i).render(gl, renderer.board);
 		}
 	}
 }
