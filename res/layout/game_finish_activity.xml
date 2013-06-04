@@ -166,26 +166,28 @@
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
-	</RelativeLayout>
-    <Button
-        android:id="@+id/new_game"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/places"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/new_local_game" />
-
-	<Button
-        android:id="@+id/show_main_menu"
-        android:layout_width="130dp"
+	</RelativeLayout><LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/places"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/main_menu" />
+        android:layout_marginTop="8dp" >
 
+        <Button
+            android:id="@+id/new_game"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_marginRight="4dp"
+            android:text="@string/new_local_game"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
+        <Button
+            android:id="@+id/show_main_menu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_marginLeft="4dp"
+            android:text="@string/main_menu"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 </RelativeLayout>
