@@ -223,19 +223,24 @@ public class Board implements ViewElement {
 			return true;
 		} else if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
 			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.65f) * 30.0f;
-			
+
+			int lp = model.wheel.getLastPlayer();
 			if (mAngleY - ta > 0.1f) {
 				mAngleY -= elapsed * SNAPSPEED;
-				if (mAngleY - ta <= 0.1f)
+				if (mAngleY - ta <= 0.1f) {
 					mAngleY = ta;
+					lp = -1;
+				}
 			}
 			if (mAngleY - ta < -0.1f) {
 				mAngleY += elapsed * SNAPSPEED;
-				if (mAngleY - ta >= -0.1f)
+				if (mAngleY - ta >= -0.1f) {
 					mAngleY = ta;
+					lp = -1;
+				}
 			}			
 			int s = getShowWheelPlayer();
-			if (model.wheel.getLastPlayer() != s) {
+			if (lp != s) {
 				model.wheel.update(s);
 				model.activity.showPlayer(s);
 			}
