@@ -140,6 +140,7 @@ public class Board implements ViewElement {
 	float oa;
 	PointF om = new PointF();
 	boolean rotating = false;
+	boolean auto_rotate = true;
 
 	@Override
 	public boolean handlePointerDown(PointF m) {
@@ -147,6 +148,7 @@ public class Board implements ViewElement {
 		om.x = m.x;
 		om.y = m.y;
 		rotating = true;
+		auto_rotate = false;
 		return true;
 	}
 
@@ -185,7 +187,7 @@ public class Board implements ViewElement {
 		if (!rotating)
 			return false;
 		if (Math.abs(m.x - om.x) < 1 && Math.abs(m.y - om.y) < 1)
-			ta = 0.0f;
+			resetRotation();
 		else {
 			if (mAngleY > 0)
 				ta = (float)(((int)mAngleY + 45) / 90 * 90);
@@ -198,11 +200,28 @@ public class Board implements ViewElement {
 	
 	public void resetRotation() {
 		ta = 0.0f;
+		auto_rotate = true;
 	}
 
 	@Override
 	public boolean execute(float elapsed) {
-		if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
+		if (!rotating && model.spiel != null && model.spiel.is_finished() && auto_rotate) {
+			final float ROTSPEED = 25.0f;
+
+			mAngleY += elapsed * ROTSPEED;
+			
+			while (mAngleY >= 180.0f)
+				mAngleY -= 360.0f;
+			while (mAngleY <= -180.0f)
+				mAngleY += 360.0f;
+			
+			int s = getShowWheelPlayer();
+			if (model.wheel.getLastPlayer() != s) {
+				model.wheel.update(s);
+				model.activity.showPlayer(s);
+			}
+			return true;
+		} else if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
 			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.65f) * 30.0f;
 			
 			if (mAngleY - ta > 0.1f) {
