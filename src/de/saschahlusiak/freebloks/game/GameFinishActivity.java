@@ -75,7 +75,7 @@ public class GameFinishActivity extends Activity {
 		}
 		while ( i < max )
 		{
-			if (spiel.get_player(place[i]).m_stone_points_left > spiel.get_player(place[i + 1]).m_stone_points_left) {
+			if (spiel.get_player(place[i]).m_stone_points < spiel.get_player(place[i + 1]).m_stone_points) {
 				int bla = place[i];
 				place[i] = place[i + 1];
 				place[i + 1] = bla;
@@ -107,7 +107,7 @@ public class GameFinishActivity extends Activity {
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
 			((TextView)t[i].findViewById(R.id.points)).setText(
-					getResources().getQuantityString(R.plurals.number_of_points_left, p.m_stone_points_left, -p.m_stone_points_left));
+					getResources().getQuantityString(R.plurals.number_of_points_left, p.m_stone_points, p.m_stone_points));
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 			t[i].setBackgroundColor(colors[place[i]]);
