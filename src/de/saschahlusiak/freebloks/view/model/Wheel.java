@@ -54,7 +54,8 @@ public class Wheel implements ViewElement {
 		}
 		this.highlightStone = null;
 
-		rotateTo((stones.size() + 1) / 2 - 2);
+		if (stones.size() > 0)
+			rotateTo((stones.size() + 1) / 2 - 2);
 		
 		this.lastPlayer = player;
 	}
