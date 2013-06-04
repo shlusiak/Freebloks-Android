@@ -852,8 +852,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				else if (client == null || !client.isConnected())
 					t.setText(R.string.not_connected);
 				else if (client.spiel.is_finished()) {
+					/* TODO: don't display player details in 2 player 2 color mode */
 					t.setText(R.string.game_over);
-					Player p = client.spiel.get_player(view.model.board.getShowWheelPlayer());
+					int pl = view.model.board.getShowWheelPlayer();
+					statusView.setBackgroundColor(colors[pl]);
+					Player p = client.spiel.get_player(pl);
 					t = (TextView)findViewById(R.id.movesLeft);
 					t.setVisibility(View.VISIBLE);
 					t.setText(getString(R.string.player_status_points, -p.m_stone_points_left));

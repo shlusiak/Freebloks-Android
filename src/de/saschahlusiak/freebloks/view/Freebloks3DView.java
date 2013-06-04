@@ -201,6 +201,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void gameFinished() {
+		model.board.resetRotation();
 		requestRender();
 	}
 
