@@ -19,154 +19,155 @@
    		android:layout_below="@+id/place"
    		android:layout_marginTop="8dp"
         android:id="@+id/places" >
-    <LinearLayout
-        android:id="@+id/place1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Small Text"
-            android:textColor="#ffffffff"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right"
-            android:layout_margin="3dp"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/stones"
-            android:layout_weight="0.3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/place2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/place1"
-        android:layout_centerHorizontal="true"
-        android:padding="4dp" >
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Small Text"
-            android:textColor="#ffffffff"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right"
-            android:layout_margin="3dp"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/stones"
-            android:layout_weight="0.3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" /> 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/place3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/place2"        
-        android:padding="4dp"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Small Text"
-            android:textColor="#ffffffff"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right"
-            android:layout_margin="3dp"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/stones"
-            android:layout_weight="0.3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-	</LinearLayout>
-    <LinearLayout
-        android:id="@+id/place4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/place3"
-        android:padding="4dp"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Small Text"
-            android:textColor="#ffffffff"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right"
-            android:layout_margin="3dp"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/stones"
-            android:layout_weight="0.3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textColor="#ffffffff"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
-	</RelativeLayout><LinearLayout
+	    <RelativeLayout
+	        android:id="@+id/place1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="4dp" >
+	
+	        <TextView
+	            android:id="@+id/name"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textColor="#ffffffff"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	        <TextView
+	            android:id="@+id/points"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:paddingRight="24dp"
+	            android:gravity="center"
+	            android:layout_centerVertical="true"
+	            android:textColor="#ffffffff"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	        <TextView
+	            android:id="@+id/stones"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	    </RelativeLayout>
+	    <RelativeLayout
+	        android:id="@+id/place2"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/place1"
+	        android:padding="4dp" >
+	
+	        <TextView
+	            android:id="@+id/name"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textColor="#ffffffff"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	        <TextView
+	            android:id="@+id/points"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:paddingRight="24dp"
+	            android:gravity="center"
+	            android:layout_centerVertical="true"
+	            android:textColor="#ffffffff"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	        <TextView
+	            android:id="@+id/stones"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	    </RelativeLayout>
+	    <RelativeLayout
+	        android:id="@+id/place3"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/place2"
+	        android:padding="4dp" >
+	
+	        <TextView
+	            android:id="@+id/name"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textColor="#ffffffff"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	        <TextView
+	            android:id="@+id/points"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:paddingRight="24dp"
+	            android:gravity="center"
+	            android:layout_centerVertical="true"
+	            android:textColor="#ffffffff"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	        <TextView
+	            android:id="@+id/stones"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	    </RelativeLayout>
+	    <RelativeLayout
+	        android:id="@+id/place4"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/place3"
+	        android:padding="4dp" >
+	
+	        <TextView
+	            android:id="@+id/name"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textColor="#ffffffff"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	        <TextView
+	            android:id="@+id/points"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:paddingRight="24dp"
+	            android:gravity="center"
+	            android:layout_centerVertical="true"
+	            android:textColor="#ffffffff"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	        <TextView
+	            android:id="@+id/stones"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:text="Small Text"
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	    </RelativeLayout>
+   	</RelativeLayout>
+	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/places"
