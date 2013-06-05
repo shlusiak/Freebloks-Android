@@ -100,7 +100,7 @@ public class GameFinishActivity extends Activity {
 
 		this.place.setText(R.string.game_finished);
 
-		for (i = 0; i < 4; i++) {
+		for (i = 3; i >= 0; i--) {
 			String name;
 			Player p = spiel.get_player(place[i]);
 			name = getResources().getStringArray(R.array.color_names)[place[i]];
