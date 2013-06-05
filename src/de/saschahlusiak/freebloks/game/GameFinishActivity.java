@@ -16,6 +16,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
@@ -57,7 +58,7 @@ public class GameFinishActivity extends Activity {
 		ViewGroup t[] = new ViewGroup[4];
 		/* TODO: generalize */
 		final int colors[] = {
-				Color.rgb(0, 0, 96),
+				Color.rgb(0, 0, 108),
 				Color.rgb(128, 128, 0),
 				Color.rgb(96, 0, 0),
 				Color.rgb(0, 96, 0),
@@ -150,8 +151,18 @@ public class GameFinishActivity extends Activity {
 
 				((TextView)t[i].findViewById(R.id.name)).setTextColor(Color.WHITE);
 				((TextView)t[i].findViewById(R.id.name)).setTypeface(Typeface.DEFAULT_BOLD);
+				((TextView)t[i].findViewById(R.id.stones)).setTextColor(Color.WHITE);
 
 				t[i].findViewById(R.id.name).startAnimation(a);
+				
+				a = new AlphaAnimation(0.5f, 1.0f);
+				a.setDuration(750);
+				a.setInterpolator(new LinearInterpolator());
+				a.setRepeatMode(Animation.REVERSE);
+				a.setRepeatCount(Animation.INFINITE);
+				
+				t[i].startAnimation(a);
+				
 				this.place.setText(getResources().getStringArray(R.array.places)[i]);
 			}
 		}
