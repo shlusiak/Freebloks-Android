@@ -68,6 +68,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
 	static final int DIALOG_CUSTOM_GAME = 7;
+	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	
 	static final int REQUEST_FINISH_GAME = 1;
 
@@ -426,6 +427,25 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 	
 	long gameStartTime = 0;
+	
+	public void startNewGame(String server) {
+		int ki = KI_DEFAULT;
+		int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
+		int fieldsize = Spiel.DEFAULT_FIELD_SIZE_X;
+		boolean players[] = null;
+		
+		/* when starting a new game from the options menu, keep previous
+		 * selected settings / players, etc.
+		 */
+		if (client != null && client.spiel != null) {
+			ki = client.getLastDifficulty();
+			gamemode = client.spiel.m_gamemode;
+			fieldsize = client.spiel.m_field_size_x;
+			players = client.getLastPlayers();
+		}
+		startNewGame(server, players, gamemode, fieldsize, ki);
+	}
+	
 	public void startNewGame(final String server, final boolean[] request_player, int gamemode, int field_size, int difficulty) {
 		newCurrentPlayer(-1);
 		if (server == null) {
@@ -575,6 +595,23 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			});
 			return builder.create();
 			
+		case DIALOG_NEW_GAME_CONFIRMATION:
+			builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.do_you_want_to_leave_current_game);
+			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					startNewGame(null);
+				}
+			});
+			builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					arg0.dismiss();
+				}
+			});
+			return builder.create();
+			
 		case DIALOG_RATE_ME:
 			return new RateAppDialog(this);
 			
@@ -705,22 +742,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (view.model.intro != null)
 				view.model.intro.cancel();
 			else {
-				/* TODO: alert dialog to confirm cancel of current game */
-				int ki = KI_DEFAULT;
-				int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
-				int fieldsize = Spiel.DEFAULT_FIELD_SIZE_X;
-				boolean players[] = null;
-				
-				/* when starting a new game from the options menu, keep previous
-				 * selected settings / players, etc.
-				 */
-				if (client != null && client.spiel != null) {
-					ki = client.getLastDifficulty();
-					gamemode = client.spiel.m_gamemode;
-					fieldsize = client.spiel.m_field_size_x;
-					players = client.getLastPlayers();
-				}
-				startNewGame(null, players, gamemode, fieldsize, ki);
+				if (client == null || (client.spiel != null && client.spiel.is_finished()))
+					startNewGame(null);
+				else
+					showDialog(DIALOG_NEW_GAME_CONFIRMATION);
 			}
 			return true;
 
