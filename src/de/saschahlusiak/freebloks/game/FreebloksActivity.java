@@ -705,6 +705,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (view.model.intro != null)
 				view.model.intro.cancel();
 			else {
+				/* TODO: alert dialog to confirm cancel of current game */
 				int ki = KI_DEFAULT;
 				int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
 				int fieldsize = Spiel.DEFAULT_FIELD_SIZE_X;

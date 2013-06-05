@@ -57,7 +57,12 @@
         <item quantity="one">%1$d point</item>
         <item quantity="other">%1$d points</item>
 	</plurals>
-    <string name="place">Place %1$d</string>
+	<string-array name="places">
+		<item>1st place</item>
+		<item>2nd place</item>
+		<item>3rd place</item>
+		<item>4th place</item>
+	</string-array>
 	<string name="game_finished">Game finished</string>
 	<string-array name="color_names">
 	    <item>Blue</item>

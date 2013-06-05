@@ -152,7 +152,7 @@ public class GameFinishActivity extends Activity {
 				((TextView)t[i].findViewById(R.id.name)).setTypeface(Typeface.DEFAULT_BOLD);
 
 				t[i].findViewById(R.id.name).startAnimation(a);
-				this.place.setText(getString(R.string.place, i + 1));
+				this.place.setText(getResources().getStringArray(R.array.places)[i]);
 			}
 		}
 	}
