@@ -15,7 +15,7 @@
     <string name="connecting">Verbinde...</string>
     <string name="connection_refused">Verbindung abgelehnt</string>
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
-    <string name="do_you_want_to_leave_current_game">Aktuelles Spiel wirklich beenden?</string>
+    <string name="do_you_want_to_leave_current_game">Aktuelles Spiel abbrechen?</string>
     
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>
