@@ -295,6 +295,11 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				if (num_players()>=2)return;
 				/* Pick zufaellig einen Spieler raus */
 				n=(rand()%2)*2;
+				/* seit 1.5: optional ist ein Wunschspieler angegeben */
+				if (ntohs(data->data_length) > sizeof(NET_HEADER)) {
+					if (req->player == 0 || req->player == 2)
+						n = req->player;
+				}
 				/* Suche den naechsten, der frei ist (!=PLAYER_COMPUTER) */
 				while (spieler[n]!=PLAYER_COMPUTER)n=(n+2)%2;
 			}else{
