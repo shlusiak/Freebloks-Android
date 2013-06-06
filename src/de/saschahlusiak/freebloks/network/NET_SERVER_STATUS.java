@@ -1,9 +1,16 @@
 package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.security.InvalidParameterException;
+
+import android.content.res.Resources;
+import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
 
-public class NET_SERVER_STATUS extends NET_HEADER {
+public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	public int player, computer, clients; /* int 8 */
 	public int width, height; /* int 8 */
 	public int stone_numbers[] = new int[Stone.STONE_SIZE_MAX]; /* int8[5] */
@@ -70,4 +77,19 @@ public class NET_SERVER_STATUS extends NET_HEADER {
 		return (spieler != null);
 	}
 	
+	public String getPlayerName(Resources resources, int player) {
+		if (player < 0)
+			throw new InvalidParameterException();
+
+		String color_name = resources.getStringArray(R.array.color_names)[player];
+		if (spieler == null)
+			return color_name;
+		if (client_names == null)
+			return color_name;
+		if (spieler[player] < 0)
+			return color_name;
+		if (client_names[spieler[player]] == null)
+			return color_name;
+		return client_names[spieler[player]];
+	}
 }
