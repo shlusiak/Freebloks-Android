@@ -485,6 +485,8 @@ public class CurrentStone implements ViewElement {
 		}
 
 		status = Status.DRAGGING;
+		/* FIXME: this actually prevents simple changing of the stone from a tap on the wheel,
+		 * but leaving this at false will commit the stone, if it has not been moved */
 		hasMoved = true;
 		stone_rel_x = 0;
 		stone_rel_y = 0;

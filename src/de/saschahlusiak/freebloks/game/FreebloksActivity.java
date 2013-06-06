@@ -1020,6 +1020,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
 		final Exception error = spielthread == null ? null : spielthread.getError();
+		/* TODO: continue game locally if there was an exception during a remote game */
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
