@@ -9,10 +9,12 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -32,9 +34,14 @@ public class GameFinishActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(LayoutParams.FLAG_NOT_TOUCH_MODAL, LayoutParams.FLAG_NOT_TOUCH_MODAL);
+		getWindow().setFlags(LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+
 		setContentView(R.layout.game_finish_activity);
 		
+	    
 		place = (TextView) findViewById(R.id.place);
 		
 		Spielleiter spiel = (Spielleiter)getIntent().getSerializableExtra("game");
@@ -57,6 +64,14 @@ public class GameFinishActivity extends Activity {
 			}
 		});
 	}
+	
+	public boolean onTouchEvent(MotionEvent event) {
+	    if (MotionEvent.ACTION_OUTSIDE == event.getAction()) {
+	      finish();
+	      return true;
+	    }
+	    return super.onTouchEvent(event);
+	  }
 	
 	public void setData(Spielleiter spiel) {
 		int place[] = { 0, 1, 2, 3 };
