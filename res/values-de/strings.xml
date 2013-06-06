@@ -28,7 +28,7 @@
     <string name="no_player">kein Spieler</string>
     <string name="not_connected">nicht verbunden</string>
     <string name="game_over">Spiel vorbei</string>
-    <string name="your_turn">Du bist dran!</string>
+    <string name="your_turn">Du bist dran, %1$s!</string>
     <string name="difficulty">Schwierigkeitsgrad</string>
     <string name="start">Start</string>
     <string name="custom_game_title">Benutzerdefiniertes Spiel</string>
