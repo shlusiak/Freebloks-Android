@@ -35,6 +35,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -92,6 +93,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	NET_SERVER_STATUS lastStatus;
 	Menu optionsMenu;
 	ViewGroup statusView;
+	String clientName;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -229,7 +231,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (view.model.soundPool == null)
 			view.model.soundPool = new Sounds(this);
-		
+		clientName = prefs.getString("player_name", null);
+
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
 			client = spielthread.client;
@@ -371,6 +374,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
+		clientName = prefs.getString("player_name", null);
 		
 		updateSoundMenuEntry();
 	}
@@ -465,11 +469,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void run() {
 				if (request_player == null)
-					client.request_player(-1);
+					client.request_player(-1, clientName);
 				else {
 					for (int i = 0; i < 4; i++)
 						if (request_player[i])
-							client.request_player(i);
+							client.request_player(i, clientName);
 				}
 				if (server == null)
 					client.request_start();
@@ -881,7 +885,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					/* TODO: don't display player details in 2 player 2 color mode */
 					int pl = view.model.board.getShowWheelPlayer();
 					Player p = client.spiel.get_player(pl);
-					status.setText("[" + getResources().getStringArray(R.array.color_names)[pl] + "]");
+					status.setText("[" + getPlayerName(pl) + "]");
 					statusView.setBackgroundColor(colors[pl]);
 					points.setVisibility(View.VISIBLE);
 					points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
@@ -894,9 +898,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 						if (!local) 
-							status.setText(getString(R.string.waiting_for_color, getResources().getStringArray(R.array.color_names)[player]));
+							status.setText(getString(R.string.waiting_for_color, getPlayerName(player)));
 						else {
-							status.setText(R.string.your_turn);
+							status.setText(getString(R.string.your_turn, getPlayerName(player)));
 							
 							movesLeft.setVisibility(View.VISIBLE);
 							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
@@ -908,9 +912,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 						
 						if (p.m_number_of_possible_turns <= 0)
-							status.setText("[" + getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[showPlayer]) + "]");
+							status.setText("[" + getString(R.string.color_is_out_of_moves, getPlayerName(showPlayer)) + "]");
 						else {
-							status.setText(getResources().getStringArray(R.array.color_names)[showPlayer]);
+							status.setText(getPlayerName(showPlayer));
 							
 							movesLeft.setVisibility((local || player < 0) ? View.VISIBLE : View.INVISIBLE);
 							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
@@ -931,11 +935,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void stoneHasBeenSet(final NET_SET_STONE s) {
 		Player p = client.spiel.get_player(s.player);
+		/* TODO: also show toast, if previous player blocked out another player */
 		if (p.m_number_of_possible_turns <= 0) {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getResources().getStringArray(R.array.color_names)[s.player]), Toast.LENGTH_SHORT).show();
+					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(s.player)), Toast.LENGTH_SHORT).show();
 					view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 				}
 			});
@@ -961,6 +966,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			public void run() {
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);
+				intent.putExtra("lastStatus", (Serializable)lastStatus);
 				startActivityForResult(intent, REQUEST_FINISH_GAME);
 			}
 		});
@@ -1096,5 +1102,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (client.spiel == null)
 			return;
 		newCurrentPlayer(client.spiel.current_player());
+	}
+	
+	String getPlayerName(int player) {
+		String color_name = getResources().getStringArray(R.array.color_names)[player];
+		if (lastStatus == null)
+			return color_name;
+		return lastStatus.getPlayerName(getResources(), player);
 	}
 }

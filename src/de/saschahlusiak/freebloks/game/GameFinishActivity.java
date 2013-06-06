@@ -4,6 +4,7 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
+import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -25,6 +26,7 @@ public class GameFinishActivity extends Activity {
 	public static final int RESULT_SHOW_MENU = RESULT_FIRST_USER + 2;
 
 	TextView place;
+	NET_SERVER_STATUS lastStatus;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class GameFinishActivity extends Activity {
 		place = (TextView) findViewById(R.id.place);
 		
 		Spielleiter spiel = (Spielleiter)getIntent().getSerializableExtra("game");
+		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		setData(spiel);
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
@@ -103,7 +106,10 @@ public class GameFinishActivity extends Activity {
 		for (i = 3; i >= 0; i--) {
 			String name;
 			Player p = spiel.get_player(place[i]);
-			name = getResources().getStringArray(R.array.color_names)[place[i]];
+			if (lastStatus == null)
+				name = getResources().getStringArray(R.array.color_names)[place[i]];
+			else
+				name = lastStatus.getPlayerName(getResources(), place[i]);
 			
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
