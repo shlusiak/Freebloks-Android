@@ -27,6 +27,7 @@ public class GameFinishActivity extends Activity {
 
 	TextView place;
 	NET_SERVER_STATUS lastStatus;
+	String clientName;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class GameFinishActivity extends Activity {
 		
 		Spielleiter spiel = (Spielleiter)getIntent().getSerializableExtra("game");
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
+		clientName = getIntent().getStringExtra("clientName");
 		setData(spiel);
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
@@ -106,7 +108,9 @@ public class GameFinishActivity extends Activity {
 		for (i = 3; i >= 0; i--) {
 			String name;
 			Player p = spiel.get_player(place[i]);
-			if (lastStatus == null)
+			if (clientName != null && spiel.is_local_player(place[i]))
+				name = clientName; 
+			else if (lastStatus == null)
 				name = getResources().getStringArray(R.array.color_names)[place[i]];
 			else
 				name = lastStatus.getPlayerName(getResources(), place[i]);

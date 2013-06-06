@@ -967,6 +967,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);
 				intent.putExtra("lastStatus", (Serializable)lastStatus);
+				intent.putExtra("clientName", clientName);
 				startActivityForResult(intent, REQUEST_FINISH_GAME);
 			}
 		});
@@ -1106,6 +1107,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	String getPlayerName(int player) {
 		String color_name = getResources().getStringArray(R.array.color_names)[player];
+		/* this will ensure that always the local name is used, even though the server
+		 * might still have stored an old or no name at all
+		 * 
+		 * When resuming a game, the name is lost and never set again. This is a non issue now.
+		 */
+		if (clientName != null && client != null && client.spiel != null && client.spiel.is_local_player(player))
+			return clientName;
 		if (lastStatus == null)
 			return color_name;
 		return lastStatus.getPlayerName(getResources(), player);
