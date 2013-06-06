@@ -112,8 +112,8 @@ public class SpielClient {
 		return true;
 	}
 
-	public void request_player(int player) {
-		new NET_REQUEST_PLAYER(player).send(client_socket);
+	public void request_player(int player, String name) {
+		new NET_REQUEST_PLAYER(player, name).send(client_socket);
 	}
 	
 	public void request_hint(int player) {
