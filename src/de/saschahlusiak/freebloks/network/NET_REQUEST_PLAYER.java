@@ -30,9 +30,11 @@ public class NET_REQUEST_PLAYER extends NET_HEADER {
 			for (int i = 0; i < 16; i++)
 				bos.write(0);
 		} else {
-			for (int i = 0; i < 15; i++)
+			int i;
+			for (i = 0; i < 15 && i < name.length(); i++)
 				bos.write((int)name.charAt(i));
-			bos.write(0);
+			for (; i < 16; i++)
+				bos.write(0);
 		}
 	}
 }

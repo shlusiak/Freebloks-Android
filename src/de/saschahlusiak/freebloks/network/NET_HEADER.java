@@ -3,9 +3,12 @@ package de.saschahlusiak.freebloks.network;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.Socket;
 
-public class NET_HEADER {
+public class NET_HEADER implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	/* int check1;	*/ /* uint8 */
 	public int data_length; /* uint16 */
 	public int msg_type; /* uint8 */
