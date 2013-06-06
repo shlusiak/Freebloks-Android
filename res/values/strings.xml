@@ -27,7 +27,7 @@
     <string name="no_player">no player</string>
     <string name="not_connected">not connected</string>
     <string name="game_over">game over</string>
-    <string name="your_turn">It\'s your turn!</string>
+    <string name="your_turn">It\'s your turn, %1$s!</string>
     <string name="difficulty">Difficulty</string>
     <string name="start">Start</string>
     <string name="custom_game_title">Custom game</string>
