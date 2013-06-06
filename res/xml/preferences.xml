@@ -57,6 +57,14 @@
 	</PreferenceCategory>
 	
     <PreferenceCategory android:title="@string/prefs_misc" >
+        <EditTextPreference
+            android:key="player_name"
+            android:persistent="true"
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:title="@string/prefs_player_name"
+            android:summary="@string/prefs_player_name_default"/>
+        
 		<CheckBoxPreference
 		    android:summary="@string/prefs_skip_intro_long"
 		    android:title="@string/prefs_skip_intro"

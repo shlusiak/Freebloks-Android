@@ -3,14 +3,19 @@ package de.saschahlusiak.freebloks.preferences;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.widget.Toast;
 
-public class FreebloksPreferences extends PreferenceActivity {
+public class FreebloksPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +40,30 @@ public class FreebloksPreferences extends PreferenceActivity {
 		/* TODO: implement Amazon specific donation activity and enable preference */
 		if (Global.IS_AMAZON)
 			((PreferenceCategory)findPreference("about_category")).removePreference(findPreference("donate"));
+	}
+	
+	@Override
+	protected void onResume() {
+		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
+		onSharedPreferenceChanged(prefs, "player_name");
+		prefs.registerOnSharedPreferenceChangeListener(this);
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if (key.equals("player_name")) {
+			EditTextPreference pref = (EditTextPreference)findPreference(key);
+			String s = pref.getText();
+			if (s == null || s.equals(""))
+				s = getString(R.string.prefs_player_name_default);
+			pref.setSummary(s);
+		}
 	}
 }
