@@ -628,10 +628,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case DIALOG_JOIN:
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
 				@Override
-				public boolean OnJoin(String server, boolean request_player) {
+				public boolean OnJoin(String server, boolean players[], String name) {
+					clientName = name;
 					startNewGame(
 							server,
-							request_player ? null : new boolean[4],
+							players,
 							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
 							Spiel.DEFAULT_FIELD_SIZE_X,
 							KI_DEFAULT);
@@ -716,7 +717,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			break;
-			
+
+		case DIALOG_JOIN:
+			((JoinDialog)dialog).prepare();
+			break;
+
 		case DIALOG_CUSTOM_GAME:
 			((CustomGameDialog)dialog).prepare();
 			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
