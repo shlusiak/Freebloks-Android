@@ -172,11 +172,10 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	
 	public boolean[] getPlayers() {
 		boolean p[] = new boolean[4];
-		p[0] = ((CheckBox)findViewById(R.id.player1)).isChecked();
-		p[1] = ((CheckBox)findViewById(R.id.player2)).isChecked();
-		p[2] = ((CheckBox)findViewById(R.id.player3)).isChecked();
-		p[3] = ((CheckBox)findViewById(R.id.player4)).isChecked();
-		
+		p[0] = player1.isChecked();
+		p[1] = player2.isChecked();
+		p[2] = player3.isChecked();
+		p[3] = player4.isChecked();		
 		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 			/* this would otherwise request players two times, the server would hand out 2x2 = 4 players */
 			p[2] = p[3] = false;
