@@ -38,8 +38,8 @@
     <string name="lobby_waiting_for_players">Waiting for players</string>
     <string name="connected_clients">%1$d clients</string>
     <string name="chat_button">Chat</string>
-    <string name="join_address">Address:</string>
-    <string name="join_request_player">Request player</string>
+    <string name="join_server_address">Server:</string>
+    <string name="join_player_name">Your Name:</string>
     
     <string name="rate_now">Yes</string>
     <string name="rate_later">Later</string>
