@@ -89,6 +89,12 @@
 
     </ListView>
 
-    
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/your_color"
+        android:layout_alignTop="@+id/clients"
+        android:layout_alignBottom="@+id/your_color"/>
 
 </RelativeLayout>
