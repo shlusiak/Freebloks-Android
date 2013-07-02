@@ -38,6 +38,8 @@
     <string name="chat_button">Chat</string>
     <string name="join_address">Server:</string>
     <string name="join_player_name">Name:</string>
+    <string name="client_d">Spieler %1$d</string>
+    
     
     <string name="rate_now">Ja</string>
     <string name="rate_later">Später</string>

@@ -77,6 +77,13 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		return (spieler != null);
 	}
 	
+	public String getClientName(Resources resources, int client) {
+		if (client_names == null || client < 0)
+			return resources.getString(R.string.client_d, client);
+		return
+			client_names[client];
+	}
+	
 	public String getPlayerName(Resources resources, int player) {
 		if (player < 0)
 			throw new InvalidParameterException();

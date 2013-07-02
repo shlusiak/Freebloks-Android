@@ -44,12 +44,4 @@ public class NET_CHAT extends NET_HEADER {
 			bos.write((int)text.charAt(i));
 		bos.write(0);
 	}
-	
-	@Override
-	public String toString() {
-		if (client < 0)
-			return "* " + text;
-		return "Client " + client + ": " + text;
-	}
-
 }
