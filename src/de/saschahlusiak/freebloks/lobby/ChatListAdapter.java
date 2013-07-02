@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.lobby;
 
+import java.util.List;
+
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import android.content.Context;
@@ -12,8 +14,8 @@ import android.widget.TextView;
 
 public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
 	
-	public ChatListAdapter(Context context) {
-		super(context, R.layout.chat_list_item, R.id.textView);
+	public ChatListAdapter(Context context, List<ChatEntry> values) {
+		super(context, R.layout.chat_list_item, R.id.textView, values);
 	}
 	
 	@Override
