@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp" >
+    android:padding="8dp" >
 
     <TextView
         android:id="@+id/server"
@@ -45,10 +45,13 @@
 
     <Button
         android:id="@+id/startButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/start" />
+        android:layout_width="150dp"
+        android:layout_height="54dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/start"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
     
     <EditText
         android:id="@+id/chatText"
@@ -57,32 +60,35 @@
         android:layout_above="@+id/startButton"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/chatButton"
+        android:imeOptions="actionSend|flagNoExtractUi"
+        android:inputType="textNoSuggestions"
         android:singleLine="true" >
 
         <requestFocus />
     </EditText>
-
-    <Button
+    
+    <ImageButton
         android:id="@+id/chatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/chatText"
-        android:layout_alignBottom="@+id/chatText"
-        android:text="@string/chat_button" />
+        android:layout_above="@+id/startButton"
+        android:src="@android:drawable/ic_menu_send" />
 
     <ListView
         android:id="@+id/chatList"
-        android:background="#3f000000"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chatText"
+        android:layout_above="@+id/chatButton"
         android:layout_below="@+id/your_color"
         android:layout_centerHorizontal="true"
+        android:background="#3f000000"
+        android:isScrollContainer="true"
         android:stackFromBottom="true"
         android:transcriptMode="normal" >
 
     </ListView>
 
+    
 
 </RelativeLayout>

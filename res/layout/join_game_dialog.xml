@@ -23,12 +23,13 @@
 	        android:id="@+id/server"
 	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/label_address"
 	        android:layout_weight="0.8"
 	        android:gravity="right"
+	        android:imeOptions="flagNoExtractUi"
 	        android:inputType="textNoSuggestions"
 	        android:singleLine="true"
 	        android:text="blokus.mooo.com" >
+
 	    </EditText>
     </LinearLayout>
 
@@ -51,10 +52,10 @@
 	        android:id="@+id/name"
 	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@+id/label_name"
 	        android:layout_weight="0.8"
 	        android:gravity="right"
 	        android:inputType="textPersonName"
+	        android:imeOptions="flagNoExtractUi"
 	        android:singleLine="true"
 	        android:text="" >	
 	    </EditText>        
