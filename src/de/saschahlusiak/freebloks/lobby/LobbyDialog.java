@@ -83,8 +83,10 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		NET_SERVER_STATUS status = (NET_SERVER_STATUS)savedInstanceState.getSerializable("lastStatus");
-		if (status != null)
-			updateStatus(status);
+		if (status != null) {
+			lastStatus = status;
+			updateStatus();
+		}
 		ArrayList<ChatEntry> entries = (ArrayList<ChatEntry>)savedInstanceState.getSerializable("chatEntries");
 		if (entries != null) {
 			chatEntries.clear();
@@ -102,8 +104,10 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	public void setSpiel(SpielClient spiel) {
 		this.spiel = spiel;
 		adapter.clear();
+		lastStatus = null;
 		if (spiel != null)
 			spiel.addClientInterface(this);
+		updateStatus();
 	}
 	
 	void sendChat() {
@@ -187,26 +191,37 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				updateStatus(status);
+				lastStatus = status;
+				updateStatus();
 			}
 		});
 	}
 	
-	void updateStatus(NET_SERVER_STATUS status) {
-		lastStatus = status;
-		
+	void updateStatus() {
 		((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
-		((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, status.clients));
 		
 		TextView v = (TextView)findViewById(R.id.your_color);
-		String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
-		int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
+		final String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
+		final int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
+		
+		if (lastStatus == null) {			
+			findViewById(R.id.clients).setVisibility(View.INVISIBLE);
+			v.setVisibility(View.INVISIBLE);
+			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+			
+			findViewById(R.id.clients).setVisibility(View.VISIBLE);
+			((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
 
-		v.setText(R.string.lobby_no_color);
-		v.setTextColor(Color.WHITE);
-		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
-			v.setText(colorNames[i]);
-			v.setTextColor(colors[i]);
+			v.setVisibility(View.VISIBLE);
+			v.setText(R.string.lobby_no_color);
+			v.setTextColor(Color.WHITE);
+			/* TODO: show more colors if player has more */
+			for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
+				v.setText(colorNames[i]);
+				v.setTextColor(colors[i]);
+			}
 		}
 	}
 
