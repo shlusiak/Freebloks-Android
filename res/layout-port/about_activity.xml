@@ -78,7 +78,7 @@
                 android:autoLink="email"
                 android:gravity="center"
                 android:linksClickable="true"
-                android:text="mail@saschahlusiak.de"
+                android:text="apps@saschahlusiak.de"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
