@@ -13,11 +13,13 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
@@ -70,6 +72,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		adapter = new ChatListAdapter(getContext(), chatEntries);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
+		
+		if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	}
 
 	@Override

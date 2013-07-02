@@ -42,15 +42,24 @@
         android:layout_alignRight="@+id/clients"
         android:text="None"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_alignParentBottom="true"
+        android:layout_width="150dp"
+        android:layout_height="54dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/start"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
     
     
     <EditText
         android:id="@+id/chatText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/startButton"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/chatButton"
-        android:layout_alignParentBottom="true"
         android:imeOptions="actionSend|flagNoExtractUi"
         android:inputType="textNoSuggestions"
         android:singleLine="true" >
@@ -62,8 +71,8 @@
         android:id="@+id/chatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/startButton"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_above="@+id/startButton"
         android:src="@android:drawable/ic_menu_send" />
 
     <ListView
@@ -87,15 +96,5 @@
         android:layout_alignRight="@+id/your_color"
         android:layout_alignTop="@+id/clients"
         android:layout_alignBottom="@+id/your_color"/>
-
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/chatButton"
-        android:text="@string/start"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
