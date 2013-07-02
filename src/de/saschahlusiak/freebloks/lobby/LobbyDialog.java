@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.lobby;
 
+import java.util.ArrayList;
+
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
@@ -30,6 +32,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	Handler handler = new Handler();
 	ListView chatList;
 	ArrayAdapter<ChatEntry> adapter;
+	ArrayList<ChatEntry> chatEntries;
 	NET_SERVER_STATUS lastStatus = null;
 
 	public LobbyDialog(Context context,
@@ -63,7 +66,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			}
 		});
 
-		adapter = new ChatListAdapter(getContext());
+		chatEntries = new ArrayList<ChatEntry>();
+		adapter = new ChatListAdapter(getContext(), chatEntries);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
 	}
@@ -72,6 +76,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	public Bundle onSaveInstanceState() {
 		Bundle b = super.onSaveInstanceState();
 		b.putSerializable("lastStatus", lastStatus);
+		b.putSerializable("chatEntries", chatEntries);
 		return b;
 	}
 	
@@ -80,17 +85,23 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		NET_SERVER_STATUS status = (NET_SERVER_STATUS)savedInstanceState.getSerializable("lastStatus");
 		if (status != null)
 			updateStatus(status);
+		ArrayList<ChatEntry> entries = (ArrayList<ChatEntry>)savedInstanceState.getSerializable("chatEntries");
+		if (entries != null) {
+			chatEntries.clear();
+			chatEntries.addAll(entries);
+			adapter.notifyDataSetChanged();
+		}
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		adapter.clear();
 	}
 	
 	public void setSpiel(SpielClient spiel) {
 		this.spiel = spiel;
+		adapter.clear();
 		if (spiel != null)
 			spiel.addClientInterface(this);
 	}
@@ -149,7 +160,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				 * i.e. "Blue" instead of "Client 0"
 				 */
 				ChatEntry e = new ChatEntry(c.client, c.text, getClientName(c.client));
-				adapter.add(e);
+				chatEntries.add(e);
+				adapter.notifyDataSetChanged();
 			}
 		});
 	}
