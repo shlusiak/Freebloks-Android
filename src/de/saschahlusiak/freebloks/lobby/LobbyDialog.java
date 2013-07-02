@@ -12,6 +12,7 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
@@ -65,6 +66,21 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		adapter = new ChatListAdapter(getContext());
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
+	}
+
+	@Override
+	public Bundle onSaveInstanceState() {
+		Bundle b = super.onSaveInstanceState();
+		b.putSerializable("lastStatus", lastStatus);
+		return b;
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		NET_SERVER_STATUS status = (NET_SERVER_STATUS)savedInstanceState.getSerializable("lastStatus");
+		if (status != null)
+			updateStatus(status);
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 	
 	@Override
@@ -159,23 +175,27 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				lastStatus = status;
-				
-				((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
-				((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, status.clients));
-				
-				TextView v = (TextView)findViewById(R.id.your_color);
-				String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
-				int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
-
-				v.setText(R.string.lobby_no_color);
-				v.setTextColor(Color.WHITE);
-				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
-					v.setText(colorNames[i]);
-					v.setTextColor(colors[i]);
-				}
+				updateStatus(status);
 			}
 		});
+	}
+	
+	void updateStatus(NET_SERVER_STATUS status) {
+		lastStatus = status;
+		
+		((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
+		((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, status.clients));
+		
+		TextView v = (TextView)findViewById(R.id.your_color);
+		String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
+		int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
+
+		v.setText(R.string.lobby_no_color);
+		v.setTextColor(Color.WHITE);
+		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
+			v.setText(colorNames[i]);
+			v.setTextColor(colors[i]);
+		}
 	}
 
 	@Override
