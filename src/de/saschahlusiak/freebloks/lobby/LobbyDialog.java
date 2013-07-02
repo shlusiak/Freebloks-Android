@@ -13,12 +13,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class LobbyDialog extends Dialog implements SpielClientInterface {
 	SpielClient spiel;
@@ -44,6 +48,16 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			@Override
 			public void onClick(View v) {
 				sendChat();
+			}
+		});
+		((EditText)findViewById(R.id.chatText)).setOnEditorActionListener(new OnEditorActionListener() {			
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_NULL) {
+					sendChat();
+					return true;
+				}
+				return false;
 			}
 		});
 
