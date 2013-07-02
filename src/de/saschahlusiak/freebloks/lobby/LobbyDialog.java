@@ -28,7 +28,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	SpielClient spiel;
 	Handler handler = new Handler();
 	ListView chatList;
-	ArrayAdapter<NET_CHAT> adapter;
+	ArrayAdapter<ChatEntry> adapter;
+	NET_SERVER_STATUS lastStatus = null;
 
 	public LobbyDialog(Context context,
 			OnCancelListener cancelListener) {
@@ -124,12 +125,23 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	@Override
 	public void chatReceived(final NET_CHAT c) {
 		chatList.post(new Runnable() {
-			
 			@Override
 			public void run() {
-				adapter.add(c);				
+				/* TODO: if there is a client without a name, try to get the name of the
+				 * first assigned color rather than the client name
+				 * 
+				 * i.e. "Blue" instead of "Client 0"
+				 */
+				ChatEntry e = new ChatEntry(c.client, c.text, getClientName(c.client));
+				adapter.add(e);
 			}
 		});
+	}
+	
+	String getClientName(int client) {
+		if (lastStatus == null)
+			return getContext().getString(R.string.client_d, client);
+		return lastStatus.getClientName(getContext().getResources(), client);
 	}
 
 	@Override
@@ -147,8 +159,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
+				lastStatus = status;
 				
+				((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
 				((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, status.clients));
 				
 				TextView v = (TextView)findViewById(R.id.your_color);

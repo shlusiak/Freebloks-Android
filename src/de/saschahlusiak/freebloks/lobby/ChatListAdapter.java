@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ChatListAdapter extends ArrayAdapter<NET_CHAT> {
-
+public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
+	
 	public ChatListAdapter(Context context) {
 		super(context, R.layout.chat_list_item, R.id.textView);
 	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		NET_CHAT c = getItem(position);
+		ChatEntry c = getItem(position);
 		TextView t;
 		int colors[] = {
 			Color.CYAN,
