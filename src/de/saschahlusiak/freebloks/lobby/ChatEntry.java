@@ -1,8 +1,12 @@
 package de.saschahlusiak.freebloks.lobby;
 
+import java.io.Serializable;
+
 import android.graphics.Color;
 
-public class ChatEntry {
+public class ChatEntry implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	int client;
 	String text, name;
 	int player;
