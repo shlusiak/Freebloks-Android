@@ -35,7 +35,7 @@
     
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Clients</string>
-    <string name="chat_button">Chat</string>
+    <string name="chat">Chat</string>
     <string name="join_address">Server:</string>
     <string name="join_player_name">Name:</string>
     <string name="client_d">Spieler %1$d</string>
