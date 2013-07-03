@@ -12,7 +12,7 @@
         android:layout_toLeftOf="@+id/chatButton"
         android:layout_alignParentBottom="true"
         android:imeOptions="actionSend|flagNoExtractUi"
-        android:inputType="textNoSuggestions"
+        android:inputType="textNoSuggestions|textCapSentences"
         android:singleLine="true" >
 
         <requestFocus />
