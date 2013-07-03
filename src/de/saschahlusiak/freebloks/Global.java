@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks;
 
+import android.graphics.Color;
+
 public class Global {
 	public final static String PACKAGE_NAME = "de.saschahlusiak.freebloks";
 	
@@ -26,4 +28,18 @@ public class Global {
 		else
 			return "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME;
 	}
+	
+	
+	public static final int PLAYER_BACKGROUND_COLOR[] = {
+		Color.rgb(0, 0, 128),
+		Color.rgb(128, 128, 0),
+		Color.rgb(96, 0, 0),
+		Color.rgb(0, 96, 0),
+	};
+	public static final int PLAYER_FORWARD_COLOR[] = {
+		Color.rgb(32, 96, 255),
+		Color.rgb(255, 255, 0),
+		Color.rgb(255, 0, 0),
+		Color.rgb(0, 255, 0),
+	};
 }

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -895,14 +896,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					optionsMenu.findItem(R.id.hint).setEnabled(local);
 					optionsMenu.findItem(R.id.undo).setEnabled(local);
 				}
-				
-				/* TODO: generalize */
-				final int colors[] = {
-						Color.rgb(0, 0, 96),
-						Color.rgb(128, 128, 0),
-						Color.rgb(96, 0, 0),
-						Color.rgb(0, 96, 0),
-				};
 
 				findViewById(R.id.progressBar).setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
 				
@@ -926,14 +919,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					int pl = view.model.board.getShowWheelPlayer();
 					Player p = client.spiel.get_player(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
-					statusView.setBackgroundColor(colors[pl]);
+					statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[pl]);
 					points.setVisibility(View.VISIBLE);
 					points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 					movesLeft.setVisibility(View.VISIBLE);
 					movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
-						statusView.setBackgroundColor(colors[player]);
+						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[player]);
 						Player p = client.spiel.get_player(player);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
@@ -946,7 +939,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
 						}
 					} else {
-						statusView.setBackgroundColor(colors[showPlayer]);
+						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[showPlayer]);
 						Player p = client.spiel.get_player(showPlayer);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));

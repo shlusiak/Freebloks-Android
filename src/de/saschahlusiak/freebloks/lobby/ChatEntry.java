@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.lobby;
 
 import java.io.Serializable;
 
+import de.saschahlusiak.freebloks.Global;
+
 import android.graphics.Color;
 
 public class ChatEntry implements Serializable {
@@ -27,14 +29,12 @@ public class ChatEntry implements Serializable {
 	}
 	
 	int getColor() {
-		final int player_colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
 		final int extra_colors[] = { Color.CYAN, Color.WHITE, Color.MAGENTA, Color.LTGRAY };
-
 
 		if (player < 0)
 			return extra_colors[client % extra_colors.length];
 		else
-			return player_colors[player];
+			return Global.PLAYER_FORWARD_COLOR[player];
 	}
 	
 	@Override
