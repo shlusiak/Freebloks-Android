@@ -54,10 +54,11 @@
 	        android:layout_height="wrap_content"
 	        android:layout_weight="0.8"
 	        android:gravity="right"
-	        android:inputType="textPersonName"
 	        android:imeOptions="flagNoExtractUi"
+	        android:inputType="textCapWords|textPersonName"
 	        android:singleLine="true"
-	        android:text="" >	
+	        android:text="" >
+	
 	    </EditText>        
     </LinearLayout>
     
