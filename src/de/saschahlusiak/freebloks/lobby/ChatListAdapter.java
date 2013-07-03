@@ -22,15 +22,6 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ChatEntry c = getItem(position);
 		TextView t;
-		int colors[] = {
-			Color.CYAN,
-			Color.YELLOW,
-			Color.WHITE,
-			Color.MAGENTA,
-			Color.GREEN,
-			Color.RED,
-			Color.BLUE,
-		};
 		
 		View view = super.getView(position, convertView, parent);
 		
@@ -39,11 +30,9 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
 			t.setTextColor(Color.LTGRAY);
 			t.setGravity(Gravity.RIGHT);
 		} else {
-			t.setTextColor(colors[c.client % colors.length]);
+			t.setTextColor(c.getColor());
 			t.setGravity(Gravity.LEFT);
 		}
-		
-		
 		
 		return view;
 	}

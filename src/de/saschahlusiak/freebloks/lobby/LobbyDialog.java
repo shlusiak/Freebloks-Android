@@ -21,12 +21,10 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
@@ -174,19 +172,32 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				 * 
 				 * i.e. "Blue" instead of "Client 0"
 				 */
-				ChatEntry e = new ChatEntry(c.client, c.text, getClientName(c.client));
+				String name = null;
+				int player = -1;;
+				if (lastStatus != null && c.client >= 0) {
+					for (int i = 0; i < lastStatus.spieler.length; i++)
+						if (lastStatus.spieler[i] == c.client) {
+							player = i;
+							break;
+						}
+					if (lastStatus.client_names[c.client] != null)
+						name = lastStatus.client_names[c.client];
+					else if (player >= 0)
+						name = getContext().getResources().getStringArray(R.array.color_names)[player];
+					else
+						name = getContext().getString(R.string.client_d, c.client);
+				} else {
+					name = getContext().getString(R.string.client_d, c.client);
+				}
+					
+				ChatEntry e = new ChatEntry(c.client, c.text, name);
+				e.setPlayer(player);
 				chatEntries.add(e);
 				adapter.notifyDataSetChanged();
 			}
 		});
 	}
 	
-	String getClientName(int client) {
-		if (lastStatus == null)
-			return getContext().getString(R.string.client_d, client);
-		return lastStatus.getClientName(getContext().getResources(), client);
-	}
-
 	@Override
 	public void gameStarted() {
 		dismiss();
@@ -213,6 +224,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		
 		LinearLayout l = (LinearLayout)findViewById(R.id.colors);
 		final String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
+		/* TODO: generalize */
 		final int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
 		
 		/* for some reason removeAllViews does not remove running animations */
