@@ -15,11 +15,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
@@ -210,6 +215,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		final String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
 		final int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
 		
+		/* for some reason removeAllViews does not remove running animations */
+		for (int i = 0; i < l.getChildCount(); i++)
+			l.getChildAt(i).clearAnimation();
 		l.removeAllViews();
 		if (lastStatus == null) {			
 			findViewById(R.id.clients).setVisibility(View.INVISIBLE);
@@ -219,20 +227,54 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			
 			findViewById(R.id.clients).setVisibility(View.VISIBLE);
 			((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
-			
-			TextView v;
-			for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
-				v = new TextView(getContext());
-				v.setText(colorNames[i]);
-				v.setTextColor(colors[i]);
-				v.setPadding(8, 0, 0, 0);
-				l.addView(v);
-			}
-			if (l.getChildCount() <= 0) {
-				v = new TextView(getContext());
-				v.setText(R.string.lobby_no_color);
-				v.setTextColor(Color.WHITE);
-				l.addView(v);
+			if (lastStatus.isAdvanced()) {
+				findViewById(R.id.textView8).setVisibility(View.GONE);
+				TextView v;
+				for (int i = 0; i < lastStatus.spieler.length; i++) if (lastStatus.spieler[i] >= 0) {
+					v = new TextView(getContext());
+					if (lastStatus.client_names[lastStatus.spieler[i]] == null)
+						v.setText(getContext().getString(R.string.client_d, lastStatus.spieler[i]));
+					else
+						v.setText(lastStatus.client_names[lastStatus.spieler[i]]);
+					v.setTextColor(colors[i]);
+					v.setPadding(12, 0, 0, 0);
+					l.addView(v);
+					if (spiel.spiel.is_local_player(i)) {
+						v.setTypeface(Typeface.DEFAULT_BOLD);
+						
+						Animation a = new TranslateAnimation(
+								TranslateAnimation.RELATIVE_TO_SELF, 
+								0, 
+								TranslateAnimation.RELATIVE_TO_SELF, 
+								0, 
+								TranslateAnimation.RELATIVE_TO_SELF, 
+								0, 
+								TranslateAnimation.RELATIVE_TO_SELF, 
+								-0.25f);
+						a.setDuration(400);
+						a.setInterpolator(new DecelerateInterpolator());
+						a.setRepeatMode(Animation.REVERSE);
+						a.setRepeatCount(Animation.INFINITE);
+
+						v.startAnimation(a);
+					}
+				}
+			} else {
+				TextView v;
+				findViewById(R.id.textView8).setVisibility(View.VISIBLE);
+				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
+					v = new TextView(getContext());
+					v.setText(colorNames[i]);
+					v.setTextColor(colors[i]);
+					v.setPadding(8, 0, 0, 0);
+					l.addView(v);
+				}
+				if (l.getChildCount() <= 0) {
+					v = new TextView(getContext());
+					v.setText(R.string.lobby_no_color);
+					v.setTextColor(Color.WHITE);
+					l.addView(v);
+				}
 			}
 		}
 	}

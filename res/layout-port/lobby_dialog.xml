@@ -38,8 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignTop="@+id/textView8"
-        android:layout_alignBottom="@+id/textView8"
+        android:layout_below="@+id/server"
         android:layout_alignRight="@+id/clients" />
 
     <Button
