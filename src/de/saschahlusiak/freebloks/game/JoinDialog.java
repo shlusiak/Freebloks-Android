@@ -33,6 +33,12 @@ public class JoinDialog extends Dialog {
 		player3 = (CheckBox)findViewById(R.id.player3);
 		player4 = (CheckBox)findViewById(R.id.player4);
 		
+		player1.setText(context.getResources().getStringArray(R.array.color_names)[0]);
+		player2.setText(context.getResources().getStringArray(R.array.color_names)[1]);
+		player3.setText(context.getResources().getStringArray(R.array.color_names)[2]);
+		player4.setText(context.getResources().getStringArray(R.array.color_names)[3]);
+
+		
 		name = (EditText)findViewById(R.id.name);
 		server = (EditText)findViewById(R.id.server);
 		
