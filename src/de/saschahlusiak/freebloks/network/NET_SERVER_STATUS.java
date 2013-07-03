@@ -78,7 +78,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 	}
 	
 	public String getClientName(Resources resources, int client) {
-		if (client_names == null || client < 0)
+		if (client_names == null || client < 0 || client_names[client] == null)
 			return resources.getString(R.string.client_d, client);
 		return
 			client_names[client];

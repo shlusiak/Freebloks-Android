@@ -1118,7 +1118,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		 * 
 		 * When resuming a game, the name is lost and never set again. This is a non issue now.
 		 */
-		if (clientName != null && client != null && client.spiel != null && client.spiel.is_local_player(player))
+		if (clientName != null && clientName.length() > 0 && client != null && client.spiel != null && client.spiel.is_local_player(player))
 			return clientName;
 		if (lastStatus == null)
 			return color_name;
