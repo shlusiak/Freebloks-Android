@@ -112,15 +112,6 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@android:id/button1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:layout_weight="0.5"
-            android:minWidth="110dp"
-            android:text="@android:string/ok" />
-
-        <Button
             android:id="@android:id/button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -128,6 +119,15 @@
             android:layout_weight="0.5"
             android:minWidth="110dp"
             android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@android:id/button1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="0.5"
+            android:minWidth="110dp"
+            android:text="@android:string/ok" />
     </LinearLayout>
 
 </RelativeLayout>
