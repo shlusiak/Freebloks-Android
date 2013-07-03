@@ -25,6 +25,7 @@ import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -205,27 +206,33 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	void updateStatus() {
 		((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
 		
-		TextView v = (TextView)findViewById(R.id.your_color);
+		LinearLayout l = (LinearLayout)findViewById(R.id.colors);
 		final String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
 		final int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
 		
+		l.removeAllViews();
 		if (lastStatus == null) {			
 			findViewById(R.id.clients).setVisibility(View.INVISIBLE);
-			v.setVisibility(View.INVISIBLE);
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 			
 			findViewById(R.id.clients).setVisibility(View.VISIBLE);
 			((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
-
-			v.setVisibility(View.VISIBLE);
-			v.setText(R.string.lobby_no_color);
-			v.setTextColor(Color.WHITE);
-			/* TODO: show more colors if player has more */
+			
+			TextView v;
 			for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
+				v = new TextView(getContext());
 				v.setText(colorNames[i]);
 				v.setTextColor(colors[i]);
+				v.setPadding(8, 0, 0, 0);
+				l.addView(v);
+			}
+			if (l.getChildCount() <= 0) {
+				v = new TextView(getContext());
+				v.setText(R.string.lobby_no_color);
+				v.setTextColor(Color.WHITE);
+				l.addView(v);
 			}
 		}
 	}

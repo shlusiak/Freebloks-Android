@@ -33,15 +33,14 @@
         android:text="@string/your_color"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/your_color"
+    <LinearLayout
+        android:id="@+id/colors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView8"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/textView8"
         android:layout_alignBottom="@+id/textView8"
-        android:layout_alignRight="@+id/clients"
-        android:text="None"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_alignRight="@+id/clients" />
 
     <Button
         android:id="@+id/startButton"
@@ -80,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chatButton"
-        android:layout_below="@+id/your_color"
+        android:layout_below="@+id/colors"
         android:layout_centerHorizontal="true"
         android:background="#3f000000"
         android:isScrollContainer="true"
@@ -93,8 +92,8 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/your_color"
+        android:layout_alignRight="@+id/colors"
         android:layout_alignTop="@+id/clients"
-        android:layout_alignBottom="@+id/your_color"/>
+        android:layout_alignBottom="@+id/colors"/>
 
 </RelativeLayout>
