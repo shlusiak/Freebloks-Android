@@ -30,7 +30,7 @@ public class NET_CHAT extends NET_HEADER {
 		
 		char[] c = new char[length]; /* ignore the trailing \0 */
 		for (int i = 0; i < c.length; i++)
-			c[i] = (char)buffer[i + 2];
+			c[i] = (char)unsigned(buffer[i + 2]);
 		text = String.copyValueOf(c);
 	}
 
@@ -39,7 +39,6 @@ public class NET_CHAT extends NET_HEADER {
 		super.prepare(bos);
 		bos.write(client);
 		bos.write(length);
-		/* TODO: fix encoding */
 		for (int i = 0; i < text.length(); i++)
 			bos.write((int)text.charAt(i));
 		bos.write(0);
