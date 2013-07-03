@@ -5,12 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.lobby.ChatDialog;
+import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -54,9 +57,11 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +73,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
+	static final int DIALOG_CHAT_DIALOG = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	
@@ -95,6 +101,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	ViewGroup statusView;
 	String clientName;
 	
+	ImageButton chatButton;
+	ArrayList<ChatEntry> chatEntries;
+	ChatDialog chatDialog = null;
+	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
 		SpielClient myclient = null;
@@ -111,6 +121,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		@Override
 		protected void onPreExecute() {
 			view.setSpiel(null, null);
+			chatButton.setVisibility(View.INVISIBLE);
+			chatEntries.clear();
 			progress = new ProgressDialog(FreebloksActivity.this);
 			progress.setMessage(getString(R.string.connecting));
 			progress.setIndeterminate(true);
@@ -212,6 +224,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		chatButton = (ImageButton)findViewById(R.id.chatButton);
+		chatButton.setVisibility(View.INVISIBLE);
+		chatButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chatButton.clearAnimation();
+				showDialog(DIALOG_CHAT_DIALOG);
+			}
+		});
+		if (savedInstanceState != null)
+			chatEntries = (ArrayList<ChatEntry>)savedInstanceState.getSerializable("chatEntries");
+		else
+			chatEntries = new ArrayList<ChatEntry>();
 
 		newCurrentPlayer(-1);
 		
@@ -221,6 +246,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			lastStatus = config.lastStatus;
 			view.model.soundPool = config.soundPool;
 			canresume = true;
+			chatButton.setVisibility((lastStatus != null && lastStatus.clients > 1) ? View.VISIBLE : View.INVISIBLE);
 		}
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
@@ -397,6 +423,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		super.onSaveInstanceState(outState);
 		outState.putFloat("view_scale", view.getScale());
 		outState.putBoolean("showRateDialog", showRateDialog);
+		outState.putSerializable("chatEntries", chatEntries);
 		writeStateToBundle(outState);
 	}
 	
@@ -572,14 +599,18 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		switch (id) {		
+		switch (id) {
 		case DIALOG_LOBBY:
 			return new LobbyDialog(this, new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface arg0) {
 					client.disconnect();
 				}
-			});
+			}, chatEntries);
+			
+		case DIALOG_CHAT_DIALOG:
+			chatDialog = new ChatDialog(this, chatEntries);
+			return chatDialog;
 			
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -658,6 +689,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					showDialog(DIALOG_GAME_MENU);
 				}
 			});
+			break;
+			
+		case DIALOG_CHAT_DIALOG:
+			((ChatDialog)dialog).setClient(client);
 			break;
 			
 		case DIALOG_GAME_MENU:
@@ -980,18 +1015,49 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void chatReceived(final NET_CHAT c) {
+		String name = null;
+		int player = -1;;
+		if (lastStatus != null && c.client >= 0) {
+			for (int i = 0; i < lastStatus.spieler.length; i++)
+				if (lastStatus.spieler[i] == c.client) {
+					player = i;
+					break;
+				}
+			if (lastStatus.client_names[c.client] != null)
+				name = lastStatus.client_names[c.client];
+			else if (player >= 0)
+				name = getResources().getStringArray(R.array.color_names)[player];
+			else
+				name = getString(R.string.client_d, c.client);
+		} else {
+			name = getString(R.string.client_d, c.client);
+		}
+			
+		ChatEntry e = new ChatEntry(c.client, c.text, name);
+		e.setPlayer(player);
+		chatEntries.add(e);
+		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if (chatDialog != null)
+					chatDialog.chatReceived();
+				
 				if (c.client == -1)
 					Toast.makeText(FreebloksActivity.this, "* " + c.text,
 							Toast.LENGTH_LONG).show();
-				else
-					/* TODO: translate */
+				else if (hasWindowFocus()) {
+					/* only animate chatButton, if no dialog has focus */
+					/* TODO: animate if activity is stopped or paused? */
+					
 					/* TODO: sound on chat message */
-					Toast.makeText(FreebloksActivity.this,
-							"Client " + c.client + ": " + c.text,
-							Toast.LENGTH_LONG).show();
+					
+					Animation a = new AlphaAnimation(0.4f, 1.0f);
+					a.setDuration(350);
+					a.setRepeatCount(Animation.INFINITE);
+					a.setRepeatMode(Animation.REVERSE);
+					chatButton.startAnimation(a);
+				}
 			}
 		});
 	}
@@ -1014,6 +1080,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
 		lastStatus = status;
+		if (lastStatus.clients > 1) {
+			chatButton.post(new Runnable() {
+				@Override
+				public void run() {
+					chatButton.setVisibility(View.VISIBLE);
+				}
+			});
+		}
 	}
 
 	@Override
@@ -1123,5 +1197,5 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (lastStatus == null)
 			return color_name;
 		return lastStatus.getPlayerName(getResources(), player);
-	}
+	}	
 }

@@ -38,11 +38,10 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	Handler handler = new Handler();
 	ListView chatList;
 	ArrayAdapter<ChatEntry> adapter;
-	ArrayList<ChatEntry> chatEntries;
 	NET_SERVER_STATUS lastStatus = null;
 
 	public LobbyDialog(Context context,
-			OnCancelListener cancelListener) {
+			OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
 		super(context, true, cancelListener);
 		setContentView(R.layout.lobby_dialog);
 
@@ -72,7 +71,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			}
 		});
 
-		chatEntries = new ArrayList<ChatEntry>();
 		adapter = new ChatListAdapter(getContext(), chatEntries);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
@@ -85,7 +83,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	public Bundle onSaveInstanceState() {
 		Bundle b = super.onSaveInstanceState();
 		b.putSerializable("lastStatus", lastStatus);
-		b.putSerializable("chatEntries", chatEntries);
 		return b;
 	}
 	
@@ -96,23 +93,11 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			lastStatus = status;
 			updateStatus();
 		}
-		ArrayList<ChatEntry> entries = (ArrayList<ChatEntry>)savedInstanceState.getSerializable("chatEntries");
-		if (entries != null) {
-			chatEntries.clear();
-			chatEntries.addAll(entries);
-			adapter.notifyDataSetChanged();
-		}
 		super.onRestoreInstanceState(savedInstanceState);
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-	}
+	}	
 	
 	public void setSpiel(SpielClient spiel) {
 		this.spiel = spiel;
-		adapter.clear();
 		lastStatus = null;
 		if (spiel != null)
 			spiel.addClientInterface(this);
@@ -167,32 +152,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		chatList.post(new Runnable() {
 			@Override
 			public void run() {
-				/* TODO: if there is a client without a name, try to get the name of the
-				 * first assigned color rather than the client name
-				 * 
-				 * i.e. "Blue" instead of "Client 0"
-				 */
-				String name = null;
-				int player = -1;;
-				if (lastStatus != null && c.client >= 0) {
-					for (int i = 0; i < lastStatus.spieler.length; i++)
-						if (lastStatus.spieler[i] == c.client) {
-							player = i;
-							break;
-						}
-					if (lastStatus.client_names[c.client] != null)
-						name = lastStatus.client_names[c.client];
-					else if (player >= 0)
-						name = getContext().getResources().getStringArray(R.array.color_names)[player];
-					else
-						name = getContext().getString(R.string.client_d, c.client);
-				} else {
-					name = getContext().getString(R.string.client_d, c.client);
-				}
-					
-				ChatEntry e = new ChatEntry(c.client, c.text, name);
-				e.setPlayer(player);
-				chatEntries.add(e);
 				adapter.notifyDataSetChanged();
 			}
 		});

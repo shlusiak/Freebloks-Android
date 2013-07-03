@@ -22,7 +22,7 @@ public class ChatEntry implements Serializable {
 		player = -1;
 	}
 	
-	void setPlayer(int player) {
+	public void setPlayer(int player) {
 		this.player = player;
 	}
 	
