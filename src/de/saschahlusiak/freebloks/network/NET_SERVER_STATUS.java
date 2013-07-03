@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.security.InvalidParameterException;
 
 import android.content.res.Resources;
@@ -44,11 +45,11 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 			spieler[3] = buffer[14];
 			
 			client_names = new String[8];
-			byte tmp[] = new byte[16];
+			char tmp[] = new char[16];
 			for (int i = 0; i < 8; i++) {
 				int j;
 				for (j = 0; j < 16; j++) {
-					tmp[j] = buffer[15 + i * 16 + j];
+					tmp[j] = (char)unsigned(buffer[15 + i * 16 + j]);
 					if (tmp[j] == 0)
 						break;
 				}
