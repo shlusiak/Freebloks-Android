@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.lobby;
 
 import java.util.ArrayList;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
@@ -183,8 +184,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		
 		LinearLayout l = (LinearLayout)findViewById(R.id.colors);
 		final String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
-		/* TODO: generalize */
-		final int colors[] = { Color.BLUE, Color.YELLOW, Color.RED , Color.GREEN };
 		
 		/* for some reason removeAllViews does not remove running animations */
 		for (int i = 0; i < l.getChildCount(); i++)
@@ -207,7 +206,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 						v.setText(getContext().getString(R.string.client_d, lastStatus.spieler[i]));
 					else
 						v.setText(lastStatus.client_names[lastStatus.spieler[i]]);
-					v.setTextColor(colors[i]);
+					v.setTextColor(Global.PLAYER_FORWARD_COLOR[i]);
 					v.setPadding(12, 0, 0, 0);
 					l.addView(v);
 					if (spiel.spiel.is_local_player(i)) {
@@ -236,7 +235,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
 					v = new TextView(getContext());
 					v.setText(colorNames[i]);
-					v.setTextColor(colors[i]);
+					v.setTextColor(Global.PLAYER_FORWARD_COLOR[i]);
 					v.setPadding(8, 0, 0, 0);
 					l.addView(v);
 				}

@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Player;
@@ -76,13 +77,6 @@ public class GameFinishActivity extends Activity {
 	public void setData(Spielleiter spiel) {
 		int place[] = { 0, 1, 2, 3 };
 		ViewGroup t[] = new ViewGroup[4];
-		/* TODO: generalize */
-		final int colors[] = {
-				Color.rgb(0, 0, 108),
-				Color.rgb(128, 128, 0),
-				Color.rgb(96, 0, 0),
-				Color.rgb(0, 96, 0),
-		};
 		
 		if (spiel == null)
 			return;
@@ -136,7 +130,7 @@ public class GameFinishActivity extends Activity {
 					getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
-			t[i].setBackgroundColor(colors[place[i]]);
+			t[i].setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[place[i]]);
 			
 			AnimationSet set = new AnimationSet(false);
 			Animation a = new AlphaAnimation(0.0f, 1.0f);
