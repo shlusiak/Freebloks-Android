@@ -1010,7 +1010,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	public void chatReceived(final NET_CHAT c) {
 		String name = null;
-		int player = -1;;
+		int player = -1;
 		if (lastStatus != null && c.client >= 0) {
 			for (int i = 0; i < lastStatus.spieler.length; i++)
 				if (lastStatus.spieler[i] == c.client) {
@@ -1031,6 +1031,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		e.setPlayer(player);
 		chatEntries.add(e);
 		
+		if (!view.model.spiel.is_local_player(player))
+			view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
+		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1043,8 +1046,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				else if (hasWindowFocus()) {
 					/* only animate chatButton, if no dialog has focus */
 					/* TODO: animate if activity is stopped or paused? */
-					
-					/* TODO: sound on chat message */
 					
 					Animation a = new AlphaAnimation(0.4f, 1.0f);
 					a.setDuration(350);
