@@ -16,7 +16,7 @@
     <string name="connection_refused">Connection refused</string>
     <string name="could_not_restore_game">Could not restore game</string>
     <string name="do_you_want_to_leave_current_game">Are you sure you want to cancel the current game?</string>
-    <string name="disconnect_error">Connection closed: %1$s</string>
+    <string name="disconnect_error">Connection closed: %1$s. You are now offline.</string>
     
     <string name="your_color">Your color:</string>
     <string name="waiting_for_color">Waiting for %1$s</string>

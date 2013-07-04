@@ -1093,7 +1093,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
 		final Exception error = spielthread == null ? null : spielthread.getError();
-		/* TODO: continue game locally if there was an exception during a remote game */
+
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1101,6 +1101,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 				if (error != null) {
 					/* TODO: add sound on disconnect on error */
+					saveGameState(GAME_STATE_FILE);
+
 					AlertDialog.Builder builder = new AlertDialog.Builder(FreebloksActivity.this);
 					builder.setTitle(android.R.string.dialog_alert_title);
 					builder.setMessage(getString(R.string.disconnect_error, error.getMessage()));
@@ -1109,6 +1111,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
+							
+							try {
+								canresume = restoreOldGame();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
 					builder.create().show();
