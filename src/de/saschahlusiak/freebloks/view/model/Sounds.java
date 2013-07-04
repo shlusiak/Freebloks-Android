@@ -16,6 +16,7 @@ public class Sounds extends SoundPool {
 	public int SOUND_HINT;
 	public int SOUND_UNDO;
 	public int SOUND_PLAYER_OUT;
+	public int SOUND_CHAT;
 
 	public Sounds(Context context) {
 		super(10, AudioManager.STREAM_MUSIC, 0);
@@ -30,6 +31,7 @@ public class Sounds extends SoundPool {
 		SOUND_HINT = load(context, R.raw.hint, 1);
 		SOUND_UNDO = load(context, R.raw.drip1, 1);
 		SOUND_PLAYER_OUT = load(context, R.raw.playerout, 1);
+		SOUND_CHAT = load(context, R.raw.chat, 1);
 	}
 	
 	public void setEnabled(boolean enabled) {
