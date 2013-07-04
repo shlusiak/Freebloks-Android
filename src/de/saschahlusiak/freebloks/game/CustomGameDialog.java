@@ -4,6 +4,9 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -19,7 +22,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	Spinner game_mode, field_size;
 
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
-	final static int DIFFICULTY_DEFAULT = 8; /* TODO: maybe save and restore default value */
+	final static int DIFFICULTY_DEFAULT = 8;
 	final static int DIFFICULTY_VALUES[] = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
@@ -34,13 +37,20 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 	public CustomGameDialog(Context context) {
 		super(context);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
 		setContentView(R.layout.game_menu_new_custom_game);
 		
 		difficulty = (SeekBar)findViewById(R.id.difficulty);
 		difficulty_label = (TextView)findViewById(R.id.difficulty_label);
 		difficulty.setOnSeekBarChangeListener(this);
 		difficulty.setMax(DIFFICULTY_MAX);
-		difficulty.setProgress(DIFFICULTY_DEFAULT);
+		int slider = DIFFICULTY_DEFAULT;
+		int diff = prefs.getInt("difficulty", DIFFICULTY_VALUES[DIFFICULTY_DEFAULT]);
+		for (int i = 0; i < DIFFICULTY_VALUES.length; i++)
+			if (DIFFICULTY_VALUES[i] == diff)
+				slider = i;
+		difficulty.setProgress(slider);
 		
 		player1 = (CheckBox)findViewById(R.id.player1);
 		player2 = (CheckBox)findViewById(R.id.player2);
@@ -122,6 +132,13 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		setLabel();
 		
 		setTitle(R.string.custom_game_title);
+	}
+	
+	public void saveSettings() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+		Editor editor = prefs.edit();
+		editor.putInt("difficulty", getDifficulty());
+		editor.commit();
 	}
 	
 	public void prepare() {
