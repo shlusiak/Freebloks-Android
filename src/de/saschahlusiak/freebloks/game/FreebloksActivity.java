@@ -764,6 +764,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onClick(View v) {
 					CustomGameDialog d = (CustomGameDialog) dialog;
+					d.saveSettings();
 					startNewGame(
 							null,
 							d.getPlayers(),
