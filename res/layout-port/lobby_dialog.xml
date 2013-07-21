@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp" >
+    android:padding="8dp" xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/server"
@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="4dp"
         android:text="server"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -24,22 +23,19 @@
         android:text="x Clients"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+    <GridView
+        android:id="@+id/color_grid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/server"
         android:layout_below="@+id/server"
-        android:text="@string/your_color"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:horizontalSpacing="8dp"
+        android:numColumns="4"
+        android:stretchMode="columnWidth" tools:listitem="@layout/color_grid_item">
 
-    <LinearLayout
-        android:id="@+id/colors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/server"
-        android:layout_alignRight="@+id/clients" />
+    </GridView>
 
     <Button
         android:id="@+id/startButton"
@@ -78,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chatButton"
-        android:layout_below="@+id/colors"
+        android:layout_below="@+id/color_grid"
         android:layout_centerHorizontal="true"
         android:background="#3f000000"
         android:isScrollContainer="true"
@@ -86,13 +82,5 @@
         android:transcriptMode="normal" >
 
     </ListView>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/colors"
-        android:layout_alignTop="@+id/clients"
-        android:layout_alignBottom="@+id/colors"/>
 
 </RelativeLayout>

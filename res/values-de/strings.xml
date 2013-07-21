@@ -19,7 +19,6 @@
     
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>
-    <string name="your_color">Deine Farbe:</string>
     <string name="waiting_for_color">Warte auf %1$s</string>
     <string name="color_is_out_of_moves">%1$s hat keine Züge mehr</string>
     <string name="player_status_points">%1$d Punkte</string>
@@ -70,7 +69,6 @@
 	   	<item>Rot</item>
    	    <item>Grün</item>
 	</string-array>
-	<string name="lobby_no_color">Keine</string>
 	<string-array name="difficulties">
 	    <item>sehr schwer</item>
 	    <item>schwer</item>
