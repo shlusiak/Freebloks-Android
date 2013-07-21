@@ -1013,12 +1013,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		String name = null;
 		int player = -1;
 		if (lastStatus != null && c.client >= 0) {
-			for (int i = 0; i < lastStatus.spieler.length; i++)
-				if (lastStatus.spieler[i] == c.client) {
-					player = i;
-					break;
-				}
-			if (lastStatus.client_names[c.client] != null)
+			if (lastStatus.isAdvanced())
+				for (int i = 0; i < lastStatus.spieler.length; i++)
+					if (lastStatus.spieler[i] == c.client) {
+						player = i;
+						break;
+					}
+			if (lastStatus.isAdvanced() && lastStatus.client_names[c.client] != null)
 				name = lastStatus.client_names[c.client];
 			else if (player >= 0)
 				name = getResources().getStringArray(R.array.color_names)[player];
