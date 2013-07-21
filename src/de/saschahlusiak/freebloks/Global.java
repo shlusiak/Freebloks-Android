@@ -36,8 +36,8 @@ public class Global {
 		Color.rgb(96, 0, 0),
 		Color.rgb(0, 96, 0),
 	};
-	public static final int PLAYER_FORWARD_COLOR[] = {
-		Color.rgb(32, 96, 255),
+	public static final int PLAYER_FOREGROUND_COLOR[] = {
+		Color.rgb(0, 160, 255),
 		Color.rgb(255, 255, 0),
 		Color.rgb(255, 0, 0),
 		Color.rgb(0, 255, 0),
