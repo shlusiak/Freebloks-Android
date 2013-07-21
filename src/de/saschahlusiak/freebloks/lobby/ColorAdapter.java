@@ -105,6 +105,24 @@ public class ColorAdapter extends BaseAdapter {
 		        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[position]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position]);
+
+				t.setTypeface(Typeface.DEFAULT_BOLD);
+				
+				Animation a = new TranslateAnimation(
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0, 
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0, 
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						0.15f, 
+						TranslateAnimation.RELATIVE_TO_SELF, 
+						-0.15f);
+				a.setDuration(400);
+				a.setInterpolator(new DecelerateInterpolator());
+				a.setRepeatMode(Animation.REVERSE);
+				a.setRepeatCount(Animation.INFINITE);
+
+				t.startAnimation(a);
 			} else {
 				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
 				t.setText("---");
