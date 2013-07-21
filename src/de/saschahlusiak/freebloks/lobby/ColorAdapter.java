@@ -63,7 +63,7 @@ public class ColorAdapter extends BaseAdapter {
         t.setTextColor(Color.WHITE);
         t.setGravity(Gravity.CENTER);
         if (lastStatus == null || spiel == null) {
-			t.setTextColor(Global.PLAYER_FORWARD_COLOR[position]);
+			t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
         	t.setText("---");
         	return v;
         }        
@@ -97,7 +97,7 @@ public class ColorAdapter extends BaseAdapter {
 				}
 			} else {
 				/* computer player */
-				t.setTextColor(Global.PLAYER_FORWARD_COLOR[position]);
+				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
 				t.setText("---");
 			}
 		} else {
@@ -106,7 +106,7 @@ public class ColorAdapter extends BaseAdapter {
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position]);
 			} else {
-				t.setTextColor(Global.PLAYER_FORWARD_COLOR[position]);
+				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
 				t.setText("---");
 			}
 		}

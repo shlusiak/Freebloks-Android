@@ -34,7 +34,7 @@ public class ChatEntry implements Serializable {
 		if (player < 0)
 			return extra_colors[client % extra_colors.length];
 		else
-			return Global.PLAYER_FORWARD_COLOR[player];
+			return Global.PLAYER_FOREGROUND_COLOR[player];
 	}
 	
 	@Override
