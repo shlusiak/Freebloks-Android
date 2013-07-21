@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.lobby;
 
 import java.util.ArrayList;
 
-import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
@@ -15,31 +14,28 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.LinearLayout;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public class LobbyDialog extends Dialog implements SpielClientInterface {
-	SpielClient spiel;
+	SpielClient client;
 	Handler handler = new Handler();
 	ListView chatList;
 	ArrayAdapter<ChatEntry> adapter;
 	NET_SERVER_STATUS lastStatus = null;
+	GridView colorGrid;
+	ColorAdapter colorAdapter;
 
 	public LobbyDialog(Context context,
 			OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
@@ -49,10 +45,14 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
 		setTitle(R.string.lobby_waiting_for_players);
 		
+		colorGrid = (GridView)findViewById(R.id.color_grid);
+		colorAdapter = new ColorAdapter(getContext(), null, null);
+		colorGrid.setAdapter(colorAdapter);
+
 		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				LobbyDialog.this.spiel.request_start();
+				LobbyDialog.this.client.request_start();
 			}
 		});
 		findViewById(R.id.chatButton).setOnClickListener(new View.OnClickListener() {			
@@ -98,7 +98,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	}	
 	
 	public void setSpiel(SpielClient spiel) {
-		this.spiel = spiel;
+		this.client = spiel;
 		lastStatus = null;
 		if (spiel != null)
 			spiel.addClientInterface(this);
@@ -112,14 +112,14 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			return;
 		
 		NET_CHAT chat = new NET_CHAT(s + "\n");
-		LobbyDialog.this.spiel.send(chat);
+		LobbyDialog.this.client.send(chat);
 		edit.setText("");
 	}
 	
 	@Override
 	protected void onStop() {
-		if (spiel != null)
-			spiel.removeClientInterface(this);
+		if (client != null)
+			client.removeClientInterface(this);
 		super.onStop();
 	}
 
@@ -180,72 +180,15 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	}
 	
 	void updateStatus() {
-		((TextView)findViewById(R.id.server)).setText("" + spiel.getLastHost());
+		((TextView)findViewById(R.id.server)).setText("" + client.getLastHost());
 		
-		LinearLayout l = (LinearLayout)findViewById(R.id.colors);
-		final String colorNames[] = getContext().getResources().getStringArray(R.array.color_names);
+		colorAdapter.setCurrentStatus(client.spiel, lastStatus);
 		
-		/* for some reason removeAllViews does not remove running animations */
-		for (int i = 0; i < l.getChildCount(); i++)
-			l.getChildAt(i).clearAnimation();
-		l.removeAllViews();
 		if (lastStatus == null) {			
 			findViewById(R.id.clients).setVisibility(View.INVISIBLE);
-			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-			
 			findViewById(R.id.clients).setVisibility(View.VISIBLE);
 			((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
-			if (lastStatus.isAdvanced()) {
-				findViewById(R.id.textView8).setVisibility(View.GONE);
-				TextView v;
-				for (int i = 0; i < lastStatus.spieler.length; i++) if (lastStatus.spieler[i] >= 0) {
-					v = new TextView(getContext());
-					if (lastStatus.client_names[lastStatus.spieler[i]] == null)
-						v.setText(getContext().getString(R.string.client_d, lastStatus.spieler[i]));
-					else
-						v.setText(lastStatus.client_names[lastStatus.spieler[i]]);
-					v.setTextColor(Global.PLAYER_FORWARD_COLOR[i]);
-					v.setPadding(12, 0, 0, 0);
-					l.addView(v);
-					if (spiel.spiel.is_local_player(i)) {
-						v.setTypeface(Typeface.DEFAULT_BOLD);
-						
-						Animation a = new TranslateAnimation(
-								TranslateAnimation.RELATIVE_TO_SELF, 
-								0, 
-								TranslateAnimation.RELATIVE_TO_SELF, 
-								0, 
-								TranslateAnimation.RELATIVE_TO_SELF, 
-								0, 
-								TranslateAnimation.RELATIVE_TO_SELF, 
-								-0.25f);
-						a.setDuration(400);
-						a.setInterpolator(new DecelerateInterpolator());
-						a.setRepeatMode(Animation.REVERSE);
-						a.setRepeatCount(Animation.INFINITE);
-
-						v.startAnimation(a);
-					}
-				}
-			} else {
-				TextView v;
-				findViewById(R.id.textView8).setVisibility(View.VISIBLE);
-				for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.spiel.is_local_player(i)) {
-					v = new TextView(getContext());
-					v.setText(colorNames[i]);
-					v.setTextColor(Global.PLAYER_FORWARD_COLOR[i]);
-					v.setPadding(8, 0, 0, 0);
-					l.addView(v);
-				}
-				if (l.getChildCount() <= 0) {
-					v = new TextView(getContext());
-					v.setText(R.string.lobby_no_color);
-					v.setTextColor(Color.WHITE);
-					l.addView(v);
-				}
-			}
 		}
 	}
 

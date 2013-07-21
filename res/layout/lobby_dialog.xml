@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp" >
@@ -10,7 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="4dp"
         android:text="server"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -24,44 +24,40 @@
         android:text="x Clients"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+    <GridView
+        android:id="@+id/color_grid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/server"
         android:layout_below="@+id/server"
-        android:text="@string/your_color"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:horizontalSpacing="8dp"
+        android:numColumns="4"
+        android:stretchMode="columnWidth"
+        tools:listitem="@layout/color_grid_item" >
+    </GridView>
 
-    <LinearLayout
-        android:id="@+id/colors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/server"
-        android:layout_alignRight="@+id/clients" />
-    
-    
     <EditText
         android:id="@+id/chatText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/chatButton"
-        android:layout_alignParentBottom="true"
         android:imeOptions="actionSend|flagNoExtractUi"
         android:inputType="textNoSuggestions|textCapSentences"
         android:singleLine="true" >
 
         <requestFocus />
     </EditText>
-    
+
     <ImageButton
         android:id="@+id/chatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/startButton"
         android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/startButton"
         android:src="@android:drawable/ic_menu_send" />
 
     <ListView
@@ -69,22 +65,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chatButton"
-        android:layout_below="@+id/colors"
+        android:layout_below="@+id/color_grid"
         android:layout_centerHorizontal="true"
         android:background="#3f000000"
         android:isScrollContainer="true"
         android:stackFromBottom="true"
         android:transcriptMode="normal" >
-
     </ListView>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/colors"
-        android:layout_alignTop="@+id/clients"
-        android:layout_alignBottom="@+id/colors"/>
 
     <Button
         android:id="@+id/startButton"
