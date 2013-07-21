@@ -579,7 +579,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (client != null && client.spiel != null)
 			local = client.spiel.is_local_player();
 
-		menu.findItem(R.id.undo).setEnabled(local);
+		menu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.clients <= 1);
 		menu.findItem(R.id.hint).setEnabled(local);
 		menu.findItem(R.id.sound_toggle_button).setVisible(hasActionBar);
 		updateSoundMenuEntry();
@@ -895,7 +895,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				
 				if (optionsMenu != null) {
 					optionsMenu.findItem(R.id.hint).setEnabled(local);
-					optionsMenu.findItem(R.id.undo).setEnabled(local);
+					optionsMenu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.clients <= 1);
 				}
 
 				findViewById(R.id.progressBar).setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
