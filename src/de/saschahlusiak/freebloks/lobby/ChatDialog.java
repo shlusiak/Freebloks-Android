@@ -45,7 +45,8 @@ public class ChatDialog extends Dialog {
 		setContentView(R.layout.chat_dialog);
 
 		setTitle(R.string.chat);
-		getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
+		/* FIXME: only do that on xlarge displays? */
+	//	getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
 		setCanceledOnTouchOutside(true);
 		
 		findViewById(R.id.chatButton).setOnClickListener(new View.OnClickListener() {			
