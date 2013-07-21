@@ -813,6 +813,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (client == null)
 				return true;
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
 			view.model.currentStone.startDragging(null, null);
 			spielthread.post(new Runnable() {
 				@Override
@@ -987,6 +988,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void run() {				
 				findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+				findViewById(R.id.movesLeft).setVisibility(View.VISIBLE);
 			}
 		});
 	}
