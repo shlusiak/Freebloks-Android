@@ -38,6 +38,8 @@
     <string name="join_address">Server:</string>
     <string name="join_player_name">Name:</string>
     <string name="client_d">Spieler %1$d</string>
+    <string name="player_joined_color">%1$s spielt %2$s</string>
+    <string name="player_left_color">%1$s (%2$s) hat das Spiel verlassen</string>
     
     
     <string name="rate_now">Ja</string>

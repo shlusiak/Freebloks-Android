@@ -39,10 +39,8 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -121,6 +119,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 		@Override
 		protected void onPreExecute() {
+			lastStatus = null;
 			view.setSpiel(null, null);
 			chatButton.setVisibility(View.INVISIBLE);
 			chatEntries.clear();
@@ -1026,6 +1025,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			else
 				name = getString(R.string.client_d, c.client);
 		} else {
+			/* if we have advanced status, ignore all server messages (c == -1) */
+			/* server messages are generated in serverStatus */
+			if (lastStatus != null && lastStatus.isAdvanced())
+				return;
 			name = getString(R.string.client_d, c.client);
 		}
 			
@@ -1076,6 +1079,50 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
+		if (lastStatus != null && status != null && lastStatus.isAdvanced()) {
+			/* generate server chat messages, aka "joined" and "left" */
+			
+			for (int i = 0; i < lastStatus.spieler.length; i++) {
+				NET_SERVER_STATUS s;
+				int client;
+				final int tid;
+				if (lastStatus.spieler[i] < 0 && status.spieler[i] >= 0) {
+					/* joined */
+					s = status;
+					tid = R.string.player_joined_color;
+				} else if (lastStatus.spieler[i] >= 0 && status.spieler[i] < 0) {
+					/* left */
+					s = lastStatus;
+					tid = R.string.player_left_color;
+				} else continue;
+				String name;
+				client = s.spieler[i];
+				if (s.client_names[client] != null)
+					name = s.client_names[client];
+				else
+					name = getString(R.string.client_d, s.spieler[i]);
+				
+				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[i]); 
+				ChatEntry e = new ChatEntry(-1, text, name);
+				e.setPlayer(i);
+				chatEntries.add(e);
+			
+				if (!view.model.spiel.is_local_player(i))
+					view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
+			
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (chatDialog != null)
+							chatDialog.chatReceived();
+						
+						/* only show toast on "left" */
+						if (tid == R.string.player_left_color)
+							Toast.makeText(FreebloksActivity.this, "* " + text, Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		}
 		lastStatus = status;
 		if (lastStatus.clients > 1) {
 			chatButton.post(new Runnable() {
