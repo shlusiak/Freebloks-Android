@@ -11,6 +11,7 @@ import android.opengl.GLU;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.BackgroundRenderer.Theme;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -33,12 +34,16 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public boolean isSoftwareRenderer;
 
 	public BoardRenderer board;
+	BackgroundRenderer backgroundRenderer;
 
 	public FreebloksRenderer(Context context, ViewModel model) {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
 		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
+		backgroundRenderer = new BackgroundRenderer();
+		
+		backgroundRenderer.applyTheme(Theme.get("blue", false));
 	}
 
 	public void init(int field_size) {
@@ -78,7 +83,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		long t = System.currentTimeMillis();
 		float cameraAngle = model.board.getCameraAngle();
 		float boardAngle = model.board.mAngleY;
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
@@ -86,6 +90,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		if (model.intro != null) {
+			backgroundRenderer.render(context.getResources(), gl);
 			model.intro.render(gl, this);
 			return;
 		}
@@ -117,6 +122,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		/* render board */
 		gl.glRotatef(boardAngle, 0, 1, 0);
+		backgroundRenderer.render(context.getResources(), gl);
 		model.board.render(this, gl);
 		
 		if (model.spiel == null)
@@ -221,7 +227,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 
-		gl.glClearColor(0.05f, 0.10f, 0.25f, 1.0f);
 		gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
@@ -237,5 +242,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
 		board.updateTexture(context, gl);
+		backgroundRenderer.updateTexture(context.getResources(), gl);
 	}
 }
