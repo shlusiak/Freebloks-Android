@@ -75,6 +75,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
+	static final int DIALOG_HOST = 9;
 	static final int DIALOG_CHAT_DIALOG = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
@@ -462,7 +463,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	long gameStartTime = 0;
 	
-	public void startNewGame(String server) {
+	public void startNewGame() {
 		int ki = KI_DEFAULT;
 		int gamemode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
 		int fieldsize = Spiel.DEFAULT_FIELD_SIZE_X;
@@ -477,10 +478,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			fieldsize = client.spiel.m_field_size_x;
 			players = client.getLastPlayers();
 		}
-		startNewGame(server, players, gamemode, fieldsize, ki);
+		startNewGame(null, false, players, gamemode, fieldsize, ki);
 	}
 	
-	public void startNewGame(final String server, final boolean[] request_player, int gamemode, int field_size, int difficulty) {
+	public void startNewGame(final String server, final boolean show_lobby, final boolean[] request_player, int gamemode, int field_size, int difficulty) {
 		newCurrentPlayer(-1);
 		if (server == null) {
 			JNIServer.runServer(null, gamemode, field_size, difficulty);
@@ -495,7 +496,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		spiel.start_new_game();
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
-		ConnectTask task = new ConnectTask(client, server != null, new Runnable() {
+		ConnectTask task = new ConnectTask(client, show_lobby, new Runnable() {
 			@Override
 			public void run() {
 				if (request_player == null)
@@ -505,7 +506,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						if (request_player[i])
 							client.request_player(i, clientName);
 				}
-				if (server == null)
+				if (! show_lobby)
 					client.request_start();
 			}
 		});
@@ -639,7 +640,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
-					startNewGame(null);
+					startNewGame();
 				}
 			});
 			builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {				
@@ -666,6 +667,25 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					clientName = name;
 					startNewGame(
 							server,
+							true,
+							players,
+							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
+							Spiel.DEFAULT_FIELD_SIZE_X,
+							KI_DEFAULT);
+					dismissDialog(DIALOG_GAME_MENU);
+					return true;
+				}
+			});
+			
+		case DIALOG_HOST:
+			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
+				@Override
+				public boolean OnJoin(String server, boolean players[], String name) {
+					/* FIXME: implement properly */
+					clientName = name;
+					startNewGame(
+							null,
+							true,
 							players,
 							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
 							Spiel.DEFAULT_FIELD_SIZE_X,
@@ -707,6 +727,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					/* starting new game from dialog creates game with default settings */
 					startNewGame(
 							null,
+							false,
 							null, 
 							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, 
 							Spiel.DEFAULT_FIELD_SIZE_X,
@@ -729,12 +750,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 //			dialog.findViewById(R.id.sound_toggle_button).setVisibility(hasActionBar ? View.GONE : View.VISIBLE);
 			dialog.findViewById(R.id.resume_game).setEnabled(canresume);
 			dialog.setCanceledOnTouchOutside(canresume);
-			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					
-				}
-			});
 			dialog.findViewById(R.id.preferences).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -748,6 +763,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					showDialog(DIALOG_JOIN);
 				}
 			});
+			dialog.findViewById(R.id.host_game).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showDialog(DIALOG_HOST);
+				}
+			});
 			dialog.findViewById(R.id.new_game_custom).setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -758,7 +779,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			break;
 
 		case DIALOG_JOIN:
-			((JoinDialog)dialog).prepare();
+			((JoinDialog)dialog).prepareJoinDialog();
+			break;
+			
+		case DIALOG_HOST:
+			((JoinDialog)dialog).prepareHostDialog();
 			break;
 
 		case DIALOG_CUSTOM_GAME:
@@ -770,6 +795,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					d.saveSettings();
 					startNewGame(
 							null,
+							false,
 							d.getPlayers(),
 							d.getGameMode(),
 							d.getFieldSize(),
@@ -792,7 +818,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				view.model.intro.cancel();
 			else {
 				if (client == null || (client.spiel != null && client.spiel.is_finished()))
-					startNewGame(null);
+					startNewGame();
 				else
 					showDialog(DIALOG_NEW_GAME_CONFIRMATION);
 			}
@@ -867,9 +893,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				if (client == null) {
 					/* TODO: find out why client can be null here */
 					/* if we don't have a previous client object, start new game with default values */
-					startNewGame(null, null, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, Spiel.DEFAULT_FIELD_SIZE_X, KI_DEFAULT);
+					startNewGame(null, false, null, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, Spiel.DEFAULT_FIELD_SIZE_X, KI_DEFAULT);
 				} else {
 					startNewGame(client.getLastHost(),
+						client.getLastHost() != null,
 						client.getLastPlayers(),
 						client.spiel.m_gamemode,
 						client.spiel.m_field_size_x,

@@ -5,6 +5,7 @@
     <string name="new_local_game">Neues Spiel</string>
     <string name="resume">Fortsetzen</string>
     <string name="join_game">Beitreten</string>
+    <string name="host_game">Erstellen</string>
     <string name="preferences">Einstellungen</string>
     <string name="hint">Hinweis</string>
     <string name="undo">Rückgängig</string>
