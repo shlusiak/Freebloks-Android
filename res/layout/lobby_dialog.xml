@@ -26,14 +26,14 @@
 
     <GridView
         android:id="@+id/color_grid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/server"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_alignRight="@+id/clients"
         android:layout_below="@+id/server"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:horizontalSpacing="8dp"
-        android:numColumns="4"
+		android:layout_above="@+id/chatButton"
+        android:layout_marginLeft="8dp"
+        android:verticalSpacing="4dp"
+        android:numColumns="1"
         android:stretchMode="columnWidth"
         tools:listitem="@layout/color_grid_item" >
     </GridView>
@@ -65,8 +65,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chatButton"
-        android:layout_below="@+id/color_grid"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/clients"
+        android:layout_toLeftOf="@+id/color_grid"
+        android:layout_alignParentLeft="true"
         android:background="#3f000000"
         android:isScrollContainer="true"
         android:stackFromBottom="true"

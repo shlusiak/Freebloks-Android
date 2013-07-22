@@ -56,7 +56,7 @@ public class ColorAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = LayoutInflater.from(context).inflate(R.layout.color_grid_item, parent, false);
 		TextView t;
-		GridView.LayoutParams lp = new GridView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		GridView.LayoutParams lp = new GridView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		t = (TextView)v.findViewById(R.id.text);
         v.setLayoutParams(lp);
