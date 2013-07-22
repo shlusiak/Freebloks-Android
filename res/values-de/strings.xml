@@ -34,7 +34,7 @@
     <string name="custom_game_title">Benutzerdefiniertes Spiel</string>
     
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
-    <string name="connected_clients">%1$d Clients</string>
+    <string name="connected_clients">%1$d Spieler</string>
     <string name="chat">Chat</string>
     <string name="join_address">Server:</string>
     <string name="join_player_name">Name:</string>

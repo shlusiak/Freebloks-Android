@@ -39,7 +39,7 @@
     <string name="connected_clients">%1$d clients</string>
     <string name="chat">Chat</string>
     <string name="join_server_address">Server:</string>
-    <string name="join_player_name">Your Name:</string>
+    <string name="join_player_name">Your name:</string>
     <string name="client_d">Client %1$d</string>
     <string name="player_joined_color">%1$s is playing %2$s</string>
     <string name="player_left_color">%1$s (%2$s) has left</string>
