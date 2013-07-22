@@ -128,6 +128,12 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 				}
 			}
 		});
+		findViewById(android.R.id.closeButton).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dismiss();
+			}
+		});
 		
 		setLabel();
 		
