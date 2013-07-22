@@ -68,7 +68,6 @@ public class Spiel implements Serializable, Cloneable {
 	
 	private void init_field() {
 		m_game_field = new int[m_field_size_x * m_field_size_y];
-//		Arrays.fill(m_game_field, (byte)0);
 		for (int p = 0; p < PLAYER_MAX; p++){
 			m_game_field[get_player_start_y(p) * m_field_size_x + get_player_start_x(p)] = PLAYER_BIT_ALLOWED[p];
 		}
@@ -129,9 +128,7 @@ public class Spiel implements Serializable, Cloneable {
 	public void set_field_size_and_new(int y, int x) {
 		m_field_size_x = x;
 		m_field_size_y = y;
-		m_game_field = new int[m_field_size_x * m_field_size_y];
 		start_new_game();
-		init_field();
 	}
 
 
@@ -162,6 +159,7 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	public void start_new_game(){
+		init_field();
 		for (int n = 0; n < PLAYER_MAX; n++){
 			m_player[n].init(this, n);
 		}
