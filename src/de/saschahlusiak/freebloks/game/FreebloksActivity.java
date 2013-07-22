@@ -26,6 +26,9 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
+import de.saschahlusiak.freebloks.view.effects.EffectSet;
+import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
+import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
@@ -968,6 +971,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	public void stoneHasBeenSet(final NET_SET_STONE s) {
+		if (!client.spiel.is_local_player(s.player)) {
+			view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
+			vibrate(Global.VIBRATE_SET_STONE);
+		}
+		
 		Player p = client.spiel.get_player(s.player);
 		/* TODO: also show toast, if previous player blocked out another player */
 		if (p.m_number_of_possible_turns <= 0) {
@@ -1182,6 +1190,21 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return false;
 		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
 			return false;
+		
+		if (view.model.showAnimations) {
+			Stone st = new Stone();
+			int player = client.spiel.current_player();
+			st.copyFrom(stone);
+			StoneRollEffect e = new StoneRollEffect(view.model, st, player, x, y, view.model.currentStone.hover_height_high, -15.0f);
+	
+			EffectSet set = new EffectSet();
+			set.add(e);
+			set.add(new StoneFadeEffect(view.model, st, player, x, y, 4.0f));
+			view.model.addEffect(set);
+		}
+
+		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
+		vibrate(Global.VIBRATE_SET_STONE);		
 		
 		spielthread.post(new Runnable() {
 			@Override
