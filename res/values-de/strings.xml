@@ -41,6 +41,7 @@
     <string name="client_d">Spieler %1$d</string>
     <string name="player_joined_color">%1$s spielt %2$s</string>
     <string name="player_left_color">%1$s (%2$s) hat das Spiel verlassen</string>
+    <string name="no_addresses_found">[Keine IP-Adresse gefunden]</string>
     
     
     <string name="rate_now">Ja</string>

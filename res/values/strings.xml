@@ -43,6 +43,7 @@
     <string name="client_d">Client %1$d</string>
     <string name="player_joined_color">%1$s is playing %2$s</string>
     <string name="player_left_color">%1$s (%2$s) has left</string>
+    <string name="no_addresses_found">[no IP-address found]</string>
     
     <string name="rate_now">Yes</string>
     <string name="rate_later">Later</string>
