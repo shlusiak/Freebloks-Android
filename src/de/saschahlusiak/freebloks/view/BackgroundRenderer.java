@@ -93,9 +93,13 @@ public class BackgroundRenderer extends SimpleModel {
     			t = new Theme(0, 0, 0);
     		} else if (theme.equals("blue")) {
     			t = new Theme(12, 25, 64);
+    		} else if (theme.equals("texture_wood")) {
+    			t = new Theme(R.drawable.texture_wood_fine);
     		} else if (theme.equals("texture_metal")) {
-    			t = new Theme(preview ? R.drawable.texture_metal : R.drawable.texture_metal);
-    		} else
+    			t = new Theme(R.drawable.texture_metal);
+    		} else if (theme.equals("texture_bricks")) {
+    			t = new Theme(R.drawable.texture_bricks);
+    		} else   		
     			return null;
     		
     		t.isPreview = preview;
@@ -128,7 +132,7 @@ public class BackgroundRenderer extends SimpleModel {
 	
 	boolean valid = false;
 	
-	public void applyTheme(Theme theme) {	
+	public void setTheme(Theme theme) {	
 		this.theme = theme;
 		valid = false;
 	}
@@ -162,13 +166,14 @@ public class BackgroundRenderer extends SimpleModel {
 		  	
 		  	bitmap.recycle();
 		  	bitmap = null;
+			theme.getRGB(rgba);
 		} else {
 			hasTexture = false;
+			theme.getRGB(rgba);
 		}
-		theme.getRGB(rgba);
 	}
 
-	final float diffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
+	final float diffuse[] = {0.65f, 0.65f, 0.65f, 1.0f};
 	final float specular[] = {0, 0, 0, 1};
 
 	public void render(Resources resources, GL10 gl) {
