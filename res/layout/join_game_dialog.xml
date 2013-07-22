@@ -27,8 +27,7 @@
 	        android:gravity="right"
 	        android:imeOptions="flagNoExtractUi"
 	        android:inputType="textNoSuggestions"
-	        android:singleLine="true"
-	        android:text="blokus.mooo.com" >
+	        android:singleLine="true" >
 
 	    </EditText>
     </LinearLayout>
