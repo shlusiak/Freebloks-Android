@@ -23,6 +23,8 @@ static int EstablishGame(CServerListener* listener)
 			perror("wait(): ");
 			return -1;
 		}
+		if (listener->get_game()->num_clients() <= 0)
+			return -1;
 		/* Solange, wie kein aktueller Spieler festgelegt ist: Spiel laeuft noch nicht */
 	}while (listener->get_game()->current_player()==-1);
 	return 0;
@@ -32,8 +34,12 @@ void* gameRunThread(void* param)
 {
 	CServerListener *listener = (CServerListener*)param;
 
-	if (EstablishGame(listener) == -1)
+	if (EstablishGame(listener) == -1) {
+		listener->close();
+		delete listener;
+		D("game not established");
 		return NULL;
+	}
 
 
 	CSpielServer* game = listener->get_game();
