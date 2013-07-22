@@ -64,6 +64,7 @@ public class ColorAdapter extends BaseAdapter {
         t.setGravity(Gravity.CENTER);
         if (lastStatus == null || spiel == null) {
 			t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
+			t.setBackgroundColor(Color.BLACK);
         	t.setText("---");
         	return v;
         }        
@@ -98,6 +99,7 @@ public class ColorAdapter extends BaseAdapter {
 			} else {
 				/* computer player */
 				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
+				t.setBackgroundColor(Color.BLACK);
 				t.setText("---");
 			}
 		} else {
@@ -125,6 +127,7 @@ public class ColorAdapter extends BaseAdapter {
 				t.startAnimation(a);
 			} else {
 				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
+				t.setBackgroundColor(Color.BLACK);
 				t.setText("---");
 			}
 		}
