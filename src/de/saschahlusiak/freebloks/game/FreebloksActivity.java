@@ -689,6 +689,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void onCancel(DialogInterface arg0) {
 					canresume = false;
+					client.disconnect();
 					showDialog(DIALOG_GAME_MENU);
 				}
 			});
