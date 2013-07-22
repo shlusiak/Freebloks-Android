@@ -24,6 +24,7 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
+import de.saschahlusiak.freebloks.view.BackgroundRenderer.Theme;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
@@ -403,6 +404,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
+		Theme t = Theme.get(prefs.getString("theme", "blue"), false);
+		view.setTheme(t);
 		
 		updateSoundMenuEntry();
 	}

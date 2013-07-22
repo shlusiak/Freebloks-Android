@@ -54,6 +54,16 @@
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="show_animations" />
+		
+		<de.saschahlusiak.freebloks.preferences.ThemePreference
+	        android:defaultValue="blue"
+	        android:dialogTitle="@string/prefs_theme"
+	        android:entries="@array/theme_labels"
+	        android:entryValues="@array/theme_values"
+	        android:key="theme"
+	        android:persistent="true"
+	        android:title="@string/prefs_theme" />
+		
 	</PreferenceCategory>
 	
     <PreferenceCategory android:title="@string/prefs_misc" >

@@ -96,6 +96,14 @@
 	<string name="please_donate">Unterstütze die Entwickler</string>
 	<string name="donation_text_long">Freebloks ist Open Source Software. Du kannst sie verwenden und verändern, wie du möchtest, völlig umsonst!\n\nWenn du die Entwickler von Freebloks unterstützen möchtest, kannst du über Google Play einen Betrag deiner Wahl spenden.\n\nVielen Dank!</string>
 	
+	<string-array name="theme_labels">
+        <item>Schwarz</item>
+        <item>Blau</item>
+        <item>Holz</item>
+        <item>Metall</item>
+        <item>Ziegelsteine</item>
+    </string-array>
+	
 	
 	<string name="prefs_interface">Oberfläche</string>
 	<string name="prefs_display">Anzeige</string>
@@ -124,4 +132,5 @@
 	<string name="prefs_donation">Spenden...</string>
 	<string name="prefs_player_name">Spielername</string>
 	<string name="prefs_player_name_default">[nicht gesetzt]</string>
+	<string name="prefs_theme">Hintergrund</string>
 </resources>

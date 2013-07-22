@@ -1,7 +1,5 @@
 package de.saschahlusiak.freebloks.view;
 
-
-import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
@@ -12,6 +10,7 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.view.BackgroundRenderer.Theme;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
@@ -48,6 +47,10 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	
 	public void setActivity(ActivityInterface activity) {
 		model.activity = activity;
+	}
+	
+	public void setTheme(Theme theme) {
+		renderer.backgroundRenderer.setTheme(theme);
 	}
 
 	public void setSpiel(SpielClient client, Spielleiter spiel) {

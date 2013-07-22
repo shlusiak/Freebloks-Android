@@ -43,13 +43,13 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
 		backgroundRenderer = new BackgroundRenderer();
 		
-		backgroundRenderer.applyTheme(Theme.get("blue", false));
+		backgroundRenderer.setTheme(Theme.get("blue", false));
 	}
 
 	public void init(int field_size) {
 		board.initBorder(field_size);
 	}
-
+	
 	private float outputfar[] = new float[4];
 	private float outputnear[] = new float[4];
 	

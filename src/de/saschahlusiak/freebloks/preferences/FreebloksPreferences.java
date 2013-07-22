@@ -46,6 +46,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 	protected void onResume() {
 		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
 		onSharedPreferenceChanged(prefs, "player_name");
+		onSharedPreferenceChanged(prefs, "theme");
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		super.onResume();
 	}
@@ -64,6 +65,10 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			if (s == null || s.equals(""))
 				s = getString(R.string.prefs_player_name_default);
 			pref.setSummary(s);
+		}
+		if (key.equals("theme")) {
+			ListPreference pref = (ListPreference)findPreference(key);
+			pref.setSummary(pref.getEntry());
 		}
 	}
 }

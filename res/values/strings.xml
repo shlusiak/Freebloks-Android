@@ -97,6 +97,21 @@
 	<string name="please_donate">Support the developers</string>
 	<string name="donation_text_long">Freebloks is free and open source software. You can use and modify it completely free of charge!\n\nIf you want to support the developers, feel free to make a donation of your choice through Google Play.\n\nThank you!</string>
 	
+	<string-array name="theme_labels">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Wood</item>
+        <item>Metal</item>
+        <item>Bricks</item>
+    </string-array>
+    <string-array name="theme_values" translatable="false" >
+        <item>black</item>
+        <item>blue</item>
+        <item>texture_wood</item>
+        <item>texture_metal</item>
+        <item>texture_bricks</item>
+	</string-array>
+	
 	<string name="prefs_interface">Interface</string>
 	<string name="prefs_display">Display</string>
 	<string name="prefs_misc">Miscellaneous</string>	
@@ -124,4 +139,5 @@
 	<string name="prefs_donation">Donate...</string>
 	<string name="prefs_player_name">Player name</string>
 	<string name="prefs_player_name_default">[default]</string>
+	<string name="prefs_theme">Theme</string>
 </resources>
