@@ -27,7 +27,7 @@
 
     <GridView
         android:id="@+id/color_grid"
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="match_parent"
         android:layout_alignRight="@+id/clients"
         android:layout_below="@+id/server"
@@ -38,6 +38,20 @@
         android:stretchMode="columnWidth"
         tools:listitem="@layout/color_grid_item" >
     </GridView>
+
+    <ListView
+        android:id="@+id/chatList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chatButton"
+        android:layout_below="@+id/clients"
+        android:layout_toLeftOf="@+id/color_grid"
+        android:layout_alignParentLeft="true"
+        android:background="#3f000000"
+        android:isScrollContainer="true"
+        android:stackFromBottom="true"
+        android:transcriptMode="normal" >
+    </ListView>
 
     <EditText
         android:id="@+id/chatText"
@@ -58,29 +72,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/startButton"
+        android:layout_alignRight="@+id/chatList"
         android:src="@android:drawable/ic_menu_send" />
-
-    <ListView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/chatButton"
-        android:layout_below="@+id/clients"
-        android:layout_toLeftOf="@+id/color_grid"
-        android:layout_alignParentLeft="true"
-        android:background="#3f000000"
-        android:isScrollContainer="true"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal" >
-    </ListView>
 
     <Button
         android:id="@+id/startButton"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/color_grid"
         android:layout_alignTop="@+id/chatButton"
         android:text="@string/start"
         android:textAppearance="?android:attr/textAppearanceMedium" />

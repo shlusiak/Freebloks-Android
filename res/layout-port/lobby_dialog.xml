@@ -37,43 +37,11 @@
 
     </GridView>
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_alignParentBottom="true"
-        android:layout_width="150dp"
-        android:layout_height="54dp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/start"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    
-    <EditText
-        android:id="@+id/chatText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/startButton"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/chatButton"
-        android:imeOptions="actionSend|flagNoExtractUi"
-        android:inputType="textNoSuggestions|textCapSentences"
-        android:singleLine="true" >
-
-        <requestFocus />
-    </EditText>
-    
-    <ImageButton
-        android:id="@+id/chatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_above="@+id/startButton"
-        android:src="@android:drawable/ic_menu_send" />
-
     <ListView
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chatButton"
+        android:layout_above="@+id/linearLayout1"
         android:layout_below="@+id/color_grid"
         android:layout_centerHorizontal="true"
         android:background="#3f000000"
@@ -82,5 +50,39 @@
         android:transcriptMode="normal" >
 
     </ListView>
-
+    
+    <LinearLayout 
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" >
+        
+	    <EditText
+	        android:id="@+id/chatText"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:imeOptions="actionSend|flagNoExtractUi"
+	        android:inputType="textNoSuggestions|textCapSentences"
+	        android:singleLine="true" >
+	
+	        <requestFocus />
+	    </EditText>
+        
+  		<ImageButton
+	        android:id="@+id/chatButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@android:drawable/ic_menu_send" />
+	
+	    <Button
+	        android:id="@+id/startButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/start"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+    </LinearLayout>
 </RelativeLayout>

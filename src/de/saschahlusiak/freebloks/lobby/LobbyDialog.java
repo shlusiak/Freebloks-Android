@@ -48,7 +48,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		setContentView(R.layout.lobby_dialog);
 
 		getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
-		setTitle(R.string.lobby_waiting_for_players);
 		
 		colorGrid = (GridView)findViewById(R.id.color_grid);
 		colorAdapter = new ColorAdapter(getContext(), null, null);
@@ -105,8 +104,20 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	public void setSpiel(SpielClient spiel) {
 		this.client = spiel;
 		lastStatus = null;
-		if (spiel != null)
+		if (spiel != null) {
 			spiel.addClientInterface(this);
+			if (spiel.spiel.current_player() < 0) {
+				/* lobby */
+				findViewById(R.id.startButton).setVisibility(View.VISIBLE);
+				setTitle(R.string.lobby_waiting_for_players);
+			} else {
+				/* chat */
+				findViewById(R.id.startButton).setVisibility(View.GONE);
+				setTitle(R.string.chat);
+			}
+			
+		}
+		
 		
 		TextView server = (TextView)findViewById(R.id.server);
 		if (client.getLastHost() == null) {

@@ -13,7 +13,6 @@ import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
-import de.saschahlusiak.freebloks.lobby.ChatDialog;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
@@ -76,7 +75,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
 	static final int DIALOG_HOST = 9;
-	static final int DIALOG_CHAT_DIALOG = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	
@@ -106,7 +104,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	ImageButton chatButton;
 	ArrayList<ChatEntry> chatEntries;
-	ChatDialog chatDialog = null;
 	
 	class ConnectTask extends AsyncTask<String,Void,String> {
 		ProgressDialog progress;
@@ -234,7 +231,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void onClick(View v) {
 				chatButton.clearAnimation();
-				showDialog(DIALOG_CHAT_DIALOG);
+				showDialog(DIALOG_LOBBY);
 			}
 		});
 		if (savedInstanceState != null)
@@ -612,10 +609,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			}, chatEntries);
 			
-		case DIALOG_CHAT_DIALOG:
-			chatDialog = new ChatDialog(this, chatEntries);
-			return chatDialog;
-			
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.do_you_want_to_leave_current_game);
@@ -705,20 +698,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		switch (id) {
 		case DIALOG_LOBBY:
 			((LobbyDialog)dialog).setSpiel(client);
+			if (lastStatus != null)
+				((LobbyDialog)dialog).serverStatus(lastStatus);
 			dialog.setOnCancelListener(new OnCancelListener() {				
 				@Override
 				public void onCancel(DialogInterface arg0) {
-					canresume = false;
-					client.disconnect();
-					showDialog(DIALOG_GAME_MENU);
+					if (client.spiel.current_player() < 0 && !client.spiel.is_finished()) {
+						canresume = false;
+						client.disconnect();
+						showDialog(DIALOG_GAME_MENU);
+					}
 				}
 			});
 			break;
-			
-		case DIALOG_CHAT_DIALOG:
-			((ChatDialog)dialog).setClient(client);
-			break;
-			
+
 		case DIALOG_GAME_MENU:
 			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 				@Override
@@ -1079,9 +1072,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (chatDialog != null)
-					chatDialog.chatReceived();
-				
 				if (c.client == -1)
 					Toast.makeText(FreebloksActivity.this, "* " + c.text,
 							Toast.LENGTH_LONG).show();
@@ -1150,9 +1140,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						if (chatDialog != null)
-							chatDialog.chatReceived();
-						
 						/* only show toast on "left" */
 						if (tid == R.string.player_left_color)
 							Toast.makeText(FreebloksActivity.this, "* " + text, Toast.LENGTH_LONG).show();
