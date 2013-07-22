@@ -1,6 +1,10 @@
 package de.saschahlusiak.freebloks.lobby;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -14,6 +18,8 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -104,10 +110,43 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		
 		TextView server = (TextView)findViewById(R.id.server);
 		if (client.getLastHost() == null) {
-			/* TODO: we are hosting a game; show own address(es) */
-			server.setText("");
+			try {
+				String s = null;
+				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+				if (interfaces != null)
+					while (interfaces.hasMoreElements()) {
+						NetworkInterface i = interfaces.nextElement();
+						Enumeration<InetAddress> addresses = i.getInetAddresses();
+						while (addresses.hasMoreElements()) {
+							InetAddress addr = addresses.nextElement();
+							if (addr.isAnyLocalAddress())
+								continue;
+							if (addr.isLinkLocalAddress())
+								continue;
+							if (addr.isLoopbackAddress())
+								continue;
+							if (addr.isMulticastAddress())
+								continue;
+							if (s == null)
+								s = addr.getHostAddress();
+							else
+								s += "\n" + addr.getHostAddress();
+						}
+					}
+				if (s == null) /* no address found, clients will not be able to connect */
+					throw new SocketException("no address found");
+				server.setText(s);
+				server.setTypeface(Typeface.DEFAULT_BOLD);
+				server.setTextColor(Color.WHITE);
+			} catch (SocketException e) {
+				e.printStackTrace();
+				server.setText(R.string.no_addresses_found);
+				server.setTypeface(Typeface.DEFAULT);
+				server.setTextColor(Color.RED);
+			}
 		} else {
-			server.setText("" + client.getLastHost());
+			server.setTypeface(Typeface.DEFAULT);
+			server.setText(client.getLastHost());
 		}
 		
 		updateStatus();
