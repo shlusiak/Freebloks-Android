@@ -57,24 +57,19 @@ class SpielClientThread extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		try {
-			do {
-				if (!client.poll(true))
-					break;
-				if (getGoDown()) {
-					return;
-				}
-			} while (client.isConnected());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			/* the disconnect method in client is synchronized and will call the
-			 * onDisconnected listener. Make sure, that is run before we store the error
-			 */
+		
+		do {
+			Exception e = client.poll();
 			synchronized(client) {
 				error = e;
 			}
-		}
+			if (error != null)
+				break;
+			if (getGoDown()) {
+				return;
+			}
+		} while (client.isConnected());
+		
 		client.disconnect();
 		if (sendThread.looper != null)
 			sendThread.looper.quit();
