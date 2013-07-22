@@ -1,14 +1,13 @@
 package de.saschahlusiak.freebloks.game;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -42,7 +41,7 @@ public class JoinDialog extends Dialog {
 		name = (EditText)findViewById(R.id.name);
 		server = (EditText)findViewById(R.id.server);
 		
-		server.setText("blokus.mooo.com");
+		server.setText(Global.DEFAULT_SERVER_ADDRESS);
 		Button okAdd = (Button)findViewById(android.R.id.button1);
 		okAdd.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
