@@ -54,6 +54,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -763,10 +764,16 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				}
 			});
 			dialog.findViewById(R.id.new_game_custom).setOnClickListener(new OnClickListener() {
-				
 				@Override
 				public void onClick(View v) {
 					showDialog(DIALOG_CUSTOM_GAME);
+				}
+			});
+			dialog.findViewById(R.id.new_game).setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					showDialog(DIALOG_CUSTOM_GAME);
+					return true;
 				}
 			});
 			break;
