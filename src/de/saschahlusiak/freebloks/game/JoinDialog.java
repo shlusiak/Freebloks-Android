@@ -25,8 +25,6 @@ public class JoinDialog extends Dialog {
 		super(context);
 		setContentView(R.layout.join_game_dialog);
 		
-		setTitle(R.string.join_game);
-		
 		player1 = (CheckBox)findViewById(R.id.player1);
 		player2 = (CheckBox)findViewById(R.id.player2);
 		player3 = (CheckBox)findViewById(R.id.player3);
@@ -65,7 +63,7 @@ public class JoinDialog extends Dialog {
 		});
 	}
 	
-	public void prepare() {
+	public void prepareJoinDialog() {
 		int p = (int)(Math.random() * 4.0);
 		
 		player1.setChecked(p == 0);
@@ -77,8 +75,26 @@ public class JoinDialog extends Dialog {
 		prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 		
 		name.setText(prefs.getString("player_name", null));
+		findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
+		setTitle(R.string.join_game);		
 	}
-	
+
+	public void prepareHostDialog() {
+		int p = (int)(Math.random() * 4.0);
+		
+		player1.setChecked(p == 0);
+		player2.setChecked(p == 1);
+		player3.setChecked(p == 2);
+		player4.setChecked(p == 3);
+		
+		SharedPreferences prefs;
+		prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+		
+		name.setText(prefs.getString("player_name", null));
+		findViewById(R.id.linearLayout1).setVisibility(View.GONE);
+		setTitle(R.string.host_game);		
+	}
+
 	boolean[] getPlayers() {
 		boolean p[] = new boolean[4];
 		p[0] = player1.isChecked();

@@ -90,13 +90,27 @@
         android:text="@string/resume"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/join_game"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_margin="2dp"
-        android:text="@string/join_game"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp" >
+		
+	    <Button
+	        android:id="@+id/host_game"
+	        android:layout_width="0dp"
+	        android:layout_height="52dp"
+	        android:layout_weight="0.5"
+	        android:text="@string/host_game"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	    <Button
+	        android:id="@+id/join_game"
+	        android:layout_width="0dp"
+	        android:layout_height="52dp"
+	        android:layout_weight="0.5"
+	        android:layout_marginLeft="2dp"
+	        android:text="@string/join_game"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	</LinearLayout>
 
 	<Button
         android:id="@+id/preferences"

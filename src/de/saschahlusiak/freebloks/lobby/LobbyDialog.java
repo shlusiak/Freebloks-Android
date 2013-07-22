@@ -37,8 +37,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	GridView colorGrid;
 	ColorAdapter colorAdapter;
 
-	public LobbyDialog(Context context,
-			OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
+	public LobbyDialog(Context context, OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
 		super(context, true, cancelListener);
 		setContentView(R.layout.lobby_dialog);
 
@@ -102,6 +101,15 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		lastStatus = null;
 		if (spiel != null)
 			spiel.addClientInterface(this);
+		
+		TextView server = (TextView)findViewById(R.id.server);
+		if (client.getLastHost() == null) {
+			/* TODO: we are hosting a game; show own address(es) */
+			server.setText("");
+		} else {
+			server.setText("" + client.getLastHost());
+		}
+		
 		updateStatus();
 	}
 	
@@ -180,8 +188,6 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	}
 	
 	void updateStatus() {
-		((TextView)findViewById(R.id.server)).setText("" + client.getLastHost());
-		
 		colorAdapter.setCurrentStatus(client.spiel, lastStatus);
 		
 		if (lastStatus == null) {			
