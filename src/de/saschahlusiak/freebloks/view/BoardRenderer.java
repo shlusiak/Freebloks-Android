@@ -274,7 +274,7 @@ public class BoardRenderer {
 	}
 	
 	final float stone_red[]={0.75f, 0, 0, 0};
-	final float stone_blue[]={0.0f, 0.05f, 0.8f, 0};
+	final float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
 	final float stone_green[]={0.0f, 0.75f, 0, 0};
 	final float stone_yellow[]={0.80f, 0.80f, 0, 0};
 	final float stone_white[]={0.7f, 0.7f, 0.7f, 0};
