@@ -13,9 +13,6 @@ import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.SimpleModel;
-import de.saschahlusiak.freebloks.view.effects.EffectSet;
-import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
-import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 
 public class CurrentStone implements ViewElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
@@ -34,8 +31,8 @@ public class CurrentStone implements ViewElement {
 	Status status;
 	ViewModel model;
 	
-	final float hover_height_low = 0.45f;
-	final float hover_height_high = 0.45f;
+	public final float hover_height_low = 0.45f;
+	public final float hover_height_high = 0.45f;
 	
 	CurrentStone(ViewModel model) {
 		this.model = model;
@@ -426,19 +423,7 @@ public class CurrentStone implements ViewElement {
 				status = Status.IDLE;
 				stone = null;
 			} else	if (!hasMoved) {
-				int player = model.spiel.current_player();
 				if (model.activity.commitCurrentStone(stone, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f))) {
-					if (model.showAnimations) {
-						Stone st = new Stone();
-						st.copyFrom(stone);
-						StoneRollEffect e = new StoneRollEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), hover_height_high, -15.0f);
-				
-						EffectSet set = new EffectSet();
-						set.add(e);
-						set.add(new StoneFadeEffect(model, st, player, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f), 4.0f));
-						model.addEffect(set);
-						
-					}
 					status = Status.IDLE;
 					stone = null;
 					model.wheel.highlightStone = null;
