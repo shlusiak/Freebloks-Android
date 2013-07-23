@@ -88,13 +88,13 @@ public class Theme {
 			t.setRGB(0.05f, 0.10f, 0.25f);
 		} else if (theme.equals("texture_wood")) {
 			t.setDrawable(R.drawable.texture_wood_fine);
-			t.setRGB(0.7f, 0.7f, 0.7f);
+			t.setRGB(0.45f, 0.45f, 0.45f);
 		} else if (theme.equals("texture_metal")) {
 			t.setDrawable(R.drawable.texture_metal);
 			t.setRGB(0.55f, 0.55f, 0.55f);
 		} else if (theme.equals("texture_bricks")) {
 			t.setDrawable(R.drawable.texture_bricks);
-			t.setRGB(0.5f, 0.5f, 0.5f);
+			t.setRGB(0.50f, 0.55f, 0.55f);
 		} else
 			return null;
 		

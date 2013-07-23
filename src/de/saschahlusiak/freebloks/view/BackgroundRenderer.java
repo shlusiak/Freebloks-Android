@@ -88,7 +88,11 @@ public class BackgroundRenderer extends SimpleModel {
 		if (!valid)
 			updateTexture(gl);
 		
-		gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+		if (hasTexture)
+			gl.glClearColor(0.05f, 0.10f, 0.25f, 1.0f); /* the default background when textured */
+		else
+			gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
+		
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		if (hasTexture) {
