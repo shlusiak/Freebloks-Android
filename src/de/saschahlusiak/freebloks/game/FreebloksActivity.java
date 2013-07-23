@@ -662,12 +662,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case DIALOG_JOIN:
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
 				@Override
-				public boolean OnJoin(String server, boolean players[], String name) {
+				public boolean OnJoin(String server, boolean players[], int game_mode, int field_size, String name) {
 					clientName = name;
 					startNewGame(
 							server,
 							true,
 							players,
+							/* we are joining, ignore game_mode and field_size */
 							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
 							Spiel.DEFAULT_FIELD_SIZE_X,
 							KI_DEFAULT);
@@ -679,15 +680,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		case DIALOG_HOST:
 			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
 				@Override
-				public boolean OnJoin(String server, boolean players[], String name) {
+				public boolean OnJoin(String server, boolean players[], int game_mode, int field_size, String name) {
 					/* FIXME: implement properly */
 					clientName = name;
 					startNewGame(
 							null,
 							true,
 							players,
-							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
-							Spiel.DEFAULT_FIELD_SIZE_X,
+							game_mode,
+							field_size,
 							KI_DEFAULT);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
