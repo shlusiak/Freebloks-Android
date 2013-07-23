@@ -398,16 +398,18 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		vibrate_on_move = prefs.getBoolean("vibrate", true);
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
-		/* TODO: update wheel when changing show_opponents preference */
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
+		/* TODO: maybe put theme in retained config and track for change using a name */
 		Theme t = Theme.get(prefs.getString("theme", "blue"), false);
 		view.setTheme(t);
 		
 		updateSoundMenuEntry();
+		/* update wheel in case showOpponents has changed */
+		view.model.wheel.update(view.model.board.getShowWheelPlayer());
 	}
 
 	@Override
