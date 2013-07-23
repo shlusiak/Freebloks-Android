@@ -24,13 +24,13 @@ import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
-import de.saschahlusiak.freebloks.view.BackgroundRenderer.Theme;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Sounds;
+import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -1278,7 +1278,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@Override
 	public void showPlayer(int player) {
-		Log.d(tag, "showing current player: " + player);
 		if (client == null)
 			return;
 		if (client.spiel == null)

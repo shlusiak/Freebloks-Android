@@ -3,19 +3,15 @@ package de.saschahlusiak.freebloks.view;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.view.model.Theme;
+
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Shader.TileMode;
-import android.graphics.drawable.BitmapDrawable;
 import android.opengl.GLUtils;
-import android.view.View;
 
 public class BackgroundRenderer extends SimpleModel {
-	float rgba[] = new float[4];
+	float rgba[] = { 0, 0, 0, 1 };
 	int texture[];
 	boolean hasTexture;
 	
@@ -25,99 +21,13 @@ public class BackgroundRenderer extends SimpleModel {
     final static float textures = 15.0f;
     
     Theme theme;
+    Resources resources;
     
-    public static class Theme {
-    	private String name;
-    	
-    	int drawable, r, g, b;
-    	boolean isPreview, isDrawable;    	
-    	
-    	private Theme(int drawable) {
-    		this.isDrawable = true;
-    		this.isPreview = false;
-    		this.drawable = drawable;
-    		this.r = 12;
-    		this.g = 25;
-    		this.b = 64;
-    	}
-    	
-    	private Theme(int r, int g, int b) {
-    		this.isDrawable = false;
-    		this.isPreview = false;
-    		this.r = r;
-    		this.g = g;
-    		this.b = b;
-    	}
-    	    	
-    	String getName() {
-    		return name;
-    	}
-    	
-    	final boolean isDrawable() {
-    		return isDrawable;
-    	}
-    	
-    	BitmapDrawable getDrawable(Resources resources) {
-    		BitmapDrawable background = (BitmapDrawable) resources.getDrawable(drawable);
-
-    		background.setTileModeXY(TileMode.REPEAT, isPreview ? TileMode.MIRROR : TileMode.REPEAT);
-    		background.setFilterBitmap(true);
-    		return background;
-    	}
-    	
-    	final int getColor() {
-    		return Color.rgb(r, g, b);
-    	}
-    	
-    	final void getRGB(float[] rgb) {
-    		rgb[0] = (float)this.r / 255.0f;
-    		rgb[1] = (float)this.g / 255.0f;
-    		rgb[2] = (float)this.b / 255.0f;
-    	}
-    	
-    	public void apply(View view) {
-    		if (isDrawable)
-    			view.setBackgroundDrawable(getDrawable(view.getResources()));
-    		else
-    			view.setBackgroundColor(getColor());
-    	}
-
-    	Bitmap getBitmap(Resources resources) {
-    		return BitmapFactory.decodeResource(resources, drawable);
-    	}
-    	
-    	public static Theme get(String theme, boolean preview) {
-    		Theme t;
-    		
-    		if (theme.equals("black")) {
-    			t = new Theme(0, 0, 0);
-    		} else if (theme.equals("blue")) {
-    			t = new Theme(12, 25, 64);
-    		} else if (theme.equals("texture_wood")) {
-    			t = new Theme(R.drawable.texture_wood_fine);
-    		} else if (theme.equals("texture_metal")) {
-    			t = new Theme(R.drawable.texture_metal);
-    		} else if (theme.equals("texture_bricks")) {
-    			t = new Theme(R.drawable.texture_bricks);
-    		} else   		
-    			return null;
-    		
-    		t.isPreview = preview;
-    		t.name = theme;
-
-    		return t;
-    	}    	
-    }
-
-    
-	public BackgroundRenderer() {
+    public BackgroundRenderer(Resources resources) {
 		super(num_vertices, num_triangles);
 		
+		this.resources = resources;
 		hasTexture = false;
-		rgba[0] = 0.0f;
-		rgba[1] = 0.0f;
-		rgba[2] = 0.0f;
-		rgba[3] = 1.0f;
 
 	    addVertex(-size, 0, -size, 0, 1, 0, 0, 0);
 	    addVertex( size, 0, -size, 0, 1, 0, textures, 0);
@@ -137,9 +47,8 @@ public class BackgroundRenderer extends SimpleModel {
 		valid = false;
 	}
 	
-	public void updateTexture(Resources resources, GL10 gl) {
+	public void updateTexture(GL10 gl) {
 		valid = true;
-		rgba[3] = 1.0f;	/* a */
 		if (theme == null) {
 			rgba[0] = 0.0f; // transparent
 			rgba[1] = 0.0f;
@@ -166,19 +75,18 @@ public class BackgroundRenderer extends SimpleModel {
 		  	
 		  	bitmap.recycle();
 		  	bitmap = null;
-			theme.getRGB(rgba);
+			rgba = theme.getRGBA();
 		} else {
 			hasTexture = false;
-			theme.getRGB(rgba);
+			rgba = theme.getRGBA();
 		}
 	}
 
-	final float diffuse[] = {0.65f, 0.65f, 0.65f, 1.0f};
 	final float specular[] = {0, 0, 0, 1};
 
-	public void render(Resources resources, GL10 gl) {
+	public void render(GL10 gl) {
 		if (!valid)
-			updateTexture(resources, gl);
+			updateTexture(gl);
 		
 		gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -186,7 +94,7 @@ public class BackgroundRenderer extends SimpleModel {
 		if (hasTexture) {
 //			float shininess[]={3.0f};
 			
-			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, diffuse, 0);
+			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, rgba, 0);
 			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
 //			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
 			
