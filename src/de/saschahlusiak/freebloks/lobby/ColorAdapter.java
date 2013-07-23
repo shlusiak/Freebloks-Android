@@ -38,7 +38,8 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		/* always 4 colors */
+		if (lastStatus != null && lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+			return 2;
 		return 4;
 	}
 
@@ -68,6 +69,11 @@ public class ColorAdapter extends BaseAdapter {
         	t.setText("---");
         	return v;
         }        
+		
+		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
+		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+			if (position == 1)
+				position = 2;
 		
 		if (lastStatus.isAdvanced()) {
 			if (lastStatus.spieler[position] >= 0) {
