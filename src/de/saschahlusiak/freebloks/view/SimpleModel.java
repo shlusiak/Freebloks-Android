@@ -41,8 +41,7 @@ public class SimpleModel {
 	    _vertexBuffer.position(0);
 	    _normalBuffer.position(0);
 	    _indexBuffer.position(0);
-	    _textureBuffer.position(0);   
-   	
+	    _textureBuffer.position(0);
     }
     
 	public void addVertex(float x, float y, float z, float nx, float ny, float nz, float tu, float tv) {
@@ -62,20 +61,17 @@ public class SimpleModel {
 		_indexBuffer.put((short)(v3));
 	}
 	
-	public FloatBuffer getVertexBuffer() {
+	public final FloatBuffer getVertexBuffer() {
 		return _vertexBuffer;
 	}
-	public FloatBuffer getNormalBuffer() {
+	public final FloatBuffer getNormalBuffer() {
 		return _normalBuffer;
 	}
-	public FloatBuffer getTextureBuffer() {
+	public final FloatBuffer getTextureBuffer() {
 		return _textureBuffer;
 	}
-	public ShortBuffer getIndexBuffer() {
-		return _indexBuffer;
-	}
 
-	public void drawElements(GL10 gl) {
-		gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, getIndexBuffer());
+	public final void drawElements(GL10 gl) {
+		gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, _indexBuffer);
 	}
 }
