@@ -10,8 +10,6 @@ import android.view.View;
 import de.saschahlusiak.freebloks.R;
 
 public class Theme {
-	private String name;
-	
 	int drawable;
 	float rgba[] = { 1, 1, 1, 1 };
 	boolean isPreview, isDrawable;
@@ -33,10 +31,6 @@ public class Theme {
 		setRGB(r, g, b);
 	}
 
-	String getName() {
-		return name;
-	}
-	
 	public final boolean isDrawable() {
 		return isDrawable;
 	}
@@ -46,7 +40,7 @@ public class Theme {
 		this.isDrawable = true;
 	}
 	
-	BitmapDrawable getDrawable(Resources resources) {
+	private BitmapDrawable getDrawable(Resources resources) {
 		BitmapDrawable background = (BitmapDrawable) resources.getDrawable(drawable);
 
 		background.setTileModeXY(TileMode.REPEAT, isPreview ? TileMode.MIRROR : TileMode.REPEAT);
@@ -62,7 +56,7 @@ public class Theme {
 		return rgba;
 	}
 	
-	void setRGB(float r, float g, float b) {
+	private void setRGB(float r, float g, float b) {
 		this.rgba[0] = r;
 		this.rgba[1] = g;
 		this.rgba[2] = b;
@@ -99,7 +93,6 @@ public class Theme {
 			return null;
 		
 		t.isPreview = preview;
-		t.name = theme;
 
 		return t;
 	}    	
