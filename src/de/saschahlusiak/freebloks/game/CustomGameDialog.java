@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.app.Dialog;
@@ -11,16 +12,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener {
-	SeekBar difficulty;
-	TextView difficulty_label;
-	Spinner game_mode, field_size;
-
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
 	final static int DIFFICULTY_DEFAULT = 8;
 	final static int DIFFICULTY_VALUES[] = {
@@ -35,9 +33,25 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	CheckBox player3;
 	CheckBox player4;
 
-	public CustomGameDialog(Context context) {
+	SeekBar difficulty;
+	TextView difficulty_label;
+	Spinner game_mode, field_size;
+
+	EditText name, server;
+	OnStartCustomGameListener listener;
+	
+	SharedPreferences prefs;
+	
+	public interface OnStartCustomGameListener {
+		public boolean OnStart(CustomGameDialog dialog);
+	}
+
+	public CustomGameDialog(Context context, final OnStartCustomGameListener listener) {
 		super(context);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		this.listener = listener;
+
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		setContentView(R.layout.game_menu_new_custom_game);
 		
@@ -134,26 +148,37 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 				dismiss();
 			}
 		});
+		findViewById(android.R.id.button1).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				saveSettings();
+				if (listener.OnStart(CustomGameDialog.this))
+					dismiss();
+			}
+		});
 		
-		setLabel();
+		name = (EditText)findViewById(R.id.name);
+		server = (EditText)findViewById(R.id.server);
+		server.setText(Global.DEFAULT_SERVER_ADDRESS);
 		
-		setTitle(R.string.custom_game_title);
+		setDifficultyLabel();		
 	}
 	
-	public void saveSettings() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+	private void saveSettings() {
+		/* what you save here should be restored in prepare() */
 		Editor editor = prefs.edit();
 		editor.putInt("difficulty", getDifficulty());
+		editor.putString("player_name", getName());
 		editor.commit();
 	}
 	
-	public void prepare() {
+	private void prepare() {
 		int p = (int)(Math.random() * 4.0);
 		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0) * 2;
 		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0);
-		
+
 		player1.setChecked(p == 0);
 		player2.setChecked(p == 1);
 		player3.setChecked(p == 2);
@@ -163,9 +188,32 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 			player3.setChecked(player1.isChecked());
 			player4.setChecked(player2.isChecked());
 		}
+
+		name.setText(prefs.getString("player_name", null));
 	}
 	
-	void setLabel() {
+	void prepareCustomGameDialog() {
+		prepare();
+		setTitle(R.string.custom_game_title);
+		findViewById(R.id.player_name_layout).setVisibility(View.GONE);
+		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
+	}
+	
+	void prepareJoinDialog() {
+		prepare();
+		setTitle(R.string.join_game);
+		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
+		findViewById(R.id.spinner_layout).setVisibility(View.GONE);
+	}
+	
+	void prepareHostDialog() {
+		prepare();
+		setTitle(R.string.host_game);
+		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
+		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
+	}
+	
+	void setDifficultyLabel() {
 		final String labels[] = getContext().getResources().getStringArray(R.array.difficulties);
 		int value = getDifficulty();
 		int text = 0;
@@ -208,7 +256,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		setLabel();
+		setDifficultyLabel();
 	}
 
 	@Override
@@ -219,5 +267,13 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		
+	}
+	
+	public String getName() {
+		return name.getText().toString();
+	}
+	
+	public String getServer() {
+		return server.getText().toString();
 	}
 }

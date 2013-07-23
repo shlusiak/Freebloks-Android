@@ -657,17 +657,32 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return new GameMenu(this);
 			
 		case DIALOG_CUSTOM_GAME:
-			return new CustomGameDialog(this);
+			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
+				@Override
+				public boolean OnStart(CustomGameDialog dialog) {
+					startNewGame(
+							null,
+							false,
+							dialog.getPlayers(),
+							dialog.getGameMode(),
+							dialog.getFieldSize(),
+							dialog.getDifficulty());
+					dismissDialog(DIALOG_CUSTOM_GAME);
+					dismissDialog(DIALOG_GAME_MENU);
+					return true;
+				}
+			});
 
 		case DIALOG_JOIN:
-			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
+			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
+				
 				@Override
-				public boolean OnJoin(String server, boolean players[], int game_mode, int field_size, String name) {
-					clientName = name;
+				public boolean OnStart(CustomGameDialog dialog) {
+					clientName = dialog.getName();
 					startNewGame(
-							server,
+							dialog.getServer(),
 							true,
-							players,
+							dialog.getPlayers(),
 							/* we are joining, ignore game_mode and field_size */
 							Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS,
 							Spiel.DEFAULT_FIELD_SIZE_X,
@@ -678,23 +693,24 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			});
 			
 		case DIALOG_HOST:
-			return new JoinDialog(this, new JoinDialog.OnJoinListener() {
+			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
+				
 				@Override
-				public boolean OnJoin(String server, boolean players[], int game_mode, int field_size, String name) {
-					/* FIXME: implement properly */
-					clientName = name;
+				public boolean OnStart(CustomGameDialog dialog) {
+					clientName = dialog.getName();
 					startNewGame(
 							null,
 							true,
-							players,
-							game_mode,
-							field_size,
+							dialog.getPlayers(),
+							dialog.getGameMode(),
+							dialog.getFieldSize(),
+							/* yeah, when hosting we don't care about computer strength... */
 							KI_DEFAULT);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
 				}
 			});
-			
+
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -785,31 +801,15 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			break;
 
 		case DIALOG_JOIN:
-			((JoinDialog)dialog).prepareJoinDialog();
+			((CustomGameDialog)dialog).prepareJoinDialog();
 			break;
 			
 		case DIALOG_HOST:
-			((JoinDialog)dialog).prepareHostDialog();
+			((CustomGameDialog)dialog).prepareHostDialog();
 			break;
 
 		case DIALOG_CUSTOM_GAME:
-			((CustomGameDialog)dialog).prepare();
-			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					CustomGameDialog d = (CustomGameDialog) dialog;
-					d.saveSettings();
-					startNewGame(
-							null,
-							false,
-							d.getPlayers(),
-							d.getGameMode(),
-							d.getFieldSize(),
-							d.getDifficulty());
-					dismissDialog(DIALOG_CUSTOM_GAME);
-					dismissDialog(DIALOG_GAME_MENU);
-				}
-			});
+			((CustomGameDialog)dialog).prepareCustomGameDialog();
 			break;
 		}
 		super.onPrepareDialog(id, dialog, args);
