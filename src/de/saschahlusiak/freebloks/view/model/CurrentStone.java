@@ -33,20 +33,20 @@ public class CurrentStone implements ViewElement {
 	
 	public final float hover_height_low = 0.45f;
 	public final float hover_height_high = 0.45f;
+	private static final float overlay_radius = 6.0f; 
 	
 	CurrentStone(ViewModel model) {
 		this.model = model;
 		
 		status = Status.IDLE;
 		
-		float s = 5.5f;
 		texture = null;
 		
 		overlay = new SimpleModel(4, 2);
-		overlay.addVertex(-s, 0, s, 0, -1, 0, 0, 0);
-		overlay.addVertex(+s, 0, s, 0, -1, 0, 1, 0);
-		overlay.addVertex(+s, 0, -s, 0, -1, 0, 1, 1);
-		overlay.addVertex(-s, 0, -s, 0, -1, 0, 0, 1);
+		overlay.addVertex(-overlay_radius, 0, overlay_radius, 0, -1, 0, 0, 0);
+		overlay.addVertex(+overlay_radius, 0, overlay_radius, 0, -1, 0, 1, 0);
+		overlay.addVertex(+overlay_radius, 0, -overlay_radius, 0, -1, 0, 1, 1);
+		overlay.addVertex(-overlay_radius, 0, -overlay_radius, 0, -1, 0, 0, 1);
 		overlay.addIndex(0, 1, 2);
 		overlay.addIndex(0, 2, 3);
 		
@@ -279,9 +279,9 @@ public class CurrentStone implements ViewElement {
 			stone_rel_y = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
 			
 //			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
-			if ((Math.abs(stone_rel_x) <= 8) && (Math.abs(stone_rel_y) <= 8)) {
-				if ((Math.abs(stone_rel_x) > 4.0f) && (Math.abs(stone_rel_y) < 3.0f) ||
-					(Math.abs(stone_rel_x) < 3.0f) && (Math.abs(stone_rel_y) > 4.0f)) {
+			if ((Math.abs(stone_rel_x) <= overlay_radius + 1.0f) && (Math.abs(stone_rel_y) <= overlay_radius + 2.0f)) {
+				if ((Math.abs(stone_rel_x) > overlay_radius - 1.5f) && (Math.abs(stone_rel_y) < 2.5f) ||
+					(Math.abs(stone_rel_x) < 2.5f) && (Math.abs(stone_rel_y) > overlay_radius - 1.5f)) {
 					status = Status.ROTATING;
 					rotate_angle = 0.0f;
 				} else {
@@ -322,7 +322,7 @@ public class CurrentStone implements ViewElement {
 			float a1 = (float)Math.atan2(stone_rel_y, stone_rel_x);
 			float a2 = (float)Math.atan2(ry, rx);
 			rotate_angle = (a1 - a2) * 180.0f / (float)Math.PI;
-			if (Math.abs(rx) + Math.abs(ry) < 5 && Math.abs(rotate_angle) < 25.0f) {
+			if (Math.abs(rx) + Math.abs(ry) < overlay_radius * 0.9f && Math.abs(rotate_angle) < 25.0f) {
 				rotate_angle = 0.0f;
 				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
 			}
