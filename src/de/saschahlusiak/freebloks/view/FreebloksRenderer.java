@@ -12,6 +12,7 @@ import android.util.Log;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.effects.Effect;
+import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -89,9 +90,10 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		if (model.intro != null) {
+		Intro intro = model.intro;
+		if (intro != null) {
 			backgroundRenderer.render(gl);
-			model.intro.render(gl, this);
+			intro.render(gl, this);
 			return;
 		}
 
