@@ -537,7 +537,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			p.unmarshall(bytes, 0, bytes.length);
 			p.setDataPosition(0);
 			bundle = p.readBundle(FreebloksActivity.class.getClassLoader());
-
+			p.recycle();
+			
 			deleteFile(GAME_STATE_FILE);
 			
 			if (readStateFromBundle(bundle)) {
@@ -565,6 +566,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			fos.write(p.marshall());
 			fos.flush();
 			fos.close();
+			p.recycle();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

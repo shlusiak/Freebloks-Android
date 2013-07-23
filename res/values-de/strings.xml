@@ -17,17 +17,16 @@
     <string name="connection_refused">Verbindung abgelehnt</string>
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
     <string name="do_you_want_to_leave_current_game">Aktuelles Spiel abbrechen?</string>
+    <string name="disconnect_error">Verbindung getrennt: %1$s. Du bist jetzt offline.</string>
     
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>
     <string name="waiting_for_color">Warte auf %1$s</string>
     <string name="color_is_out_of_moves">%1$s hat keine Züge mehr</string>
-    <string name="player_status_points">%1$d Punkte</string>
     <string name="player_status_moves">%1$d Züge</string>
-    <string name="touch_to_skip">intro überspringen</string>
+    <string name="touch_to_skip">Intro überspringen</string>
     <string name="no_player">kein Spieler</string>
     <string name="not_connected">nicht verbunden</string>
-    <string name="game_over">Spiel vorbei</string>
     <string name="your_turn">Du bist dran, %1$s!</string>
     <string name="difficulty">Schwierigkeitsgrad</string>
     <string name="start">Start</string>
@@ -36,7 +35,7 @@
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Spieler</string>
     <string name="chat">Chat</string>
-    <string name="join_address">Server:</string>
+    <string name="join_server_address">Server:</string>
     <string name="join_player_name">Name:</string>
     <string name="client_d">Spieler %1$d</string>
     <string name="player_joined_color">%1$s spielt %2$s</string>

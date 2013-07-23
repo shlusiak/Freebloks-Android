@@ -135,21 +135,13 @@
             android:id="@+id/difficulty_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-            
-	        <SeekBar
-	            android:id="@+id/difficulty"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_below="@+id/difficulty_label"
-	            android:max="10" />
-	
+
 	        <TextView
 	            android:id="@+id/textView2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
-	            android:layout_below="@+id/linearLayout1"
+	            android:layout_alignParentTop="true"
 	            android:layout_marginTop="8dp"
 	            android:text="@string/difficulty"
 	            android:textAppearance="?android:attr/textAppearanceMedium"
@@ -164,6 +156,15 @@
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceSmall"
 	            android:typeface="monospace" />
+            
+	        <SeekBar
+	            android:id="@+id/difficulty"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_below="@+id/difficulty_label"
+	            android:max="10" />
+	
 		</RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
