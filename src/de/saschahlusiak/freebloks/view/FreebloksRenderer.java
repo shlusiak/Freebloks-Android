@@ -11,8 +11,8 @@ import android.opengl.GLU;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.view.BackgroundRenderer.Theme;
 import de.saschahlusiak.freebloks.view.effects.Effect;
+import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
@@ -41,7 +41,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.model = model;
 		mAngleX = 70.0f;
 		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
-		backgroundRenderer = new BackgroundRenderer();
+		backgroundRenderer = new BackgroundRenderer(context.getResources());
 		
 		backgroundRenderer.setTheme(Theme.get("blue", false));
 	}
@@ -90,7 +90,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		if (model.intro != null) {
-			backgroundRenderer.render(context.getResources(), gl);
+			backgroundRenderer.render(gl);
 			model.intro.render(gl, this);
 			return;
 		}
@@ -122,7 +122,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		
 		/* render board */
 		gl.glRotatef(boardAngle, 0, 1, 0);
-		backgroundRenderer.render(context.getResources(), gl);
+		backgroundRenderer.render(gl);
 		model.board.render(this, gl);
 		
 		if (model.spiel == null)
@@ -242,6 +242,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
 		board.updateTexture(context, gl);
-		backgroundRenderer.updateTexture(context.getResources(), gl);
+		backgroundRenderer.updateTexture(gl);
 	}
 }
