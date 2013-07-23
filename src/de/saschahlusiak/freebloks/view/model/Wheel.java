@@ -262,7 +262,7 @@ public class Wheel implements ViewElement {
 			while (angle > 180.0f)
 				angle -= 360.0f;
 
-			alpha = 0.8f / (1.0f + Math.abs(angle) / 47.0f);
+			alpha = 0.95f / (1.0f + Math.abs(angle) / 47.0f);
 			if (model.currentStone.stone != null)
 				alpha *= 0.7f;
 			if (!moves_left && !model.spiel.is_finished())
