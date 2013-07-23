@@ -1062,8 +1062,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					}
 			if (lastStatus.isAdvanced() && lastStatus.client_names[c.client] != null)
 				name = lastStatus.client_names[c.client];
-			else if (player >= 0)
-				name = getResources().getStringArray(R.array.color_names)[player];
 			else
 				name = getString(R.string.client_d, c.client);
 		} else {
