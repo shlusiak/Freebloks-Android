@@ -98,6 +98,8 @@
 	<string-array name="theme_labels">
         <item>Black</item>
         <item>Blue</item>
+        <item>Cloth with flowers</item>
+        <item>Cloth with stripes</item>
         <item>Wood</item>
         <item>Metal</item>
         <item>Bricks</item>
@@ -105,6 +107,8 @@
     <string-array name="theme_values" translatable="false" >
         <item>black</item>
         <item>blue</item>
+        <item>texture_table_cloth_1</item>
+        <item>texture_table_cloth_2</item>
         <item>texture_wood</item>
         <item>texture_metal</item>
         <item>texture_bricks</item>
@@ -137,5 +141,5 @@
 	<string name="prefs_donation">Donate...</string>
 	<string name="prefs_player_name">Player name</string>
 	<string name="prefs_player_name_default">[default]</string>
-	<string name="prefs_theme">Theme</string>
+	<string name="prefs_theme">Background</string>
 </resources>
