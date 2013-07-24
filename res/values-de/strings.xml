@@ -98,6 +98,8 @@
 	<string-array name="theme_labels">
         <item>Schwarz</item>
         <item>Blau</item>
+        <item>Tischdecke mit Blumenmuster</item>
+        <item>Karierte Tischdecke</item>
         <item>Holz</item>
         <item>Metall</item>
         <item>Ziegelsteine</item>
