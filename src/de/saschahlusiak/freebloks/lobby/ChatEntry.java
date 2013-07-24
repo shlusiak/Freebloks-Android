@@ -16,10 +16,7 @@ public class ChatEntry implements Serializable {
 	public ChatEntry(int client, String text, String name) {
 		this.client = client;
 		this.text = text;
-		if (name != null)
-			this.name = name;
-		else
-			name = "Client " + client;
+		this.name = name;
 		
 		player = -1;
 	}
@@ -29,7 +26,7 @@ public class ChatEntry implements Serializable {
 	}
 	
 	int getColor() {
-		final int extra_colors[] = { Color.CYAN, Color.WHITE, Color.MAGENTA, Color.LTGRAY };
+		final int extra_colors[] = { Color.CYAN, Color.MAGENTA, Color.LTGRAY, Color.WHITE };
 
 		if (player < 0)
 			return extra_colors[client % extra_colors.length];
