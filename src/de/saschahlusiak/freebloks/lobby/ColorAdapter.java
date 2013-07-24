@@ -78,10 +78,7 @@ public class ColorAdapter extends BaseAdapter {
 		if (lastStatus.isAdvanced()) {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */
-				if (lastStatus.client_names[lastStatus.spieler[position]] == null)
-					t.setText(context.getString(R.string.client_d, lastStatus.spieler[position]));
-				else
-					t.setText(lastStatus.client_names[lastStatus.spieler[position]]);
+				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
 		        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[position]);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);

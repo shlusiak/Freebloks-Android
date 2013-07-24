@@ -1063,16 +1063,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						player = i;
 						break;
 					}
-			if (lastStatus.isAdvanced() && lastStatus.client_names[c.client] != null)
-				name = lastStatus.client_names[c.client];
-			else
-				name = getString(R.string.client_d, c.client);
+			name = lastStatus.getClientName(getResources(), c.client);
 		} else {
 			/* if we have advanced status, ignore all server messages (c == -1) */
 			/* server messages are generated in serverStatus */
 			if (lastStatus != null && lastStatus.isAdvanced())
 				return;
-			name = getString(R.string.client_d, c.client);
+			name = getString(R.string.client_d, c.client + 1);
 		}
 			
 		ChatEntry e = new ChatEntry(c.client, c.text, name);
@@ -1124,7 +1121,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			
 			for (int i = 0; i < lastStatus.spieler.length; i++) {
 				NET_SERVER_STATUS s;
-				int client;
 				final int tid;
 				if (lastStatus.spieler[i] < 0 && status.spieler[i] >= 0) {
 					/* joined */
@@ -1136,11 +1132,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					tid = R.string.player_left_color;
 				} else continue;
 				String name;
-				client = s.spieler[i];
-				if (s.client_names[client] != null)
-					name = s.client_names[client];
-				else
-					name = getString(R.string.client_d, s.spieler[i]);
+				name = s.getClientName(getResources(), s.spieler[i]);
 				
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[i]); 
 				ChatEntry e = new ChatEntry(-1, text, name);
