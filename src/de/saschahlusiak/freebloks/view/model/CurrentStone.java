@@ -23,7 +23,9 @@ public class CurrentStone implements ViewElement {
 	
 	Stone stone;
 	PointF pos = new PointF();
-	boolean hasMoved, isValid;
+	boolean hasMoved; /* has the stone been moved since it was touched? */
+	boolean canCommit; /* is the stone commitable if it has not been moved? */
+	boolean isValid;
 	float stone_rel_x, stone_rel_y;
 	float rotate_angle;
 	int texture[];
@@ -268,6 +270,7 @@ public class CurrentStone implements ViewElement {
 	synchronized public boolean handlePointerDown(PointF m) {
 		status = Status.IDLE;
 		hasMoved = false;
+		canCommit = true;
 		if (stone != null) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
@@ -418,17 +421,17 @@ public class CurrentStone implements ViewElement {
 			if (!model.vertical_layout)
 				fieldPoint.y = model.spiel.m_field_size_x - fieldPoint.x - 1;
 			
-			if (fieldPoint.y < -2.0f) {
+			if (fieldPoint.y < -2.0f && hasMoved) {
 				model.wheel.highlightStone = stone;
 				status = Status.IDLE;
 				stone = null;
-			} else	if (!hasMoved) {
+			} else	if (canCommit && !hasMoved) {
 				if (model.activity.commitCurrentStone(stone, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f))) {
 					status = Status.IDLE;
 					stone = null;
 					model.wheel.highlightStone = null;
 				}
-			} else {
+			} else if (hasMoved) {
 				snap(x, y, false);
 			}
 		}
@@ -470,13 +473,13 @@ public class CurrentStone implements ViewElement {
 		}
 
 		status = Status.DRAGGING;
-		/* FIXME: this actually prevents simple changing of the stone from a tap on the wheel,
-		 * but leaving this at false will commit the stone, if it has not been moved */
-		hasMoved = true;
+
+		hasMoved = false;
+		canCommit = false;
 		stone_rel_x = 0;
 		stone_rel_y = 0;
+		
 		if (fieldPoint != null) {
-			
 			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
 			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
 	
