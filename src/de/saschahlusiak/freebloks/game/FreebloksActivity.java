@@ -1072,9 +1072,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			name = getString(R.string.client_d, c.client + 1);
 		}
 			
-		ChatEntry e = new ChatEntry(c.client, c.text, name);
+		final ChatEntry e = new ChatEntry(c.client, c.text, name);
 		e.setPlayer(player);
-		chatEntries.add(e);
 		
 		if (!view.model.spiel.is_local_player(player))
 			view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
@@ -1082,6 +1081,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				chatEntries.add(e);
 				if (c.client == -1)
 					Toast.makeText(FreebloksActivity.this, "* " + c.text,
 							Toast.LENGTH_LONG).show();
@@ -1135,9 +1135,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				name = s.getClientName(getResources(), s.spieler[i]);
 				
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[i]); 
-				ChatEntry e = new ChatEntry(-1, text, name);
+				final ChatEntry e = new ChatEntry(-1, text, name);
 				e.setPlayer(i);
-				chatEntries.add(e);
 			
 				if (!view.model.spiel.is_local_player(i))
 					view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
@@ -1145,6 +1144,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						chatEntries.add(e);
 						/* only show toast on "left" */
 						if (tid == R.string.player_left_color)
 							Toast.makeText(FreebloksActivity.this, "* " + text, Toast.LENGTH_LONG).show();
