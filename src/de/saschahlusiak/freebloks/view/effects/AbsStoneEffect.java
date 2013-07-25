@@ -36,37 +36,7 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 		
 		return true;			
 	}
-	
-	public void renderShadow(GL10 gl, BoardRenderer renderer, 
-			float height,
-			float ang, float ax, float ay, float az,
-			float alpha, float scale) {
-	    gl.glDisable(GL10.GL_DEPTH_TEST);
-	    
-	    gl.glScalef(scale, 0.01f, scale);
-
-	    
-		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		float m_alpha = 0.65f - height / 19.0f;
-	    gl.glTranslatef(-2.5f * height * 0.11f, 0, 2.0f * height * 0.11f);
-
-	    gl.glTranslatef(
-	    		BoardRenderer.stone_size * offset,
-	    		0,
-	    		BoardRenderer.stone_size * offset);
-		gl.glRotatef(ang, ax, ay, az);
-
-	    gl.glScalef(1.0f + height / 16.0f, 1, 1.0f + height / 16.0f);
-
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * offset,
-	    		0,
-	    		-BoardRenderer.stone_size * offset);
-	    
-		renderer.renderStoneShadow(gl, player, stone, m_alpha * alpha);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-	}
-	
+		
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
 		
