@@ -287,7 +287,7 @@ public class CurrentStone implements ViewElement {
 			stone_rel_y = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
 			
 //			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
-			if ((Math.abs(stone_rel_x) <= overlay_radius + 1.0f) && (Math.abs(stone_rel_y) <= overlay_radius + 2.0f)) {
+			if ((Math.abs(stone_rel_x) <= overlay_radius + 3.0f) && (Math.abs(stone_rel_y) <= overlay_radius + 3.0f)) {
 				if ((Math.abs(stone_rel_x) > overlay_radius - 1.5f) && (Math.abs(stone_rel_y) < 2.5f) ||
 					(Math.abs(stone_rel_x) < 2.5f) && (Math.abs(stone_rel_y) > overlay_radius - 1.5f)) {
 					status = Status.ROTATING;
