@@ -63,7 +63,7 @@
 	    <EditText
 	        android:id="@+id/chatText"
 	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:layout_weight="1"
 	        android:imeOptions="actionSend|flagNoExtractUi"
 	        android:inputType="textNoSuggestions|textCapSentences"
@@ -75,13 +75,13 @@
   		<ImageButton
 	        android:id="@+id/chatButton"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:src="@android:drawable/ic_menu_send" />
 	
 	    <Button
 	        android:id="@+id/startButton"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:text="@string/start"
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
         
