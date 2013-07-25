@@ -46,6 +46,7 @@ public class StoneUndoEffect extends AbsStoneEffect {
 				stone, player,
 				z,
 				rot, 0, 1, 0,
+				90 * model.board.centerPlayer,
 				alpha, 1.0f);
 		
 		gl.glPopMatrix();

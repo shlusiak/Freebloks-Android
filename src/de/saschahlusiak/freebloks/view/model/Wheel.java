@@ -33,6 +33,8 @@ public class Wheel implements ViewElement {
 	private Timer timer = new Timer();
 	private TimerTask task;
 	
+	private static final float stone_spacing = 5.5f * BoardRenderer.stone_size * 2.0f;
+	
 	public Wheel(ViewModel model) {
 		this.model = model;
 		stones = new ArrayList<Stone>();
@@ -60,12 +62,10 @@ public class Wheel implements ViewElement {
 		this.currentPlayer = player;
 	}
 	
-	private void rotateTo(int column) {
-		lastOffset = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + (float)column - 1.5f) * 17.0f;
-		while (lastOffset > 180)
-			lastOffset -= 360.0f;
-		while (lastOffset < -180)
-			lastOffset += 360.0f;
+	private void rotateTo(int column) {	
+		lastOffset = (float)column * stone_spacing;
+		if (!model.showAnimations)
+			currentOffset = lastOffset;
 	}
 	
 	private int getStonePositionInWheel(int stone) {
@@ -118,13 +118,8 @@ public class Wheel implements ViewElement {
 		if (tmp.y > 0)
 			return false;
 		
-		/* TODO: remove or understand magic numbers */
 		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
-		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 5.5f + 5.3f + lastOffset / 17.0f);
-
-//		Log.d(tag, "currentWheelAngle = " + originalAngle);
-//		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
-//		Log.d(tag, "row " + row + ", col " + col);
+		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f + lastOffset) / stone_spacing + 0.5f);
 		
 		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
 			spinning = true;
@@ -143,23 +138,25 @@ public class Wheel implements ViewElement {
 			if (task != null)
 				task.cancel();
 			if (model.currentStone.stone != null && model.currentStone.stone != highlightStone) {
+				/* TODO: this has no effect but we'd like to spin the wheel to the
+				 * current position even when spinning == true
+				 */
+				showStone(highlightStone.get_number());
 				model.currentStone.startDragging(null, highlightStone);
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 			} else timer.schedule(task = new TimerTask() {
-				
 				@Override
 				public void run() {
 					if (!spinning)
 						return;
 					if (highlightStone == null)
 						return;
-					if (Math.abs(currentOffset - lastOffset) > 10.0f)
+					if (Math.abs(currentOffset - lastOffset) > 5.0f)
 						return;
 					if (!model.spiel.is_local_player())
 						return;
 					
 					handler.post(new Runnable() {
-						
 						@Override
 						public void run() {
 							if (highlightStone == null)
@@ -168,11 +165,9 @@ public class Wheel implements ViewElement {
 							tmp.y = m.y;
 							model.board.modelToBoard(tmp);
 							
-							Log.d(tag, "timer expire, start moving stone");
 							if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 								model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
-							if (!model.showAnimations)
-								currentOffset = lastOffset;
+							showStone(highlightStone.get_number());
 							model.currentStone.startDragging(tmp, highlightStone);
 							model.board.resetRotation();
 							spinning = false;
@@ -205,13 +200,13 @@ public class Wheel implements ViewElement {
 		}
 		
 		/* everything underneath row 0 spins the wheel */
-		float offset = 8.0f * (originalX - tmp.x);
+		float offset = (originalX - tmp.x) * 2.0f;
 		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 3.0f);
 		currentOffset += offset;
-		while (currentOffset > 180)
-			currentOffset -= 360.0f;
-		while (currentOffset < -180)
-			currentOffset += 360.0f;
+		if (currentOffset < 0.0f)
+			currentOffset = 0.0f;
+		if (currentOffset > (float)((stones.size() - 1)/ 2) * stone_spacing)
+			currentOffset = (float)((stones.size() - 1)/ 2) * stone_spacing;
 
 		originalX = tmp.x;
 
@@ -220,24 +215,20 @@ public class Wheel implements ViewElement {
 			return true;
 		}
 
-		if (Math.abs(currentOffset - lastOffset) >= 90.0f) {
+		if (Math.abs(currentOffset - lastOffset) >= 5.0f) {
 			highlightStone = null;
 		}
 
 		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
-			if (Math.abs(currentOffset - lastOffset) < 90.0f) {
-//				model.activity.vibrate_on_move(Global.VIBRATE_START_DRAGGING);
-				tmp.x = m.x;
-				tmp.y = m.y;
-				model.board.modelToBoard(tmp);
-				if (!model.showAnimations)
-					currentOffset = lastOffset;
-				if (model.currentStone.stone != highlightStone)
-					model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
-				model.currentStone.startDragging(tmp, highlightStone);
-				spinning = false;
-				model.board.resetRotation();
-			}
+			tmp.x = m.x;
+			tmp.y = m.y;
+			model.board.modelToBoard(tmp);
+			showStone(highlightStone.get_number());
+			if (model.currentStone.stone != highlightStone)
+				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
+			model.currentStone.startDragging(tmp, highlightStone);
+			spinning = false;
+			model.board.resetRotation();
 		}
 		return true;
 	}
@@ -256,62 +247,58 @@ public class Wheel implements ViewElement {
 	}	
 
 	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
-		final float da = 17.0f;
-		float angle = currentOffset + 9.5f * 0.5f * da;
-		
 		if (model.spiel == null)
-			return;		
+			return;
 
-		gl.glTranslatef(0, -BoardRenderer.stone_size * 33.0f, 0);
-		gl.glRotatef(currentOffset, 0, 0, 1);
-		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
-		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
-		gl.glScalef(1.1f, 1.1f, 1.1f);
-		gl.glPushMatrix();
+		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
 		for (int i = 0; i < stones.size(); i++) {
-			Stone s = stones.get(i);
-			
-			float alpha = 1.0f;
-			while (angle < -180f)
-				angle += 360.0f;
-			while (angle > 180.0f)
-				angle -= 360.0f;
-
-			alpha = 0.95f / (1.0f + Math.abs(angle) / 47.0f);
-			if (model.currentStone.stone != null)
-				alpha *= 0.7f;
-			if (!moves_left && !model.spiel.is_finished())
-				alpha *= 0.65f;
+			Stone s = stones.get(i);			
 
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+				final float col = i / 2;
+				final float row = i % 2;
+				final float offset = (float)(s.get_stone_size()) - 1.0f;
+
+				final float x = col * stone_spacing;
+				final float effect = 7.5f / (7.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.6f, 2.0f)); 
+				float y = 0.3f + effect * 0.7f;
+				final float z = row * stone_spacing;
+				
+				float alpha = 1.0f;
+				
+				if (highlightStone == s)
+					y += 1.5f;
+
+				if (!moves_left && !model.spiel.is_finished())
+					alpha *= 0.65f;
+				alpha *= 0.5f + effect * 0.5f;
+
 				gl.glPushMatrix();
+				gl.glTranslatef(x, 0, z);
+
 				gl.glRotatef(90 * model.board.centerPlayer, 0, 1, 0);
 				if (!model.vertical_layout)
 					gl.glRotatef(-90.0f, 0, 1, 0);
-				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
+
+				final float scale = 0.9f + effect * 0.3f;
+				gl.glScalef(scale, scale, scale);
+				gl.glTranslatef(-offset * BoardRenderer.stone_size, 0, -offset * BoardRenderer.stone_size);
+				gl.glPushMatrix();
+				renderer.board.renderShadow(gl, s, currentPlayer, y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
+				gl.glPopMatrix();
+
+				gl.glTranslatef(0, y, 0);
 				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : currentPlayer, s, alpha);
 				gl.glPopMatrix();
 			}
-			
-			if (i % 2 == 0) {
-				gl.glTranslatef(0, 0, BoardRenderer.stone_size * 2.0f * 5.1f);
-			} else {
-				gl.glPopMatrix();
-				gl.glTranslatef(BoardRenderer.stone_size * 2.0f * 5.1f, 0, 0);
-				gl.glRotatef(-da, 0, 0, 1);
-				angle -= da;
-				gl.glPushMatrix();
-			}
 		}
-		
-		gl.glPopMatrix();
 	}
 
 	@Override
 	public boolean execute(float elapsed) {
-		final float EPSILON = 1.0f;
+		final float EPSILON = 0.5f;
 		if (spinning == false && (Math.abs(currentOffset - lastOffset) > EPSILON)) {
-			final float ROTSPEED = 10.0f + (float)Math.pow(Math.abs(currentOffset - lastOffset), 0.65f) * 15.0f;
+			final float ROTSPEED = 3.0f + (float)Math.pow(Math.abs(currentOffset - lastOffset), 0.65f) * 7.0f;
 
 			if (!model.showAnimations) {
 				currentOffset = lastOffset;

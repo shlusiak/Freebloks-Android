@@ -339,20 +339,27 @@ public class BoardRenderer {
 			Stone stone, int player,
 			float height,
 			float ang, float ax, float ay, float az,
+			float light_angle,
 			float alpha, float scale) {
 	    gl.glDisable(GL10.GL_DEPTH_TEST);
 	    
-	    gl.glScalef(scale, 0.01f, scale);
 
 	    
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
 		float m_alpha = 0.65f - height / 19.0f;
-	    gl.glTranslatef(-2.5f * height * 0.11f, 0, 2.0f * height * 0.11f);
+		
+		/* TODO: remove this and always show the board at the exact same angle,
+		 * so we always have light coming from top left */
+		gl.glRotatef(-light_angle, 0, 1, 0);
+	    gl.glTranslatef(2.5f * height * 0.08f, 0, 2.0f * height * 0.08f);
+		gl.glRotatef(light_angle, 0, 1, 0);
 
 	    gl.glTranslatef(
 	    		BoardRenderer.stone_size * offset,
 	    		0,
 	    		BoardRenderer.stone_size * offset);
+	    gl.glScalef(scale, 0.01f, scale);
+
 		gl.glRotatef(ang, ax, ay, az);
 
 	    gl.glScalef(1.0f + height / 16.0f, 1, 1.0f + height / 16.0f);

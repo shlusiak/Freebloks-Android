@@ -82,6 +82,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 				stone, player,
 				z, 
 				r, ax, ay, az,
+				90 * model.board.centerPlayer,
 				1.0f, 1.0f);
 		
 		gl.glPopMatrix();

@@ -282,7 +282,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				try {
 					Thread.sleep(delay);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 					break;
 				}
 				tmp = System.currentTimeMillis();

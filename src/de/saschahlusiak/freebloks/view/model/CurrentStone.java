@@ -113,7 +113,12 @@ public class CurrentStone implements ViewElement {
 				0,
 				BoardRenderer.stone_size * offset);
 		
-	    gl.glTranslatef(-2.5f * hover_height * 0.11f, 0, 2.0f * hover_height * 0.11f);
+		/* TODO: remove this and always show the board at the exact same angle,
+		 * so we always have light coming from top left */
+		/* TODO: merge with BoardRenderer.renderShadow() */
+		gl.glRotatef(-model.board.centerPlayer * 90, 0, 1, 0);
+	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
+		gl.glRotatef(model.board.centerPlayer * 90, 0, 1, 0);
 		
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
