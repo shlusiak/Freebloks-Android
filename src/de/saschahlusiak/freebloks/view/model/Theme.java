@@ -83,19 +83,19 @@ public class Theme {
 			t.setRGB(0.05f, 0.10f, 0.25f);
 		} else if (theme.equals("texture_table_cloth_1")) {
 			t.setDrawable(R.drawable.texture_table_1);
-			t.setRGB(0.7f, 0.7f, 0.7f);
+			t.setRGB(0.8f, 0.8f, 0.8f);
 		} else if (theme.equals("texture_table_cloth_2")) {
 			t.setDrawable(R.drawable.texture_table_2);
 			t.setRGB(0.7f, 0.7f, 0.7f);
 		} else if (theme.equals("texture_wood")) {
 			t.setDrawable(R.drawable.texture_wood_fine);
-			t.setRGB(0.45f, 0.45f, 0.45f);
+			t.setRGB(0.7f, 0.7f, 0.7f);
 		} else if (theme.equals("texture_metal")) {
 			t.setDrawable(R.drawable.texture_metal);
-			t.setRGB(0.55f, 0.55f, 0.55f);
+			t.setRGB(0.8f, 0.8f, 0.8f);
 		} else if (theme.equals("texture_bricks")) {
 			t.setDrawable(R.drawable.texture_bricks);
-			t.setRGB(0.6f, 0.6f, 0.6f);
+			t.setRGB(0.85f, 0.85f, 0.85f);
 		}
 
 		return t;
