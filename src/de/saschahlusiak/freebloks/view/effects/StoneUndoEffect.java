@@ -42,7 +42,8 @@ public class StoneUndoEffect extends AbsStoneEffect {
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * y);
 
-		renderShadow(gl, renderer, 
+		renderer.renderShadow(gl, 
+				stone, player,
 				z,
 				rot, 0, 1, 0,
 				alpha, 1.0f);
