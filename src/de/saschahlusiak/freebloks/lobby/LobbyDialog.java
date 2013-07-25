@@ -47,7 +47,11 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		super(context, true, cancelListener);
 		setContentView(R.layout.lobby_dialog);
 
-		getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
+		/* to make sure we have enough real estate. not neccessary on xlarge displays */
+		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) != 
+		        Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+			getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
+		}
 		
 		colorGrid = (GridView)findViewById(R.id.color_grid);
 		colorAdapter = new ColorAdapter(getContext(), null, null);
