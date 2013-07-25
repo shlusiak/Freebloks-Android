@@ -18,26 +18,26 @@ import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 public class Wheel implements ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
 	
-	Stone highlightStone;
-	float currentAngle = 0.0f;
-	float lastAngle;
-	float originalX, originalY;
-	boolean spinning = false;
-	ArrayList<Stone> stones;
-	private int lastPlayer; /* the last shown player */
-	ViewModel model;
-	boolean moves_left;
+	private Stone highlightStone;
+	private float currentOffset;
+	private float lastOffset;
+	private float originalX, originalY;
+	private boolean spinning = false;
+	private ArrayList<Stone> stones;
+	private int currentPlayer; /* the currently shown player */
+	private ViewModel model;
+	private boolean moves_left;
+	
+	private PointF tmp = new PointF();
+	private Handler handler = new Handler();
+	private Timer timer = new Timer();
+	private TimerTask task;
 	
 	public Wheel(ViewModel model) {
 		this.model = model;
 		stones = new ArrayList<Stone>();
-		lastPlayer = -1;
+		currentPlayer = -1;
 	}
-	
-	PointF tmp = new PointF();
-	Handler handler = new Handler();
-	Timer timer = new Timer();
-	TimerTask task;
 	
 	public synchronized void update(int player) {
 		stones.clear();
@@ -57,35 +57,50 @@ public class Wheel implements ViewElement {
 		if (stones.size() > 0)
 			rotateTo((stones.size() + 1) / 2 - 2);
 		
-		this.lastPlayer = player;
+		this.currentPlayer = player;
 	}
 	
-	public void rotateTo(int column) {
-		lastAngle = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + (float)column - 1.5f) * 17.0f;
-		while (lastAngle > 180)
-			lastAngle -= 360.0f;
-		while (lastAngle < -180)
-			lastAngle += 360.0f;
+	private void rotateTo(int column) {
+		lastOffset = (((float) model.spiel.m_field_size_x / 2.0f) / 5.5f - 5.3f + (float)column - 1.5f) * 17.0f;
+		while (lastOffset > 180)
+			lastOffset -= 360.0f;
+		while (lastOffset < -180)
+			lastOffset += 360.0f;
 	}
 	
-	public int getStonePosition(int stone) {
+	private int getStonePositionInWheel(int stone) {
 		for (int i = 0; i < stones.size(); i++)
 			if (stones.get(i).get_number() == stone)
 				return i;
 		return 0;
 	}
-
-	public final int getLastPlayer() {
-		return lastPlayer;
+	
+	/* makes sure the given stone is visible in the wheel */
+	public void showStone(int stone) {
+		rotateTo(getStonePositionInWheel(stone) / 2);
 	}
-		
+
+	/* returns the player number currently shown in the wheel (aka. last call of update) */
+	public final int getCurrentPlayer() {
+		return this.currentPlayer;
+	}
+	
+	/* returns the currently highlighted stone in the wheel */
+	public Stone getCurrentStone() {
+		return this.highlightStone;
+	}
+
+	public void setCurrentStone(Stone stone) {
+		this.highlightStone = stone;
+	}
+
 	@Override
 	synchronized public boolean handlePointerDown(final PointF m) {
 		spinning = false;
 		if (model.spiel == null)
 			return false;
 		
-		lastAngle = currentAngle;
+		lastOffset = currentOffset;
 		
 		tmp.x = m.x;
 		tmp.y = m.y;
@@ -105,13 +120,13 @@ public class Wheel implements ViewElement {
 		
 		/* TODO: remove or understand magic numbers */
 		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
-		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 5.5f + 5.3f + lastAngle / 17.0f);
+		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f) / 5.5f + 5.3f + lastOffset / 17.0f);
 
 //		Log.d(tag, "currentWheelAngle = " + originalAngle);
 //		Log.d(tag, "unified coordinates (" + tmp.x + ", " + tmp.y + ")");
 //		Log.d(tag, "row " + row + ", col " + col);
 		
-		if (!model.spiel.is_local_player() || model.spiel.current_player() != lastPlayer) {
+		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
 			spinning = true;
 			return true;
 		}
@@ -138,7 +153,7 @@ public class Wheel implements ViewElement {
 						return;
 					if (highlightStone == null)
 						return;
-					if (Math.abs(currentAngle - lastAngle) > 10.0f)
+					if (Math.abs(currentOffset - lastOffset) > 10.0f)
 						return;
 					if (!model.spiel.is_local_player())
 						return;
@@ -157,7 +172,7 @@ public class Wheel implements ViewElement {
 							if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 								model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 							if (!model.showAnimations)
-								currentAngle = lastAngle;
+								currentOffset = lastOffset;
 							model.currentStone.startDragging(tmp, highlightStone);
 							model.board.resetRotation();
 							spinning = false;
@@ -192,31 +207,31 @@ public class Wheel implements ViewElement {
 		/* everything underneath row 0 spins the wheel */
 		float offset = 8.0f * (originalX - tmp.x);
 		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 3.0f);
-		currentAngle += offset;
-		while (currentAngle > 180)
-			currentAngle -= 360.0f;
-		while (currentAngle < -180)
-			currentAngle += 360.0f;
+		currentOffset += offset;
+		while (currentOffset > 180)
+			currentOffset -= 360.0f;
+		while (currentOffset < -180)
+			currentOffset += 360.0f;
 
 		originalX = tmp.x;
 
 		model.redraw = true;
-		if (!model.spiel.is_local_player() || model.spiel.current_player() != lastPlayer) {
+		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
 			return true;
 		}
 
-		if (Math.abs(currentAngle - lastAngle) >= 90.0f) {
+		if (Math.abs(currentOffset - lastOffset) >= 90.0f) {
 			highlightStone = null;
 		}
 
 		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
-			if (Math.abs(currentAngle - lastAngle) < 90.0f) {
+			if (Math.abs(currentOffset - lastOffset) < 90.0f) {
 //				model.activity.vibrate_on_move(Global.VIBRATE_START_DRAGGING);
 				tmp.x = m.x;
 				tmp.y = m.y;
 				model.board.modelToBoard(tmp);
 				if (!model.showAnimations)
-					currentAngle = lastAngle;
+					currentOffset = lastOffset;
 				if (model.currentStone.stone != highlightStone)
 					model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 				model.currentStone.startDragging(tmp, highlightStone);
@@ -233,7 +248,7 @@ public class Wheel implements ViewElement {
 			task.cancel();
 		task = null;
 		if (spinning) {
-			lastAngle = currentAngle;
+			lastOffset = currentOffset;
 			spinning = false;
 			return true;
 		}
@@ -242,13 +257,13 @@ public class Wheel implements ViewElement {
 
 	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		final float da = 17.0f;
-		float angle = currentAngle + 9.5f * 0.5f * da;
+		float angle = currentOffset + 9.5f * 0.5f * da;
 		
 		if (model.spiel == null)
 			return;		
 
 		gl.glTranslatef(0, -BoardRenderer.stone_size * 33.0f, 0);
-		gl.glRotatef(currentAngle, 0, 0, 1);
+		gl.glRotatef(currentOffset, 0, 0, 1);
 		gl.glTranslatef(-BoardRenderer.stone_size * 5.1f * 6.5f, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
 		gl.glRotatef(9.5f * 0.5f * da, 0, 0, 1);
 		gl.glScalef(1.1f, 1.1f, 1.1f);
@@ -274,7 +289,7 @@ public class Wheel implements ViewElement {
 				if (!model.vertical_layout)
 					gl.glRotatef(-90.0f, 0, 1, 0);
 				gl.glTranslatef(-s.get_stone_size() * BoardRenderer.stone_size, 0, -s.get_stone_size() * BoardRenderer.stone_size);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : lastPlayer, s, alpha);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : currentPlayer, s, alpha);
 				gl.glPopMatrix();
 			}
 			
@@ -295,21 +310,21 @@ public class Wheel implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		final float EPSILON = 1.0f;
-		if (spinning == false && (Math.abs(currentAngle - lastAngle) > EPSILON)) {
-			final float ROTSPEED = 10.0f + (float)Math.pow(Math.abs(currentAngle - lastAngle), 0.65f) * 15.0f;
+		if (spinning == false && (Math.abs(currentOffset - lastOffset) > EPSILON)) {
+			final float ROTSPEED = 10.0f + (float)Math.pow(Math.abs(currentOffset - lastOffset), 0.65f) * 15.0f;
 
 			if (!model.showAnimations) {
-				currentAngle = lastAngle;
+				currentOffset = lastOffset;
 				return true;
 			}
-			if (currentAngle < lastAngle) {
-				currentAngle += elapsed * ROTSPEED;
-				if (currentAngle > lastAngle)
-					currentAngle = lastAngle;
+			if (currentOffset < lastOffset) {
+				currentOffset += elapsed * ROTSPEED;
+				if (currentOffset > lastOffset)
+					currentOffset = lastOffset;
 			} else {
-				currentAngle -= elapsed * ROTSPEED;
-				if (currentAngle < lastAngle)
-					currentAngle = lastAngle;				
+				currentOffset -= elapsed * ROTSPEED;
+				if (currentOffset < lastOffset)
+					currentOffset = lastOffset;				
 			}
 			return true;
 		}
