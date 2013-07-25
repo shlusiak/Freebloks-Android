@@ -149,7 +149,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		if (model.spiel.is_local_player() || model.wheel.getLastPlayer() != model.board.getShowWheelPlayer())
+		if (model.spiel.is_local_player() || model.wheel.getCurrentPlayer() != model.board.getShowWheelPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 		requestRender();
 	}
@@ -170,7 +170,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 	
 	public void stoneHasBeenSet(NET_SET_STONE s) {
-		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getLastPlayer())
+		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getCurrentPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 
 		requestRender();
@@ -185,7 +185,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		
 		model.board.resetRotation();
 		model.wheel.update(s.player);
-		model.wheel.rotateTo(model.wheel.getStonePosition(s.stone) / 2);
+		model.wheel.showStone(s.stone);
 
 		model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 		

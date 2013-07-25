@@ -179,7 +179,7 @@ public class Board implements ViewElement {
 		int s = getShowDetailsPlayer();
 		if (s < 0)
 			s = getShowWheelPlayer();
-		if (model.wheel.getLastPlayer() != s) {
+		if (model.wheel.getCurrentPlayer() != s) {
 			model.wheel.update(s);
 			model.activity.showPlayer(s);
 		}
@@ -225,7 +225,7 @@ public class Board implements ViewElement {
 			
 			updateDetailsPlayer();
 			int s = getShowWheelPlayer();
-			if (model.wheel.getLastPlayer() != s) {
+			if (model.wheel.getCurrentPlayer() != s) {
 				model.wheel.update(s);
 				model.activity.showPlayer(s);
 			}
@@ -233,7 +233,7 @@ public class Board implements ViewElement {
 		} else if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
 			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.65f) * 30.0f;
 
-			int lp = model.wheel.getLastPlayer();
+			int lp = model.wheel.getCurrentPlayer();
 			if (mAngleY - ta > 0.1f) {
 				mAngleY -= elapsed * SNAPSPEED;
 				if (mAngleY - ta <= 0.1f) {

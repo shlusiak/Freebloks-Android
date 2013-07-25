@@ -422,14 +422,14 @@ public class CurrentStone implements ViewElement {
 				fieldPoint.y = model.spiel.m_field_size_x - fieldPoint.x - 1;
 			
 			if (fieldPoint.y < -2.0f && hasMoved) {
-				model.wheel.highlightStone = stone;
+				model.wheel.setCurrentStone(stone);
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
 				if (model.activity.commitCurrentStone(stone, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f))) {
 					status = Status.IDLE;
 					stone = null;
-					model.wheel.highlightStone = null;
+					model.wheel.setCurrentStone(null);
 				}
 			} else if (hasMoved) {
 				snap(x, y, false);
