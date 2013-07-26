@@ -101,7 +101,6 @@
         <item>Cloth with flowers</item>
         <item>Cloth with stripes</item>
         <item>Wood</item>
-        <item>Metal</item>
         <item>Bricks</item>
     </string-array>
     <string-array name="theme_values" translatable="false" >
@@ -110,7 +109,6 @@
         <item>texture_table_cloth_1</item>
         <item>texture_table_cloth_2</item>
         <item>texture_wood</item>
-        <item>texture_metal</item>
         <item>texture_bricks</item>
 	</string-array>
 	
