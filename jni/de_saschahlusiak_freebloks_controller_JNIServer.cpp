@@ -2,10 +2,17 @@
 #include "config.h"
 #endif
 
+#include <unistd.h>
 #include "de_saschahlusiak_freebloks_controller_JNIServer.h"
 #include <pthread.h>
 #include "spielserver.h"
 
+
+JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_get_1number_1of_1processors
+  (JNIEnv *je, jclass jc)
+{
+	return sysconf(_SC_NPROCESSORS_CONF);
+}
 
 /**
  * Funktion kriegt einen CServerListener und wartet so lange, bis das Spiel gestartet wurde

@@ -3,6 +3,9 @@ package de.saschahlusiak.freebloks.controller;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class JNIServer {
+	/* unfortunately Runtime.availableProcessors() returns only the number of online cores */
+	public static native int get_number_of_processors();
+	
 	private static native int native_run_server(int game_mode, int field_size_x, int field_size_y, int ki_mode, int ki_threads);
 	
 	private static native int native_resume_server(
@@ -18,7 +21,7 @@ public class JNIServer {
 	
 	
 	public static void runServer(Spielleiter spiel, int game_mode, int field_size, int ki_mode) {
-		int ki_threads = Runtime.getRuntime().availableProcessors();
+		int ki_threads = get_number_of_processors();
 		
 		if (spiel == null)
 			native_run_server(game_mode, field_size, field_size, ki_mode, ki_threads);
