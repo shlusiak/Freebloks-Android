@@ -56,7 +56,7 @@
 		    android:key="show_animations" />
 		
 		<de.saschahlusiak.freebloks.preferences.ThemePreference
-	        android:defaultValue="blue"
+	        android:defaultValue="texture_wood"
 	        android:dialogTitle="@string/prefs_theme"
 	        android:entries="@array/theme_labels"
 	        android:entryValues="@array/theme_values"

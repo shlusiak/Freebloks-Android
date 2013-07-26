@@ -404,7 +404,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
 		/* TODO: maybe put theme in retained config and track for change using a name */
-		Theme t = Theme.get(prefs.getString("theme", "blue"), false);
+		Theme t = Theme.get(prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
 		
 		updateSoundMenuEntry();
