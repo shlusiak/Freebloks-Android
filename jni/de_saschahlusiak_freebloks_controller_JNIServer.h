@@ -7,6 +7,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_get_1number_1of_1processors
+  (JNIEnv *, jclass);
+
 /*
  * Class:     de_saschahlusiak_freebloks_controller_JNIServer
  * Method:    native_run_server
