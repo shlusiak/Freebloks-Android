@@ -64,6 +64,8 @@ public class Wheel implements ViewElement {
 	
 	private void rotateTo(int column) {	
 		lastOffset = (float)column * stone_spacing;
+		if (lastOffset < 0.0f)
+			lastOffset = 0.0f;
 		if (!model.showAnimations)
 			currentOffset = lastOffset;
 	}
