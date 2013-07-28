@@ -299,6 +299,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 	
 	public final void execute(float elapsed) {
+		if (elapsed < 0.001f)
+			elapsed = 0.001f;
 		if (model.execute(elapsed)) {
 			requestRender();
 		}
