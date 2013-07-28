@@ -126,6 +126,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			break;
 			
 		case MotionEvent.ACTION_POINTER_DOWN:
+			model.handlePointerUp(modelPoint);
 			oldDist = spacing(event);
 			break;
 			
