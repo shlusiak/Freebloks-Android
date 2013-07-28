@@ -18,14 +18,21 @@ import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 public class Wheel implements ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
 	
+	final float MAX_FLING_SPEED = 100.0f;
+	final float MIN_FLING_SPEED = 2.0f;
+	
 	enum Status {
 		IDLE, SPINNING, FLINGING
 	}
 	
 	private Stone highlightStone;
-	private float currentOffset;
-	private float lastOffset;
+	private float currentOffset;	/* the current offset */
+	private float lastOffset;		/* the offset on last touch down; rotate back to here when idle */
+	private float maxOffset;		/* the maximum offset till reaching the right end */
 	private float originalX, originalY;
+	
+	private float flingSpeed, lastFlingOffset;
+	
 	private Status status = Status.IDLE;
 	private ArrayList<Stone> stones;
 	private int currentPlayer; /* the currently shown player */
@@ -59,6 +66,7 @@ public class Wheel implements ViewElement {
 				stones.add(s);
 		}
 		this.highlightStone = null;
+		maxOffset = (float)((stones.size() - 1)/ 2) * stone_spacing;
 
 		if (stones.size() > 0)
 			rotateTo((stones.size() + 1) / 2 - 2);
@@ -70,6 +78,8 @@ public class Wheel implements ViewElement {
 		lastOffset = (float)column * stone_spacing;
 		if (lastOffset < 0.0f)
 			lastOffset = 0.0f;
+		if (lastOffset > maxOffset)
+			lastOffset = maxOffset;
 		if (!model.showAnimations)
 			currentOffset = lastOffset;
 	}
@@ -107,6 +117,8 @@ public class Wheel implements ViewElement {
 			return false;
 		
 		lastOffset = currentOffset;
+		lastFlingOffset = currentOffset;
+		flingSpeed = 0.0f;
 		
 		tmp.x = m.x;
 		tmp.y = m.y;
@@ -189,7 +201,8 @@ public class Wheel implements ViewElement {
 					}
 				}, 500);
 			}
-		}
+		} else
+			status = Status.SPINNING;
 
 		return true;
 	}
@@ -211,13 +224,13 @@ public class Wheel implements ViewElement {
 		}
 		
 		/* everything underneath row 0 spins the wheel */
-		float offset = (originalX - tmp.x) * 2.0f;
+		float offset = (originalX - tmp.x) * 1.7f;
 		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 3.0f);
 		currentOffset += offset;
 		if (currentOffset < 0.0f)
 			currentOffset = 0.0f;
-		if (currentOffset > (float)((stones.size() - 1)/ 2) * stone_spacing)
-			currentOffset = (float)((stones.size() - 1)/ 2) * stone_spacing;
+		if (currentOffset > maxOffset)
+			currentOffset = maxOffset;
 
 		originalX = tmp.x;
 
@@ -250,12 +263,16 @@ public class Wheel implements ViewElement {
 			task.cancel();
 		task = null;
 		if (status == Status.SPINNING) {
-			if (highlightStone != null && model.currentStone.stone == null) {
+			if (highlightStone != null && model.currentStone.stone == null && (Math.abs(lastOffset - currentOffset) < 0.5f)) {
 				showStone(highlightStone.get_number());
+				status = Status.IDLE;
 			} else {
 				lastOffset = currentOffset;
+				if (model.showAnimations)
+					status = Status.FLINGING;
+				else
+					status = Status.IDLE;
 			}
-			status = Status.IDLE;
 			return true;
 		}
 		return false;
@@ -327,6 +344,41 @@ public class Wheel implements ViewElement {
 				currentOffset -= elapsed * ROTSPEED;
 				if (currentOffset < lastOffset)
 					currentOffset = lastOffset;				
+			}
+			return true;
+		}
+		if (status == Status.SPINNING) {
+			flingSpeed *= 0.2f;
+			flingSpeed += 0.95 * (currentOffset - lastFlingOffset) / elapsed;
+			if (flingSpeed > MAX_FLING_SPEED) {
+				flingSpeed = MAX_FLING_SPEED;
+			}
+			if (flingSpeed < -MAX_FLING_SPEED) {
+				flingSpeed = -MAX_FLING_SPEED;
+			}
+			lastFlingOffset = currentOffset;
+		}
+		if (status == Status.FLINGING) {
+			if (Math.abs(flingSpeed) < MIN_FLING_SPEED) {
+				status = Status.IDLE;
+				lastOffset = currentOffset;
+				return true;
+			}
+			
+			currentOffset += flingSpeed * elapsed;
+			if (Math.abs(currentOffset - lastOffset) >= 5.0f) {
+				highlightStone = null;
+			}
+			flingSpeed *= (float)Math.pow(0.05f, elapsed);
+			if (currentOffset < 0) {
+				currentOffset = 0.0f;
+				/* bounce */
+				flingSpeed *= -0.4f;
+			}
+			if (currentOffset > maxOffset) {
+				currentOffset = maxOffset;
+				/* bounce */
+				flingSpeed *= -0.4f;
 			}
 			return true;
 		}
