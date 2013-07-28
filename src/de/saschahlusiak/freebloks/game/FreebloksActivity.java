@@ -1259,7 +1259,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			showDialog(DIALOG_QUIT);
 		else {
 			if (view.model.intro != null) {
-				finish();
+				view.model.intro.cancel();
 			}
 			else {
 				if (client != null && client.isConnected())
