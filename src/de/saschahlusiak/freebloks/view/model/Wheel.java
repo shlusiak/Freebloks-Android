@@ -175,6 +175,7 @@ public class Wheel implements ViewElement {
 									model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 								showStone(highlightStone.get_number());
 								model.currentStone.startDragging(tmp, highlightStone);
+								model.currentStone.hasMoved = true;
 								model.board.resetRotation();
 								spinning = false;
 								model.view.requestRender();
