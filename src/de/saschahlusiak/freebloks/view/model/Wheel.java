@@ -293,14 +293,14 @@ public class Wheel implements ViewElement {
 				final float offset = (float)(s.get_stone_size()) - 1.0f;
 
 				final float x = col * stone_spacing;
-				final float effect = 7.5f / (7.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.6f, 2.0f)); 
+				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f)); 
 				float y = 0.3f + effect * 0.7f;
 				final float z = row * stone_spacing;
 				
 				float alpha = 1.0f;
 				
 				if (highlightStone == s)
-					y += 1.5f;
+					y += 1.2f;
 
 				if (!moves_left && !model.spiel.is_finished())
 					alpha *= 0.65f;
