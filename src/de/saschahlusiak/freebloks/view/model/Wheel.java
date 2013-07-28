@@ -246,7 +246,11 @@ public class Wheel implements ViewElement {
 			task.cancel();
 		task = null;
 		if (spinning) {
-			lastOffset = currentOffset;
+			if (highlightStone != null && model.currentStone.stone == null) {
+				showStone(highlightStone.get_number());
+			} else {
+				lastOffset = currentOffset;
+			}
 			spinning = false;
 			return true;
 		}
