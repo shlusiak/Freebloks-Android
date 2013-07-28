@@ -277,16 +277,21 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			
 			delay = 1000 / (model.showAnimations ? FPS_ANIMATIONS : FPS_NO_ANIMATIONS);
 			
-			long time = System.currentTimeMillis(), tmp;
+			long time, tmp, lastExecTime;
+			time = System.currentTimeMillis();
+			lastExecTime = 0;
 			while (!goDown) {
 				try {
-					Thread.sleep(delay);
+					if (delay - lastExecTime > 0)
+						Thread.sleep(delay - lastExecTime);
 				} catch (InterruptedException e) {
 					break;
 				}
 				tmp = System.currentTimeMillis();
 				
+				lastExecTime = tmp;
 				execute((float)(tmp - time) / 1000.0f);
+				lastExecTime = System.currentTimeMillis() - lastExecTime;
 				time = tmp;
 			}
 			super.run();
