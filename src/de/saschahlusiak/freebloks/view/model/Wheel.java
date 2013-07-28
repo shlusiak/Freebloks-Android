@@ -146,42 +146,46 @@ public class Wheel implements ViewElement {
 				showStone(highlightStone.get_number());
 				model.currentStone.startDragging(null, highlightStone);
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
-			} else timer.schedule(task = new TimerTask() {
-				@Override
-				public void run() {
-					if (!spinning)
-						return;
-					if (highlightStone == null)
-						return;
-					if (Math.abs(currentOffset - lastOffset) > 5.0f)
-						return;
-					if (!model.spiel.is_local_player())
-						return;
-					
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							if (highlightStone == null)
-								return;
-							tmp.x = m.x;
-							tmp.y = m.y;
-							model.board.modelToBoard(tmp);
-							
-							if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
-								model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
-							showStone(highlightStone.get_number());
-							model.currentStone.startDragging(tmp, highlightStone);
-							model.board.resetRotation();
-							spinning = false;
-							model.view.requestRender();
-						}
-					});
-					spinning = false;
-				}
-			}, 500);
+				spinning = false;
+			} else {
+				spinning = true;
+				timer.schedule(task = new TimerTask() {
+				
+					@Override
+					public void run() {
+						if (!spinning)
+							return;
+						if (highlightStone == null)
+							return;
+						if (Math.abs(currentOffset - lastOffset) > 5.0f)
+							return;
+						if (!model.spiel.is_local_player())
+							return;
+						
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								if (highlightStone == null)
+									return;
+								tmp.x = m.x;
+								tmp.y = m.y;
+								model.board.modelToBoard(tmp);
+								
+								if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
+									model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
+								showStone(highlightStone.get_number());
+								model.currentStone.startDragging(tmp, highlightStone);
+								model.board.resetRotation();
+								spinning = false;
+								model.view.requestRender();
+							}
+						});
+						spinning = false;
+					}
+				}, 500);
+			}
 		}
 
-		spinning = true;
 		return true;
 	}
 
