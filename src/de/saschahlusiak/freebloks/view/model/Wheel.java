@@ -18,11 +18,15 @@ import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 public class Wheel implements ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
 	
+	enum Status {
+		IDLE, SPINNING, FLINGING
+	}
+	
 	private Stone highlightStone;
 	private float currentOffset;
 	private float lastOffset;
 	private float originalX, originalY;
-	private boolean spinning = false;
+	private Status status = Status.IDLE;
 	private ArrayList<Stone> stones;
 	private int currentPlayer; /* the currently shown player */
 	private ViewModel model;
@@ -98,7 +102,7 @@ public class Wheel implements ViewElement {
 
 	@Override
 	synchronized public boolean handlePointerDown(final PointF m) {
-		spinning = false;
+		status = Status.IDLE;
 		if (model.spiel == null)
 			return false;
 		
@@ -124,7 +128,7 @@ public class Wheel implements ViewElement {
 		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f + lastOffset) / stone_spacing + 0.5f);
 		
 		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
-			spinning = true;
+			status = Status.SPINNING;
 			return true;
 		}
 		
@@ -146,14 +150,14 @@ public class Wheel implements ViewElement {
 				showStone(highlightStone.get_number());
 				model.currentStone.startDragging(null, highlightStone);
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
-				spinning = false;
+				status = Status.IDLE;
 			} else {
-				spinning = true;
+				status = Status.SPINNING;
 				timer.schedule(task = new TimerTask() {
 				
 					@Override
 					public void run() {
-						if (!spinning)
+						if (status != Status.SPINNING)
 							return;
 						if (highlightStone == null)
 							return;
@@ -177,11 +181,11 @@ public class Wheel implements ViewElement {
 								model.currentStone.startDragging(tmp, highlightStone);
 								model.currentStone.hasMoved = true;
 								model.board.resetRotation();
-								spinning = false;
+								status = Status.IDLE;
 								model.view.requestRender();
 							}
 						});
-						spinning = false;
+						status = Status.IDLE;
 					}
 				}, 500);
 			}
@@ -192,7 +196,7 @@ public class Wheel implements ViewElement {
 
 	@Override
 	synchronized public boolean handlePointerMove(PointF m) {
-		if (!spinning)
+		if (status != Status.SPINNING)
 			return false;
 		
 		tmp.x = m.x;
@@ -234,7 +238,7 @@ public class Wheel implements ViewElement {
 			if (model.currentStone.stone != highlightStone)
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 			model.currentStone.startDragging(tmp, highlightStone);
-			spinning = false;
+			status = Status.IDLE;
 			model.board.resetRotation();
 		}
 		return true;
@@ -245,13 +249,13 @@ public class Wheel implements ViewElement {
 		if (task != null)
 			task.cancel();
 		task = null;
-		if (spinning) {
+		if (status == Status.SPINNING) {
 			if (highlightStone != null && model.currentStone.stone == null) {
 				showStone(highlightStone.get_number());
 			} else {
 				lastOffset = currentOffset;
 			}
-			spinning = false;
+			status = Status.IDLE;
 			return true;
 		}
 		return false;
@@ -308,7 +312,7 @@ public class Wheel implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		final float EPSILON = 0.5f;
-		if (spinning == false && (Math.abs(currentOffset - lastOffset) > EPSILON)) {
+		if (status == Status.IDLE && (Math.abs(currentOffset - lastOffset) > EPSILON)) {
 			final float ROTSPEED = 3.0f + (float)Math.pow(Math.abs(currentOffset - lastOffset), 0.65f) * 7.0f;
 
 			if (!model.showAnimations) {
