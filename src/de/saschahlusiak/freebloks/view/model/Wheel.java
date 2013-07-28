@@ -173,7 +173,7 @@ public class Wheel implements ViewElement {
 							return;
 						if (highlightStone == null)
 							return;
-						if (Math.abs(currentOffset - lastOffset) > 5.0f)
+						if (Math.abs(currentOffset - lastOffset) > 3.0f)
 							return;
 						if (!model.spiel.is_local_player())
 							return;
@@ -239,7 +239,8 @@ public class Wheel implements ViewElement {
 			return true;
 		}
 
-		if (Math.abs(currentOffset - lastOffset) >= 5.0f) {
+		/* if the wheel is moved too far, deselect highlighted stone */
+		if (Math.abs(currentOffset - lastOffset) >= 3.0f) {
 			highlightStone = null;
 		}
 
@@ -366,7 +367,7 @@ public class Wheel implements ViewElement {
 			}
 			
 			currentOffset += flingSpeed * elapsed;
-			if (Math.abs(currentOffset - lastOffset) >= 5.0f) {
+			if (Math.abs(currentOffset - lastOffset) >= 3.05f) {
 				highlightStone = null;
 			}
 			flingSpeed *= (float)Math.pow(0.05f, elapsed);
