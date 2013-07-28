@@ -426,7 +426,7 @@ public class CurrentStone implements ViewElement {
 			if (!model.vertical_layout)
 				fieldPoint.y = model.spiel.m_field_size_x - fieldPoint.x - 1;
 			
-			if (fieldPoint.y < -2.0f && hasMoved) {
+			if (fieldPoint.y < -2.0f && (hasMoved || !canCommit)) {
 				model.wheel.setCurrentStone(stone);
 				status = Status.IDLE;
 				stone = null;
