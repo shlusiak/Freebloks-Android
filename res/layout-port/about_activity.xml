@@ -27,7 +27,7 @@
                     android:layout_centerHorizontal="true"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:src="@drawable/freebloks_big" />
+                    android:src="@drawable/appicon_big" />
 
                 <TextView
                     android:id="@+id/version"

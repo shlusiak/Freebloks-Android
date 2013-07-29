@@ -18,7 +18,7 @@
 	    android:xlargeScreens="true" />
 
     <application
-        android:icon="@drawable/freebloks"
+        android:icon="@drawable/appicon_small"
         android:label="@string/app_name" >
         <activity
             android:name=".game.FreebloksActivity"
