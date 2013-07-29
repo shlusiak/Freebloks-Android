@@ -33,8 +33,8 @@ public class CurrentStone implements ViewElement {
 	Status status;
 	ViewModel model;
 	
-	public final float hover_height_low = 0.45f;
-	public final float hover_height_high = 0.45f;
+	public final float hover_height_low = 0.55f;
+	public final float hover_height_high = 0.55f;
 	private static final float overlay_radius = 6.0f; 
 	
 	CurrentStone(ViewModel model) {
@@ -57,9 +57,9 @@ public class CurrentStone implements ViewElement {
 	
 	public void updateTexture(Context context, GL10 gl) {
 		if (texture == null)
-			texture = new int[2];
+			texture = new int[3];
 
-		gl.glGenTextures(2, texture, 0);
+		gl.glGenTextures(3, texture, 0);
 		
 		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_green);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);		
@@ -83,7 +83,19 @@ public class CurrentStone implements ViewElement {
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 		BoardRenderer.myTexImage2D(gl, bitmap);
-		bitmap.recycle();		
+		bitmap.recycle();
+		
+		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_shadow);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[2]);
+		if (gl instanceof GL11) {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
+			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+		} else {
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
+		}
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		BoardRenderer.myTexImage2D(gl, bitmap);
+		bitmap.recycle();
 	}
 	
 //	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
@@ -94,9 +106,13 @@ public class CurrentStone implements ViewElement {
 		if (stone == null)
 			return;
 		
-		final float hover_height = (status == Status.IDLE) ? hover_height_low : hover_height_high;
-		
+		float hover_height = (status == Status.IDLE) ? hover_height_low : hover_height_high;
 		final float offset = (float)(stone.get_stone_size()) - 1.0f;
+		
+		if (status == Status.FLIPPING_HORIZONTAL ||
+			status == Status.FLIPPING_VERTICAL)
+			hover_height += Math.abs(Math.sin(rotate_angle / 180 * Math.PI) * overlay_radius * 0.4f);
+
 		
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 		
@@ -107,6 +123,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				BoardRenderer.stone_size * (-(float)(model.spiel.m_field_size_x - 1) + 2.0f * pos.y + offset));
 		
+		/* STONE SHADOW */
 	    gl.glPushMatrix();
 		/* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */
@@ -130,33 +147,54 @@ public class CurrentStone implements ViewElement {
 
 		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.40f);
 		gl.glPopMatrix();
+
+
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glDisable(GL10.GL_LIGHTING);
+
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
+	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
 		
 		
-		gl.glPushMatrix();	    
+	    /* OVERLAY SHADOW */
+	    gl.glPushMatrix();
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[2]);	    
+		gl.glRotatef(-model.board.centerPlayer * 90, 0, 1, 0);
+	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
+		gl.glRotatef(model.board.centerPlayer * 90, 0, 1, 0);
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
 		if (status == Status.FLIPPING_HORIZONTAL)
 			gl.glRotatef(rotate_angle, 0, 0, 1);
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
-		
-		gl.glEnable(GL10.GL_TEXTURE_2D);
-		gl.glEnable(GL10.GL_BLEND);
-		gl.glDisable(GL10.GL_LIGHTING);
-		
-	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isValid ? texture[0] : texture[1]);
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
-	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
+	    gl.glScalef(1.0f, 0.01f, 1.0f);
+	    overlay.drawElements(gl);
+	    gl.glPopMatrix();
+
+		/* OVERLAY */		
+		gl.glPushMatrix();	    
+		gl.glTranslatef(0, hover_height, 0);
+		if (status == Status.ROTATING)
+			gl.glRotatef(rotate_angle, 0, 1, 0);
+		if (status == Status.FLIPPING_HORIZONTAL)
+			gl.glRotatef(rotate_angle, 0, 0, 1);
+		if (status == Status.FLIPPING_VERTICAL)
+			gl.glRotatef(rotate_angle, 1, 0, 0);				
 	    
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isValid ? texture[0] : texture[1]);
 	    overlay.drawElements(gl);
 
+	    
 	    gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glEnable(GL10.GL_LIGHTING);
-	    gl.glPopMatrix();
-	    
-	    
 		gl.glDisable(GL10.GL_TEXTURE_2D);
+		
+		
+		/* STONE */
+	    gl.glPopMatrix();
 		gl.glTranslatef(
 				0,
 				hover_height,
