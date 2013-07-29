@@ -96,23 +96,18 @@ public class CurrentStone implements ViewElement {
 		
 		final float hover_height = (status == Status.IDLE) ? hover_height_low : hover_height_high;
 		
-		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		
-		gl.glPushMatrix();
+		final float offset = (float)(stone.get_stone_size()) - 1.0f;
 		
 		gl.glDisable(GL10.GL_DEPTH_TEST);
-
-	    gl.glPushMatrix();
-	    /* TODO: optimize the following 3 groups of glTranslatef */
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
-	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.y);
-		gl.glTranslatef(
-				BoardRenderer.stone_size * offset,
-				0,
-				BoardRenderer.stone_size * offset);
 		
+		gl.glDisable(GL10.GL_CULL_FACE);
+		gl.glPushMatrix();
+		gl.glTranslatef(
+				BoardRenderer.stone_size * (-(float)(model.spiel.m_field_size_x - 1) + 2.0f * pos.x + offset),
+				0,
+				BoardRenderer.stone_size * (-(float)(model.spiel.m_field_size_x - 1) + 2.0f * pos.y + offset));
+		
+	    gl.glPushMatrix();
 		/* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */
 		/* TODO: merge with BoardRenderer.renderShadow() */
@@ -126,26 +121,18 @@ public class CurrentStone implements ViewElement {
 			gl.glRotatef(rotate_angle, 0, 0, 1);
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
-		gl.glScalef(1.09f, 0, 1.09f);
+		gl.glScalef(1.09f, 0.01f, 1.09f);
 
 	    gl.glTranslatef(
 				-BoardRenderer.stone_size * offset,
 				0,
 				-BoardRenderer.stone_size * offset);
 
-	    gl.glDisable(GL10.GL_CULL_FACE);
 		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.40f);
-	    gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glPopMatrix();
 		
 		
-		
-		gl.glPushMatrix();
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.x + stone.get_stone_size() / 2),
-	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)(pos.y + stone.get_stone_size() / 2));
-	    
+		gl.glPushMatrix();	    
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
 		if (status == Status.FLIPPING_HORIZONTAL)
@@ -153,44 +140,34 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
 		
-	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isValid ? texture[0] : texture[1]);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_LIGHTING);
 		
+	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isValid ? texture[0] : texture[1]);
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
 	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
 	    
 	    overlay.drawElements(gl);
-	    gl.glRotatef(180.0f, 1, 0, 0);
-	    overlay.drawElements(gl);
-	    gl.glRotatef(180.0f, 1, 0, 0);
 
+	    gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glEnable(GL10.GL_LIGHTING);
-	    
-	    
 	    gl.glPopMatrix();
 	    
+	    
 		gl.glDisable(GL10.GL_TEXTURE_2D);
-		
-	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.x,
-	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * pos.y);
-
 		gl.glTranslatef(
-				BoardRenderer.stone_size * offset,
+				0,
 				hover_height,
-				BoardRenderer.stone_size * offset);
-
+				0);
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
 		if (status == Status.FLIPPING_HORIZONTAL)
 			gl.glRotatef(rotate_angle, 0, 0, 1);
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
-	    	
+
 	    gl.glTranslatef(
 				-BoardRenderer.stone_size * offset,
 				0,
