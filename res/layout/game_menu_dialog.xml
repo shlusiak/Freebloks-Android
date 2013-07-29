@@ -20,7 +20,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center_vertical"
             android:padding="1dp"
-            android:src="@drawable/freebloks" />
+            android:src="@drawable/appicon_small" />
 
         <TextView
             android:id="@+id/textView1"

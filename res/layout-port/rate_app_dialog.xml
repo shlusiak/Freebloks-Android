@@ -13,7 +13,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/freebloks_big" />
+        android:src="@drawable/appicon_big" />
 
     <TextView
         android:id="@+id/textView1"
