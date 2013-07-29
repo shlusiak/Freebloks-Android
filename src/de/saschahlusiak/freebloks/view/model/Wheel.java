@@ -156,13 +156,16 @@ public class Wheel implements ViewElement {
 			if (task != null)
 				task.cancel();
 			if (model.currentStone.stone != null && model.currentStone.stone != highlightStone) {
-				/* TODO: this has no effect but we'd like to spin the wheel to the
-				 * current position even when spinning == true
-				 */
-				showStone(highlightStone.get_number());
-				model.currentStone.startDragging(null, highlightStone);
+				/* TODO: think about what we actually want when we have a current stone and touching on the
+				 * wheel. Spin? Change current stone? Set a different highlighted stone? Start dragging the
+				 * new stone? */
+				
+				/* swap current stone */
+//				showStone(highlightStone.get_number());
+//				model.currentStone.startDragging(null, highlightStone);
+//				model.currentStone.stone = highlightStone;
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
-				status = Status.IDLE;
+				status = Status.SPINNING;
 			} else {
 				status = Status.SPINNING;
 				timer.schedule(task = new TimerTask() {
@@ -264,7 +267,10 @@ public class Wheel implements ViewElement {
 			task.cancel();
 		task = null;
 		if (status == Status.SPINNING) {
-			if (highlightStone != null && model.currentStone.stone == null && (Math.abs(lastOffset - currentOffset) < 0.5f)) {
+			if (highlightStone != null && model.currentStone.stone != highlightStone && (Math.abs(lastOffset - currentOffset) < 0.5f)) {
+				if (model.currentStone.stone != null)
+					model.currentStone.startDragging(null, highlightStone);
+				model.currentStone.status = CurrentStone.Status.IDLE;
 				showStone(highlightStone.get_number());
 				status = Status.IDLE;
 			} else {
