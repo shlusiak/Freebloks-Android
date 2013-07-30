@@ -496,6 +496,8 @@ public class CurrentStone implements ViewElement {
 
 		hasMoved = false;
 		canCommit = false;
+		/* TODO: set this to about 3 above the touch event to make stone visible
+		 * when started dragging */
 		stone_rel_x = 0;
 		stone_rel_y = 0;
 		
