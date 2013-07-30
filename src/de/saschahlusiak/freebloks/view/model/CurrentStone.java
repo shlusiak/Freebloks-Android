@@ -211,9 +211,9 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 	    
+	    gl.glEnable(GL10.GL_DEPTH_TEST);
 		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 
 				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
 		
 		gl.glPopMatrix();
 	}
