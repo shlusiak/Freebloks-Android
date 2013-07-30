@@ -289,6 +289,9 @@ public class Wheel implements ViewElement {
 		if (model.spiel == null)
 			return;
 
+	    gl.glDisable(GL10.GL_DEPTH_TEST);
+	    gl.glDepthMask(false);
+
 		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
 		for (int i = 0; i < stones.size(); i++) {
 			Stone s = stones.get(i);			
@@ -331,6 +334,8 @@ public class Wheel implements ViewElement {
 				gl.glPopMatrix();
 			}
 		}
+	    gl.glDepthMask(true);
+	    gl.glDisable(GL10.GL_DEPTH_TEST);
 	}
 
 	@Override
