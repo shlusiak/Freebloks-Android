@@ -356,7 +356,7 @@ public class Wheel implements ViewElement {
 		}
 		if (status == Status.SPINNING) {
 			flingSpeed *= 0.2f;
-			flingSpeed += 0.95 * (currentOffset - lastFlingOffset) / elapsed;
+			flingSpeed += 0.90f * (currentOffset - lastFlingOffset) / elapsed;
 			if (flingSpeed > MAX_FLING_SPEED) {
 				flingSpeed = MAX_FLING_SPEED;
 			}
