@@ -37,6 +37,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	public Freebloks3DView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+		/* set this for the emulator. WTF? */
+//		setEGLConfigChooser(5, 6, 5, 0, 0, 0);
 		renderer = new FreebloksRenderer(context, model);
 		renderer.density = getResources().getDisplayMetrics().density;
 		setRenderer(renderer);
