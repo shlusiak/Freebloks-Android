@@ -32,8 +32,6 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
-		gl.glDisable(GL10.GL_DEPTH_TEST);
-		gl.glDepthMask(false);
 		gl.glScalef(1, 0.01f, 1);
 		gl.glTranslatef(x, 0, z);
 	    
@@ -49,8 +47,6 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
  				0.0f,
 			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);	    
 		renderer.renderStoneShadow(gl, player, stone, m_alpha);
-		gl.glDepthMask(true);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glPopMatrix();
 	}
 

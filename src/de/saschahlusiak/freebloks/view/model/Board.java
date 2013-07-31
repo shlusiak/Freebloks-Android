@@ -107,7 +107,7 @@ public class Board implements ViewElement {
 	 * @return current player, if local
 	 * @return -1 otherwise
 	 */
-	private int getShowSeedsPlayer() {
+	public int getShowSeedsPlayer() {
 		if (!model.showSeeds)
 			return -1;
 		if (model.spiel == null)
@@ -138,10 +138,6 @@ public class Board implements ViewElement {
 		/* TODO: would be nice to show the last current local player instead of the center one
 		 * needs caching of previous local player */
 		return centerPlayer;
-	}
-	
-	public final void render(FreebloksRenderer renderer, GL10 gl) {
-		renderer.board.renderBoard(gl, model.spiel, getShowSeedsPlayer());
 	}
 
 	float oa;

@@ -261,17 +261,22 @@ public class BoardRenderer {
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
     	gl.glPopMatrix();
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
-	    
+
+	    /* we want the border in the depth buffer so it can cover the stones rendered later */
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+
 	    for (int i = 0; i < 4; i++) {
 	    	border.drawElements(gl);
 	    	gl.glRotatef(90, 0, 1, 0);
 	    }
+	    
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    gl.glLoadIdentity();
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 	    
 		gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
+	
 	
 	final float stone_red[]={0.75f, 0, 0, 0};
 	final float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
@@ -341,9 +346,7 @@ public class BoardRenderer {
 			float ang, float ax, float ay, float az,
 			float light_angle,
 			float alpha, float scale) {
-	    gl.glDisable(GL10.GL_DEPTH_TEST);
 	    
-
 	    
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
 		float m_alpha = 0.65f - height / 19.0f;
@@ -370,7 +373,6 @@ public class BoardRenderer {
 	    		-BoardRenderer.stone_size * offset);
 	    
 		renderStoneShadow(gl, player, stone, m_alpha * alpha);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
 	}
 	
 	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {

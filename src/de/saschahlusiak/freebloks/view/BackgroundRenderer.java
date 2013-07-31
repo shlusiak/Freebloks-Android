@@ -103,7 +103,6 @@ public class BackgroundRenderer extends SimpleModel {
 //			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess, 0);
 			
 			gl.glEnable(GL10.GL_TEXTURE_2D);
-			gl.glDepthMask(false);
 		
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, getVertexBuffer());
@@ -112,7 +111,6 @@ public class BackgroundRenderer extends SimpleModel {
 			
 			drawElements(gl);
 			
-			gl.glDepthMask(true);
 			gl.glDisable(GL10.GL_TEXTURE_2D);
 		}
 	}
