@@ -112,9 +112,6 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.FLIPPING_HORIZONTAL ||
 			status == Status.FLIPPING_VERTICAL)
 			hover_height += Math.abs(Math.sin(rotate_angle / 180 * Math.PI) * overlay_radius * 0.4f);
-
-		
-		gl.glDisable(GL10.GL_DEPTH_TEST);
 		
 		gl.glDisable(GL10.GL_CULL_FACE);
 		gl.glPushMatrix();

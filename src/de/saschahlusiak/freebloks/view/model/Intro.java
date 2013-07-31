@@ -445,13 +445,16 @@ public class Intro implements ViewElement {
 			gl.glRotatef(field_anim*WIPE_ANGLE,1,0,0);
 			gl.glTranslatef(0,0,-20*BoardRenderer.stone_size);
 		}
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 		renderer.board.renderBoard(gl, null, -1);
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		gl.glPopMatrix();
 		/* Alle Steine rendern. */
 		synchronized(effects) {
 			for (int i = 0; i < effects.size(); i++)
 				effects.get(i).renderShadow(gl, renderer.board);
+			gl.glEnable(GL10.GL_DEPTH_TEST);
 			for (int i = 0; i < effects.size(); i++)
 				effects.get(i).render(gl, renderer.board);
 		}

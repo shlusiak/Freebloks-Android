@@ -124,9 +124,11 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light0_pos, 0);
 		
 		/* render board */
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		
 		gl.glRotatef(boardAngle, 0, 1, 0);
 		backgroundRenderer.render(gl);
-		model.board.render(this, gl);
+		board.renderBoard(gl, model.spiel, model.board.getShowSeedsPlayer());
 		
 		if (model.spiel == null)
 			return;
@@ -156,18 +158,24 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		    	gl.glTranslatef(- x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
 		    }
 	    }
+	    
 	    gl.glDisable(GL10.GL_BLEND);
 	    gl.glPopMatrix();
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		/* render all effects */
 		synchronized (model.effects) {
 			for (int i = 0; i < model.effects.size(); i++) {
 				model.effects.get(i).renderShadow(gl, board);
 			}
+			
+			gl.glEnable(GL10.GL_DEPTH_TEST);
+			
 			for (int i = 0; i < model.effects.size(); i++) {
 				model.effects.get(i).render(gl, board);
 			}
 		}
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		gl.glRotatef(-boardAngle, 0, 1, 0);
 
