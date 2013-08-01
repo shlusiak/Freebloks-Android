@@ -136,6 +136,7 @@ public class Intro implements ViewElement {
 			@Override
 			public void run() {
 				listener.OnIntroCompleted();
+				model.view.requestRender();
 			}
 		});
 	}
