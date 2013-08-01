@@ -68,11 +68,11 @@ public class GameFinishActivity extends Activity {
 	
 	public boolean onTouchEvent(MotionEvent event) {
 	    if (MotionEvent.ACTION_OUTSIDE == event.getAction()) {
-	      finish();
-	      return true;
+	    	finish();
+	    	return true;
 	    }
 	    return super.onTouchEvent(event);
-	  }
+	}
 	
 	public void setData(Spielleiter spiel) {
 		int place[] = { 0, 1, 2, 3 };

@@ -403,6 +403,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
+		if (clientName != null && clientName.equals(""))
+			clientName = null;
 		/* TODO: maybe put theme in retained config and track for change using a name */
 		Theme t = Theme.get(prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
