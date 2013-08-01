@@ -41,11 +41,15 @@ public class Intro implements ViewElement {
 
 	
 	public Intro(ViewModel model, OnIntroCompleteListener listener) {
-		this.model = model;
-		this.listener = listener;
+		setModel(model, listener);
 		init();
 	}
 	
+	public void setModel(ViewModel model, OnIntroCompleteListener listener) {
+		this.model = model;
+		this.listener = listener;
+	}
+
 	void init() {
 		for (int i = 0; i < stones.length; i++)
 			stones[i] = new Stone();

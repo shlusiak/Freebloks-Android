@@ -248,6 +248,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			spielthread = config.clientThread;
 			lastStatus = config.lastStatus;
 			view.model.soundPool = config.soundPool;
+			view.model.intro = config.intro;
+			if (view.model.intro != null)
+				view.model.intro.setModel(view.model, this);
 			canresume = true;
 			chatButton.setVisibility((lastStatus != null && lastStatus.clients > 1) ? View.VISIBLE : View.INVISIBLE);
 		}
@@ -421,6 +424,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		config.clientThread = spielthread;
 		config.lastStatus = lastStatus;
 		config.soundPool = view.model.soundPool;
+		config.intro = view.model.intro;
 		view.model.soundPool = null;
 		spielthread = null;
 		return config;
