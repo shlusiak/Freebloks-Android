@@ -408,7 +408,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		clientName = prefs.getString("player_name", null);
 		if (clientName != null && clientName.equals(""))
 			clientName = null;
-		/* TODO: maybe put theme in retained config and track for change using a name */
 		Theme t = Theme.get(prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
 		
@@ -1025,6 +1024,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void run() {
 					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(s.player)), Toast.LENGTH_SHORT).show();
+					/* FIXME: this may throw a nullpointer exception */
 					view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 				}
 			});
