@@ -283,14 +283,14 @@ public class Wheel implements ViewElement {
 			return true;
 		}
 		return false;
-	}	
+	}
 
 	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
 		if (model.spiel == null)
 			return;
 
 		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
-		for (int i = 0; i < stones.size(); i++) {
+		for (int i = stones.size() - 1; i >= 0; i--) {
 			Stone s = stones.get(i);			
 
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
