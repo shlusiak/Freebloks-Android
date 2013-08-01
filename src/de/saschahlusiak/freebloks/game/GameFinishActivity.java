@@ -151,7 +151,6 @@ public class GameFinishActivity extends Activity {
 			a.setDuration(600);
 			a.setFillBefore(true);
 			set.addAnimation(a);
-			t[i].startAnimation(set);
 			
 			if (spiel.is_local_player(place[i])) {
 				a = new TranslateAnimation(
@@ -180,10 +179,12 @@ public class GameFinishActivity extends Activity {
 				a.setRepeatMode(Animation.REVERSE);
 				a.setRepeatCount(Animation.INFINITE);
 				
-				t[i].startAnimation(a);
+				set.addAnimation(a);
 				
 				this.place.setText(getResources().getStringArray(R.array.places)[i]);
 			}
+			t[i].startAnimation(set);
+
 		}
 	}
 }
