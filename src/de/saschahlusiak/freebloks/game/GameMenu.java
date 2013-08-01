@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.donate.DonateActivity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,22 +11,33 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class GameMenu extends Dialog {
 	ToggleButton soundButton;
 	FreebloksActivity activity;
+	boolean isDonate;
 
 	public GameMenu(Context context) {
 		super(context);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);		
 		setContentView(R.layout.game_menu_dialog);
 		
+		isDonate = (Math.random() > 0.95);
+		
+		if (isDonate)
+			((ImageView)findViewById(R.id.imageView1)).setImageResource(R.drawable.coin);
+		
 		findViewById(R.id.imageView1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getContext(), AboutActivity.class);
+				Intent intent;
+				if (isDonate)
+					intent = new Intent(getContext(), DonateActivity.class);
+				else
+					intent = new Intent(getContext(), AboutActivity.class);
 				getContext().startActivity(intent);
 			}
 		});
