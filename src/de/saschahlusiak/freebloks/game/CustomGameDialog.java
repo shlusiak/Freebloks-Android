@@ -40,7 +40,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	EditText name, server;
 	OnStartCustomGameListener listener;
 	
-	SharedPreferences prefs;
 	
 	public interface OnStartCustomGameListener {
 		public boolean OnStart(CustomGameDialog dialog);
@@ -51,20 +50,12 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		
 		this.listener = listener;
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		
 		setContentView(R.layout.game_menu_new_custom_game);
 		
 		difficulty = (SeekBar)findViewById(R.id.difficulty);
 		difficulty_label = (TextView)findViewById(R.id.difficulty_label);
 		difficulty.setOnSeekBarChangeListener(this);
 		difficulty.setMax(DIFFICULTY_MAX);
-		int slider = DIFFICULTY_DEFAULT;
-		int diff = prefs.getInt("difficulty", DIFFICULTY_VALUES[DIFFICULTY_DEFAULT]);
-		for (int i = 0; i < DIFFICULTY_VALUES.length; i++)
-			if (DIFFICULTY_VALUES[i] == diff)
-				slider = i;
-		difficulty.setProgress(slider);
 		
 		player1 = (CheckBox)findViewById(R.id.player1);
 		player2 = (CheckBox)findViewById(R.id.player2);
@@ -77,10 +68,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player4.setText(context.getResources().getStringArray(R.array.color_names)[3]);
 		
 		field_size = (Spinner) findViewById(R.id.field_size);
-		field_size.setSelection(3);
 		
 		game_mode = (Spinner) findViewById(R.id.game_mode);
-		game_mode.setSelection(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 		game_mode.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -97,6 +86,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 						player3.setChecked(true);
 					player2.setChecked(false);
 					player4.setChecked(false);
+					/* FIXME: on first create this is called after prepare, which does seem to not persiste the
+					 * last set size if != 15 */
 					field_size.setSelection(1); /* 15x15 */
 				} else if (position == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 					player1.setEnabled(true);
@@ -165,18 +156,24 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	}
 	
 	private void saveSettings() {
-		/* what you save here should be restored in prepare() */
+		SharedPreferences prefs;
+		prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+		
 		Editor editor = prefs.edit();
 		editor.putInt("difficulty", getDifficulty());
 		editor.putString("player_name", getName());
+		editor.putInt("gamemode", getGameMode());
+		editor.putInt("fieldsize", getFieldSize());
 		editor.commit();
 	}
 	
-	private void prepare() {
+	private void prepare(String name, int difficulty, int gamemode, int fieldsize) {
 		int p = (int)(Math.random() * 4.0);
-		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+		game_mode.setSelection(gamemode);
+
+		if (gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0) * 2;
-		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+		if (gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0);
 
 		player1.setChecked(p == 0);
@@ -184,30 +181,42 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player3.setChecked(p == 2);
 		player4.setChecked(p == 3);
 		
-		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
+		if (gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 			player3.setChecked(player1.isChecked());
 			player4.setChecked(player2.isChecked());
 		}
 
-		name.setText(prefs.getString("player_name", null));
+		this.name.setText(name);
+		
+		int slider = DIFFICULTY_DEFAULT;
+		for (int i = 0; i < DIFFICULTY_VALUES.length; i++)
+			if (DIFFICULTY_VALUES[i] == difficulty)
+				slider = i;
+		this.difficulty.setProgress(slider);
+
+		slider = 3;
+		for (int i = 0; i < FIELD_SIZES.length; i++)
+			if (FIELD_SIZES[i] == fieldsize)
+				slider = i;
+		field_size.setSelection(slider);
 	}
 	
-	void prepareCustomGameDialog() {
-		prepare();
+	void prepareCustomGameDialog(String name, int difficulty, int gamemode, int fieldsize) {
+		prepare(name, difficulty, gamemode, fieldsize);
 		setTitle(R.string.custom_game_title);
 		findViewById(R.id.player_name_layout).setVisibility(View.GONE);
 		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
 	}
 	
-	void prepareJoinDialog() {
-		prepare();
+	void prepareJoinDialog(String name, int difficulty, int gamemode, int fieldsize) {
+		prepare(name, difficulty, gamemode, fieldsize);
 		setTitle(R.string.join_game);
 		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
 		findViewById(R.id.spinner_layout).setVisibility(View.GONE);
 	}
 	
-	void prepareHostDialog() {
-		prepare();
+	void prepareHostDialog(String name, int difficulty, int gamemode, int fieldsize) {
+		prepare(name, difficulty, gamemode, fieldsize);
 		setTitle(R.string.host_game);
 		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
 		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
