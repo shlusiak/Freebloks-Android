@@ -36,7 +36,7 @@ public class Global {
 	
 	public static final int PLAYER_BACKGROUND_COLOR[] = {
 		Color.rgb(0, 0, 128),
-		Color.rgb(128, 128, 0),
+		Color.rgb(140, 140, 0),
 		Color.rgb(96, 0, 0),
 		Color.rgb(0, 96, 0),
 	};
