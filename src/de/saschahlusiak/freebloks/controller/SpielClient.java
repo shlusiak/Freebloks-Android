@@ -42,10 +42,6 @@ public class SpielClient {
 		super.finalize();
 	}
 	
-	public int getLastDifficulty() {
-		return lastDifficulty;
-	}
-	
 	public boolean[] getLastPlayers() {
 		return lastPlayers;
 	}
