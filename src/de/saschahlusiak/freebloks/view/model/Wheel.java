@@ -20,6 +20,7 @@ public class Wheel implements ViewElement {
 	
 	final float MAX_FLING_SPEED = 100.0f;
 	final float MIN_FLING_SPEED = 2.0f;
+	final float MAX_STONE_DRAG_DISTANCE = 3.5f;
 	
 	enum Status {
 		IDLE, SPINNING, FLINGING
@@ -243,7 +244,7 @@ public class Wheel implements ViewElement {
 		}
 
 		/* if the wheel is moved too far, deselect highlighted stone */
-		if (Math.abs(currentOffset - lastOffset) >= 3.0f) {
+		if (Math.abs(currentOffset - lastOffset) >= MAX_STONE_DRAG_DISTANCE) {
 			highlightStone = null;
 		}
 
@@ -373,7 +374,7 @@ public class Wheel implements ViewElement {
 			}
 			
 			currentOffset += flingSpeed * elapsed;
-			if (Math.abs(currentOffset - lastOffset) >= 3.05f) {
+			if (Math.abs(currentOffset - lastOffset) >= MAX_STONE_DRAG_DISTANCE) {
 				highlightStone = null;
 			}
 			flingSpeed *= (float)Math.pow(0.05f, elapsed);
