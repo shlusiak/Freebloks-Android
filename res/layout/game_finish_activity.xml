@@ -31,6 +31,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textColor="#ffffffff"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -41,6 +44,9 @@
 	            android:layout_height="wrap_content"
 	            android:paddingRight="24dp"
 	            android:gravity="center"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:layout_centerVertical="true"
 	            android:textColor="#ffffffff"
 	            android:text="Small Text"
@@ -52,6 +58,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
 	    </RelativeLayout>
@@ -68,6 +77,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textColor="#ffffffff"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -79,6 +91,9 @@
 	            android:paddingRight="24dp"
 	            android:gravity="center"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:textColor="#ffffffff"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -89,6 +104,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
 	    </RelativeLayout>
@@ -105,6 +123,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textColor="#ffffffff"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -117,6 +138,9 @@
 	            android:gravity="center"
 	            android:layout_centerVertical="true"
 	            android:textColor="#ffffffff"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
 	
@@ -126,6 +150,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
 	    </RelativeLayout>
@@ -142,6 +169,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textColor="#ffffffff"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -153,6 +183,9 @@
 	            android:paddingRight="24dp"
 	            android:gravity="center"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:textColor="#ffffffff"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -163,6 +196,9 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
+	            android:shadowRadius="5"
+            	android:shadowDy="2"
+            	android:shadowColor="#9f000000"
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
 	    </RelativeLayout>
