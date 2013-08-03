@@ -24,11 +24,11 @@ public class SpielClient {
 	boolean lastPlayers[];
 
 	
-	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers) {
+	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
 		this.lastDifficulty = difficulty;
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
-			spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
+			spiel = new Spielleiter(fieldsize, fieldsize);
 			spiel.start_new_game();			
 			spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		} else
