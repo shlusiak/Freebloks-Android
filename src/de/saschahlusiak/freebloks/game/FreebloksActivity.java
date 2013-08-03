@@ -460,11 +460,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 			
-			JNIServer.runServer(spiel1, spiel1.m_gamemode, spiel1.m_field_size_x, KI_DEFAULT);
+			JNIServer.runServer(spiel1, spiel1.m_gamemode, spiel1.m_field_size_x, difficulty);
 			
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
-			SpielClient client = new SpielClient(spiel1, difficulty, null);
+			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.m_field_size_x);
 			ConnectTask task = new ConnectTask(client, false, null);
 			task.execute((String)null);
 
@@ -500,8 +500,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			spielthread.client.disconnect();
 		
 		view.model.clearEffects();
-		Spielleiter spiel = new Spielleiter(Spiel.DEFAULT_FIELD_SIZE_Y, Spiel.DEFAULT_FIELD_SIZE_X);
-		final SpielClient client = new SpielClient(spiel, difficulty, request_player);
+		Spielleiter spiel = new Spielleiter(fieldsize, fieldsize);
+		final SpielClient client = new SpielClient(spiel, difficulty, request_player, fieldsize);
 		spiel.start_new_game();
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
