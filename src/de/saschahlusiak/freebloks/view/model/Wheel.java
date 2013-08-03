@@ -229,7 +229,7 @@ public class Wheel implements ViewElement {
 		
 		/* everything underneath row 0 spins the wheel */
 		float offset = (originalX - tmp.x) * 1.7f;
-		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 3.0f);
+		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 2.3f);
 		currentOffset += offset;
 		if (currentOffset < 0.0f)
 			currentOffset = 0.0f;
