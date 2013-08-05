@@ -611,11 +611,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode);
 	}
 
-	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_LOBBY:
+			if (client == null)
+				return null;
 			return new LobbyDialog(this, new DialogInterface.OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface arg0) {
@@ -722,19 +723,30 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	protected void onPrepareDialog(int id, final Dialog dialog, Bundle args) {
 		switch (id) {
 		case DIALOG_LOBBY:
-			((LobbyDialog)dialog).setSpiel(client);
-			if (lastStatus != null)
-				((LobbyDialog)dialog).serverStatus(lastStatus);
-			dialog.setOnCancelListener(new OnCancelListener() {				
-				@Override
-				public void onCancel(DialogInterface arg0) {
-					if (client.spiel.current_player() < 0 && !client.spiel.is_finished()) {
-						canresume = false;
-						client.disconnect();
-						showDialog(DIALOG_GAME_MENU);
+			if (client != null) {
+				((LobbyDialog)dialog).setSpiel(client);
+				if (lastStatus != null)
+					((LobbyDialog)dialog).serverStatus(lastStatus);
+				dialog.setOnCancelListener(new OnCancelListener() {				
+					@Override
+					public void onCancel(DialogInterface arg0) {
+						if (client.spiel.current_player() < 0 && !client.spiel.is_finished()) {
+							canresume = false;
+							client.disconnect();
+							showDialog(DIALOG_GAME_MENU);
+						}
 					}
-				}
-			});
+				});
+			} else {
+				/* this can happen when the app is saved but purged from memory
+				 * upon resume, the open dialog is reopened but the client connection
+				 * has to be disconnected. just close the lobby since there is no
+				 * connection
+				 */
+				dialog.dismiss();
+				canresume = false;
+				showDialog(DIALOG_GAME_MENU);
+			}
 			break;
 
 		case DIALOG_GAME_MENU:

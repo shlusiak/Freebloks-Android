@@ -242,6 +242,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	}
 	
 	void updateStatus() {
+		/* better: dismiss */
+		if (client == null)
+			return;
 		colorAdapter.setCurrentStatus(client.spiel, lastStatus);
 		
 		if (lastStatus == null) {			
