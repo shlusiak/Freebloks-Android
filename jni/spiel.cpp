@@ -15,7 +15,12 @@ CSpiel::CSpiel(){
 	CSpiel::m_game_field = NULL;
 	CSpiel::m_field_size_y = DEFAULT_FIELD_SIZE_Y;
 	CSpiel::m_field_size_x = DEFAULT_FIELD_SIZE_X;
-//	start_new_game();
+}
+
+CSpiel::CSpiel(int width, int height) {
+	m_field_size_x = width;
+	m_field_size_y = height;
+	CSpiel::m_game_field = new TSingleField[CSpiel::m_field_size_y * CSpiel::m_field_size_x];
 }
 
 
@@ -23,7 +28,7 @@ CSpiel::CSpiel(const int player_team1_1, const int player_team1_2, const int pla
 	CSpiel::m_game_field = NULL;
 	CSpiel::m_field_size_y = DEFAULT_FIELD_SIZE_Y;
 	CSpiel::m_field_size_x = DEFAULT_FIELD_SIZE_X;
-	start_new_game();
+	start_new_game(GAMEMODE_4_COLORS_4_PLAYERS);
 	CSpiel::set_teams(player_team1_1, player_team1_2, player_team2_1, player_team2_2);
 }
 
@@ -48,13 +53,6 @@ const int CSpiel::get_player_start_y(const int playernumber)const{
 	default: return CSpiel::m_field_size_y -1;
 	}
 
-}
-
-
-void CSpiel::set_field_size_and_new(int y, int x){
-	CSpiel::m_field_size_x = x;
-	CSpiel::m_field_size_y = y;
-	CSpiel::start_new_game();
 }
 
 
@@ -109,8 +107,9 @@ CSpiel::~CSpiel(){
 
 
 
-void CSpiel::start_new_game(){
+void CSpiel::start_new_game(GAMEMODE gamemode){
 	init_field();
+	set_seeds(gamemode);
 	for (int n = 0; n < PLAYER_MAX; n++){
 		CSpiel::m_player[n].init(this, n);
 	}
@@ -128,13 +127,17 @@ void CSpiel::refresh_player_data(){
 void CSpiel::init_field(){ 
 	if (m_game_field != NULL) delete[] CSpiel::m_game_field;
 	CSpiel::m_game_field = new TSingleField[CSpiel::m_field_size_y * CSpiel::m_field_size_x];
-	for (int y = 0; y < CSpiel::m_field_size_y; y++){
-		for (int x = 0; x < CSpiel::m_field_size_x ; x++){
-			CSpiel::set_game_field(y, x, 0);
+	memset(m_game_field, 0, sizeof(TSingleField) * m_field_size_y * m_field_size_x);
+}
+
+void CSpiel::set_seeds(GAMEMODE gamemode) {
+	if (gamemode == GAMEMODE_DUO) {
+		set_game_field(m_field_size_y - 4, 4, PLAYER_BIT_ALLOWED[0]);
+		set_game_field(4, m_field_size_x - 4, PLAYER_BIT_ALLOWED[2]);
+	} else {
+		for (int p = 0; p < PLAYER_MAX; p++){
+			CSpiel::set_game_field(CSpiel::get_player_start_y(p), CSpiel::get_player_start_x(p), PLAYER_BIT_ALLOWED[p]);
 		}
-	}
-	for (int p = 0; p < PLAYER_MAX; p++){
-		CSpiel::set_game_field(CSpiel::get_player_start_y(p), CSpiel::get_player_start_x(p), PLAYER_BIT_ALLOWED[p]);
 	}
 }
 

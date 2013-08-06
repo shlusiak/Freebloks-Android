@@ -40,6 +40,8 @@ public class ColorAdapter extends BaseAdapter {
 	public int getCount() {
 		if (lastStatus != null && lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
 			return 2;
+		if (lastStatus != null && lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+			return 2;
 		return 4;
 	}
 
@@ -71,7 +73,8 @@ public class ColorAdapter extends BaseAdapter {
         }        
 		
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
-		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
 			if (position == 1)
 				position = 2;
 		

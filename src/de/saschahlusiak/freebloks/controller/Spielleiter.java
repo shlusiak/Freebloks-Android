@@ -17,6 +17,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	public static final int GAMEMODE_2_COLORS_2_PLAYERS = 0;
 	public static final int GAMEMODE_4_COLORS_2_PLAYERS = 1;
 	public static final int GAMEMODE_4_COLORS_4_PLAYERS = 2;
+	public static final int GAMEMODE_DUO = 3;
 	
 	int m_current_player;
 	int spieler[] = new int[Spiel.PLAYER_MAX];
