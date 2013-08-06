@@ -13,8 +13,6 @@
 #include "ki.h"
 #include "turnpool.h"
 
-
-
 class CSpiel{
 
 	private:
@@ -34,12 +32,14 @@ class CSpiel{
 	public:
 
 		CSpiel();
+		CSpiel(const int width, const int height);
 		CSpiel(const int player_team1_1, const int player_team1_2, const int player_team2_1, const int player_team2_2);
 		
 		virtual ~CSpiel();
 		
 		void follow_situation(int vorher_playernumber, const CSpiel* vorher_situation, const CTurn* turn);
 		void init_field();
+		void set_seeds(enum GAMEMODE gamemode);
 
 		/*PLAYER*/
 		const int get_player_start_x(const int playernumber)const;
@@ -54,7 +54,8 @@ class CSpiel{
 		const int get_nemesis(const int playernumber)const ;
 
 
-		void start_new_game();
+		void start_new_game(GAMEMODE gamemode);
+		void set_field_size(int x, int y) { m_field_size_x = x; m_field_size_y = y; }
 		
 		const int get_field_size_x()const;
 		const int get_field_size_y()const;
@@ -64,16 +65,15 @@ class CSpiel{
 
 		void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2);
 		void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer);
-		void set_field_size(int y, int x) { m_field_size_y = y; m_field_size_x = x; }
-		void set_field_size_and_new(int y, int x);	 //startet neues spiel!
 		
 		CPlayer* get_player(const int playernumber);
 		TSingleField is_valid_turn(CStone* stone, int player, int y, int x)const;
 		TSingleField is_valid_turn(const CTurn* turn);
 
+		void set_game_field(const int y, const int x, const TSingleField value);
+
 		const TSingleField get_game_field(const int playernumber, const int y, const int x)const; //f�r spielerr�ckgaben
 		const TSingleField get_game_field(const int y, const int x)const; //f�r feldr�ckgaben
-		void set_game_field(const int y, const int x, const TSingleField value);
 		
 		const char get_game_field_value(const int y, const int x)const; //f�r �bergabe an andere spiel-klassen
 		TSingleField* get_field_pointer()const;

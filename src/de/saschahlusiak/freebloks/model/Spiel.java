@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 
+import de.saschahlusiak.freebloks.controller.Spielleiter;
+
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
 	
@@ -68,8 +70,21 @@ public class Spiel implements Serializable, Cloneable {
 	
 	private void init_field() {
 		m_game_field = new int[m_field_size_x * m_field_size_y];
-		for (int p = 0; p < PLAYER_MAX; p++){
-			m_game_field[get_player_start_y(p) * m_field_size_x + get_player_start_x(p)] = PLAYER_BIT_ALLOWED[p];
+	}
+	
+	public void set_field_size(int width, int height) {
+		m_field_size_x = width;
+		m_field_size_y = height;
+	}
+	
+	private void set_seeds(int gamemode) {
+		if (gamemode == Spielleiter.GAMEMODE_DUO) {
+			m_game_field[(m_field_size_y - 4) * m_field_size_x + 4] = PLAYER_BIT_ALLOWED[0];
+			m_game_field[4 * m_field_size_x + (m_field_size_x - 4)] = PLAYER_BIT_ALLOWED[2];
+		} else {
+			for (int p = 0; p < PLAYER_MAX; p++){
+				m_game_field[get_player_start_y(p) * m_field_size_x + get_player_start_x(p)] = PLAYER_BIT_ALLOWED[p];
+			}
 		}
 	}
 	
@@ -125,13 +140,6 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	}
 	
-	public void set_field_size_and_new(int y, int x) {
-		m_field_size_x = x;
-		m_field_size_y = y;
-		start_new_game();
-	}
-
-
 	public void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer){
 		int counts[] = {einer, zweier, dreier, vierer, fuenfer};
 
@@ -158,8 +166,9 @@ public class Spiel implements Serializable, Cloneable {
 		m_player[player_team2_2].set_nemesis(player_team1_1);
 	}
 
-	public void start_new_game(){
+	public void start_new_game(int gamemode){
 		init_field();
+		set_seeds(gamemode);
 		for (int n = 0; n < PLAYER_MAX; n++){
 			m_player[n].init(this, n);
 		}
