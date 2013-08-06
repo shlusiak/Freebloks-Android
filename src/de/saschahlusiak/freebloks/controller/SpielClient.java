@@ -29,7 +29,7 @@ public class SpielClient {
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
 			spiel = new Spielleiter(fieldsize, fieldsize);
-			spiel.start_new_game();			
+			spiel.start_new_game(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);			
 			spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		} else
 			this.spiel = leiter;
@@ -197,8 +197,10 @@ public class SpielClient {
 			NET_SERVER_STATUS status = (NET_SERVER_STATUS)data;
 			/* Wenn Spielfeldgroesse sich von Server unterscheidet,
 			   lokale Spielfeldgroesse hier anpassen */
-			if (status.width != spiel.m_field_size_x || status.height != spiel.m_field_size_y)
-				spiel.set_field_size_and_new(status.height,status.width);
+			if (status.width != spiel.m_field_size_x || status.height != spiel.m_field_size_y) {
+				spiel.set_field_size(status.width, status.height);
+				spiel.start_new_game(status.gamemode);
+			}
 			{
 				boolean changed=false;
 				for (i = 0; i < Stone.STONE_SIZE_MAX; i++)
@@ -211,7 +213,8 @@ public class SpielClient {
 			spiel.m_gamemode = status.gamemode;
 			if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0, 2, 1, 3);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS
+				|| spiel.m_gamemode==Spielleiter.GAMEMODE_DUO)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);
@@ -231,7 +234,7 @@ public class SpielClient {
 		}
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
-			spiel.start_new_game();
+			spiel.start_new_game(spiel.m_gamemode);
 			spiel.setFinished(false);
 			/* Unbedingt history leeren. */
 			if (spiel.history != null)
