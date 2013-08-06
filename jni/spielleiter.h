@@ -16,7 +16,6 @@
 #define PLAYER_COMPUTER (-2)	/* Spieler ist ein Computer */
 #define PLAYER_LOCAL (-1)	/* Spieler ist ein lokaler Spieler */
 
-enum GAMEMODE { GAMEMODE_2_COLORS_2_PLAYERS, GAMEMODE_4_COLORS_2_PLAYERS, GAMEMODE_4_COLORS_4_PLAYERS };
 
 /**
  * Diese Klasse erweitert das CSpiel-Geruest um grundlegende Funktionen
