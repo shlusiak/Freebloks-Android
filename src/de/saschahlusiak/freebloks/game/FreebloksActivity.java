@@ -502,7 +502,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		view.model.clearEffects();
 		Spielleiter spiel = new Spielleiter(fieldsize, fieldsize);
 		final SpielClient client = new SpielClient(spiel, difficulty, request_player, fieldsize);
-		spiel.start_new_game();
+		spiel.start_new_game(gamemode);
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
 		ConnectTask task = new ConnectTask(client, show_lobby, new Runnable() {

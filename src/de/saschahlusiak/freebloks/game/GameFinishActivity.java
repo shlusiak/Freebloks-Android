@@ -68,10 +68,11 @@ public class GameFinishActivity extends Activity {
 		
 		if (spiel == null)
 			return;
-		
+
 		int i = 0;
 		int max = Spiel.PLAYER_MAX - 1;
-		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {
+		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+			spiel.m_gamemode == Spielleiter.GAMEMODE_DUO) {
 			place[1] = 2;
 			place[2] = 1;
 			max = 1;
@@ -92,7 +93,8 @@ public class GameFinishActivity extends Activity {
 		t[3] = (ViewGroup) findViewById(R.id.place4);
 		
 		/* TODO: combine yellow/green, blue/red on 4_COLORS_2_PLAYERS */
-		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {
+		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+			spiel.m_gamemode == Spielleiter.GAMEMODE_DUO) {
 			t[2].setVisibility(View.GONE);
 			t[3].setVisibility(View.GONE);
 		} else {

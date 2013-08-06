@@ -25,7 +25,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
 	final static int FIELD_SIZES[] = {
-		13, 15, 17, 20, 23
+		13, 14, 15, 17, 20, 23
 	};
 
 	CheckBox player1;
@@ -74,7 +74,22 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 			@Override
 			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {				
-				if (position == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {	
+				if (position == Spielleiter.GAMEMODE_DUO) {	
+					player1.setEnabled(true);
+					player3.setEnabled(true);
+					player2.setEnabled(false);
+					player4.setEnabled(false);
+
+					if (player2.isChecked())
+						player1.setChecked(true);
+					if (player4.isChecked())
+						player3.setChecked(true);
+					player2.setChecked(false);
+					player4.setChecked(false);
+					/* FIXME: on first create this is called after prepare, which does seem to not persiste the
+					 * last set size if != 14 */
+					field_size.setSelection(1); /* 14x14 */
+				} else if (position == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {	
 					player1.setEnabled(true);
 					player3.setEnabled(true);
 					player2.setEnabled(false);
@@ -88,7 +103,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 					player4.setChecked(false);
 					/* FIXME: on first create this is called after prepare, which does seem to not persiste the
 					 * last set size if != 15 */
-					field_size.setSelection(1); /* 15x15 */
+					field_size.setSelection(2); /* 15x15 */
 				} else if (position == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 					player1.setEnabled(true);
 					player2.setEnabled(true);
@@ -172,6 +187,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		game_mode.setSelection(gamemode);
 
 		if (gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+			p = (int)(Math.random() * 2.0) * 2;
+		if (gamemode == Spielleiter.GAMEMODE_DUO)
 			p = (int)(Math.random() * 2.0) * 2;
 		if (gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0);

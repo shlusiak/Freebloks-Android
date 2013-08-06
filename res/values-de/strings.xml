@@ -82,10 +82,12 @@
 	<string-array name="game_modes">
 	    <item>2 Spieler, 2 Farben</item>
 	    <item>2 Spieler, 4 Farben</item>
-	    <item>4 Spieler, 4 Farben</item>
+	    <item>Blokus Classic</item>
+	    <item>Blokus Duo</item>
 	</string-array>
 	<string-array name="game_field_sizes">
 	    <item>13x13</item>
+	    <item>14x14</item>
 	    <item>15x15</item>
 	    <item>17x17</item>
 	    <item>20x20</item>
