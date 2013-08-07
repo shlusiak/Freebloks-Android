@@ -131,14 +131,18 @@ void CSpiel::init_field(){
 }
 
 void CSpiel::set_seeds(GAMEMODE gamemode) {
+	#define set_seed(x, y, player) \
+		if (get_game_field(player, y, x) == FIELD_FREE) \
+			set_game_field(y, x, PLAYER_BIT_ALLOWED[player]);
 	if (gamemode == GAMEMODE_DUO) {
-		set_game_field(m_field_size_y - 4, 4, PLAYER_BIT_ALLOWED[0]);
-		set_game_field(4, m_field_size_x - 4, PLAYER_BIT_ALLOWED[2]);
+		set_seed(4, m_field_size_y - 5, 0);
+		set_seed(m_field_size_x - 5, 4, 2);
 	} else {
 		for (int p = 0; p < PLAYER_MAX; p++){
-			CSpiel::set_game_field(CSpiel::get_player_start_y(p), CSpiel::get_player_start_x(p), PLAYER_BIT_ALLOWED[p]);
+			set_seed(get_player_start_x(p), get_player_start_y(p), p);
 		}
 	}
+	#undef set_seed
 }
 
 /** r�ckgabe �ndern in bool?! **/
@@ -232,7 +236,7 @@ TSingleField CSpiel::set_stone(CStone* stone, int playernumber, int startY, int 
  
 
 
-void CSpiel::undo_turn(CTurnpool* turnpool){
+void CSpiel::undo_turn(CTurnpool* turnpool, GAMEMODE gamemode){
 	CTurn* turn = turnpool->get_last_turn();
 	CStone* stone = CSpiel::m_player[turn->get_playernumber()].get_stone(turn->get_stone_number());
 	int x, y;
@@ -278,11 +282,7 @@ void CSpiel::undo_turn(CTurnpool* turnpool){
 		}
 	}
 
-	for (int p = 0; p < PLAYER_MAX; p++){
-		if (CSpiel::get_game_field(p, CSpiel::get_player_start_y(p), CSpiel::get_player_start_x(p)) == FIELD_FREE){
-			m_game_field[CSpiel::get_player_start_y(p) * CSpiel::m_field_size_x + CSpiel::get_player_start_x(p)] |= PLAYER_BIT_ALLOWED[p]; 
-		}
-	}
+	set_seeds(gamemode);
 	stone->available_increment();
 	refresh_player_data();
 	//end redraw
