@@ -263,7 +263,7 @@ public class SpielClient {
 			stone.mirror_rotate_to(t.m_mirror_count, t.m_rotate_count);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone(stone, t);
-			spiel.undo_turn(spiel.history);
+			spiel.undo_turn(spiel.history, spiel.m_gamemode);
 			break;
 		}
 		default: Log.e(tag, "FEHLER: unbekannte Nachricht empfangen: #" + data.msg_type);
