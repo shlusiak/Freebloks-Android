@@ -301,7 +301,8 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 						n = req->player;
 				}
 				/* Suche den naechsten, der frei ist (!=PLAYER_COMPUTER) */
-				n = 2 - n;
+				if (spieler[n] != PLAYER_COMPUTER)
+					n = 2 - n;
 				if (spieler[n] != PLAYER_COMPUTER)
 					return;
 			}else{
