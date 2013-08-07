@@ -437,7 +437,7 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				// Aktuellen Spieler uebermitteln
 				send_current_player();
 				// Und lokal den Zug zuruecknehmen
-				undo_turn(history);
+				undo_turn(history, m_gamemode);
 				// Solange Zuege des Computers zurueckgenommen werden
 			}while (spieler[m_current_player]==PLAYER_COMPUTER);
 // 			printf("Removed %d turns.\n",i);
