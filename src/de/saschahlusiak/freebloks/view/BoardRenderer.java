@@ -8,7 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 

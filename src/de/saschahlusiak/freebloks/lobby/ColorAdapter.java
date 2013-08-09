@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.lobby;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import android.content.Context;

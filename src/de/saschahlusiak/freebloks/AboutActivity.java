@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
+import de.saschahlusiak.freebloksvip.R;
 
 public class AboutActivity extends Activity {
 	

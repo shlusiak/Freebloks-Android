@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.billing.IabException;
 import de.saschahlusiak.freebloks.billing.IabHelper;
 import de.saschahlusiak.freebloks.billing.IabHelper.OnConsumeFinishedListener;

@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 
 public class Theme {
 	int drawable;

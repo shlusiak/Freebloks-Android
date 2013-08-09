@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;

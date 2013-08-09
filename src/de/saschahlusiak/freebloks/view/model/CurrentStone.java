@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.util.Log;
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;

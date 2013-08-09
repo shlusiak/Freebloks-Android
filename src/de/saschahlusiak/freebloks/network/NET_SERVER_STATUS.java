@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidParameterException;
 
 import android.content.res.Resources;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {

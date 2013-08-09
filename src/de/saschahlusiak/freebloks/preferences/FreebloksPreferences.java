@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.preferences;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

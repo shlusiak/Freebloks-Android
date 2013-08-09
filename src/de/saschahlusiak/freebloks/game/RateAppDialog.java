@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import android.app.Dialog;
 import android.content.Context;

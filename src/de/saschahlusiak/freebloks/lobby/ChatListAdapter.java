@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.lobby;
 
 import java.util.List;
 
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import android.content.Context;
 import android.graphics.Color;

@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.view.model;
 
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;

@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.AboutActivity;
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
