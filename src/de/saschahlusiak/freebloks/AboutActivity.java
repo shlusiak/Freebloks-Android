@@ -41,6 +41,6 @@ public class AboutActivity extends Activity {
 			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
 			e.printStackTrace();
 		}
-		((TextView)findViewById(R.id.url1)).setText(Global.getMarketURLString());
+		((TextView)findViewById(R.id.url1)).setText(Global.getMarketURLString(this));
 	}
 }

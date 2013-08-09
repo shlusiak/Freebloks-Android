@@ -1,10 +1,9 @@
 package de.saschahlusiak.freebloks;
 
+import android.content.Context;
 import android.graphics.Color;
 
 public class Global {
-	public final static String PACKAGE_NAME = "de.saschahlusiak.freebloks";
-	
 	public final static int VIBRATE_START_DRAGGING = 85;
 	public final static int VIBRATE_SET_STONE = 65;
 	public final static int VIBRATE_STONE_SNAP = 40;
@@ -26,11 +25,11 @@ public class Global {
 	public final static boolean IS_AMAZON = false;
 	
 	
-	public final static String getMarketURLString() {
+	public final static String getMarketURLString(Context context) {
 		if (IS_AMAZON)
-			return "http://www.amazon.com/gp/mas/dl/android?p=" + PACKAGE_NAME;
+			return "http://www.amazon.com/gp/mas/dl/android?p=" + context.getPackageName();
 		else
-			return "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME;
+			return "https://play.google.com/store/apps/details?id=" + context.getPackageName();
 	}
 	
 	
