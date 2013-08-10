@@ -19,7 +19,7 @@ public class Global {
 	
 	
 	public final static String base64EncodedPublicKey =
-			"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsV2nQN/odu41MVs9jWCUiFBYlEKh+s+NeT81970AJo1t/0o+n46sQhxBBRuPAGPKiUPH1QEWwM+JgfNdaHjAX66D2Y4KlpQRu/u3hJjnRzn0hYWMOyjhhP06Dr+CKNworbRGdAbvWcUtkxjDXdixYExfIvX5Kdt/84evRzFjW/9JgpTYbqPnOt6qo1cuJkRfGKADTGbjk2POLY/s+tlcYrNUJScNBDgjfSgrY1fDAbv6T0JY+HaDkQSFfnb+W+nNZ6N/1pLizTjAX9/A5iZVc058jrFV0utXXpAd9b/CtxjETF/WnfXBVmdue+glG4WlacIZMpq2x6r09pJ2HbbOsQIDAQAB";
+			"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkCGTTo8xtal1NUMNmuPVHLXNY0JtFJgSIkhv2qBEdnSjQugoOdYE2mz6l91QifDArksScX19TXJn5wpuOUayLV88U9O9WJ8T33jYhYkko5ij/nuJu+jBPEvJrKc/jfuAM07Qapk2bSGcbCB8S18PpFjomvPD7dzID8wabhoQdr218XEYfK96CXrOYmHZSs7Yt+bFpM2wAyTNIg/nUv9pfXzpskgpny89HPmChYik5lwOaCAjnO03xfTPV53yUnVwff+ZdBz89uGCMCO1+dj30TAX7KL68dFrb3fnSrxHX8yfUs+5OXQPYQh6PMy6PANDNPoJ68kQiZYRM/W2OIYFgQIDAQAB";
 
 	/* set to true for Amazon export */
 	public final static boolean IS_AMAZON = false;
