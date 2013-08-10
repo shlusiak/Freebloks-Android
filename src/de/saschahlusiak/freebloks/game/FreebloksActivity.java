@@ -102,7 +102,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	NET_SERVER_STATUS lastStatus;
 	Menu optionsMenu;
 	ViewGroup statusView;
-	
+
+	ConnectTask connectTask;
+
 	String clientName;
 	int difficulty;
 	int gamemode;
@@ -155,12 +157,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		@Override
 		protected void onCancelled() {
-			progress.dismiss();
+			connectTask = null;
 			super.onCancelled();
 		}
 		
 		@Override
 		protected void onPostExecute(String result) {
+			connectTask = null;
 			FreebloksActivity.this.client = this.myclient;
 			progress.dismiss();
 			if (result != null) {
@@ -357,6 +360,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onDestroy() {
 		Log.d(tag, "onDestroy");
+		if (connectTask != null) try {
+			connectTask.cancel(true);
+			connectTask.get();
+			connectTask = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (spielthread != null) try {
 			spielthread.client.disconnect();
 			spielthread.goDown();
@@ -465,8 +475,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
 			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.m_field_size_x);
-			ConnectTask task = new ConnectTask(client, false, null);
-			task.execute((String)null);
+			connectTask = new ConnectTask(client, false, null);
+			connectTask.execute((String)null);
 
 			return true;
 		}
@@ -505,7 +515,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		spiel.start_new_game(gamemode);
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
-		ConnectTask task = new ConnectTask(client, show_lobby, new Runnable() {
+		connectTask = new ConnectTask(client, show_lobby, new Runnable() {
 			@Override
 			public void run() {
 				if (request_player == null)
@@ -519,7 +529,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					client.request_start();
 			}
 		});
-		task.execute(server);
+		connectTask.execute(server);
 	}
 	
 	boolean restoreOldGame() throws Exception {
