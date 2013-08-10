@@ -20,7 +20,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 public class DonateActivity extends Activity implements OnIabSetupFinishedListener, OnIabPurchaseFinishedListener, OnConsumeFinishedListener {
 	IabHelper mHelper;
@@ -55,7 +56,7 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
     }
 
 	void setupButton(int id, SkuDetails details) {
-		final Button b = (Button)findViewById(id);
+		final RadioButton b = (RadioButton)findViewById(id);
 		
 		if (details == null) {
 			b.setText(android.R.string.unknownName);
@@ -66,15 +67,6 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 		b.setText(details.getPrice());
 		b.setTag(details);
 		b.setEnabled(true);
-		
-		b.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SkuDetails detail = (SkuDetails)b.getTag();
-				mHelper.launchPurchaseFlow(DonateActivity.this, detail.getSku(), RC_REQUEST, 
-						DonateActivity.this, "abcdef");
-			}
-		});		
 	}
 
 	@Override
@@ -103,6 +95,25 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 				if (inventory.hasPurchase(sku))
 	                mHelper.consumeAsync(inventory.getPurchase(sku), this);
 			}
+			
+			findViewById(R.id.next).setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
+					RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
+					if (!button.isEnabled())
+						return;
+					
+					SkuDetails detail = (SkuDetails)button.getTag();
+					if (detail == null) {
+						finish();
+						return;
+					}
+					mHelper.launchPurchaseFlow(DonateActivity.this, detail.getSku(), RC_REQUEST, 
+							DonateActivity.this, "abcdef");
+				}
+			});
 		}
 	}
 
@@ -115,6 +126,7 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
         }
 		/* consume purchase */
         mHelper.consumeAsync(info, this);
+        finish();
 	}
 
 	@Override
