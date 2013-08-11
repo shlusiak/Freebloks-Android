@@ -1272,7 +1272,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
-		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
+		if (client != null && client.spiel.current_player() >= 0 && lastStatus != null && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else {
 			if (view.model.intro != null) {
