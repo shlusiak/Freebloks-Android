@@ -1023,6 +1023,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	public void stoneHasBeenSet(final NET_SET_STONE s) {
+		if (client == null)
+			return;
+		if (view == null)
+			return;
 		if (!client.spiel.is_local_player(s.player)) {
 			view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
 			vibrate(Global.VIBRATE_SET_STONE);
@@ -1035,8 +1039,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				@Override
 				public void run() {
 					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(s.player)), Toast.LENGTH_SHORT).show();
-					/* FIXME: this may throw a nullpointer exception */
-					view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
+					if (view != null)
+						view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 				}
 			});
 		}
