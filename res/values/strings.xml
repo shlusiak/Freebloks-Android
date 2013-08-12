@@ -95,7 +95,7 @@
 	</string-array>
 	
 	<string name="please_donate">Support the developers</string>
-	<string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That\'s why you can decide how much the game is worth to you and to support the development of free software.\n\nWhat is Freebloks worth to you?</string>
+	<string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That\'s why you can decide how much the game is worth to you and support the development of free software.\n\nWhat is Freebloks worth to you?</string>
 	<string name="donation_nothing">Nothing</string>
 	<string name="donation_next">Next</string>
 	<string name="donation_retry">Retry</string>
