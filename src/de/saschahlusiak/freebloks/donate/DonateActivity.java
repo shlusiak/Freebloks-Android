@@ -16,6 +16,7 @@ import de.saschahlusiak.freebloks.billing.Purchase;
 import de.saschahlusiak.freebloks.billing.SkuDetails;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,10 +38,24 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.donate_activity);
 		
-		mHelper = new IabHelper(this, Global.base64EncodedPublicKey);
-		mHelper.enableDebugLogging(true);
+		if (Global.IS_AMAZON) {
+			findViewById(R.id.donation_001).setVisibility(View.GONE);
+			findViewById(R.id.donation_002).setVisibility(View.GONE);
+			findViewById(R.id.donation_003).setVisibility(View.GONE);
+			findViewById(R.id.donation_004).setVisibility(View.GONE);
+			((RadioButton)findViewById(R.id.donation_freebloksvip)).setChecked(true);
+		} else {
+			mHelper = new IabHelper(this, Global.base64EncodedPublicKey);
+			mHelper.enableDebugLogging(true);
+			mHelper.startSetup(this);
+		}
 		
-		mHelper.startSetup(this);		
+		findViewById(R.id.next).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onNextButtonPress();
+			}
+		});
 	}
 	
 	@Override
@@ -70,26 +85,37 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 		b.setTag(details);
 		b.setEnabled(true);
 	}
+	
+	void onNextButtonPress() {
+		RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
+		RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
+		
+		if (group.getCheckedRadioButtonId() == R.id.donation_freebloksvip) {
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Global.getMarketURLString("de.saschahlusiak.freebloksvip")));
+			startActivity(intent);
+			finish();
+			return;
+		}
+		if (button == null)
+			return;
+		if (!button.isEnabled())
+			return;
+		
+		SkuDetails detail = (SkuDetails)button.getTag();
+		if (detail == null) {
+			finish();
+			return;
+		}
+		mHelper.launchPurchaseFlow(DonateActivity.this, detail.getSku(), RC_REQUEST, 
+				DonateActivity.this, "abcdef");		
+	}
 
 	@Override
 	public void onIabSetupFinished(final IabResult result) {
 		findViewById(R.id.next).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
-				RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
-				if (button == null)
-					return;
-				if (!button.isEnabled())
-					return;
-				
-				SkuDetails detail = (SkuDetails)button.getTag();
-				if (detail == null) {
-					finish();
-					return;
-				}
-				mHelper.launchPurchaseFlow(DonateActivity.this, detail.getSku(), RC_REQUEST, 
-						DonateActivity.this, "abcdef");
+				onNextButtonPress();
 			}
 		});
 

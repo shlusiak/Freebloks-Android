@@ -64,7 +64,14 @@
 	    	android:enabled="false"
 	        android:textAppearance="?android:attr/textAppearanceLarge"
 	        android:text="@android:string/unknownName" />
-	    
+
+	    <RadioButton
+	        android:id="@+id/donation_freebloksvip"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@string/donation_freebloksvip" />
+	    	    
     </RadioGroup>
 
     <Button
