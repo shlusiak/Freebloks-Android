@@ -25,11 +25,11 @@ public class Global {
 	public final static boolean IS_AMAZON = false;
 	
 	
-	public final static String getMarketURLString(Context context) {
+	public final static String getMarketURLString(String packageName) {
 		if (IS_AMAZON)
-			return "http://www.amazon.com/gp/mas/dl/android?p=" + context.getPackageName();
+			return "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
 		else
-			return "https://play.google.com/store/apps/details?id=" + context.getPackageName();
+			return "https://play.google.com/store/apps/details?id=" + packageName;
 	}
 	
 	
