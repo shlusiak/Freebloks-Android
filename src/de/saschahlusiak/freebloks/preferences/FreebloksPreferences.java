@@ -27,7 +27,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			public boolean onPreferenceClick(Preference preference) {
 				String url;
 				if (Global.IS_AMAZON)
-					url = Global.getMarketURLString(getBaseContext());
+					url = Global.getMarketURLString(getPackageName());
 				else
 					url = "market://details?id=" + getApplication().getPackageName();
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
