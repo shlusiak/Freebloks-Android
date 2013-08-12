@@ -68,20 +68,23 @@ public class RateAppDialog extends Dialog {
 	public static boolean checkShowRateDialog(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
+		long starts = prefs.getLong("rate_number_of_starts", 0);
+		long first_started = prefs.getLong("rate_first_started", 0);
+		Editor editor = prefs.edit();
+		boolean show = false;
+		
+		starts++;
+		
 		if (prefs.getBoolean("rate_show_again", true)) {
-			long starts = prefs.getLong("rate_number_of_starts", 0);
-			long first_started = prefs.getLong("rate_first_started", 0);
-			boolean show = false;
-			Editor editor = prefs.edit();
-
 			if (first_started <= 0) {
 				first_started = System.currentTimeMillis();
 			}
 			
-			starts++;
 			Log.d(tag, "started " + starts + " times");
 			Log.d(tag, "elapsed time since first start: " + (System.currentTimeMillis() - first_started));
 			
+			if (starts >= Global.RATE_MIN_STARTS)
+				starts = Global.RATE_MIN_STARTS;
 			if (starts >= Global.RATE_MIN_STARTS && (System.currentTimeMillis() - first_started >= Global.RATE_MIN_ELAPSED)) {
 				starts = 0;
 				first_started = System.currentTimeMillis();
@@ -89,10 +92,9 @@ public class RateAppDialog extends Dialog {
 			}
 			
 			editor.putLong("rate_first_started", first_started);
-			editor.putLong("rate_number_of_starts", starts);
-			editor.commit();
-			return show;
 		}
-		return false;
+		editor.putLong("rate_number_of_starts", starts);
+		editor.commit();
+		return show;
 	}
 }

@@ -14,6 +14,9 @@ public class Global {
 	/* minimum elapsed time after first start, before rating dialog appears */
 	public static final long RATE_MIN_ELAPSED = 4 * (24 * 60 * 60 * 1000);
 	
+	/* number of starts before the donate dialog appears */
+	public final static int DONATE_STARTS = 50;
+	
 	/* the default server address: blokus.mooo.com */
 	public static final String DEFAULT_SERVER_ADDRESS = "blokus.mooo.com";
 	
