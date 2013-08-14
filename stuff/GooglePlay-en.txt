@@ -1,10 +1,10 @@
-This is the Android version of Freebloks 3D, an implementation of the famous board game Blokus by Sekkoïa. Try to place as many tiles on the board as possible, keeping in mind only two simple rules: your tiles must touch a corner of one of your previously placed tiles, but they must not share an edge. Can you play more tiles than your opponents? 
+This is the Android version of Freebloks 3D, an implementation of the famous board game Blokus. Try to place as many tiles on the board as possible, keeping in mind only two simple rules: your tiles must touch a corner of one of your previously placed tiles, but they must not share an edge. Can you play more tiles than your opponents? 
 
 RULES
 Each player has 21 Tetris-like tiles: 12 tiles with 5 squares, 5 tiles with 4 squares, 2 tiles with 3 squares, 1 tile with 2 squares and 1 tile with 1 square. 
 Players take turns in placing one tile onto the 20x20 board. The first tile for each player has to be placed in their corner of the board. Each following tile has to touch a corner of one of your previous tiles, but it must never share an edge. It may share edges with the opponents' tiles though. 
 If a player has no more possible move, they have to pass. The game is over when no player can place a tile. 
-For each player, the squares of all their remaining tiles are added up. The player with the lowest number of squares left wins. 
+For each player, the squares of all their tiles on the board are added up. The player with the most points  wins. 
 
 HOW TO PLAY
 - Swipe the list of available tiles with your finger. 
@@ -17,20 +17,20 @@ HOW TO PLAY
 Quit the app at any time, your current game will be saved and restored on next start. 
 
 FEATURES
-- Supports 2-player mode, either with 2 colors (Blokus Duo) or 4 colors (2 each).
-- Customizable board size (other than 20x20). 
+- Supports 2-player modes, with 2 colors (Original and Blokus Duo), 4 colors (2 each).
+- Customizable board sizes other than 20x20.
 - Play against the computer or humans on the same device. 
-- Play online against your friends (beta). 
+- Play online against your friends
 - Hint and undo options.
 - Looks great on tablets, too!
 
 The game is network-compatible with Freebloks 3D for Windows and Linux: http://www.saschahlusiak.de/freebloks-3d/ 
 
 PLEASE DONATE
-If you like Freebloks 3D, please support the developers by purchasing an in-app donation of your choice! 
+Freebloks 3D is absolutely free, open source and without advertisement! But things for free still have a value. You can decide how much Freebloks is worth to you by purchasing an in-app donation of your choice or by buying Freebloks VIP: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
 
-The game is absolutely free and without advertisement. The complete source code is available on GitHub: https://github.com/shlusiak/Freebloks-Android 
+The complete source code is available on GitHub: https://github.com/shlusiak/Freebloks-Android 
 
-If you have any idea, feature request or wish concerning the game, just drop us an email: mail@saschahlusiak.de 
+If you have any idea, feature request or wish concerning the game, just drop us an email: apps@saschahlusiak.de 
 
-Similar to Blokish and Blokr!
+Similar: Blokish and Blokr!
