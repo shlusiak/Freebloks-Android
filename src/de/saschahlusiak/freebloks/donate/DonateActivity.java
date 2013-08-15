@@ -73,17 +73,18 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
         }
     }
 
-	void setupButton(int id, SkuDetails details) {
+	void setupButton(int id, String sku, SkuDetails details) {
 		final RadioButton b = (RadioButton)findViewById(id);
 		
-		if (details == null) {
+		if (sku == null) {
 			b.setText(android.R.string.unknownName);
 			b.setEnabled(false);
 			return;
 		}
 		
-		b.setText(details.getPrice());
-		b.setTag(details);
+		b.setTag(sku);
+		if (details != null)
+			b.setText(details.getPrice());
 		b.setEnabled(true);
 	}
 	
@@ -102,13 +103,12 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 		if (!button.isEnabled())
 			return;
 		
-		SkuDetails detail = (SkuDetails)button.getTag();
-		if (detail == null) {
+		String sku = (String)button.getTag();
+		if (sku == null) {
 			finish();
 			return;
 		}
-		mHelper.launchPurchaseFlow(DonateActivity.this, detail.getSku(), RC_REQUEST, 
-				DonateActivity.this, "abcdef");		
+		mHelper.launchPurchaseFlow(DonateActivity.this, sku, RC_REQUEST, DonateActivity.this, "abcdef");
 	}
 
 	@Override
@@ -122,7 +122,6 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 
 		if (!result.isSuccess()) {
 			Log.d(tag, "Problem setting up In-app Billing: " + result);
-			Toast.makeText(this, "no internet connection", Toast.LENGTH_LONG).show();
 		} else {
 			List<String> more = new ArrayList<String>();
 			more.add("donation_001");
@@ -134,22 +133,16 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 				inventory = mHelper.queryInventory(true, more);
 			} catch (IabException e) {
 				e.printStackTrace();
-				Toast.makeText(this, "error querying inventory", Toast.LENGTH_LONG).show();
-				((Button)findViewById(R.id.next)).setText(R.string.donation_retry);
-				findViewById(R.id.next).setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						onIabSetupFinished(result);
-					}
-				});
+				setupButton(R.id.donation_001, "donation_001", null);
+				setupButton(R.id.donation_002, "donation_002", null);
+				setupButton(R.id.donation_003, "donation_003", null);
+				setupButton(R.id.donation_004, "donation_004", null);
 				return;
 			}
-			((Button)findViewById(R.id.next)).setText(R.string.donation_next);
-			setupButton(R.id.donation_001, inventory.getSkuDetails("donation_001"));
-			setupButton(R.id.donation_002, inventory.getSkuDetails("donation_002"));
-			setupButton(R.id.donation_003, inventory.getSkuDetails("donation_003"));
-			setupButton(R.id.donation_004, inventory.getSkuDetails("donation_004"));
+			setupButton(R.id.donation_001, "donation_001", inventory.getSkuDetails("donation_001"));
+			setupButton(R.id.donation_002, "donation_002", inventory.getSkuDetails("donation_002"));
+			setupButton(R.id.donation_003, "donation_003", inventory.getSkuDetails("donation_003"));
+			setupButton(R.id.donation_004, "donation_004", inventory.getSkuDetails("donation_004"));
 			
 			for (String sku: more) {
 				if (inventory.hasPurchase(sku))
