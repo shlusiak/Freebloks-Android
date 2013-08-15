@@ -65,7 +65,7 @@
 		<item>3rd place</item>
 		<item>4th place</item>
 	</string-array>
-	<string name="game_finished">Game finished</string>
+	<string name="game_finished">Game Over</string>
 	<string-array name="color_names">
 	    <item>Blue</item>
 	    <item>Yellow</item>
