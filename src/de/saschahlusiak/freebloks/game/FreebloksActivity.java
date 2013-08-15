@@ -1021,9 +1021,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		});
 	}
 
+	/* we have to store the number of possible turns before and after a stone has been set
+	 * to detect blocking of other players */
+	private int number_of_possible_turns[] = new int[4];
+	
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
-
+		for (int i = 0; i < 4; i++)
+			number_of_possible_turns[i] = client.spiel.get_player(i).m_number_of_possible_turns;
 	}
 	
 	@Override
@@ -1036,18 +1041,19 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
 			vibrate(Global.VIBRATE_SET_STONE);
 		}
-		
-		Player p = client.spiel.get_player(s.player);
-		/* TODO: also show toast, if previous player blocked out another player */
-		if (p.m_number_of_possible_turns <= 0) {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(s.player)), Toast.LENGTH_SHORT).show();
-					if (view != null)
-						view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
-				}
-			});
+
+		for (int i = 0; i < 4; i++) {
+			final Player p = client.spiel.get_player(i);
+			if (p.m_number_of_possible_turns <= 0 && number_of_possible_turns[i] > 0) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
+						if (view != null)
+							view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
+					}
+				});
+			}
 		}
 	}
 
