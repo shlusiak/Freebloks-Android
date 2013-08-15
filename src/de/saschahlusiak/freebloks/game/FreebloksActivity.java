@@ -976,7 +976,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				else if (client == null || !client.isConnected())
 					status.setText(R.string.not_connected);
 				else if (client.spiel.is_finished()) {
-					/* TODO: don't display player details in 2 player 2 color mode */
 					int pl = view.model.board.getShowWheelPlayer();
 					Player p = client.spiel.get_player(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
