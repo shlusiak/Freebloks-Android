@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.view.model;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import android.graphics.PointF;
@@ -86,6 +87,16 @@ public class Board implements ViewElement {
 			lastDetailsPlayer = -1;
 		else
 			lastDetailsPlayer = (centerPlayer + p + 4) % 4;
+		
+		if (model.spiel != null) {
+			if (model.spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+				model.spiel.m_gamemode == Spielleiter.GAMEMODE_DUO) {
+				if (lastDetailsPlayer == 1)
+					lastDetailsPlayer = 0;
+				if (lastDetailsPlayer == 3)
+					lastDetailsPlayer = 2;
+			}
+		}
 	}
 	
 	/**
