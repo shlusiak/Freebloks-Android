@@ -180,7 +180,7 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	} 
 
-	void refresh_player_data(){
+	public void refresh_player_data(){
 		for (int n = 0; n < PLAYER_MAX; n++){
 			m_player[n].refresh_data(this);
 		}

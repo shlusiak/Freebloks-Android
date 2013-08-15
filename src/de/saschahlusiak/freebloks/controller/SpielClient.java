@@ -252,6 +252,7 @@ public class SpielClient {
 				}
 			}
 			spiel.m_current_player=-1;
+			spiel.refresh_player_data();
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.gameStarted();
 			break;
