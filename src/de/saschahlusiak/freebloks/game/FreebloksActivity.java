@@ -26,6 +26,8 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
+import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
+import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
@@ -1050,8 +1052,31 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					@Override
 					public void run() {
 						Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
-						if (view != null)
+						if (view != null) {
 							view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
+							if (view.model.showAnimations) {
+								int sx, sy;
+								sx = client.spiel.get_player_start_x(p.getPlayerNumber());
+								sy = client.spiel.get_player_start_y(p.getPlayerNumber());
+								for (int x = 0; x < client.spiel.m_field_size_x; x++)
+									for (int y = 0; y < client.spiel.m_field_size_y; y++)
+										if (client.spiel.get_game_field(y, x) == p.getPlayerNumber()) {
+											boolean effected = false;
+											synchronized (view.model.effects) {
+												for (int j = 0; j < view.model.effects.size(); j++)
+													if (view.model.effects.get(j).isEffected(x, y)) {
+														effected = true;
+														break;
+													}
+											}
+											if (!effected) {
+												final float distance = (float)Math.sqrt((x - sx)*(x - sx) + (y - sy)*(y - sy));
+												Effect effect = new BoardStoneGlowEffect(view.model, p.getPlayerNumber(), x, y, distance);
+												view.model.addEffect(effect);
+											}
+										}
+							}
+						}
 					}
 				});
 			}
