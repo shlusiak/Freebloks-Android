@@ -278,12 +278,12 @@ public class BoardRenderer {
 	}
 	
 	
-	final float stone_red[]={0.75f, 0, 0, 0};
-	final float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
-	final float stone_green[]={0.0f, 0.65f, 0, 0};
-	final float stone_yellow[]={0.80f, 0.80f, 0, 0};
-	final float stone_white[]={0.7f, 0.7f, 0.7f, 0};
-	final float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green };
+	final static float stone_red[]={0.75f, 0, 0, 0};
+	final static float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
+	final static float stone_green[]={0.0f, 0.65f, 0, 0};
+	final static float stone_yellow[]={0.80f, 0.80f, 0, 0};
+	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};
+	public static final float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green };
 	final float stone_specular[]={0.3f, 0.3f, 0.3f, 1.0f};
 	final float stone_shininess[]={ 30.0f };
 
@@ -292,6 +292,17 @@ public class BoardRenderer {
 		c[3] = alpha;
 		
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
+		
+	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, stone.getVertexBuffer());
+	    gl.glNormalPointer(GL10.GL_FLOAT, 0, stone.getNormalBuffer());
+	    
+	    stone.drawElements(gl);
+	}
+
+	public final void renderStone(GL10 gl, float[] color) {
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, color, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
 		
