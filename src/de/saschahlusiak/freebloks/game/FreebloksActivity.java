@@ -272,10 +272,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		} else {
 			view.setScale(prefs.getFloat("view_scale", 1.0f));
 			showRateDialog = RateAppDialog.checkShowRateDialog(this);
-			if (prefs.getLong("rate_number_of_starts", 0) == Global.DONATE_STARTS) {
-				Intent intent = new Intent(this, DonateActivity.class);
-				startActivity(intent);
-			}
 		}
 		if (view.model.soundPool == null)
 			view.model.soundPool = new Sounds(this);
