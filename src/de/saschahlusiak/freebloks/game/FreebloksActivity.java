@@ -13,6 +13,7 @@ import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
@@ -25,6 +26,8 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
+import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
+import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
@@ -32,6 +35,7 @@ import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -102,7 +106,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	NET_SERVER_STATUS lastStatus;
 	Menu optionsMenu;
 	ViewGroup statusView;
-	
+
+	ConnectTask connectTask;
+
 	String clientName;
 	int difficulty;
 	int gamemode;
@@ -155,12 +161,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		@Override
 		protected void onCancelled() {
-			progress.dismiss();
+			connectTask = null;
 			super.onCancelled();
 		}
 		
 		@Override
 		protected void onPostExecute(String result) {
+			connectTask = null;
 			FreebloksActivity.this.client = this.myclient;
 			progress.dismiss();
 			if (result != null) {
@@ -201,6 +208,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	SharedPreferences prefs;
 
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -264,6 +272,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		} else {
 			view.setScale(prefs.getFloat("view_scale", 1.0f));
 			showRateDialog = RateAppDialog.checkShowRateDialog(this);
+			if (prefs.getLong("rate_number_of_starts", 0) == Global.DONATE_STARTS) {
+				Intent intent = new Intent(this, DonateActivity.class);
+				startActivity(intent);
+			}
 		}
 		if (view.model.soundPool == null)
 			view.model.soundPool = new Sounds(this);
@@ -357,6 +369,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onDestroy() {
 		Log.d(tag, "onDestroy");
+		if (connectTask != null) try {
+			connectTask.cancel(true);
+			connectTask.get();
+			connectTask = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (spielthread != null) try {
 			spielthread.client.disconnect();
 			spielthread.goDown();
@@ -452,8 +471,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return;
 		if (client.spiel == null)
 			return;
-		Spielleiter l = client.spiel;
-		outState.putSerializable("game", l);
+		synchronized (client) {
+			Spielleiter l = client.spiel;
+			outState.putSerializable("game", l);
+		}
 	}
 	
 	private boolean readStateFromBundle(Bundle in) {
@@ -465,8 +486,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
 			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.m_field_size_x);
-			ConnectTask task = new ConnectTask(client, false, null);
-			task.execute((String)null);
+			connectTask = new ConnectTask(client, false, null);
+			connectTask.execute((String)null);
 
 			return true;
 		}
@@ -505,7 +526,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		spiel.start_new_game(gamemode);
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		
-		ConnectTask task = new ConnectTask(client, show_lobby, new Runnable() {
+		connectTask = new ConnectTask(client, show_lobby, new Runnable() {
 			@Override
 			public void run() {
 				if (request_player == null)
@@ -519,7 +540,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					client.request_start();
 			}
 		});
-		task.execute(server);
+		connectTask.execute(server);
 	}
 	
 	boolean restoreOldGame() throws Exception {
@@ -961,7 +982,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				else if (client == null || !client.isConnected())
 					status.setText(R.string.not_connected);
 				else if (client.spiel.is_finished()) {
-					/* TODO: don't display player details in 2 player 2 color mode */
 					int pl = view.model.board.getShowWheelPlayer();
 					Player p = client.spiel.get_player(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
@@ -1006,29 +1026,62 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		});
 	}
 
+	/* we have to store the number of possible turns before and after a stone has been set
+	 * to detect blocking of other players */
+	private int number_of_possible_turns[] = new int[4];
+	
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
-
+		for (int i = 0; i < 4; i++)
+			number_of_possible_turns[i] = client.spiel.get_player(i).m_number_of_possible_turns;
 	}
 	
 	@Override
 	public void stoneHasBeenSet(final NET_SET_STONE s) {
+		if (client == null)
+			return;
+		if (view == null)
+			return;
 		if (!client.spiel.is_local_player(s.player)) {
 			view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
 			vibrate(Global.VIBRATE_SET_STONE);
 		}
-		
-		Player p = client.spiel.get_player(s.player);
-		/* TODO: also show toast, if previous player blocked out another player */
-		if (p.m_number_of_possible_turns <= 0) {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(s.player)), Toast.LENGTH_SHORT).show();
-					/* FIXME: this may throw a nullpointer exception */
-					view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
-				}
-			});
+
+		for (int i = 0; i < 4; i++) {
+			final Player p = client.spiel.get_player(i);
+			if (p.m_number_of_possible_turns <= 0 && number_of_possible_turns[i] > 0) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
+						if (view != null) {
+							view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
+							if (view.model.showAnimations) {
+								int sx, sy;
+								sx = client.spiel.get_player_start_x(p.getPlayerNumber());
+								sy = client.spiel.get_player_start_y(p.getPlayerNumber());
+								for (int x = 0; x < client.spiel.m_field_size_x; x++)
+									for (int y = 0; y < client.spiel.m_field_size_y; y++)
+										if (client.spiel.get_game_field(y, x) == p.getPlayerNumber()) {
+											boolean effected = false;
+											synchronized (view.model.effects) {
+												for (int j = 0; j < view.model.effects.size(); j++)
+													if (view.model.effects.get(j).isEffected(x, y)) {
+														effected = true;
+														break;
+													}
+											}
+											if (!effected) {
+												final float distance = (float)Math.sqrt((x - sx)*(x - sx) + (y - sy)*(y - sy));
+												Effect effect = new BoardStoneGlowEffect(view.model, p.getPlayerNumber(), x, y, distance);
+												view.model.addEffect(effect);
+											}
+										}
+							}
+						}
+					}
+				});
+			}
 		}
 	}
 
@@ -1262,7 +1315,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
-		if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
+		if (client != null && client.spiel.current_player() >= 0 && lastStatus != null && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else {
 			if (view.model.intro != null) {

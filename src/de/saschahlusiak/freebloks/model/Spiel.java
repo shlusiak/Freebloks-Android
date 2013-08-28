@@ -130,7 +130,7 @@ public class Spiel implements Serializable, Cloneable {
 		return m_player[playernumber];
 	}
 
-	int get_player_start_x(int playernumber) {
+	public int get_player_start_x(int playernumber) {
 		switch (playernumber) {
 		case 0 : 
 		case 1 : return 0;
@@ -138,7 +138,7 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	}
 
-	int get_player_start_y(int playernumber) {
+	public int get_player_start_y(int playernumber) {
 		switch (playernumber){
 		case 1 :
 		case 2 : return 0;
@@ -180,7 +180,7 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	} 
 
-	void refresh_player_data(){
+	public void refresh_player_data(){
 		for (int n = 0; n < PLAYER_MAX; n++){
 			m_player[n].refresh_data(this);
 		}

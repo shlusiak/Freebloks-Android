@@ -1,6 +1,5 @@
 Dies ist die Android-Version von Freebloks 3D, einem Klon des bekannten Brettspiels "Blokus" von Sekkoia. Versuche so viele Steine wie möglich auf das Spielfeld zu legen, mit nur zwei einfachen Regeln: jeder Stein muss mindestens eine Ecke eines bereits gelegten Steins berühren, aber nie eine Kante. Kannst du mehr Steine ablegen, als deine Gegenspieler?
 
-
 SPIELREGELN:
 Jeder Spieler besitzt 21 tetris-ähnliche Steine: 12 Steine mit 5 Quadraten, 5 mit 4 Quadraten, 2 mit 3 Quadraten, 1 mit 2 Quadraten und einen einzelnen Stein.
 
@@ -8,8 +7,7 @@ Die Spieler legen der Reihe nach einen Stein auf das 20 x 20 Spielbrett ab. Der 
 
 Wenn ein Spieler keine Züge mehr hat, muss er aussetzen. Das Spiel ist vorbei, wenn kein Spieler mehr legen kann.
 
-Die Anzahl der einzelnen Quadrate der Spielsteine wird aufaddiert. Der Spieler mit den wenigsten Quadraten übrig, hat gewonnen.
-
+Die Anzahl der einzelnen Quadrate der Spielsteine wird aufaddiert. Der Spieler mit den meisten Quadraten auf dem Spielfeld hat gewonnen.
 
 BEDIENUNG:
 - Durchscrolle die Liste deiner Steine mit dem Finger
@@ -21,7 +19,6 @@ BEDIENUNG:
 
 Das Spiel kann jederzeit beendet werden, der aktuelle Spielstand wird beim nächsten Start fortgesetzt.
 
-
 FUNKTIONEN:
 - Unterstützung für 2 Spieler: entweder mit nur 2 Farben (Blokus Duo), oder mit 4 Farben und pro Spieler 2
 - Unterschiedliche Feldgrößen
@@ -32,13 +29,12 @@ FUNKTIONEN:
 
 Das Spiel ist netzwerkkompatibel mit "Freebloks 3D" für Windows und Linux: http://www.saschahlusiak.de/freebloks-3d/
 
-
 SPENDEN:
-Wenn dir Freebloks 3D gefällt, unterstütze bitte die Entwickler durch Kauf einer In-App Spende deiner Wahl.
+Freebloks 3D is kostenlos, werbefrei und Open Source. Aber nicht alles, was nichts kostet, hat auch keinen Wert. Du kannst selber entscheiden, wieviel Freebloks dir wert ist und die Entwickler durch Kauf einer In-App Spende deiner Wahl unterstützen, oder Freebloks VIP kaufen: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
 
-Das Spiel ist frei, Open Source und vollständig ohne Werbung. Der vollständige Quelltext ist auf GitHub verfügbar: https://github.com/shlusiak/Freebloks-Android
+Der vollständige Quelltext ist auf GitHub verfügbar: https://github.com/shlusiak/Freebloks-Android
 
-Wenn du eine Idee oder einen Wunsch hast, schreib mir einfach eine E-Mail: mail@saschahlusiak.de
+Wenn du eine Idee oder einen Wunsch hast, schreib mir einfach eine E-Mail: apps@saschahlusiak.de
 
 
 Ähnlich Blokish und Blokr!

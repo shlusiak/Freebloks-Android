@@ -27,7 +27,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			public boolean onPreferenceClick(Preference preference) {
 				String url;
 				if (Global.IS_AMAZON)
-					url = Global.getMarketURLString(getBaseContext());
+					url = Global.getMarketURLString(getPackageName());
 				else
 					url = "market://details?id=" + getApplication().getPackageName();
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -36,10 +36,6 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			}
 		});
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
-		
-		/* TODO: implement Amazon specific donation activity and enable preference */
-		if (Global.IS_AMAZON)
-			((PreferenceCategory)findPreference("about_category")).removePreference(findPreference("donate"));
 	}
 	
 	@Override

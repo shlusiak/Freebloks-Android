@@ -16,11 +16,15 @@ import de.saschahlusiak.freebloks.billing.Purchase;
 import de.saschahlusiak.freebloks.billing.SkuDetails;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class DonateActivity extends Activity implements OnIabSetupFinishedListener, OnIabPurchaseFinishedListener, OnConsumeFinishedListener {
 	IabHelper mHelper;
@@ -34,10 +38,25 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.donate_activity);
 		
-		mHelper = new IabHelper(this, Global.base64EncodedPublicKey);
-		mHelper.enableDebugLogging(true);
+		if (Global.IS_AMAZON) {
+			findViewById(R.id.donation_001).setVisibility(View.GONE);
+			findViewById(R.id.donation_002).setVisibility(View.GONE);
+			findViewById(R.id.donation_003).setVisibility(View.GONE);
+			findViewById(R.id.donation_004).setVisibility(View.GONE);
+			((RadioButton)findViewById(R.id.donation_freebloksvip)).setChecked(true);
+		} else {
+			findViewById(R.id.donation_freebloksvip).setVisibility(View.GONE);
+			mHelper = new IabHelper(this, Global.base64EncodedPublicKey);
+			mHelper.enableDebugLogging(true);
+			mHelper.startSetup(this);
+		}
 		
-		mHelper.startSetup(this);
+		findViewById(R.id.next).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onNextButtonPress();
+			}
+		});
 	}
 	
 	@Override
@@ -54,31 +73,53 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
         }
     }
 
-	void setupButton(int id, SkuDetails details) {
-		final Button b = (Button)findViewById(id);
+	void setupButton(int id, String sku, SkuDetails details) {
+		final RadioButton b = (RadioButton)findViewById(id);
 		
-		if (details == null) {
+		if (sku == null) {
 			b.setText(android.R.string.unknownName);
 			b.setEnabled(false);
 			return;
 		}
 		
-		b.setText(details.getPrice());
-		b.setTag(details);
+		b.setTag(sku);
+		if (details != null)
+			b.setText(details.getPrice());
 		b.setEnabled(true);
+	}
+	
+	void onNextButtonPress() {
+		RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
+		RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
 		
-		b.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SkuDetails detail = (SkuDetails)b.getTag();
-				mHelper.launchPurchaseFlow(DonateActivity.this, detail.getSku(), RC_REQUEST, 
-						DonateActivity.this, "abcdef");
-			}
-		});		
+		if (group.getCheckedRadioButtonId() == R.id.donation_freebloksvip) {
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Global.getMarketURLString("de.saschahlusiak.freebloksvip")));
+			startActivity(intent);
+			finish();
+			return;
+		}
+		if (button == null)
+			return;
+		if (!button.isEnabled())
+			return;
+		
+		String sku = (String)button.getTag();
+		if (sku == null) {
+			finish();
+			return;
+		}
+		mHelper.launchPurchaseFlow(DonateActivity.this, sku, RC_REQUEST, DonateActivity.this, "abcdef");
 	}
 
 	@Override
-	public void onIabSetupFinished(IabResult result) {
+	public void onIabSetupFinished(final IabResult result) {
+		findViewById(R.id.next).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onNextButtonPress();
+			}
+		});
+
 		if (!result.isSuccess()) {
 			Log.d(tag, "Problem setting up In-app Billing: " + result);
 		} else {
@@ -92,12 +133,16 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 				inventory = mHelper.queryInventory(true, more);
 			} catch (IabException e) {
 				e.printStackTrace();
+				setupButton(R.id.donation_001, "donation_001", null);
+				setupButton(R.id.donation_002, "donation_002", null);
+				setupButton(R.id.donation_003, "donation_003", null);
+				setupButton(R.id.donation_004, "donation_004", null);
 				return;
 			}
-			setupButton(R.id.donation_001, inventory.getSkuDetails("donation_001"));
-			setupButton(R.id.donation_002, inventory.getSkuDetails("donation_002"));
-			setupButton(R.id.donation_003, inventory.getSkuDetails("donation_003"));
-			setupButton(R.id.donation_004, inventory.getSkuDetails("donation_004"));
+			setupButton(R.id.donation_001, "donation_001", inventory.getSkuDetails("donation_001"));
+			setupButton(R.id.donation_002, "donation_002", inventory.getSkuDetails("donation_002"));
+			setupButton(R.id.donation_003, "donation_003", inventory.getSkuDetails("donation_003"));
+			setupButton(R.id.donation_004, "donation_004", inventory.getSkuDetails("donation_004"));
 			
 			for (String sku: more) {
 				if (inventory.hasPurchase(sku))
@@ -115,6 +160,7 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
         }
 		/* consume purchase */
         mHelper.consumeAsync(info, this);
+        finish();
 	}
 
 	@Override

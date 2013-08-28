@@ -18,38 +18,69 @@
         android:paddingBottom="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:layout_gravity="center" >
+        
+	    <RadioButton
+	        android:id="@+id/donation_none"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@string/donation_nothing" />
+	    
+	    <RadioButton
+	        android:id="@+id/donation_001"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	    	android:enabled="false"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@android:string/unknownName" />
+	    	
+	    <RadioButton
+	        android:id="@+id/donation_002"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	    	android:enabled="false"
+	    	android:checked="true"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@android:string/unknownName" />
+	
+	    <RadioButton
+	        android:id="@+id/donation_003"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	    	android:enabled="false"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@android:string/unknownName" />
+	
+	    <RadioButton
+	        android:id="@+id/donation_004"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	    	android:enabled="false"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@android:string/unknownName" />
+
+	    <RadioButton
+	        android:id="@+id/donation_freebloksvip"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:text="@string/donation_freebloksvip" />
+	    	    
+    </RadioGroup>
+
     <Button
-        android:id="@+id/donation_001"
+        android:id="@+id/next"
         android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
-    <Button
-        android:id="@+id/donation_002"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
-    <Button
-        android:id="@+id/donation_003"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_height="54dp"
+        android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
-    <Button
-        android:id="@+id/donation_004"
-        android:layout_width="190dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:enabled="false"
-        android:text="@android:string/unknownName" />
+        android:text="@string/donation_next" />
     
 </LinearLayout>
 </ScrollView>

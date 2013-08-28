@@ -157,14 +157,6 @@ public class Wheel implements ViewElement {
 			if (task != null)
 				task.cancel();
 			if (model.currentStone.stone != null && model.currentStone.stone != highlightStone) {
-				/* TODO: think about what we actually want when we have a current stone and touching on the
-				 * wheel. Spin? Change current stone? Set a different highlighted stone? Start dragging the
-				 * new stone? */
-				
-				/* swap current stone */
-//				showStone(highlightStone.get_number());
-//				model.currentStone.startDragging(null, highlightStone);
-//				model.currentStone.stone = highlightStone;
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 				status = Status.SPINNING;
 			} else {
