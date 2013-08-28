@@ -471,8 +471,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return;
 		if (client.spiel == null)
 			return;
-		Spielleiter l = client.spiel;
-		outState.putSerializable("game", l);
+		synchronized (client) {
+			Spielleiter l = client.spiel;
+			outState.putSerializable("game", l);
+		}
 	}
 	
 	private boolean readStateFromBundle(Bundle in) {
