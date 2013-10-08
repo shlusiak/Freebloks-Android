@@ -83,6 +83,7 @@ void CTurnpool::delete_last(){
 	m_current->set_next(NULL);
 	delete m_tail;
 	m_tail = m_current;
+	m_current = NULL;
 }
 
 
