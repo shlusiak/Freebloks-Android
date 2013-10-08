@@ -106,13 +106,14 @@ public class GameFinishActivity extends Activity {
 
 		for (i = 3; i >= 0; i--) {
 			String name;
+			int color = Global.getPlayerColor(place[i], spiel.m_gamemode);
 			Player p = spiel.get_player(place[i]);
 			if (clientName != null && spiel.is_local_player(place[i]))
 				name = clientName; 
 			else if (lastStatus == null)
-				name = getResources().getStringArray(R.array.color_names)[place[i]];
+				name = getResources().getStringArray(R.array.color_names)[color];
 			else
-				name = lastStatus.getPlayerName(getResources(), place[i]);
+				name = lastStatus.getPlayerName(getResources(), place[i], color);
 			
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
@@ -120,7 +121,7 @@ public class GameFinishActivity extends Activity {
 					getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
-			t[i].setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[place[i]]);
+			t[i].setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[color]);
 			
 			AnimationSet set = new AnimationSet(false);
 			Animation a = new AlphaAnimation(0.0f, 1.0f);

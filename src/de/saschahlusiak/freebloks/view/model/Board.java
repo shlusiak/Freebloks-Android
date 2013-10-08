@@ -171,7 +171,7 @@ public class Board implements ViewElement {
 		if (!rotating)
 			return false;
 		
-		model.currentStone.startDragging(null, null);
+		model.currentStone.startDragging(null, null, 0);
 		
 		float an = (float)Math.atan2(m.y, m.x);
 		mAngleY += (oa - an) / (float)Math.PI * 180.0f;

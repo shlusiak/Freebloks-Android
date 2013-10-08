@@ -67,10 +67,13 @@
 	</string-array>
 	<string name="game_finished">Spiel vorbei</string>
 	<string-array name="color_names">
+	    <item>Weiß</item>
 	    <item>Blau</item>
 	    <item>Gelb</item>
 	   	<item>Rot</item>
    	    <item>Grün</item>
+   	    <item>Orange</item>
+   	    <item>Lila</item>
 	</string-array>
 	<string-array name="difficulties">
 	    <item>sehr schwer</item>

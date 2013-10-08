@@ -13,8 +13,8 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	
 	private float NUMBER_OF_PERIODS;
 	
-	public StoneFadeEffect(ViewModel model, Stone stone, int player, int x, int y, float cycles) {
-		super(model, stone, player, x, y);
+	public StoneFadeEffect(ViewModel model, Stone stone, int color, int x, int y, float cycles) {
+		super(model, stone, color, x, y);
 		this.NUMBER_OF_PERIODS = cycles;
 	}
 	
@@ -37,7 +37,7 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 		
-		renderer.renderPlayerStone(gl, player, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 }

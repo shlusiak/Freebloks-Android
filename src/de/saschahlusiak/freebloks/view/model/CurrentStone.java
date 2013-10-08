@@ -22,6 +22,7 @@ public class CurrentStone implements ViewElement {
 	}
 	
 	Stone stone;
+	int current_color;
 	PointF pos = new PointF();
 	boolean hasMoved; /* has the stone been moved since it was touched? */
 	boolean canCommit; /* is the stone commitable if it has not been moved? */
@@ -209,7 +210,7 @@ public class CurrentStone implements ViewElement {
 				-BoardRenderer.stone_size * offset);
 	    
 	    gl.glEnable(GL10.GL_DEPTH_TEST);
-		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 
+		renderer.board.renderPlayerStone(gl, current_color, stone, 
 				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
 		
 		gl.glPopMatrix();
@@ -482,8 +483,9 @@ public class CurrentStone implements ViewElement {
 		return false;
 	}
 	
-	synchronized public void startDragging(PointF fieldPoint, Stone stone) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone, int color) {
 		this.stone = stone;
+		this.current_color = color;
 		if (stone == null) {
 			status = Status.IDLE;
 			return;
