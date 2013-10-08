@@ -163,11 +163,11 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			Stone st = new Stone();
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
-			StoneRollEffect e = new StoneRollEffect(model, st, s.player, s.x, s.y, 4.0f, -7.0f);
+			StoneRollEffect e = new StoneRollEffect(model, st, model.getPlayerColor(s.player), s.x, s.y, 4.0f, -7.0f);
 		
 			EffectSet set = new EffectSet();
 			set.add(e);
-			set.add(new StoneFadeEffect(model, st, s.player, s.x, s.y, 4.0f));
+			set.add(new StoneFadeEffect(model, st, model.getPlayerColor(s.player), s.x, s.y, 4.0f));
 			model.addEffect(set);
 		}
 	}
@@ -198,7 +198,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		PointF p = new PointF();
 		p.x = s.x - 0.5f + st.get_stone_size() / 2;
 		p.y = s.y - 0.5f + st.get_stone_size() / 2;
-		model.currentStone.startDragging(p, st);
+		model.currentStone.startDragging(p, st, model.getPlayerColor(s.player));
 		requestRender();
 	}
 
@@ -229,10 +229,10 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
 		if (model.showAnimations) {
-			Effect e = new StoneUndoEffect(model, s, t.m_playernumber, t.m_x, t.m_y);
+			Effect e = new StoneUndoEffect(model, s, model.getPlayerColor(t.m_playernumber), t.m_x, t.m_y);
 			model.addEffect(e);
 		}
-		model.currentStone.startDragging(null, null);
+		model.currentStone.startDragging(null, null, 0);
 		requestRender();
 	}
 

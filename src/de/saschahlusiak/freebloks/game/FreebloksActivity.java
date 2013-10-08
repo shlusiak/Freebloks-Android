@@ -881,7 +881,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				return true;
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
-			view.model.currentStone.startDragging(null, null);
+			view.model.currentStone.startDragging(null, null, 0);
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
@@ -985,14 +985,14 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					int pl = view.model.board.getShowWheelPlayer();
 					Player p = client.spiel.get_player(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
-					statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[pl]);
+					statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(pl)]);
 					points.setVisibility(View.VISIBLE);
 					points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 					movesLeft.setVisibility(View.VISIBLE);
 					movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
-						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[player]);
+						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(player)]);
 						Player p = client.spiel.get_player(player);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
@@ -1005,7 +1005,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
 						}
 					} else {
-						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[showPlayer]);
+						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(showPlayer)]);
 						Player p = client.spiel.get_player(showPlayer);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
@@ -1073,7 +1073,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 											}
 											if (!effected) {
 												final float distance = (float)Math.sqrt((x - sx)*(x - sx) + (y - sy)*(y - sy));
-												Effect effect = new BoardStoneGlowEffect(view.model, p.getPlayerNumber(), x, y, distance);
+												Effect effect = new BoardStoneGlowEffect(
+														view.model,
+														view.model.getPlayerColor(p.getPlayerNumber()),
+														x,
+														y,
+														distance);
 												view.model.addEffect(effect);
 											}
 										}
@@ -1194,10 +1199,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				String name;
 				name = s.getClientName(getResources(), s.spieler[i]);
 				
-				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[i]); 
+				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]); 
 				final ChatEntry e = new ChatEntry(-1, text, name);
 				e.setPlayer(i);
-			
+
 				if (!view.model.spiel.is_local_player(i))
 					view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
 			
@@ -1275,11 +1280,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			Stone st = new Stone();
 			int player = client.spiel.current_player();
 			st.copyFrom(stone);
-			StoneRollEffect e = new StoneRollEffect(view.model, st, player, x, y, view.model.currentStone.hover_height_high, -15.0f);
-	
+			StoneRollEffect e = new StoneRollEffect(view.model, st, view.model.getPlayerColor(player), x, y, view.model.currentStone.hover_height_high, -15.0f);
+
 			EffectSet set = new EffectSet();
 			set.add(e);
-			set.add(new StoneFadeEffect(view.model, st, player, x, y, 4.0f));
+			set.add(new StoneFadeEffect(view.model, st, view.model.getPlayerColor(player), x, y, 4.0f));
 			view.model.addEffect(set);
 		}
 
@@ -1341,7 +1346,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	}
 	
 	String getPlayerName(int player) {
-		String color_name = getResources().getStringArray(R.array.color_names)[player];
+		String color_name = getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(player)];
 		/* this will ensure that always the local name is used, even though the server
 		 * might still have stored an old or no name at all
 		 * 
@@ -1351,6 +1356,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return clientName;
 		if (lastStatus == null)
 			return color_name;
-		return lastStatus.getPlayerName(getResources(), player);
+		return lastStatus.getPlayerName(getResources(), player, view.model.getPlayerColor(player));
 	}	
 }

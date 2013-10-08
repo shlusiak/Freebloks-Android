@@ -61,12 +61,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player2 = (CheckBox)findViewById(R.id.player2);
 		player3 = (CheckBox)findViewById(R.id.player3);
 		player4 = (CheckBox)findViewById(R.id.player4);
-		
-		player1.setText(context.getResources().getStringArray(R.array.color_names)[0]);
-		player2.setText(context.getResources().getStringArray(R.array.color_names)[1]);
-		player3.setText(context.getResources().getStringArray(R.array.color_names)[2]);
-		player4.setText(context.getResources().getStringArray(R.array.color_names)[3]);
-		
+				
 		field_size = (Spinner) findViewById(R.id.field_size);
 		
 		game_mode = (Spinner) findViewById(R.id.game_mode);
@@ -124,6 +119,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 					player3.setEnabled(true);
 					player4.setEnabled(true);
 				}
+				updateNames();
 			}
 
 			@Override
@@ -167,7 +163,18 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		server = (EditText)findViewById(R.id.server);
 		server.setText(Global.DEFAULT_SERVER_ADDRESS);
 		
+		updateNames();
+		
 		setDifficultyLabel();		
+	}
+	
+	void updateNames() {
+		String[] color_names = getContext().getResources().getStringArray(R.array.color_names);
+		int game_mode = this.game_mode.getSelectedItemPosition();
+		player1.setText(color_names[Global.getPlayerColor(0, game_mode)]);
+		player2.setText(color_names[Global.getPlayerColor(1, game_mode)]);
+		player3.setText(color_names[Global.getPlayerColor(2, game_mode)]);
+		player4.setText(color_names[Global.getPlayerColor(3, game_mode)]);
 	}
 	
 	private void saveSettings() {
@@ -204,6 +211,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		}
 
 		this.name.setText(name);
+		updateNames();
 		
 		int slider = DIFFICULTY_DEFAULT;
 		for (int i = 0; i < DIFFICULTY_VALUES.length; i++)

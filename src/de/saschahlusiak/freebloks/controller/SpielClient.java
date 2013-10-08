@@ -263,6 +263,7 @@ public class SpielClient {
 			Turn t = spiel.history.get_last_turn();
 			Stone stone = spiel.get_player(t.m_playernumber).get_stone(t.m_stone_number);
 			stone.mirror_rotate_to(t.m_mirror_count, t.m_rotate_count);
+			Log.d(tag, "stone undone: " + t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone(stone, t);
 			spiel.undo_turn(spiel.history, spiel.m_gamemode);

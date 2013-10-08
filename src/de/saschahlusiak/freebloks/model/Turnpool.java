@@ -38,7 +38,7 @@ public class Turnpool implements Serializable {
 
 	final void delete_last() {
 		if (current <= 0)
-			return;
+			throw new IllegalStateException();
 		current--;
 		turns.remove(current);		
 	}

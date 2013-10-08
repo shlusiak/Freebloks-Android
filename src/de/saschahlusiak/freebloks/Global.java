@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks;
 
-import android.content.Context;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.graphics.Color;
 
 public class Global {
@@ -37,15 +37,52 @@ public class Global {
 	
 	
 	public static final int PLAYER_BACKGROUND_COLOR[] = {
-		Color.rgb(0, 0, 128),
-		Color.rgb(140, 140, 0),
-		Color.rgb(96, 0, 0),
-		Color.rgb(0, 96, 0),
+		Color.rgb(92, 92, 92),	/* white */
+		Color.rgb(0, 0, 128),	/* blue */
+		Color.rgb(140, 140, 0),	/* yellow */
+		Color.rgb(96, 0, 0),	/* red */
+		Color.rgb(0, 96, 0),	/* green */
+		Color.rgb(128, 64, 0),	/* orange */
+		Color.rgb(64, 0, 140)	/* purple */
 	};
+	
 	public static final int PLAYER_FOREGROUND_COLOR[] = {
-		Color.rgb(0, 160, 255),
-		Color.rgb(255, 255, 0),
-		Color.rgb(255, 0, 0),
-		Color.rgb(0, 255, 0),
+		Color.rgb(255, 255, 255),	/* white */
+		Color.rgb(0, 160, 255),	/* blue */
+		Color.rgb(255, 255, 0),	/* yellow */
+		Color.rgb(255, 0, 0),	/* red */
+		Color.rgb(0, 255, 0),	/* green */
+		Color.rgb(255, 128, 0),	/* orange */
+		Color.rgb(92, 0, 160),	/* purple */
 	};
+	
+	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};
+	final static float stone_red[]={0.75f, 0, 0, 0};
+	final static float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
+	final static float stone_green[]={0.0f, 0.65f, 0, 0};
+	final static float stone_yellow[]={0.80f, 0.80f, 0, 0};
+	final static float stone_orange[]={0.85f, 0.50f, 0, 0};
+	final static float stone_purple[]={0.40f, 0.0f, 0.80f, 0};
+	public final static float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green, stone_orange, stone_purple };
+
+	final static float stone_red_dark[]={0.065f, 0, 0, 0};
+	final static float stone_blue_dark[]={0.0f, 0.005f, 0.07f, 0};
+	final static float stone_green_dark[]={0.0f, 0.065f, 0, 0};
+	final static float stone_yellow_dark[]={0.070f, 0.070f, 0, 0};
+	final static float stone_orange_dark[]={0.070f, 0.040f, 0, 0};
+	final static float stone_purple_dark[]={0.040f, 0.000f, 0.070f, 0};
+	final static float stone_white_dark[]={0.06f, 0.06f, 0.06f, 0};
+	public final static float stone_shadow_color_a[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark, stone_orange_dark, stone_purple_dark };
+	
+	public final static int getPlayerColor(int player, int game_mode) {
+		if (game_mode == Spielleiter.GAMEMODE_DUO) {
+			/* player 1 is orange */
+			if (player == 0)
+				return 5;
+			/* player 2 is purple */
+			if (player == 2)
+				return 6;
+		}
+		return player + 1;
+	}
 }

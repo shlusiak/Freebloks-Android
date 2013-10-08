@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -278,17 +279,13 @@ public class BoardRenderer {
 	}
 	
 	
-	final static float stone_red[]={0.75f, 0, 0, 0};
-	final static float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
-	final static float stone_green[]={0.0f, 0.65f, 0, 0};
-	final static float stone_yellow[]={0.80f, 0.80f, 0, 0};
-	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};
-	public static final float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green };
+
+	
 	final float stone_specular[]={0.3f, 0.3f, 0.3f, 1.0f};
 	final float stone_shininess[]={ 30.0f };
 
 	public void renderStone(GL10 gl, int color, float alpha) {
-		final float c[] = stone_color_a[color + 1];
+		final float c[] = Global.stone_color_a[color];
 		c[3] = alpha;
 		
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
@@ -312,15 +309,8 @@ public class BoardRenderer {
 	    stone.drawElements(gl);
 	}
 
-	final float stone_red_dark[]={0.065f, 0, 0, 0};
-	final float stone_blue_dark[]={0.0f, 0.005f, 0.07f, 0};
-	final float stone_green_dark[]={0.0f, 0.065f, 0, 0};
-	final float stone_yellow_dark[]={0.070f, 0.070f, 0, 0};
-	final float stone_white_dark[]={0.06f, 0.06f, 0.06f, 0};
-	final float stone_shadow[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark };
-
 	public void renderStoneShadow(GL10 gl, int color, Stone stone, float alpha) {
-		final float c[] = stone_shadow[color + 1];
+		final float c[] = Global.stone_shadow_color_a[color];
 		c[3] = alpha;
 		
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, c, 0);
@@ -352,7 +342,7 @@ public class BoardRenderer {
 	}
 	
 	public void renderShadow(GL10 gl,
-			Stone stone, int player,
+			Stone stone, int color,
 			float height,
 			float ang, float ax, float ay, float az,
 			float light_angle,
@@ -383,12 +373,12 @@ public class BoardRenderer {
 	    		0,
 	    		-BoardRenderer.stone_size * offset);
 	    
-		renderStoneShadow(gl, player, stone, m_alpha * alpha);
+		renderStoneShadow(gl, color, stone, m_alpha * alpha);
 	}
 	
-	public void renderPlayerStone(GL10 gl, int player, Stone stone, float alpha) {
+	public void renderPlayerStone(GL10 gl, int color, Stone stone, float alpha) {
 		int i;
-		final float c[] = stone_color_a[player + 1];
+		final float c[] = Global.stone_color_a[color];
 		c[3] = alpha;
 
 		gl.glEnable(GL10.GL_BLEND);

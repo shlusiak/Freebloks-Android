@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -43,7 +44,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	}
 	
 	public void reset() {
-		currentStone.startDragging(null, null);
+		currentStone.startDragging(null, null, 0);
 		board.resetRotation();
 	}
 
@@ -115,5 +116,9 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		synchronized (effects) {
 			effects.clear();
 		}
+	}
+
+	public int getPlayerColor(int player) {
+		return Global.getPlayerColor(player, spiel.m_gamemode);
 	}
 }

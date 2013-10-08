@@ -67,10 +67,13 @@
 	</string-array>
 	<string name="game_finished">Game Over</string>
 	<string-array name="color_names">
+	    <item>White</item>
 	    <item>Blue</item>
 	    <item>Yellow</item>
 	   	<item>Red</item>
    	    <item>Green</item>
+   	    <item>Orange</item>
+   	    <item>Purple</item>
 	</string-array>
 	<string-array name="difficulties">
 	    <item>nuts</item>

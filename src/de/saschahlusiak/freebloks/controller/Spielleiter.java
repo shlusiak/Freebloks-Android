@@ -102,5 +102,5 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	
 	public void setFinished(boolean finished) {
 		this.finished = finished;
-	}
+	}	
 }

@@ -8,13 +8,13 @@ import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	Stone stone;
-	int player, x, y;
+	int color, x, y;
 	ViewModel model;
 	
-	AbsStoneEffect(ViewModel model, Stone stone, int player, int x, int y) {
+	AbsStoneEffect(ViewModel model, Stone stone, int color, int x, int y) {
 		this.model = model;
 		this.stone = stone;
-		this.player = player;
+		this.color = color;
 		this.x = x;
 		this.y = y;
 	}
