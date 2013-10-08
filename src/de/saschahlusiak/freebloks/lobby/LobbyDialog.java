@@ -165,6 +165,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		}
 		
 		updateStatus();
+		adapter.notifyDataSetChanged();
 	}
 	
 	void sendChat() {
@@ -237,6 +238,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			public void run() {
 				lastStatus = status;
 				updateStatus();
+				adapter.notifyDataSetChanged();
 			}
 		});
 	}
