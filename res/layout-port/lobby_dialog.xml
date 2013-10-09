@@ -81,6 +81,7 @@
 	        android:layout_weight="1"
 	        android:imeOptions="actionSend|flagNoExtractUi"
 	        android:inputType="textNoSuggestions|textCapSentences"
+	        android:hint="@string/lobby_message_hint"
 	        android:singleLine="true" >
 	
 	        <requestFocus />

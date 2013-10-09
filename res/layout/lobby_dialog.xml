@@ -62,8 +62,9 @@
         android:layout_toLeftOf="@+id/chatButton"
         android:imeOptions="actionSend|flagNoExtractUi"
         android:inputType="textNoSuggestions|textCapSentences"
-        android:singleLine="true" >
-
+        android:singleLine="true"
+	    android:hint="@string/lobby_message_hint" >
+        
         <requestFocus />
     </EditText>
 
