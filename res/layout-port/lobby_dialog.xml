@@ -23,27 +23,41 @@
         android:text="x Clients"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <GridView
-        android:id="@+id/color_grid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:orientation="horizontal"
         android:layout_alignLeft="@+id/server"
         android:layout_below="@+id/server"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:horizontalSpacing="4dp"
-        android:verticalSpacing="4dp"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth" tools:listitem="@layout/color_grid_item">
-
-    </GridView>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <GridView
+	        android:id="@+id/color_grid"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1.0"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginBottom="4dp"
+	        android:horizontalSpacing="4dp"
+	        android:verticalSpacing="4dp"
+	        android:numColumns="auto_fit"
+	        android:stretchMode="columnWidth" tools:listitem="@layout/color_grid_item">
+	
+	    </GridView>
+	    <Button
+	        android:id="@+id/startButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0"
+	        android:text="@string/start"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout1"
-        android:layout_below="@+id/color_grid"
+        android:layout_below="@+id/linearLayout2"
         android:layout_centerHorizontal="true"
         android:background="#3f000000"
         android:isScrollContainer="true"
@@ -77,13 +91,6 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="match_parent"
 	        android:src="@android:drawable/ic_menu_send" />
-	
-	    <Button
-	        android:id="@+id/startButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:text="@string/start"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
         
     </LinearLayout>
 </RelativeLayout>
