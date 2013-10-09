@@ -143,10 +143,13 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 								continue;
 							if (addr.isMulticastAddress())
 								continue;
+							String a = addr.getHostAddress();
+							if (a.contains("%"))
+								a = a.substring(0, a.indexOf("%"));
 							if (s == null)
-								s = addr.getHostAddress();
+								s = a;
 							else
-								s += "\n" + addr.getHostAddress();
+								s += "\n" + a;
 						}
 					}
 				if (s == null) /* no address found, clients will not be able to connect */
