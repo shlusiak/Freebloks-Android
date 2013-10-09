@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -38,7 +39,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	SpielClient client;
 	Handler handler = new Handler();
 	ListView chatList;
-	ArrayAdapter<ChatEntry> adapter;
+	ChatListAdapter adapter;
 	NET_SERVER_STATUS lastStatus = null;
 	GridView colorGrid;
 	ColorAdapter colorAdapter;
@@ -80,7 +81,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			}
 		});
 
-		adapter = new ChatListAdapter(getContext(), chatEntries);
+		adapter = new ChatListAdapter(getContext(), chatEntries, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
 		
@@ -163,6 +164,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			server.setTypeface(Typeface.DEFAULT);
 			server.setText(client.getLastHost());
 		}
+		adapter.setGameMode(client.spiel.m_gamemode);
 		
 		updateStatus();
 		adapter.notifyDataSetChanged();
@@ -237,6 +239,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			@Override
 			public void run() {
 				lastStatus = status;
+				adapter.setGameMode(client.spiel.m_gamemode);
 				updateStatus();
 				adapter.notifyDataSetChanged();
 			}
