@@ -31,7 +31,7 @@
         android:layout_height="match_parent"
         android:layout_alignRight="@+id/clients"
         android:layout_below="@+id/server"
-		android:layout_above="@+id/chatButton"
+		android:layout_above="@+id/startButton"
         android:layout_marginLeft="8dp"
         android:verticalSpacing="4dp"
         android:numColumns="1"
@@ -62,8 +62,9 @@
         android:layout_toLeftOf="@+id/chatButton"
         android:imeOptions="actionSend|flagNoExtractUi"
         android:inputType="textNoSuggestions|textCapSentences"
-        android:singleLine="true" >
-
+        android:singleLine="true"
+	    android:hint="@string/lobby_message_hint" >
+        
         <requestFocus />
     </EditText>
 
@@ -83,7 +84,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignLeft="@+id/color_grid"
-        android:layout_alignTop="@+id/chatButton"
         android:text="@string/start"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

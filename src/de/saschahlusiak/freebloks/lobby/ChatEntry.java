@@ -25,13 +25,13 @@ public class ChatEntry implements Serializable {
 		this.player = player;
 	}
 	
-	int getColor() {
+	int getColor(int gamemode) {
 		final int extra_colors[] = { Color.CYAN, Color.MAGENTA, Color.LTGRAY, Color.WHITE };
 
 		if (player < 0)
 			return extra_colors[client % extra_colors.length];
 		else
-			return Global.PLAYER_FOREGROUND_COLOR[player];
+			return Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(player, gamemode)];
 	}
 	
 	@Override

@@ -22,6 +22,7 @@ public class CurrentStone implements ViewElement {
 	}
 	
 	Stone stone;
+	int current_color;
 	PointF pos = new PointF();
 	boolean hasMoved; /* has the stone been moved since it was touched? */
 	boolean canCommit; /* is the stone commitable if it has not been moved? */
@@ -209,7 +210,7 @@ public class CurrentStone implements ViewElement {
 				-BoardRenderer.stone_size * offset);
 	    
 	    gl.glEnable(GL10.GL_DEPTH_TEST);
-		renderer.board.renderPlayerStone(gl, model.spiel.current_player(), stone, 
+		renderer.board.renderPlayerStone(gl, current_color, stone, 
 				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
 		
 		gl.glPopMatrix();
@@ -253,14 +254,15 @@ public class CurrentStone implements ViewElement {
 			y = (float)Math.floor(y + 0.5f);
 		}
 
+		/* FIXME: lock stone inside 3 top walls, when board is always in the same orientation */
 		/*
 		for (int i = 0; i < stone.get_stone_size(); i++)
 			for (int j = 0; j < stone.get_stone_size(); j++) {
 				if (stone.get_stone_field(j, i) == Stone.STONE_FIELD_ALLOWED) {
 					if (x + i < 0)
 						x = -i;
-					if (y + j < 0)
-						y = -j;
+//					if (y + j < 0)
+//						y = -j;
 					
 					if (x + i + 1 >= model.spiel.m_field_size_x)
 						x = model.spiel.m_field_size_x - i - 1;
@@ -268,7 +270,8 @@ public class CurrentStone implements ViewElement {
 						y = model.spiel.m_field_size_y - j - 1;
 				}
 			}
-		*/
+			*/
+		
 		
 		if (Math.floor(0.5f + pos.x) != Math.floor(0.5f + x) || Math.floor(pos.y + 0.5f) != Math.floor(0.5f + y)) {
 			pos.x = x;
@@ -482,8 +485,9 @@ public class CurrentStone implements ViewElement {
 		return false;
 	}
 	
-	synchronized public void startDragging(PointF fieldPoint, Stone stone) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone, int color) {
 		this.stone = stone;
+		this.current_color = color;
 		if (stone == null) {
 			status = Status.IDLE;
 			return;

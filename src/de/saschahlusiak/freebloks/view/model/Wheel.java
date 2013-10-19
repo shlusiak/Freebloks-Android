@@ -186,7 +186,7 @@ public class Wheel implements ViewElement {
 								if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 									model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 								showStone(highlightStone.get_number());
-								model.currentStone.startDragging(tmp, highlightStone);
+								model.currentStone.startDragging(tmp, highlightStone, model.getPlayerColor(currentPlayer));
 								model.currentStone.hasMoved = true;
 								model.board.resetRotation();
 								status = Status.IDLE;
@@ -247,7 +247,7 @@ public class Wheel implements ViewElement {
 			showStone(highlightStone.get_number());
 			if (model.currentStone.stone != highlightStone)
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
-			model.currentStone.startDragging(tmp, highlightStone);
+			model.currentStone.startDragging(tmp, highlightStone, model.getPlayerColor(currentPlayer));
 			status = Status.IDLE;
 			model.board.resetRotation();
 		}
@@ -262,7 +262,7 @@ public class Wheel implements ViewElement {
 		if (status == Status.SPINNING) {
 			if (highlightStone != null && model.currentStone.stone != highlightStone && (Math.abs(lastOffset - currentOffset) < 0.5f)) {
 				if (model.currentStone.stone != null)
-					model.currentStone.startDragging(null, highlightStone);
+					model.currentStone.startDragging(null, highlightStone, model.getPlayerColor(currentPlayer));
 				model.currentStone.status = CurrentStone.Status.IDLE;
 				showStone(highlightStone.get_number());
 				status = Status.IDLE;
@@ -316,11 +316,11 @@ public class Wheel implements ViewElement {
 				gl.glScalef(scale, scale, scale);
 				gl.glTranslatef(-offset * BoardRenderer.stone_size, 0, -offset * BoardRenderer.stone_size);
 				gl.glPushMatrix();
-				renderer.board.renderShadow(gl, s, currentPlayer, y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
+				renderer.board.renderShadow(gl, s, model.getPlayerColor(currentPlayer), y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
 				gl.glPopMatrix();
 
 				gl.glTranslatef(0, y, 0);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? -1 : currentPlayer, s, alpha);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? 0 : model.getPlayerColor(currentPlayer), s, alpha);
 				gl.glPopMatrix();
 			}
 		}

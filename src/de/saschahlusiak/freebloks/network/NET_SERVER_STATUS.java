@@ -84,11 +84,11 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		return client_names[client];
 	}
 	
-	public String getPlayerName(Resources resources, int player) {
+	public String getPlayerName(Resources resources, int player, int color) {
 		if (player < 0)
 			throw new InvalidParameterException();
 
-		String color_name = resources.getStringArray(R.array.color_names)[player];
+		String color_name = resources.getStringArray(R.array.color_names)[color];
 		if (spieler == null)
 			return color_name;
 		if (client_names == null)

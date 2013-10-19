@@ -41,6 +41,7 @@
     <string name="player_joined_color">%1$s spielt %2$s</string>
     <string name="player_left_color">%1$s (%2$s) hat das Spiel verlassen</string>
     <string name="no_addresses_found">[Keine IP-Adresse gefunden]</string>
+    <string name="lobby_message_hint">Nachricht</string>
     
     
     <string name="rate_now">Ja</string>
@@ -67,10 +68,13 @@
 	</string-array>
 	<string name="game_finished">Spiel vorbei</string>
 	<string-array name="color_names">
+	    <item>Weiß</item>
 	    <item>Blau</item>
 	    <item>Gelb</item>
 	   	<item>Rot</item>
    	    <item>Grün</item>
+   	    <item>Orange</item>
+   	    <item>Lila</item>
 	</string-array>
 	<string-array name="difficulties">
 	    <item>sehr schwer</item>
@@ -98,7 +102,7 @@
 	<string name="donation_text_long">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!\n\nAber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wieviel du bezahlen möchtest um die Entwickler zu unterstützen.\n\nWas ist dir Freebloks wert?</string>
 	<string name="donation_nothing">Nichts</string>
 	<string name="donation_next">Weiter</string>
-	<string name="donation_freebloksvip">Freebloks VIP kaufen</string>
+	<string name="donation_freebloksvip">Freebloks VIP</string>
 	
 			
 	<string-array name="theme_labels">
@@ -134,8 +138,8 @@
 	<string name="prefs_auto_resume">Auto-Fortsetzen</string>
 	<string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
 	<string name="prefs_rate_review">Freebloks in %1$s...</string>
-	<string name="prefs_donation_long">Unterstütze die Entwickler durch eine freiwillige Spende</string>
-	<string name="prefs_donation">Spenden...</string>
+	<string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
+	<string name="prefs_donation">Unterstützen...</string>
 	<string name="prefs_player_name">Spielername</string>
 	<string name="prefs_player_name_default">[nicht gesetzt]</string>
 	<string name="prefs_theme">Hintergrund</string>

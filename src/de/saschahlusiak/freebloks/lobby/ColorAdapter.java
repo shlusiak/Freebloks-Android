@@ -66,7 +66,7 @@ public class ColorAdapter extends BaseAdapter {
         t.setTextColor(Color.WHITE);
         t.setGravity(Gravity.CENTER);
         if (lastStatus == null || spiel == null) {
-			t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
+			t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 			t.setBackgroundColor(Color.BLACK);
         	t.setText("---");
         	return v;
@@ -82,7 +82,7 @@ public class ColorAdapter extends BaseAdapter {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
-		        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[position]);
+		        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
 					
@@ -104,13 +104,13 @@ public class ColorAdapter extends BaseAdapter {
 				}
 			} else {
 				/* computer player */
-				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
+				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				t.setBackgroundColor(Color.BLACK);
 				t.setText("---");
 			}
 		} else {
 			if (spiel.is_local_player(position)) {
-		        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[position]);
+		        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position]);
 
@@ -132,7 +132,7 @@ public class ColorAdapter extends BaseAdapter {
 
 				t.startAnimation(a);
 			} else {
-				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[position]);
+				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				t.setBackgroundColor(Color.BLACK);
 				t.setText("---");
 			}

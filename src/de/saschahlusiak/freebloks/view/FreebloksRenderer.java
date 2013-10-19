@@ -151,7 +151,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 								break;
 		    				}
 		    			if (!effected)
-		    				board.renderStone(gl, field, BoardRenderer.DEFAULT_ALPHA);
+		    				board.renderStone(gl, model.getPlayerColor(field), BoardRenderer.DEFAULT_ALPHA);
 		    		}
 		    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
 		    	}

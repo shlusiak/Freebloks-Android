@@ -2,12 +2,13 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class BoardStoneGlowEffect extends AbsEffect implements Effect {
-	int player, x, y;
+	int x, y;
 	ViewModel model;
 	Stone stone;
 	
@@ -17,9 +18,8 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	final float[] color1;
 	final float[] color2;
 
-	public BoardStoneGlowEffect(ViewModel model, int player, int x, int y, float distance) {
+	public BoardStoneGlowEffect(ViewModel model, int color, int x, int y, float distance) {
 		this.model = model;
-		this.player = player;
 		this.x = x;
 		this.y = y;
 		this.time = -0.6f - distance * 0.025f;
@@ -27,13 +27,13 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 		this.stone = new Stone();
 		stone.init(0);
 		
-	    color1 = BoardRenderer.stone_color_a[player + 1];
-	    color2 = BoardRenderer.stone_color_a[0];
+	    color1 = Global.stone_color_a[color];
+	    color2 = Global.stone_color_a[0];
 	    
-	    color[0] = color1[0];
-	    color[1] = color1[1];
-	    color[2] = color1[2];
-	    color[3] = BoardRenderer.DEFAULT_ALPHA;
+	    this.color[0] = color1[0];
+	    this.color[1] = color1[1];
+	    this.color[2] = color1[2];
+	    this.color[3] = BoardRenderer.DEFAULT_ALPHA;
 	}
 	
 	@Override
