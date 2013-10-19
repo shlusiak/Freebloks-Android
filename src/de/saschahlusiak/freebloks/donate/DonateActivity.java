@@ -45,7 +45,7 @@ public class DonateActivity extends Activity implements OnIabSetupFinishedListen
 			findViewById(R.id.donation_004).setVisibility(View.GONE);
 			((RadioButton)findViewById(R.id.donation_freebloksvip)).setChecked(true);
 		} else {
-			findViewById(R.id.donation_freebloksvip).setVisibility(View.GONE);
+		//	findViewById(R.id.donation_freebloksvip).setVisibility(View.GONE);
 			mHelper = new IabHelper(this, Global.base64EncodedPublicKey);
 			mHelper.enableDebugLogging(true);
 			mHelper.startSetup(this);

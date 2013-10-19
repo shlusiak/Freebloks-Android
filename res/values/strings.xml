@@ -102,7 +102,7 @@
 	<string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That\'s why you can decide how much the game is worth to you and support the development of free software.\n\nWhat is Freebloks worth to you?</string>
 	<string name="donation_nothing">Nothing</string>
 	<string name="donation_next">Next</string>
-	<string name="donation_freebloksvip">Buy Freebloks VIP</string>
+	<string name="donation_freebloksvip">Freebloks VIP</string>
 			
 	<string-array name="theme_labels">
         <item>Black</item>
@@ -145,7 +145,7 @@
 	<string name="prefs_rate_review_long">Please rate or leave a comment</string>
 	<string name="prefs_rate_review">Freebloks in %1$s...</string>
 	<string name="prefs_donation_long">Please support the development with a donation</string>
-	<string name="prefs_donation">Donate...</string>
+	<string name="prefs_donation">Support Freebloks...</string>
 	<string name="prefs_player_name">Player name</string>
 	<string name="prefs_player_name_default">[default]</string>
 	<string name="prefs_theme">Background</string>
