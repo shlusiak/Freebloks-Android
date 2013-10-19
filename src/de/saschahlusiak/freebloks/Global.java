@@ -42,8 +42,8 @@ public class Global {
 		Color.rgb(140, 140, 0),	/* yellow */
 		Color.rgb(96, 0, 0),	/* red */
 		Color.rgb(0, 96, 0),	/* green */
-		Color.rgb(140, 96, 32),	/* orange */
-		Color.rgb(64, 0, 140)	/* purple */
+		Color.rgb(170, 96, 24),	/* orange */
+		Color.rgb(96, 0, 140)	/* purple */
 	};
 	
 	public static final int PLAYER_FOREGROUND_COLOR[] = {
@@ -53,7 +53,7 @@ public class Global {
 		Color.rgb(255, 0, 0),	/* red */
 		Color.rgb(0, 255, 0),	/* green */
 		Color.rgb(255, 140, 92),/* orange */
-		Color.rgb(140, 0, 255),	/* purple */
+		Color.rgb(180, 64, 255),/* purple */
 	};
 	
 	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};
@@ -61,7 +61,7 @@ public class Global {
 	final static float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
 	final static float stone_green[]={0.0f, 0.65f, 0, 0};
 	final static float stone_yellow[]={0.80f, 0.80f, 0, 0};
-	final static float stone_orange[]={0.85f, 0.50f, 0.0f, 0};
+	final static float stone_orange[]={0.90f, 0.40f, 0.0f, 0};
 	final static float stone_purple[]={0.40f, 0.0f, 0.80f, 0};
 	public final static float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green, stone_orange, stone_purple };
 
