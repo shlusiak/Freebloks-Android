@@ -833,7 +833,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			break;
 
 		case DIALOG_JOIN:
-			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, gamemode, fieldsize);
+			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
 			break;
 			
 		case DIALOG_HOST:

@@ -234,6 +234,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	}
 	
 	void prepareJoinDialog(String name, int difficulty, int gamemode, int fieldsize) {
+		/* NOTE: if the spinner is hidden, the callback to enable the colors is not called! */
 		prepare(name, difficulty, gamemode, fieldsize);
 		setTitle(R.string.join_game);
 		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
