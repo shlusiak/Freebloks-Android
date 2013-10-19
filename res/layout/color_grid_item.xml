@@ -11,6 +11,9 @@
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:text="Small Text"
+        android:shadowRadius="3"
+        android:shadowDy="2"
+        android:shadowColor="#9f000000"
         android:textSize="15dp" />
 
 </RelativeLayout>
