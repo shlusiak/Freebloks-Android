@@ -26,7 +26,6 @@
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
             android:paddingRight="8dp"
-            android:text="version"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>

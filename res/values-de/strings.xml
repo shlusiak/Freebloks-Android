@@ -10,10 +10,10 @@
     <string name="hint">Hinweis</string>
     <string name="undo">Rückgängig</string>
     <string name="main_menu">Hauptmenü</string>
-    <string name="about">Über...</string>
-    <string name="about_freebloks">Über Freebloks...</string>
+    <string name="about">Über&#8230;</string>
+    <string name="about_freebloks">Über Freebloks&#8230;</string>
     <string name="special_thanks_to">Besonderer Dank an</string>
-    <string name="connecting">Verbinde...</string>
+    <string name="connecting">Verbinde&#8230;</string>
     <string name="connection_refused">Verbindung abgelehnt</string>
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
     <string name="do_you_want_to_leave_current_game">Aktuelles Spiel abbrechen?</string>
@@ -137,9 +137,9 @@
 	<string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
 	<string name="prefs_auto_resume">Auto-Fortsetzen</string>
 	<string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
-	<string name="prefs_rate_review">Freebloks in %1$s...</string>
+	<string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
 	<string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
-	<string name="prefs_donation">Unterstützen...</string>
+	<string name="prefs_donation">Unterstützen&#8230;</string>
 	<string name="prefs_player_name">Spielername</string>
 	<string name="prefs_player_name_default">[nicht gesetzt]</string>
 	<string name="prefs_theme">Hintergrund</string>
