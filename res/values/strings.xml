@@ -107,8 +107,8 @@
 	<string-array name="theme_labels">
         <item>Black</item>
         <item>Blue</item>
-        <item>Cloth with flowers</item>
-        <item>Cloth with stripes</item>
+        <item>Flowery cloth</item>
+        <item>Striped cloth</item>
         <item>Wood</item>
         <item>Bricks</item>
     </string-array>
@@ -134,7 +134,7 @@
 	<string name="prefs_undo">Undo with back</string>	
 	<string name="prefs_show_corners_long">Show possible corners of your stones</string>	
 	<string name="prefs_show_corners">Corners</string>	
-	<string name="prefs_show_opponents_long">Show stones of opponents</string>
+	<string name="prefs_show_opponents_long">Show opponents\' stones</string>
 	<string name="prefs_show_opponents">Opponents</string>
 	<string name="prefs_show_animations_long">Show animations</string>
 	<string name="prefs_show_animations">Animations</string>
