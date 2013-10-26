@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
@@ -52,6 +53,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.os.StrictMode;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -213,6 +215,23 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(tag, "onCreate");
+		
+		if (Build.VERSION.SDK_INT >= 11 && BuildConfig.DEBUG) {
+	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+	         		 .detectCustomSlowCalls()
+	                 .detectDiskReads()
+	                 .detectDiskWrites()
+	                 .detectNetwork()   // or .detectAll() for all detectable problems
+	                 .penaltyLog()
+	                 .build());
+	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+	                 .detectLeakedSqlLiteObjects()
+	                 .detectLeakedClosableObjects()
+	                 .detectAll()
+	                 .penaltyLog()
+	                 .build());
+	     }
+
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
 		
