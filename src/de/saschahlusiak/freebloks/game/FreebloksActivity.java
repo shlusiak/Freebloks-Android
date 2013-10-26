@@ -601,21 +601,25 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}		
 	}
 	
-	private void saveGameState(String filename) {
-		FileOutputStream fos;
-		try {
-			fos = openFileOutput(filename, Context.MODE_PRIVATE);
-			Parcel p = Parcel.obtain();
-			Bundle b = new Bundle();
-			writeStateToBundle(b);
-			p.writeBundle(b);
-			fos.write(p.marshall());
-			fos.flush();
-			fos.close();
-			p.recycle();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private void saveGameState(final String filename) {
+		final Parcel p = Parcel.obtain();
+		Bundle b = new Bundle();
+		writeStateToBundle(b);
+		p.writeBundle(b);
+		new Thread() {
+			public void run() {
+				try {
+					FileOutputStream fos;
+					fos = openFileOutput(filename, Context.MODE_PRIVATE);
+					fos.write(p.marshall());
+					fos.flush();
+					fos.close();
+					p.recycle();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			};
+		}.start();
 	}
 
 	@Override
