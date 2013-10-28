@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.game;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
@@ -44,7 +45,13 @@ public class GameFinishActivity extends Activity {
 		Spielleiter spiel = (Spielleiter)getIntent().getSerializableExtra("game");
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
-		setData(spiel);
+
+		int local_players = 0;
+		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
+			if (spiel.is_local_player(i))
+				local_players++;
+
+		setData(spiel, savedInstanceState == null && ((local_players == 1) || (local_players == 2 && spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)));
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
 			@Override
@@ -62,7 +69,7 @@ public class GameFinishActivity extends Activity {
 		});
 	}
 	
-	public void setData(Spielleiter spiel) {
+	public void setData(Spielleiter spiel, boolean addToDB) {
 		int place[] = { 0, 1, 2, 3 };
 		ViewGroup t[] = new ViewGroup[4];
 		
@@ -185,9 +192,15 @@ public class GameFinishActivity extends Activity {
 				set.addAnimation(a);
 				
 				this.place.setText(getResources().getStringArray(R.array.places)[i]);
+
+				if (addToDB) {
+					HighscoreDB db = new HighscoreDB(this);
+					db.open();
+					db.addHighscore(spiel.m_gamemode, p.m_stone_points, p.m_stone_count, place[i], i + 1);
+					db.close();
+				}
 			}
 			t[i].startAnimation(set);
-
 		}
 	}
 }

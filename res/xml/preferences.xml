@@ -90,18 +90,15 @@
 		    android:persistent="true"
 		    android:key="auto_resume" />
 		
+        <PreferenceScreen
+            android:summary="Show Statistics"
+            android:title="@string/statistics"
+            android:key="statistics" >
+            <intent android:action="de.saschahlusiak.freebloks.SHOW_STATISTICS" />
+        </PreferenceScreen>
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/about" android:key="about_category" >
-<!--         <PreferenceScreen
-            android:summary="Fork me!"
-            android:title="Freebloks on GitHub..." >
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/shlusiak/Freebloks-Android" />
-        </PreferenceScreen>
-     -->   
         <PreferenceScreen
             android:key="rate_review"
             android:summary="@string/prefs_rate_review_long"
