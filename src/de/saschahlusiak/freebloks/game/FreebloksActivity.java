@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import de.saschahlusiak.freebloks.BuildConfig;
+import de.saschahlusiak.freebloksvip.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
