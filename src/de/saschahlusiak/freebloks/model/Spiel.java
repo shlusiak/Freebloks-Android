@@ -249,6 +249,7 @@ public class Spiel implements Serializable, Cloneable {
 			}
 		}
 		stone.available_decrement();
+		m_player[playernumber].m_lastStone = stone;
 		refresh_player_data();
 		return Stone.FIELD_ALLOWED;
 	}
