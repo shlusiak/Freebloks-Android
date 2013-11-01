@@ -15,6 +15,7 @@ public class Player implements Serializable, Cloneable {
 	int m_number;
 
 	Stone m_stone[] = new Stone[Stone.STONE_COUNT_ALL_SHAPES];
+	public Stone m_lastStone;
 	
 	public Player() {
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
@@ -98,6 +99,11 @@ public class Player implements Serializable, Cloneable {
 				} else if (spiel.get_game_field(y, x) == m_number)
 					m_stone_points++;
 			}	
+		}
+		if (m_stone_count == 0 && m_lastStone != null) {
+			m_stone_points += 15;
+			if (m_lastStone.m_shape == 0)
+				m_stone_points += 5;
 		}
 	}
 }
