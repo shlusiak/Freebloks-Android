@@ -16,196 +16,26 @@
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 		
-    <RelativeLayout 
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
    		android:layout_below="@+id/place"
    		android:layout_marginTop="8dp"
+   		android:orientation="vertical"
         android:id="@+id/places" >
-	    <RelativeLayout
+	    <include
 	        android:id="@+id/place1"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="4dp" >
-	
-	        <TextView
-	            android:id="@+id/name"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textColor="#ffffffff"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	        <TextView
-	            android:id="@+id/points"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="24dp"
-	            android:gravity="center"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:layout_centerVertical="true"
-	            android:textColor="#ffffffff"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <TextView
-	            android:id="@+id/stones"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	    </RelativeLayout>
-	    <RelativeLayout
+	        layout="@layout/game_finish_player_row" />
+	    <include
 	        android:id="@+id/place2"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/place1"
-	        android:padding="4dp" >
-	
-	        <TextView
-	            android:id="@+id/name"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textColor="#ffffffff"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	        <TextView
-	            android:id="@+id/points"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="24dp"
-	            android:gravity="center"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:textColor="#ffffffff"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <TextView
-	            android:id="@+id/stones"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	    </RelativeLayout>
-	    <RelativeLayout
+	        layout="@layout/game_finish_player_row" />
+	    <include
 	        android:id="@+id/place3"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/place2"
-	        android:padding="4dp" >
-	
-	        <TextView
-	            android:id="@+id/name"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textColor="#ffffffff"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	        <TextView
-	            android:id="@+id/points"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="24dp"
-	            android:gravity="center"
-	            android:layout_centerVertical="true"
-	            android:textColor="#ffffffff"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <TextView
-	            android:id="@+id/stones"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	    </RelativeLayout>
-	    <RelativeLayout
+	        layout="@layout/game_finish_player_row" />
+	    <include
 	        android:id="@+id/place4"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/place3"
-	        android:padding="4dp" >
-	
-	        <TextView
-	            android:id="@+id/name"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textColor="#ffffffff"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	
-	        <TextView
-	            android:id="@+id/points"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:paddingRight="24dp"
-	            android:gravity="center"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:textColor="#ffffffff"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <TextView
-	            android:id="@+id/stones"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_centerVertical="true"
-	            android:shadowRadius="5"
-            	android:shadowDy="2"
-            	android:shadowColor="#9f000000"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-	    </RelativeLayout>
-   	</RelativeLayout>
+	        layout="@layout/game_finish_player_row" />
+   	</LinearLayout>
 	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
