@@ -7,7 +7,9 @@ import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
+import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -65,6 +67,13 @@ public class GameFinishActivity extends Activity {
 			public void onClick(View v) {
 				setResult(RESULT_SHOW_MENU);
 				finish();
+			}
+		});
+		findViewById(R.id.statistics).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(GameFinishActivity.this, StatisticsActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
