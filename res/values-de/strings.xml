@@ -32,6 +32,9 @@
     <string name="start">Start</string>
     <string name="custom_game_title">Benutzerdefiniertes Spiel</string>
     
+    <string name="statistics">Statistiken</string>
+    <string name="clear_statistics">Zurücksetzen</string>
+    
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Spieler</string>
     <string name="chat">Chat</string>
