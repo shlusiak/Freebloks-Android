@@ -4,6 +4,8 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -51,6 +53,23 @@ public class StatisticsActivity extends Activity {
 		db.close();
 		db = null;
 		super.onDestroy();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.stats_optionsmenu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.clear:
+			db.clearHighscores();
+			refreshData();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	void refreshData() {

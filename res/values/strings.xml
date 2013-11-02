@@ -33,6 +33,7 @@
     <string name="sound_off">Sound off</string>
     
     <string name="statistics">Statistics</string>
+    <string name="clear_statistics">Reset</string>
     
     
     <string name="lobby_waiting_for_players">Waiting for players</string>
