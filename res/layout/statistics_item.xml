@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:padding="8dp"
-    android:orientation="horizontal" >
+    android:padding="8dp" >
 
     <TextView
         android:id="@android:id/text1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:text="text1"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/primary_text_light_nodisable" />
 
     <TextView
-        android:id="@android:id/text2"
+        android:id="@+id/text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="100dp"
         android:text="text2"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ff00aa70" />
+    
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="text3"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#ff0080bb" />
     
-</LinearLayout>
+</RelativeLayout>

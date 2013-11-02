@@ -10,13 +10,15 @@ import android.widget.TextView;
 
 public class StatisticsAdapter extends BaseAdapter {
 	String labels[];
-	String values[];
+	String values1[];
+	String values2[];
 	Context context;
 	
-	StatisticsAdapter(Context context, String[] labels, String[] values) {
+	StatisticsAdapter(Context context, String[] labels, String[] values1, String[] values2) {
 		this.context = context;
 		this.labels = labels;
-		this.values = values;
+		this.values1 = values1;
+		this.values2 = values2;
 	}
 	
 	@Override
@@ -38,7 +40,8 @@ public class StatisticsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = LayoutInflater.from(context).inflate(R.layout.statistics_item, parent, false);
 		((TextView)v.findViewById(android.R.id.text1)).setText(labels[position]);
-		((TextView)v.findViewById(android.R.id.text2)).setText(values[position]);
+		((TextView)v.findViewById(R.id.text2)).setText(values1[position]);
+		((TextView)v.findViewById(R.id.text3)).setText(values2[position]);
 		return v;
 	}
 
