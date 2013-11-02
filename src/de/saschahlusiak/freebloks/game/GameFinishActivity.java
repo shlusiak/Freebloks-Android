@@ -138,9 +138,12 @@ public class GameFinishActivity extends Activity {
 			s = getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points);
 			((TextView)t[i].findViewById(R.id.points)).setText(s);
 			s = "";
+			boolean is_perfect = false;
 			if (p.m_stone_count == 0 && p.m_lastStone != null) {
-				if (p.m_lastStone.get_stone_shape() == 0)
+				if (p.m_lastStone.get_stone_shape() == 0) {
+					is_perfect = true;
 					s = "(+20)";
+				}
 				else
 					s = "(+15)";
 			}
@@ -205,7 +208,19 @@ public class GameFinishActivity extends Activity {
 				if (addToDB) {
 					HighscoreDB db = new HighscoreDB(this);
 					db.open();
-					db.addHighscore(spiel.m_gamemode, p.m_stone_points, p.m_stone_count, place[i], i + 1);
+					
+					int flags = 0;
+					if (is_perfect)
+						flags |= HighscoreDB.FLAG_IS_PERFECT;
+					
+					db.addHighscore(
+							spiel.m_gamemode,
+							p.m_stone_points,
+							p.m_stone_count,
+							place[i],
+							i + 1,
+							flags);
+					
 					db.close();
 				}
 			}

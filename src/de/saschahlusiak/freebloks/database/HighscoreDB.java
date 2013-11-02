@@ -13,6 +13,7 @@ public class HighscoreDB extends FreebloksDB {
 	public static final String STONES_LEFT_ID = "stonesleft";		/* 3 */
 	public static final String PLAYER_COLOR_ID = "playercolor";	/* 4 */
 	public static final String PLACE_ID = "place";					/* 5 */
+	public static final String FLAGS_ID = "flags";					/* 6 */
 
 	/* NEVER CHANGE THE INDEX OF COLUMNS FOR BACKWARDS COMPATIBILITY */
 	public static final int HIGHSCORE_INDEX = 0;
@@ -21,6 +22,10 @@ public class HighscoreDB extends FreebloksDB {
 	public static final int STONES_LEFT_INDEX = 3;
 	public static final int PLAYER_COLOR_INDEX = 4;
 	public static final int PLACE_INDEX = 5;
+	public static final int FLAGS_INDEX = 6;
+	
+	
+	public static final int FLAG_IS_PERFECT = 0x01;
 	
 	
 	/* WARNING: The IDs are used in Cursors to query the colums, for compatibility they should NEVER be changed.
@@ -31,7 +36,8 @@ public class HighscoreDB extends FreebloksDB {
 			POINTS_ID + " INTEGER, " +					/* 2 */
 			STONES_LEFT_ID + " INTEGER, " +				/* 3 */
 			PLAYER_COLOR_ID + " INTEGER, " +			/* 4 */ 
-			PLACE_ID + " INTEGER);";					/* 5 */
+			PLACE_ID + " INTEGER, " +					/* 5 */ 
+			FLAGS_ID + " INTEGER);";					/* 6 */
 
 	public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE + ";";
 
@@ -39,7 +45,12 @@ public class HighscoreDB extends FreebloksDB {
 		super(context);
 	}
 
-	public long addHighscore(int game_mode, int points, int stones_left, int player_color, int place) {
+	public long addHighscore(int game_mode,
+			int points,
+			int stones_left,
+			int player_color, 
+			int place,
+			int flags) {
 		ContentValues values = new ContentValues();
 
 		values.put(GAME_MODE_ID, game_mode);
@@ -47,6 +58,7 @@ public class HighscoreDB extends FreebloksDB {
 		values.put(STONES_LEFT_ID, stones_left);
 		values.put(PLAYER_COLOR_ID, player_color);
 		values.put(PLACE_ID, place);
+		values.put(FLAGS_ID, flags);
 
 		return db.insert(TABLE, null, values);
 	}
