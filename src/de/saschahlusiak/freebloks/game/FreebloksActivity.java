@@ -1065,10 +1065,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return;
 		if (view == null)
 			return;
-		if (!client.spiel.is_local_player(s.player)) {
-			view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
-			vibrate(Global.VIBRATE_SET_STONE);
-		}
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {				
+				if (!client.spiel.is_local_player(s.player)) {
+					if (view == null)
+						return;
+					if (view.model.soundPool == null)
+						return;
+					view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
+					vibrate(Global.VIBRATE_SET_STONE);
+				}
+			}
+		});
 
 		for (int i = 0; i < 4; i++) {
 			final Player p = client.spiel.get_player(i);
@@ -1078,7 +1088,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					public void run() {
 						Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
 						if (view != null) {
-							view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
+							if (view.model.soundPool != null)
+								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.showAnimations) {
 								int sx, sy;
 								sx = client.spiel.get_player_start_x(p.getPlayerNumber());
