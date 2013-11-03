@@ -4,8 +4,11 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -14,10 +17,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
-public class StatisticsActivity extends Activity {
+public class StatisticsActivity extends Activity implements OnNavigationListener {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
 	int game_mode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
@@ -51,21 +56,31 @@ public class StatisticsActivity extends Activity {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		game_mode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 		
-		/* TODO: make this spinner an ActionBar dropdown navigation on API > 11 */
-		((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode);
-		((Spinner)findViewById(R.id.game_mode)).setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
-				game_mode = position;
-				refreshData();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				
-			}
-		});
+		if (Build.VERSION.SDK_INT < 11) {
+			((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode);
+			((Spinner)findViewById(R.id.game_mode)).setOnItemSelectedListener(new OnItemSelectedListener() {
+	
+				@Override
+				public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
+					game_mode = position;
+					refreshData();
+				}
+	
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					
+				}
+			});
+		} else {
+			findViewById(R.id.game_mode).setVisibility(View.GONE);
+			SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.game_modes,
+					android.R.layout.simple_spinner_dropdown_item);
+			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
+			getActionBar().setSelectedNavigationItem(game_mode);
+			getActionBar().setDisplayShowTitleEnabled(false);
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 	}
 	
 	@Override
@@ -84,6 +99,9 @@ public class StatisticsActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
 		case R.id.clear:
 			db.clearHighscores();
 			refreshData();
@@ -122,6 +140,13 @@ public class StatisticsActivity extends Activity {
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
 
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int position, long id) {
+		game_mode = position;
+		refreshData();
+		return true;
 	}
 	
 }
