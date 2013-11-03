@@ -34,6 +34,17 @@
     
     <string name="statistics">Statistics</string>
     <string name="clear_statistics">Reset all</string>
+	<string-array name="statistics_labels">
+		<item>Games played</item>
+		<item>Good games (+15)</item>
+		<item>Perfect games (+20)</item>
+		<item>1st place</item>
+		<item>2nd place</item>
+		<item>3rd place</item>
+		<item>4th place</item>
+		<item>Stones used</item>
+		<item>Points total</item>
+	</string-array>
     
     
     <string name="lobby_waiting_for_players">Waiting for players</string>
