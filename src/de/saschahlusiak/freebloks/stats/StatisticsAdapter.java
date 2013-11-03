@@ -28,6 +28,18 @@ public class StatisticsAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		return null;
 	}
+	
+	@Override
+	public boolean isEnabled(int position) {
+		if (values1[position] == null)
+			return false;
+		return true;
+	}
+	
+	@Override
+	public boolean areAllItemsEnabled() {
+		return true;
+	}
 
 	@Override
 	public long getItemId(int position) {
@@ -37,8 +49,10 @@ public class StatisticsAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = LayoutInflater.from(context).inflate(R.layout.statistics_item, parent, false);
+		v.findViewById(android.R.id.text1).setEnabled(isEnabled(position));
+		v.findViewById(R.id.text2).setEnabled(isEnabled(position));
 		((TextView)v.findViewById(android.R.id.text1)).setText(labels[position]);
-		((TextView)v.findViewById(R.id.text2)).setText(values1[position]);
+		((TextView)v.findViewById(R.id.text2)).setText(values1[position] == null ? "--" : values1[position]);
 		return v;
 	}
 

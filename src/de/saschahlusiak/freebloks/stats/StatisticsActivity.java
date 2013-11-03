@@ -42,7 +42,6 @@ public class StatisticsActivity extends Activity implements OnNavigationListener
 		db.open();
 		
 		adapter = new StatisticsAdapter(this, labels, values);
-		refreshData();
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
 		
 		findViewById(R.id.ok).setOnClickListener(new OnClickListener() {
@@ -55,6 +54,7 @@ public class StatisticsActivity extends Activity implements OnNavigationListener
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		game_mode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		refreshData();
 		
 		if (Build.VERSION.SDK_INT < 11) {
 			((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode);
@@ -136,6 +136,10 @@ public class StatisticsActivity extends Activity implements OnNavigationListener
 		for (i = 0; i < 4; i++) {
 			int n = db.getNumberOfPlace(game_mode, i + 1);
 			values[3 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
+		}
+		if (game_mode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+			game_mode == Spielleiter.GAMEMODE_DUO) {
+			values[5] = values[6] = null;
 		}
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
 
