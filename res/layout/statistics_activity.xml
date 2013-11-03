@@ -5,11 +5,11 @@
 
     <Button
         android:id="@+id/ok"
-        style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        style="@style/Widget.Light.Button.Borderless"
         android:text="@android:string/ok" />
 
     <ListView

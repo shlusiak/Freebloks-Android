@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:text="text1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/primary_text_light_nodisable" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/text2"
