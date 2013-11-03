@@ -1,20 +1,26 @@
 package de.saschahlusiak.freebloks.stats;
 
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 public class StatisticsActivity extends Activity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
-	int game_mode = -1;
+	int game_mode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
 	
 	String[] labels;
 	String[] values;
@@ -30,7 +36,6 @@ public class StatisticsActivity extends Activity {
 		db = new HighscoreDB(this);
 		db.open();
 		
-		
 		adapter = new StatisticsAdapter(this, labels, values);
 		refreshData();
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
@@ -40,6 +45,25 @@ public class StatisticsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
+			}
+		});
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		game_mode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		
+		/* TODO: make this spinner an ActionBar dropdown navigation on API > 11 */
+		((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode);
+		((Spinner)findViewById(R.id.game_mode)).setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
+				game_mode = position;
+				refreshData();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
 			}
 		});
 	}
