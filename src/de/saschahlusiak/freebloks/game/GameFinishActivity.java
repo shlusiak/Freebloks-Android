@@ -53,7 +53,15 @@ public class GameFinishActivity extends Activity {
 			if (spiel.is_local_player(i))
 				local_players++;
 
-		setData(spiel, savedInstanceState == null && ((local_players == 1) || (local_players == 2 && spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)));
+		boolean addToDB = false;
+		if (local_players == 1)
+			addToDB = true;
+		/* TODO: point counting for 4_COLORS_2_PLAYERS is currently just wrong. Don't add to DB yet */
+//		if (local_players == 2 && spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+//			addToDB = true;
+		if (savedInstanceState != null)
+			addToDB = false;
+		setData(spiel, addToDB);
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
 			@Override
@@ -213,6 +221,7 @@ public class GameFinishActivity extends Activity {
 					if (is_perfect)
 						flags |= HighscoreDB.FLAG_IS_PERFECT;
 					
+					/* FIXME: this is wrong for 4_COLORS_2_PLAYERS */
 					db.addHighscore(
 							spiel.m_gamemode,
 							p.m_stone_points,
