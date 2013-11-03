@@ -19,7 +19,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:text="text3"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ff0080bb" />
     
 </RelativeLayout>
