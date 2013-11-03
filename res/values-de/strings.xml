@@ -146,4 +146,6 @@
 	<string name="prefs_player_name">Spielername</string>
 	<string name="prefs_player_name_default">[nicht gesetzt]</string>
 	<string name="prefs_theme">Hintergrund</string>
+	<string name="prefs_statistics">Statistiken&#8230;</string>
+	<string name="prefs_statistics_long">Spielstatistiken zeigen</string>
 </resources>
