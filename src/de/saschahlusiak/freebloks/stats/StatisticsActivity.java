@@ -25,7 +25,7 @@ public class StatisticsActivity extends Activity {
 		db.open();
 		
 		
-		adapter = new StatisticsAdapter(this, labels, values1, values2);
+		adapter = new StatisticsAdapter(this, labels, values1);
 		refreshData();
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
 		
@@ -64,7 +64,8 @@ public class StatisticsActivity extends Activity {
 
 	final String[] labels = {
 			"Games played",
-			"Perfect",
+			"Good games (+15)",
+			"Perfect games (+20)",
 			"1st place",
 			"2nd place",
 			"3rd place",
@@ -73,37 +74,38 @@ public class StatisticsActivity extends Activity {
 			"Points total",
 		};
 	final String[] values1 = new String[labels.length];
-	final String[] values2 = new String[labels.length];
 
 	void refreshData() {
 		int games = db.getTotalNumberOfGames(game_mode);
 		int points = db.getTotalNumberOfPoints(game_mode);
 		int perfect = db.getNumberOfPerfectGames(game_mode);
+		int good = db.getNumberOfGoodGames(game_mode);
 		int stones_left = db.getTotalNumberOfStonesLeft(game_mode);
 		int stones_used = games * Stone.STONE_COUNT_ALL_SHAPES - stones_left;
 		int i;
 
 		for (i = 0; i < values1.length; i++)
-			values1[i] = values2[i] = "";
+			values1[i] = "";
 		
-		adapter.values2[0] = String.format("%d", games);
-		adapter.values2[7] = String.format("%d", points);
-		
+		adapter.values1[0] = String.format("%d", games);
+		adapter.values1[8] = String.format("%d", points);
 		
 		if (games == 0) /* avoid divide by zero */ {
 			games = 1;
 			stones_used = 0;
 		}
 		
-		adapter.values2[1] = String.format("%.1f%%", 100.0f * (float)perfect / (float)games);
-		adapter.values1[1] = String.format("%d", perfect);
+		good -= perfect;
+		adapter.values1[1] = String.format("%.1f%%", 100.0f * (float)good / (float)games);
+		adapter.values1[2] = String.format("%.1f%%", 100.0f * (float)perfect / (float)games);
+//		adapter.values1[2] = String.format("%d", perfect);
 		for (i = 0; i < 4; i++) {
 			int n = db.getNumberOfPlace(game_mode, i + 1);
-			adapter.values2[2 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
-			adapter.values1[2 + i] = String.format("%d", n);
+			adapter.values1[3 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
+//			adapter.values1[3 + i] = String.format("%d", n);
 		}
-		adapter.values2[6] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
-		adapter.values1[6] = String.format("%.2f", (float)stones_used / (float)games);
+		adapter.values1[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
+//		adapter.values1[7] = String.format("%.2f", (float)stones_used / (float)games);
 
 		adapter.notifyDataSetChanged();
 	}
