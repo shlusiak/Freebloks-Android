@@ -34,6 +34,17 @@
     
     <string name="statistics">Statistiken</string>
     <string name="clear_statistics">Zurücksetzen</string>
+	<string-array name="statistics_labels">
+		<item>Spiele insgesamt</item>
+		<item>Gute Spiele (+15)</item>
+		<item>Perfekte Spiele (+20)</item>
+		<item>Erster Platz</item>
+		<item>Zweiter Platz</item>
+		<item>Dritter Platz</item>
+		<item>Vierter Platz</item>
+		<item>Verwendete Steine</item>
+		<item>Punkte insgesamt</item>
+	</string-array>
     
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Spieler</string>

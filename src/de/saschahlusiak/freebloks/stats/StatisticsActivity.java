@@ -15,17 +15,23 @@ public class StatisticsActivity extends Activity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
 	int game_mode = -1;
+	
+	String[] labels;
+	String[] values;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistics_activity);
 		
+		labels = getResources().getStringArray(R.array.statistics_labels);
+		values = new String[labels.length];
+		
 		db = new HighscoreDB(this);
 		db.open();
 		
 		
-		adapter = new StatisticsAdapter(this, labels, values1);
+		adapter = new StatisticsAdapter(this, labels, values);
 		refreshData();
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
 		
@@ -62,19 +68,6 @@ public class StatisticsActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	final String[] labels = {
-			"Games played",
-			"Good games (+15)",
-			"Perfect games (+20)",
-			"1st place",
-			"2nd place",
-			"3rd place",
-			"4th place",
-			"Stones used (avg)",
-			"Points total",
-		};
-	final String[] values1 = new String[labels.length];
-
 	void refreshData() {
 		int games = db.getTotalNumberOfGames(game_mode);
 		int points = db.getTotalNumberOfPoints(game_mode);
@@ -84,11 +77,11 @@ public class StatisticsActivity extends Activity {
 		int stones_used = games * Stone.STONE_COUNT_ALL_SHAPES - stones_left;
 		int i;
 
-		for (i = 0; i < values1.length; i++)
-			values1[i] = "";
+		for (i = 0; i < values.length; i++)
+			values[i] = "";
 		
-		adapter.values1[0] = String.format("%d", games);
-		adapter.values1[8] = String.format("%d", points);
+		values[0] = String.format("%d", games);
+		values[8] = String.format("%d", points);
 		
 		if (games == 0) /* avoid divide by zero */ {
 			games = 1;
@@ -96,16 +89,13 @@ public class StatisticsActivity extends Activity {
 		}
 		
 		good -= perfect;
-		adapter.values1[1] = String.format("%.1f%%", 100.0f * (float)good / (float)games);
-		adapter.values1[2] = String.format("%.1f%%", 100.0f * (float)perfect / (float)games);
-//		adapter.values1[2] = String.format("%d", perfect);
+		values[1] = String.format("%.1f%%", 100.0f * (float)good / (float)games);
+		values[2] = String.format("%.1f%%", 100.0f * (float)perfect / (float)games);
 		for (i = 0; i < 4; i++) {
 			int n = db.getNumberOfPlace(game_mode, i + 1);
-			adapter.values1[3 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
-//			adapter.values1[3 + i] = String.format("%d", n);
+			values[3 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
 		}
-		adapter.values1[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
-//		adapter.values1[7] = String.format("%.2f", (float)stones_used / (float)games);
+		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
 
 		adapter.notifyDataSetChanged();
 	}
