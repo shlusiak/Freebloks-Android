@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <Spinner
         android:id="@+id/game_mode"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/game_mode"
         android:layout_above="@+id/ok" >
     </ListView>
