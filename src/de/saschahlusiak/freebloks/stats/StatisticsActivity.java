@@ -1,12 +1,7 @@
 package de.saschahlusiak.freebloks.stats;
 
-import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
-import de.saschahlusiak.freebloks.database.HighscoreDB;
-import de.saschahlusiak.freebloks.model.Stone;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,13 +17,26 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-public class StatisticsActivity extends Activity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.games.GamesClient;
+import com.google.example.games.basegameutils.BaseGameActivity;
+
+import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.database.HighscoreDB;
+import de.saschahlusiak.freebloks.model.Stone;
+
+public class StatisticsActivity extends BaseGameActivity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
 	int game_mode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
 	
 	String[] labels;
 	String[] values;
+	
+	private static final int REQUEST_LEADERBOARD = 1;
+	
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,23 @@ public class StatisticsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
+			}
+		});
+		findViewById(R.id.signin).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				beginUserInitiatedSignIn();
+			}
+		});
+		findViewById(R.id.leaderboard).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (!isSignedIn())
+					return;
+				GamesClient mGamesClient = getGamesClient();
+				startActivityForResult(mGamesClient.getLeaderboardIntent(getString(R.string.leaderboard_games_won)), REQUEST_LEADERBOARD);
 			}
 		});
 		
@@ -88,6 +113,8 @@ public class StatisticsActivity extends Activity {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SERVICE_MISSING)
+			findViewById(R.id.signin).setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -104,6 +131,12 @@ public class StatisticsActivity extends Activity {
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.signout).setVisible(isSignedIn());
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -112,6 +145,11 @@ public class StatisticsActivity extends Activity {
 		case R.id.clear:
 			db.clearHighscores();
 			refreshData();
+			return true;
+		case R.id.signout:
+			signOut();
+			findViewById(R.id.signin).setVisibility(View.VISIBLE);
+			findViewById(R.id.leaderboard).setVisibility(View.GONE);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -125,6 +163,7 @@ public class StatisticsActivity extends Activity {
 		int stones_left = db.getTotalNumberOfStonesLeft(game_mode);
 		int stones_used = games * Stone.STONE_COUNT_ALL_SHAPES - stones_left;
 		int i;
+		
 
 		for (i = 0; i < values.length; i++)
 			values[i] = "";
@@ -151,5 +190,23 @@ public class StatisticsActivity extends Activity {
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
 
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onSignInFailed() {
+		findViewById(R.id.signin).setVisibility(View.VISIBLE);
+		findViewById(R.id.leaderboard).setVisibility(View.GONE);
+		invalidateOptionsMenu();
+	}
+
+	@Override
+	public void onSignInSucceeded() {
+		findViewById(R.id.signin).setVisibility(View.GONE);
+		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
+		invalidateOptionsMenu();
+		
+		getGamesClient().submitScore(
+			getString(R.string.leaderboard_games_won),
+			db.getNumberOfPlace(-1, 1));
 	}
 }

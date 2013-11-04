@@ -28,6 +28,10 @@
         <meta-data android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIR_4yQhng55BwxHabL4lnZTsSeT7G8uIACcuntQ" />
         
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
+
         <activity
             android:name=".game.FreebloksActivity"
             android:label="@string/app_name"
