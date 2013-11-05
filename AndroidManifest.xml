@@ -20,7 +20,7 @@
     <application
         android:icon="@drawable/appicon_small"
         android:label="@string/app_name"
-        android:backupAgent=".backup.FreebloksBackupAgent"
+        android:backupAgent="de.saschahlusiak.freebloks.backup.FreebloksBackupAgent"
         android:restoreAnyVersion="true"
         android:allowBackup="true"
         android:killAfterRestore="true" >
@@ -29,7 +29,7 @@
             android:value="AEdPqrEAAAAIZgBvnliRisJF_INah6A-glCYZkWb1zMTLfWPLg" />
         
         <activity
-            android:name=".game.FreebloksActivity"
+            android:name="de.saschahlusiak.freebloks.game.FreebloksActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,12 +42,12 @@
             android:theme="@style/Theme.Freebloks.Dialog" >
         </activity>
    		<activity
-            android:name=".preferences.FreebloksPreferences"
+            android:name="de.saschahlusiak.freebloks.preferences.FreebloksPreferences"
             android:icon="@drawable/gears"
             android:label="@string/preferences" >
         </activity>
         <activity 
-            android:name=".stats.StatisticsActivity"
+            android:name="de.saschahlusiak.freebloks.stats.StatisticsActivity"
             android:label="@string/statistics"
             android:theme="@style/Theme.Freebloks.Light"
             android:icon="@drawable/stats"
