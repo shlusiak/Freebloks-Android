@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.preferences;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -42,6 +43,15 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			}
 		});
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
+	}
+	
+	@Override
+	protected void onDestroy() {
+		if (Build.VERSION.SDK_INT >= 8) {
+			BackupManager backupManager = new BackupManager(this);
+			backupManager.dataChanged();
+		}
+		super.onDestroy();
 	}
 	
 	@Override

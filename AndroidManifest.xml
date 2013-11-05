@@ -19,7 +19,15 @@
 
     <application
         android:icon="@drawable/appicon_small"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:backupAgent=".backup.FreebloksBackupAgent"
+        android:restoreAnyVersion="true"
+        android:allowBackup="true"
+        android:killAfterRestore="true" >
+        
+        <meta-data android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIR_4yQhng55BwxHabL4lnZTsSeT7G8uIACcuntQ" />
+        
         <activity
             android:name=".game.FreebloksActivity"
             android:label="@string/app_name" >
