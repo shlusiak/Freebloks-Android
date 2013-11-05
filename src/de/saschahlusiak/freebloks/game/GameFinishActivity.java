@@ -215,22 +215,22 @@ public class GameFinishActivity extends Activity {
 
 				if (addToDB) {
 					HighscoreDB db = new HighscoreDB(this);
-					db.open();
-					
-					int flags = 0;
-					if (is_perfect)
-						flags |= HighscoreDB.FLAG_IS_PERFECT;
-					
-					/* FIXME: this is wrong for 4_COLORS_2_PLAYERS */
-					db.addHighscore(
-							spiel.m_gamemode,
-							p.m_stone_points,
-							p.m_stone_count,
-							place[i],
-							i + 1,
-							flags);
-					
-					db.close();
+					if (db.open()) {
+						int flags = 0;
+						if (is_perfect)
+							flags |= HighscoreDB.FLAG_IS_PERFECT;
+
+						/* FIXME: this is wrong for 4_COLORS_2_PLAYERS */
+						db.addHighscore(
+								spiel.m_gamemode,
+								p.m_stone_points,
+								p.m_stone_count,
+								place[i],
+								i + 1,
+								flags);
+
+						db.close();
+					}
 				}
 			}
 			t[i].startAnimation(set);
