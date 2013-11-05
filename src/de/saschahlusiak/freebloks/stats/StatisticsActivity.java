@@ -36,6 +36,7 @@ public class StatisticsActivity extends BaseGameActivity {
 	String[] values;
 	
 	private static final int REQUEST_LEADERBOARD = 1;
+	private static final int REQUEST_ACHIEVEMENTS = 2;
 	
 		
 	@Override
@@ -72,8 +73,16 @@ public class StatisticsActivity extends BaseGameActivity {
 			public void onClick(View v) {
 				if (!isSignedIn())
 					return;
-				GamesClient mGamesClient = getGamesClient();
-				startActivityForResult(mGamesClient.getLeaderboardIntent(getString(R.string.leaderboard_games_won)), REQUEST_LEADERBOARD);
+				startActivityForResult(getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
+			}
+		});
+		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (!isSignedIn())
+					return;
+				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
 			}
 		});
 		
@@ -150,6 +159,7 @@ public class StatisticsActivity extends BaseGameActivity {
 			signOut();
 			findViewById(R.id.signin).setVisibility(View.VISIBLE);
 			findViewById(R.id.leaderboard).setVisibility(View.GONE);
+			findViewById(R.id.achievements).setVisibility(View.GONE);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -196,6 +206,7 @@ public class StatisticsActivity extends BaseGameActivity {
 	public void onSignInFailed() {
 		findViewById(R.id.signin).setVisibility(View.VISIBLE);
 		findViewById(R.id.leaderboard).setVisibility(View.GONE);
+		findViewById(R.id.achievements).setVisibility(View.GONE);
 		invalidateOptionsMenu();
 	}
 
@@ -203,10 +214,14 @@ public class StatisticsActivity extends BaseGameActivity {
 	public void onSignInSucceeded() {
 		findViewById(R.id.signin).setVisibility(View.GONE);
 		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
+		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
 		invalidateOptionsMenu();
 		
 		getGamesClient().submitScore(
 			getString(R.string.leaderboard_games_won),
 			db.getNumberOfPlace(-1, 1));
+		getGamesClient().submitScore(
+				getString(R.string.leaderboard_points),
+				db.getTotalNumberOfPoints(-1));
 	}
 }

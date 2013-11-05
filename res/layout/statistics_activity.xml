@@ -27,6 +27,14 @@
 	        style="@style/Widget.Light.Button.Borderless"
 	        android:text="@android:string/ok" />
 	    <Button
+	        android:id="@+id/achievements"
+	        android:visibility="gone"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        style="@style/Widget.Light.Button.Borderless"
+	        android:text="Achievements" />
+	    <Button
 	        android:id="@+id/leaderboard"
 	        android:visibility="gone"
 	        android:layout_width="0dp"
