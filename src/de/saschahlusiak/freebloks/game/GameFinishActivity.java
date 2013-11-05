@@ -9,9 +9,11 @@ import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 import android.app.Activity;
+import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -230,6 +232,11 @@ public class GameFinishActivity extends Activity {
 								flags);
 
 						db.close();
+						
+						if (Build.VERSION.SDK_INT >= 8) {
+							BackupManager backupManager = new BackupManager(this);
+							backupManager.dataChanged();
+						}
 					}
 				}
 			}

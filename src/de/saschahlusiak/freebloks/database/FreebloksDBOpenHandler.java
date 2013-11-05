@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class FreebloksDBOpenHandler extends SQLiteOpenHelper {
-	private static final String DATABASE_NAME = "freebloks.db";
+	public static final String DATABASE_NAME = "freebloks.db";
 	private static final int DATABASE_VERSION = 1;
 
 
@@ -26,5 +26,4 @@ public class FreebloksDBOpenHandler extends SQLiteOpenHelper {
 			onCreate(db);
 		}
 	}
-
 }
