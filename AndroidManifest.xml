@@ -26,7 +26,7 @@
         android:killAfterRestore="true" >
         
         <meta-data android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIR_4yQhng55BwxHabL4lnZTsSeT7G8uIACcuntQ" />
+            android:value="AEdPqrEAAAAIZgBvnliRisJF_INah6A-glCYZkWb1zMTLfWPLg" />
         
         <activity
             android:name=".game.FreebloksActivity"
