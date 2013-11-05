@@ -3,12 +3,17 @@ package de.saschahlusiak.freebloks.game;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
+import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 import android.app.Activity;
+import android.app.backup.BackupManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -44,7 +49,21 @@ public class GameFinishActivity extends Activity {
 		Spielleiter spiel = (Spielleiter)getIntent().getSerializableExtra("game");
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
-		setData(spiel);
+
+		int local_players = 0;
+		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
+			if (spiel.is_local_player(i))
+				local_players++;
+
+		boolean addToDB = false;
+		if (local_players == 1)
+			addToDB = true;
+		/* TODO: point counting for 4_COLORS_2_PLAYERS is currently just wrong. Don't add to DB yet */
+//		if (local_players == 2 && spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+//			addToDB = true;
+		if (savedInstanceState != null)
+			addToDB = false;
+		setData(spiel, addToDB);
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
 			@Override
@@ -60,9 +79,16 @@ public class GameFinishActivity extends Activity {
 				finish();
 			}
 		});
+		findViewById(R.id.statistics).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(GameFinishActivity.this, StatisticsActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 	
-	public void setData(Spielleiter spiel) {
+	public void setData(Spielleiter spiel, boolean addToDB) {
 		int place[] = { 0, 1, 2, 3 };
 		ViewGroup t[] = new ViewGroup[4];
 		
@@ -115,12 +141,27 @@ public class GameFinishActivity extends Activity {
 			else
 				name = lastStatus.getPlayerName(getResources(), place[i], color);
 			
+			String s;
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
-			((TextView)t[i].findViewById(R.id.points)).setText(
-					getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+			
+			s = getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points);
+			((TextView)t[i].findViewById(R.id.points)).setText(s);
+			s = "";
+			boolean is_perfect = false;
+			if (p.m_stone_count == 0 && p.m_lastStone != null) {
+				if (p.m_lastStone.get_stone_shape() == 0) {
+					is_perfect = true;
+					s = "(+20)";
+				}
+				else
+					s = "(+15)";
+			}
+			((TextView)t[i].findViewById(R.id.bonus_points)).setText(s);
+			
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
+				
 			t[i].setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[color]);
 			
 			AnimationSet set = new AnimationSet(false);
@@ -173,9 +214,33 @@ public class GameFinishActivity extends Activity {
 				set.addAnimation(a);
 				
 				this.place.setText(getResources().getStringArray(R.array.places)[i]);
+
+				if (addToDB) {
+					HighscoreDB db = new HighscoreDB(this);
+					if (db.open()) {
+						int flags = 0;
+						if (is_perfect)
+							flags |= HighscoreDB.FLAG_IS_PERFECT;
+
+						/* FIXME: this is wrong for 4_COLORS_2_PLAYERS */
+						db.addHighscore(
+								spiel.m_gamemode,
+								p.m_stone_points,
+								p.m_stone_count,
+								place[i],
+								i + 1,
+								flags);
+
+						db.close();
+						
+						if (Build.VERSION.SDK_INT >= 8) {
+							BackupManager backupManager = new BackupManager(this);
+							backupManager.dataChanged();
+						}
+					}
+				}
 			}
 			t[i].startAnimation(set);
-
 		}
 	}
 }

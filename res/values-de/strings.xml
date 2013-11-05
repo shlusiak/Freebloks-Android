@@ -32,6 +32,20 @@
     <string name="start">Start</string>
     <string name="custom_game_title">Benutzerdefiniertes Spiel</string>
     
+    <string name="statistics">Statistiken</string>
+    <string name="clear_statistics">Zurücksetzen</string>
+	<string-array name="statistics_labels">
+		<item>Spiele insgesamt</item>
+		<item>Gute Spiele (+15)</item>
+		<item>Perfekte Spiele (+20)</item>
+		<item>Erster Platz</item>
+		<item>Zweiter Platz</item>
+		<item>Dritter Platz</item>
+		<item>Vierter Platz</item>
+		<item>Verwendete Steine</item>
+		<item>Punkte insgesamt</item>
+	</string-array>
+    
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Spieler</string>
     <string name="chat">Chat</string>
@@ -143,4 +157,6 @@
 	<string name="prefs_player_name">Spielername</string>
 	<string name="prefs_player_name_default">[nicht gesetzt]</string>
 	<string name="prefs_theme">Hintergrund</string>
+	<string name="prefs_statistics">Statistiken&#8230;</string>
+	<string name="prefs_statistics_long">Spielstatistiken zeigen</string>
 </resources>

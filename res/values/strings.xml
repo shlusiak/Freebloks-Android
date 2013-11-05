@@ -32,6 +32,20 @@
     <string name="sound_on">Sound on</string>
     <string name="sound_off">Sound off</string>
     
+    <string name="statistics">Statistics</string>
+    <string name="clear_statistics">Reset all</string>
+	<string-array name="statistics_labels">
+		<item>Games played</item>
+		<item>Good games (+15)</item>
+		<item>Perfect games (+20)</item>
+		<item>1st place</item>
+		<item>2nd place</item>
+		<item>3rd place</item>
+		<item>4th place</item>
+		<item>Stones used</item>
+		<item>Points total</item>
+	</string-array>
+    
     
     <string name="lobby_waiting_for_players">Waiting for players</string>
     <string name="connected_clients">%1$d clients</string>
@@ -149,4 +163,6 @@
 	<string name="prefs_player_name">Player name</string>
 	<string name="prefs_player_name_default">[default]</string>
 	<string name="prefs_theme">Background</string>
+	<string name="prefs_statistics">Statistics&#8230;</string>
+	<string name="prefs_statistics_long">Show game statistics</string>
 </resources>

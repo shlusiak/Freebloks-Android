@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.saschahlusiak.freebloksvip"
     android:versionCode="34"
-    android:versionName="0.2.1" >
+    android:versionName="0.2.2" >
 
     <uses-sdk android:minSdkVersion="8" 
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,9 +19,17 @@
 
     <application
         android:icon="@drawable/appicon_small"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:backupAgent=".backup.FreebloksBackupAgent"
+        android:restoreAnyVersion="true"
+        android:allowBackup="true"
+        android:killAfterRestore="true" >
+        
+        <meta-data android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIR_4yQhng55BwxHabL4lnZTsSeT7G8uIACcuntQ" />
+        
         <activity
-            android:name="de.saschahlusiak.freebloks.game.FreebloksActivity"
+            android:name=".game.FreebloksActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,11 +42,23 @@
             android:theme="@style/Theme.Freebloks.Dialog" >
         </activity>
    		<activity
-            android:name="de.saschahlusiak.freebloks.preferences.FreebloksPreferences"
-            android:label="@string/app_name" >
+            android:name=".preferences.FreebloksPreferences"
+            android:icon="@drawable/gears"
+            android:label="@string/preferences" >
         </activity>
         <activity 
-            android:name="de.saschahlusiak.freebloks.donate.DonateActivity"
+            android:name=".stats.StatisticsActivity"
+            android:label="@string/statistics"
+            android:theme="@style/Theme.Freebloks.Light"
+            android:icon="@drawable/stats"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="de.saschahlusiak.freebloks.SHOW_STATISTICS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+   		<activity 
+            android:name=".donate.DonateActivity"
             android:label="@string/please_donate"
             android:icon="@drawable/coin"
             android:exported="false" >
