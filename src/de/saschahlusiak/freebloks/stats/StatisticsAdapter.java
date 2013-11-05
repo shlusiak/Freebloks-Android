@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.stats;
 
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

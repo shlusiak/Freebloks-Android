@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.stats;
 
-import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
