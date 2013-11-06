@@ -233,6 +233,10 @@ public class Spiel implements Serializable, Cloneable {
 			}
 		}
 	}
+	
+	final void set_field_free_bit(int playernumber, int y, int x) {
+		m_game_field[y * m_field_size_x + x] &= ~PLAYER_BIT_ALLOWED[playernumber];
+	}
 
 	public final int set_stone(Turn turn){
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
