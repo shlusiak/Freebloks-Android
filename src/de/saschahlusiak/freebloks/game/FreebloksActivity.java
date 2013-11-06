@@ -417,7 +417,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onPause() {
 		Log.d(tag, "onPause");
-		if (client != null && client.spiel.current_player() >= 0 && !client.spiel.is_finished())
+		if (client != null && client.spiel.isStarted() && !client.spiel.isFinished())
 			saveGameState(GAME_STATE_FILE);
 		super.onPause();
 	}
@@ -505,6 +505,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			/* this will start a new SpielClient, which needs to be restored 
 			 * from saved gamestate first */
 			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.m_field_size_x);
+			client.spiel.setStarted(true);
 			connectTask = new ConnectTask(client, false, null);
 			connectTask.execute((String)null);
 
@@ -774,7 +775,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				dialog.setOnCancelListener(new OnCancelListener() {				
 					@Override
 					public void onCancel(DialogInterface arg0) {
-						if (client.spiel.current_player() < 0 && !client.spiel.is_finished()) {
+						if (!client.spiel.isStarted() && !client.spiel.isFinished()) {
 							canresume = false;
 							client.disconnect();
 							showDialog(DIALOG_GAME_MENU);
@@ -878,7 +879,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (view.model.intro != null)
 				view.model.intro.cancel();
 			else {
-				if (client == null || (client.spiel != null && client.spiel.is_finished()))
+				if (client == null || (client.spiel != null && client.spiel.isFinished()))
 					startNewGame();
 				else
 					showDialog(DIALOG_NEW_GAME_CONFIRMATION);
@@ -927,7 +928,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			return true;
 			
 		case R.id.show_main_menu:
-			if (client != null && client.spiel.current_player() >= 0 && lastStatus.clients > 1)
+			if (client != null && client.spiel.isStarted() && lastStatus.clients > 1)
 				showDialog(DIALOG_QUIT);
 			else {
 				if (client != null && client.isConnected())
@@ -1004,7 +1005,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					status.setText(R.string.touch_to_skip);
 				else if (client == null || !client.isConnected())
 					status.setText(R.string.not_connected);
-				else if (client.spiel.is_finished()) {
+				else if (client.spiel.isFinished()) {
 					int pl = view.model.board.getShowWheelPlayer();
 					Player p = client.spiel.get_player(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
@@ -1354,7 +1355,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
-		if (client != null && client.spiel.current_player() >= 0 && lastStatus != null && lastStatus.clients > 1)
+		if (client != null && client.spiel.isStarted() && !client.spiel.isFinished() && lastStatus != null && lastStatus.clients > 1)
 			showDialog(DIALOG_QUIT);
 		else {
 			if (view.model.intro != null) {

@@ -301,7 +301,7 @@ public class Wheel implements ViewElement {
 				if (highlightStone == s)
 					y += 1.2f;
 
-				if (!moves_left && !model.spiel.is_finished())
+				if (!moves_left && !model.spiel.isFinished())
 					alpha *= 0.65f;
 				alpha *= 0.5f + effect * 0.5f;
 

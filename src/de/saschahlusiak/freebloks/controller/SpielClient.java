@@ -8,7 +8,6 @@ import android.content.Context;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
@@ -236,6 +235,7 @@ public class SpielClient {
 		case Network.MSG_START_GAME: {
 			spiel.start_new_game(spiel.m_gamemode);
 			spiel.setFinished(false);
+			spiel.setStarted(true);
 			/* Unbedingt history leeren. */
 			if (spiel.history != null)
 				spiel.history.delete_all_turns();
