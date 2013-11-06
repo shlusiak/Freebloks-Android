@@ -104,7 +104,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			updateStatus();
 		}
 		super.onRestoreInstanceState(savedInstanceState);
-	}	
+	}
+	
 	
 	public void setSpiel(SpielClient client) {
 		this.client = client;
@@ -112,9 +113,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		/* what do we do if supplied client is null? */
 		if (client == null)
 			return;
-		
+
 		client.addClientInterface(this);
-		if (client.spiel.current_player() < 0) {
+		if (!client.spiel.isStarted()) {
 			/* lobby */
 			findViewById(R.id.startButton).setVisibility(View.VISIBLE);
 			setTitle(R.string.lobby_waiting_for_players);

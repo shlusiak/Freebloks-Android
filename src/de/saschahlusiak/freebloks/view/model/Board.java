@@ -125,7 +125,7 @@ public class Board implements ViewElement {
 			return -1;
 		if (getShowDetailsPlayer() >= 0)
 			return getShowDetailsPlayer();
-		if (model.spiel.is_finished())
+		if (model.spiel.isFinished())
 			return centerPlayer;
 		if (model.spiel.is_local_player())
 			return model.spiel.current_player();
@@ -141,7 +141,7 @@ public class Board implements ViewElement {
 			return getShowDetailsPlayer();
 		if (model.spiel == null)
 			return centerPlayer;
-		if (model.spiel.is_finished()) {
+		if (model.spiel.isFinished()) {
 			return centerPlayer;
 		}
 		if (model.spiel.is_local_player() || model.showOpponents)
@@ -220,7 +220,7 @@ public class Board implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		if (!rotating && model.spiel != null && model.spiel.is_finished() && auto_rotate) {
+		if (!rotating && model.spiel != null && model.spiel.isFinished() && auto_rotate) {
 			final float ROTSPEED = 25.0f;
 
 			mAngleY += elapsed * ROTSPEED;
