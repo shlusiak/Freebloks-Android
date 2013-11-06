@@ -15,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout.LayoutParams;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -104,9 +103,17 @@ public class ColorAdapter extends BaseAdapter {
 				}
 			} else {
 				/* computer player */
-				t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
-				t.setBackgroundColor(Color.BLACK);
-				t.setText("---");
+				if (spiel.isStarted()) {
+					t.setTextColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
+					t.setBackgroundColor(Color.BLACK);
+					t.setText("---");
+					t.setVisibility(View.VISIBLE);
+					v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+				} else {
+					v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+					t.setVisibility(View.INVISIBLE);
+			        v.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
+				}
 			}
 		} else {
 			if (spiel.is_local_player(position)) {
