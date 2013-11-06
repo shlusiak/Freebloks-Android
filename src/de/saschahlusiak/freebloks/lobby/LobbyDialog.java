@@ -219,12 +219,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void chatReceived(final NET_CHAT c) {
-		chatList.post(new Runnable() {
+		chatList.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				adapter.notifyDataSetChanged();
 			}
-		});
+		}, 100);
 	}
 	
 	@Override
@@ -239,7 +239,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void serverStatus(final NET_SERVER_STATUS status) {
-		handler.post(new Runnable() {
+		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				lastStatus = status;
@@ -247,7 +247,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				updateStatus();
 				adapter.notifyDataSetChanged();
 			}
-		});
+		}, 100);
 	}
 	
 	void updateStatus() {
