@@ -52,6 +52,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -1459,7 +1460,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 						pendingIntent);
 				if (!forceShow) {
 					n.tickerText = getString(R.string.your_turn, getPlayerName(client.spiel.current_player()));
-					n.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND;
+					n.defaults = Notification.DEFAULT_VIBRATE;
 				}
 			} else {
 				n.setLatestEventInfo(this,
@@ -1474,7 +1475,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					chat,
 					pendingIntent);
 			n.tickerText = chat;
-			n.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND;
+			n.defaults = Notification.DEFAULT_VIBRATE;
+			n.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat);
 		} else
 			multiplayerNotification = n;
 		
