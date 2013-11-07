@@ -1263,15 +1263,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				e.setPlayer(i);
 
 				if (!view.model.spiel.is_local_player(i))
-					updateMultiplayerNotification(false, text);
+					updateMultiplayerNotification(tid == R.string.player_left_color && client.spiel.isStarted(), text);
 			
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						chatEntries.add(e);
-						/* only show toast on "left" */
-						if (tid == R.string.player_left_color)
-							Toast.makeText(FreebloksActivity.this, "* " + text, Toast.LENGTH_LONG).show();
 					}
 				});
 			}
