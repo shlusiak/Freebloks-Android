@@ -55,57 +55,57 @@
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d pièce restante</item>
         <item quantity="other">%1$d pièces restantes</item>
-	</plurals>
+    </plurals>
     <plurals name="number_of_points">
         <item quantity="one">%1$d point</item>
         <item quantity="other">%1$d points</item>
-	</plurals>
-	<string-array name="places">
-		<item>1ère place</item>
-		<item>2e place</item>
-		<item>3e place</item>
-		<item>4e place</item>
-	</string-array>
-	<string name="game_finished">Fin du jeu</string>
-	<string-array name="color_names">
-    	<item>Blanc</item>
-	    <item>Bleu</item>
-    	<item>Jaune</item>
-   		<item>Rouge</item>
-		<item>Vert</item>
-		<item>Orange</item>
-		<item>Violet</item>
-	</string-array>
-	<string-array name="difficulties">
-    	<item>dingue</item>
-    	<item>dur</item>
-       	<item>moyen</item>
-       	<item>facile</item>
-    	<item>très facile</item>
-	</string-array>
-	<string-array name="game_modes">
-	    <item>2 Joueurs, 2 Couleurs</item>
-	    <item>2 Joueurs, 4 Couleurs</item>
-	    <item>Blokus Classique</item>
-	    <item>Blokus Duo</item>
-	</string-array>
-	<string-array name="game_field_sizes">
-	    <item>13x13</item>
-	    <item>14x14</item>
-	    <item>15x15</item>
-	    <item>17x17</item>
-	    <item>20x20</item>
-	    <item>23x23</item>
-	</string-array>
+    </plurals>
+    <string-array name="places">
+        <item>1ère place</item>
+        <item>2e place</item>
+        <item>3e place</item>
+        <item>4e place</item>
+    </string-array>
+    <string name="game_finished">Fin du jeu</string>
+    <string-array name="color_names">
+        <item>Blanc</item>
+        <item>Bleu</item>
+        <item>Jaune</item>
+        <item>Rouge</item>
+        <item>Vert</item>
+        <item>Orange</item>
+        <item>Violet</item>
+    </string-array>
+    <string-array name="difficulties">
+        <item>dingue</item>
+        <item>dur</item>
+        <item>moyen</item>
+        <item>facile</item>
+        <item>très facile</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 Joueurs, 2 Couleurs</item>
+        <item>2 Joueurs, 4 Couleurs</item>
+        <item>Blokus Classique</item>
+        <item>Blokus Duo</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
 
-	<string name="please_donate">Soutenez les développeurs</string>
-	<string name="donation_text_long">Freebloks est un logiciel gratuit. Vous pouvez l\'utiliser et le modifier complètement gratuitement!\n\ Mais cela ne signifie qu\'il n\'ait pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et de soutenir le développement des logiciels gratuits. \n\nCombien vaut Freebloks pour vous?</string>
-	<string name="donation_nothing">Rien</string>
-	<string name="donation_next">Suivant</string>
-	<string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="please_donate">Soutenez les développeurs</string>
+    <string name="donation_text_long">Freebloks est un logiciel gratuit. Vous pouvez l\'utiliser et le modifier complètement gratuitement!\n\ Mais cela ne signifie qu\'il n\'ait pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et de soutenir le développement des logiciels gratuits. \n\nCombien vaut Freebloks pour vous?</string>
+    <string name="donation_nothing">Rien</string>
+    <string name="donation_next">Suivant</string>
+    <string name="donation_freebloksvip">Freebloks VIP</string>
 	
-	<string-array name="theme_labels">
-        <item>Noir</item>
+    <string-array name="theme_labels">
+    <item>Noir</item>
         <item>Bleu</item>
         <item>Tissu fleuri</item>
         <item>Tissu rayé</item>
@@ -113,32 +113,32 @@
         <item>Briques</item>
     </string-array>
 	
-	<string name="prefs_interface">Interface</string>
-	<string name="prefs_display">Affichage</string>
-	<string name="prefs_misc">Divers</string> 
-	<string name="prefs_sounds_long">Activer effets sonores</string>
-	<string name="prefs_sounds">Sons</string>
-	<string name="prefs_vibrate_long">Vibrer lors du déplacement des pièces</string>
-	<string name="prefs_vibrate">Vibrer</string>
-	<string name="prefs_snap_to_corners_long">Aide en faisant claquer les pièces auprès des positions valides</string>
-	<string name="prefs_snap_to_corners">Claquer auprès des coins</string> 
-	<string name="prefs_undo_long">Annuler dernier tour en appuyant sur le bouton retour</string> 
-	<string name="prefs_undo">Annuler avec retour</string> 
-	<string name="prefs_show_corners_long">Montrer coins possibles de vos pièces</string> 
-	<string name="prefs_show_corners">Coins</string>
-	<string name="prefs_show_opponents_long">Montrer les pièces des adversaires</string>
-	<string name="prefs_show_opponents">Adversaires</string>
-	<string name="prefs_show_animations_long">Afficher animations</string>
-	<string name="prefs_show_animations">Animations</string>
-	<string name="prefs_skip_intro_long">Omettre l\'intro animé</string>
-	<string name="prefs_skip_intro">Omettre l\'intro</string>
-	<string name="prefs_auto_resume_long">Reprendre automatiquement la dernière partie</string>
-	<string name="prefs_auto_resume">Reprise automatique</string>
-	<string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
-	<string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
-	<string name="prefs_donation_long"> Veuillez soutenir le développement par un don</string>
-	<string name="prefs_donation"> Soutenez Freebloks&#8230;</string>
-	<string name="prefs_player_name">Nom du joueur</string>
-	<string name="prefs_player_name_default">[par défaut]</string>
-	<string name="prefs_theme">Fond d\'écran </string>
+    <string name="prefs_interface">Interface</string>
+    <string name="prefs_display">Affichage</string>
+    <string name="prefs_misc">Divers</string>
+    <string name="prefs_sounds_long">Activer effets sonores</string>
+    <string name="prefs_sounds">Sons</string>
+    <string name="prefs_vibrate_long">Vibrer lors du déplacement des pièces</string>
+    <string name="prefs_vibrate">Vibrer</string>
+    <string name="prefs_snap_to_corners_long">Aide en faisant claquer les pièces auprès des positions valides</string>
+    <string name="prefs_snap_to_corners">Claquer auprès des coins</string>
+    <string name="prefs_undo_long">Annuler dernier tour en appuyant sur le bouton retour</string>
+    <string name="prefs_undo">Annuler avec retour</string>
+    <string name="prefs_show_corners_long">Montrer coins possibles de vos pièces</string>
+    <string name="prefs_show_corners">Coins</string>
+    <string name="prefs_show_opponents_long">Montrer les pièces des adversaires</string>
+    <string name="prefs_show_opponents">Adversaires</string>
+    <string name="prefs_show_animations_long">Afficher animations</string>
+    <string name="prefs_show_animations">Animations</string>
+    <string name="prefs_skip_intro_long">Omettre l\'intro animé</string>
+    <string name="prefs_skip_intro">Omettre l\'intro</string>
+    <string name="prefs_auto_resume_long">Reprendre automatiquement la dernière partie</string>
+    <string name="prefs_auto_resume">Reprise automatique</string>
+    <string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
+    <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
+    <string name="prefs_donation_long"> Veuillez soutenir le développement par un don</string>
+    <string name="prefs_donation"> Soutenez Freebloks&#8230;</string>
+    <string name="prefs_player_name">Nom du joueur</string>
+    <string name="prefs_player_name_default">[par défaut]</string>
+    <string name="prefs_theme">Fond d\'écran </string>
 </resources>

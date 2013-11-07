@@ -34,18 +34,17 @@
     
     <string name="statistics">Statistics</string>
     <string name="clear_statistics">Reset all</string>
-	<string-array name="statistics_labels">
-		<item>Games played</item>
-		<item>Good games (+15)</item>
-		<item>Perfect games (+20)</item>
-		<item>1st place</item>
-		<item>2nd place</item>
-		<item>3rd place</item>
-		<item>4th place</item>
-		<item>Stones used</item>
-		<item>Points total</item>
-	</string-array>
-    
+    <string-array name="statistics_labels">
+        <item>Games played</item>
+        <item>Good games (+15)</item>
+        <item>Perfect games (+20)</item>
+        <item>1st place</item>
+        <item>2nd place</item>
+        <item>3rd place</item>
+        <item>4th place</item>
+        <item>Stones used</item>
+        <item>Points total</item>
+    </string-array>
     
     <string name="lobby_waiting_for_players">Waiting for players</string>
     <string name="connected_clients">%1$d clients</string>
@@ -69,56 +68,56 @@
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d stone left</item>
         <item quantity="other">%1$d stones left</item>
-	</plurals>
+    </plurals>
     <plurals name="number_of_points">
         <item quantity="one">%1$d point</item>
         <item quantity="other">%1$d points</item>
-	</plurals>
-	<string-array name="places">
-		<item>1st place</item>
-		<item>2nd place</item>
-		<item>3rd place</item>
-		<item>4th place</item>
-	</string-array>
-	<string name="game_finished">Game Over</string>
-	<string-array name="color_names">
-	    <item>White</item>
-	    <item>Blue</item>
-	    <item>Yellow</item>
-	   	<item>Red</item>
-   	    <item>Green</item>
-   	    <item>Orange</item>
-   	    <item>Purple</item>
-	</string-array>
-	<string-array name="difficulties">
-	    <item>nuts</item>
-	    <item>hard</item>
-   	    <item>medium</item>
-   	    <item>easy</item>
- 	    <item>very easy</item>
-	</string-array>
-	<string-array name="game_modes">
-	    <item>2 Players, 2 Colors</item>
-	    <item>2 Players, 4 Colors</item>
-	    <item>Blokus Classic</item>
-	    <item>Blokus Duo</item>
-	</string-array>
-	<string-array name="game_field_sizes">
-	    <item>13x13</item>
-	    <item>14x14</item>
-	    <item>15x15</item>
-	    <item>17x17</item>
-	    <item>20x20</item>
-	    <item>23x23</item>
-	</string-array>
+    </plurals>
+    <string-array name="places">
+        <item>1st place</item>
+        <item>2nd place</item>
+        <item>3rd place</item>
+        <item>4th place</item>
+    </string-array>
+    <string name="game_finished">Game Over</string>
+    <string-array name="color_names">
+        <item>White</item>
+        <item>Blue</item>
+        <item>Yellow</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Orange</item>
+        <item>Purple</item>
+    </string-array>
+    <string-array name="difficulties">
+        <item>nuts</item>
+        <item>hard</item>
+        <item>medium</item>
+        <item>easy</item>
+        <item>very easy</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 Players, 2 Colors</item>
+        <item>2 Players, 4 Colors</item>
+        <item>Blokus Classic</item>
+        <item>Blokus Duo</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
 	
-	<string name="please_donate">Support the developers</string>
-	<string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That\'s why you can decide how much the game is worth to you and support the development of free software.\n\nWhat is Freebloks worth to you?</string>
-	<string name="donation_nothing">Nothing</string>
-	<string name="donation_next">Next</string>
-	<string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="please_donate">Support the developers</string>
+    <string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That\'s why you can decide how much the game is worth to you and support the development of free software.\n\nWhat is Freebloks worth to you?</string>
+    <string name="donation_nothing">Nothing</string>
+    <string name="donation_next">Next</string>
+    <string name="donation_freebloksvip">Freebloks VIP</string>
 			
-	<string-array name="theme_labels">
+    <string-array name="theme_labels">
         <item>Black</item>
         <item>Blue</item>
         <item>Flowery cloth</item>
@@ -133,36 +132,36 @@
         <item>texture_table_cloth_2</item>
         <item>texture_wood</item>
         <item>texture_bricks</item>
-	</string-array>
+    </string-array>
 	
-	<string name="prefs_interface">Interface</string>
-	<string name="prefs_display">Display</string>
-	<string name="prefs_misc">Miscellaneous</string>	
-	<string name="prefs_sounds_long">Play sound effects</string>
-	<string name="prefs_sounds">Sounds</string>
-	<string name="prefs_vibrate_long">Vibrate when moving stones</string>
-	<string name="prefs_vibrate">Vibrate</string>
-	<string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
-	<string name="prefs_snap_to_corners">Snap to corners</string>	
-	<string name="prefs_undo_long">Undo last move with back button</string>	
-	<string name="prefs_undo">Undo with back</string>	
-	<string name="prefs_show_corners_long">Show possible corners of your stones</string>	
-	<string name="prefs_show_corners">Corners</string>	
-	<string name="prefs_show_opponents_long">Show opponents\' stones</string>
-	<string name="prefs_show_opponents">Opponents</string>
-	<string name="prefs_show_animations_long">Show animations</string>
-	<string name="prefs_show_animations">Animations</string>
-	<string name="prefs_skip_intro_long">Skip intro animation on app start</string>
-	<string name="prefs_skip_intro">Skip intro</string>
-	<string name="prefs_auto_resume_long">Automatically resume last game</string>
-	<string name="prefs_auto_resume">Auto-resume</string>
-	<string name="prefs_rate_review_long">Please rate or leave a comment</string>
-	<string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
-	<string name="prefs_donation_long">Please support the development with a donation</string>
-	<string name="prefs_donation">Support Freebloks&#8230;</string>
-	<string name="prefs_player_name">Player name</string>
-	<string name="prefs_player_name_default">[default]</string>
-	<string name="prefs_theme">Background</string>
-	<string name="prefs_statistics">Statistics&#8230;</string>
-	<string name="prefs_statistics_long">Show game statistics</string>
+    <string name="prefs_interface">Interface</string>
+    <string name="prefs_display">Display</string>
+    <string name="prefs_misc">Miscellaneous</string>
+    <string name="prefs_sounds_long">Play sound effects</string>
+    <string name="prefs_sounds">Sounds</string>
+    <string name="prefs_vibrate_long">Vibrate when moving stones</string>
+    <string name="prefs_vibrate">Vibrate</string>
+    <string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
+    <string name="prefs_snap_to_corners">Snap to corners</string>
+    <string name="prefs_undo_long">Undo last move with back button</string>
+    <string name="prefs_undo">Undo with back</string>
+    <string name="prefs_show_corners_long">Show possible corners of your stones</string>
+    <string name="prefs_show_corners">Corners</string>
+    <string name="prefs_show_opponents_long">Show opponents\' stones</string>
+    <string name="prefs_show_opponents">Opponents</string>
+    <string name="prefs_show_animations_long">Show animations</string>
+    <string name="prefs_show_animations">Animations</string>
+    <string name="prefs_skip_intro_long">Skip intro animation on app start</string>
+    <string name="prefs_skip_intro">Skip intro</string>
+    <string name="prefs_auto_resume_long">Automatically resume last game</string>
+    <string name="prefs_auto_resume">Auto-resume</string>
+    <string name="prefs_rate_review_long">Please rate or leave a comment</string>
+    <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
+    <string name="prefs_donation_long">Please support the development with a donation</string>
+    <string name="prefs_donation">Support Freebloks&#8230;</string>
+    <string name="prefs_player_name">Player name</string>
+    <string name="prefs_player_name_default">[default]</string>
+    <string name="prefs_theme">Background</string>
+    <string name="prefs_statistics">Statistics&#8230;</string>
+    <string name="prefs_statistics_long">Show game statistics</string>
 </resources>
