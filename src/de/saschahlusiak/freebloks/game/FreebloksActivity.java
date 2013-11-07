@@ -40,6 +40,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -87,6 +90,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	
 	static final int REQUEST_FINISH_GAME = 1;
+	
+	static final int NOTIFICATION_GAME_ID = 1;
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
@@ -108,6 +113,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	NET_SERVER_STATUS lastStatus;
 	Menu optionsMenu;
 	ViewGroup statusView;
+	NotificationManager notificationManager;
+	Notification multiplayerNotification;
 
 	ConnectTask connectTask;
 
@@ -234,6 +241,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
+		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		
 		hasActionBar = false;
 		/* by default, don't show title bar */
@@ -388,6 +396,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	@Override
 	protected void onDestroy() {
 		Log.d(tag, "onDestroy");
+		notificationManager.cancelAll();
+		notificationManager.cancel(NOTIFICATION_GAME_ID);
+
 		if (connectTask != null) try {
 			connectTask.cancel(true);
 			connectTask.get();
@@ -430,6 +441,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	
 	@Override
 	protected void onStop() {
+		if (client != null && client.isConnected()) {
+			if ((lastStatus != null && lastStatus.clients > 1) ||
+				(!client.spiel.isStarted()))
+				updateMultiplayerNotification(true, null);
+		}
 		view.onPause();
 		Editor editor = prefs.edit();
 		editor.putFloat("view_scale", view.getScale());
@@ -443,6 +459,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		Log.d(tag, "onStart");
 		super.onStart();
 		view.onResume();
+		
+		notificationManager.cancel(NOTIFICATION_GAME_ID);
+		multiplayerNotification = null;
 		
 		vibrate_on_move = prefs.getBoolean("vibrate", true);
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
@@ -976,6 +995,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if (multiplayerNotification != null)
+					updateMultiplayerNotification(false, null);
 				boolean local = false;
 				int showPlayer = view.model.board.getShowDetailsPlayer();
 				if (client != null && client.spiel != null)
@@ -1143,6 +1164,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				updateMultiplayerNotification(false, null);
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);
 				intent.putExtra("lastStatus", (Serializable)lastStatus);
@@ -1171,12 +1193,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				return;
 			name = getString(R.string.client_d, c.client + 1);
 		}
-			
+
 		final ChatEntry e = new ChatEntry(c.client, c.text, name);
 		e.setPlayer(player);
 		
-		if (!view.model.spiel.is_local_player(player))
-			view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
+		if (!client.spiel.is_local_player(player) &&
+			(client.spiel.isStarted() || multiplayerNotification != null))
+			updateMultiplayerNotification(true, e.toString());
 		
 		runOnUiThread(new Runnable() {
 			@Override
@@ -1239,7 +1262,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 				e.setPlayer(i);
 
 				if (!view.model.spiel.is_local_player(i))
-					view.model.soundPool.play(view.model.soundPool.SOUND_CHAT, 0.5f, 1.0f);
+					updateMultiplayerNotification(false, text);
 			
 				runOnUiThread(new Runnable() {
 					@Override
@@ -1392,5 +1415,69 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (lastStatus == null)
 			return color_name;
 		return lastStatus.getPlayerName(getResources(), player, view.model.getPlayerColor(player));
-	}	
+	}
+	
+	void updateMultiplayerNotification(boolean forceShow, String chat) {
+		if (client == null || client.spiel == null)
+			return;
+		if (!client.isConnected())
+			return;
+		if (multiplayerNotification == null && !forceShow)
+			return;
+		
+		Notification n = new Notification();
+				
+		Intent intent = new Intent(this, FreebloksActivity.class);
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		n.icon = R.drawable.appicon_notification;
+		n.flags = Notification.FLAG_AUTO_CANCEL;
+		if (forceShow && chat == null)
+			n.flags |= Notification.FLAG_ONGOING_EVENT;
+		if (multiplayerNotification != null)
+			n.flags |= Notification.FLAG_ONGOING_EVENT;
+		
+		if (!client.spiel.isStarted()) {
+			n.setLatestEventInfo(this,
+					getString(R.string.app_name),
+					getString(R.string.lobby_waiting_for_players),
+					pendingIntent);
+		} else if (client.spiel.isFinished()) {
+			n.setLatestEventInfo(this,
+					getString(R.string.app_name),
+					getString(R.string.game_finished),
+					pendingIntent);
+		} else {
+			if (client.spiel.current_player() < 0)
+				return;
+			if (client.spiel.is_local_player()) {
+				n.setLatestEventInfo(this,
+						getString(R.string.app_name),
+						getString(R.string.your_turn, getPlayerName(client.spiel.current_player())),
+						pendingIntent);
+				if (!forceShow) {
+					n.tickerText = getString(R.string.your_turn, getPlayerName(client.spiel.current_player()));
+					n.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND;
+				}
+			} else {
+				n.setLatestEventInfo(this,
+						getString(R.string.app_name),
+						getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())),
+						pendingIntent);
+			}
+		}
+		if (chat != null) {
+			n.setLatestEventInfo(this,
+					getString(R.string.app_name),
+					chat,
+					pendingIntent);
+			n.tickerText = chat;
+			n.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND;
+		} else
+			multiplayerNotification = n;
+		
+		notificationManager.notify(NOTIFICATION_GAME_ID, n);
+	}
 }
