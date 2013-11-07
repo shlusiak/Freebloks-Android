@@ -1431,6 +1431,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		Intent intent = new Intent(this, FreebloksActivity.class);
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		if (chat != null)
+			intent.putExtra("showChat", true);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		n.icon = R.drawable.appicon_notification;
@@ -1481,5 +1483,12 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			multiplayerNotification = n;
 		
 		notificationManager.notify(NOTIFICATION_GAME_ID, n);
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		if (intent.hasExtra("showChat") && client != null && client.spiel.isStarted())
+			showDialog(DIALOG_LOBBY);
+		super.onNewIntent(intent);
 	}
 }
