@@ -1432,7 +1432,6 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			intent.putExtra("showChat", true);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		n.icon = R.drawable.appicon_notification;
 		n.flags = Notification.FLAG_AUTO_CANCEL;
 		if (forceShow && chat == null)
 			n.flags |= Notification.FLAG_ONGOING_EVENT;
@@ -1440,11 +1439,13 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			n.flags |= Notification.FLAG_ONGOING_EVENT;
 		
 		if (!client.spiel.isStarted()) {
+			n.icon = R.drawable.notification_waiting;
 			n.setLatestEventInfo(this,
 					getString(R.string.app_name),
 					getString(R.string.lobby_waiting_for_players),
 					pendingIntent);
 		} else if (client.spiel.isFinished()) {
+			n.icon = R.drawable.notification_main;
 			n.setLatestEventInfo(this,
 					getString(R.string.app_name),
 					getString(R.string.game_finished),
@@ -1453,6 +1454,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			if (client.spiel.current_player() < 0)
 				return;
 			if (client.spiel.is_local_player()) {
+				n.icon = R.drawable.notification_your_turn;
 				n.setLatestEventInfo(this,
 						getString(R.string.app_name),
 						getString(R.string.your_turn, getPlayerName(client.spiel.current_player())),
@@ -1462,6 +1464,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 					n.defaults = Notification.DEFAULT_VIBRATE;
 				}
 			} else {
+				n.icon = R.drawable.notification_waiting;
 				n.setLatestEventInfo(this,
 						getString(R.string.app_name),
 						getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())),
@@ -1469,6 +1472,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			}
 		}
 		if (chat != null) {
+			n.icon = R.drawable.notification_chat;
 			n.setLatestEventInfo(this,
 					getString(R.string.app_name),
 					chat,
