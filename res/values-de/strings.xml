@@ -136,6 +136,8 @@
     <string name="prefs_sounds">Töne</string>
     <string name="prefs_vibrate_long">Vibrieren, wenn Steine gelegt wird</string>
     <string name="prefs_vibrate">Vibrationen</string>
+    <string name="prefs_notifications_long">Benachrichtigungen im Mehrspielermodus anzeigen</string>
+    <string name="prefs_notifications">Benachrichtigungen</string>
     <string name="prefs_snap_to_corners_long">Steine an gültigen Positionen einrasten lassen</string>
     <string name="prefs_snap_to_corners">Einrasthilfe</string>
     <string name="prefs_undo_long">\"Zurück\"-Taste macht letzten Zug rückgängig</string>

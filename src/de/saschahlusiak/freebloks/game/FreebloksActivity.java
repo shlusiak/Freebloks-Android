@@ -109,6 +109,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	SpielClientThread spielthread = null;
 	Vibrator vibrator;
 	boolean vibrate_on_move;
+	boolean show_notifications;
 	boolean undo_with_back;
 	boolean hasActionBar;
 	NET_SERVER_STATUS lastStatus;
@@ -466,6 +467,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		vibrate_on_move = prefs.getBoolean("vibrate", true);
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
+		show_notifications = prefs.getBoolean("notifications", true);
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = prefs.getBoolean("show_animations", true);
@@ -1421,6 +1423,8 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (!client.isConnected())
 			return;
 		if (multiplayerNotification == null && !forceShow)
+			return;
+		if (!show_notifications)
 			return;
 		
 		Notification n = new Notification();
