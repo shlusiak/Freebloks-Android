@@ -75,6 +75,13 @@
             android:title="@string/prefs_player_name"
             android:summary="@string/prefs_player_name_default"/>
         
+        <CheckBoxPreference
+		    android:summary="@string/prefs_notifications_long"
+		    android:title="@string/prefs_notifications"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="notifications" />
+        
 		<CheckBoxPreference
 		    android:summary="@string/prefs_skip_intro_long"
 		    android:title="@string/prefs_skip_intro"
