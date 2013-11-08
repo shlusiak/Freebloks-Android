@@ -34,17 +34,17 @@
     
     <string name="statistics">Statistiken</string>
     <string name="clear_statistics">Zurücksetzen</string>
-	<string-array name="statistics_labels">
-		<item>Spiele insgesamt</item>
-		<item>Gute Spiele (+15)</item>
-		<item>Perfekte Spiele (+20)</item>
-		<item>Erster Platz</item>
-		<item>Zweiter Platz</item>
-		<item>Dritter Platz</item>
-		<item>Vierter Platz</item>
-		<item>Verwendete Steine</item>
-		<item>Punkte insgesamt</item>
-	</string-array>
+    <string-array name="statistics_labels">
+        <item>Spiele insgesamt</item>
+        <item>Gute Spiele (+15)</item>
+        <item>Perfekte Spiele (+20)</item>
+        <item>Erster Platz</item>
+        <item>Zweiter Platz</item>
+        <item>Dritter Platz</item>
+        <item>Vierter Platz</item>
+        <item>Verwendete Steine</item>
+        <item>Punkte insgesamt</item>
+    </string-array>
     
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Spieler</string>
@@ -69,57 +69,57 @@
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d Stein übrig</item>
         <item quantity="other">%1$d Steine übrig</item>
-	</plurals>
+    </plurals>
     <plurals name="number_of_points">
         <item quantity="one">%1$d Punkt</item>
         <item quantity="other">%1$d Punkte</item>
-	</plurals>
-	<string-array name="places">
-		<item>Erster Platz</item>
-		<item>Zweiter Platz</item>
-		<item>Dritter Platz</item>
-		<item>Vierter Platz</item>
-	</string-array>
-	<string name="game_finished">Spiel vorbei</string>
-	<string-array name="color_names">
-	    <item>Weiß</item>
-	    <item>Blau</item>
-	    <item>Gelb</item>
-	   	<item>Rot</item>
-   	    <item>Grün</item>
-   	    <item>Orange</item>
-   	    <item>Lila</item>
-	</string-array>
-	<string-array name="difficulties">
-	    <item>sehr schwer</item>
-	    <item>schwer</item>
-   	    <item>mittel</item>
-   	    <item>einfach</item>
- 	    <item>sehr einfach</item>
-	</string-array>
-	<string-array name="game_modes">
-	    <item>2 Spieler, 2 Farben</item>
-	    <item>2 Spieler, 4 Farben</item>
-	    <item>Blokus Classic</item>
-	    <item>Blokus Duo</item>
-	</string-array>
-	<string-array name="game_field_sizes">
-	    <item>13x13</item>
-	    <item>14x14</item>
-	    <item>15x15</item>
-	    <item>17x17</item>
-	    <item>20x20</item>
-	    <item>23x23</item>
-	</string-array>
-	
-	<string name="please_donate">Unterstütze die Entwickler</string>
-	<string name="donation_text_long">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!\n\nAber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wieviel du bezahlen möchtest um die Entwickler zu unterstützen.\n\nWas ist dir Freebloks wert?</string>
-	<string name="donation_nothing">Nichts</string>
-	<string name="donation_next">Weiter</string>
-	<string name="donation_freebloksvip">Freebloks VIP</string>
-	
-			
-	<string-array name="theme_labels">
+    </plurals>
+    <string-array name="places">
+        <item>Erster Platz</item>
+        <item>Zweiter Platz</item>
+        <item>Dritter Platz</item>
+        <item>Vierter Platz</item>
+    </string-array>
+    <string name="game_finished">Spiel vorbei</string>
+
+    <string-array name="color_names">
+        <item>Weiß</item>
+        <item>Blau</item>
+        <item>Gelb</item>
+        <item>Rot</item>
+        <item>Grün</item>
+        <item>Orange</item>
+        <item>Lila</item>
+    </string-array>
+    <string-array name="difficulties">
+        <item>sehr schwer</item>
+        <item>schwer</item>
+        <item>mittel</item>
+        <item>einfach</item>
+        <item>sehr einfach</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 Spieler, 2 Farben</item>
+        <item>2 Spieler, 4 Farben</item>
+        <item>Blokus Classic</item>
+        <item>Blokus Duo</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
+
+    <string name="please_donate">Unterstütze die Entwickler</string>
+    <string name="donation_text_long">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!\n\nAber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wieviel du bezahlen möchtest um die Entwickler zu unterstützen.\n\nWas ist dir Freebloks wert?</string>
+    <string name="donation_nothing">Nichts</string>
+    <string name="donation_next">Weiter</string>
+    <string name="donation_freebloksvip">Freebloks VIP</string>
+
+    <string-array name="theme_labels">
         <item>Schwarz</item>
         <item>Blau</item>
         <item>Tischdecke mit Blumenmuster</item>
@@ -127,36 +127,39 @@
         <item>Holz</item>
         <item>Ziegelsteine</item>
     </string-array>
-	
-	
-	<string name="prefs_interface">Oberfläche</string>
-	<string name="prefs_display">Anzeige</string>
-	<string name="prefs_misc">Verschiedenes</string>	
-	<string name="prefs_sounds_long">Töne abspielen, wenn Steine gelegt werden</string>
-	<string name="prefs_sounds">Töne</string>
-	<string name="prefs_vibrate_long">Vibrieren, wenn Steine gelegt wird</string>
-	<string name="prefs_vibrate">Vibrationen</string>
-	<string name="prefs_snap_to_corners_long">Steine an gültigen Positionen einrasten lassen</string>
-	<string name="prefs_snap_to_corners">Einrasthilfe</string>
-	<string name="prefs_undo_long">\"Zurück\"-Taste macht letzten Zug rückgängig</string>	
-	<string name="prefs_undo">Rückgängig mit \"Zurück\"</string>	
-	<string name="prefs_show_corners_long">Verfügbare Ecken eigener Steine hervorheben</string>	
-	<string name="prefs_show_corners">Ecken hervorheben</string>
-	<string name="prefs_show_opponents_long">Steine der Gegenspieler zeigen, wenn am Zug</string>
-	<string name="prefs_show_opponents">Gegner zeigen</string>
-	<string name="prefs_show_animations_long">Verschiedene Animationen anzeigen</string>
-	<string name="prefs_show_animations">Animationen</string>
-	<string name="prefs_skip_intro_long">Intro beim Start nicht zeigen</string>
-	<string name="prefs_skip_intro">Intro überspringen</string>
-	<string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
-	<string name="prefs_auto_resume">Auto-Fortsetzen</string>
-	<string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
-	<string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
-	<string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
-	<string name="prefs_donation">Unterstützen&#8230;</string>
-	<string name="prefs_player_name">Spielername</string>
-	<string name="prefs_player_name_default">[nicht gesetzt]</string>
-	<string name="prefs_theme">Hintergrund</string>
-	<string name="prefs_statistics">Statistiken&#8230;</string>
-	<string name="prefs_statistics_long">Spielstatistiken zeigen</string>
+
+
+    <string name="prefs_interface">Oberfläche</string>
+    <string name="prefs_display">Anzeige</string>
+    <string name="prefs_misc">Verschiedenes</string>
+    <string name="prefs_sounds_long">Töne abspielen, wenn Steine gelegt werden</string>
+    <string name="prefs_sounds">Töne</string>
+    <string name="prefs_vibrate_long">Vibrieren, wenn Steine gelegt wird</string>
+    <string name="prefs_vibrate">Vibrationen</string>
+    <string name="prefs_notifications_long">Benachrichtigungen im Mehrspielermodus anzeigen</string>
+    <string name="prefs_notifications">Benachrichtigungen</string>
+    <string name="prefs_snap_to_corners_long">Steine an gültigen Positionen einrasten lassen</string>
+    <string name="prefs_snap_to_corners">Einrasthilfe</string>
+    <string name="prefs_undo_long">\"Zurück\"-Taste macht letzten Zug rückgängig</string>
+    <string name="prefs_undo">Rückgängig mit \"Zurück\"</string>
+    <string name="prefs_show_corners_long">Verfügbare Ecken eigener Steine hervorheben</string>
+    <string name="prefs_show_corners">Ecken hervorheben</string>
+    <string name="prefs_show_opponents_long">Steine der Gegenspieler zeigen, wenn am Zug</string>
+    <string name="prefs_show_opponents">Gegner zeigen</string>
+    <string name="prefs_show_animations_long">Verschiedene Animationen anzeigen</string>
+    <string name="prefs_show_animations">Animationen</string>
+    <string name="prefs_skip_intro_long">Intro beim Start nicht zeigen</string>
+    <string name="prefs_skip_intro">Intro überspringen</string>
+    <string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
+    <string name="prefs_auto_resume">Auto-Fortsetzen</string>
+    <string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
+    <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
+    <string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
+    <string name="prefs_donation">Unterstützen&#8230;</string>
+    <string name="prefs_player_name">Spielername</string>
+    <string name="prefs_player_name_default">[nicht gesetzt]</string>
+    <string name="prefs_theme">Hintergrund</string>
+    <string name="prefs_statistics">Statistiken&#8230;</string>
+    <string name="prefs_statistics_long">Spielstatistiken zeigen</string>
 </resources>
+

@@ -236,6 +236,7 @@ public class SpielClient {
 		case Network.MSG_START_GAME: {
 			spiel.start_new_game(spiel.m_gamemode);
 			spiel.setFinished(false);
+			spiel.setStarted(true);
 			/* Unbedingt history leeren. */
 			if (spiel.history != null)
 				spiel.history.delete_all_turns();

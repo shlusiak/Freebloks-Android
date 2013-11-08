@@ -94,7 +94,7 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	}
 	
-	public int[] get_game_field() {
+	public final int[] get_game_field() {
 		return m_game_field;
 	}
 	
@@ -130,7 +130,7 @@ public class Spiel implements Serializable, Cloneable {
 		return m_player[playernumber];
 	}
 
-	public int get_player_start_x(int playernumber) {
+	public final int get_player_start_x(int playernumber) {
 		switch (playernumber) {
 		case 0 : 
 		case 1 : return 0;
@@ -138,7 +138,7 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	}
 
-	public int get_player_start_y(int playernumber) {
+	public final int get_player_start_y(int playernumber) {
 		switch (playernumber){
 		case 1 :
 		case 2 : return 0;
@@ -180,7 +180,7 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	} 
 
-	public void refresh_player_data(){
+	public final void refresh_player_data(){
 		for (int n = 0; n < PLAYER_MAX; n++){
 			m_player[n].refresh_data(this);
 		}
@@ -206,14 +206,14 @@ public class Spiel implements Serializable, Cloneable {
 		return valid;
 	}
 
-	public int is_valid_turn(Turn turn){
+	public final int is_valid_turn(Turn turn){
 		int playernumber = turn.m_playernumber;
 		Stone stone = m_player[playernumber].get_stone(turn.m_stone_number);
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 		return is_valid_turn(stone, playernumber, turn.m_y, turn.m_x);
 	}
 
-	void free_gamefield(int y, int x){
+	final void free_gamefield(int y, int x){
 		m_game_field[y * m_field_size_x + x] = 0;
 	}
 
@@ -232,6 +232,10 @@ public class Spiel implements Serializable, Cloneable {
 				}
 			}
 		}
+	}
+	
+	final void set_field_free_bit(int playernumber, int y, int x) {
+		m_game_field[y * m_field_size_x + x] &= ~PLAYER_BIT_ALLOWED[playernumber];
 	}
 
 	public final int set_stone(Turn turn){

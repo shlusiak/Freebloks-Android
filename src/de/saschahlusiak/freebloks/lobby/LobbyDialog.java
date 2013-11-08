@@ -104,7 +104,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 			updateStatus();
 		}
 		super.onRestoreInstanceState(savedInstanceState);
-	}	
+	}
+	
 	
 	public void setSpiel(SpielClient client) {
 		this.client = client;
@@ -112,9 +113,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		/* what do we do if supplied client is null? */
 		if (client == null)
 			return;
-		
+
 		client.addClientInterface(this);
-		if (client.spiel.current_player() < 0) {
+		if (!client.spiel.isStarted()) {
 			/* lobby */
 			findViewById(R.id.startButton).setVisibility(View.VISIBLE);
 			setTitle(R.string.lobby_waiting_for_players);
@@ -218,12 +219,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void chatReceived(final NET_CHAT c) {
-		chatList.post(new Runnable() {
+		chatList.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				adapter.notifyDataSetChanged();
 			}
-		});
+		}, 100);
 	}
 	
 	@Override
@@ -238,7 +239,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 
 	@Override
 	public void serverStatus(final NET_SERVER_STATUS status) {
-		handler.post(new Runnable() {
+		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				lastStatus = status;
@@ -246,7 +247,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 				updateStatus();
 				adapter.notifyDataSetChanged();
 			}
-		});
+		}, 100);
 	}
 	
 	void updateStatus() {
