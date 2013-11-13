@@ -180,7 +180,7 @@ public class GameFinishActivity extends Activity {
 			set.addAnimation(a);
 			a = new TranslateAnimation(
 					TranslateAnimation.RELATIVE_TO_SELF, 
-					-1, 
+					1, 
 					TranslateAnimation.RELATIVE_TO_SELF, 
 					0, 
 					TranslateAnimation.RELATIVE_TO_SELF, 
@@ -224,7 +224,7 @@ public class GameFinishActivity extends Activity {
 				
 				this.place.setText(getResources().getStringArray(R.array.places)[data[i].place - 1]);
 			}
-			t[i].startAnimation(set);
+			t[i].findViewById(R.id.data).startAnimation(set);
 		}
 	}
 }
