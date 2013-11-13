@@ -11,6 +11,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -79,7 +82,7 @@ public class GameFinishActivity extends Activity {
 		});
 	}
 	
-	PlayerData[] getData(Spielleiter spiel) {
+	static PlayerData[] getData(Spielleiter spiel) {
 		PlayerData[] data;
 		int i;
 		switch (spiel.m_gamemode) {
@@ -170,7 +173,7 @@ public class GameFinishActivity extends Activity {
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, data[i].stones_left, data[i].stones_left));
 				
-			t[i].findViewById(R.id.data).setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+			t[i].findViewById(R.id.data).setBackgroundDrawable(getScoreDrawable(data[i]));
 			
 			AnimationSet set = new AnimationSet(false);
 			Animation a = new AlphaAnimation(0.0f, 1.0f);
@@ -226,5 +229,23 @@ public class GameFinishActivity extends Activity {
 			}
 			t[i].findViewById(R.id.data).startAnimation(set);
 		}
+	}
+	
+	Drawable getScoreDrawable(PlayerData data) {
+		int color = Global.getPlayerColor(data.player1, spiel.m_gamemode);
+		LayerDrawable l;
+		
+		if (data.player2 >= 0)
+			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_2);
+		else
+			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1);
+		
+		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+		if (data.player2 >= 0) {
+			color = Global.getPlayerColor(data.player2, spiel.m_gamemode);
+			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+		}
+		
+		return l;
 	}
 }
