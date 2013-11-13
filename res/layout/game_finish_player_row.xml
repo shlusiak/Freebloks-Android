@@ -1,64 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="4dp" >
+    android:layout_height="wrap_content" >
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="8dp"
         android:shadowColor="#9f000000"
         android:shadowDy="2"
         android:shadowRadius="5"
-        android:text="Name"
+        android:text="1"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ffffffff" />
+        android:textColor="?android:attr/textColorSecondary" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/data"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:paddingRight="24dp" >
-        
-	    <TextView
-	        android:id="@+id/points"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_vertical"
-	        android:shadowColor="#9f000000"
-	        android:shadowDy="2"
-	        android:shadowRadius="5"
-	        android:text="Points"
-	        android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:textColor="#ffffffff" />
-	    
-	    <TextView
-	        android:id="@+id/bonus_points"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center"
-	        android:paddingLeft="4dp"
-	        android:shadowColor="#9f000000"
-	        android:shadowDy="2"
-	        android:shadowRadius="4"
-	        android:text="(+00)"
-	        android:textColor="#ffaff7af"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+        android:background="#7f0000"
+        android:padding="4dp" >
 
-    <TextView
-        android:id="@+id/stones"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:shadowColor="#9f000000"
-        android:shadowDy="2"
-        android:shadowRadius="5"
-        android:text="Stones"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/place"
+            android:shadowColor="#9f000000"
+            android:shadowDy="2"
+            android:shadowRadius="5"
+            android:text="Name"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#ffffffff" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingRight="24dp" >
+
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:shadowColor="#9f000000"
+                android:shadowDy="2"
+                android:shadowRadius="5"
+                android:text="Points"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#ffffffff" />
+
+            <TextView
+                android:id="@+id/bonus_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="4dp"
+                android:shadowColor="#9f000000"
+                android:shadowDy="2"
+                android:shadowRadius="4"
+                android:text="(+00)"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffaff7af" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:shadowColor="#9f000000"
+            android:shadowDy="2"
+            android:shadowRadius="5"
+            android:text="Stones"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+</LinearLayout>
