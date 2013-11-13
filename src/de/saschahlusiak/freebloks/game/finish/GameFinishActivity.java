@@ -1,21 +1,16 @@
-package de.saschahlusiak.freebloks.game;
+package de.saschahlusiak.freebloks.game.finish;
 
 import java.util.Arrays;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
-import de.saschahlusiak.freebloks.database.HighscoreDB;
-import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 import android.app.Activity;
-import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -38,46 +33,6 @@ public class GameFinishActivity extends Activity {
 	String clientName;
 	Spielleiter spiel;
 	
-	class AddToDBTask extends AsyncTask<PlayerData,Void,Void> {
-
-		@Override
-		protected Void doInBackground(PlayerData... data) {
-			int local_players = 0;
-			for (int i = 0; i < data.length; i++)
-				if (data[i].is_local)
-					local_players++;
-			
-			if (local_players != 1)
-				return null;
-			
-			HighscoreDB db = new HighscoreDB(getBaseContext());
-			if (db.open()) {
-				for (int i = 0; i < data.length; i++) if (data[i].is_local) {
-					int flags = 0;
-					if (data[i].is_perfect)
-						flags |= HighscoreDB.FLAG_IS_PERFECT;
-
-					db.addHighscore(
-							spiel.m_gamemode,
-							data[i].points,
-							data[i].stones_left,
-							data[i].player1,
-							data[i].place,
-							flags);
-
-					db.close();
-					
-					if (Build.VERSION.SDK_INT >= 8) {
-						BackupManager backupManager = new BackupManager(getBaseContext());
-						backupManager.dataChanged();
-					}
-				}
-			}
-			return null;
-		}
-		
-	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -96,8 +51,9 @@ public class GameFinishActivity extends Activity {
 		
 		PlayerData[] data = getData(spiel);
 		updateViews(data, spiel.m_gamemode);
+		
 		if (savedInstanceState == null)
-			new AddToDBTask().execute(data);
+			new AddScoreToDBTask(this, spiel.m_gamemode).execute(data);
 		
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
@@ -121,62 +77,6 @@ public class GameFinishActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-	}
-	
-	class PlayerData implements Comparable<PlayerData> {
-		int player1, player2;
-		int place;
-		int points, stones_left;
-		int bonus;
-		boolean is_local, is_perfect;
-		
-		PlayerData(Spielleiter spiel, int player) {
-			this.place = -1;
-			this.player1 = player;
-			this.player2 = -1;
-			this.is_local = spiel.is_local_player(player);
-			this.is_perfect = true;
-			addPoints(spiel.get_player(player));
-		}
-		
-		PlayerData(Spielleiter spiel, int player1, int player2) {
-			this.place = -1;
-			this.player1 = player1;
-			this.player2 = player2;
-			this.is_local = spiel.is_local_player(player1);
-			this.is_perfect = true;
-			
-			addPoints(spiel.get_player(player1));
-			addPoints(spiel.get_player(player2));
-		}
-		
-		void addPoints(Player p) {
-			this.points += p.m_stone_points;
-			this.stones_left += p.m_stone_count;
-			if (p.m_stone_count == 0 && p.m_lastStone != null) {
-				if (p.m_lastStone.get_stone_shape() == 0) {
-					bonus += 20;
-				}
-				else {
-					bonus += 15;
-					is_perfect = false;
-				}
-			} else
-				is_perfect = false;
-		}
-
-		@Override
-		public int compareTo(PlayerData another) {
-			if (points > another.points)
-				return -1;
-			if (points < another.points)
-				return 1;
-			if (stones_left < another.stones_left)
-				return -1;
-			if (stones_left > another.stones_left)
-				return 1;
-			return 0;
-		}
 	}
 	
 	PlayerData[] getData(Spielleiter spiel) {
