@@ -21,6 +21,7 @@ public class Network {
 	public static final int MSG_UNDO_STONE = 10;
 	public static final int MSG_REQUEST_HINT = 11;
 	public static final int MSG_STONE_HINT = 12;
+	public static final int MSG_REVOKE_PLAYER = 13;
 	
 	public static NET_HEADER read_package(Socket socket, boolean block) throws Exception {
 		NET_HEADER p = new NET_HEADER(0, 0);
@@ -54,6 +55,8 @@ public class Network {
 			return new NET_REQUEST_HINT(p);
 		case MSG_STONE_HINT:
 			return new NET_SET_STONE(p);
+		case MSG_REVOKE_PLAYER:
+			return new NET_REVOKE_PLAYER(p);
 		
 		default:
 			//throw new Exception("Unhandled message type " + p.msg_type);

@@ -53,10 +53,39 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+				lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+				if (position == 1)
+					position = 2;
+		return position;
 	}
 	
-	
+	@Override
+	public boolean isEnabled(int position) {
+		if (lastStatus == null || spiel == null)
+			return false;
+		
+		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
+		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+			if (position == 1)
+				position = 2;
+		
+		if (!lastStatus.isAdvanced())
+			return false;
+		
+		if (spiel.isStarted())
+			return false;
+		
+		if (lastStatus.spieler[position] >= 0) {
+			/* it is a human player */
+			if (spiel.is_local_player(position))
+				return true;
+		} else
+			return true;
+		
+		return false;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

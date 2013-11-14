@@ -117,6 +117,10 @@ public class SpielClient {
 		new NET_REQUEST_PLAYER(player, name).send(client_socket);
 	}
 	
+	public void revoke_player(int player) {
+		new NET_REVOKE_PLAYER(player).send(client_socket);
+	}
+	
 	public void request_hint(int player) {
 		if (spiel == null)
 			return;
@@ -136,6 +140,13 @@ public class SpielClient {
 			i=((NET_GRANT_PLAYER)data).player;
 			/* Merken, dass es sich bei i um einen lokalen Spieler handelt */
 			spiel.spieler[i] = Spielleiter.PLAYER_LOCAL;
+			break;
+			
+		case Network.MSG_REVOKE_PLAYER:
+			i=((NET_REVOKE_PLAYER)data).player;
+			if (spiel.spieler[i] != Spielleiter.PLAYER_LOCAL)
+				throw new IllegalStateException("revoked player " + i + " is not local");
+			spiel.spieler[i] = Spielleiter.PLAYER_COMPUTER;
 			break;
 
 		/* Der Server hat einen aktuellen Spieler festgelegt */
