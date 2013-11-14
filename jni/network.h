@@ -56,7 +56,7 @@ typedef struct
 {
 	NET_HEADER header;	/* Erstes Element ist stets NET_HEADER, damit gecastet werden kann */
 	int8 player;		/* Spielernummer */
-} NET_GRANT_PLAYER,NET_CURRENT_PLAYER,NET_REQUEST_HINT;
+} NET_GRANT_PLAYER,NET_CURRENT_PLAYER,NET_REQUEST_HINT,NET_REVOKE_PLAYER;
 
 /**
  * Nachricht ueber die Aktion eines Steins (setzen oder Zuruecknahme)
@@ -115,6 +115,7 @@ const int MSG_REQUEST_UNDO=9;
 const int MSG_UNDO_STONE=10;
 const int MSG_REQUEST_HINT=11;
 const int MSG_STONE_HINT=12;
+const int MSG_REVOKE_PLAYER=13;
 
 
 /* Bereitet die Netzwerknachricht *header vor und schickt sie an target.*/
