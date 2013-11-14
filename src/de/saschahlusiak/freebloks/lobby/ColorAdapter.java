@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.opengl.Visibility;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,8 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
+		if (lastStatus == null)
+			return position;
 		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
 				lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
 				if (position == 1)
@@ -89,7 +92,12 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = LayoutInflater.from(context).inflate(R.layout.color_grid_item, parent, false);
+		View v;
+		if (convertView == null)
+			v = LayoutInflater.from(context).inflate(R.layout.color_grid_item, parent, false);
+		else
+			v = convertView;
+		
 		TextView t;
 		
 		LayerDrawable ld = (LayerDrawable)context.getResources().getDrawable(R.drawable.bg_card_1);
@@ -98,11 +106,14 @@ public class ColorAdapter extends BaseAdapter {
 
 		t = (TextView)v.findViewById(R.id.text);
 		t.setTextColor(Color.WHITE);
+		t.setVisibility(View.VISIBLE);
         if (lastStatus == null || spiel == null) {
         	/* unknown game state */
 			background.setColor(Color.BLACK);
 			background.setAlpha(96);
         	t.setText("---");
+        	t.clearAnimation();
+        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
         	return v;
         }
 		
@@ -117,6 +128,7 @@ public class ColorAdapter extends BaseAdapter {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
 					
@@ -135,12 +147,15 @@ public class ColorAdapter extends BaseAdapter {
 					a.setRepeatCount(Animation.INFINITE);
 
 					t.startAnimation(a);
+				} else {
+		        	t.clearAnimation();
 				}
 			} else {
 				/* computer player */
 				background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				background.setAlpha(96);
 				t.setText("---");
+				t.clearAnimation();
 				if (spiel.isStarted()) {
 					t.setVisibility(View.VISIBLE);
 					v.findViewById(R.id.progressBar).setVisibility(View.GONE);
@@ -151,6 +166,7 @@ public class ColorAdapter extends BaseAdapter {
 			}
 		} else {
 			if (spiel.is_local_player(position)) {
+	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position]);
@@ -173,9 +189,11 @@ public class ColorAdapter extends BaseAdapter {
 
 				t.startAnimation(a);
 			} else {
+	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
 				background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				background.setAlpha(96);
 				t.setText("---");
+				t.clearAnimation();
 			}
 		}
         
