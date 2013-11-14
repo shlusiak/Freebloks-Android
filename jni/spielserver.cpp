@@ -118,6 +118,10 @@ void CSpielServer::delete_client(int index,bool notify)
 	for (int i=0;i<PLAYER_MAX;i++)if (spieler[i]==clients[index]) {
 		spieler[i]=PLAYER_COMPUTER;
 	}
+	if (names[index]) {
+		free(names[index]);
+		names[index] = NULL;
+	}
 	/* Socket zu dem Client schliessen */
 	if (closesocket(clients[index])==-1)perror("close: ");
 	clients[index]=0;
@@ -344,14 +348,13 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 
 			}
 			/* setze Spielernamen */
-			if (names[client])
-				free(names[client]);
-			names[client] = NULL;
-			if (ntohs(data->data_length) > sizeof(NET_HEADER)) {
-				req->name[sizeof(req->name) - 1] = '\0';
-				if (strlen((char*)req->name) > 0) {
-					/* store client name */
-					names[client] = strdup((char*)req->name);
+			if (names[client] == NULL) {
+				if (ntohs(data->data_length) > sizeof(NET_HEADER)) {
+					req->name[sizeof(req->name) - 1] = '\0';
+					if (strlen((char*)req->name) > 0) {
+						/* store client name */
+						names[client] = strdup((char*)req->name);
+					}
 				}
 			}
 
