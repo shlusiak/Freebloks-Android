@@ -364,6 +364,27 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 			break;
 		}
 
+		case MSG_REVOKE_PLAYER: {
+			/* client requests to revoke an assigned player */
+			NET_REVOKE_PLAYER *rev = (NET_REVOKE_PLAYER*)(data);
+			if (m_current_player > -1)
+				break;
+			if (rev->player < 0)
+				break;
+			if (rev->player > PLAYER_MAX)
+				break;
+
+			if (spieler[rev->player] == clients[client]) {
+				spieler[rev->player]=PLAYER_COMPUTER;
+
+				network_send(clients[client],(NET_HEADER*)rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+
+				send_server_status();
+			}
+
+			break;
+		}
+
 		/* Ein Client hat einen Stein gesetzt */
 		case MSG_SET_STONE:{
 			NET_SET_STONE *s=(NET_SET_STONE*)data;
