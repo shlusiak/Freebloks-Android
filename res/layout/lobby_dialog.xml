@@ -33,7 +33,7 @@
         android:layout_below="@+id/server"
 		android:layout_above="@+id/startButton"
         android:layout_marginLeft="8dp"
-        android:verticalSpacing="4dp"
+        android:verticalSpacing="2dp"
         android:numColumns="1"
         android:stretchMode="columnWidth"
         tools:listitem="@layout/color_grid_item" >
