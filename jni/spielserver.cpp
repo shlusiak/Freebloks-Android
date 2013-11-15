@@ -379,6 +379,15 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 
 				network_send(clients[client],(NET_HEADER*)rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
 
+				if (m_gamemode==GAMEMODE_4_COLORS_2_PLAYERS)
+				{
+					int n = rev->player;
+					n=(n+2)%PLAYER_MAX;
+					spieler[n]=PLAYER_COMPUTER;
+					rev->player = n;
+					network_send(clients[client],(NET_HEADER*)rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+				}
+
 				send_server_status();
 			}
 
