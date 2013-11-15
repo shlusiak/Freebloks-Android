@@ -17,14 +17,6 @@ class AddScoreToDBTask extends AsyncTask<PlayerData,Void,Void> {
 	
 	@Override
 	protected Void doInBackground(PlayerData... data) {
-		int local_players = 0;
-		for (int i = 0; i < data.length; i++)
-			if (data[i].is_local)
-				local_players++;
-		
-		if (local_players != 1)
-			return null;
-		
 		HighscoreDB db = new HighscoreDB(context);
 		if (db.open()) {
 			for (int i = 0; i < data.length; i++) if (data[i].is_local) {
@@ -40,12 +32,12 @@ class AddScoreToDBTask extends AsyncTask<PlayerData,Void,Void> {
 						data[i].place,
 						flags);
 
-				db.close();
-				
-				if (Build.VERSION.SDK_INT >= 8) {
-					BackupManager backupManager = new BackupManager(context);
-					backupManager.dataChanged();
-				}
+			}
+			db.close();
+			
+			if (Build.VERSION.SDK_INT >= 8) {
+				BackupManager backupManager = new BackupManager(context);
+				backupManager.dataChanged();
 			}
 		}
 		return null;
