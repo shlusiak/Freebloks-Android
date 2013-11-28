@@ -1,19 +1,19 @@
-package de.saschahlusiak.freebloks.game;
+package de.saschahlusiak.freebloks.game.finish;
+
+import java.util.Arrays;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
-import de.saschahlusiak.freebloks.database.HighscoreDB;
-import de.saschahlusiak.freebloks.model.Player;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 import android.app.Activity;
-import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +34,7 @@ public class GameFinishActivity extends Activity {
 	TextView place;
 	NET_SERVER_STATUS lastStatus;
 	String clientName;
+	Spielleiter spiel;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +47,17 @@ public class GameFinishActivity extends Activity {
 	    
 		place = (TextView) findViewById(R.id.place);
 		
-		Spielleiter spiel = (Spielleiter)getIntent().getSerializableExtra("game");
+		spiel = (Spielleiter)getIntent().getSerializableExtra("game");
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
 
-		int local_players = 0;
-		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
-			if (spiel.is_local_player(i))
-				local_players++;
-
-		boolean addToDB = false;
-		if (local_players == 1)
-			addToDB = true;
-		/* TODO: point counting for 4_COLORS_2_PLAYERS is currently just wrong. Don't add to DB yet */
-//		if (local_players == 2 && spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
-//			addToDB = true;
-		if (savedInstanceState != null)
-			addToDB = false;
-		setData(spiel, addToDB);
+		
+		PlayerData[] data = getData(spiel);
+		updateViews(data, spiel.m_gamemode);
+		
+		if (savedInstanceState == null)
+			new AddScoreToDBTask(this, spiel.m_gamemode).execute(data);
+		
 		
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
 			@Override
@@ -88,30 +82,51 @@ public class GameFinishActivity extends Activity {
 		});
 	}
 	
-	public void setData(Spielleiter spiel, boolean addToDB) {
-		int place[] = { 0, 1, 2, 3 };
-		ViewGroup t[] = new ViewGroup[4];
+	static PlayerData[] getData(Spielleiter spiel) {
+		PlayerData[] data;
+		int i;
+		switch (spiel.m_gamemode) {
+		case Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS:
+		case Spielleiter.GAMEMODE_DUO:
+			data = new PlayerData[2];
+			data[0] = new PlayerData(spiel, 0);
+			data[1] = new PlayerData(spiel, 2);
+			break;
+			
+		case Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS:
+			data = new PlayerData[2];
+			data[0] = new PlayerData(spiel, 0, 2);
+			data[1] = new PlayerData(spiel, 1, 3);
+			break;
+			
+		case Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS:
+		default:
+			data = new PlayerData[4];
+			data[0] = new PlayerData(spiel, 0);
+			data[1] = new PlayerData(spiel, 1);
+			data[2] = new PlayerData(spiel, 2);
+			data[3] = new PlayerData(spiel, 3);
+			break;
+		}
 		
-		if (spiel == null)
-			return;
+		Arrays.sort(data);
+		int place;
+		for (i = 0; i < data.length; i++) {
+			place = i + 1;
+			if (i > 0) {
+				if (data[i].compareTo(data[i-1]) == 0)
+					place = data[i-1].place;
+			}
+			
+			data[i].place = place;
+		}
+		return data;
+	}
+	
+	void updateViews(PlayerData[] data, int game_mode) {
+		ViewGroup t[] = new ViewGroup[4];
 
 		int i = 0;
-		int max = Spiel.PLAYER_MAX - 1;
-		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-			spiel.m_gamemode == Spielleiter.GAMEMODE_DUO) {
-			place[1] = 2;
-			place[2] = 1;
-			max = 1;
-		}
-		while ( i < max )
-		{
-			if (spiel.get_player(place[i]).m_stone_points < spiel.get_player(place[i + 1]).m_stone_points) {
-				int bla = place[i];
-				place[i] = place[i + 1];
-				place[i + 1] = bla;
-				i = 0;
-			}else i++;
-		}
 		
 		t[0] = (ViewGroup) findViewById(R.id.place1);
 		t[1] = (ViewGroup) findViewById(R.id.place2);
@@ -119,8 +134,9 @@ public class GameFinishActivity extends Activity {
 		t[3] = (ViewGroup) findViewById(R.id.place4);
 		
 		/* TODO: combine yellow/green, blue/red on 4_COLORS_2_PLAYERS */
-		if (spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-			spiel.m_gamemode == Spielleiter.GAMEMODE_DUO) {
+		if (game_mode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
+			game_mode == Spielleiter.GAMEMODE_DUO ||
+			game_mode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 			t[2].setVisibility(View.GONE);
 			t[3].setVisibility(View.GONE);
 		} else {
@@ -130,39 +146,34 @@ public class GameFinishActivity extends Activity {
 
 		this.place.setText(R.string.game_finished);
 
-		for (i = 3; i >= 0; i--) {
+		for (i = data.length - 1; i >= 0; i--) {
 			String name;
-			int color = Global.getPlayerColor(place[i], spiel.m_gamemode);
-			Player p = spiel.get_player(place[i]);
-			if (clientName != null && spiel.is_local_player(place[i]))
+			int color = Global.getPlayerColor(data[i].player1, game_mode);
+			if (clientName != null && data[i].is_local)
 				name = clientName; 
 			else if (lastStatus == null)
 				name = getResources().getStringArray(R.array.color_names)[color];
 			else
-				name = lastStatus.getPlayerName(getResources(), place[i], color);
+				name = lastStatus.getPlayerName(getResources(), data[i].player1, color);
 			
 			String s;
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
 			
-			s = getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points);
+			((TextView)t[i].findViewById(R.id.place)).setText(String.format("%d.", data[i].place));
+
+			s = getResources().getQuantityString(R.plurals.number_of_points, data[i].points, data[i].points);
 			((TextView)t[i].findViewById(R.id.points)).setText(s);
 			s = "";
-			boolean is_perfect = false;
-			if (p.m_stone_count == 0 && p.m_lastStone != null) {
-				if (p.m_lastStone.get_stone_shape() == 0) {
-					is_perfect = true;
-					s = "(+20)";
-				}
-				else
-					s = "(+15)";
-			}
+			if (data[i].bonus > 0)
+				s += " (+" + data[i].bonus + ")";
+			
 			((TextView)t[i].findViewById(R.id.bonus_points)).setText(s);
 			
 			((TextView)t[i].findViewById(R.id.stones)).setText(
-					getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
+					getResources().getQuantityString(R.plurals.number_of_stones_left, data[i].stones_left, data[i].stones_left));
 				
-			t[i].setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+			t[i].findViewById(R.id.data).setBackgroundDrawable(getScoreDrawable(data[i]));
 			
 			AnimationSet set = new AnimationSet(false);
 			Animation a = new AlphaAnimation(0.0f, 1.0f);
@@ -172,7 +183,7 @@ public class GameFinishActivity extends Activity {
 			set.addAnimation(a);
 			a = new TranslateAnimation(
 					TranslateAnimation.RELATIVE_TO_SELF, 
-					-1, 
+					1, 
 					TranslateAnimation.RELATIVE_TO_SELF, 
 					0, 
 					TranslateAnimation.RELATIVE_TO_SELF, 
@@ -184,7 +195,7 @@ public class GameFinishActivity extends Activity {
 			a.setFillBefore(true);
 			set.addAnimation(a);
 			
-			if (spiel.is_local_player(place[i])) {
+			if (data[i].is_local) {
 				a = new TranslateAnimation(
 						TranslateAnimation.RELATIVE_TO_SELF, 
 						0, 
@@ -200,6 +211,7 @@ public class GameFinishActivity extends Activity {
 				a.setRepeatCount(Animation.INFINITE);
 
 				((TextView)t[i].findViewById(R.id.name)).setTextColor(Color.WHITE);
+				((TextView)t[i].findViewById(R.id.place)).setTextColor(Color.WHITE);
 				((TextView)t[i].findViewById(R.id.name)).setTypeface(Typeface.DEFAULT_BOLD);
 				((TextView)t[i].findViewById(R.id.stones)).setTextColor(Color.WHITE);
 
@@ -213,34 +225,27 @@ public class GameFinishActivity extends Activity {
 				
 				set.addAnimation(a);
 				
-				this.place.setText(getResources().getStringArray(R.array.places)[i]);
-
-				if (addToDB) {
-					HighscoreDB db = new HighscoreDB(this);
-					if (db.open()) {
-						int flags = 0;
-						if (is_perfect)
-							flags |= HighscoreDB.FLAG_IS_PERFECT;
-
-						/* FIXME: this is wrong for 4_COLORS_2_PLAYERS */
-						db.addHighscore(
-								spiel.m_gamemode,
-								p.m_stone_points,
-								p.m_stone_count,
-								place[i],
-								i + 1,
-								flags);
-
-						db.close();
-						
-						if (Build.VERSION.SDK_INT >= 8) {
-							BackupManager backupManager = new BackupManager(this);
-							backupManager.dataChanged();
-						}
-					}
-				}
+				this.place.setText(getResources().getStringArray(R.array.places)[data[i].place - 1]);
 			}
-			t[i].startAnimation(set);
+			t[i].findViewById(R.id.data).startAnimation(set);
 		}
+	}
+	
+	Drawable getScoreDrawable(PlayerData data) {
+		int color = Global.getPlayerColor(data.player1, spiel.m_gamemode);
+		LayerDrawable l;
+		
+		if (data.player2 >= 0)
+			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_2);
+		else
+			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1);
+		
+		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+		if (data.player2 >= 0) {
+			color = Global.getPlayerColor(data.player2, spiel.m_gamemode);
+			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+		}
+		
+		return l;
 	}
 }

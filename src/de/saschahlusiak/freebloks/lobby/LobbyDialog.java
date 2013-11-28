@@ -27,7 +27,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.GridView;
@@ -35,7 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class LobbyDialog extends Dialog implements SpielClientInterface {
+public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemClickListener {
 	SpielClient client;
 	Handler handler = new Handler();
 	ListView chatList;
@@ -57,6 +58,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 		colorGrid = (GridView)findViewById(R.id.color_grid);
 		colorAdapter = new ColorAdapter(getContext(), null, null);
 		colorGrid.setAdapter(colorAdapter);
+		
+		colorGrid.setOnItemClickListener(this);
 
 		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -272,5 +275,16 @@ public class LobbyDialog extends Dialog implements SpielClientInterface {
 	@Override
 	public void onDisconnected(Spiel spiel) {
 		dismiss();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+		if (client.spiel.isStarted())
+			return;
+		if (client.spiel.is_local_player((int)id)) {
+			client.revoke_player((int)id);
+		} else {
+			client.request_player((int)id, null);
+		}
 	}
 }

@@ -15,6 +15,7 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
@@ -247,10 +248,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		
 		hasActionBar = false;
 		/* by default, don't show title bar */
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		if (Build.VERSION.SDK_INT >= 11) {
 			/* all honeycomb tablets had no menu button; leave action bar visible */
 			hasActionBar = true;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			if (Build.VERSION.SDK_INT >= 14) {
 				/* tablets/phone with ICS may or may not have physical buttons. Show action bar if mising */
 				ViewConfiguration viewConfig = ViewConfiguration.get(this);
 				/* we need the action bar if we don't have a menu key */
@@ -259,6 +260,11 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (!hasActionBar)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
+		else {
+			if (Build.VERSION.SDK_INT >= 14) {
+				getActionBar().setHomeButtonEnabled(true);
+			}
+		}
 		
 		setContentView(R.layout.main_3d);
 
@@ -893,6 +899,10 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			showDialog(DIALOG_GAME_MENU);
+			return true;
+			
 		case R.id.new_game:
 			if (view.model.intro != null)
 				view.model.intro.cancel();

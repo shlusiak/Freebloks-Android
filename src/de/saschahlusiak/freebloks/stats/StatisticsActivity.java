@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-public class StatisticsActivity extends Activity implements OnNavigationListener {
+public class StatisticsActivity extends Activity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
 	int game_mode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
@@ -76,7 +76,14 @@ public class StatisticsActivity extends Activity implements OnNavigationListener
 			SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.game_modes,
 					android.R.layout.simple_spinner_dropdown_item);
 			getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-			getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
+			getActionBar().setListNavigationCallbacks(mSpinnerAdapter, new OnNavigationListener() {
+				@Override
+				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+					game_mode = itemPosition;
+					refreshData();
+					return true;
+				}
+			});
 			getActionBar().setSelectedNavigationItem(game_mode);
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -145,12 +152,4 @@ public class StatisticsActivity extends Activity implements OnNavigationListener
 
 		adapter.notifyDataSetChanged();
 	}
-
-	@Override
-	public boolean onNavigationItemSelected(int position, long id) {
-		game_mode = position;
-		refreshData();
-		return true;
-	}
-	
 }
