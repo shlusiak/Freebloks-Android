@@ -7,15 +7,17 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.google.example.games.basegameutils.BaseGameActivity;
+
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.JNIServer;
+import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
-import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
@@ -79,7 +81,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
+public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -222,8 +224,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {		
 		Log.d(tag, "onCreate");
 		
 		if (Build.VERSION.SDK_INT >= 11 && BuildConfig.DEBUG) {
@@ -240,11 +241,7 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 	                 .detectAll()
 	                 .penaltyLog()
 	                 .build());
-	     }
-
-		
-		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
-		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+	    }
 		
 		hasActionBar = false;
 		/* by default, don't show title bar */
@@ -260,13 +257,20 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		}
 		if (!hasActionBar)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
-		else {
+
+		
+		super.onCreate(savedInstanceState);
+		
+		if (hasActionBar) {
 			if (Build.VERSION.SDK_INT >= 14) {
 				getActionBar().setHomeButtonEnabled(true);
-			}
+			}			
 		}
 		
 		setContentView(R.layout.main_3d);
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
+		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
 		view = (Freebloks3DView)findViewById(R.id.board);
 		view.setActivity(this);
@@ -1178,6 +1182,9 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 			@Override
 			public void run() {
 				updateMultiplayerNotification(false, null);
+				PlayerData[] data = client.spiel.getResultData();
+				new AddScoreTask(FreebloksActivity.this, getGamesClient(), client.spiel.m_gamemode).execute(data);
+				
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);
 				intent.putExtra("lastStatus", (Serializable)lastStatus);
@@ -1505,5 +1512,17 @@ public class FreebloksActivity extends Activity implements ActivityInterface, Sp
 		if (intent.hasExtra("showChat") && client != null && client.spiel.isStarted())
 			showDialog(DIALOG_LOBBY);
 		super.onNewIntent(intent);
+	}
+
+	@Override
+	public void onSignInFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSignInSucceeded() {
+		// TODO Auto-generated method stub
+		
 	}
 }

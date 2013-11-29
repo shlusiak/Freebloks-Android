@@ -1,9 +1,10 @@
-package de.saschahlusiak.freebloks.game.finish;
+package de.saschahlusiak.freebloks.game;
 
 import java.util.Arrays;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
@@ -51,14 +52,9 @@ public class GameFinishActivity extends Activity {
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
 
-		
-		PlayerData[] data = getData(spiel);
+		PlayerData[] data = spiel.getResultData();
 		updateViews(data, spiel.m_gamemode);
-		
-		if (savedInstanceState == null)
-			new AddScoreToDBTask(this, spiel.m_gamemode).execute(data);
-		
-		
+
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
@@ -81,48 +77,7 @@ public class GameFinishActivity extends Activity {
 			}
 		});
 	}
-	
-	static PlayerData[] getData(Spielleiter spiel) {
-		PlayerData[] data;
-		int i;
-		switch (spiel.m_gamemode) {
-		case Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS:
-		case Spielleiter.GAMEMODE_DUO:
-			data = new PlayerData[2];
-			data[0] = new PlayerData(spiel, 0);
-			data[1] = new PlayerData(spiel, 2);
-			break;
-			
-		case Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS:
-			data = new PlayerData[2];
-			data[0] = new PlayerData(spiel, 0, 2);
-			data[1] = new PlayerData(spiel, 1, 3);
-			break;
-			
-		case Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS:
-		default:
-			data = new PlayerData[4];
-			data[0] = new PlayerData(spiel, 0);
-			data[1] = new PlayerData(spiel, 1);
-			data[2] = new PlayerData(spiel, 2);
-			data[3] = new PlayerData(spiel, 3);
-			break;
-		}
 		
-		Arrays.sort(data);
-		int place;
-		for (i = 0; i < data.length; i++) {
-			place = i + 1;
-			if (i > 0) {
-				if (data[i].compareTo(data[i-1]) == 0)
-					place = data[i-1].place;
-			}
-			
-			data[i].place = place;
-		}
-		return data;
-	}
-	
 	void updateViews(PlayerData[] data, int game_mode) {
 		ViewGroup t[] = new ViewGroup[4];
 

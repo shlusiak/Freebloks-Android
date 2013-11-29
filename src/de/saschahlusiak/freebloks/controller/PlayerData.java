@@ -1,14 +1,13 @@
-package de.saschahlusiak.freebloks.game.finish;
+package de.saschahlusiak.freebloks.controller;
 
-import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Player;
 
-class PlayerData implements Comparable<PlayerData> {
-	int player1, player2;
-	int place;
-	int points, stones_left;
-	int bonus;
-	boolean is_local, is_perfect;
+public class PlayerData implements Comparable<PlayerData> {
+	public int player1, player2;
+	public int place;
+	public int points, stones_left;
+	public int bonus;
+	public boolean is_local, is_perfect;
 	
 	PlayerData(Spielleiter spiel, int player) {
 		this.place = -1;
