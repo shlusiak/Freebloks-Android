@@ -19,7 +19,6 @@ import android.widget.SpinnerAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.games.GamesClient;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.R;
@@ -41,14 +40,15 @@ public class StatisticsActivity extends BaseGameActivity {
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		db = new HighscoreDB(this);
+		db.open();
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistics_activity);
 		
 		labels = getResources().getStringArray(R.array.statistics_labels);
 		values = new String[labels.length];
 		
-		db = new HighscoreDB(this);
-		db.open();
 		
 		adapter = new StatisticsAdapter(this, labels, values);
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
@@ -73,7 +73,7 @@ public class StatisticsActivity extends BaseGameActivity {
 			public void onClick(View v) {
 				if (!isSignedIn())
 					return;
-				startActivityForResult(getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
+				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points)), REQUEST_LEADERBOARD);
 			}
 		});
 		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
@@ -206,7 +206,7 @@ public class StatisticsActivity extends BaseGameActivity {
 	public void onSignInFailed() {
 		findViewById(R.id.signin).setVisibility(View.VISIBLE);
 		findViewById(R.id.leaderboard).setVisibility(View.GONE);
-		findViewById(R.id.achievements).setVisibility(View.GONE);
+	//	findViewById(R.id.achievements).setVisibility(View.GONE);
 		invalidateOptionsMenu();
 	}
 
@@ -214,7 +214,7 @@ public class StatisticsActivity extends BaseGameActivity {
 	public void onSignInSucceeded() {
 		findViewById(R.id.signin).setVisibility(View.GONE);
 		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
-		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
+	//	findViewById(R.id.achievements).setVisibility(View.VISIBLE);
 		invalidateOptionsMenu();
 		
 		getGamesClient().submitScore(
