@@ -33,7 +33,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_weight="0.5"
 	        style="@style/Widget.Light.Button.Borderless"
-	        android:text="Achievements" />
+	        android:text="@string/googleplus_achievements" />
 	    <Button
 	        android:id="@+id/leaderboard"
 	        android:visibility="gone"
@@ -41,7 +41,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_weight="0.5"
 	        style="@style/Widget.Light.Button.Borderless"
-	        android:text="Leaderboard" />
+	        android:text="@string/googleplus_leaderboard" />
 	    <com.google.android.gms.common.SignInButton
 	        android:id="@+id/signin"
 	        android:layout_width="0dp"
