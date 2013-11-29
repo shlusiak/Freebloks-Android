@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.controller;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -111,5 +112,46 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	
 	public void setStarted(boolean started) {
 		this.started = started;
-	}	
+	}
+	
+	public PlayerData[] getResultData() {
+		PlayerData[] data;
+		int i;
+		switch (m_gamemode) {
+		case Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS:
+		case Spielleiter.GAMEMODE_DUO:
+			data = new PlayerData[2];
+			data[0] = new PlayerData(this, 0);
+			data[1] = new PlayerData(this, 2);
+			break;
+			
+		case Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS:
+			data = new PlayerData[2];
+			data[0] = new PlayerData(this, 0, 2);
+			data[1] = new PlayerData(this, 1, 3);
+			break;
+			
+		case Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS:
+		default:
+			data = new PlayerData[4];
+			data[0] = new PlayerData(this, 0);
+			data[1] = new PlayerData(this, 1);
+			data[2] = new PlayerData(this, 2);
+			data[3] = new PlayerData(this, 3);
+			break;
+		}
+		
+		Arrays.sort(data);
+		int place;
+		for (i = 0; i < data.length; i++) {
+			place = i + 1;
+			if (i > 0) {
+				if (data[i].compareTo(data[i-1]) == 0)
+					place = data[i-1].place;
+			}
+			
+			data[i].place = place;
+		}
+		return data;
+	}
 }

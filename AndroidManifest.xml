@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.saschahlusiak.freebloks.game.finish.GameFinishActivity"
+            android:name="de.saschahlusiak.freebloks.game.GameFinishActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Freebloks.Dialog" >
         </activity>
