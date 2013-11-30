@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.preferences;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 
@@ -51,27 +53,33 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			}
 		});
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
-		findPreference("googleplus_signin").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (mHelper.isSignedIn()) {
-					mHelper.signOut();
-					onSignInFailed();
-				} else
-					mHelper.beginUserInitiatedSignIn();
-				return true;
-			}
-		});
-		findPreference("googleplus_leaderboard").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				if (!mHelper.isSignedIn())
-					return false;
-//				startActivityForResult(mHelper.getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
-				startActivityForResult(mHelper.getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points)), REQUEST_LEADERBOARD);
-				return true;
-			}
-		});
+		
+		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this); 
+		if (avail != ConnectionResult.SUCCESS) {
+			getPreferenceScreen().removePreference(findPreference("googleplus_category"));
+		} else {
+			findPreference("googleplus_signin").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					if (mHelper.isSignedIn()) {
+						mHelper.signOut();
+						onSignInFailed();
+					} else
+						mHelper.beginUserInitiatedSignIn();
+					return true;
+				}
+			});
+			findPreference("googleplus_leaderboard").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					if (!mHelper.isSignedIn())
+						return false;
+	//				startActivityForResult(mHelper.getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
+					startActivityForResult(mHelper.getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points)), REQUEST_LEADERBOARD);
+					return true;
+				}
+			});
+		}
 	}
 	
 	@Override
@@ -143,6 +151,9 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 
 	@Override
 	public void onSignInFailed() {
+		if (findPreference("googleplus_category") == null)
+			return;
+		
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signin);
 		findPreference("googleplus_signin").setSummary(R.string.googleplus_signin_long);
 		findPreference("googleplus_leaderboard").setEnabled(false);

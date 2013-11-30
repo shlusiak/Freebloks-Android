@@ -123,7 +123,7 @@ public class StatisticsActivity extends BaseGameActivity {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SERVICE_MISSING)
+		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
 			findViewById(R.id.signin).setVisibility(View.GONE);
 	}
 	
@@ -205,10 +205,14 @@ public class StatisticsActivity extends BaseGameActivity {
 
 	@Override
 	public void onSignInFailed() {
+		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
+			return;
+		
 		findViewById(R.id.signin).setVisibility(View.VISIBLE);
 		findViewById(R.id.leaderboard).setVisibility(View.GONE);
 	//	findViewById(R.id.achievements).setVisibility(View.GONE);
-		invalidateOptionsMenu();
+		if (Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
 	}
 
 	@Override
@@ -216,7 +220,8 @@ public class StatisticsActivity extends BaseGameActivity {
 		findViewById(R.id.signin).setVisibility(View.GONE);
 		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
 	//	findViewById(R.id.achievements).setVisibility(View.VISIBLE);
-		invalidateOptionsMenu();
+		if (Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
 		
 		new AddScoreTask(this, getGamesClient(), 0).execute();
 	}
