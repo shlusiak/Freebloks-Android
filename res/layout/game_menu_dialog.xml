@@ -85,8 +85,8 @@
         android:id="@+id/resume_game"
         android:layout_width="match_parent"
         android:layout_height="52dp"
+        android:minWidth="240dp"
         android:layout_margin="2dp"
-		android:minWidth="210dp"
         android:text="@string/resume"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
