@@ -74,7 +74,7 @@ public class StatisticsActivity extends BaseGameActivity {
 			public void onClick(View v) {
 				if (!isSignedIn())
 					return;
-				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points)), REQUEST_LEADERBOARD);
+				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			}
 		});
 		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {

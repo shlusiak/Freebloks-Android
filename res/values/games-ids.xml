@@ -5,6 +5,11 @@ Save this file as res/values/games-ids.xml in your project.
 -->
 <resources>
   <string name="app_id">786410326200</string>
+  <string name="achievement_win_blokus_classic">CgkIuJHVzfEWEAIQAw</string>
+  <string name="achievement_win_blokus_duo">CgkIuJHVzfEWEAIQBA</string>
+  <string name="achievement_perfect_game">CgkIuJHVzfEWEAIQBQ</string>
+  <string name="achievement_1000_points">CgkIuJHVzfEWEAIQBg</string>
+  <string name="achievement_freebloks_vip">CgkIuJHVzfEWEAIQCQ</string>
+  <string name="leaderboard_points_total">CgkIuJHVzfEWEAIQAg</string>
   <string name="leaderboard_games_won">CgkIuJHVzfEWEAIQAQ</string>
-  <string name="leaderboard_points">CgkIuJHVzfEWEAIQAg</string>
 </resources>

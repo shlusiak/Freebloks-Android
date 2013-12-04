@@ -1516,13 +1516,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void onSignInFailed() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onSignInSucceeded() {
-		// TODO Auto-generated method stub
 		
 	}
 }

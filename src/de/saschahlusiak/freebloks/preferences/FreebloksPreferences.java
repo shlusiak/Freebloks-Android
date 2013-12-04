@@ -75,7 +75,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 					if (!mHelper.isSignedIn())
 						return false;
 	//				startActivityForResult(mHelper.getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
-					startActivityForResult(mHelper.getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points)), REQUEST_LEADERBOARD);
+					startActivityForResult(mHelper.getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 					return true;
 				}
 			});

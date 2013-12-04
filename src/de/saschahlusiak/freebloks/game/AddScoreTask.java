@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.PlayerData;
+import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 
 public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
@@ -38,7 +39,21 @@ public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 							data[i].player1,
 							data[i].place,
 							flags);
-	
+					if (gamesClient != null && gamesClient.isConnected()) {
+						if (game_mode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
+								&& data[i].place == 1)
+							gamesClient.unlockAchievement(context.getString(R.string.achievement_win_blokus_classic));
+						
+						if (game_mode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
+								&& data[i].is_perfect)
+							gamesClient.unlockAchievement(context.getString(R.string.achievement_perfect_game));
+						
+						if (game_mode == Spielleiter.GAMEMODE_DUO
+								&& data[i].place == 1)
+							gamesClient.unlockAchievement(context.getString(R.string.achievement_win_blokus_duo));
+						
+						gamesClient.incrementAchievement(context.getString(R.string.achievement_1000_points), data[i].points);
+					}
 				}
 			
 			if (gamesClient != null && gamesClient.isConnected()) {
@@ -47,7 +62,7 @@ public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 					db.getNumberOfPlace(-1, 1));
 				
 				gamesClient.submitScore(
-					context.getString(R.string.leaderboard_points),
+					context.getString(R.string.leaderboard_points_total),
 					db.getTotalNumberOfPoints(-1));
 			}
 			
