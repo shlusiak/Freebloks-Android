@@ -24,7 +24,6 @@ import com.google.example.games.basegameutils.BaseGameActivity;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
-import de.saschahlusiak.freebloks.game.AddScoreTask;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class StatisticsActivity extends BaseGameActivity {
@@ -222,7 +221,14 @@ public class StatisticsActivity extends BaseGameActivity {
 	//	findViewById(R.id.achievements).setVisibility(View.VISIBLE);
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
-		
-		new AddScoreTask(this, getGamesClient(), 0).execute();
+
+
+		getGamesClient().submitScore(
+				getString(R.string.leaderboard_games_won),
+				db.getNumberOfPlace(-1, 1));
+
+		getGamesClient().submitScore(
+				getString(R.string.leaderboard_points_total),
+				db.getTotalNumberOfPoints(-1));
 	}
 }

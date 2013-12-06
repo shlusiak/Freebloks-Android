@@ -1183,7 +1183,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			public void run() {
 				updateMultiplayerNotification(false, null);
 				PlayerData[] data = client.spiel.getResultData();
-				new AddScoreTask(FreebloksActivity.this, getGamesClient(), client.spiel.m_gamemode).execute(data);
+				new AddScoreTask(getApplicationContext(), client.spiel.m_gamemode).execute(data);
 				
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);

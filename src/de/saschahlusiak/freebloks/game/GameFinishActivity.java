@@ -1,14 +1,14 @@
 package de.saschahlusiak.freebloks.game;
 
-import java.util.Arrays;
+import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -28,7 +28,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
-public class GameFinishActivity extends Activity {
+public class GameFinishActivity extends BaseGameActivity {
 	public static final int RESULT_NEW_GAME = RESULT_FIRST_USER + 1;
 	public static final int RESULT_SHOW_MENU = RESULT_FIRST_USER + 2;
 
@@ -36,12 +36,18 @@ public class GameFinishActivity extends Activity {
 	NET_SERVER_STATUS lastStatus;
 	String clientName;
 	Spielleiter spiel;
-	
+	boolean firstRun = false;
+	PlayerData[] data;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		if (savedInstanceState == null)
+			firstRun = true;
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		super.onCreate(savedInstanceState);
+		
 
 		setContentView(R.layout.game_finish_activity);
 		
@@ -52,7 +58,7 @@ public class GameFinishActivity extends Activity {
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
 
-		PlayerData[] data = spiel.getResultData();
+		data = spiel.getResultData();
 		updateViews(data, spiel.m_gamemode);
 
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
@@ -202,5 +208,46 @@ public class GameFinishActivity extends Activity {
 		}
 		
 		return l;
+	}
+
+	@Override
+	public void onSignInFailed() {
+		
+	}
+
+	@Override
+	public void onSignInSucceeded() {
+		if (!firstRun)
+			return;
+		
+		HighscoreDB db = new HighscoreDB(this);
+		if (db.open()) {
+			for (int i = 0; i < data.length; i++) if (data[i].is_local) {
+					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
+							&& data[i].place == 1)
+						getGamesClient().unlockAchievement(getString(R.string.achievement_win_blokus_classic));
+					
+					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
+							&& data[i].is_perfect)
+						getGamesClient().unlockAchievement(getString(R.string.achievement_perfect_game));
+					
+					if (spiel.m_gamemode == Spielleiter.GAMEMODE_DUO
+							&& data[i].place == 1)
+						getGamesClient().unlockAchievement(getString(R.string.achievement_win_blokus_duo));
+					
+					getGamesClient().incrementAchievement(getString(R.string.achievement_1000_points), data[i].points);
+				}
+
+			getGamesClient().submitScore(
+				getString(R.string.leaderboard_games_won),
+				db.getNumberOfPlace(-1, 1));
+
+			getGamesClient().submitScore(
+				getString(R.string.leaderboard_points_total),
+				db.getTotalNumberOfPoints(-1));
+
+			db.close();
+		} else
+			throw new IllegalStateException("could not open highscore db");
 	}
 }
