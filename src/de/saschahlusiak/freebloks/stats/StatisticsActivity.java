@@ -209,7 +209,7 @@ public class StatisticsActivity extends BaseGameActivity {
 		
 		findViewById(R.id.signin).setVisibility(View.VISIBLE);
 		findViewById(R.id.leaderboard).setVisibility(View.GONE);
-	//	findViewById(R.id.achievements).setVisibility(View.GONE);
+		findViewById(R.id.achievements).setVisibility(View.GONE);
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 	}
@@ -218,7 +218,7 @@ public class StatisticsActivity extends BaseGameActivity {
 	public void onSignInSucceeded() {
 		findViewById(R.id.signin).setVisibility(View.GONE);
 		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
-	//	findViewById(R.id.achievements).setVisibility(View.VISIBLE);
+		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 
