@@ -11,14 +11,27 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        style="@style/Widget.Light.Button.Borderless"
-        android:text="@android:string/ok" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+	    <Button
+	        android:id="@+id/ok"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        style="@style/Widget.Light.Button.Borderless"
+	        android:text="@android:string/ok" />
+	    <com.google.android.gms.common.SignInButton
+	        android:id="@+id/signin"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5" />
+	</LinearLayout>
 
     <ListView
         android:id="@+id/listView"
@@ -26,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/game_mode"
-        android:layout_above="@+id/ok" >
+        android:layout_above="@+id/buttons" >
     </ListView>
 
 </RelativeLayout>

@@ -1,12 +1,8 @@
 package de.saschahlusiak.freebloks.stats;
 
 import de.saschahlusiak.freebloksvip.R;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
-import de.saschahlusiak.freebloks.database.HighscoreDB;
-import de.saschahlusiak.freebloks.model.Stone;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,24 +18,37 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-public class StatisticsActivity extends Activity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.example.games.basegameutils.BaseGameActivity;
+
+import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.database.HighscoreDB;
+import de.saschahlusiak.freebloks.model.Stone;
+
+public class StatisticsActivity extends BaseGameActivity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
 	int game_mode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
 	
 	String[] labels;
 	String[] values;
+	
+	private static final int REQUEST_LEADERBOARD = 1;
+	private static final int REQUEST_ACHIEVEMENTS = 2;
+	
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		db = new HighscoreDB(this);
+		db.open();
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistics_activity);
 		
 		labels = getResources().getStringArray(R.array.statistics_labels);
 		values = new String[labels.length];
 		
-		db = new HighscoreDB(this);
-		db.open();
 		
 		adapter = new StatisticsAdapter(this, labels, values);
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
@@ -49,6 +58,13 @@ public class StatisticsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
+			}
+		});
+		findViewById(R.id.signin).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				beginUserInitiatedSignIn();
 			}
 		});
 		
@@ -88,6 +104,8 @@ public class StatisticsActivity extends Activity {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
+			findViewById(R.id.signin).setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -104,6 +122,14 @@ public class StatisticsActivity extends Activity {
 	}
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.signout).setVisible(isSignedIn());
+		menu.findItem(R.id.achievements).setVisible(isSignedIn());
+		menu.findItem(R.id.leaderboard).setVisible(isSignedIn());
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -112,6 +138,20 @@ public class StatisticsActivity extends Activity {
 		case R.id.clear:
 			db.clearHighscores();
 			refreshData();
+			return true;
+		case R.id.signout:
+			signOut();
+			findViewById(R.id.signin).setVisibility(View.VISIBLE);
+			findViewById(R.id.leaderboard).setVisibility(View.GONE);
+			findViewById(R.id.achievements).setVisibility(View.GONE);
+			return true;
+		case R.id.achievements:
+			if (isSignedIn())
+				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
+			return true;
+		case R.id.leaderboard:
+			if (isSignedIn())
+				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -125,6 +165,7 @@ public class StatisticsActivity extends Activity {
 		int stones_left = db.getTotalNumberOfStonesLeft(game_mode);
 		int stones_used = games * Stone.STONE_COUNT_ALL_SHAPES - stones_left;
 		int i;
+		
 
 		for (i = 0; i < values.length; i++)
 			values[i] = "";
@@ -151,5 +192,30 @@ public class StatisticsActivity extends Activity {
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
 
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onSignInFailed() {
+		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
+			return;
+		
+		findViewById(R.id.signin).setVisibility(View.VISIBLE);
+		if (Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
+	}
+
+	@Override
+	public void onSignInSucceeded() {
+		findViewById(R.id.signin).setVisibility(View.GONE);
+		if (Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
+
+		getGamesClient().submitScore(
+				getString(R.string.leaderboard_games_won),
+				db.getNumberOfPlace(-1, 1));
+
+		getGamesClient().submitScore(
+				getString(R.string.leaderboard_points_total),
+				db.getTotalNumberOfPoints(-1));
 	}
 }

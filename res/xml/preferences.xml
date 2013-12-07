@@ -107,6 +107,27 @@
             <intent android:action="de.saschahlusiak.freebloks.SHOW_STATISTICS" />
         </PreferenceScreen>
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/googleplus" android:key="googleplus_category" >
+        <PreferenceScreen
+            android:summary="@string/googleplus_signin_long"
+            android:title="@string/googleplus_signin"
+            android:key="googleplus_signin" >
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="@string/googleplus_achievements_long"
+            android:title="@string/googleplus_achievements"
+            android:enabled="false"
+            android:key="googleplus_achievements" >
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="@string/googleplus_leaderboard_long"
+            android:title="@string/googleplus_leaderboard"
+            android:enabled="false"
+            android:key="googleplus_leaderboard" >
+        </PreferenceScreen>
+    </PreferenceCategory>
+    
     <PreferenceCategory android:title="@string/about" android:key="about_category" >
         <PreferenceScreen
             android:key="rate_review"
