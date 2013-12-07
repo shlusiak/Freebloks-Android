@@ -52,7 +52,7 @@
     <string name="googleplus_signout">Abmelden</string>
     <string name="googleplus_signout_long">Als %1$s angemeldet</string>
     <string name="googleplus_leaderboard">Bestenliste</string>
-    <string name="googleplus_leaderboard_long">Zeigt Punktzahlen ihrer Kreise an</string>
+    <string name="googleplus_leaderboard_long">Zeige Punktzahlen ihrer Kreise an</string>
     <string name="googleplus_achievements">Erfolge</string>
     <string name="googleplus_achievements_long">Zeige erspielte Erfolge an</string>
     
@@ -169,7 +169,7 @@
     <string name="prefs_player_name">Spielername</string>
     <string name="prefs_player_name_default">[nicht gesetzt]</string>
     <string name="prefs_theme">Hintergrund</string>
-    <string name="prefs_statistics">Statistiken&#8230;</string>
+    <string name="prefs_statistics">Statistiken</string>
     <string name="prefs_statistics_long">Spielstatistiken zeigen</string>
 </resources>
 

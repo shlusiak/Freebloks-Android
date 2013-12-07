@@ -4,22 +4,55 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp" >
 
-    <TextView
-        android:id="@+id/place"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/award_ribbon"
-        android:drawablePadding="12dp"
-        android:gravity="center"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-		
+        android:orientation="horizontal" >
+        
+	    <TextView
+	        android:id="@+id/place"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:drawableLeft="@drawable/award_ribbon"
+	        android:paddingLeft="8dp"
+	        android:gravity="center"
+	        android:layout_gravity="center"
+	        android:text="Large Text"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageButton
+		    android:id="@+id/achievements"
+		    android:layout_width="44dp"
+		    android:layout_height="44dp"
+		    android:layout_weight="0"
+    	    android:visibility="gone"
+		    android:src="@drawable/ic_play_games_badge_achievements_white" />
+        
+        <ImageButton
+		    android:id="@+id/leaderboard"
+		    android:layout_width="44dp"
+		    android:layout_height="44dp"
+		    android:layout_weight="0"
+	        android:visibility="gone"
+		    android:src="@drawable/ic_play_games_badge_leaderboards_white" />
+                
+		<ImageButton
+		    android:id="@+id/statistics"
+		    android:layout_width="44dp"
+		    android:layout_height="44dp"
+		    android:layout_weight="0"
+		    style="?android:attr/buttonStyle"
+		    android:src="@drawable/stats" />
+    </LinearLayout>
+    		
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-   		android:layout_below="@+id/place"
+   		android:layout_below="@+id/title"
    		android:layout_marginTop="8dp"
    		android:orientation="vertical"
         android:id="@+id/places" >
@@ -37,10 +70,11 @@
 	        layout="@layout/game_finish_player_row" />
    	</LinearLayout>
 	<LinearLayout
+	    android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/places"
-        android:layout_marginTop="8dp" >
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/places" >
 
         <Button
             android:id="@+id/new_game"
@@ -59,15 +93,7 @@
             android:layout_marginLeft="2dp"
             android:text="@string/main_menu"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
-        <ImageButton
-		    android:id="@+id/statistics"
-		    android:layout_width="48dp"
-		    android:layout_height="48dp"
-		    android:layout_weight="0"
-		    android:layout_marginLeft="4dp"
-		    style="?android:attr/buttonStyle"
-		    android:src="@drawable/stats" />
-    </LinearLayout>
 
+    </LinearLayout>
+	
 </RelativeLayout>

@@ -50,11 +50,11 @@
     <string name="googleplus_signin">Sign in</string>
     <string name="googleplus_signin_long">Sign in with Google+</string>
     <string name="googleplus_signout">Sign out</string>
-    <string name="googleplus_signout_long">Signed in as %1$s</string>
+    <string name="googleplus_signout_long">Signed in with Google+ as %1$s</string>
     <string name="googleplus_leaderboard">Leaderboard</string>
-    <string name="googleplus_leaderboard_long">Show scores of your circles</string>
+    <string name="googleplus_leaderboard_long">Show scores of people in your circles</string>
     <string name="googleplus_achievements">Achievements</string>
-    <string name="googleplus_achievements_long">Show your earned achievements</string>
+    <string name="googleplus_achievements_long">Show earned achievements</string>
     
     <string name="lobby_waiting_for_players">Waiting for players</string>
     <string name="connected_clients">%1$d clients</string>
@@ -174,6 +174,6 @@
     <string name="prefs_player_name">Player name</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_theme">Background</string>
-    <string name="prefs_statistics">Statistics&#8230;</string>
+    <string name="prefs_statistics">Statistics</string>
     <string name="prefs_statistics_long">Show game statistics</string>
 </resources>
