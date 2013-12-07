@@ -1516,6 +1516,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void onSignInSucceeded() {
-		
+		getGamesClient().unlockAchievement(getString(R.string.achievement_freebloks_vip));
 	}
 }
