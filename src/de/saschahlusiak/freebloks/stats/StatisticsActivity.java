@@ -67,24 +67,6 @@ public class StatisticsActivity extends BaseGameActivity {
 				beginUserInitiatedSignIn();
 			}
 		});
-		findViewById(R.id.leaderboard).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if (!isSignedIn())
-					return;
-				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
-			}
-		});
-		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if (!isSignedIn())
-					return;
-				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
-			}
-		});
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		game_mode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
@@ -142,6 +124,8 @@ public class StatisticsActivity extends BaseGameActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(R.id.signout).setVisible(isSignedIn());
+		menu.findItem(R.id.achievements).setVisible(isSignedIn());
+		menu.findItem(R.id.leaderboard).setVisible(isSignedIn());
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -160,6 +144,14 @@ public class StatisticsActivity extends BaseGameActivity {
 			findViewById(R.id.signin).setVisibility(View.VISIBLE);
 			findViewById(R.id.leaderboard).setVisibility(View.GONE);
 			findViewById(R.id.achievements).setVisibility(View.GONE);
+			return true;
+		case R.id.achievements:
+			if (isSignedIn())
+				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
+			return true;
+		case R.id.leaderboard:
+			if (isSignedIn())
+				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -208,8 +200,6 @@ public class StatisticsActivity extends BaseGameActivity {
 			return;
 		
 		findViewById(R.id.signin).setVisibility(View.VISIBLE);
-		findViewById(R.id.leaderboard).setVisibility(View.GONE);
-		findViewById(R.id.achievements).setVisibility(View.GONE);
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 	}
@@ -217,11 +207,8 @@ public class StatisticsActivity extends BaseGameActivity {
 	@Override
 	public void onSignInSucceeded() {
 		findViewById(R.id.signin).setVisibility(View.GONE);
-		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
-		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
-
 
 		getGamesClient().submitScore(
 				getString(R.string.leaderboard_games_won),

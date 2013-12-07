@@ -31,6 +31,9 @@ import android.widget.TextView;
 public class GameFinishActivity extends BaseGameActivity {
 	public static final int RESULT_NEW_GAME = RESULT_FIRST_USER + 1;
 	public static final int RESULT_SHOW_MENU = RESULT_FIRST_USER + 2;
+	
+	private static final int REQUEST_LEADERBOARD = 1;
+	private static final int REQUEST_ACHIEVEMENTS = 2;
 
 	TextView place;
 	NET_SERVER_STATUS lastStatus;
@@ -80,6 +83,18 @@ public class GameFinishActivity extends BaseGameActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(GameFinishActivity.this, StatisticsActivity.class);
 				startActivity(intent);
+			}
+		});
+		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
+			}
+		});
+		findViewById(R.id.leaderboard).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			}
 		});
 	}
@@ -212,11 +227,15 @@ public class GameFinishActivity extends BaseGameActivity {
 
 	@Override
 	public void onSignInFailed() {
-		
+		findViewById(R.id.achievements).setVisibility(View.GONE);
+		findViewById(R.id.leaderboard).setVisibility(View.GONE);
 	}
 
 	@Override
 	public void onSignInSucceeded() {
+		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
+		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
+		
 		if (!firstRun)
 			return;
 		
