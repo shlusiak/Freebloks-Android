@@ -5,11 +5,16 @@ Save this file as res/values/games-ids.xml in your project.
 -->
 <resources>
   <string name="app_id">786410326200</string>
-  <string name="achievement_win_blokus_classic">CgkIuJHVzfEWEAIQAw</string>
-  <string name="achievement_win_blokus_duo">CgkIuJHVzfEWEAIQBA</string>
-  <string name="achievement_perfect_game">CgkIuJHVzfEWEAIQBQ</string>
+  <string name="achievement_blokus_classic">CgkIuJHVzfEWEAIQAw</string>
+  <string name="achievement_blokus_duo">CgkIuJHVzfEWEAIQBA</string>
+  <string name="achievement_perfect">CgkIuJHVzfEWEAIQBQ</string>
   <string name="achievement_1000_points">CgkIuJHVzfEWEAIQBg</string>
-  <string name="achievement_freebloks_vip">CgkIuJHVzfEWEAIQCQ</string>
+  <string name="achievement_addicted">CgkIuJHVzfEWEAIQDA</string>
+  <string name="achievement_all_colors">CgkIuJHVzfEWEAIQDQ</string>
+  <string name="achievement_winner">CgkIuJHVzfEWEAIQCg</string>
+  <string name="achievement_loser">CgkIuJHVzfEWEAIQDg</string>
+  <string name="achievement_multiplayer">CgkIuJHVzfEWEAIQCw</string>
+  <string name="achievement_vip">CgkIuJHVzfEWEAIQCQ</string>
   <string name="leaderboard_points_total">CgkIuJHVzfEWEAIQAg</string>
   <string name="leaderboard_games_won">CgkIuJHVzfEWEAIQAQ</string>
 </resources>
