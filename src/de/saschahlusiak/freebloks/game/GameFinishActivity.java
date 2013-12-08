@@ -244,18 +244,41 @@ public class GameFinishActivity extends BaseGameActivity {
 			for (int i = 0; i < data.length; i++) if (data[i].is_local) {
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].place == 1)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_win_blokus_classic));
+						getGamesClient().unlockAchievement(getString(R.string.achievement_blokus_classic));
 					
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].is_perfect)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_perfect_game));
+						getGamesClient().unlockAchievement(getString(R.string.achievement_perfect));
 					
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_DUO
 							&& data[i].place == 1)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_win_blokus_duo));
+						getGamesClient().unlockAchievement(getString(R.string.achievement_blokus_duo));
 					
 					getGamesClient().incrementAchievement(getString(R.string.achievement_1000_points), data[i].points);
+					
+					if (data[i].place == 1)
+						getGamesClient().incrementAchievement(getString(R.string.achievement_winner), 1);
+					
+					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
+							&& data[i].place == 4)
+						getGamesClient().incrementAchievement(getString(R.string.achievement_loser), 1);
+					
+					if (lastStatus != null && lastStatus.clients >= 4 && data[i].place == 1)
+						getGamesClient().unlockAchievement(getString(R.string.achievement_multiplayer));
 				}
+			
+			getGamesClient().incrementAchievement(getString(R.string.achievement_addicted), 1);
+
+			int n = 0;
+			for (int i = 0; i < 4; i++)
+				if (db.getNumberOfPlace(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, 1, i) > 0)
+					n++;
+			if (db.getNumberOfPlace(Spielleiter.GAMEMODE_DUO, 1, 0) > 0)
+				n++;
+			if (db.getNumberOfPlace(Spielleiter.GAMEMODE_DUO, 1, 2) > 0)
+				n++;
+			if (n == 6)
+				getGamesClient().unlockAchievement(getString(R.string.achievement_all_colors));
 
 			getGamesClient().submitScore(
 				getString(R.string.leaderboard_games_won),
