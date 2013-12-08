@@ -99,13 +99,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
-	
-//	public static final int KI_PERFECT = 0;
-	public static final int KI_HARD = 5;
-//	public static final int KI_MEDIUM = 50;
-//	public static final int KI_EASY = 120;
-	public static final int KI_DEFAULT = KI_HARD;
-
 
 	Freebloks3DView view;
 	SpielClient client = null;
