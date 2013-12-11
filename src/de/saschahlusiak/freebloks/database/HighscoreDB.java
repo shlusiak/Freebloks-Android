@@ -115,6 +115,18 @@ public class HighscoreDB extends FreebloksDB {
 		return count;
 	}
 	
+	public int getNumberOfPlace(int game_mode, int place, int color) {
+		int count;
+		String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE " + PLACE_ID + " = " + place + " AND " + PLAYER_COLOR_ID + " = " + color;
+		if (game_mode >= 0)
+			sql += " AND " + GAME_MODE_ID + " = " + game_mode;
+		Cursor c = db.rawQuery(sql, null);
+		c.moveToFirst();
+		count = c.getInt(0);
+		c.close();
+		return count;
+	}
+	
 	public int getNumberOfGoodGames(int game_mode) {
 		int count;
 		String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE " + STONES_LEFT_ID + " = 0";
