@@ -99,8 +99,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 
 		gl.glLoadIdentity();
-		if (model.vertical_layout)
-			gl.glTranslatef(0, 7.4f, 0);
+		if (model.vertical_layout) {
+			gl.glTranslatef(0, 7.0f, 0);
+		}
 		else
 			gl.glTranslatef(-5.0f, 0.6f, 0);
 		
