@@ -929,7 +929,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		Intent intent;
 		switch (item.getItemId()) {
 		case android.R.id.home:
+			if (client != null && client.isConnected())
+				canresume = true;
+			else
+				canresume = false;
+
 			showDialog(DIALOG_GAME_MENU);
+			if (view.model.intro != null)
+				view.model.intro.cancel();
 			return true;
 			
 		case R.id.new_game:
