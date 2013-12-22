@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+   	<CheckBoxPreference
+	    android:summary="@string/prefs_show_corners_long"
+	    android:title="@string/prefs_show_corners" 
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="show_seeds" />
+
+	<CheckBoxPreference
+	    android:summary="@string/prefs_show_opponents_long"
+	    android:title="@string/prefs_show_opponents"
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="show_opponents" />
+
+	<CheckBoxPreference
+	    android:summary="@string/prefs_show_animations_long"
+	    android:title="@string/prefs_show_animations"
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="show_animations" />
+	
+	<de.saschahlusiak.freebloks.preferences.ThemePreference
+        android:defaultValue="texture_wood"
+        android:dialogTitle="@string/prefs_theme"
+        android:entries="@array/theme_labels"
+        android:entryValues="@array/theme_values"
+        android:key="theme"
+        android:persistent="true"
+        android:title="@string/prefs_theme" />
+		
+</PreferenceScreen>

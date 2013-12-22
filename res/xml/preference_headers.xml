@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header android:fragment="de.saschahlusiak.freebloks.preferences.InterfaceFragment"
+            android:title="@string/prefs_interface"
+            android:icon="@drawable/ic_action_mouse" >
+   	</header>
+
+    <header android:fragment="de.saschahlusiak.freebloks.preferences.DisplayFragment"
+            android:title="@string/prefs_display"
+            android:icon="@drawable/ic_action_brightness_medium" >
+    </header>
+
+    <header android:fragment="de.saschahlusiak.freebloks.preferences.MiscFragment"
+            android:title="@string/prefs_misc"
+            android:icon="@drawable/ic_action_labels" >
+    </header>
+    
+    <header android:fragment="de.saschahlusiak.freebloks.preferences.StatisticsFragment"
+            android:title="@string/prefs_statistics"
+            android:icon="@drawable/stats" >
+    </header>
+    
+    <header android:fragment="de.saschahlusiak.freebloks.preferences.AboutFragment"
+            android:title="@string/about"
+            android:icon="@drawable/ic_action_about" >
+    </header>
+   
+</preference-headers>
+
