@@ -109,7 +109,6 @@ public class GameFinishActivity extends BaseGameActivity {
 		t[2] = (ViewGroup) findViewById(R.id.place3);
 		t[3] = (ViewGroup) findViewById(R.id.place4);
 		
-		/* TODO: combine yellow/green, blue/red on 4_COLORS_2_PLAYERS */
 		if (game_mode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
 			game_mode == Spielleiter.GAMEMODE_DUO ||
 			game_mode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {

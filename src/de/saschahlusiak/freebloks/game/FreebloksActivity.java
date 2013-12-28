@@ -39,6 +39,7 @@ import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -53,6 +54,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -72,11 +76,13 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -249,14 +255,36 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 		if (!hasActionBar)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
+		else
+			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
 		
 		super.onCreate(savedInstanceState);
 		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+	        Window w = getWindow();
+	        /* only set translucent status bar, if we don't have an actionbar, otherwise it looks weird */
+	        if (!hasActionBar)
+	        	w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+	    }
+		
 		if (hasActionBar) {
 			if (Build.VERSION.SDK_INT >= 14) {
 				getActionBar().setHomeButtonEnabled(true);
-			}			
+			}
+//			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
+			getActionBar().setBackgroundDrawable(
+					new GradientDrawable(
+							Orientation.TOP_BOTTOM,
+							new int[] {
+									Color.argb(128, 0, 0, 0),
+									Color.argb(96, 0, 0, 0),
+									Color.argb(64, 0, 0, 0)
+								}
+						)
+					);
+//			getActionBar().setDisplayShowTitleEnabled(false);
+//			getActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME);
 		}
 		
 		setContentView(R.layout.main_3d);
@@ -896,7 +924,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		Intent intent;
 		switch (item.getItemId()) {
 		case android.R.id.home:
+			if (client != null && client.isConnected())
+				canresume = true;
+			else
+				canresume = false;
+
 			showDialog(DIALOG_GAME_MENU);
+			if (view.model.intro != null)
+				view.model.intro.cancel();
 			return true;
 			
 		case R.id.new_game:
