@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Freebloks</string>
+
+    <string name="new_local_game">Новая игра</string>
+    <string name="resume">Продолжить</string>
+    <string name="join_game">Присоединиться</string>
+    <string name="host_game">Хост</string>
+    <string name="preferences">Настройки</string>
+    <string name="hint">Подсказка</string>
+    <string name="undo">Отменить ход</string>
+    <string name="main_menu">Главное меню</string>
+    <string name="about">О</string>
+    <string name="about_freebloks">О Freebloks&#8230;</string>
+    <string name="special_thanks_to">Большое спасибо</string>
+    <string name="connecting">Подключение&#8230;</string>
+    <string name="connection_refused">Не удалось подключиться</string>
+    <string name="could_not_restore_game">Could not restore game</string>
+    <string name="do_you_want_to_leave_current_game">Вы уверенны, что хотите начать новую игру?</string>
+    <string name="disconnect_error">Нет подключения: %1$s. Вы не в сети.</string>
+    
+    <string name="waiting_for_color">Ожидание %1$s</string>
+    <string name="color_is_out_of_moves">У %1$s кончились ходы</string>
+    <string name="player_status_moves">%1$d ходов</string>
+    <string name="touch_to_skip">нажмите чтобы продолжить</string>
+    <string name="no_player">нет игрока</string>
+    <string name="not_connected">нет подключения</string>
+    <string name="your_turn">Ваш ход, %1$s!</string>
+    <string name="difficulty">Сложность</string>
+    <string name="start">Начать</string>
+    <string name="custom_game_title">Custom game</string>
+    <string name="sound_on">Звук вкл.</string>
+    <string name="sound_off">Звук выкл.</string>
+    
+    <string name="statistics">Статистика</string>
+    <string name="clear_statistics">Сбросить все</string>
+    <string-array name="statistics_labels">
+        <item>Игр сыграно</item>
+        <item>Хороших игр (+15)</item>
+        <item>Идеальных игр (+20)</item>
+        <item>1х мест</item>
+        <item>2х мест</item>
+        <item>3х мест</item>
+        <item>4х мест</item>
+        <item>Фигурок использовано</item>
+        <item>Всего очков</item>
+    </string-array>
+    
+    <string name="googleplus">Google+</string>
+    <string name="googleplus_signin">Войти</string>
+    <string name="googleplus_signin_long">Войти через Google+</string>
+    <string name="googleplus_signout">Выйти</string>
+    <string name="googleplus_signout_long">Вошли через Google+ как %1$s</string>
+    <string name="googleplus_leaderboard">Список лучших</string>
+    <string name="googleplus_leaderboard_long">Показать результат людей из ваших кругов</string>
+    <string name="googleplus_achievements">Достижения</string>
+    <string name="googleplus_achievements_long">Показать заработанные достижения</string>
+    
+    <string name="lobby_waiting_for_players">Ожидание хода игроков</string>
+    <string name="connected_clients">%1$d игрок</string>
+    <string name="chat">Чат</string>
+    <string name="join_server_address">Сервер:</string>
+    <string name="join_player_name">Ваше имя:</string>
+    <string name="client_d">Игрок %1$d</string>
+    <string name="player_joined_color">%1$s выбрал %2$s цвет</string>
+    <string name="player_left_color">%1$s (%2$s) вышел из игры</string>
+    <string name="no_addresses_found">[не найдено такого IP]</string>
+    <string name="lobby_message_hint">Напишите сообщение</string>
+    
+    <string name="rate_now">Да</string>
+    <string name="rate_later">Позже</string>
+    <string name="rate_never">Нет, спасибо</string>
+    <string name="rate_freebloks_title">Оцените Freebloks</string>
+    <string name="rate_freebloks_text">Если вам понравилась игра Freebloks, не могли бы вы потратить минутку и оценить её?</string>
+    <string name="rate_freebloks_donate_link"><u>Пожалуйста, поддержите игру Freebloks</u></string>
+    
+   
+    <plurals name="number_of_stones_left">
+        <item quantity="one">Осталась %1$d фишка</item>
+        <item quantity="other">Осталось %1$d фишек</item>
+    </plurals>
+    <plurals name="number_of_points">
+        <item quantity="one">%1$d очко</item>
+        <item quantity="other">%1$d очков</item>
+    </plurals>
+    <string-array name="places">
+        <item>1е место</item>
+        <item>2е место</item>
+        <item>3е место</item>
+        <item>4е место</item>
+    </string-array>
+    <string name="game_finished">Игра Окончена</string>
+    <string-array name="color_names">
+        <item>Белый</item>
+        <item>Синий</item>
+        <item>Жёлтый</item>
+        <item>Красный</item>
+        <item>Зелёный</item>
+        <item>Оранжевый</item>
+        <item>Фиолетовый</item>
+    </string-array>
+    <string-array name="difficulties">
+        <item>очень сложно</item>
+        <item>сложно</item>
+        <item>средне</item>
+        <item>легко</item>
+        <item>очень легко</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 Игрока, 2 Цвета</item>
+        <item>2 Игрока, 4 Цвета</item>
+        <item>Классический Blokus</item>
+        <item>Blokus Duo</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
+	
+    <string name="please_donate">Помогите разработчикам</string>
+    <string name="donation_text_long">Freebloks - бесплатный софт. Вы можете использовать и модифицировать его абсолютно бесплатно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если вам понравилась эта игра, не вложить денег в этот прогрессивный и бесплатный проект.\n\n Что Freebloks стоит для вас?</string>
+    <string name="donation_nothing">Нисколько</string>
+    <string name="donation_next">Далее</string>
+    <string name="donation_freebloksvip">Freebloks VIP</string>
+			
+    <string-array name="theme_labels">
+        <item>Чёрная</item>
+        <item>Синяя</item>
+        <item>В звёздочку</item>
+        <item>В клеточку</item>
+        <item>Дерево</item>
+        <item>Кирпич</item>
+    </string-array>
+    <string-array name="theme_values" translatable="false" >
+        <item>black</item>
+        <item>blue</item>
+        <item>texture_table_cloth_1</item>
+        <item>texture_table_cloth_2</item>
+        <item>texture_wood</item>
+        <item>texture_bricks</item>
+    </string-array>
+	
+    <string name="prefs_interface">Интерфейс</string>
+    <string name="prefs_display">Показывать</string>
+    <string name="prefs_misc">Дополнительно</string>
+    <string name="prefs_sounds_long">Воспроизводить звук</string>
+    <string name="prefs_sounds">Звук</string>
+    <string name="prefs_vibrate_long">Вибрация при перемещении фишек</string>
+    <string name="prefs_vibrate">Вибрация</string>
+    <string name="prefs_notifications_long">Показывать уведомления при многопользовательской игре</string>
+    <string name="prefs_notifications">Уведомления</string>
+    <string name="prefs_snap_to_corners_long">Притягивать фишки к ближайшей возможной позиции</string>
+    <string name="prefs_snap_to_corners">Притягивать к уголкам</string>
+    <string name="prefs_undo_long">Отменять последний ход нажатием кнопки назад</string>
+    <string name="prefs_undo">Отмена кнопкой назад</string>
+    <string name="prefs_show_corners_long">Показывать возможные ходы</string>
+    <string name="prefs_show_corners">Уголки</string>
+    <string name="prefs_show_opponents_long">Показывать фишки противников</string>
+    <string name="prefs_show_opponents">Противники</string>
+    <string name="prefs_show_animations_long">Показывать анимацию</string>
+    <string name="prefs_show_animations">Анимация</string>
+    <string name="prefs_skip_intro_long">Пропускать интро при входе в приложение</string>
+    <string name="prefs_skip_intro">Пропустить интро</string>
+    <string name="prefs_auto_resume_long">Автоматически продолжить последнюю игру</string>
+    <string name="prefs_auto_resume">Авто-продолжение</string>
+    <string name="prefs_rate_review_long">Пожалуйста, оцените нас или напишите комментарий</string>
+    <string name="prefs_rate_review">Freebloks в %1$s&#8230;</string>
+    <string name="prefs_donation_long">Пожалуйста, помогите разработчикам</string>
+    <string name="prefs_donation">Помогите Freebloks&#8230;</string>
+    <string name="prefs_player_name">Имя игрока</string>
+    <string name="prefs_player_name_default">[стандартное]</string>
+    <string name="prefs_theme">Задний фон</string>
+    <string name="prefs_statistics">Статистика</string>
+    <string name="prefs_statistics_long">Показать игровую статистику</string>
+</resources>
