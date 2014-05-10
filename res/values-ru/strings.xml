@@ -15,7 +15,7 @@
     <string name="special_thanks_to">Большое спасибо</string>
     <string name="connecting">Подключение&#8230;</string>
     <string name="connection_refused">Не удалось подключиться</string>
-    <string name="could_not_restore_game">Could not restore game</string>
+    <string name="could_not_restore_game">Невозможно восстановить игру</string>
     <string name="do_you_want_to_leave_current_game">Вы уверенны, что хотите начать новую игру?</string>
     <string name="disconnect_error">Нет подключения: %1$s. Вы не в сети.</string>
     
@@ -28,7 +28,7 @@
     <string name="your_turn">Ваш ход, %1$s!</string>
     <string name="difficulty">Сложность</string>
     <string name="start">Начать</string>
-    <string name="custom_game_title">Custom game</string>
+    <string name="custom_game_title">Параметры игры</string>
     <string name="sound_on">Звук вкл.</string>
     <string name="sound_off">Звук выкл.</string>
     
@@ -122,7 +122,7 @@
     </string-array>
 	
     <string name="please_donate">Помогите разработчикам</string>
-    <string name="donation_text_long">Freebloks - бесплатный софт. Вы можете использовать и модифицировать его абсолютно бесплатно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если вам понравилась эта игра, не вложить денег в этот прогрессивный и бесплатный проект.\n\n Что Freebloks стоит для вас?</string>
+    <string name="donation_text_long">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.\n\n Сколько вы готовы отдать?</string>
     <string name="donation_nothing">Нисколько</string>
     <string name="donation_next">Далее</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
@@ -149,7 +149,7 @@
     <string name="prefs_misc">Дополнительно</string>
     <string name="prefs_sounds_long">Воспроизводить звук</string>
     <string name="prefs_sounds">Звук</string>
-    <string name="prefs_vibrate_long">Вибрация при перемещении фишек</string>
+    <string name="prefs_vibrate_long">Вибрация при постановке фишки</string>
     <string name="prefs_vibrate">Вибрация</string>
     <string name="prefs_notifications_long">Показывать уведомления при многопользовательской игре</string>
     <string name="prefs_notifications">Уведомления</string>
@@ -165,7 +165,7 @@
     <string name="prefs_show_animations">Анимация</string>
     <string name="prefs_skip_intro_long">Пропускать интро при входе в приложение</string>
     <string name="prefs_skip_intro">Пропустить интро</string>
-    <string name="prefs_auto_resume_long">Автоматически продолжить последнюю игру</string>
+    <string name="prefs_auto_resume_long">Автоматически продолжать последнюю игру</string>
     <string name="prefs_auto_resume">Авто-продолжение</string>
     <string name="prefs_rate_review_long">Пожалуйста, оцените нас или напишите комментарий</string>
     <string name="prefs_rate_review">Freebloks в %1$s&#8230;</string>
