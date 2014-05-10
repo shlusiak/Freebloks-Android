@@ -169,7 +169,7 @@ public class ColorAdapter extends BaseAdapter {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
-				t.setText(colorNames[position]);
+				t.setText(colorNames[position + 1]);
 
 				t.setTypeface(Typeface.DEFAULT_BOLD);
 				

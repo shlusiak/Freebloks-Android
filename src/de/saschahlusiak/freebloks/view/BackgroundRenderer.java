@@ -56,7 +56,6 @@ public class BackgroundRenderer extends SimpleModel {
 			rgba[3] = 0.0f;
 			hasTexture = false;
 		} else if (theme.isDrawable()) {
-			Bitmap bitmap = theme.getBitmap(resources);
 			hasTexture = true;
 			
 			texture = new int[1];
@@ -71,10 +70,8 @@ public class BackgroundRenderer extends SimpleModel {
 		  		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_FALSE);
 		  	}
 		  	gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		  	GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+		  	FreebloksRenderer.loadKTXTexture(gl, resources, theme.getTexture());
 		  	
-		  	bitmap.recycle();
-		  	bitmap = null;
 			rgba = theme.getRGBA();
 		} else {
 			hasTexture = false;

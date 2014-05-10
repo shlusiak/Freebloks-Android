@@ -10,7 +10,7 @@ import android.view.View;
 import de.saschahlusiak.freebloksvip.R;
 
 public class Theme {
-	int drawable;
+	int drawable, texture;
 	float rgba[] = { 1, 1, 1, 1 };
 	boolean isPreview, isDrawable;
 	
@@ -19,10 +19,11 @@ public class Theme {
 		this.isPreview = false;
 	}
 	
-	private Theme(int drawable) {
+	private Theme(int drawable, int texture) {
 		this.isDrawable = true;
 		this.isPreview = false;
 		this.drawable = drawable;
+		this.texture = texture;
 	}
 	
 	private Theme(float r, float g, float b) {
@@ -35,8 +36,9 @@ public class Theme {
 		return isDrawable;
 	}
 	
-	private void setDrawable(int drawable) {
+	private void setDrawable(int drawable, int texture) {
 		this.drawable = drawable;
+		this.texture = texture;
 		this.isDrawable = true;
 	}
 	
@@ -69,8 +71,8 @@ public class Theme {
 			view.setBackgroundColor(getColor());
 	}
 
-	public Bitmap getBitmap(Resources resources) {
-		return BitmapFactory.decodeResource(resources, drawable);
+	public int getTexture() {
+		return texture;
 	}
 	
 	public static Theme get(String theme, boolean preview) {
@@ -82,19 +84,19 @@ public class Theme {
 		} else if (theme.equals("blue")) {
 			t.setRGB(0.05f, 0.10f, 0.25f);
 		} else if (theme.equals("texture_table_cloth_1")) {
-			t.setDrawable(R.drawable.texture_table_1);
+			t.setDrawable(R.drawable.texture_table_1, R.raw.texture_table_1);
 			t.setRGB(0.8f, 0.8f, 0.8f);
 		} else if (theme.equals("texture_table_cloth_2")) {
-			t.setDrawable(R.drawable.texture_table_2);
+			t.setDrawable(R.drawable.texture_table_2, R.raw.texture_table_2);
 			t.setRGB(0.7f, 0.7f, 0.7f);
 		} else if (theme.equals("texture_wood")) {
-			t.setDrawable(R.drawable.texture_wood_fine);
+			t.setDrawable(R.drawable.texture_wood_fine, R.raw.texture_wood_fine);
 			t.setRGB(0.7f, 0.7f, 0.7f);
 		} else if (theme.equals("texture_metal")) {
-			t.setDrawable(R.drawable.texture_metal);
+			t.setDrawable(R.drawable.texture_metal, R.raw.texture_metal);
 			t.setRGB(0.8f, 0.8f, 0.8f);
 		} else if (theme.equals("texture_bricks")) {
-			t.setDrawable(R.drawable.texture_bricks);
+			t.setDrawable(R.drawable.texture_bricks, R.raw.texture_bricks);
 			t.setRGB(0.85f, 0.85f, 0.85f);
 		}
 
