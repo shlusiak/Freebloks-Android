@@ -181,7 +181,6 @@ public class BoardRenderer {
 		
 		gl.glGenTextures(texture.length, texture, 0);
 		
-		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.field_wood);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 		if (gl instanceof GL11) {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
@@ -190,9 +189,11 @@ public class BoardRenderer {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR); 
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
 		
-		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_shadow);
+        FreebloksRenderer.loadKTXTexture(gl, context, R.raw.field_wood);
+
+		
+		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_shadow);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);
 		if (gl instanceof GL11) {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST); 
