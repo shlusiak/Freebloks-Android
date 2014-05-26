@@ -1,16 +1,8 @@
 package de.saschahlusiak.freebloks.view;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-
-import nl.weeaboo.jktx.KTXFile;
-import nl.weeaboo.jktx.KTXFormatException;
-import nl.weeaboo.jktx.KTXHeader;
-import nl.weeaboo.jktx.KTXTextureData;
 
 import android.content.Context;
 import android.graphics.PointF;
@@ -263,36 +255,5 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		model.currentStone.updateTexture(context, gl);
 		board.updateTexture(context, gl);
 		backgroundRenderer.updateTexture(gl);
-	}
-	
-	public static void loadKTXTexture(GL10 gl, Context context, int resId) {
-		InputStream input;
-	
-	    try {
-	    	input = context.getResources().openRawResource(resId);
-	    	KTXFile file = new KTXFile();
-	    	file.read(input);
-	        input.close();
-	
-	    	KTXHeader header = file.getHeader();
-	    	KTXTextureData data = file.getTextureData();
-	    	
-	    	for (int level = 0; level < data.getNumberOfMipmapLevels(); level++) {
-	    		gl.glCompressedTexImage2D(GL10.GL_TEXTURE_2D,
-	        			level,
-	        			header.getGLInternalFormat(),
-	        			header.getPixelWidth(level),
-	        			header.getPixelHeight(level),
-	        			0,
-	        			data.getBytesPerFace(level),
-	        			data.getFace(level, 0));
-	    	}
-	    }
-	    catch (IOException e) {
-	    	throw new RuntimeException(e);
-	    }
-	    catch (KTXFormatException e2) {
-	    	throw new RuntimeException(e2);
-	    }
 	}
 }
