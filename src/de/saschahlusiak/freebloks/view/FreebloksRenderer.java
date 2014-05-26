@@ -13,7 +13,6 @@ import nl.weeaboo.jktx.KTXHeader;
 import nl.weeaboo.jktx.KTXTextureData;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -266,11 +265,11 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		backgroundRenderer.updateTexture(gl);
 	}
 	
-	public static void loadKTXTexture(GL10 gl, Resources resources, int resId) {
+	public static void loadKTXTexture(GL10 gl, Context context, int resId) {
 		InputStream input;
 	
 	    try {
-	    	input = resources.openRawResource(resId);
+	    	input = context.getResources().openRawResource(resId);
 	    	KTXFile file = new KTXFile();
 	    	file.read(input);
 	        input.close();
