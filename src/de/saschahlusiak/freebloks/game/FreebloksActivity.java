@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.lang.Thread.State;
 import java.util.ArrayList;
 
 import de.saschahlusiak.freebloksvip.BuildConfig;
@@ -212,7 +213,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				 * rotated, the task finishes and a new task is started while
 				 * the thread is running.
 				 */
-				spielthread.start();
+				if (spielthread.getState() == State.NEW)
+					spielthread.start();
 			}
 			super.onPostExecute(result);
 		}
