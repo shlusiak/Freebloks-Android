@@ -31,39 +31,6 @@
 	        android:layout_height="wrap_content"
 	        android:textAppearance="?android:attr/textAppearanceLarge"
 	        android:text="@string/donation_nothing" />
-	    
-	    <RadioButton
-	        android:id="@+id/donation_001"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	    	android:enabled="false"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:text="@android:string/unknownName" />
-	    	
-	    <RadioButton
-	        android:id="@+id/donation_002"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	    	android:enabled="false"
-	    	android:checked="true"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:text="@android:string/unknownName" />
-	
-	    <RadioButton
-	        android:id="@+id/donation_003"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	    	android:enabled="false"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:text="@android:string/unknownName" />
-	
-	    <RadioButton
-	        android:id="@+id/donation_004"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	    	android:enabled="false"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:text="@android:string/unknownName" />
 
 	    <RadioButton
 	        android:id="@+id/donation_freebloksvip"
