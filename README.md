@@ -20,4 +20,13 @@ Amazon App Store: http://www.amazon.com/Sascha-Hlusiak-Freebloks-3D/dp/B00CY8CLU
 APK direct download: https://github.com/shlusiak/Freebloks-Android/tree/master/apk
 
 
-Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2013.
+About
+-----
+
+Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2014.
+
+Email: apps@saschahlusiak.de
+Project homepage: http://www.saschahlusiak.de/freebloks-3d-android/
+
+
+
