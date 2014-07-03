@@ -18,7 +18,7 @@
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
     <string name="do_you_want_to_leave_current_game">Aktuelles Spiel abbrechen?</string>
     <string name="disconnect_error">Verbindung getrennt: %1$s. Du bist jetzt offline.</string>
-    
+
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>
     <string name="waiting_for_color">Warte auf %1$s</string>
@@ -31,7 +31,7 @@
     <string name="difficulty">Schwierigkeitsgrad</string>
     <string name="start">Start</string>
     <string name="custom_game_title">Benutzerdefiniertes Spiel</string>
-    
+
     <string name="statistics">Statistiken</string>
     <string name="clear_statistics">Zurücksetzen</string>
     <string-array name="statistics_labels">
@@ -45,7 +45,7 @@
         <item>Verwendete Steine</item>
         <item>Punkte insgesamt</item>
     </string-array>
-    
+
     <string name="googleplus">Google+</string>
     <string name="googleplus_signin">Anmelden</string>
     <string name="googleplus_signin_long">Über Google+ anmelden</string>
@@ -55,7 +55,7 @@
     <string name="googleplus_leaderboard_long">Zeige Punktzahlen ihrer Kreise an</string>
     <string name="googleplus_achievements">Erfolge</string>
     <string name="googleplus_achievements_long">Zeige erspielte Erfolge an</string>
-    
+
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <string name="connected_clients">%1$d Spieler</string>
     <string name="chat">Chat</string>
@@ -66,16 +66,16 @@
     <string name="player_left_color">%1$s (%2$s) hat das Spiel verlassen</string>
     <string name="no_addresses_found">[Keine IP-Adresse gefunden]</string>
     <string name="lobby_message_hint">Nachricht</string>
-    
-    
+
+
     <string name="rate_now">Ja</string>
     <string name="rate_later">Später</string>
     <string name="rate_never">Nein</string>
     <string name="rate_freebloks_title">Freebloks bewerten</string>
     <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, nimm dir doch bitte eine Minute Zeit, es zu bewerten.</string>
     <string name="rate_freebloks_donate_link"><u>Freebloks unterstützen</u></string>
-    
-   
+
+
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d Stein übrig</item>
         <item quantity="other">%1$d Steine übrig</item>

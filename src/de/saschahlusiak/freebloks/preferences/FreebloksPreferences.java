@@ -32,7 +32,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 	private static final int REQUEST_ACHIEVEMENTS = 2;
 	GameHelper mHelper;
 	boolean hasHeaders = false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,22 +40,22 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		if (Build.VERSION.SDK_INT >= 11) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		
+
 		if (savedInstanceState != null) {
 			hasHeaders = savedInstanceState.getBoolean("hasHeaders");
 		}
-		
+
 		if (getIntent().getStringExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT) != null)
 			hasHeaders = true;
-		
+
 		if (hasHeaders)
 			return;
-		
+
 		mHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
         mHelper.setup(this);
-        
+
 		addPreferencesFromResource(R.xml.preferences);
-		
+
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -70,8 +70,8 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			}
 		});
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
-		
-		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this); 
+
+		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (avail != ConnectionResult.SUCCESS) {
 			getPreferenceScreen().removePreference(findPreference("googleplus_category"));
 		} else {
@@ -105,7 +105,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			});
 		}
 	}
-	
+
 	@Override
 	public void onBuildHeaders(List<Header> target) {
 		if (!onIsMultiPane())
@@ -113,13 +113,13 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		hasHeaders = true;
         loadHeadersFromResource(R.xml.preference_headers, target);
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean("hasHeaders", hasHeaders);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		if (Build.VERSION.SDK_INT >= 8) {
@@ -128,28 +128,28 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		}
 		super.onDestroy();
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
 		if (mHelper != null)
 			mHelper.onStart(this);
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
 		if (mHelper != null)
 			mHelper.onStop();
 	}
-	
+
     @Override
     protected void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
         if (mHelper != null)
         	mHelper.onActivityResult(request, response, data);
     }
-	
+
 	@Override
 	protected void onResume() {
 		if (!hasHeaders) {
@@ -160,7 +160,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		}
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		if (!hasHeaders)
@@ -182,7 +182,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			pref.setSummary(pref.getEntry());
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -199,7 +199,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			return;
 		if (findPreference("googleplus_category") == null)
 			return;
-		
+
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signin);
 		findPreference("googleplus_signin").setSummary(R.string.googleplus_signin_long);
 		findPreference("googleplus_leaderboard").setEnabled(false);
@@ -212,10 +212,10 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			return;
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signout);
 		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, Games.Players.getCurrentPlayer(mHelper.getApiClient()).getDisplayName()));
-		findPreference("googleplus_leaderboard").setEnabled(true);		
-		findPreference("googleplus_achievements").setEnabled(true);		
+		findPreference("googleplus_leaderboard").setEnabled(true);
+		findPreference("googleplus_achievements").setEnabled(true);
 	}
-	
+
 	@Override
 	protected boolean isValidFragment(String fragmentName) {
 		if (InterfaceFragment.class.getCanonicalName().equals(fragmentName))

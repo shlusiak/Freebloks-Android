@@ -28,13 +28,13 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 		ax = az = speedx = speedy = speedz = 0.0f;
 		ay = 1.0f;
 	}
-	
+
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
 		gl.glScalef(1, 0.01f, 1);
 		gl.glTranslatef(x, 0, z);
-	    
+
 		float m_alpha = 0.60f - y / 20.0f;
 	    gl.glTranslatef(-2.5f * y * 0.11f, 0, 2.0f * y * 0.11f);
 
@@ -45,17 +45,17 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	    gl.glTranslatef(
  				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
  				0.0f,
-			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);	    
+			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);
 		renderer.renderStoneShadow(gl, color, stone, m_alpha);
 		gl.glPopMatrix();
 	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {		
+	public void render(GL10 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
 		gl.glTranslatef(x, y, z);
 		gl.glRotatef(ang, ax, ay, az);
-		
+
 		gl.glTranslatef(
  				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
  				0.0f,
@@ -69,7 +69,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	public boolean isDone() {
 		return false;
 	}
-	
+
 	public void setPos(float sx, float sy, float sz) {
 		this.x=sx;
 		this.y=sy;
@@ -98,7 +98,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	@Override
 	public boolean execute(float elapsed) {
 		super.execute(elapsed);
-		
+
 		/* Gradlinige Bewegung, einfach zu animieren. */
 		x+=speedx*elapsed;
 		y-=speedy*elapsed;
@@ -126,7 +126,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 		/* Der Stein will nie entfernt werden, verschwindet nie automatisch. */
 		return false;
 	}
-	
+
 	public final float getX() { return x;}
 	public final float getY() { return y;}
 	public final float getZ() { return z;}

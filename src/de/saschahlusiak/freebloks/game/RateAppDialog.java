@@ -16,20 +16,20 @@ import android.view.View;
 
 public class RateAppDialog extends Dialog {
 	private static final String tag = RateAppDialog.class.getSimpleName();
-	
+
 	SharedPreferences prefs;
 
 	public RateAppDialog(Context context) {
 		super(context, R.style.Theme_Freebloks_Light_Dialog);
 		prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.rate_app_dialog);
 		setTitle(R.string.rate_freebloks_title);
-		
+
 		findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -64,25 +64,25 @@ public class RateAppDialog extends Dialog {
 			}
 		});
 	}
-	
+
 	public static boolean checkShowRateDialog(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		
+
 		long starts = prefs.getLong("rate_number_of_starts", 0);
 		long first_started = prefs.getLong("rate_first_started", 0);
 		Editor editor = prefs.edit();
 		boolean show = false;
-		
+
 		starts++;
-		
+
 		if (prefs.getBoolean("rate_show_again", true)) {
 			if (first_started <= 0) {
 				first_started = System.currentTimeMillis();
 			}
-			
+
 			Log.d(tag, "started " + starts + " times");
 			Log.d(tag, "elapsed time since first start: " + (System.currentTimeMillis() - first_started));
-			
+
 			if (starts >= Global.RATE_MIN_STARTS)
 				starts = Global.RATE_MIN_STARTS;
 			if (starts >= Global.RATE_MIN_STARTS && (System.currentTimeMillis() - first_started >= Global.RATE_MIN_ELAPSED)) {
@@ -90,7 +90,7 @@ public class RateAppDialog extends Dialog {
 				first_started = System.currentTimeMillis();
 				show = true;
 			}
-			
+
 			editor.putLong("rate_first_started", first_started);
 		}
 		editor.putLong("rate_number_of_starts", starts);

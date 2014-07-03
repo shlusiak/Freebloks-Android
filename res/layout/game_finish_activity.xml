@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="horizontal" >
-        
+
 	    <TextView
 	        android:id="@+id/place"
 	        android:layout_width="0dp"
@@ -31,7 +31,7 @@
 		    android:layout_weight="0"
     	    android:visibility="gone"
 		    android:src="@drawable/ic_play_games_badge_achievements_white" />
-        
+
         <ImageButton
 		    android:id="@+id/leaderboard"
 		    android:layout_width="44dp"
@@ -39,7 +39,7 @@
 		    android:layout_weight="0"
 	        android:visibility="gone"
 		    android:src="@drawable/ic_play_games_badge_leaderboards_white" />
-                
+
 		<ImageButton
 		    android:id="@+id/statistics"
 		    android:layout_width="44dp"
@@ -48,7 +48,7 @@
 		    style="?android:attr/buttonStyle"
 		    android:src="@drawable/stats" />
     </LinearLayout>
-    		
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -95,5 +95,5 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
-	
+
 </RelativeLayout>

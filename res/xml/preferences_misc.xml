@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+
     <EditTextPreference
         android:inputType="textCapWords"
         android:key="player_name"
@@ -15,19 +15,19 @@
         android:persistent="true"
         android:summary="@string/prefs_notifications_long"
         android:title="@string/prefs_notifications" />
-    
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="skip_intro"
         android:persistent="true"
         android:summary="@string/prefs_skip_intro_long"
         android:title="@string/prefs_skip_intro" />
-    
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="auto_resume"
         android:persistent="true"
         android:summary="@string/prefs_auto_resume_long"
         android:title="@string/prefs_auto_resume" />
-    
+
 </PreferenceScreen>

@@ -1,7 +1,7 @@
 LOCAL_PATH := $(call my-dir)
- 
+
 include $(CLEAR_VARS)
- 
+
 LOCAL_CPPFLAGS  := -DHAVE_CONFIG_H=1
 LOCAL_MODULE    := server
 LOCAL_SRC_FILES := spiel.cpp \

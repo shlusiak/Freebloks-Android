@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="" />
-        
+
         <ToggleButton
             android:id="@+id/sound_toggle_button"
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
             android:textOn=""
             android:textOff="" />
 
-        
+
     </LinearLayout>
 
     <LinearLayout
@@ -79,7 +79,7 @@
 		    style="?android:attr/buttonStyle"
 		    android:src="@drawable/gears" />
 
-		
+
 	</LinearLayout>
     <Button
         android:id="@+id/resume_game"
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp" >
-		
+
 	    <Button
 	        android:id="@+id/host_game"
 	        android:layout_width="0dp"
