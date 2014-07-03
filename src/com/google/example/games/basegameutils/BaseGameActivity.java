@@ -90,7 +90,7 @@ public abstract class BaseGameActivity extends Activity implements
      * @param additionalScopes.  Scopes that should also be requested when the auth
      *         request is made.
      */
-    protected void setRequestedClients(int requestedClients, String ... additionalScopes) {
+    protected void setRequestedClients(int requestedClients, String... additionalScopes) {
         mRequestedClients = requestedClients;
         mAdditionalScopes = additionalScopes;
     }
