@@ -32,14 +32,17 @@ import android.util.Log;
 import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.Api.ApiOptions.NoOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.Games.GamesOptions;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.request.GameRequest;
 import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.Plus.PlusOptions;
 
 import de.saschahlusiak.freebloks.R;
 
@@ -110,9 +113,9 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.Builder mGoogleApiClientBuilder = null;
 
     // Api options to use when adding each API, null for none
-    GoogleApiClient.ApiOptions mGamesApiOptions = null;
-    GoogleApiClient.ApiOptions mPlusApiOptions = null;
-    GoogleApiClient.ApiOptions mAppStateApiOptions = null;
+    GamesOptions mGamesApiOptions = GamesOptions.builder().build();
+    PlusOptions mPlusApiOptions = null;
+    NoOptions mAppStateApiOptions = null;
 
     // Google API client object we manage.
     GoogleApiClient mGoogleApiClient = null;
@@ -236,7 +239,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
      * Sets the options to pass when setting up the Games API. Call before
      * setup().
      */
-    public void setGamesApiOptions(GoogleApiClient.ApiOptions options) {
+    public void setGamesApiOptions(GamesOptions options) {
         doApiOptionsPreCheck();
         mGamesApiOptions = options;
     }
@@ -245,7 +248,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
      * Sets the options to pass when setting up the AppState API. Call before
      * setup().
      */
-    public void setAppStateApiOptions(GoogleApiClient.ApiOptions options) {
+    public void setAppStateApiOptions(NoOptions options) {
         doApiOptionsPreCheck();
         mAppStateApiOptions = options;
     }
@@ -254,7 +257,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
      * Sets the options to pass when setting up the Plus API. Call before
      * setup().
      */
-    public void setPlusApiOptions(GoogleApiClient.ApiOptions options) {
+    public void setPlusApiOptions(PlusOptions options) {
         doApiOptionsPreCheck();
         mPlusApiOptions = options;
     }
@@ -287,7 +290,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         }
 
         if (0 != (mRequestedClients & CLIENT_APPSTATE)) {
-            builder.addApi(AppStateManager.API, mAppStateApiOptions);
+            builder.addApi(AppStateManager.API);
             builder.addScope(AppStateManager.SCOPE_APP_STATE);
         }
 
@@ -540,7 +543,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         // For the games client, signing out means calling signOut and
         // disconnecting
         if (0 != (mRequestedClients & CLIENT_GAMES)) {
-            debugLog("Signing out from GamesClient.");
+            debugLog("Signing out from the Google API Client.");
             Games.signOut(mGoogleApiClient);
         }
 
@@ -557,10 +560,10 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
      * process, processes it appropriately.
      */
     public void onActivityResult(int requestCode, int responseCode,
-            Intent intent) {
+                                 Intent intent) {
         debugLog("onActivityResult: req="
                 + (requestCode == RC_RESOLVE ? "RC_RESOLVE" : String
-                        .valueOf(requestCode)) + ", resp="
+                .valueOf(requestCode)) + ", resp="
                 + GameHelperUtils.activityResponseCodeToString(responseCode));
         if (requestCode != RC_RESOLVE) {
             debugLog("onActivityResult: request code not meant for us. Ignoring.");
@@ -606,7 +609,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
             // solved. So give up and show an error message.
             debugLog("onAR: responseCode="
                     + GameHelperUtils
-                            .activityResponseCodeToString(responseCode)
+                    .activityResponseCodeToString(responseCode)
                     + ", so giving up.");
             giveUp(new SignInFailureReason(mConnectionResult.getErrorCode(),
                     responseCode));
@@ -616,8 +619,8 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     void notifyListener(boolean success) {
         debugLog("Notifying LISTENER of sign-in "
                 + (success ? "SUCCESS"
-                        : mSignInFailureReason != null ? "FAILURE (error)"
-                                : "FAILURE (no error)"));
+                : mSignInFailureReason != null ? "FAILURE (error)"
+                : "FAILURE (no error)"));
         if (mListener != null) {
             if (success) {
                 mListener.onSignInSucceeded();
@@ -788,7 +791,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         debugLog("Connection failure:");
         debugLog("   - code: "
                 + GameHelperUtils.errorCodeToString(mConnectionResult
-                        .getErrorCode()));
+                .getErrorCode()));
         debugLog("   - resolvable: " + mConnectionResult.hasResolution());
         debugLog("   - details: " + mConnectionResult.toString());
 
@@ -929,7 +932,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
 
     /** Shows an error dialog that's appropriate for the failure reason. */
     public static void showFailureDialog(Activity activity, int actResp,
-            int errorCode) {
+                                         int errorCode) {
         if (activity == null) {
             Log.e("GameHelper", "*** No Activity. Can't show failure dialog!");
             return;
@@ -937,34 +940,34 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
         Dialog errorDialog = null;
 
         switch (actResp) {
-        case GamesActivityResultCodes.RESULT_APP_MISCONFIGURED:
-            errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(
-                    activity, GameHelperUtils.R_APP_MISCONFIGURED));
-            break;
-        case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
-            errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(
-                    activity, GameHelperUtils.R_SIGN_IN_FAILED));
-            break;
-        case GamesActivityResultCodes.RESULT_LICENSE_FAILED:
-            errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(
-                    activity, GameHelperUtils.R_LICENSE_FAILED));
-            break;
-        default:
-            // No meaningful Activity response code, so generate default Google
-            // Play services dialog
-            errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
-                    activity, RC_UNUSED, null);
-            if (errorDialog == null) {
-                // get fallback dialog
-                Log.e("GameHelper",
-                        "No standard error dialog available. Making fallback dialog.");
-                errorDialog = makeSimpleDialog(
-                        activity,
-                        GameHelperUtils.getString(activity,
-                                GameHelperUtils.R_UNKNOWN_ERROR)
-                                + " "
-                                + GameHelperUtils.errorCodeToString(errorCode));
-            }
+            case GamesActivityResultCodes.RESULT_APP_MISCONFIGURED:
+                errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(
+                        activity, GameHelperUtils.R_APP_MISCONFIGURED));
+                break;
+            case GamesActivityResultCodes.RESULT_SIGN_IN_FAILED:
+                errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(
+                        activity, GameHelperUtils.R_SIGN_IN_FAILED));
+                break;
+            case GamesActivityResultCodes.RESULT_LICENSE_FAILED:
+                errorDialog = makeSimpleDialog(activity, GameHelperUtils.getString(
+                        activity, GameHelperUtils.R_LICENSE_FAILED));
+                break;
+            default:
+                // No meaningful Activity response code, so generate default Google
+                // Play services dialog
+                errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
+                        activity, RC_UNUSED, null);
+                if (errorDialog == null) {
+                    // get fallback dialog
+                    Log.e("GameHelper",
+                            "No standard error dialog available. Making fallback dialog.");
+                    errorDialog = makeSimpleDialog(
+                            activity,
+                            GameHelperUtils.getString(activity,
+                                    GameHelperUtils.R_UNKNOWN_ERROR)
+                                    + " "
+                                    + GameHelperUtils.errorCodeToString(errorCode));
+                }
         }
 
         errorDialog.show();
@@ -976,7 +979,7 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
     }
 
     static Dialog
-            makeSimpleDialog(Activity activity, String title, String text) {
+    makeSimpleDialog(Activity activity, String title, String text) {
         return (new AlertDialog.Builder(activity)).setMessage(text)
                 .setTitle(title).setNeutralButton(android.R.string.ok, null)
                 .create();
@@ -1040,9 +1043,9 @@ public class GameHelper implements GoogleApiClient.ConnectionCallbacks,
             return "SignInFailureReason(serviceErrorCode:"
                     + GameHelperUtils.errorCodeToString(mServiceErrorCode)
                     + ((mActivityResultCode == NO_ACTIVITY_RESULT_CODE) ? ")"
-                            : (",activityResultCode:"
-                                    + GameHelperUtils
-                                            .activityResponseCodeToString(mActivityResultCode) + ")"));
+                    : (",activityResultCode:"
+                    + GameHelperUtils
+                    .activityResponseCodeToString(mActivityResultCode) + ")"));
         }
     }
 
