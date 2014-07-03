@@ -19,6 +19,7 @@ import android.widget.SpinnerAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.R;
@@ -147,11 +148,11 @@ public class StatisticsActivity extends BaseGameActivity {
 			return true;
 		case R.id.achievements:
 			if (isSignedIn())
-				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
+				startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
 			return true;
 		case R.id.leaderboard:
 			if (isSignedIn())
-				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -210,11 +211,13 @@ public class StatisticsActivity extends BaseGameActivity {
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 
-		getGamesClient().submitScore(
+		Games.Leaderboards.submitScore(
+				getApiClient(),
 				getString(R.string.leaderboard_games_won),
 				db.getNumberOfPlace(-1, 1));
 
-		getGamesClient().submitScore(
+		Games.Leaderboards.submitScore(
+				getApiClient(),
 				getString(R.string.leaderboard_points_total),
 				db.getTotalNumberOfPoints(-1));
 	}
