@@ -45,7 +45,7 @@ void CLogWriter::addLogWriter(CLogWriter* _next) {
 
 void CStdoutWriter::log(const char* fmt, va_list va) {
 	CLogWriter::log(fmt, va);
-	
+
 	vprintf(fmt,va);
 }
 

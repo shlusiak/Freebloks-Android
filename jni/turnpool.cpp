@@ -49,7 +49,7 @@ void CTurnpool::add_turn(const int playernumber, const CStone* stone, const int 
 void CTurnpool::end_add() {
 	if (m_current == m_head) {
 		if (m_head) delete m_head;
-		m_head = m_tail = NULL;		
+		m_head = m_tail = NULL;
 	} else if (m_tail->get_next()) {
 		delete m_tail->get_next();
 		m_tail->set_next(NULL);
@@ -58,7 +58,7 @@ void CTurnpool::end_add() {
 }
 
 void CTurnpool::delete_all_turns(){
-	if (m_head) { 
+	if (m_head) {
 		delete m_head;
 	}
 	m_tail = NULL;
@@ -70,12 +70,12 @@ void CTurnpool::delete_last(){
 	#ifdef _DEBUG
 		if (CTurnpool::get_number_of_stored_turns() == 0) error_exit("Turnpool ist leer!!... delete_last unsinnig", 31);
 	#endif
-	
+
 	if (CTurnpool::get_number_of_stored_turns() == 1) {
 		CTurnpool::delete_all_turns();
 		return;
 	}
-		
+
 	m_current = m_head;
 	while (m_current->get_next() != m_tail){
 		m_current = m_current->get_next();
@@ -95,6 +95,6 @@ CTurn* CTurnpool::get_turn(int i) {
 	while (i > m_current->get_turn_number()){
 		m_current = m_current->get_next();
 	}
-	return m_current;	
+	return m_current;
 }
 

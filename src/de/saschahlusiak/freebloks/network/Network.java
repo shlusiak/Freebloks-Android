@@ -6,9 +6,9 @@ import android.util.Log;
 
 public class Network {
 	static final String tag = Network.class.getSimpleName();
-	
+
 	public static final int DEFAULT_PORT = 59995;
-	
+
 	public static final int MSG_REQUEST_PLAYER = 1;
 	public static final int MSG_GRANT_PLAYER = 2;
 	public static final int MSG_CURRENT_PLAYER = 3;
@@ -22,14 +22,14 @@ public class Network {
 	public static final int MSG_REQUEST_HINT = 11;
 	public static final int MSG_STONE_HINT = 12;
 	public static final int MSG_REVOKE_PLAYER = 13;
-	
+
 	public static NET_HEADER read_package(Socket socket, boolean block) throws Exception {
 		NET_HEADER p = new NET_HEADER(0, 0);
 		if (! p.read(socket, block))
 			return null;
-		
+
 //		Log.d(tag, "Received network package type " + p.msg_type);
-		
+
 		switch (p.msg_type) {
 		case MSG_REQUEST_PLAYER:
 			return new NET_REQUEST_PLAYER(p);
@@ -57,7 +57,7 @@ public class Network {
 			return new NET_SET_STONE(p);
 		case MSG_REVOKE_PLAYER:
 			return new NET_REVOKE_PLAYER(p);
-		
+
 		default:
 			//throw new Exception("Unhandled message type " + p.msg_type);
 			Log.e(tag, "Unhandled message type: " + p.msg_type);

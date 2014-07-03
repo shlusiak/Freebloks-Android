@@ -11,21 +11,21 @@ import de.saschahlusiak.freebloks.model.Turnpool;
 
 public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	private static final long serialVersionUID = -7880809258246268794L;
-	
+
 	static final int PLAYER_COMPUTER = -2;
 	static final int PLAYER_LOCAL = -1;
-	
+
 	public static final int GAMEMODE_2_COLORS_2_PLAYERS = 0;
 	public static final int GAMEMODE_4_COLORS_2_PLAYERS = 1;
 	public static final int GAMEMODE_4_COLORS_4_PLAYERS = 2;
 	public static final int GAMEMODE_DUO = 3;
-	
+
 	int m_current_player;
 	int spieler[] = new int[Spiel.PLAYER_MAX];
 	public int m_gamemode;
 	boolean finished = false;
 	boolean started = false;
-	
+
 	Turnpool history;
 
 	public Spielleiter(int size_y, int size_x) {
@@ -35,7 +35,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		for (int i=0;i<PLAYER_MAX;i++)spieler[i]=PLAYER_COMPUTER;
 		history=new Turnpool();
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Spielleiter c = (Spielleiter)super.clone();
@@ -43,26 +43,26 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		c.history = new Turnpool();
 		return c;
 	}
-	
-	void set_noplayer() { 
+
+	void set_noplayer() {
 		m_current_player=-1;
 	}
-	
+
 	public int current_player() {
 		return m_current_player;
 	}
 
-	public Player get_current_player() { 
-		if (m_current_player == -1) 
-			return null; 
-		else 
+	public Player get_current_player() {
+		if (m_current_player == -1)
+			return null;
+		else
 			return get_player(m_current_player);
 	}
-	
+
 	int get_gamemode() {
 		return m_gamemode;
 	}
-	
+
 	void addHistory(Turn turn)
 	{
 		history.add_turn(turn);
@@ -80,7 +80,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		for (int i=0;i<PLAYER_MAX;i++)if (spieler[i]!=PLAYER_COMPUTER)n++;
 		return n;
 	}
-	
+
 	/**
 	 * Gibt true zurueck, wenn der Spieler kein Computerspieler ist
 	 **/
@@ -93,27 +93,27 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 			return false;
 		return (spieler[player] != Spielleiter.PLAYER_COMPUTER);
 	}
-	
+
 	public boolean is_local_player() {
 		return is_local_player(m_current_player);
 	}
-	
+
 	public boolean isFinished() {
 		return finished;
 	}
-	
+
 	public void setFinished(boolean finished) {
 		this.finished = finished;
 	}
-	
+
 	public boolean isStarted() {
 		return started;
 	}
-	
+
 	public void setStarted(boolean started) {
 		this.started = started;
 	}
-	
+
 	public PlayerData[] getResultData() {
 		PlayerData[] data;
 		int i;
@@ -124,13 +124,13 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 			data[0] = new PlayerData(this, 0);
 			data[1] = new PlayerData(this, 2);
 			break;
-			
+
 		case Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS:
 			data = new PlayerData[2];
 			data[0] = new PlayerData(this, 0, 2);
 			data[1] = new PlayerData(this, 1, 3);
 			break;
-			
+
 		case Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS:
 		default:
 			data = new PlayerData[4];
@@ -140,7 +140,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 			data[3] = new PlayerData(this, 3);
 			break;
 		}
-		
+
 		Arrays.sort(data);
 		int place;
 		for (i = 0; i < data.length; i++) {
@@ -149,7 +149,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 				if (data[i].compareTo(data[i-1]) == 0)
 					place = data[i-1].place;
 			}
-			
+
 			data[i].place = place;
 		}
 		return data;

@@ -11,7 +11,7 @@ public class NET_REQUEST_PLAYER extends NET_HEADER {
 		this.player = player;
 		this.name = name;
 	}
-	
+
 	public NET_REQUEST_PLAYER(NET_HEADER from) {
 		super(from);
 		if (data_length >= 17) {
@@ -22,9 +22,9 @@ public class NET_REQUEST_PLAYER extends NET_HEADER {
 			player = -1;
 		}
 	}
-	
+
 	@Override
-	void prepare(ByteArrayOutputStream bos) {		
+	void prepare(ByteArrayOutputStream bos) {
 		super.prepare(bos);
 		bos.write(player);
 		if (name == null) {

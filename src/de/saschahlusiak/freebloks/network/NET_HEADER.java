@@ -8,35 +8,35 @@ import java.net.Socket;
 
 public class NET_HEADER implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	/* int check1;	*/ /* uint8 */
 	public int data_length; /* uint16 */
 	public int msg_type; /* uint8 */
 	/* int check2; */ /* uint8 */
 	public static final int HEADER_SIZE = 5;
-	
+
 	byte buffer[];
-	
+
 	public NET_HEADER(int msg_type, int data_length) {
 		this.msg_type = msg_type;
 		this.data_length = data_length;
 	}
-	
+
 	public NET_HEADER(NET_HEADER from) {
 		this.data_length = from.data_length;
 		this.msg_type = from.msg_type;
 		this.buffer = from.buffer;
 	}
-	
+
 	/**
 	 * a java byte is always signed, being -128..127
 	 * casting (byte)-1 to int will result in (int)-1
-	 *  
+	 *
 	 */
 	public static final int unsigned(byte b) {
 		return (b & 0xFF);
 	}
-	
+
 	boolean read(Socket socket, boolean block) throws Exception {
 		InputStream is;
 		int r;
@@ -70,7 +70,7 @@ public class NET_HEADER implements Serializable {
 		/* Bei Ungleichheit Fehler, sonst Nachricht ok */
 		if (c1 != check1 || c2 != check2)
 			throw new Exception("header checksum failed");
-		
+
 		data_length -= HEADER_SIZE;
 
 		if (is.available() < data_length)
@@ -84,20 +84,20 @@ public class NET_HEADER implements Serializable {
 		return true;
 
 	}
-	
+
 	void prepare(ByteArrayOutputStream bos) {
 		int l = data_length + HEADER_SIZE;
 		int check1, check2;
 		check1 = (l & 0x0055) ^ msg_type;
 		check2 = (check1 ^ 0xD6) + msg_type;
-		
+
 		bos.write(check1);
 		bos.write((l >> 8) & 0xff);
 		bos.write(l & 0xff);
 		bos.write(msg_type);
 		bos.write(check2);
 	}
-	
+
 	public boolean send(Socket socket) {
 		if (socket == null)
 			return false;

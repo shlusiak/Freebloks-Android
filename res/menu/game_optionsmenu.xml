@@ -5,7 +5,7 @@
         android:icon="@android:drawable/ic_popup_sync"
         android:title="@string/new_local_game" >
     </item>
-    <item 
+    <item
         android:id="@+id/sound_toggle_button"
         android:icon="@android:drawable/ic_lock_silent_mode_off"
         android:showAsAction="always"

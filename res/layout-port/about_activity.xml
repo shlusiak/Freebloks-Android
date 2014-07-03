@@ -7,9 +7,9 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
-        
+
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="fill_parent"
@@ -34,7 +34,7 @@
                 android:layout_centerVertical="true"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
-        
+
         <TextView
             android:id="@+id/url1"
             android:layout_width="fill_parent"
@@ -43,7 +43,7 @@
             android:gravity="center"
             android:linksClickable="true"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-        
+
         <TextView
             android:id="@+id/url2"
             android:layout_width="fill_parent"
@@ -54,7 +54,7 @@
             android:linksClickable="true"
             android:text="https://github.com/shlusiak/Freebloks-Android"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-        
+
 	<TextView
             android:id="@+id/textView2"
             android:layout_width="fill_parent"
@@ -85,7 +85,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="4dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-        
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
             android:singleLine="true"
             android:text="Martin Hollingsworth"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-        
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
             android:singleLine="true"
             android:text="Egor Ponomarev"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-        
+
         <Button
             android:id="@+id/ok"
             android:layout_marginTop="12dp"

@@ -11,21 +11,21 @@ import de.saschahlusiak.freebloks.model.Stone;
 
 public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	public int player, computer, clients; /* int 8 */
 	public int width, height; /* int 8 */
 	public int stone_numbers[] = new int[Stone.STONE_SIZE_MAX]; /* int8[5] */
 	public int gamemode; /* int8 */
-	
+
 	/* since 1.5, optional */
 	public int spieler[]; /* int8[4] */
 	public String client_names[]; /* uint8[8][16] */
-	
-	
+
+
 	public NET_SERVER_STATUS() {
 		super(Network.MSG_SERVER_STATUS, 11);
 	}
-	
+
 	public NET_SERVER_STATUS(NET_HEADER from) {
 		super(from);
 		player = buffer[0];
@@ -43,7 +43,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 			spieler[1] = buffer[12];
 			spieler[2] = buffer[13];
 			spieler[3] = buffer[14];
-			
+
 			client_names = new String[8];
 			char tmp[] = new char[16];
 			for (int i = 0; i < 8; i++) {
@@ -60,7 +60,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 			}
 		}
 	}
-	
+
 	@Override
 	void prepare(ByteArrayOutputStream bos) {
 		super.prepare(bos);
@@ -73,17 +73,17 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 			bos.write(stone_numbers[i]);
 		bos.write(gamemode);
 	}
-	
+
 	public boolean isAdvanced() {
 		return (spieler != null);
 	}
-	
+
 	public String getClientName(Resources resources, int client) {
 		if (client_names == null || client < 0 || client_names[client] == null)
 			return resources.getString(R.string.client_d, client + 1);
 		return client_names[client];
 	}
-	
+
 	public String getPlayerName(Resources resources, int player, int color) {
 		if (player < 0)
 			throw new InvalidParameterException();

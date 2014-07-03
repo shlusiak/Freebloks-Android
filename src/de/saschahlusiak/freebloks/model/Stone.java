@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Stone implements Serializable, Cloneable {
 	private static final long serialVersionUID = -4949247356899826370L;
-	
+
 	public static final int STONE_COUNT_ALL_SHAPES = 21;
 	public static final int STONE_SIZE_MAX  =  5;
 
@@ -15,7 +15,7 @@ public class Stone implements Serializable, Cloneable {
 	static final int ROTATEABLE_NOT   = 1;
 	static final int ROTATEABLE_TWO   = 2;
 	static final int ROTATEABLE_FOUR  = 4;
-	
+
 	public static final int FIELD_FREE   =  240;
 	public static final int FIELD_ALLOWED=  241;
 	public static final int FIELD_DENIED =  255;
@@ -157,43 +157,43 @@ public class Stone implements Serializable, Cloneable {
 							8,8,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,1,8,8,8,	//1
-							0,1,8,8,8, 
+							0,1,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,0,8,8,8,	//2
 							1,1,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-											
+
 							{0,1,0,8,8,	//3
 							0,2,0,8,8,
 							0,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,1,8,8,8,	//4
 							1,1,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,1,0,8,8,	//5
 							0,2,0,8,8,
 							1,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,1,0,8,8,	//6
 							0,2,1,8,8,
 							0,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,0,0,8,8,	//7
 							1,1,0,8,8,
 							0,1,1,8,8,
@@ -205,67 +205,67 @@ public class Stone implements Serializable, Cloneable {
 							0,0,2,0,8,
 							0,0,1,0,8,
 							8,8,8,8,8,},
-							
+
 							{0,1,0,8,8,	//9
 							1,2,0,8,8,
 							1,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,1,0,8,8,	//10
 							0,2,0,8,8,
 							1,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,1,0,8,8,	//11
 							0,2,0,8,8,
 							1,2,1,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,0,0,8,8,	//12
 							2,0,0,8,8,
 							1,2,1,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,1,0,8,8,	//13
 							0,1,1,8,8,
 							0,0,1,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,0,0,8,8,	//14
 							1,2,1,8,8,
 							0,0,1,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{1,0,0,8,8,	//15
 							1,2,1,8,8,
 							0,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,1,0,8,8,	//16
 							1,2,1,8,8,
 							0,1,0,8,8,
 							8,8,8,8,8,
 							8,8,8,8,8,},
-						
+
 							{0,0,1,0,8,	//17
 							0,0,2,0,8,
 							0,0,2,0,8,
 							0,1,1,0,8,
 							8,8,8,8,8,},
-		
+
 							{0,0,1,0,8,	//18
 							0,0,2,0,8,
 							0,1,1,0,8,
 							0,1,0,0,8,
 							8,8,8,8,8,},
-		
+
 							{0,1,0,0,8,	//19
 							0,2,1,0,8,
 							0,2,0,0,8,
@@ -285,16 +285,16 @@ public class Stone implements Serializable, Cloneable {
 	int m_mirror_counter;
 	int m_rotate_counter;
 
-	
+
 	public Stone() {
 		m_available = m_shape = m_size = m_mirror_counter = m_rotate_counter = 0;
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
-	
+
 	public final void copyFrom(Stone from) {
 		this.m_available = from.m_available;
 		this.m_shape = from.m_shape;
@@ -302,7 +302,7 @@ public class Stone implements Serializable, Cloneable {
 		this.m_mirror_counter = from.m_mirror_counter;
 		this.m_rotate_counter = from.m_rotate_counter;
 	}
-	
+
 	public final void mirror_rotate_to(int mirror_counter, int rotate_counter){
 		this.m_mirror_counter = mirror_counter;
 		this.m_rotate_counter = rotate_counter;
@@ -352,7 +352,7 @@ public class Stone implements Serializable, Cloneable {
 		return m_shape;
 	}
 
-	
+
 	public final int get_stone_size() {
 		return m_size;
 	}
@@ -366,7 +366,7 @@ public class Stone implements Serializable, Cloneable {
 		m_shape = shape;
 		m_size = STONE_SIZE[m_shape];
 		m_rotate_counter = 0;
-		m_mirror_counter = 0;		
+		m_mirror_counter = 0;
 	}
 
 	public final int get_stone_field(int y, int x) {
@@ -401,7 +401,7 @@ public class Stone implements Serializable, Cloneable {
 				ny = m_size - 1 - y;
 			} else return 0; /* ERROR */
 		}
-		
+
 		return STONE_FIELD[m_shape][ny + nx * STONE_SIZE_MAX];
 	}
 
@@ -419,21 +419,21 @@ public class Stone implements Serializable, Cloneable {
 	public final void mirror_over_x(){
 		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
-		if (m_rotate_counter%2 == 1) 
+		if (m_rotate_counter%2 == 1)
 			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
 	}
 
 	public final void mirror_over_y(){
 		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
-		if (m_rotate_counter%2 == 0) 
+		if (m_rotate_counter%2 == 0)
 			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
 	}
 
 	final int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX){
 		int mirror;
 		int count = 0;
-		
+
 		int rotate_count = m_rotate_counter;
 		int mirror_count = m_mirror_counter;
 
@@ -442,11 +442,11 @@ public class Stone implements Serializable, Cloneable {
 
 		for (m_mirror_counter = 0; m_mirror_counter <= mirror; m_mirror_counter++){
 			for (m_rotate_counter = 0; m_rotate_counter < STONE_ROTATEABLE[m_shape]; m_rotate_counter++){
-				
+
 				for (int x = 0; x < STONE_SIZE[m_shape]; x++){
 					for (int y = 0; y < STONE_SIZE[m_shape]; y++){
-						
-						if (get_stone_field(y, x) == STONE_FIELD_ALLOWED) {      					
+
+						if (get_stone_field(y, x) == STONE_FIELD_ALLOWED) {
 							if (spiel.is_valid_turn(this, playernumber, fieldY-y, fieldX-x) == FIELD_ALLOWED){
 								count++;
 							}

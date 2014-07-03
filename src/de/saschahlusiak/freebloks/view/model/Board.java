@@ -12,7 +12,7 @@ public class Board implements ViewElement {
 	public int last_size;
 	public float mAngleY;
 	public int centerPlayer; /* the "center" position of the board, usually the first local */
-	
+
 	public Board(ViewModel model, int size) {
 		this.model = model;
 		this.last_size = size;
@@ -30,13 +30,13 @@ public class Board implements ViewElement {
 	public PointF modelToBoard(PointF point) {
 		point.x = point.x / (BoardRenderer.stone_size * 2.0f);
 		point.y = point.y / (BoardRenderer.stone_size * 2.0f);
-		
+
 		point.x = point.x + 0.5f * (float)(model.spiel.m_field_size_x - 1);
 		point.y = point.y + 0.5f * (float)(model.spiel.m_field_size_y - 1);
 
 		return point;
 	}
-	
+
 	/**
 	 * converts p from relative board coordinates, to rotated board coordinates
 	 * relative board coordinates: yellow starting point is 0/0, blue starting point is 0/19
@@ -45,7 +45,7 @@ public class Board implements ViewElement {
 	 */
 	void boardToUnified(PointF p) {
 		float tmp;
-		
+
 		switch (centerPlayer) {
 		default:
 		case 0: /* nothing */
@@ -66,7 +66,7 @@ public class Board implements ViewElement {
 			break;
 		}
 	}
-	
+
 	/**
 	 * @return the base angle for the camera, to focus on the center player
 	 */
@@ -75,7 +75,7 @@ public class Board implements ViewElement {
 			return 0.0f;
 		return -90.0f * (float)centerPlayer;
 	}
-	
+
 	int lastDetailsPlayer = -1;
 	private void updateDetailsPlayer() {
 		int p;
@@ -87,7 +87,7 @@ public class Board implements ViewElement {
 			lastDetailsPlayer = -1;
 		else
 			lastDetailsPlayer = (centerPlayer + p + 4) % 4;
-		
+
 		if (model.spiel != null) {
 			if (model.spiel.m_gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
 				model.spiel.m_gamemode == Spielleiter.GAMEMODE_DUO) {
@@ -98,7 +98,7 @@ public class Board implements ViewElement {
 			}
 		}
 	}
-	
+
 	/**
 	 * returns the player, whose details are to be shown, if board is rotated, -1 otherwise
 	 * @return player, the board is rotated to
@@ -109,10 +109,10 @@ public class Board implements ViewElement {
 			return -1;
 		return lastDetailsPlayer;
 	}
-	
+
 	/**
 	 * returns the number of the player whose seeds are to be shown
-	 * 
+	 *
 	 * @return -1 if seeds are disabled
 	 * @return detail player if board is rotated
 	 * @return current player, if local
@@ -131,7 +131,7 @@ public class Board implements ViewElement {
 			return model.spiel.current_player();
 		return -1;
 	}
-	
+
 	/**
 	 * the player that should be shown on the wheel
 	 * @return
@@ -170,19 +170,19 @@ public class Board implements ViewElement {
 	public boolean handlePointerMove(PointF m) {
 		if (!rotating)
 			return false;
-		
+
 		model.currentStone.startDragging(null, null, 0);
-		
+
 		float an = (float)Math.atan2(m.y, m.x);
 		mAngleY += (oa - an) / (float)Math.PI * 180.0f;
 		oa = an;
-		
+
 		while (mAngleY >= 180.0f)
 			mAngleY -= 360.0f;
 		while (mAngleY <= -180.0f)
 			mAngleY += 360.0f;
 		updateDetailsPlayer();
-		
+
 		int s = getShowDetailsPlayer();
 		if (s < 0)
 			s = getShowWheelPlayer();
@@ -194,7 +194,7 @@ public class Board implements ViewElement {
 		model.redraw = true;
 		return true;
 	}
-	
+
 	float ta;
 
 	@Override
@@ -212,7 +212,7 @@ public class Board implements ViewElement {
 		rotating = false;
 		return false;
 	}
-	
+
 	public void resetRotation() {
 		ta = 0.0f;
 		auto_rotate = true;
@@ -224,12 +224,12 @@ public class Board implements ViewElement {
 			final float ROTSPEED = 25.0f;
 
 			mAngleY += elapsed * ROTSPEED;
-			
+
 			while (mAngleY >= 180.0f)
 				mAngleY -= 360.0f;
 			while (mAngleY <= -180.0f)
 				mAngleY += 360.0f;
-			
+
 			updateDetailsPlayer();
 			int s = getShowWheelPlayer();
 			if (model.wheel.getCurrentPlayer() != s) {

@@ -64,7 +64,7 @@
         android:inputType="textNoSuggestions|textCapSentences"
         android:singleLine="true"
 	    android:hint="@string/lobby_message_hint" >
-        
+
         <requestFocus />
     </EditText>
 

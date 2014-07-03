@@ -14,9 +14,9 @@ public class DisplayFragment extends PreferenceFragment implements OnSharedPrefe
 
         addPreferencesFromResource(R.xml.preferences_display);
     }
-    
+
     @Override
-    public void onResume() {    	
+    public void onResume() {
 		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
 		onSharedPreferenceChanged(prefs, "theme");
 		prefs.registerOnSharedPreferenceChangeListener(this);

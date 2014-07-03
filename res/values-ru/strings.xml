@@ -18,7 +18,7 @@
     <string name="could_not_restore_game">Невозможно восстановить игру</string>
     <string name="do_you_want_to_leave_current_game">Вы уверенны, что хотите начать новую игру?</string>
     <string name="disconnect_error">Нет подключения: %1$s. Вы не в сети.</string>
-    
+
     <string name="waiting_for_color">Ожидание %1$s</string>
     <string name="color_is_out_of_moves">У %1$s кончились ходы</string>
     <string name="player_status_moves">%1$d ходов</string>
@@ -31,7 +31,7 @@
     <string name="custom_game_title">Параметры игры</string>
     <string name="sound_on">Звук вкл.</string>
     <string name="sound_off">Звук выкл.</string>
-    
+
     <string name="statistics">Статистика</string>
     <string name="clear_statistics">Сбросить все</string>
     <string-array name="statistics_labels">
@@ -45,7 +45,7 @@
         <item>Фигурок использовано</item>
         <item>Всего очков</item>
     </string-array>
-    
+
     <string name="googleplus">Google+</string>
     <string name="googleplus_signin">Войти</string>
     <string name="googleplus_signin_long">Войти через Google+</string>
@@ -55,7 +55,7 @@
     <string name="googleplus_leaderboard_long">Показать результат людей из ваших кругов</string>
     <string name="googleplus_achievements">Достижения</string>
     <string name="googleplus_achievements_long">Показать заработанные достижения</string>
-    
+
     <string name="lobby_waiting_for_players">Ожидание хода игроков</string>
     <string name="connected_clients">%1$d игрок</string>
     <string name="chat">Чат</string>
@@ -66,15 +66,15 @@
     <string name="player_left_color">%1$s (%2$s) вышел из игры</string>
     <string name="no_addresses_found">[не найдено такого IP]</string>
     <string name="lobby_message_hint">Напишите сообщение</string>
-    
+
     <string name="rate_now">Да</string>
     <string name="rate_later">Позже</string>
     <string name="rate_never">Нет, спасибо</string>
     <string name="rate_freebloks_title">Оцените Freebloks</string>
     <string name="rate_freebloks_text">Если вам понравилась игра Freebloks, не могли бы вы потратить минутку и оценить её?</string>
     <string name="rate_freebloks_donate_link"><u>Пожалуйста, поддержите игру Freebloks</u></string>
-    
-   
+
+
     <plurals name="number_of_stones_left">
         <item quantity="one">Осталась %1$d фишка</item>
         <item quantity="other">Осталось %1$d фишек</item>
@@ -120,13 +120,13 @@
         <item>20x20</item>
         <item>23x23</item>
     </string-array>
-	
+
     <string name="please_donate">Помогите разработчикам</string>
     <string name="donation_text_long">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.\n\n Сколько вы готовы отдать?</string>
     <string name="donation_nothing">Нисколько</string>
     <string name="donation_next">Далее</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
-			
+
     <string-array name="theme_labels">
         <item>Чёрная</item>
         <item>Синяя</item>
@@ -143,7 +143,7 @@
         <item>texture_wood</item>
         <item>texture_bricks</item>
     </string-array>
-	
+
     <string name="prefs_interface">Интерфейс</string>
     <string name="prefs_display">Показывать</string>
     <string name="prefs_misc">Дополнительно</string>

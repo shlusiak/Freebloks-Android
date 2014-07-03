@@ -13,7 +13,7 @@ class CSpiel;
 class CPlayer{
 
 	private:
-		
+
 		int m_stone_points_left;
 		int m_stone_count;
 		int m_number_of_possible_turns;
@@ -22,10 +22,10 @@ class CPlayer{
 		int m_teammate;
 		int m_nemesis;
 		int m_number;
-	
+
 		CStone m_stone[STONE_COUNT_ALL_SHAPES]; // eventuell auf bool verkleinerbar?!
 	public:
-		
+
 		CPlayer();
 
 		void init(const CSpiel* spiel, const int playernumber); //unbedingt ausf�hren!
@@ -37,7 +37,7 @@ class CPlayer{
 		const int get_position_points()const; //gibt eine situationsbewertung zur�ck
 		const int get_number_of_possible_turns()const;
 		const int get_stone_count()const;
-		
+
 		const int get_teammate()const;
 		const int get_nemesis()const;
 		void set_teammate(int playernumber);
@@ -48,14 +48,14 @@ class CPlayer{
 
 
 inline
-CPlayer::CPlayer() 
+CPlayer::CPlayer()
 :m_nemesis(-1), m_teammate(-1)
 {
 }
 
 
-inline 
-CStone* CPlayer::get_stone(const int stonenumber){ 
+inline
+CStone* CPlayer::get_stone(const int stonenumber){
 	return &CPlayer::m_stone[stonenumber];
 }
 

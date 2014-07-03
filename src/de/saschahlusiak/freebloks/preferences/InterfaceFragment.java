@@ -10,5 +10,5 @@ public class InterfaceFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences_interface);
-    }    
+    }
 }

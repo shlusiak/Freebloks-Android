@@ -141,43 +141,43 @@ const TStoneField STONE_FIELD[STONE_COUNT_ALL_SHAPES]=
 						8,8,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,1,8,8,8,	//1
-						0,1,8,8,8, 
+						0,1,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,0,8,8,8,	//2
 						1,1,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-										
+
 						{0,1,0,8,8,	//3
 						0,2,0,8,8,
 						0,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,1,8,8,8,	//4
 						1,1,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,1,0,8,8,	//5
 						0,2,0,8,8,
 						1,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,1,0,8,8,	//6
 						0,2,1,8,8,
 						0,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,0,0,8,8,	//7
 						1,1,0,8,8,
 						0,1,1,8,8,
@@ -189,67 +189,67 @@ const TStoneField STONE_FIELD[STONE_COUNT_ALL_SHAPES]=
 						0,0,2,0,8,
 						0,0,1,0,8,
 						8,8,8,8,8,},
-						
+
 						{0,1,0,8,8,	//9
 						1,2,0,8,8,
 						1,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,1,0,8,8,	//10
 						0,2,0,8,8,
 						1,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,1,0,8,8,	//11
 						0,2,0,8,8,
 						1,2,1,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,0,0,8,8,	//12
 						2,0,0,8,8,
 						1,2,1,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,1,0,8,8,	//13
 						0,1,1,8,8,
 						0,0,1,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,0,0,8,8,	//14
 						1,2,1,8,8,
 						0,0,1,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{1,0,0,8,8,	//15
 						1,2,1,8,8,
 						0,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,1,0,8,8,	//16
 						1,2,1,8,8,
 						0,1,0,8,8,
 						8,8,8,8,8,
 						8,8,8,8,8,},
-					
+
 						{0,0,1,0,8,	//17
 						0,0,2,0,8,
 						0,0,2,0,8,
 						0,1,1,0,8,
 						8,8,8,8,8,},
-	
+
 						{0,0,1,0,8,	//18
 						0,0,2,0,8,
 						0,1,1,0,8,
 						0,1,0,0,8,
 						8,8,8,8,8,},
-	
+
 						{0,1,0,0,8,	//19
 						0,2,1,0,8,
 						0,2,0,0,8,
@@ -286,15 +286,15 @@ class CStone{
 		int m_size;
 		int m_mirror_counter;
 		int m_rotate_counter;
-		
+
 		const bool is_position_inside_stone(const int y, const int x)const; //braucht get_stone_field
 
-	public: 
+	public:
 		CStone():m_available(0),m_shape(0),m_mirror_counter(0),m_rotate_counter(0) {}
 		void init (const int shape);
 
 		const TSingleStone get_stone_field(const int y, const int x)const;
-		
+
 		const int calculate_possible_turns_in_position(const CSpiel* const spiel, const int playernumber, const int fieldY, const int fieldX);
 
 		const int get_stone_size()const;
@@ -397,7 +397,7 @@ const int CStone::get_stone_points()const{
 }
 
 inline
-const bool CStone::is_position_inside_stone(const int y,const int x)const{ 
+const bool CStone::is_position_inside_stone(const int y,const int x)const{
 	if (y < 0 || y >= m_size || x < 0 || x >= m_size) return false;
 	return true;
 }

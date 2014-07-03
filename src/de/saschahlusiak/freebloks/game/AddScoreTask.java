@@ -10,12 +10,12 @@ import de.saschahlusiak.freebloks.database.HighscoreDB;
 public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 	int game_mode;
 	Context context;
-	
+
 	public AddScoreTask(Context context, int game_mode) {
 		this.game_mode = game_mode;
 		this.context = context;
 	}
-	
+
 	@Override
 	protected Void doInBackground(PlayerData... data) {
 		HighscoreDB db = new HighscoreDB(context);
@@ -25,7 +25,7 @@ public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 					int flags = 0;
 					if (data[i].is_perfect)
 						flags |= HighscoreDB.FLAG_IS_PERFECT;
-	
+
 					db.addHighscore(
 							game_mode,
 							data[i].points,
@@ -34,14 +34,14 @@ public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 							data[i].place,
 							flags);
 				}
-						
+
 			db.close();
-			
+
 			if (Build.VERSION.SDK_INT >= 8) {
 				BackupManager backupManager = new BackupManager(context);
 				backupManager.dataChanged();
 			}
 		}
 		return null;
-	}	
+	}
 }

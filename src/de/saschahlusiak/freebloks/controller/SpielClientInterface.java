@@ -10,7 +10,7 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 public interface SpielClientInterface {
 	void onConnected(Spiel spiel);
 	void onDisconnected(Spiel spiel);
-	
+
 	void newCurrentPlayer(int player);
 	void stoneWillBeSet(NET_SET_STONE s);
 	void stoneHasBeenSet(NET_SET_STONE s);

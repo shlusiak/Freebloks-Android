@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Freebloks</string>
-    
+
     <string name="new_local_game">Nuevo juego</string>
     <string name="resume">Reanudar</string>
     <string name="join_game">Únete</string>

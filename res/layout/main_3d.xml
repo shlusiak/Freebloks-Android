@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >    
-    
+    android:layout_height="fill_parent" >
+
 	<de.saschahlusiak.freebloks.view.Freebloks3DView
 	    android:id="@+id/board"
 	    android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#b0ffffff"
             android:textStyle="bold" />
-        
+
         <TextView
             android:id="@+id/currentPlayer"
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffffff"
             android:textStyle="bold" />
-        
+
         <TextView
             android:id="@+id/movesLeft"
             android:layout_width="wrap_content"
@@ -78,14 +78,14 @@
 	        android:layout_alignParentTop="true"
 	        android:layout_alignParentLeft="true"
 	        android:src="@android:drawable/sym_action_chat" />
-	    
+
 	    <ImageButton
 	        android:id="@+id/myLocation"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentTop="true"
 	        android:layout_alignParentRight="true"
-	        android:src="@android:drawable/ic_menu_compass" />        
+	        android:src="@android:drawable/ic_menu_compass" />
     </RelativeLayout>
 
 </RelativeLayout>

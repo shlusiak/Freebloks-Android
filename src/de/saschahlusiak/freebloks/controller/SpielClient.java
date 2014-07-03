@@ -14,7 +14,7 @@ import de.saschahlusiak.freebloks.network.*;
 
 public class SpielClient {
 	static final String tag = SpielClient.class.getSimpleName();
-	
+
 	ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
 	Socket client_socket;
 	String lastHost;
@@ -22,41 +22,41 @@ public class SpielClient {
 	int lastDifficulty;
 	boolean lastPlayers[];
 
-	
+
 	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
 		this.lastDifficulty = difficulty;
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
 			spiel = new Spielleiter(fieldsize, fieldsize);
-			spiel.start_new_game(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);			
+			spiel.start_new_game(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 			spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		} else
 			this.spiel = leiter;
 		client_socket = null;
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		disconnect();
 		super.finalize();
 	}
-	
+
 	public boolean[] getLastPlayers() {
 		return lastPlayers;
 	}
-	
+
 	public boolean isConnected() {
 		return (client_socket != null) && (!client_socket.isClosed());
 	}
-	
+
 	public synchronized void addClientInterface(SpielClientInterface sci) {
 		this.spielClientInterface.add(sci);
 	}
-	
+
 	public synchronized void removeClientInterface(SpielClientInterface sci) {
 		this.spielClientInterface.remove(sci);
 	}
-	
+
 	public synchronized void clearClientInterface() {
 		spielClientInterface.clear();
 	}
@@ -72,7 +72,7 @@ public class SpielClient {
 			throw new Exception(context.getString(R.string.connection_refused));
 		}
 		for (SpielClientInterface sci : spielClientInterface)
-			sci.onConnected(spiel);		
+			sci.onConnected(spiel);
 	}
 
 	void setSocket(Socket client_socket) {
@@ -88,7 +88,7 @@ public class SpielClient {
 				e.printStackTrace();
 			}
 			for (SpielClientInterface sci : spielClientInterface)
-				sci.onDisconnected(spiel);		
+				sci.onDisconnected(spiel);
 		}
 		client_socket = null;
 	}
@@ -96,7 +96,7 @@ public class SpielClient {
 	public Exception poll() {
 		NET_HEADER pkg;
 		/* Puffer fuer eine Netzwerknachricht. */
-		
+
 		/* Lese eine Nachricht komplett aus dem Socket in buffer */
 		try {
 			pkg = Network.read_package(client_socket, true);
@@ -105,22 +105,22 @@ public class SpielClient {
 			e.printStackTrace();
 			return e;
 		}
-		
+
 		/* TODO: implement some game specific exceptions, like GameNotInSyncException */
 		if (pkg != null)
 			process_message(pkg);
-		
+
 		return null;
 	}
 
 	public void request_player(int player, String name) {
 		new NET_REQUEST_PLAYER(player, name).send(client_socket);
 	}
-	
+
 	public void revoke_player(int player) {
 		new NET_REVOKE_PLAYER(player).send(client_socket);
 	}
-	
+
 	public void request_hint(int player) {
 		if (spiel == null)
 			return;
@@ -141,7 +141,7 @@ public class SpielClient {
 			/* Merken, dass es sich bei i um einen lokalen Spieler handelt */
 			spiel.spieler[i] = Spielleiter.PLAYER_LOCAL;
 			break;
-			
+
 		case Network.MSG_REVOKE_PLAYER:
 			i=((NET_REVOKE_PLAYER)data).player;
 			if (spiel.spieler[i] != Spielleiter.PLAYER_LOCAL)
@@ -150,12 +150,12 @@ public class SpielClient {
 			break;
 
 		/* Der Server hat einen aktuellen Spieler festgelegt */
-		case Network.MSG_CURRENT_PLAYER: 
+		case Network.MSG_CURRENT_PLAYER:
 			spiel.m_current_player=((NET_CURRENT_PLAYER)data).player;
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.newCurrentPlayer(spiel.m_current_player);
 			break;
-				
+
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
 		case Network.MSG_SET_STONE: {
 			NET_SET_STONE s=(NET_SET_STONE)data;
@@ -173,7 +173,7 @@ public class SpielClient {
 			 */
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneWillBeSet(s);
-			
+
 			if ((spiel.is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
 			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
@@ -183,10 +183,10 @@ public class SpielClient {
 
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneHasBeenSet(s);
-			
+
 			break;
 		}
-		
+
 		case Network.MSG_STONE_HINT: {
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.hintReceived((NET_SET_STONE)data);
@@ -200,7 +200,7 @@ public class SpielClient {
 				sci.gameFinished();
 			break;
 		}
-	
+
 		/* Ein Server-Status Paket ist eingetroffen, Inhalt merken */
 		case Network.MSG_SERVER_STATUS:
 		{
@@ -235,7 +235,7 @@ public class SpielClient {
 				sci.serverStatus(status);
 		}
 		break;
-	
+
 		/* Server hat eine Chat-Nachricht geschickt. */
 		case Network.MSG_CHAT: {
 			for (SpielClientInterface sci : spielClientInterface)
@@ -268,7 +268,7 @@ public class SpielClient {
 				sci.gameStarted();
 			break;
 		}
-	
+
 		/* Server laesst den letzten Zug rueckgaengig machen */
 		case Network.MSG_UNDO_STONE: {
 			Turn t = spiel.history.get_last_turn();
@@ -304,7 +304,7 @@ public class SpielClient {
 		data.x=x;
 		data.y=y;
 
-		
+
 		/* Nachricht ueber den Stein an den Server schicken */
 		data.send(client_socket);
 
@@ -342,14 +342,14 @@ public class SpielClient {
 	void chat(String text) {
 		/* Bei Textlaenge von 0 wird nix verschickt */
 		if (text.length() < 1)return;
-		
+
 		new NET_CHAT(text, -1).send(client_socket);
 	}
-	
+
 	public String getLastHost() {
 		return lastHost;
 	}
-	
+
 	public void send(NET_HEADER msg) {
 		msg.send(client_socket);
 	}

@@ -11,7 +11,7 @@ const int DEFAULT_FIELD_SIZE_X = 20;
 const int DEFAULT_FIELD_SIZE_Y = 20;
 
 
-CSpiel::CSpiel(){ 
+CSpiel::CSpiel(){
 	CSpiel::m_game_field = NULL;
 	CSpiel::m_field_size_y = DEFAULT_FIELD_SIZE_Y;
 	CSpiel::m_field_size_x = DEFAULT_FIELD_SIZE_X;
@@ -24,7 +24,7 @@ CSpiel::CSpiel(int width, int height) {
 }
 
 
-CSpiel::CSpiel(const int player_team1_1, const int player_team1_2, const int player_team2_1, const int player_team2_2){ 
+CSpiel::CSpiel(const int player_team1_1, const int player_team1_2, const int player_team2_1, const int player_team2_2){
 	CSpiel::m_game_field = NULL;
 	CSpiel::m_field_size_y = DEFAULT_FIELD_SIZE_Y;
 	CSpiel::m_field_size_x = DEFAULT_FIELD_SIZE_X;
@@ -40,7 +40,7 @@ void CSpiel::follow_situation(int vorher_playernumber, const CSpiel* vorher_situ
 
 const int CSpiel::get_player_start_x(const int playernumber)const{
 	switch (playernumber) {
-	case 0 : 
+	case 0 :
 	case 1 : return 0;
 	default: return CSpiel::m_field_size_x-1;
 	}
@@ -59,7 +59,7 @@ const int CSpiel::get_player_start_y(const int playernumber)const{
 void CSpiel::set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer){
 	int counts[5] = {einer, zweier, dreier, vierer, fuenfer};
 
-	for (int n = 0 ; n < STONE_COUNT_ALL_SHAPES; n++){  
+	for (int n = 0 ; n < STONE_COUNT_ALL_SHAPES; n++){
 		int size = CSpiel::m_player[0].get_stone(n)->get_stone_points();
 		for (int p = 0; p < PLAYER_MAX; p++){
 			CStone* stone = CSpiel::m_player[p].get_stone(n);
@@ -72,8 +72,8 @@ void CSpiel::set_stone_numbers(int einer, int zweier, int dreier, int vierer, in
 
 
 void CSpiel::set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
-	
-	#ifdef _DEBUG 
+
+	#ifdef _DEBUG
 		//�berpr�fung!
 		for (int p = 0; p < PLAYER_MAX; p++){
 			int count = 0;
@@ -89,7 +89,7 @@ void CSpiel::set_teams(int player_team1_1, int player_team1_2, int player_team2_
 	CSpiel::m_player[player_team1_2].set_teammate(player_team1_1);
 	CSpiel::m_player[player_team1_1].set_nemesis(player_team2_1);
 	CSpiel::m_player[player_team1_2].set_nemesis(player_team2_1);
-	
+
 	CSpiel::m_player[player_team2_1].set_teammate(player_team2_2);
 	CSpiel::m_player[player_team2_2].set_teammate(player_team2_1);
 	CSpiel::m_player[player_team2_1].set_nemesis(player_team1_1);
@@ -101,7 +101,7 @@ void CSpiel::set_teams(int player_team1_1, int player_team1_2, int player_team2_
 
 
 CSpiel::~CSpiel(){
-	delete [] CSpiel::m_game_field; 
+	delete [] CSpiel::m_game_field;
 }
 
 
@@ -124,7 +124,7 @@ void CSpiel::refresh_player_data(){
 }
 
 
-void CSpiel::init_field(){ 
+void CSpiel::init_field(){
 	if (m_game_field != NULL) delete[] CSpiel::m_game_field;
 	CSpiel::m_game_field = new TSingleField[CSpiel::m_field_size_y * CSpiel::m_field_size_x];
 	memset(m_game_field, 0, sizeof(TSingleField) * m_field_size_y * m_field_size_x);
@@ -220,11 +220,11 @@ TSingleField CSpiel::set_stone(CStone* stone, int playernumber, int startY, int 
 	if (playernumber < 0 || playernumber >= PLAYER_MAX) error_exit("Falsche Spielerzahl", playernumber); //debug
 #endif
 //	if (is_valid_turn(stone, playernumber, startY, startX) == FIELD_DENIED) return FIELD_DENIED;
-	
+
 	for (int y = 0; y < stone->get_stone_size(); y++){
 		for (int x = 0; x < stone->get_stone_size(); x++){
 			if (stone->get_stone_field(y,x) != STONE_FIELD_FREE) {
-				CSpiel::set_single_stone_for_player(playernumber, startY+y, startX+x); 
+				CSpiel::set_single_stone_for_player(playernumber, startY+y, startX+x);
 			}
 		}
 	}
@@ -233,7 +233,7 @@ TSingleField CSpiel::set_stone(CStone* stone, int playernumber, int startY, int 
 	return FIELD_ALLOWED;
 }
 
- 
+
 
 
 void CSpiel::undo_turn(CTurnpool* turnpool, GAMEMODE gamemode){
@@ -241,16 +241,16 @@ void CSpiel::undo_turn(CTurnpool* turnpool, GAMEMODE gamemode){
 	CStone* stone = CSpiel::m_player[turn->get_playernumber()].get_stone(turn->get_stone_number());
 	int x, y;
 	stone->mirror_rotate_to(turn->get_mirror_count(), turn->get_rotate_count());
-	
+
 	#ifdef _DEBUG
 		//check valid
-		if (turn == NULL) error_exit("Kein turn", 42); 
+		if (turn == NULL) error_exit("Kein turn", 42);
 		for (x = 0; x < stone->get_stone_size(); x++){
 			for (y = 0; y < stone->get_stone_size(); y++){
 				if (stone->get_stone_field(y, x) != STONE_FIELD_FREE){
 					if (CSpiel::get_game_field(turn->get_y() + y, turn->get_x() + x) != turn->get_playernumber()) {
 						printf("y: %d, x: %d\n", turn->get_y() + y, turn->get_x() +x);
-						error_exit("�bergebener Turnpool fehlerhaft (undo turn)", 44);//return false;			
+						error_exit("�bergebener Turnpool fehlerhaft (undo turn)", 44);//return false;
 					}
 				}
 			}
@@ -265,7 +265,7 @@ void CSpiel::undo_turn(CTurnpool* turnpool, GAMEMODE gamemode){
 			}
 		}
 	}
-	
+
 	//redraw gamefield
 	for (x = 0; x < CSpiel::get_field_size_x(); x++){
 		for (y = 0; y < CSpiel::get_field_size_y(); y++){

@@ -28,7 +28,7 @@ class CSpielleiter:public CSpiel
 {
 protected:
 	/* Nummer des aktuellen Spielers (beginnt bei 0), -1 ist niemand */
-	int m_current_player;	
+	int m_current_player;
 	/* Entweder PLAYER_COMPUTER, oder PLAYER_LOCAL.
 	   Beim CSpielServer sind auch socket Handles moeglich, die einen Remote-Player
 	   kennzeichnen	*/

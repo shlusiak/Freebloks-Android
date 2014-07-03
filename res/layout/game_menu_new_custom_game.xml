@@ -14,14 +14,14 @@
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
 	        android:id="@+id/server_address_layout" >
-        
+
 		    <TextView
 		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="0.4"
 		        android:text="@string/join_server_address"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
-		
+
 		    <EditText
 		        android:id="@+id/server"
 		        android:layout_width="0dp"
@@ -31,23 +31,23 @@
 		        android:imeOptions="flagNoExtractUi"
 		        android:inputType="textNoSuggestions"
 		        android:singleLine="true" >
-	
+
 		    </EditText>
 	    </LinearLayout>
-	
+
 	    <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
 	        android:id="@+id/player_name_layout" >
-	        
+
 		    <TextView
 		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="0.4"
 		        android:text="@string/join_player_name"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
-	
+
 		    <EditText
 		        android:id="@+id/name"
 		        android:layout_width="0dp"
@@ -58,23 +58,23 @@
 		        android:inputType="textCapWords|textPersonName"
 		        android:singleLine="true"
 		        android:text="" >
-		
-		    </EditText>        
+
+		    </EditText>
 	    </LinearLayout>
-        
+
         <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/spinner_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
-            
+
 	        <Spinner
 	            android:id="@+id/game_mode"
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
 	            android:entries="@array/game_modes" />
-	
+
 			<Spinner
 	            android:id="@+id/field_size"
 	            android:layout_width="wrap_content"
@@ -83,8 +83,8 @@
 	            android:entries="@array/game_field_sizes" />
 		</LinearLayout>
 
-	    <LinearLayout 
-	        android:id="@+id/players_layout" 
+	    <LinearLayout
+	        android:id="@+id/players_layout"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal" >
@@ -95,40 +95,40 @@
 	            android:layout_weight="0.5"
 	            android:paddingLeft="16dp"
 	            android:orientation="vertical" >
-	
+
 	            <CheckBox
 	                android:id="@+id/player2"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
 	                android:text="Yellow" />
-	            
+
 	            <CheckBox
 	                android:id="@+id/player1"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
 	                android:text="Blue" />
 	        </LinearLayout>
-	
+
 	        <LinearLayout
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="0.5"
 	            android:paddingRight="16dp"
 	            android:orientation="vertical" >
-	
+
 	            <CheckBox
 	                android:id="@+id/player3"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
 	                android:text="Red" />
-	
+
 	            <CheckBox
 	                android:id="@+id/player4"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
 	                android:text="Green" />
 	        </LinearLayout>
-	        
+
 	    </LinearLayout>
 
         <RelativeLayout
@@ -146,7 +146,7 @@
 	            android:text="@string/difficulty"
 	            android:textAppearance="?android:attr/textAppearanceMedium"
 	            android:textStyle="bold" />
-	
+
 	        <TextView
 	            android:id="@+id/difficulty_label"
 	            android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
 	            android:text="Small Text"
 	            android:textAppearance="?android:attr/textAppearanceSmall"
 	            android:typeface="monospace" />
-            
+
 	        <SeekBar
 	            android:id="@+id/difficulty"
 	            android:layout_width="match_parent"
@@ -164,12 +164,12 @@
 	            android:layout_alignParentLeft="true"
 	            android:layout_below="@+id/difficulty_label"
 	            android:max="10" />
-	
+
 		</RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-            
+
 			<Button
 	           android:id="@android:id/closeButton"
 	           android:layout_width="0dp"

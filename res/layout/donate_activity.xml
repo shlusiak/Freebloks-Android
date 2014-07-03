@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/donation_nothing"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-            
+
 			<RadioButton
 		        android:id="@+id/donation_freebloksvip"
 		        android:layout_width="fill_parent"

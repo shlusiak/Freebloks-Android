@@ -18,7 +18,7 @@
     <string name="could_not_restore_game">Impossible de rétablir jeu</string>
     <string name="do_you_want_to_leave_current_game">Êtes-vous sûr de vouloir annuler la partie en cours?</string>
     <string name="disconnect_error">Connexion fermée: %1$s. Vous êtes maintenant déconnecté.</string>
-    
+
     <string name="waiting_for_color">Attendant à %1$s</string>
     <string name="color_is_out_of_moves">%1$s n\'a plus de tours</string>
     <string name="player_status_moves">%1$d tours</string>
@@ -31,8 +31,8 @@
     <string name="custom_game_title">Jeu personnalisé</string>
     <string name="sound_on">Sons activés</string>
     <string name="sound_off">Sons désactivés</string>
-    
-    
+
+
     <string name="lobby_waiting_for_players">Attendant aux joueurs</string>
     <string name="connected_clients">%1$d clients</string>
     <string name="chat">Chat</string>
@@ -43,15 +43,15 @@
     <string name="player_left_color">%1$s (%2$s) a abandonné</string>
     <string name="no_addresses_found">[aucune adresse IP trouvée]</string>
     <string name="lobby_message_hint">Tapez votre message</string>
-    
+
     <string name="rate_now">Oui</string>
     <string name="rate_later">Plus tard</string>
     <string name="rate_never">Non</string>
     <string name="rate_freebloks_title">Classez Freebloks</string>
     <string name="rate_freebloks_text">Si vous aimez Freebloks, voulez-vous prendre une minute pour le classer?</string>
     <string name="rate_freebloks_donate_link"><u>S\'il vous plaît, soutenez Freebloks</u></string>
-    
-   
+
+
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d pièce restante</item>
         <item quantity="other">%1$d pièces restantes</item>
@@ -103,7 +103,7 @@
     <string name="donation_nothing">Rien</string>
     <string name="donation_next">Suivant</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
-	
+
     <string-array name="theme_labels">
     <item>Noir</item>
         <item>Bleu</item>
@@ -112,7 +112,7 @@
         <item>Bois</item>
         <item>Briques</item>
     </string-array>
-	
+
     <string name="prefs_interface">Interface</string>
     <string name="prefs_display">Affichage</string>
     <string name="prefs_misc">Divers</string>

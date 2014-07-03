@@ -21,7 +21,7 @@
 void CKi::calculate_possible_turns(const CSpiel* spiel, CStone* stone, const char playernumber){
 	for (int x = 0; x < spiel->get_field_size_x(); x++){
 		for (int y = 0; y < spiel->get_field_size_y(); y++){
-			
+
 #ifdef _DEBUG
 			unsigned char wert = spiel->get_game_field_value(y, x);
 			if (wert < PLAYER_BIT_HAVE_MIN){
@@ -35,14 +35,14 @@ void CKi::calculate_possible_turns(const CSpiel* spiel, CStone* stone, const cha
 			if (spiel->get_game_field(playernumber, y, x) == FIELD_ALLOWED){
 				CKi::calculate_possible_turns_in_position(spiel, stone, playernumber, y, x);
 			}
-		}	
-	}	
+		}
+	}
 }
 
 
 void CKi::calculate_possible_turns_in_position(const CSpiel* spiel, CStone* stone, const char playernumber, const int fieldY, const int fieldX){
 	int mirror;
-		
+
 	int rotate_count = stone->get_rotate_counter();
 	int mirror_count = stone->get_mirror_counter();
 	//int shape = stone->get_stone_shape();
@@ -55,8 +55,8 @@ void CKi::calculate_possible_turns_in_position(const CSpiel* spiel, CStone* ston
 			stone->mirror_rotate_to(m, r);
 			for (int x = 0; x < stone->get_stone_size(); x++){
 				for (int y = 0; y < stone->get_stone_size(); y++){
-					
-					if (stone->get_stone_field(y, x) == STONE_FIELD_ALLOWED) {  //es wird get_stone_field benutzt, da gedreht wurde      					
+
+					if (stone->get_stone_field(y, x) == STONE_FIELD_ALLOWED) {  //es wird get_stone_field benutzt, da gedreht wurde
 						if (spiel->is_valid_turn(stone, playernumber, fieldY-y, fieldX-x) == FIELD_ALLOWED){
 							CKi::m_turnpool.add_turn(playernumber, stone, fieldY-y, fieldX-x);
 						}
@@ -87,7 +87,7 @@ void* kiThread(void* p)
 {
 	THREADDATA *data=(THREADDATA*)p;
 	CSpiel spiel(data->spiel->get_field_size_x(), data->spiel->get_field_size_y());
-	
+
 	int new_points;
 #ifdef HAVE_PTHREAD_CREATE
 	if (data->from>data->to)pthread_exit((void*)0);
@@ -116,7 +116,7 @@ void* kiThread(void* p)
 
 CTurn* CKi::get_ultimate_turn(CSpiel* spiel, const char current_player, const int ki_fehler){
 	CKi::build_up_turnpool_biggest_x_stones(spiel, current_player, BIGGEST_X_STONES);
-	
+
 	CTurn* best;
 	int best_points;
 	int i;
@@ -157,7 +157,7 @@ CTurn* CKi::get_ultimate_turn(CSpiel* spiel, const char current_player, const in
 	follow_situation.follow_situation(current_player, spiel, best);
 
 	best_points = get_ultimate_points(&follow_situation, current_player, ki_fehler, best); //Bewertung hier!!!
- 
+
 	for (i=0;i<num_threads;i++)
 	{
 #ifdef HAVE_PTHREAD_CREATE
