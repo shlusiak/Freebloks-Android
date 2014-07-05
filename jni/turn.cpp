@@ -8,13 +8,13 @@
 
 
 CTurn::CTurn(const CTurn* turn) {
-	CTurn::m_next = NULL;	
-	init_CTurn(turn); 
+	CTurn::m_next = NULL;
+	init_CTurn(turn);
 }
 
-CTurn::CTurn(const int playernumber, const CStone* stone, const int y, const int x) { 
+CTurn::CTurn(const int playernumber, const CStone* stone, const int y, const int x) {
 	CTurn::m_next = NULL;
-	init_CTurn(playernumber, stone, y, x); 
+	init_CTurn(playernumber, stone, y, x);
 }
 
 CTurn::~CTurn(){

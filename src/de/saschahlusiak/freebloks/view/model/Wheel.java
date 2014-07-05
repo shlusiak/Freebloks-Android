@@ -17,42 +17,42 @@ import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 
 public class Wheel implements ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
-	
+
 	final float MAX_FLING_SPEED = 100.0f;
 	final float MIN_FLING_SPEED = 2.0f;
 	final float MAX_STONE_DRAG_DISTANCE = 3.5f;
-	
+
 	enum Status {
 		IDLE, SPINNING, FLINGING
 	}
-	
+
 	private Stone highlightStone;
 	private float currentOffset;	/* the current offset */
 	private float lastOffset;		/* the offset on last touch down; rotate back to here when idle */
 	private float maxOffset;		/* the maximum offset till reaching the right end */
 	private float originalX, originalY;
-	
+
 	private float flingSpeed, lastFlingOffset;
-	
+
 	private Status status = Status.IDLE;
 	private ArrayList<Stone> stones;
 	private int currentPlayer; /* the currently shown player */
 	private ViewModel model;
 	private boolean moves_left;
-	
+
 	private PointF tmp = new PointF();
 	private Handler handler = new Handler();
 	private Timer timer = new Timer();
 	private TimerTask task;
-	
+
 	private static final float stone_spacing = 5.5f * BoardRenderer.stone_size * 2.0f;
-	
+
 	public Wheel(ViewModel model) {
 		this.model = model;
 		stones = new ArrayList<Stone>();
 		currentPlayer = -1;
 	}
-	
+
 	public synchronized void update(int player) {
 		stones.clear();
 		if (player < 0)
@@ -71,11 +71,11 @@ public class Wheel implements ViewElement {
 
 		if (stones.size() > 0)
 			rotateTo((stones.size() + 1) / 2 - 2);
-		
+
 		this.currentPlayer = player;
 	}
-	
-	private void rotateTo(int column) {	
+
+	private void rotateTo(int column) {
 		lastOffset = (float)column * stone_spacing;
 		if (lastOffset < 0.0f)
 			lastOffset = 0.0f;
@@ -84,14 +84,14 @@ public class Wheel implements ViewElement {
 		if (!model.showAnimations)
 			currentOffset = lastOffset;
 	}
-	
+
 	private int getStonePositionInWheel(int stone) {
 		for (int i = 0; i < stones.size(); i++)
 			if (stones.get(i).get_number() == stone)
 				return i;
 		return 0;
 	}
-	
+
 	/* makes sure the given stone is visible in the wheel */
 	public void showStone(int stone) {
 		rotateTo(getStonePositionInWheel(stone) / 2);
@@ -101,7 +101,7 @@ public class Wheel implements ViewElement {
 	public final int getCurrentPlayer() {
 		return this.currentPlayer;
 	}
-	
+
 	/* returns the currently highlighted stone in the wheel */
 	public Stone getCurrentStone() {
 		return this.highlightStone;
@@ -116,11 +116,11 @@ public class Wheel implements ViewElement {
 		status = Status.IDLE;
 		if (model.spiel == null)
 			return false;
-		
+
 		lastOffset = currentOffset;
 		lastFlingOffset = currentOffset;
 		flingSpeed = 0.0f;
-		
+
 		tmp.x = m.x;
 		tmp.y = m.y;
 		model.board.modelToBoard(tmp);
@@ -130,21 +130,21 @@ public class Wheel implements ViewElement {
 			tmp.x = tmp.y;
 			tmp.y = model.spiel.m_field_size_x - t - 1;
 		}
-		
+
 		originalX = tmp.x;
 		originalY = tmp.y;
 
 		if (tmp.y > 0)
 			return false;
-		
+
 		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
 		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f + lastOffset) / stone_spacing + 0.5f);
-		
+
 		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
 			status = Status.SPINNING;
 			return true;
 		}
-		
+
 		int nr = col * 2 + row;
 		if (nr < 0 || nr >= stones.size() || row > 1)
 			highlightStone = null;
@@ -162,7 +162,7 @@ public class Wheel implements ViewElement {
 			} else {
 				status = Status.SPINNING;
 				timer.schedule(task = new TimerTask() {
-				
+
 					@Override
 					public void run() {
 						if (status != Status.SPINNING)
@@ -173,7 +173,7 @@ public class Wheel implements ViewElement {
 							return;
 						if (!model.spiel.is_local_player())
 							return;
-						
+
 						handler.post(new Runnable() {
 							@Override
 							public void run() {
@@ -182,7 +182,7 @@ public class Wheel implements ViewElement {
 								tmp.x = m.x;
 								tmp.y = m.y;
 								model.board.modelToBoard(tmp);
-								
+
 								if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 									model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 								showStone(highlightStone.get_number());
@@ -207,18 +207,18 @@ public class Wheel implements ViewElement {
 	synchronized public boolean handlePointerMove(PointF m) {
 		if (status != Status.SPINNING)
 			return false;
-		
+
 		tmp.x = m.x;
 		tmp.y = m.y;
 		model.board.modelToBoard(tmp);
 		model.board.boardToUnified(tmp);
-		
+
 		if (!model.vertical_layout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
 			tmp.y = model.spiel.m_field_size_x - t - 1;
 		}
-		
+
 		/* everything underneath row 0 spins the wheel */
 		float offset = (originalX - tmp.x) * 1.7f;
 		offset *= 1.0f / (1.0f + Math.abs(originalY - tmp.y) / 2.3f);
@@ -253,7 +253,7 @@ public class Wheel implements ViewElement {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean handlePointerUp(PointF m) {
 		if (task != null)
@@ -284,7 +284,7 @@ public class Wheel implements ViewElement {
 
 		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
 		for (int i = stones.size() - 1; i >= 0; i--) {
-			Stone s = stones.get(i);			
+			Stone s = stones.get(i);
 
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
 				final float col = i / 2;
@@ -292,12 +292,12 @@ public class Wheel implements ViewElement {
 				final float offset = (float)(s.get_stone_size()) - 1.0f;
 
 				final float x = col * stone_spacing;
-				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f)); 
+				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f));
 				float y = 0.3f + effect * 0.7f;
 				final float z = row * stone_spacing;
-				
+
 				float alpha = 1.0f;
-				
+
 				if (highlightStone == s)
 					y += 1.2f;
 
@@ -343,7 +343,7 @@ public class Wheel implements ViewElement {
 			} else {
 				currentOffset -= elapsed * ROTSPEED;
 				if (currentOffset < lastOffset)
-					currentOffset = lastOffset;				
+					currentOffset = lastOffset;
 			}
 			return true;
 		}
@@ -364,7 +364,7 @@ public class Wheel implements ViewElement {
 				lastOffset = currentOffset;
 				return true;
 			}
-			
+
 			currentOffset += flingSpeed * elapsed;
 			if (Math.abs(currentOffset - lastOffset) >= MAX_STONE_DRAG_DISTANCE) {
 				highlightStone = null;

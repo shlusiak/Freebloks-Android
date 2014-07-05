@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Turnpool implements Serializable {
 	private static final long serialVersionUID = 4356065376532513833L;
-	
+
 	ArrayList<Turn> turns = new ArrayList<Turn>();
 	int current = 0;
 
@@ -26,7 +26,7 @@ public class Turnpool implements Serializable {
 			turns.get(current - 1).init(playernumber, stone, y, x);
 		}
 	}
-	
+
 	final void begin_add() {
 		current = 0;
 	}
@@ -40,9 +40,9 @@ public class Turnpool implements Serializable {
 		if (current <= 0)
 			return;
 		current--;
-		turns.remove(current);		
+		turns.remove(current);
 	}
-	
+
 	final public Turn get_last_turn() {
 		return turns.get(current - 1);
 	}
@@ -50,8 +50,8 @@ public class Turnpool implements Serializable {
 	final Turn get_turn(int i) {
 		return turns.get(i - 1);
 	}
-	
+
 	final int get_number_of_stored_turns() {
 		return current;
-	}	
+	}
 }

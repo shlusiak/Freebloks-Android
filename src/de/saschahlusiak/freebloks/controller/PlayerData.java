@@ -8,7 +8,7 @@ public class PlayerData implements Comparable<PlayerData> {
 	public int points, stones_left;
 	public int bonus;
 	public boolean is_local, is_perfect;
-	
+
 	PlayerData(Spielleiter spiel, int player) {
 		this.place = -1;
 		this.player1 = player;
@@ -17,18 +17,18 @@ public class PlayerData implements Comparable<PlayerData> {
 		this.is_perfect = true;
 		addPoints(spiel.get_player(player));
 	}
-	
+
 	PlayerData(Spielleiter spiel, int player1, int player2) {
 		this.place = -1;
 		this.player1 = player1;
 		this.player2 = player2;
 		this.is_local = spiel.is_local_player(player1);
 		this.is_perfect = true;
-		
+
 		addPoints(spiel.get_player(player1));
 		addPoints(spiel.get_player(player2));
 	}
-	
+
 	void addPoints(Player p) {
 		this.points += p.m_stone_points;
 		this.stones_left += p.m_stone_count;

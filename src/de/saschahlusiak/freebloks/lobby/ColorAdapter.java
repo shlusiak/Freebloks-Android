@@ -25,13 +25,13 @@ public class ColorAdapter extends BaseAdapter {
 	Context context;
 	NET_SERVER_STATUS lastStatus;
 	Spielleiter spiel;
-	
+
 	public ColorAdapter(Context context, Spielleiter spiel, NET_SERVER_STATUS lastStatus) {
 		this.context = context;
 		this.lastStatus = lastStatus;
 		this.spiel = spiel;
 	}
-	
+
 	void setCurrentStatus(Spielleiter spiel, NET_SERVER_STATUS status) {
 		this.spiel = spiel;
 		this.lastStatus = status;
@@ -62,31 +62,31 @@ public class ColorAdapter extends BaseAdapter {
 					position = 2;
 		return position;
 	}
-	
+
 	@Override
 	public boolean isEnabled(int position) {
 		if (lastStatus == null || spiel == null)
 			return false;
-		
+
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
 		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
 			lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
 			if (position == 1)
 				position = 2;
-		
+
 		if (!lastStatus.isAdvanced())
 			return false;
-		
+
 		if (spiel.isStarted())
 			return false;
-		
+
 		if (lastStatus.spieler[position] >= 0) {
 			/* it is a human player */
 			if (spiel.is_local_player(position))
 				return true;
 		} else
 			return true;
-		
+
 		return false;
 	}
 
@@ -97,11 +97,11 @@ public class ColorAdapter extends BaseAdapter {
 			v = LayoutInflater.from(context).inflate(R.layout.color_grid_item, parent, false);
 		else
 			v = convertView;
-		
+
 		TextView t;
-		
+
 		LayerDrawable ld = (LayerDrawable)context.getResources().getDrawable(R.drawable.bg_card_1);
-		GradientDrawable background = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1)); 
+		GradientDrawable background = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
 		v.setBackgroundDrawable(ld);
 
 		t = (TextView)v.findViewById(R.id.text);
@@ -116,13 +116,13 @@ public class ColorAdapter extends BaseAdapter {
         	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
         	return v;
         }
-		
+
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
 		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
 			lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
 			if (position == 1)
 				position = 2;
-		
+
 		if (lastStatus.isAdvanced()) {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */
@@ -131,15 +131,15 @@ public class ColorAdapter extends BaseAdapter {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
-					
+
 					Animation a = new TranslateAnimation(
-							TranslateAnimation.RELATIVE_TO_SELF, 
-							0, 
-							TranslateAnimation.RELATIVE_TO_SELF, 
-							0, 
-							TranslateAnimation.RELATIVE_TO_SELF, 
-							0.15f, 
-							TranslateAnimation.RELATIVE_TO_SELF, 
+							TranslateAnimation.RELATIVE_TO_SELF,
+							0,
+							TranslateAnimation.RELATIVE_TO_SELF,
+							0,
+							TranslateAnimation.RELATIVE_TO_SELF,
+							0.15f,
+							TranslateAnimation.RELATIVE_TO_SELF,
 							-0.15f);
 					a.setDuration(400);
 					a.setInterpolator(new DecelerateInterpolator());
@@ -172,15 +172,15 @@ public class ColorAdapter extends BaseAdapter {
 				t.setText(colorNames[position + 1]);
 
 				t.setTypeface(Typeface.DEFAULT_BOLD);
-				
+
 				Animation a = new TranslateAnimation(
-						TranslateAnimation.RELATIVE_TO_SELF, 
-						0, 
-						TranslateAnimation.RELATIVE_TO_SELF, 
-						0, 
-						TranslateAnimation.RELATIVE_TO_SELF, 
-						0.15f, 
-						TranslateAnimation.RELATIVE_TO_SELF, 
+						TranslateAnimation.RELATIVE_TO_SELF,
+						0,
+						TranslateAnimation.RELATIVE_TO_SELF,
+						0,
+						TranslateAnimation.RELATIVE_TO_SELF,
+						0.15f,
+						TranslateAnimation.RELATIVE_TO_SELF,
 						-0.15f);
 				a.setDuration(400);
 				a.setInterpolator(new DecelerateInterpolator());
@@ -196,7 +196,7 @@ public class ColorAdapter extends BaseAdapter {
 				t.clearAnimation();
 			}
 		}
-        
+
 		return v;
 	}
 }

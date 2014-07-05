@@ -22,7 +22,7 @@ class CKi{
 
 		CTurn* get_ultimate_turn(CSpiel* spiel, const char playernumber, const int ki_fehler);
 		void build_up_turnpool_biggest_x_stones(CSpiel* spiel, const char playernumber, const int max_stored_stones);
-		
+
 	public:
 		CKi() { num_threads=1; }
 
@@ -30,7 +30,7 @@ class CKi{
 
 		CTurnpool m_turnpool;
 		static int get_ultimate_points(CSpiel* spiel, const char playernumber, const int ki_fehler, const CTurn* turn);
-		static int get_distance_points(CSpiel* follow_situation, const char playernumber, const CTurn* turn);		
+		static int get_distance_points(CSpiel* follow_situation, const char playernumber, const CTurn* turn);
 		CTurn* get_ki_turn(CSpiel* spiel, char playernumber, int ki_fehler); //je höher ki_fehler, desto schlechter die ki... werte zwischen 0 und 1 empfohlen
 };
 

@@ -19,18 +19,17 @@ package com.google.example.games.basegameutils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
-import com.google.android.gms.appstate.AppStateClient;
-import com.google.android.gms.games.GamesClient;
-import com.google.android.gms.plus.PlusClient;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
  * Example base class for games. This implementation takes care of setting up
- * the GamesClient object and managing its lifecycle. Subclasses only need to
+ * the API client object and managing its lifecycle. Subclasses only need to
  * override the @link{#onSignInSucceeded} and @link{#onSignInFailed} abstract
  * methods. To initiate the sign-in flow when the user clicks the sign-in
  * button, subclasses should call @link{#beginUserInitiatedSignIn}. By default,
- * this class only instantiates the GamesClient object. If the PlusClient or
+ * this class only instantiates the GoogleApiClient object. If the PlusClient or
  * AppStateClient objects are also wanted, call the BaseGameActivity(int)
  * constructor and specify the requested clients. For example, to request
  * PlusClient and GamesClient, use BaseGameActivity(CLIENT_GAMES | CLIENT_PLUS).
@@ -57,16 +56,12 @@ public abstract class BaseGameActivity extends Activity implements
     // Requested clients. By default, that's just the games client.
     protected int mRequestedClients = CLIENT_GAMES;
 
-    // stores any additional scopes.
-    private String[] mAdditionalScopes;
-
-    protected String mDebugTag = "BaseGameActivity";
+    private final static String TAG = "BaseGameActivity";
     protected boolean mDebugLog = false;
 
     /** Constructs a BaseGameActivity with default client (GamesClient). */
     protected BaseGameActivity() {
         super();
-        mHelper = new GameHelper(this);
     }
 
     /**
@@ -82,27 +77,32 @@ public abstract class BaseGameActivity extends Activity implements
     /**
      * Sets the requested clients. The preferred way to set the requested clients is
      * via the constructor, but this method is available if for some reason your code
-     * cannot do this in the constructor. This must be called before onCreate in order to
-     * have any effect. If called after onCreate, this method is a no-op.
+     * cannot do this in the constructor. This must be called before onCreate or getGameHelper()
+     * in order to have any effect. If called after onCreate()/getGameHelper(), this method
+     * is a no-op.
      *
      * @param requestedClients A combination of the flags CLIENT_GAMES, CLIENT_PLUS
      *         and CLIENT_APPSTATE, or CLIENT_ALL to request all available clients.
-     * @param additionalScopes.  Scopes that should also be requested when the auth
-     *         request is made.
      */
-    protected void setRequestedClients(int requestedClients, String ... additionalScopes) {
+    protected void setRequestedClients(int requestedClients) {
         mRequestedClients = requestedClients;
-        mAdditionalScopes = additionalScopes;
+    }
+
+    public GameHelper getGameHelper() {
+        if (mHelper == null) {
+            mHelper = new GameHelper(this, mRequestedClients);
+            mHelper.enableDebugLog(mDebugLog);
+        }
+        return mHelper;
     }
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        mHelper = new GameHelper(this);
-        if (mDebugLog) {
-            mHelper.enableDebugLog(mDebugLog, mDebugTag);
+        if (mHelper == null) {
+            getGameHelper();
         }
-        mHelper.setup(this, mRequestedClients, mAdditionalScopes);
+        mHelper.setup(this);
     }
 
     @Override
@@ -123,16 +123,8 @@ public abstract class BaseGameActivity extends Activity implements
         mHelper.onActivityResult(request, response, data);
     }
 
-    protected GamesClient getGamesClient() {
-        return mHelper.getGamesClient();
-    }
-
-    protected AppStateClient getAppStateClient() {
-        return mHelper.getAppStateClient();
-    }
-
-    protected PlusClient getPlusClient() {
-        return mHelper.getPlusClient();
+    protected GoogleApiClient getApiClient() {
+        return mHelper.getApiClient();
     }
 
     protected boolean isSignedIn() {
@@ -147,36 +139,34 @@ public abstract class BaseGameActivity extends Activity implements
         mHelper.signOut();
     }
 
-    protected void showAlert(String title, String message) {
-        mHelper.showAlert(title, message);
-    }
-
     protected void showAlert(String message) {
-        mHelper.showAlert(message);
+        mHelper.makeSimpleDialog(message).show();
     }
 
-    protected void enableDebugLog(boolean enabled, String tag) {
+    protected void showAlert(String title, String message) {
+        mHelper.makeSimpleDialog(title, message).show();
+    }
+
+    protected void enableDebugLog(boolean enabled) {
         mDebugLog = true;
-        mDebugTag = tag;
         if (mHelper != null) {
-            mHelper.enableDebugLog(enabled, tag);
+            mHelper.enableDebugLog(enabled);
         }
+    }
+
+    @Deprecated
+    protected void enableDebugLog(boolean enabled, String tag) {
+        Log.w(TAG, "BaseGameActivity.enabledDebugLog(bool,String) is " +
+                "deprecated. Use enableDebugLog(boolean)");
+        enableDebugLog(enabled);
     }
 
     protected String getInvitationId() {
         return mHelper.getInvitationId();
     }
 
-    protected void reconnectClients(int whichClients) {
-        mHelper.reconnectClients(whichClients);
-    }
-
-    protected String getScopes() {
-        return mHelper.getScopes();
-    }
-
-    protected String[] getScopesArray() {
-        return mHelper.getScopesArray();
+    protected void reconnectClient() {
+        mHelper.reconnectClient();
     }
 
     protected boolean hasSignInError() {

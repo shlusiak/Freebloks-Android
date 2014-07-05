@@ -14,7 +14,7 @@ class CTurn{
 		int m_playernumber;
 
 		int m_stone_number;
-		
+
 		int m_mirror_count;
 		int m_rotate_count;
 
@@ -26,7 +26,7 @@ class CTurn{
 		//zeiger auf nachfolger
 		CTurn* m_next;
 	public:
-		
+
 		CTurn(const CTurn* turn);
 		CTurn(const int playernumber, const CStone* stone, const int y, const int x);
 
@@ -34,12 +34,12 @@ class CTurn{
 
 		void init_CTurn(const CTurn* turn);
 		void init_CTurn(const int playernumber, const CStone* stone, const int y, const int x);
- 
-		
-		
+
+
+
 		const int get_stone_number()const;
 		const int get_turn_number()const;
-		
+
 		const int get_mirror_count()const;
 		const int get_rotate_count()const;
 
@@ -49,12 +49,12 @@ class CTurn{
 		const int get_playernumber()const;
 
 		CTurn* get_next()const;
-						
+
 		void set_next(CTurn* next_turn);
 		void set_number(int number);
-		
-		
-		
+
+
+
 };
 
 
@@ -64,7 +64,7 @@ const int CTurn::get_x()const{
 	return CTurn::m_x;
 }
 
-		
+
 inline
 const int CTurn::get_y()const{
 	return CTurn::m_y;

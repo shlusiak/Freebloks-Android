@@ -8,14 +8,14 @@ import android.preference.PreferenceFragment;
 import de.saschahlusiak.freebloks.R;
 
 public class MiscFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences_misc);
     }
-    
+
     @Override
     public void onResume() {
 		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
@@ -23,7 +23,7 @@ public class MiscFragment extends PreferenceFragment implements OnSharedPreferen
 		prefs.registerOnSharedPreferenceChangeListener(this);
     	super.onResume();
     }
-    
+
     @Override
     public void onPause() {
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);

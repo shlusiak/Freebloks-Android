@@ -10,7 +10,7 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	Stone stone;
 	int color, x, y;
 	ViewModel model;
-	
+
 	AbsStoneEffect(ViewModel model, Stone stone, int color, int x, int y) {
 		this.model = model;
 		this.stone = stone;
@@ -18,7 +18,7 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	@Override
 	public boolean isEffected(int x, int y) {
 		x = x - this.x;
@@ -30,16 +30,16 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 			return false;
 		if (y >= stone.get_stone_size())
 			return false;
-		
+
 		if (stone.get_stone_field(y, x) == Stone.STONE_FIELD_FREE)
 			return false;
-		
-		return true;			
+
+		return true;
 	}
-		
+
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
-		
+
 	}
 
 }

@@ -6,7 +6,7 @@
         android:summary="@string/prefs_rate_review_long"
         android:title="@string/prefs_rate_review" >
     </PreferenceScreen>
-    
+
     <PreferenceScreen
         android:summary="@string/prefs_donation_long"
         android:title="@string/prefs_donation"

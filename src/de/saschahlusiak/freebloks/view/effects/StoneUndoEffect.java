@@ -8,22 +8,22 @@ import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class StoneUndoEffect extends AbsStoneEffect {
 	static private final float TIME = 1.1f;
-	
+
 	float phase, z, alpha, rot;
-		
+
 	public StoneUndoEffect(ViewModel model, Stone stone, int color, int x, int y) {
 		super(model, stone, color, x, y);
 	}
-	
+
 	@Override
 	public boolean isDone() {
 		return time > TIME;
 	}
-	
+
 	@Override
 	public boolean execute(float elapsed) {
 		super.execute(elapsed);
-		
+
 		phase = (float) Math.pow(time / TIME, 0.8);
 
 		alpha = 1.0f - phase;
@@ -32,36 +32,36 @@ public class StoneUndoEffect extends AbsStoneEffect {
 
 		return true;
 	}
-	
+
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
-		
+
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * x,
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * y);
 
-		renderer.renderShadow(gl, 
+		renderer.renderShadow(gl,
 				stone, color,
 				z,
 				rot, 0, 1, 0,
 				90 * model.board.centerPlayer,
 				alpha, 1.0f);
-		
+
 		gl.glPopMatrix();
 	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {		
+	public void render(GL10 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
 		gl.glTranslatef(0, z, 0);
-		
+
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
-		
+
 	    gl.glRotatef(rot, 0, 1, 0);
 		renderer.renderPlayerStone(gl, color, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();

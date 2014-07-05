@@ -25,7 +25,7 @@ __int64 CTimer::frequency;
 CTimer::CTimer()
 {
 #ifdef WIN32
-	/* Unter Windows wird der PerformanceCounter benutzt. 
+	/* Unter Windows wird der PerformanceCounter benutzt.
 	   Hier Frequenz davon anfordern und fuer spaeter merken. */
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 #endif

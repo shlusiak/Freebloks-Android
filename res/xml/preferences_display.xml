@@ -3,7 +3,7 @@
 
    	<CheckBoxPreference
 	    android:summary="@string/prefs_show_corners_long"
-	    android:title="@string/prefs_show_corners" 
+	    android:title="@string/prefs_show_corners"
 	    android:defaultValue="true"
 	    android:persistent="true"
 	    android:key="show_seeds" />
@@ -21,7 +21,7 @@
 	    android:defaultValue="true"
 	    android:persistent="true"
 	    android:key="show_animations" />
-	
+
 	<de.saschahlusiak.freebloks.preferences.ThemePreference
         android:defaultValue="texture_wood"
         android:dialogTitle="@string/prefs_theme"
@@ -30,5 +30,5 @@
         android:key="theme"
         android:persistent="true"
         android:title="@string/prefs_theme" />
-		
+
 </PreferenceScreen>

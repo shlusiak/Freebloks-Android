@@ -28,12 +28,12 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
 	public ViewModel model = new ViewModel(this);
-	
-	
+
+
 	FreebloksRenderer renderer;
 	private float scale = 1.0f;
 
-	
+
 	public Freebloks3DView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -46,11 +46,11 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
-	
+
 	public void setActivity(ActivityInterface activity) {
 		model.activity = activity;
 	}
-	
+
 	public void setTheme(Theme theme) {
 		renderer.backgroundRenderer.setTheme(theme);
 	}
@@ -69,7 +69,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				model.wheel.update(model.board.getShowWheelPlayer());
 			}
 		}
-		
+
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -78,27 +78,27 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			}
 		});
 	}
-	
+
 	private final static float spacing(MotionEvent event) {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
 		return (float)Math.sqrt(x * x + y * y);
 	}
-		
-	
+
+
 	float oldDist;
-	
+
 //	PointF originalPos = new PointF(); // original touch down in unified coordinates
 	PointF modelPoint = new PointF();	// current position in field coordinates
-	
+
 
 	@Override
 	public boolean onTouchEvent(final MotionEvent event) {
 		modelPoint.x = event.getX();
 		modelPoint.y = event.getY();
-		
+
 		renderer.windowToModel(modelPoint);
-		
+
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 		//	if (model.spiel != null && model.spiel.is_finished())
@@ -106,7 +106,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			model.handlePointerDown(modelPoint);
 			requestRender();
 			break;
-			
+
 		case MotionEvent.ACTION_MOVE:
 			if (event.getPointerCount() > 1) {
 				float newDist = spacing(event);
@@ -126,21 +126,21 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 					requestRender();
 			}
 			break;
-			
+
 		case MotionEvent.ACTION_POINTER_DOWN:
 			model.handlePointerUp(modelPoint);
 			oldDist = spacing(event);
 			break;
-			
+
 		case MotionEvent.ACTION_UP:
 			model.handlePointerUp(modelPoint);
 			requestRender();
 			break;
-			
+
 		default:
 			break;
 		}
-		
+
 		return true;
 	}
 
@@ -164,14 +164,14 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
 			StoneRollEffect e = new StoneRollEffect(model, st, model.getPlayerColor(s.player), s.x, s.y, 4.0f, -7.0f);
-		
+
 			EffectSet set = new EffectSet();
 			set.add(e);
 			set.add(new StoneFadeEffect(model, st, model.getPlayerColor(s.player), s.x, s.y, 4.0f));
 			model.addEffect(set);
 		}
 	}
-	
+
 	public void stoneHasBeenSet(NET_SET_STONE s) {
 		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getCurrentPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
@@ -185,16 +185,16 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			return;
 		if (!model.spiel.is_local_player())
 			return;
-		
+
 		model.board.resetRotation();
 		model.wheel.update(s.player);
 		model.wheel.showStone(s.stone);
 
 		model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
-		
+
 		Stone st = model.spiel.get_current_player().get_stone(s.stone);
 		st.mirror_rotate_to(s.mirror_count, s.rotate_count);
-		
+
 		PointF p = new PointF();
 		p.x = s.x - 0.5f + st.get_stone_size() / 2;
 		p.y = s.y - 0.5f + st.get_stone_size() / 2;
@@ -210,7 +210,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void chatReceived(NET_CHAT c) {
-		
+
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		}
 		model.wheel.update(model.board.getShowWheelPlayer());
 		renderer.updateModelViewMatrix = true;
-		model.reset();		
+		model.reset();
 		requestRender();
 	}
 
@@ -240,7 +240,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	public void serverStatus(NET_SERVER_STATUS status) {
 		if (status.width != model.board.last_size) {
 			model.board.last_size = status.width;
-			queueEvent(new Runnable() {				
+			queueEvent(new Runnable() {
 				@Override
 				public void run() {
 					renderer.board.initBorder(model.spiel.m_field_size_x);
@@ -253,33 +253,33 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void onConnected(Spiel spiel) {
-		
+
 	}
 
 	@Override
 	public void onDisconnected(Spiel spiel) {
-		
+
 	}
-	
-	
+
+
 	class UpdateThread extends Thread {
 		boolean goDown = false;
 		private static final int FPS_ANIMATIONS = 35;
 		private static final int FPS_NO_ANIMATIONS = 5;
-		
+
 		@Override
 		public void run() {
 			long delay;
-			
+
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 				return;
 			}
-			
+
 			delay = 1000 / (model.showAnimations ? FPS_ANIMATIONS : FPS_NO_ANIMATIONS);
-			
+
 			long time, tmp, lastExecTime;
 			time = System.currentTimeMillis();
 			lastExecTime = 0;
@@ -291,7 +291,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 					break;
 				}
 				tmp = System.currentTimeMillis();
-				
+
 				lastExecTime = tmp;
 				execute((float)(tmp - time) / 1000.0f);
 				lastExecTime = System.currentTimeMillis() - lastExecTime;
@@ -300,7 +300,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			super.run();
 		}
 	}
-	
+
 	public final void execute(float elapsed) {
 		if (elapsed < 0.001f)
 			elapsed = 0.001f;
@@ -308,9 +308,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			requestRender();
 		}
 	}
-	
+
 	UpdateThread thread = null;
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -324,7 +324,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		model.effects.clear();
 		thread = null;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -334,13 +334,13 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			thread.start();
 		}
 	}
-	
+
 	public void setScale(float scale) {
 		this.scale = scale;
 		renderer.zoom = scale;
 		renderer.updateModelViewMatrix = true;
 	}
-	
+
 	public final float getScale() {
 		return scale;
 	}

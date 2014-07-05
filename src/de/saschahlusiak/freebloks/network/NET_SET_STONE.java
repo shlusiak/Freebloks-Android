@@ -7,15 +7,15 @@ public class NET_SET_STONE extends NET_HEADER {
 	public int stone; /* uint8 */
 	public int mirror_count, rotate_count; /* uint8 */
 	public int x, y; /* int8 */
-		
+
 	public NET_SET_STONE() {
 		this(Network.MSG_SET_STONE);
 	}
-	
+
 	public NET_SET_STONE(int msg_type) {
 		super(msg_type, 6);
 	}
-	
+
 	public NET_SET_STONE(NET_HEADER from) {
 		super(from);
 		player = buffer[0];
@@ -25,7 +25,7 @@ public class NET_SET_STONE extends NET_HEADER {
 		x = buffer[4];
 		y = buffer[5];
 	}
-	
+
 	@Override
 	void prepare(ByteArrayOutputStream bos) {
 		super.prepare(bos);

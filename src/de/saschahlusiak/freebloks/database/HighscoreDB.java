@@ -23,11 +23,11 @@ public class HighscoreDB extends FreebloksDB {
 	public static final int PLAYER_COLOR_INDEX = 4;
 	public static final int PLACE_INDEX = 5;
 	public static final int FLAGS_INDEX = 6;
-	
-	
+
+
 	public static final int FLAG_IS_PERFECT = 0x01;
-	
-	
+
+
 	/* WARNING: The IDs are used in Cursors to query the colums, for compatibility they should NEVER be changed.
 	 * Make sure to ONLY append colums. */
 	public static final String CREATE_TABLE = "CREATE TABLE " + TABLE + " (" +
@@ -35,8 +35,8 @@ public class HighscoreDB extends FreebloksDB {
 			GAME_MODE_ID + " INTEGER, " +				/* 1 */
 			POINTS_ID + " INTEGER, " +					/* 2 */
 			STONES_LEFT_ID + " INTEGER, " +				/* 3 */
-			PLAYER_COLOR_ID + " INTEGER, " +			/* 4 */ 
-			PLACE_ID + " INTEGER, " +					/* 5 */ 
+			PLAYER_COLOR_ID + " INTEGER, " +			/* 4 */
+			PLACE_ID + " INTEGER, " +					/* 5 */
 			FLAGS_ID + " INTEGER);";					/* 6 */
 
 	public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE + ";";
@@ -48,7 +48,7 @@ public class HighscoreDB extends FreebloksDB {
 	public long addHighscore(int game_mode,
 			int points,
 			int stones_left,
-			int player_color, 
+			int player_color,
 			int place,
 			int flags) {
 		ContentValues values = new ContentValues();
@@ -66,7 +66,7 @@ public class HighscoreDB extends FreebloksDB {
 	public boolean clearHighscores() {
 		return db.delete(TABLE, null, null) > 0;
 	}
-	
+
 	public int getTotalNumberOfGames(int game_mode) {
 		int count;
 		String sql = "SELECT COUNT(*) FROM " + TABLE;
@@ -78,7 +78,7 @@ public class HighscoreDB extends FreebloksDB {
 		c.close();
 		return count;
 	}
-	
+
 	public int getTotalNumberOfPoints(int game_mode) {
 		int count;
 		String sql = "SELECT SUM(" + POINTS_ID + ") FROM " + TABLE;
@@ -90,7 +90,7 @@ public class HighscoreDB extends FreebloksDB {
 		c.close();
 		return count;
 	}
-	
+
 	public int getTotalNumberOfStonesLeft(int game_mode) {
 		int count;
 		String sql = "SELECT SUM(" + STONES_LEFT_ID + ") FROM " + TABLE;
@@ -102,7 +102,7 @@ public class HighscoreDB extends FreebloksDB {
 		c.close();
 		return count;
 	}
-	
+
 	public int getNumberOfPlace(int game_mode, int place) {
 		int count;
 		String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE " + PLACE_ID + " = " + place;
@@ -114,7 +114,7 @@ public class HighscoreDB extends FreebloksDB {
 		c.close();
 		return count;
 	}
-	
+
 	public int getNumberOfPlace(int game_mode, int place, int color) {
 		int count;
 		String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE " + PLACE_ID + " = " + place + " AND " + PLAYER_COLOR_ID + " = " + color;
@@ -126,7 +126,7 @@ public class HighscoreDB extends FreebloksDB {
 		c.close();
 		return count;
 	}
-	
+
 	public int getNumberOfGoodGames(int game_mode) {
 		int count;
 		String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE " + STONES_LEFT_ID + " = 0";
@@ -138,11 +138,11 @@ public class HighscoreDB extends FreebloksDB {
 		c.close();
 		return count;
 	}
-	
+
 	public int getNumberOfPerfectGames(int game_mode) {
 		int count;
 		String sql = "SELECT COUNT(*) FROM " + TABLE + " WHERE " + STONES_LEFT_ID + " = 0";
-		sql += " AND (" + FLAGS_ID + "&" + FLAG_IS_PERFECT + ")=" + FLAG_IS_PERFECT; 
+		sql += " AND (" + FLAGS_ID + "&" + FLAG_IS_PERFECT + ")=" + FLAG_IS_PERFECT;
 		if (game_mode >= 0)
 			sql += " AND " + GAME_MODE_ID + " = " + game_mode;
 		Cursor c = db.rawQuery(sql, null);

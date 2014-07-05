@@ -8,22 +8,22 @@ public class Turn implements Serializable {
 	public int m_playernumber;
 
 	public int m_stone_number;
-	
+
 	public int m_mirror_count;
 	public int m_rotate_count;
 
 	public int m_y;
 	public int m_x;
 
-	
+
 	Turn(Turn from) {
 		copy(from);
 	}
-	
+
 	Turn(int player, Stone stone, int y, int x) {
 		init(player, stone, y, x);
 	}
-	
+
 	final void copy(Turn from) {
 		m_playernumber = from.m_playernumber;
 		m_stone_number = from.m_stone_number;
@@ -32,7 +32,7 @@ public class Turn implements Serializable {
 		m_y = from.m_y;
 		m_x = from.m_x;
 	}
-	
+
 	final void init(int player, Stone stone, int y, int x) {
 		m_playernumber = player;
 		m_stone_number = stone.get_number();

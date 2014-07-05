@@ -5,6 +5,6 @@
     <style name="Theme.Freebloks.Dialog" parent="android:Theme.DeviceDefault.Dialog.MinWidth"></style>
     <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog.MinWidth"></style>
     <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.DeviceDefault.NoActionBar"></style>
-    
+
     <style name="Widget.Light.Button.Borderless" parent="android:Widget.DeviceDefault.Light.Button.Borderless.Small" />
 </resources>

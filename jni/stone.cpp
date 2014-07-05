@@ -7,7 +7,7 @@
 
 
 
-void CStone::init(const int shape){	
+void CStone::init(const int shape){
 	CStone::m_available = 1;
 	CStone::m_shape = shape;
 	CStone::m_size = STONE_SIZE[CStone::m_shape];
@@ -51,7 +51,7 @@ const TSingleStone CStone::get_stone_field(const int y, const int x)const{
 			ny = m_size-1-y;
 		} else error_exit("unbekannter steinzustand!", 15); //debug
 	}
-	
+
 	return STONE_FIELD[CStone::m_shape][nx][ny];
 }
 
@@ -64,20 +64,20 @@ void CStone::rotate_left(){
 
 void CStone::rotate_right(){
 	CStone::m_rotate_counter=(CStone::m_rotate_counter+1)%STONE_ROTATEABLE[m_shape];
-// 	if (CStone::m_rotate_counter >= STONE_ROTATEABLE[m_shape]) CStone::m_rotate_counter = 0; 
+// 	if (CStone::m_rotate_counter >= STONE_ROTATEABLE[m_shape]) CStone::m_rotate_counter = 0;
 }
 
 void CStone::mirror_over_x(){
 	if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 	CStone::m_mirror_counter = (CStone::m_mirror_counter + 1) % 2;
-	if (m_rotate_counter%2 == 1) 
+	if (m_rotate_counter%2 == 1)
 		CStone::m_rotate_counter = (CStone::m_rotate_counter + 2)%(STONE_ROTATEABLE[CStone::m_shape]);
 }
 
  void CStone::mirror_over_y(){
 	if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
 	CStone::m_mirror_counter = (CStone::m_mirror_counter + 1) % 2;
-	if (CStone::m_rotate_counter%2 == 0) 
+	if (CStone::m_rotate_counter%2 == 0)
 		CStone::m_rotate_counter = (CStone::m_rotate_counter + 2)%(STONE_ROTATEABLE[CStone::m_shape]);
 }
 
@@ -87,7 +87,7 @@ void CStone::mirror_over_x(){
 const int CStone::calculate_possible_turns_in_position(const CSpiel* spiel, const int playernumber, const int fieldY, const int fieldX){
 	int mirror;
 	int count = 0;
-	
+
 	const int rotate_count = CStone::m_rotate_counter;///debug siehe unten
 	const int mirror_count = CStone::m_mirror_counter;///debug siehe unten
 
@@ -96,11 +96,11 @@ const int CStone::calculate_possible_turns_in_position(const CSpiel* spiel, cons
 
 	for (CStone::m_mirror_counter = 0; CStone::m_mirror_counter <= mirror; CStone::m_mirror_counter++){
 		for (CStone::m_rotate_counter = 0; CStone::m_rotate_counter < STONE_ROTATEABLE[CStone::m_shape]; CStone::m_rotate_counter++){
-			
+
 			for (int x = 0; x < STONE_SIZE[CStone::m_shape]; x++){
 				for (int y = 0; y < STONE_SIZE[CStone::m_shape]; y++){
-					
-					if (CStone::get_stone_field(y, x) == STONE_FIELD_ALLOWED) {  //es wird get_stone_field benutzt, da gedreht wurde      					
+
+					if (CStone::get_stone_field(y, x) == STONE_FIELD_ALLOWED) {  //es wird get_stone_field benutzt, da gedreht wurde
 						if (spiel->is_valid_turn(this, playernumber, fieldY-y, fieldX-x) == FIELD_ALLOWED){
 							count++;
 						}

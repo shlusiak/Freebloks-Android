@@ -20,7 +20,7 @@ public class EffectSet extends ArrayList<AbsStoneEffect> implements Effect {
 		if (size() > 0)
 			get(0).render(gl, renderer);
 	}
-	
+
 	@Override
 	public void renderShadow(GL10 gl, BoardRenderer renderer) {
 		if (size() > 0)

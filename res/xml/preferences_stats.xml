@@ -7,7 +7,7 @@
         android:key="statistics" >
         <intent android:action="de.saschahlusiak.freebloks.SHOW_STATISTICS" />
     </PreferenceScreen>
-    
+
     <PreferenceCategory android:title="@string/googleplus" android:key="googleplus_category" >
         <PreferenceScreen
             android:summary="@string/googleplus_signin_long"
