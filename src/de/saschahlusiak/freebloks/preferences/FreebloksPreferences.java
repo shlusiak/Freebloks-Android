@@ -52,6 +52,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			return;
 
 		mHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
+		mHelper.setMaxAutoSignInAttempts(0);
         mHelper.setup(this);
 
 		addPreferencesFromResource(R.xml.preferences);

@@ -43,6 +43,8 @@ public class StatisticsActivity extends BaseGameActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		db = new HighscoreDB(this);
 		db.open();
+		
+		getGameHelper().setMaxAutoSignInAttempts(0);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistics_activity);

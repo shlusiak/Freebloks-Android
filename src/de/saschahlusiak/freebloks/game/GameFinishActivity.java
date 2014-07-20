@@ -49,6 +49,7 @@ public class GameFinishActivity extends BaseGameActivity {
 			firstRun = true;
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getGameHelper().setMaxAutoSignInAttempts(0);
 
 		super.onCreate(savedInstanceState);
 

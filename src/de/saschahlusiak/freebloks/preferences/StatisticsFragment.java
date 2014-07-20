@@ -31,6 +31,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
     	super.onActivityCreated(savedInstanceState);
 
 		mHelper = new GameHelper(getActivity(), GameHelper.CLIENT_GAMES);
+		mHelper.setMaxAutoSignInAttempts(0);
         mHelper.setup(this);
 
         /* XXX: this is a hack, because the onActivityResult of the activity will be called instead of the fragment */

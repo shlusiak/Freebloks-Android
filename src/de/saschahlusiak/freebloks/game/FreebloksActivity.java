@@ -261,7 +261,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		else
 			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
-
+		getGameHelper().setMaxAutoSignInAttempts(0);
 		super.onCreate(savedInstanceState);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
