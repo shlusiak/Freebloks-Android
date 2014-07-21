@@ -81,7 +81,7 @@ public class Wheel implements ViewElement {
 			lastOffset = 0.0f;
 		if (lastOffset > maxOffset)
 			lastOffset = maxOffset;
-		if (!model.showAnimations)
+		if (!model.hasAnimations())
 			currentOffset = lastOffset;
 	}
 
@@ -268,7 +268,7 @@ public class Wheel implements ViewElement {
 				status = Status.IDLE;
 			} else {
 				lastOffset = currentOffset;
-				if (model.showAnimations)
+				if (model.hasAnimations())
 					status = Status.FLINGING;
 				else
 					status = Status.IDLE;
@@ -332,7 +332,7 @@ public class Wheel implements ViewElement {
 		if (status == Status.IDLE && (Math.abs(currentOffset - lastOffset) > EPSILON)) {
 			final float ROTSPEED = 3.0f + (float)Math.pow(Math.abs(currentOffset - lastOffset), 0.65f) * 7.0f;
 
-			if (!model.showAnimations) {
+			if (!model.hasAnimations()) {
 				currentOffset = lastOffset;
 				return true;
 			}

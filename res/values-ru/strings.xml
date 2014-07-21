@@ -161,7 +161,6 @@
     <string name="prefs_show_corners">Уголки</string>
     <string name="prefs_show_opponents_long">Показывать фишки противников</string>
     <string name="prefs_show_opponents">Противники</string>
-    <string name="prefs_show_animations_long">Показывать анимацию</string>
     <string name="prefs_show_animations">Анимация</string>
     <string name="prefs_skip_intro_long">Пропускать интро при входе в приложение</string>
     <string name="prefs_skip_intro">Пропустить интро</string>

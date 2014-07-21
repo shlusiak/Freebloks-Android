@@ -23,9 +23,14 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public Intro intro;
 	public Sounds soundPool;
 
-	public boolean showSeeds, showOpponents, showAnimations, snapAid;
+	public boolean showSeeds, showOpponents, snapAid;
+	public int showAnimations;
 	public boolean vertical_layout = true;
 	boolean redraw;
+	
+	public final static int ANIMATIONS_FULL = 0;
+	public final static int ANIMATIONS_HALF = 1;
+	public final static int ANIMATIONS_OFF = 2;
 
 	public ViewModel(Freebloks3DView view) {
 		this.view = view;
@@ -41,6 +46,10 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		add(currentStone);
 		add(wheel);
 		add(board);
+	}
+	
+	public boolean hasAnimations() {
+		return showAnimations != ANIMATIONS_OFF;
 	}
 
 	public void reset() {

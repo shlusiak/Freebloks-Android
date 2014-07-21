@@ -161,8 +161,19 @@
     <string name="prefs_show_corners">Corners</string>
     <string name="prefs_show_opponents_long">Show opponents\' stones</string>
     <string name="prefs_show_opponents">Opponents</string>
-    <string name="prefs_show_animations_long">Show animations</string>
     <string name="prefs_show_animations">Animations</string>
+    
+    <string-array name="prefs_animations_labels">
+        <item>Off</item>
+        <item>Reduced (30 fps)</item>
+        <item>Full (60 fps)</item>
+    </string-array> 
+    <string-array name="prefs_animations_values" translatable="false" >
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array> 
+    
     <string name="prefs_skip_intro_long">Skip intro animation on app start</string>
     <string name="prefs_skip_intro">Skip intro</string>
     <string name="prefs_auto_resume_long">Automatically resume last game</string>

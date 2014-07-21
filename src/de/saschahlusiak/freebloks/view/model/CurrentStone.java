@@ -221,7 +221,7 @@ public class CurrentStone implements ViewElement {
 			return false;
 
 		/* provide a weird but nice pseudo snapping feeling */
-		if (model.showAnimations) {
+		if (model.hasAnimations()) {
 			float r = x - (float)Math.floor(x);
 			if (r < 0.5f) {
 				r *= 2.0f;
@@ -337,7 +337,7 @@ public class CurrentStone implements ViewElement {
 			boolean mv = snap(x, y, false);
 			hasMoved |= mv;
 			model.redraw |= mv;
-			model.redraw |= model.showAnimations;
+			model.redraw |= model.hasAnimations();
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;

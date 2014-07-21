@@ -47,13 +47,15 @@
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="show_opponents" />
-
-		<CheckBoxPreference
-		    android:summary="@string/prefs_show_animations_long"
-		    android:title="@string/prefs_show_animations"
-		    android:defaultValue="true"
-		    android:persistent="true"
-		    android:key="show_animations" />
+		
+		<ListPreference
+	        android:defaultValue="0"
+	        android:dialogTitle="@string/prefs_show_animations"
+	        android:entries="@array/prefs_animations_labels"
+	        android:entryValues="@array/prefs_animations_values"
+	        android:key="animations"
+	        android:persistent="true"
+	        android:title="@string/prefs_show_animations" />
 
 		<de.saschahlusiak.freebloks.preferences.ThemePreference
 	        android:defaultValue="texture_wood"
@@ -86,7 +88,6 @@
 		    android:summary="@string/prefs_skip_intro_long"
 		    android:title="@string/prefs_skip_intro"
 		    android:defaultValue="false"
-		    android:dependency="show_animations"
 		    android:persistent="true"
 		    android:key="skip_intro" />
 

@@ -128,7 +128,6 @@
     <string name="prefs_show_corners">Coins</string>
     <string name="prefs_show_opponents_long">Montrer les pièces des adversaires</string>
     <string name="prefs_show_opponents">Adversaires</string>
-    <string name="prefs_show_animations_long">Afficher animations</string>
     <string name="prefs_show_animations">Animations</string>
     <string name="prefs_skip_intro_long">Omettre l\'intro animé</string>
     <string name="prefs_skip_intro">Omettre l\'intro</string>

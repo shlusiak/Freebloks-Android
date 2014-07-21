@@ -39,6 +39,7 @@ import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
+import de.saschahlusiak.freebloks.view.model.ViewModel;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -503,7 +504,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		show_notifications = prefs.getBoolean("notifications", true);
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
-		view.model.showAnimations = prefs.getBoolean("show_animations", true);
+		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", ViewModel.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
@@ -1159,7 +1160,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						if (view != null) {
 							if (view.model.soundPool != null)
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
-							if (view.model.showAnimations) {
+							if (view.model.hasAnimations()) {
 								int sx, sy;
 								sx = client.spiel.get_player_start_x(p.getPlayerNumber());
 								sy = client.spiel.get_player_start_y(p.getPlayerNumber());
@@ -1381,7 +1382,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
 			return false;
 
-		if (view.model.showAnimations) {
+		if (view.model.hasAnimations()) {
 			Stone st = new Stone();
 			int player = client.spiel.current_player();
 			st.copyFrom(stone);

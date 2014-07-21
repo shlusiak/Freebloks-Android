@@ -126,7 +126,6 @@
     <string name="prefs_show_corners">Esquinas</string>
     <string name="prefs_show_opponents_long">Mostrar las fichas de los adversarios</string>
     <string name="prefs_show_opponents">Adversarios</string>
-    <string name="prefs_show_animations_long">Activar animaciones</string>
     <string name="prefs_show_animations">Animaciones</string>
     <string name="prefs_skip_intro_long">Omitir la intro animada del inicio</string>
     <string name="prefs_skip_intro">Omitir la intro</string>

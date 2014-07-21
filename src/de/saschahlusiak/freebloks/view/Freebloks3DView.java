@@ -29,7 +29,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	public ViewModel model = new ViewModel(this);
 
-
 	FreebloksRenderer renderer;
 	private float scale = 1.0f;
 
@@ -159,7 +158,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
-		if (model.showAnimations && !model.spiel.is_local_player(s.player)) {
+		if (model.hasAnimations() && !model.spiel.is_local_player(s.player)) {
 			Stone st = new Stone();
 			st.init(s.stone);
 			st.mirror_rotate_to(s.mirror_count, s.rotate_count);
@@ -228,7 +227,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		if (model.showAnimations) {
+		if (model.hasAnimations()) {
 			Effect e = new StoneUndoEffect(model, s, model.getPlayerColor(t.m_playernumber), t.m_x, t.m_y);
 			model.addEffect(e);
 		}
@@ -264,7 +263,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	class UpdateThread extends Thread {
 		boolean goDown = false;
-		private static final int FPS_ANIMATIONS = 35;
+		private static final int FPS_ANIMATIONS = 60;
 		private static final int FPS_NO_ANIMATIONS = 5;
 
 		@Override
@@ -278,12 +277,34 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				return;
 			}
 
-			delay = 1000 / (model.showAnimations ? FPS_ANIMATIONS : FPS_NO_ANIMATIONS);
+			
 
 			long time, tmp, lastExecTime;
 			time = System.currentTimeMillis();
 			lastExecTime = 0;
 			while (!goDown) {
+				switch (model.showAnimations) {
+				case ViewModel.ANIMATIONS_FULL:
+					if (lastRender < 0.2f)
+						delay = 1000 / 60;
+					else
+						delay = 1000 / 15;
+					break;
+				case ViewModel.ANIMATIONS_HALF:
+					if (lastRender < 0.2f)
+						delay = 1000 / 30;
+					else
+						delay = 1000 / 15;
+					break;
+				default:
+					if (model.intro != null)
+						delay = 1000 / 30;
+					else
+						delay = 1000 / 3;
+					break;
+				}
+				
+				
 				try {
 					if (delay - lastExecTime > 0)
 						Thread.sleep(delay - lastExecTime);
@@ -300,12 +321,27 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			super.run();
 		}
 	}
+	
+	float lastRender = 1.0f;
 
 	public final void execute(float elapsed) {
 		if (elapsed < 0.001f)
 			elapsed = 0.001f;
 		if (model.execute(elapsed)) {
-			requestRender();
+			if (model.showAnimations == ViewModel.ANIMATIONS_OFF)
+				requestRender();
+			else {
+				if (lastRender > 0.0f)
+					setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+				lastRender = 0.0f;
+			}
+		} else {
+			if (lastRender < 0.3f) {
+				lastRender += elapsed;
+				if (lastRender >= 0.29f)
+					setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+			}
+
 		}
 	}
 

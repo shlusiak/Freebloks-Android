@@ -156,8 +156,12 @@
     <string name="prefs_show_corners">Ecken hervorheben</string>
     <string name="prefs_show_opponents_long">Steine der Gegenspieler zeigen, wenn am Zug</string>
     <string name="prefs_show_opponents">Gegner zeigen</string>
-    <string name="prefs_show_animations_long">Verschiedene Animationen anzeigen</string>
     <string name="prefs_show_animations">Animationen</string>
+    <string-array name="prefs_animations_labels">
+        <item>Aus</item>
+        <item>Reduziert (30 fps)</item>
+        <item>Voll (60 fps)</item>
+    </string-array> 
     <string name="prefs_skip_intro_long">Intro beim Start nicht zeigen</string>
     <string name="prefs_skip_intro">Intro überspringen</string>
     <string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
