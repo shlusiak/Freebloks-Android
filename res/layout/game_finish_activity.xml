@@ -22,28 +22,28 @@
 	        android:gravity="center"
 	        android:layout_gravity="center"
 	        android:text="Large Text"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	        android:textSize="@dimen/menu_button_font_size" />
 
         <ImageButton
 		    android:id="@+id/achievements"
-		    android:layout_width="44dp"
-		    android:layout_height="44dp"
+            android:layout_width="@dimen/menu_button_height"
+            android:layout_height="@dimen/menu_button_height"
 		    android:layout_weight="0"
     	    android:visibility="gone"
 		    android:src="@drawable/ic_play_games_badge_achievements_white" />
 
         <ImageButton
 		    android:id="@+id/leaderboard"
-		    android:layout_width="44dp"
-		    android:layout_height="44dp"
+            android:layout_width="@dimen/menu_button_height"
+            android:layout_height="@dimen/menu_button_height"
 		    android:layout_weight="0"
 	        android:visibility="gone"
 		    android:src="@drawable/ic_play_games_badge_leaderboards_white" />
 
 		<ImageButton
 		    android:id="@+id/statistics"
-		    android:layout_width="44dp"
-		    android:layout_height="44dp"
+            android:layout_width="@dimen/menu_button_height"
+            android:layout_height="@dimen/menu_button_height"
 		    android:layout_weight="0"
 		    style="?android:attr/buttonStyle"
 		    android:src="@drawable/stats" />
@@ -79,20 +79,20 @@
         <Button
             android:id="@+id/new_game"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/menu_button_height"
             android:layout_weight="0.5"
             android:layout_marginRight="2dp"
             android:text="@string/new_local_game"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+			android:textSize="@dimen/menu_button_font_size" />
 
         <Button
             android:id="@+id/show_main_menu"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/menu_button_height"
             android:layout_weight="0.5"
             android:layout_marginLeft="2dp"
             android:text="@string/main_menu"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+			android:textSize="@dimen/menu_button_font_size" />
 
     </LinearLayout>
 
