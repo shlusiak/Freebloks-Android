@@ -8,7 +8,6 @@
     <item
         android:id="@+id/sound_toggle_button"
         android:icon="@android:drawable/ic_lock_silent_mode_off"
-        android:showAsAction="always"
         android:title="@string/sound_on" >
     </item>
     <item
