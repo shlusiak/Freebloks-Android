@@ -75,7 +75,7 @@ public class StatisticsActivity extends BaseGameActivity {
 		game_mode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 		refreshData();
 
-		if (Build.VERSION.SDK_INT < 11) {
+		if (Build.VERSION.SDK_INT < 11 || getActionBar() == null) {
 			((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode);
 			((Spinner)findViewById(R.id.game_mode)).setOnItemSelectedListener(new OnItemSelectedListener() {
 
