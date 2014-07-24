@@ -257,6 +257,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				hasActionBar = !viewConfig.hasPermanentMenuKey();
 			}
 		}
+
 		if (!hasActionBar)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
 		else
@@ -267,28 +268,22 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 	        Window w = getWindow();
+	        
 	        /* only set translucent status bar, if we don't have an actionbar, otherwise it looks weird */
-	        if (!hasActionBar)
-	        	w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+	        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 	    }
 
 		if (hasActionBar) {
 			if (Build.VERSION.SDK_INT >= 14) {
 				getActionBar().setHomeButtonEnabled(true);
-			}
+				getActionBar().setIcon(android.R.drawable.ic_dialog_dialer);
+			} else
+				getActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME);
+				
+//			getActionBar().setDisplayUseLogoEnabled(false);
 //			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
-			getActionBar().setBackgroundDrawable(
-					new GradientDrawable(
-							Orientation.TOP_BOTTOM,
-							new int[] {
-									Color.argb(128, 0, 0, 0),
-									Color.argb(96, 0, 0, 0),
-									Color.argb(64, 0, 0, 0)
-								}
-						)
-					);
-//			getActionBar().setDisplayShowTitleEnabled(false);
-//			getActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME);
+			getActionBar().setBackgroundDrawable(new ColorDrawable(0));
+			getActionBar().setDisplayShowTitleEnabled(false);
 		}
 
 		setContentView(R.layout.main_3d);

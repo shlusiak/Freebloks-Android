@@ -20,6 +20,7 @@ import de.saschahlusiak.freebloks.view.model.ViewModel;
 import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -36,14 +37,30 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	public Freebloks3DView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		/* set this for the emulator. WTF? */
-//		setEGLConfigChooser(5, 6, 5, 0, 0, 0);
 		renderer = new FreebloksRenderer(context, model);
 		renderer.density = getResources().getDisplayMetrics().density;
 		setRenderer(renderer);
 		renderer.zoom = scale;
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		}
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+	    super.onWindowFocusChanged(hasFocus);
+	    if (hasFocus) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				setSystemUiVisibility(SYSTEM_UI_FLAG_LOW_PROFILE | 
+						SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | 
+						SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+						SYSTEM_UI_FLAG_HIDE_NAVIGATION | 
+						SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+			}
+	    }
 	}
 
 	public void setActivity(ActivityInterface activity) {
