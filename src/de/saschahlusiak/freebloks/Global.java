@@ -7,35 +7,35 @@ public class Global {
 	public final static int VIBRATE_START_DRAGGING = 85;
 	public final static int VIBRATE_SET_STONE = 65;
 	public final static int VIBRATE_STONE_SNAP = 40;
-	
+
 	/* minimum number of starts before rating dialog appears */
 	public final static int RATE_MIN_STARTS = 8;
-	
+
 	/* minimum elapsed time after first start, before rating dialog appears */
 	public static final long RATE_MIN_ELAPSED = 4 * (24 * 60 * 60 * 1000);
-	
+
 	/* number of starts before the donate dialog appears */
 	public final static int DONATE_STARTS = 50;
-	
+
 	/* the default server address: blokus.mooo.com */
 	public static final String DEFAULT_SERVER_ADDRESS = "blokus.mooo.com";
-	
-	
+
+
 	public final static String base64EncodedPublicKey =
 			"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkCGTTo8xtal1NUMNmuPVHLXNY0JtFJgSIkhv2qBEdnSjQugoOdYE2mz6l91QifDArksScX19TXJn5wpuOUayLV88U9O9WJ8T33jYhYkko5ij/nuJu+jBPEvJrKc/jfuAM07Qapk2bSGcbCB8S18PpFjomvPD7dzID8wabhoQdr218XEYfK96CXrOYmHZSs7Yt+bFpM2wAyTNIg/nUv9pfXzpskgpny89HPmChYik5lwOaCAjnO03xfTPV53yUnVwff+ZdBz89uGCMCO1+dj30TAX7KL68dFrb3fnSrxHX8yfUs+5OXQPYQh6PMy6PANDNPoJ68kQiZYRM/W2OIYFgQIDAQAB";
 
 	/* set to true for Amazon export */
 	public final static boolean IS_AMAZON = false;
-	
-	
+
+
 	public final static String getMarketURLString(String packageName) {
 		if (IS_AMAZON)
 			return "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
 		else
 			return "https://play.google.com/store/apps/details?id=" + packageName;
 	}
-	
-	
+
+
 	public static final int PLAYER_BACKGROUND_COLOR[] = {
 		Color.rgb(92, 92, 92),	/* white */
 		Color.rgb(0, 0, 128),	/* blue */
@@ -45,7 +45,7 @@ public class Global {
 		Color.rgb(170, 96, 24),	/* orange */
 		Color.rgb(96, 0, 140)	/* purple */
 	};
-	
+
 	public static final int PLAYER_FOREGROUND_COLOR[] = {
 		Color.rgb(255, 255, 255),	/* white */
 		Color.rgb(0, 160, 255),	/* blue */
@@ -55,7 +55,7 @@ public class Global {
 		Color.rgb(255, 140, 92),/* orange */
 		Color.rgb(180, 64, 255),/* purple */
 	};
-	
+
 	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};
 	final static float stone_red[]={0.75f, 0, 0, 0};
 	final static float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
@@ -73,7 +73,7 @@ public class Global {
 	final static float stone_purple_dark[]={0.040f, 0.000f, 0.070f, 0};
 	final static float stone_white_dark[]={0.06f, 0.06f, 0.06f, 0};
 	public final static float stone_shadow_color_a[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark, stone_orange_dark, stone_purple_dark };
-	
+
 	public final static int getPlayerColor(int player, int game_mode) {
 		if (game_mode == Spielleiter.GAMEMODE_DUO) {
 			/* player 1 is orange */

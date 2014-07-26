@@ -50,30 +50,30 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		setContentView(R.layout.lobby_dialog);
 
 		/* to make sure we have enough real estate. not neccessary on xlarge displays */
-		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) != 
+		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) !=
 		        Configuration.SCREENLAYOUT_SIZE_XLARGE) {
 			getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
 		}
-		
+
 		colorGrid = (GridView)findViewById(R.id.color_grid);
 		colorAdapter = new ColorAdapter(getContext(), null, null);
 		colorGrid.setAdapter(colorAdapter);
-		
+
 		colorGrid.setOnItemClickListener(this);
 
-		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {			
+		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				LobbyDialog.this.client.request_start();
 			}
 		});
-		findViewById(R.id.chatButton).setOnClickListener(new View.OnClickListener() {			
+		findViewById(R.id.chatButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				sendChat();
 			}
 		});
-		((EditText)findViewById(R.id.chatText)).setOnEditorActionListener(new OnEditorActionListener() {			
+		((EditText)findViewById(R.id.chatText)).setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_NULL) {
@@ -87,7 +87,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		adapter = new ChatListAdapter(getContext(), chatEntries, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
-		
+
 		if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	}
@@ -98,7 +98,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		b.putSerializable("lastStatus", lastStatus);
 		return b;
 	}
-	
+
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		NET_SERVER_STATUS status = (NET_SERVER_STATUS)savedInstanceState.getSerializable("lastStatus");
@@ -108,8 +108,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		}
 		super.onRestoreInstanceState(savedInstanceState);
 	}
-	
-	
+
+
 	public void setSpiel(SpielClient client) {
 		this.client = client;
 		lastStatus = null;
@@ -172,22 +172,22 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			server.setText(client.getLastHost());
 		}
 		adapter.setGameMode(client.spiel.m_gamemode);
-		
+
 		updateStatus();
 		adapter.notifyDataSetChanged();
 	}
-	
+
 	void sendChat() {
 		EditText edit = (EditText)findViewById(R.id.chatText);
 		String s = edit.getText().toString();
 		if (s.length() < 1)
 			return;
-		
+
 		NET_CHAT chat = new NET_CHAT(s + "\n");
 		LobbyDialog.this.client.send(chat);
 		edit.setText("");
 	}
-	
+
 	@Override
 	protected void onStop() {
 		if (client != null)
@@ -197,27 +197,27 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		
+
 	}
 
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
-		
+
 	}
-	
+
 	@Override
 	public void stoneHasBeenSet(NET_SET_STONE s) {
-		
+
 	}
 
 	@Override
 	public void hintReceived(NET_SET_STONE s) {
-		
+
 	}
 
 	@Override
 	public void gameFinished() {
-		
+
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			}
 		}, 100);
 	}
-	
+
 	@Override
 	public void gameStarted() {
 		dismiss();
@@ -237,7 +237,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	@Override
 	public void stoneUndone(Stone s, Turn t) {
-		
+
 	}
 
 	@Override
@@ -252,14 +252,14 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			}
 		}, 100);
 	}
-	
+
 	void updateStatus() {
 		/* better: dismiss */
 		if (client == null)
 			return;
 		colorAdapter.setCurrentStatus(client.spiel, lastStatus);
-		
-		if (lastStatus == null) {			
+
+		if (lastStatus == null) {
 			findViewById(R.id.clients).setVisibility(View.INVISIBLE);
 		} else {
 			findViewById(R.id.clients).setVisibility(View.VISIBLE);
@@ -269,7 +269,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	@Override
 	public void onConnected(Spiel spiel) {
-		
+
 	}
 
 	@Override

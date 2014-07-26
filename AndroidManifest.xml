@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.saschahlusiak.freebloksvip"
-    android:versionCode="44"
-    android:versionName="0.3.0" >
+    android:versionCode="45"
+    android:versionName="0.3.1" >
 
-    <uses-sdk android:minSdkVersion="9" 
+    <uses-sdk android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
 	<uses-feature android:glEsVersion="0x00010000" android:required="true" />
     <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
-    
+
 
 	<supports-screens
 	    android:smallScreens="true"
 	    android:normalScreens="true"
-	    android:largeScreens="true" 
+	    android:largeScreens="true"
 	    android:xlargeScreens="true" />
 
     <application
@@ -27,13 +27,16 @@
         android:restoreAnyVersion="true"
         android:allowBackup="true"
         android:killAfterRestore="true" >
-        
+
         <meta-data android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIZgBvnliRisJF_INah6A-glCYZkWb1zMTLfWPLg" />
-        
+
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/app_id" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name="de.saschahlusiak.freebloks.game.FreebloksActivity"
@@ -67,6 +70,7 @@
         </activity>
    		<activity 
             android:name="de.saschahlusiak.freebloks.donate.DonateActivity"
+
             android:label="@string/please_donate"
             android:icon="@drawable/coin"
             android:exported="false" >

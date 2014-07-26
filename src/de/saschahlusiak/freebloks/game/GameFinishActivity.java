@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
@@ -31,7 +32,7 @@ import android.widget.TextView;
 public class GameFinishActivity extends BaseGameActivity {
 	public static final int RESULT_NEW_GAME = RESULT_FIRST_USER + 1;
 	public static final int RESULT_SHOW_MENU = RESULT_FIRST_USER + 2;
-	
+
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;
 
@@ -46,17 +47,18 @@ public class GameFinishActivity extends BaseGameActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		if (savedInstanceState == null)
 			firstRun = true;
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+		getGameHelper().setMaxAutoSignInAttempts(0);
+
 		super.onCreate(savedInstanceState);
-		
+
 
 		setContentView(R.layout.game_finish_activity);
-		
-	    
+
+
 		place = (TextView) findViewById(R.id.place);
-		
+
 		spiel = (Spielleiter)getIntent().getSerializableExtra("game");
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
@@ -64,7 +66,7 @@ public class GameFinishActivity extends BaseGameActivity {
 		data = spiel.getResultData();
 		updateViews(data, spiel.m_gamemode);
 
-		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {			
+		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_NEW_GAME);
@@ -88,27 +90,27 @@ public class GameFinishActivity extends BaseGameActivity {
 		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
+				startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
 			}
 		});
 		findViewById(R.id.leaderboard).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			}
 		});
 	}
-		
+
 	void updateViews(PlayerData[] data, int game_mode) {
 		ViewGroup t[] = new ViewGroup[4];
 
 		int i = 0;
-		
+
 		t[0] = (ViewGroup) findViewById(R.id.place1);
 		t[1] = (ViewGroup) findViewById(R.id.place2);
 		t[2] = (ViewGroup) findViewById(R.id.place3);
 		t[3] = (ViewGroup) findViewById(R.id.place4);
-		
+
 		if (game_mode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
 			game_mode == Spielleiter.GAMEMODE_DUO ||
 			game_mode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
@@ -125,16 +127,16 @@ public class GameFinishActivity extends BaseGameActivity {
 			String name;
 			int color = Global.getPlayerColor(data[i].player1, game_mode);
 			if (clientName != null && data[i].is_local)
-				name = clientName; 
+				name = clientName;
 			else if (lastStatus == null)
 				name = getResources().getStringArray(R.array.color_names)[color];
 			else
 				name = lastStatus.getPlayerName(getResources(), data[i].player1, color);
-			
+
 			String s;
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
 			t[i].findViewById(R.id.name).clearAnimation();
-			
+
 			((TextView)t[i].findViewById(R.id.place)).setText(String.format("%d.", data[i].place));
 
 			s = getResources().getQuantityString(R.plurals.number_of_points, data[i].points, data[i].points);
@@ -142,14 +144,14 @@ public class GameFinishActivity extends BaseGameActivity {
 			s = "";
 			if (data[i].bonus > 0)
 				s += " (+" + data[i].bonus + ")";
-			
+
 			((TextView)t[i].findViewById(R.id.bonus_points)).setText(s);
-			
+
 			((TextView)t[i].findViewById(R.id.stones)).setText(
 					getResources().getQuantityString(R.plurals.number_of_stones_left, data[i].stones_left, data[i].stones_left));
-				
+
 			t[i].findViewById(R.id.data).setBackgroundDrawable(getScoreDrawable(data[i]));
-			
+
 			AnimationSet set = new AnimationSet(false);
 			Animation a = new AlphaAnimation(0.0f, 1.0f);
 			a.setStartOffset(i * 100);
@@ -157,28 +159,28 @@ public class GameFinishActivity extends BaseGameActivity {
 			a.setFillBefore(true);
 			set.addAnimation(a);
 			a = new TranslateAnimation(
-					TranslateAnimation.RELATIVE_TO_SELF, 
-					1, 
-					TranslateAnimation.RELATIVE_TO_SELF, 
-					0, 
-					TranslateAnimation.RELATIVE_TO_SELF, 
-					0, 
-					TranslateAnimation.RELATIVE_TO_SELF, 
+					TranslateAnimation.RELATIVE_TO_SELF,
+					1,
+					TranslateAnimation.RELATIVE_TO_SELF,
+					0,
+					TranslateAnimation.RELATIVE_TO_SELF,
+					0,
+					TranslateAnimation.RELATIVE_TO_SELF,
 					0);
 			a.setStartOffset(200 + i * 100);
 			a.setDuration(600);
 			a.setFillBefore(true);
 			set.addAnimation(a);
-			
+
 			if (data[i].is_local) {
 				a = new TranslateAnimation(
-						TranslateAnimation.RELATIVE_TO_SELF, 
-						0, 
-						TranslateAnimation.RELATIVE_TO_SELF, 
-						0.4f, 
-						TranslateAnimation.RELATIVE_TO_SELF, 
-						0, 
-						TranslateAnimation.RELATIVE_TO_SELF, 
+						TranslateAnimation.RELATIVE_TO_SELF,
+						0,
+						TranslateAnimation.RELATIVE_TO_SELF,
+						0.4f,
+						TranslateAnimation.RELATIVE_TO_SELF,
+						0,
+						TranslateAnimation.RELATIVE_TO_SELF,
 						0);
 				a.setDuration(300);
 				a.setInterpolator(new DecelerateInterpolator());
@@ -191,36 +193,36 @@ public class GameFinishActivity extends BaseGameActivity {
 				((TextView)t[i].findViewById(R.id.stones)).setTextColor(Color.WHITE);
 
 				t[i].findViewById(R.id.name).startAnimation(a);
-				
+
 				a = new AlphaAnimation(0.5f, 1.0f);
 				a.setDuration(750);
 				a.setInterpolator(new LinearInterpolator());
 				a.setRepeatMode(Animation.REVERSE);
 				a.setRepeatCount(Animation.INFINITE);
-				
+
 				set.addAnimation(a);
-				
+
 				this.place.setText(getResources().getStringArray(R.array.places)[data[i].place - 1]);
 			}
 			t[i].findViewById(R.id.data).startAnimation(set);
 		}
 	}
-	
+
 	Drawable getScoreDrawable(PlayerData data) {
 		int color = Global.getPlayerColor(data.player1, spiel.m_gamemode);
 		LayerDrawable l;
-		
+
 		if (data.player2 >= 0)
 			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_2);
 		else
 			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1);
-		
+
 		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
 		if (data.player2 >= 0) {
 			color = Global.getPlayerColor(data.player2, spiel.m_gamemode);
 			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
 		}
-		
+
 		return l;
 	}
 
@@ -234,39 +236,39 @@ public class GameFinishActivity extends BaseGameActivity {
 	public void onSignInSucceeded() {
 		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
 		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
-		
+
 		if (!firstRun)
 			return;
-		
+
 		HighscoreDB db = new HighscoreDB(this);
 		if (db.open()) {
 			for (int i = 0; i < data.length; i++) if (data[i].is_local) {
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].place == 1)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_blokus_classic));
-					
+						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_classic));
+
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].is_perfect)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_perfect));
-					
+						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_perfect));
+
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_DUO
 							&& data[i].place == 1)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_blokus_duo));
-					
-					getGamesClient().incrementAchievement(getString(R.string.achievement_1000_points), data[i].points);
-					
+						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_duo));
+
+					Games.Achievements.increment(getApiClient(), getString(R.string.achievement_1000_points), data[i].points);
+
 					if (data[i].place == 1)
-						getGamesClient().incrementAchievement(getString(R.string.achievement_winner), 1);
-					
+						Games.Achievements.increment(getApiClient(), getString(R.string.achievement_winner), 1);
+
 					if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].place == 4)
-						getGamesClient().incrementAchievement(getString(R.string.achievement_loser), 1);
-					
+						Games.Achievements.increment(getApiClient(), getString(R.string.achievement_loser), 1);
+
 					if (lastStatus != null && lastStatus.clients >= 4 && data[i].place == 1)
-						getGamesClient().unlockAchievement(getString(R.string.achievement_multiplayer));
+						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_multiplayer));
 				}
-			
-			getGamesClient().incrementAchievement(getString(R.string.achievement_addicted), 1);
+
+			Games.Achievements.increment(getApiClient(), getString(R.string.achievement_addicted), 1);
 
 			int n = 0;
 			for (int i = 0; i < 4; i++)
@@ -277,13 +279,15 @@ public class GameFinishActivity extends BaseGameActivity {
 			if (db.getNumberOfPlace(Spielleiter.GAMEMODE_DUO, 1, 2) > 0)
 				n++;
 			if (n == 6)
-				getGamesClient().unlockAchievement(getString(R.string.achievement_all_colors));
+				Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_all_colors));
 
-			getGamesClient().submitScore(
+			Games.Leaderboards.submitScore(
+				getApiClient(),
 				getString(R.string.leaderboard_games_won),
 				db.getNumberOfPlace(-1, 1));
 
-			getGamesClient().submitScore(
+			Games.Leaderboards.submitScore(
+				getApiClient(),
 				getString(R.string.leaderboard_points_total),
 				db.getTotalNumberOfPoints(-1));
 

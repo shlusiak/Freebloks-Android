@@ -52,7 +52,7 @@ void* gameRunThread(void* param)
 	CSpielServer* game = listener->get_game();
 
 	listener->close();
-	
+
 	game->run();
 
 	delete listener;

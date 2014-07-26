@@ -17,7 +17,7 @@ private:
 public:
 	CLogWriter() { next = NULL; }
 	virtual ~CLogWriter();
-	
+
 	void addLogWriter(CLogWriter* _next);
 	virtual void log(const char* fmt, va_list va);
 };
@@ -37,7 +37,7 @@ public:
 	virtual ~CLogFileWriter();
 	void closeFile();
 	void flush();
-	
+
 	void createFile(const char* filename);
 	virtual void log(const char* fmt, va_list va);
 };
@@ -51,10 +51,10 @@ protected:
 	void logva(const char* fmt, va_list va);
 public:
 	CLogger(CLogWriter* _writer) { writer = _writer; }
-	
+
 	void log(const char* fmt, ...);
 	virtual void logLine(const char* fmt, ...);
-	void logTime(); 
+	void logTime();
 	virtual void logHeader() { }
 };
 

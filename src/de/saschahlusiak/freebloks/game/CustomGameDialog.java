@@ -39,37 +39,37 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 	EditText name, server;
 	OnStartCustomGameListener listener;
-	
-	
+
+
 	public interface OnStartCustomGameListener {
 		public boolean OnStart(CustomGameDialog dialog);
 	}
 
 	public CustomGameDialog(Context context, final OnStartCustomGameListener listener) {
 		super(context);
-		
+
 		this.listener = listener;
 
 		setContentView(R.layout.game_menu_new_custom_game);
-		
+
 		difficulty = (SeekBar)findViewById(R.id.difficulty);
 		difficulty_label = (TextView)findViewById(R.id.difficulty_label);
 		difficulty.setOnSeekBarChangeListener(this);
 		difficulty.setMax(DIFFICULTY_MAX);
-		
+
 		player1 = (CheckBox)findViewById(R.id.player1);
 		player2 = (CheckBox)findViewById(R.id.player2);
 		player3 = (CheckBox)findViewById(R.id.player3);
 		player4 = (CheckBox)findViewById(R.id.player4);
-				
+
 		field_size = (Spinner) findViewById(R.id.field_size);
-		
+
 		game_mode = (Spinner) findViewById(R.id.game_mode);
 		game_mode.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {				
-				if (position == Spielleiter.GAMEMODE_DUO) {	
+			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
+				if (position == Spielleiter.GAMEMODE_DUO) {
 					player1.setEnabled(true);
 					player3.setEnabled(true);
 					player2.setEnabled(false);
@@ -84,7 +84,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 					/* FIXME: on first create this is called after prepare, which does seem to not persiste the
 					 * last set size if != 14 */
 					field_size.setSelection(1); /* 14x14 */
-				} else if (position == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {	
+				} else if (position == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS) {
 					player1.setEnabled(true);
 					player3.setEnabled(true);
 					player2.setEnabled(false);
@@ -124,10 +124,10 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				
+
 			}
 		});
-		
+
 		player1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -158,16 +158,16 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 					dismiss();
 			}
 		});
-		
+
 		name = (EditText)findViewById(R.id.name);
 		server = (EditText)findViewById(R.id.server);
 		server.setText(Global.DEFAULT_SERVER_ADDRESS);
-		
+
 		updateNames();
-		
-		setDifficultyLabel();		
+
+		setDifficultyLabel();
 	}
-	
+
 	void updateNames() {
 		String[] color_names = getContext().getResources().getStringArray(R.array.color_names);
 		int game_mode = this.game_mode.getSelectedItemPosition();
@@ -176,11 +176,11 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player3.setText(color_names[Global.getPlayerColor(2, game_mode)]);
 		player4.setText(color_names[Global.getPlayerColor(3, game_mode)]);
 	}
-	
+
 	private void saveSettings() {
 		SharedPreferences prefs;
 		prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-		
+
 		Editor editor = prefs.edit();
 		editor.putInt("difficulty", getDifficulty());
 		editor.putString("player_name", getName());
@@ -188,7 +188,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		editor.putInt("fieldsize", getFieldSize());
 		editor.commit();
 	}
-	
+
 	private void prepare(String name, int difficulty, int gamemode, int fieldsize) {
 		int p = (int)(Math.random() * 4.0);
 		game_mode.setSelection(gamemode);
@@ -204,7 +204,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		player2.setChecked(p == 1);
 		player3.setChecked(p == 2);
 		player4.setChecked(p == 3);
-		
+
 		if (gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 			player3.setChecked(player1.isChecked());
 			player4.setChecked(player2.isChecked());
@@ -212,7 +212,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		this.name.setText(name);
 		updateNames();
-		
+
 		int slider = DIFFICULTY_DEFAULT;
 		for (int i = 0; i < DIFFICULTY_VALUES.length; i++)
 			if (DIFFICULTY_VALUES[i] == difficulty)
@@ -225,14 +225,14 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 				slider = i;
 		field_size.setSelection(slider);
 	}
-	
+
 	void prepareCustomGameDialog(String name, int difficulty, int gamemode, int fieldsize) {
 		prepare(name, difficulty, gamemode, fieldsize);
 		setTitle(R.string.custom_game_title);
 		findViewById(R.id.player_name_layout).setVisibility(View.GONE);
 		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
 	}
-	
+
 	void prepareJoinDialog(String name, int difficulty, int gamemode, int fieldsize) {
 		/* NOTE: if the spinner is hidden, the callback to enable the colors is not called! */
 		prepare(name, difficulty, gamemode, fieldsize);
@@ -240,19 +240,19 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
 		findViewById(R.id.spinner_layout).setVisibility(View.GONE);
 	}
-	
+
 	void prepareHostDialog(String name, int difficulty, int gamemode, int fieldsize) {
 		prepare(name, difficulty, gamemode, fieldsize);
 		setTitle(R.string.host_game);
 		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
 		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
 	}
-	
+
 	void setDifficultyLabel() {
 		final String labels[] = getContext().getResources().getStringArray(R.array.difficulties);
 		int value = getDifficulty();
 		int text = 0;
-		
+
 		if (value >= 5)
 			text = 1;
 		if (value >= 40)
@@ -263,25 +263,25 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 			text = 4;
 		difficulty_label.setText(String.format("%s (%d)", labels[text], difficulty.getProgress()));
 	}
-	
+
 	public int getDifficulty() {
 		return DIFFICULTY_VALUES[difficulty.getProgress()];
 	}
-	
+
 	public int getGameMode() {
 		return (int)game_mode.getSelectedItemPosition();
 	}
-	
+
 	public int getFieldSize() {
 		return FIELD_SIZES[field_size.getSelectedItemPosition()];
 	}
-	
+
 	public boolean[] getPlayers() {
 		boolean p[] = new boolean[4];
 		p[0] = player1.isChecked();
 		p[1] = player2.isChecked();
 		p[2] = player3.isChecked();
-		p[3] = player4.isChecked();		
+		p[3] = player4.isChecked();
 		if (game_mode.getSelectedItemPosition() == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS) {
 			/* this would otherwise request players two times, the server would hand out 2x2 = 4 players */
 			p[2] = p[3] = false;
@@ -296,18 +296,18 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		
+
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		
+
 	}
-	
+
 	public String getName() {
 		return name.getText().toString();
 	}
-	
+
 	public String getServer() {
 		return server.getText().toString();
 	}

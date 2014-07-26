@@ -250,7 +250,7 @@ void CSpielServer::run()
 		}
 	}while (retval>0);
 
-    /* Der Server laeuft in der Schleife, solange noch mindestens ein Client verbunden ist. 
+    /* Der Server laeuft in der Schleife, solange noch mindestens ein Client verbunden ist.
        Sind alle Clients getrennt, wird der Server hier beendet. */
     }while (num_clients()>0);
 }
@@ -447,7 +447,7 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 
 		/* Ein Client will eine Zugzuruecknahme */
 		case MSG_REQUEST_UNDO: {
-			/* Zugzuruecknahme ist nur bei einem Client oder einem Menschlichem 
+			/* Zugzuruecknahme ist nur bei einem Client oder einem Menschlichem
 			   Spieler zulaessig. */
 			if (num_clients()>1 && num_players()>1)
 			{
@@ -620,7 +620,7 @@ void CSpielServer::next_player()
 	for (i=0;i<PLAYER_MAX;i++)
 	{
 		m_current_player=(m_current_player+1)%PLAYER_MAX;
-		/* Wenn der naechste Spieler in der Reihe noch mindestens einen freien Zug hat, 
+		/* Wenn der naechste Spieler in der Reihe noch mindestens einen freien Zug hat,
 		   ist dieser dran. Sonst muss er aussetzen, und der uebernaechste wird probiert. */
 		if (get_number_of_possible_turns(m_current_player)>0)
 		{
@@ -665,8 +665,8 @@ void CSpielServer::set_stone_numbers(int einer,int zweier,int dreier,int vierer,
 }
 
 
-/** 
- * Der Server-Thread, der das Spiel parallel hosten soll 
+/**
+ * Der Server-Thread, der das Spiel parallel hosten soll
  * Wird von CSpielServer::run_server(...) aufgerufen
  **/
 #ifdef WIN32
@@ -677,7 +677,7 @@ void* LocalServerThread(void* param)
 {
 	/* Wir brauchen erst einen Listener */
 	CServerListener* listener=(CServerListener*)param;
-	/* Der Thread soll sterben, wenn sich ein Spieler verbunden und wieder getrennt hat, 
+	/* Der Thread soll sterben, wenn sich ein Spieler verbunden und wieder getrennt hat,
 	   ohne dass das Spiel gestartet wurde */
 	bool hadClient=false;
 #ifdef WIN32
@@ -851,7 +851,7 @@ int CServerListener::init(const char* interface_,int port)
 		listen_socket=socket(res->ai_family,res->ai_socktype,res->ai_protocol);
 		if (listen_socket>=0)
 		{
-#ifndef WIN32	
+#ifndef WIN32
 			int i;
 			/* Unter Linux doch SO_REUSEADDR verwenden, damit bind auch erfolgt, wenn ein Socket
 			  mit dem Port bereits existiert. */
@@ -907,7 +907,7 @@ int CServerListener::init(const char* interface_,int port)
 	if (listen_sockets[0]==-1)return errno;
 	num_listen_sockets = 1;
 
-#ifndef WIN32	
+#ifndef WIN32
 	/* Unter Linux doch SO_REUSEADDR verwenden, damit bind auch erfolgt, wenn ein Socket
 	   mit dem Port bereits existiert. */
 	int i = 1;

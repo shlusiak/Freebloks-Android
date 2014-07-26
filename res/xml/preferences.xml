@@ -2,41 +2,48 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="first_preferencescreen" >
 
-    <PreferenceCategory android:title="@string/prefs_interface" >
+    <PreferenceCategory android:title="@string/prefs_interface" android:key="interface_category">
 		<CheckBoxPreference
 		    android:summary="@string/prefs_sounds_long"
 		    android:title="@string/prefs_sounds"
 		    android:key="sounds"
 		    android:persistent="true"
 		    android:defaultValue="true" />
-		
+
         <CheckBoxPreference
 		    android:summary="@string/prefs_vibrate_long"
 		    android:title="@string/prefs_vibrate"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="vibrate" />
-		
+
 		<CheckBoxPreference
 		    android:summary="@string/prefs_snap_to_corners_long"
 		    android:title="@string/prefs_snap_to_corners"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="snap_aid" />
-		
+
 		<CheckBoxPreference
 		    android:summary="@string/prefs_undo_long"
 		    android:title="@string/prefs_undo"
 		    android:defaultValue="false"
 		    android:persistent="true"
 		    android:key="back_undo" />
+		
+		<CheckBoxPreference
+		    android:summary="@string/prefs_immersive_long"
+		    android:title="@string/prefs_immersive"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="immersive_mode" />
 	</PreferenceCategory>
 
-    
+
     <PreferenceCategory android:title="@string/prefs_display" >
     	<CheckBoxPreference
 		    android:summary="@string/prefs_show_corners_long"
-		    android:title="@string/prefs_show_corners" 
+		    android:title="@string/prefs_show_corners"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="show_seeds" />
@@ -47,14 +54,16 @@
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="show_opponents" />
-
-		<CheckBoxPreference
-		    android:summary="@string/prefs_show_animations_long"
-		    android:title="@string/prefs_show_animations"
-		    android:defaultValue="true"
-		    android:persistent="true"
-		    android:key="show_animations" />
 		
+		<ListPreference
+	        android:defaultValue="0"
+	        android:dialogTitle="@string/prefs_show_animations"
+	        android:entries="@array/prefs_animations_labels"
+	        android:entryValues="@array/prefs_animations_values"
+	        android:key="animations"
+	        android:persistent="true"
+	        android:title="@string/prefs_show_animations" />
+
 		<de.saschahlusiak.freebloks.preferences.ThemePreference
 	        android:defaultValue="texture_wood"
 	        android:dialogTitle="@string/prefs_theme"
@@ -63,9 +72,9 @@
 	        android:key="theme"
 	        android:persistent="true"
 	        android:title="@string/prefs_theme" />
-		
+
 	</PreferenceCategory>
-	
+
     <PreferenceCategory android:title="@string/prefs_misc" >
         <EditTextPreference
             android:key="player_name"
@@ -74,31 +83,30 @@
             android:singleLine="true"
             android:title="@string/prefs_player_name"
             android:summary="@string/prefs_player_name_default"/>
-        
+
         <CheckBoxPreference
 		    android:summary="@string/prefs_notifications_long"
 		    android:title="@string/prefs_notifications"
 		    android:defaultValue="true"
 		    android:persistent="true"
 		    android:key="notifications" />
-        
+
 		<CheckBoxPreference
 		    android:summary="@string/prefs_skip_intro_long"
 		    android:title="@string/prefs_skip_intro"
 		    android:defaultValue="false"
-		    android:dependency="show_animations"
 		    android:persistent="true"
 		    android:key="skip_intro" />
-				
+
         <CheckBoxPreference
 		    android:summary="@string/prefs_auto_resume_long"
 		    android:title="@string/prefs_auto_resume"
 		    android:defaultValue="false"
 		    android:persistent="true"
 		    android:key="auto_resume" />
-		
+
     </PreferenceCategory>
-    
+
     <PreferenceCategory android:title="@string/statistics" android:key="stats_category" >
         <PreferenceScreen
             android:summary="@string/prefs_statistics_long"
@@ -107,7 +115,7 @@
             <intent android:action="de.saschahlusiak.freebloks.SHOW_STATISTICS" />
         </PreferenceScreen>
     </PreferenceCategory>
-    
+
     <PreferenceCategory android:title="@string/googleplus" android:key="googleplus_category" >
         <PreferenceScreen
             android:summary="@string/googleplus_signin_long"
@@ -127,14 +135,14 @@
             android:key="googleplus_leaderboard" >
         </PreferenceScreen>
     </PreferenceCategory>
-    
+
     <PreferenceCategory android:title="@string/about" android:key="about_category" >
         <PreferenceScreen
             android:key="rate_review"
             android:summary="@string/prefs_rate_review_long"
             android:title="@string/prefs_rate_review" >
         </PreferenceScreen>
-        
+
         <PreferenceScreen
             android:summary="@string/prefs_donation_long"
             android:title="@string/prefs_donation"
@@ -147,6 +155,6 @@
             android:title="@string/about_freebloks" >
             <intent android:action="de.saschahlusiak.freebloks.SHOW_ABOUT" />
         </PreferenceScreen>
-    </PreferenceCategory>    
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Player implements Serializable, Cloneable {
 	private static final long serialVersionUID = -7320011705508155304L;
-	
+
 	public int m_stone_points;
 	public int m_stone_count;
 	public int m_number_of_possible_turns;
@@ -16,13 +16,13 @@ public class Player implements Serializable, Cloneable {
 
 	Stone m_stone[] = new Stone[Stone.STONE_COUNT_ALL_SHAPES];
 	public Stone m_lastStone;
-	
+
 	public Player() {
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
 			m_stone[i] = new Stone();
 		}
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Player c = (Player) super.clone();
@@ -31,7 +31,7 @@ public class Player implements Serializable, Cloneable {
 			c.m_stone[i] = (Stone)m_stone[i].clone();
 		return c;
 	}
-	
+
 	void init(Spiel spiel, int playernumber){
 		m_number = playernumber;
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
@@ -39,7 +39,7 @@ public class Player implements Serializable, Cloneable {
 		}
 		refresh_data(spiel);
 	}
-	
+
 	public final void copyFrom(Player from) {
 		this.m_stone_points = from.m_stone_points;
 		this.m_stone_count = from.m_stone_count;
@@ -52,26 +52,26 @@ public class Player implements Serializable, Cloneable {
 			this.m_stone[i].copyFrom(from.m_stone[i]);
 		}
 	}
-	
+
 	public int getPlayerNumber() {
 		return m_number;
 	}
-	
+
 	final public Stone get_stone(int n) {
 		if (n < 0 || n > m_stone.length)
 			return null;
 		return m_stone[n];
 	}
-	
+
 	void set_teammate(int player) {
 		m_teammate = player;
 	}
-	
+
 	void set_nemesis(int player) {
 		m_nemesis = player;
 	}
-	
-	 
+
+
 	void refresh_data(Spiel spiel){
 		m_stone_points = 0;
 		m_number_of_possible_turns = 0;
@@ -104,7 +104,7 @@ public class Player implements Serializable, Cloneable {
 					}
 				} else if (spiel.get_game_field(y, x) == m_number)
 					m_stone_points++;
-			}	
+			}
 		}
 		if (m_stone_count == 0 && m_lastStone != null) {
 			m_stone_points += 15;

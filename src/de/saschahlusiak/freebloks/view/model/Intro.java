@@ -21,19 +21,19 @@ public class Intro implements ViewElement {
 	public interface OnIntroCompleteListener {
 		public void OnIntroCompleted();
 	}
-	
+
 	final static float INTRO_SPEED = 1.0f;
 
-	final static float WIPE_SPEED = 14.0f;	
+	final static float WIPE_SPEED = 14.0f;
 	final static float WIPE_ANGLE = 28.0f;
 	final static float MATRIX_START = 1.56f;
 	final static float MATRIX_STOP = 6.0f;
 	final static float MATRIX_DURATION_START = 0.25f;
 	final static float MATRIX_DURATION_STOP = 0.25f;
-	
+
 	ViewModel model;
 	OnIntroCompleteListener listener;
-	
+
 	float anim = 0.0f;
 	ArrayList<PhysicalStoneEffect> effects = new ArrayList<PhysicalStoneEffect>();
 	int phase = 0;
@@ -41,12 +41,12 @@ public class Intro implements ViewElement {
 	float field_anim = 0.0f;
 	Stone stones[] = new Stone[14];
 
-	
+
 	public Intro(ViewModel model, OnIntroCompleteListener listener) {
 		setModel(model, listener);
 		init();
 	}
-	
+
 	public void setModel(ViewModel model, OnIntroCompleteListener listener) {
 		this.model = model;
 		this.listener = listener;
@@ -55,7 +55,7 @@ public class Intro implements ViewElement {
 	void init() {
 		for (int i = 0; i < stones.length; i++)
 			stones[i] = new Stone();
-		
+
 		stones[0].init(5);			// XXX
 		stones[0].rotate_left();	//   X
 
@@ -84,7 +84,7 @@ public class Intro implements ViewElement {
 		stones[6].init(5);		//  X
 								//  X
 								// XX
-			
+
 		stones[7].init(2);			// XX
 		stones[7].rotate_left();	//  X
 		stones[7].rotate_left();
@@ -135,7 +135,7 @@ public class Intro implements ViewElement {
 	public boolean handlePointerUp(PointF m) {
 		return false;
 	}
-	
+
 	public void cancel() {
 		model.intro = null;
 		model.view.post(new Runnable() {
@@ -244,7 +244,7 @@ public class Intro implements ViewElement {
 		}
 		return true;
 	}
-	
+
 	void add(int stone, int player, int dx, int dy) {
 		float x,y,z;
 		/* Eine Rotationsachse berechnen */
@@ -257,7 +257,7 @@ public class Intro implements ViewElement {
 		/* CPhysicalStone erstellen, aus stones[stone] */
 		Stone st = stones[stone];
 		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS));
-		
+
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
 		x=(float)(-(Spiel.DEFAULT_FIELD_SIZE_X-1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
 		z=(float)(-(Spiel.DEFAULT_FIELD_SIZE_Y-1)*BoardRenderer.stone_size+((double)dy+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
@@ -280,7 +280,7 @@ public class Intro implements ViewElement {
 		/* Effekt der verketteten Liste hinzufuegen. */
 		effects.add(s);
 	}
-	
+
 	void addChar(char c, int color, int x, int y) {
 		switch (c)
 		{
@@ -342,7 +342,7 @@ public class Intro implements ViewElement {
 			add(9,color, x+1,y);
 			add(10,color,x  ,y+3);
 			break;
-			
+
 		case 'i':
 			add(4, color, x, y);
 			add(9, color, x, y+2);
@@ -353,7 +353,7 @@ public class Intro implements ViewElement {
 			add(1,color,x-2,y+1);
 			add(8,color,x+1,y+2);
 			add(4,color,x+1,y+3);
-			break;	
+			break;
 		case 's':
 			add(3,color, x,  y);
 			add(11,color,x+1,y-1);
@@ -375,14 +375,14 @@ public class Intro implements ViewElement {
 	 	default: throw new IllegalStateException("Falscher char uebergeben: " + c);
 		}
 	}
-	
+
 	void wipe() {
 		/* Zu Beginn das Feld hoch klappen */
 		field_up = true;
 		field_anim = 0.0f;
 		/* Komplette verkettete Liste durchgehen und fuer jeden enthaltenen CPhysicalStone...*/
 		for (PhysicalStoneEffect e: effects) {
-			/* ...Geschwindigkeit setzen, dass die Steine tangential zur Drehung des 
+			/* ...Geschwindigkeit setzen, dass die Steine tangential zur Drehung des
 			   Felds wegfliegen */
 			/* Winkel, in dem die Steine beschleunigt werden */
 			final float ANG = WIPE_ANGLE / 180.0f * (float)Math.PI;
@@ -400,12 +400,12 @@ public class Intro implements ViewElement {
 			e.unsetDestination();
 		}
 	}
-	
+
 	void executeEffects(float elapsed) {
 		for (int i = 0; i < effects.size(); i++)
 			effects.get(i).execute(elapsed);
 	}
-	
+
 	public void render(GL10 gl, FreebloksRenderer renderer) {
 		gl.glLoadIdentity();
 		/* Kamera positionieren */
@@ -421,7 +421,7 @@ public class Intro implements ViewElement {
 
 		/* Kamera drehen, evtl. durch Matrix move */
 		gl.glRotatef(50, 1, 0, 0);
-		
+
 		final float winkel1 = 180.0f;
 		final float winkel2 = -60.0f;
 		final float matrix_anim=(float)(Math.sin((anim - MATRIX_START)/(MATRIX_STOP-MATRIX_START)*Math.PI-Math.PI/2.0)/2.0+0.5);

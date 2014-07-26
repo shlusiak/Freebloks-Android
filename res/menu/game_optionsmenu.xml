@@ -5,10 +5,9 @@
         android:icon="@android:drawable/ic_popup_sync"
         android:title="@string/new_local_game" >
     </item>
-    <item 
+    <item
         android:id="@+id/sound_toggle_button"
         android:icon="@android:drawable/ic_lock_silent_mode_off"
-        android:showAsAction="always"
         android:title="@string/sound_on" >
     </item>
     <item
@@ -19,7 +18,7 @@
     <item
         android:id="@+id/undo"
         android:icon="@android:drawable/ic_menu_revert"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/undo">
     </item>
     <item

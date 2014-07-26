@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 public class ThemePreference extends ListPreference {
-	
+
 	class ThemeAdapter extends ArrayAdapter<CharSequence> {
 		public ThemeAdapter(Context context) {
 			super(context, android.R.layout.simple_list_item_single_choice);
@@ -21,7 +21,7 @@ public class ThemePreference extends ListPreference {
 				this.add("");
 			}
 		}
-		
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = super.getView(position, convertView, parent);
@@ -35,7 +35,7 @@ public class ThemePreference extends ListPreference {
 	public ThemePreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
-	
+
 	@Override
 	protected void onPrepareDialogBuilder(final Builder builder) {
 		super.onPrepareDialogBuilder(builder);

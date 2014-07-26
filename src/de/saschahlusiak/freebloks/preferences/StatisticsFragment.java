@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.preferences;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 
@@ -15,28 +16,29 @@ import de.saschahlusiak.freebloksvip.R;
 public class StatisticsFragment extends PreferenceFragment implements GameHelperListener {
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;
-	
+
 	GameHelper mHelper;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.preferences_stats);        
+        addPreferencesFromResource(R.xml.preferences_stats);
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
-    	
-		mHelper = new GameHelper(getActivity());
-        mHelper.setup(this, GameHelper.CLIENT_GAMES, (String[])null);
-        
+
+		mHelper = new GameHelper(getActivity(), GameHelper.CLIENT_GAMES);
+		mHelper.setMaxAutoSignInAttempts(0);
+        mHelper.setup(this);
+
         /* XXX: this is a hack, because the onActivityResult of the activity will be called instead of the fragment */
         /* make sure that the activity knows about the helper, which is created in the context of the fragment. bah. */
         ((FreebloksPreferences)getActivity()).mHelper = mHelper;
 
-		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()); 
+		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 		if (avail != ConnectionResult.SUCCESS) {
 			getPreferenceScreen().removePreference(findPreference("googleplus_category"));
 		} else {
@@ -57,44 +59,44 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 					if (!mHelper.isSignedIn())
 						return false;
 	//				startActivityForResult(mHelper.getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
-					startActivityForResult(mHelper.getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+					startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mHelper.getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 					return true;
 				}
 			});
 			findPreference("googleplus_achievements").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					startActivityForResult(mHelper.getGamesClient().getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
+					startActivityForResult(Games.Achievements.getAchievementsIntent(mHelper.getApiClient()), REQUEST_ACHIEVEMENTS);
 					return true;
 				}
 			});
 		}
     }
-    
+
     @Override
     public void onStart() {
     	super.onStart();
     	mHelper.onStart(getActivity());
     }
-    
+
     @Override
     public void onStop() {
     	super.onStop();
     	mHelper.onStop();
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
 //    	mHelper.onActivityResult(requestCode, resultCode, data);
     	/* the onActivityResult of the activity will be called :-/ */
     }
-    
+
 	@Override
 	public void onSignInFailed() {
 		if (findPreference("googleplus_category") == null)
 			return;
-		
+
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signin);
 		findPreference("googleplus_signin").setSummary(R.string.googleplus_signin_long);
 		findPreference("googleplus_leaderboard").setEnabled(false);
@@ -104,8 +106,8 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 	@Override
 	public void onSignInSucceeded() {
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signout);
-		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, mHelper.getGamesClient().getCurrentPlayer().getDisplayName()));
-		findPreference("googleplus_leaderboard").setEnabled(true);		
-		findPreference("googleplus_achievements").setEnabled(true);		
+		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, Games.Players.getCurrentPlayer(mHelper.getApiClient()).getDisplayName()));
+		findPreference("googleplus_leaderboard").setEnabled(true);
+		findPreference("googleplus_achievements").setEnabled(true);
 	}
 }

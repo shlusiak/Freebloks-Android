@@ -18,9 +18,9 @@ public class DonateActivity extends Activity {
 		super.onCreate(savedInstanceState);
 	    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	    setContentView(R.layout.donate_activity);
-		
+
 		((RadioButton)findViewById(R.id.donation_freebloksvip)).setChecked(true);
-		
+
 		findViewById(R.id.next).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -28,11 +28,11 @@ public class DonateActivity extends Activity {
 			}
 		});
 	}
-		
+
 	void onNextButtonPress() {
 		RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
 	//	RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
-		
+
 		if (group.getCheckedRadioButtonId() == R.id.donation_freebloksvip) {
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Global.getMarketURLString("de.saschahlusiak.freebloksvip")));
 			startActivity(intent);

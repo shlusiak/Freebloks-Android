@@ -12,13 +12,13 @@ public class StatisticsAdapter extends BaseAdapter {
 	String labels[];
 	String values1[];
 	Context context;
-	
+
 	StatisticsAdapter(Context context, String[] labels, String[] values1) {
 		this.context = context;
 		this.labels = labels;
 		this.values1 = values1;
 	}
-	
+
 	@Override
 	public int getCount() {
 		return labels.length;
@@ -28,14 +28,14 @@ public class StatisticsAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		return null;
 	}
-	
+
 	@Override
 	public boolean isEnabled(int position) {
 		if (values1[position] == null)
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public boolean areAllItemsEnabled() {
 		return true;

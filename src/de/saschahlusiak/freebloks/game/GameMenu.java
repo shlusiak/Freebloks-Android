@@ -19,9 +19,9 @@ public class GameMenu extends Dialog {
 
 	public GameMenu(Context context) {
 		super(context);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.game_menu_dialog);
-		
+
 		findViewById(R.id.imageView1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -51,7 +51,7 @@ public class GameMenu extends Dialog {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);

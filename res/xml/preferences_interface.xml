@@ -7,26 +7,33 @@
 	    android:key="sounds"
 	    android:persistent="true"
 	    android:defaultValue="true" />
-	
+
        <CheckBoxPreference
 	    android:summary="@string/prefs_vibrate_long"
 	    android:title="@string/prefs_vibrate"
 	    android:defaultValue="true"
 	    android:persistent="true"
 	    android:key="vibrate" />
-	
+
 	<CheckBoxPreference
 	    android:summary="@string/prefs_snap_to_corners_long"
 	    android:title="@string/prefs_snap_to_corners"
 	    android:defaultValue="true"
 	    android:persistent="true"
 	    android:key="snap_aid" />
-	
+
 	<CheckBoxPreference
 	    android:summary="@string/prefs_undo_long"
 	    android:title="@string/prefs_undo"
 	    android:defaultValue="false"
 	    android:persistent="true"
 	    android:key="back_undo" />
+	
+	<CheckBoxPreference
+	    android:summary="@string/prefs_immersive_long"
+	    android:title="@string/prefs_immersive"
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="immersive_mode" />
 
 </PreferenceScreen>

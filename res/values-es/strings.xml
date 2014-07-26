@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Freebloks</string>
-    
+
     <string name="new_local_game">Nuevo juego</string>
     <string name="resume">Reanudar</string>
     <string name="join_game">Únete</string>
@@ -126,7 +126,6 @@
     <string name="prefs_show_corners">Esquinas</string>
     <string name="prefs_show_opponents_long">Mostrar las fichas de los adversarios</string>
     <string name="prefs_show_opponents">Adversarios</string>
-    <string name="prefs_show_animations_long">Activar animaciones</string>
     <string name="prefs_show_animations">Animaciones</string>
     <string name="prefs_skip_intro_long">Omitir la intro animada del inicio</string>
     <string name="prefs_skip_intro">Omitir la intro</string>

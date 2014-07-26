@@ -7,9 +7,9 @@ import android.media.SoundPool;
 
 public class Sounds extends SoundPool {
 	static float GLOBAL_VOLUME = 0.5f;
-	
+
 	boolean enabled;
-	
+
 	public int SOUND_CLICK1;
 	public int SOUND_CLICK2;
 	public int SOUND_CLICK3;
@@ -23,7 +23,7 @@ public class Sounds extends SoundPool {
 		enabled = true;
 		loadSounds(context);
 	}
-	
+
 	void loadSounds(Context context) {
 		SOUND_CLICK1 = load(context, R.raw.click1, 1);
 		SOUND_CLICK2 = load(context, R.raw.click2, 1);
@@ -33,15 +33,15 @@ public class Sounds extends SoundPool {
 		SOUND_PLAYER_OUT = load(context, R.raw.playerout, 1);
 		SOUND_CHAT = load(context, R.raw.chat, 1);
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	public void toggle() {
 		enabled = !enabled;
 	}

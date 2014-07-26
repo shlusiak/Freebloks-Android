@@ -11,7 +11,7 @@ import android.os.Build;
 public class FreebloksBackupAgent extends BackupAgentHelper{
 	static final String PREFS_BACKUP_KEY = "prefs";
 	static final String DB_BACKUP_KEY = "database";
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

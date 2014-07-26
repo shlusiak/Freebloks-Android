@@ -16,9 +16,9 @@ void CPlayer::init(const CSpiel* spiel, const int playernumber){
 	}
 	refresh_data(spiel);
 }
- 
+
 void CPlayer::refresh_data(const CSpiel* spiel){
-	
+
 	m_stone_points_left = 0;
 	m_number_of_possible_turns = 0;
 	m_position_points = 0;
@@ -44,8 +44,8 @@ void CPlayer::refresh_data(const CSpiel* spiel){
 					}
 				}
 			}
-		}	
-	}	
+		}
+	}
 }
 
 

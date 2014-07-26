@@ -15,10 +15,10 @@ public class AboutFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences_about);
-        
+
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {

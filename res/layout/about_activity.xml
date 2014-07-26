@@ -49,7 +49,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-            
+
             <TextView
                 android:id="@+id/url2"
                 android:layout_width="fill_parent"
@@ -99,7 +99,7 @@
                 android:singleLine="true"
                 android:text="Alina Bilciurescu"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-            
+
 			<TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                 android:singleLine="true"
                 android:text="Martin Hollingsworth"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-			
+
 			<TextView
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
@@ -115,14 +115,15 @@
 	            android:singleLine="true"
 	            android:text="Egor Ponomarev"
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
-			
+
             <Button
                 android:id="@+id/ok"
                 android:layout_width="124dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/menu_button_height"
                 android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
+                android:textSize="@dimen/menu_button_font_size"
                 android:text="@android:string/ok" />
         </LinearLayout>
     </ScrollView>

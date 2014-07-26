@@ -13,22 +13,22 @@ import android.widget.TextView;
 import de.saschahlusiak.freebloksvip.R;
 
 public class AboutActivity extends Activity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.about_activity);
-		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) != 
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) !=
 			        Configuration.SCREENLAYOUT_SIZE_XLARGE)
 		{
 			LayoutParams params = getWindow().getAttributes();
 			params.width = LayoutParams.FILL_PARENT;
 			getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
 		}
-		
+
 		((Button)findViewById(R.id.ok)).setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				finish();

@@ -13,19 +13,19 @@ public class Theme {
 	int drawable, texture;
 	float rgba[] = { 1, 1, 1, 1 };
 	boolean isPreview, isDrawable;
-	
+
 	private Theme() {
 		this.isDrawable = false;
 		this.isPreview = false;
 	}
-	
+
 	private Theme(int drawable, int texture) {
 		this.isDrawable = true;
 		this.isPreview = false;
 		this.drawable = drawable;
 		this.texture = texture;
 	}
-	
+
 	private Theme(float r, float g, float b) {
 		this.isDrawable = false;
 		this.isPreview = false;
@@ -35,13 +35,13 @@ public class Theme {
 	public final boolean isDrawable() {
 		return isDrawable;
 	}
-	
+
 	private void setDrawable(int drawable, int texture) {
 		this.drawable = drawable;
 		this.texture = texture;
 		this.isDrawable = true;
 	}
-	
+
 	private BitmapDrawable getDrawable(Resources resources) {
 		BitmapDrawable background = (BitmapDrawable) resources.getDrawable(drawable);
 
@@ -49,21 +49,21 @@ public class Theme {
 		background.setFilterBitmap(true);
 		return background;
 	}
-	
+
 	final int getColor() {
 		return Color.rgb((int)(rgba[0] * 255.0f), (int)(rgba[1] * 255.0f), (int)(rgba[2] * 255.0f));
 	}
-	
+
 	public final float[] getRGBA() {
 		return rgba;
 	}
-	
+
 	private void setRGB(float r, float g, float b) {
 		this.rgba[0] = r;
 		this.rgba[1] = g;
 		this.rgba[2] = b;
 	}
-	
+
 	public void apply(View view) {
 		if (isDrawable)
 			view.setBackgroundDrawable(getDrawable(view.getResources()));
@@ -74,11 +74,11 @@ public class Theme {
 	public int getTexture() {
 		return texture;
 	}
-	
+
 	public static Theme get(String theme, boolean preview) {
 		Theme t = new Theme();
 		t.isPreview = preview;
-		
+
 		if (theme.equals("black")) {
 			t.setRGB(0, 0, 0);
 		} else if (theme.equals("blue")) {
@@ -101,5 +101,5 @@ public class Theme {
 		}
 
 		return t;
-	}    	
+	}
 }

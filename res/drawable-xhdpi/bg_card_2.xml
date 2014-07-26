@@ -11,7 +11,7 @@
             <solid android:color="#4f000000" />
         </shape>
     </item>
-    
+
     <item
         android:right="2dp"
         android:bottom="3dp"
@@ -27,7 +27,7 @@
 
         </shape>
     </item>
-    
+
 
     <item
         android:bottom="10dp"
@@ -40,7 +40,7 @@
             <solid android:color="#4f000000" />
         </shape>
     </item>
-    
+
     <item android:bottom="13dp"
         android:right="9dp"
         android:id="@+id/color1" >
