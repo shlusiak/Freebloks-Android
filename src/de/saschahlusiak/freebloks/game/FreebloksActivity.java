@@ -269,8 +269,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 	        Window w = getWindow();
 	        
-	        /* only set translucent status bar, if we don't have an actionbar, otherwise it looks weird */
 	        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//	        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 	    }
 
 		if (hasActionBar) {
@@ -293,6 +293,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		view = (Freebloks3DView)findViewById(R.id.board);
 		view.setActivity(this);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && prefs.getBoolean("immersive_mode", true)) {
+			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		}
+
 
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -501,6 +506,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", ViewModel.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
+		view.model.immersiveMode = prefs.getBoolean("immersive_mode", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
 		if (clientName != null && clientName.equals(""))

@@ -24,7 +24,9 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceGroup;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 import android.widget.Toast;
 
 public class FreebloksPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, GameHelperListener {
@@ -56,6 +58,12 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
         mHelper.setup(this);
 
 		addPreferencesFromResource(R.xml.preferences);
+		
+		ViewConfiguration viewConfig = ViewConfiguration.get(this);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || viewConfig.hasPermanentMenuKey()) {
+			Preference p = findPreference("immersive_mode");
+			((PreferenceGroup)findPreference("interface_category")).removePreference(p);
+		}
 
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override

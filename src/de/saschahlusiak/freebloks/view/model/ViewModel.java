@@ -25,6 +25,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 
 	public boolean showSeeds, showOpponents, snapAid;
 	public int showAnimations;
+	public boolean immersiveMode = true;
 	public boolean vertical_layout = true;
 	boolean redraw;
 	

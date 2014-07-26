@@ -43,22 +43,22 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		renderer.zoom = scale;
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | SYSTEM_UI_FLAG_LAYOUT_STABLE);
-		}
 	}
+	
 	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 	    super.onWindowFocusChanged(hasFocus);
 	    if (hasFocus) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				setSystemUiVisibility(SYSTEM_UI_FLAG_LOW_PROFILE | 
+				if (model.immersiveMode)
+					setSystemUiVisibility(SYSTEM_UI_FLAG_LOW_PROFILE | 
 						SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | 
 						SYSTEM_UI_FLAG_LAYOUT_STABLE | 
 						SYSTEM_UI_FLAG_HIDE_NAVIGATION | 
 						SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+				else
+					setSystemUiVisibility(0);
 			}
 	    }
 	}

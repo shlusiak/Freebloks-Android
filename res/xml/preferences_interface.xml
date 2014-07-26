@@ -28,5 +28,12 @@
 	    android:defaultValue="false"
 	    android:persistent="true"
 	    android:key="back_undo" />
+	
+	<CheckBoxPreference
+	    android:summary="@string/prefs_immersive_long"
+	    android:title="@string/prefs_immersive"
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="immersive_mode" />
 
 </PreferenceScreen>

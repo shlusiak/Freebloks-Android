@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="first_preferencescreen" >
 
-    <PreferenceCategory android:title="@string/prefs_interface" >
+    <PreferenceCategory android:title="@string/prefs_interface" android:key="interface_category">
 		<CheckBoxPreference
 		    android:summary="@string/prefs_sounds_long"
 		    android:title="@string/prefs_sounds"
@@ -30,6 +30,13 @@
 		    android:defaultValue="false"
 		    android:persistent="true"
 		    android:key="back_undo" />
+		
+		<CheckBoxPreference
+		    android:summary="@string/prefs_immersive_long"
+		    android:title="@string/prefs_immersive"
+		    android:defaultValue="true"
+		    android:persistent="true"
+		    android:key="immersive_mode" />
 	</PreferenceCategory>
 
 
