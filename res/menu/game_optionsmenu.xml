@@ -18,7 +18,7 @@
     <item
         android:id="@+id/undo"
         android:icon="@android:drawable/ic_menu_revert"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/undo">
     </item>
     <item
