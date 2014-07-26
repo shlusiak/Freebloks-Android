@@ -45,16 +45,15 @@
 
         <ToggleButton
             android:id="@+id/sound_toggle_button"
+            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="?android:attr/buttonStyleToggle"
-            android:drawableLeft="@android:drawable/ic_lock_silent_mode_off"
             android:layout_gravity="center_vertical"
             android:checked="true"
+            android:drawableLeft="@android:drawable/ic_lock_silent_mode_off"
             android:text=""
-            android:textOn=""
-            android:textOff="" />
-
+            android:textOff=""
+            android:textOn="" />
 
     </LinearLayout>
 
