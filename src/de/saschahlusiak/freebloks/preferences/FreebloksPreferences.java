@@ -7,7 +7,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.leaderboard.Leaderboards;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -23,11 +22,9 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
 
 public class FreebloksPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, GameHelperListener {
 	private static final int REQUEST_LEADERBOARD = 1;
@@ -40,7 +37,8 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		super.onCreate(savedInstanceState);
 
 		if (Build.VERSION.SDK_INT >= 11) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+			if (getActionBar() != null)
+				getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
 		if (savedInstanceState != null) {
