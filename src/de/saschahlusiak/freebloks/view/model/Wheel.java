@@ -293,7 +293,7 @@ public class Wheel implements ViewElement {
 
 				final float x = col * stone_spacing;
 				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f));
-				float y = 0.3f + effect * 0.7f;
+				float y = 0.35f + effect * 0.75f;
 				final float z = row * stone_spacing;
 
 				float alpha = 1.0f;
@@ -303,7 +303,7 @@ public class Wheel implements ViewElement {
 
 				if (!moves_left && !model.spiel.isFinished())
 					alpha *= 0.65f;
-				alpha *= 0.5f + effect * 0.5f;
+				alpha *= 0.75f + effect * 0.25f;
 
 				gl.glPushMatrix();
 				gl.glTranslatef(x, 0, z);
