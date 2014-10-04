@@ -134,6 +134,10 @@
         <item>В клеточку</item>
         <item>Дерево</item>
         <item>Кирпич</item>
+        <item>Metal</item>
+        <item>Velvet</item>
+        <item>Carpet</item>
+        <item>Grass</item>
     </string-array>
     <string-array name="theme_values" translatable="false" >
         <item>black</item>

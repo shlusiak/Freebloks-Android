@@ -7,7 +7,7 @@ import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class StoneFadeEffect extends AbsStoneEffect {
-	private static final float TIME_PER_PERIOD = 1.15f;
+	private static final float TIME_PER_PERIOD = 1.1f;
 	private static final float ALPHA_MIN = 0.15f;
 	private static final float ALPHA_MAX = 1.0f;
 

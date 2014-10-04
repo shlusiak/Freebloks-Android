@@ -1389,7 +1389,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			EffectSet set = new EffectSet();
 			set.add(e);
-			set.add(new StoneFadeEffect(view.model, st, view.model.getPlayerColor(player), x, y, 4.0f));
+			set.add(new StoneFadeEffect(view.model, st, view.model.getPlayerColor(player), x, y, 1.0f));
 			view.model.addEffect(set);
 		}
 

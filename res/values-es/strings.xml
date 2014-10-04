@@ -109,6 +109,10 @@
         <item>Tela a rayas</item>
         <item>Madera</item>
         <item>Ladrillos</item>
+        <item>Metal</item>
+        <item>Velvet</item>
+        <item>Carpet</item>
+        <item>Grass</item>
     </string-array>
 
     <string name="prefs_interface">Interface</string>

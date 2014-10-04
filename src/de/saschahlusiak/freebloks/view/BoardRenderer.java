@@ -351,7 +351,7 @@ public class BoardRenderer {
 
 
 		float offset = (float)(stone.get_stone_size()) - 1.0f;
-		float m_alpha = 0.65f - height / 19.0f;
+		float m_alpha = 0.80f - height / 16.0f;
 
 		/* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */

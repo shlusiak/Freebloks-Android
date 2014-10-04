@@ -65,13 +65,13 @@ public class Global {
 	final static float stone_purple[]={0.40f, 0.0f, 0.80f, 0};
 	public final static float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green, stone_orange, stone_purple };
 
-	final static float stone_red_dark[]={0.065f, 0, 0, 0};
-	final static float stone_blue_dark[]={0.0f, 0.005f, 0.07f, 0};
-	final static float stone_green_dark[]={0.0f, 0.065f, 0, 0};
-	final static float stone_yellow_dark[]={0.070f, 0.070f, 0, 0};
-	final static float stone_orange_dark[]={0.070f, 0.040f, 0, 0};
-	final static float stone_purple_dark[]={0.040f, 0.000f, 0.070f, 0};
-	final static float stone_white_dark[]={0.06f, 0.06f, 0.06f, 0};
+	final static float stone_red_dark[]={0.035f, 0, 0, 0};
+	final static float stone_blue_dark[]={0.0f, 0.004f, 0.035f, 0};
+	final static float stone_green_dark[]={0.0f, 0.035f, 0, 0};
+	final static float stone_yellow_dark[]={0.025f, 0.025f, 0, 0};
+	final static float stone_orange_dark[]={0.040f, 0.020f, 0, 0};
+	final static float stone_purple_dark[]={0.020f, 0.000f, 0.040f, 0};
+	final static float stone_white_dark[]={0.04f, 0.04f, 0.04f, 0};
 	public final static float stone_shadow_color_a[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark, stone_orange_dark, stone_purple_dark };
 
 	public final static int getPlayerColor(int player, int game_mode) {
