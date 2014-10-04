@@ -143,7 +143,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 
-		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.40f);
+		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.80f);
 		gl.glPopMatrix();
 
 

@@ -183,7 +183,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 			EffectSet set = new EffectSet();
 			set.add(e);
-			set.add(new StoneFadeEffect(model, st, model.getPlayerColor(s.player), s.x, s.y, 4.0f));
+			set.add(new StoneFadeEffect(model, st, model.getPlayerColor(s.player), s.x, s.y, 2.0f));
 			model.addEffect(set);
 		}
 	}
