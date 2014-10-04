@@ -98,7 +98,22 @@ public class Theme {
 		} else if (theme.equals("texture_bricks")) {
 			t.setDrawable(R.drawable.texture_bricks, R.raw.texture_bricks);
 			t.setRGB(0.85f, 0.85f, 0.85f);
+		} else if (theme.equals("texture_carpet_blue")) {
+			t.setDrawable(R.drawable.texture_carpet_blue, R.raw.texture_carpet_blue);
+			t.setRGB(0.85f, 0.85f, 0.85f);
+		} else if (theme.equals("texture_velvet")) {
+			t.setDrawable(R.drawable.texture_velvet, R.raw.texture_velvet);
+			t.setRGB(0.85f, 0.85f, 0.85f);
+		} else if (theme.equals("texture_metal")) {
+			t.setDrawable(R.drawable.texture_metal, R.raw.texture_metal);
+			t.setRGB(0.85f, 0.85f, 0.85f);
+		} else if (theme.equals("texture_grass")) {
+			t.setDrawable(R.drawable.texture_grass, R.raw.texture_grass);
+			t.setRGB(0.85f, 0.85f, 0.85f);
 		}
+
+
+
 
 		return t;
 	}

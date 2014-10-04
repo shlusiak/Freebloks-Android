@@ -134,6 +134,10 @@
         <item>Striped cloth</item>
         <item>Wood</item>
         <item>Bricks</item>
+        <item>Metal</item>
+        <item>Velvet</item>
+        <item>Carpet</item>
+        <item>Grass</item>
     </string-array>
     <string-array name="theme_values" translatable="false" >
         <item>black</item>
@@ -142,6 +146,10 @@
         <item>texture_table_cloth_2</item>
         <item>texture_wood</item>
         <item>texture_bricks</item>
+        <item>texture_metal</item>
+		<item>texture_velvet</item>
+        <item>texture_carpet_blue</item>
+        <item>texture_grass</item>
     </string-array>
 
     <string name="prefs_interface">Interface</string>

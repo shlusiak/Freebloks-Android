@@ -111,6 +111,10 @@
         <item>Tissu rayé</item>
         <item>Bois</item>
         <item>Briques</item>
+        <item>Metal</item>
+        <item>Velvet</item>
+        <item>Carpet</item>
+        <item>Grass</item>
     </string-array>
 
     <string name="prefs_interface">Interface</string>

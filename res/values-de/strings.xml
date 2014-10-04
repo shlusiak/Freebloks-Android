@@ -136,7 +136,11 @@
         <item>Karierte Tischdecke</item>
         <item>Holz</item>
         <item>Ziegelsteine</item>
-    </string-array>
+        <item>Metall</item>
+        <item>Samt</item>
+        <item>Blauer Teppich</item>
+        <item>Gras</item>
+	</string-array>
 
 
     <string name="prefs_interface">Oberfläche</string>
