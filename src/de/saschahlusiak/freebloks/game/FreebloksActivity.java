@@ -996,7 +996,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return true;
 
 		case R.id.show_main_menu:
-			if (client != null && client.spiel.isStarted() && lastStatus.clients > 1)
+			if (client != null && client.spiel.isStarted() && lastStatus != null && lastStatus.clients > 1)
 				showDialog(DIALOG_QUIT);
 			else {
 				if (client != null && client.isConnected())
