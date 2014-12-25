@@ -161,7 +161,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		name = (EditText)findViewById(R.id.name);
 		server = (EditText)findViewById(R.id.server);
-		server.setText(Global.DEFAULT_SERVER_ADDRESS);
+		server.setText("");
 
 		updateNames();
 
@@ -309,6 +309,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	}
 
 	public String getServer() {
+		if (server.getText().toString().isEmpty())
+			return Global.DEFAULT_SERVER_ADDRESS;
 		return server.getText().toString();
 	}
 }

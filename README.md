@@ -23,7 +23,7 @@ APK direct download: https://github.com/shlusiak/Freebloks-Android/tree/master/a
 About
 -----
 
-Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2014.
+Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2015.
 
 Email: apps@saschahlusiak.de
 Project homepage: http://www.saschahlusiak.de/freebloks-3d-android/

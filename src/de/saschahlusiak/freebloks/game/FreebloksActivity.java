@@ -994,7 +994,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return true;
 
 		case R.id.show_main_menu:
-			if (client != null && client.spiel.isStarted() && lastStatus.clients > 1)
+			if (client != null && client.spiel.isStarted() && lastStatus != null && lastStatus.clients > 1)
 				showDialog(DIALOG_QUIT);
 			else {
 				if (client != null && client.isConnected())
@@ -1310,6 +1310,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]);
 				final ChatEntry e = new ChatEntry(-1, text, name);
 				e.setPlayer(i);
+				
+				if (view == null)
+					return;
+				if (view.model == null)
+					return;
+				if (view.model.spiel == null)
+					return;
 
 				if (!view.model.spiel.is_local_player(i))
 					updateMultiplayerNotification(tid == R.string.player_left_color && client.spiel.isStarted(), text);
@@ -1376,6 +1383,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public boolean commitCurrentStone(final Stone stone, final int x, final int y) {
+		if (client == null)
+			return false;
+		
 		if (!client.spiel.is_local_player())
 			return false;
 		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
