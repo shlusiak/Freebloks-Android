@@ -17,8 +17,8 @@ public class Global {
 	/* number of starts before the donate dialog appears */
 	public final static int DONATE_STARTS = 50;
 
-	/* the default server address: blokus.mooo.com */
-	public static final String DEFAULT_SERVER_ADDRESS = "blokus.mooo.com";
+	/* the default server address: blokus.saschahlusiak.de */
+	public static final String DEFAULT_SERVER_ADDRESS = "blokus.saschahlusiak.de";
 
 
 	public final static String base64EncodedPublicKey =

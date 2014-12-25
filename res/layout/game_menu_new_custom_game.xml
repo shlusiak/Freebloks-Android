@@ -27,7 +27,8 @@
 		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="0.6"
-		        android:gravity="right"
+		        android:gravity="center"
+		        android:hint="@string/default_server"
 		        android:imeOptions="flagNoExtractUi"
 		        android:inputType="textNoSuggestions"
 		        android:singleLine="true" >
@@ -53,7 +54,7 @@
 		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="0.6"
-		        android:gravity="right"
+		        android:gravity="center"
 		        android:imeOptions="flagNoExtractUi"
 		        android:inputType="textCapWords|textPersonName"
 		        android:singleLine="true"
