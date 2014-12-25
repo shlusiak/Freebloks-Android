@@ -62,7 +62,7 @@
             android:paddingTop="12dp"
             android:gravity="center"
             android:singleLine="true"
-            android:text="Copyright (c) Sascha Hlusiak, 2012-2014."
+            android:text="Copyright (c) Sascha Hlusiak, 2012-2015."
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
