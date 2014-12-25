@@ -1378,6 +1378,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public boolean commitCurrentStone(final Stone stone, final int x, final int y) {
+		if (client == null)
+			return false;
+		
 		if (!client.spiel.is_local_player())
 			return false;
 		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
