@@ -1312,6 +1312,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]);
 				final ChatEntry e = new ChatEntry(-1, text, name);
 				e.setPlayer(i);
+				
+				if (view == null)
+					return;
+				if (view.model == null)
+					return;
+				if (view.model.spiel == null)
+					return;
 
 				if (!view.model.spiel.is_local_player(i))
 					updateMultiplayerNotification(tid == R.string.player_left_color && client.spiel.isStarted(), text);
