@@ -139,14 +139,6 @@
         <item>Carpet</item>
         <item>Grass</item>
     </string-array>
-    <string-array name="theme_values" translatable="false" >
-        <item>black</item>
-        <item>blue</item>
-        <item>texture_table_cloth_1</item>
-        <item>texture_table_cloth_2</item>
-        <item>texture_wood</item>
-        <item>texture_bricks</item>
-    </string-array>
 
     <string name="prefs_interface">Интерфейс</string>
     <string name="prefs_display">Показывать</string>
