@@ -74,7 +74,7 @@ public class ColorAdapter extends BaseAdapter {
 			if (position == 1)
 				position = 2;
 
-		if (!lastStatus.isAdvanced())
+		if (!lastStatus.isVersion(2))
 			return false;
 
 		if (spiel.isStarted())
@@ -123,7 +123,7 @@ public class ColorAdapter extends BaseAdapter {
 			if (position == 1)
 				position = 2;
 
-		if (lastStatus.isAdvanced()) {
+		if (lastStatus.isVersion(2)) {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));

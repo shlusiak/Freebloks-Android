@@ -1231,7 +1231,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		String name = null;
 		int player = -1;
 		if (lastStatus != null && c.client >= 0) {
-			if (lastStatus.isAdvanced())
+			if (lastStatus.isVersion(2))
 				for (int i = 0; i < lastStatus.spieler.length; i++)
 					if (lastStatus.spieler[i] == c.client) {
 						player = i;
@@ -1241,7 +1241,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		} else {
 			/* if we have advanced status, ignore all server messages (c == -1) */
 			/* server messages are generated in serverStatus */
-			if (lastStatus != null && lastStatus.isAdvanced())
+			if (lastStatus != null && lastStatus.isVersion(2))
 				return;
 			name = getString(R.string.client_d, c.client + 1);
 		}
@@ -1291,7 +1291,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
-		if (lastStatus != null && status != null && lastStatus.isAdvanced()) {
+		if (lastStatus != null && status != null && lastStatus.isVersion(2)) {
 			/* generate server chat messages, aka "joined" and "left" */
 
 			for (int i = 0; i < lastStatus.spieler.length; i++) {
