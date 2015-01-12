@@ -56,24 +56,32 @@ const int CSpiel::get_player_start_y(const int playernumber)const{
 }
 
 
-void CSpiel::set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer){
-	int counts[5] = {einer, zweier, dreier, vierer, fuenfer};
-
-	for (int n = 0 ; n < STONE_COUNT_ALL_SHAPES; n++){
-		int size = CSpiel::m_player[0].get_stone(n)->get_stone_points();
+void CSpiel::set_stone_numbers(int8 stone_numbers[]){
+	for (int n = 0 ; n < STONE_COUNT_ALL_SHAPES; n++){  
 		for (int p = 0; p < PLAYER_MAX; p++){
 			CStone* stone = CSpiel::m_player[p].get_stone(n);
-			stone->set_available(counts [stone->get_stone_points()-1]);
+			stone->set_available(stone_numbers[n]);
 		}
 	}
 
 	CSpiel::refresh_player_data();
 }
 
+void CSpiel::set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer) {
+	int8 a[STONE_COUNT_ALL_SHAPES] = {
+			einer,
+			zweier,
+			dreier, dreier,
+			vierer, vierer, vierer, vierer, vierer,
+			fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer,
+	};
+	set_stone_numbers(a);
+}
+
 
 void CSpiel::set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
-
-	#ifdef _DEBUG
+	
+	#ifdef _DEBUG 
 		//�berpr�fung!
 		for (int p = 0; p < PLAYER_MAX; p++){
 			int count = 0;
@@ -134,7 +142,7 @@ void CSpiel::set_seeds(GAMEMODE gamemode) {
 	#define set_seed(x, y, player) \
 		if (get_game_field(player, y, x) == FIELD_FREE) \
 			set_game_field(y, x, PLAYER_BIT_ALLOWED[player]);
-	if (gamemode == GAMEMODE_DUO) {
+	if (gamemode == GAMEMODE_DUO || gamemode == GAMEMODE_JUNIOR) {
 		set_seed(4, m_field_size_y - 5, 0);
 		set_seed(m_field_size_x - 5, 4, 2);
 	} else {
