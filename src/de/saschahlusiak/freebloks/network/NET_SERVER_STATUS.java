@@ -2,11 +2,11 @@ package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.security.InvalidParameterException;
 
 import android.content.res.Resources;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
@@ -15,7 +15,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 	public int player, computer, clients; /* int 8 */
 	public int width, height; /* int 8 */
 	public int stone_numbers[] = new int[Stone.STONE_SIZE_MAX]; /* int8[5] */
-	public int gamemode; /* int8 */
+	public GameMode gamemode; /* int8 */
 
 	/* since 1.5, optional */
 	public int spieler[]; /* int8[4] */
@@ -40,7 +40,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		height = buffer[4];
 		for (int i = 0; i < Stone.STONE_SIZE_MAX; i++)
 			stone_numbers[i] = buffer[5 + i];
-		gamemode = buffer[10];
+		gamemode = GameMode.from(buffer[10]);
 		version = 1;
 		version_min = 1;
 		if (from.data_length >= 11 + 4 + 16 * 8)
@@ -94,7 +94,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		bos.write(height);
 		for (int i = 0; i < Stone.STONE_SIZE_MAX; i++)
 			bos.write(stone_numbers[i]);
-		bos.write(gamemode);
+		bos.write(gamemode.ordinal());
 	}
 
 	public String getClientName(Resources resources, int client) {

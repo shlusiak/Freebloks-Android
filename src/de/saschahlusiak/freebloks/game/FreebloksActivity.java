@@ -13,6 +13,7 @@ import com.google.example.games.basegameutils.BaseGameActivity;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -126,7 +127,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	String clientName;
 	int difficulty;
-	int gamemode;
+	GameMode gamemode;
 	int fieldsize;
 
 	ImageButton chatButton;
@@ -345,7 +346,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		clientName = prefs.getString("player_name", null);
 		difficulty = prefs.getInt("difficulty", 10);	/* TODO: generalize the value */
-		gamemode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		fieldsize = prefs.getInt("fieldsize", Spiel.DEFAULT_FIELD_SIZE_X);
 
 		if (spielthread != null) {
@@ -557,7 +558,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 
-			JNIServer.runServer(spiel1, spiel1.m_gamemode, spiel1.m_field_size_x, difficulty);
+			JNIServer.runServer(spiel1, spiel1.m_gamemode.ordinal(), spiel1.m_field_size_x, difficulty);
 
 			/* this will start a new SpielClient, which needs to be restored
 			 * from saved gamestate first */
@@ -591,7 +592,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void startNewGame(final String server, final boolean show_lobby, final boolean[] request_player) {
 		newCurrentPlayer(-1);
 		if (server == null) {
-			JNIServer.runServer(null, gamemode, fieldsize, difficulty);
+			JNIServer.runServer(null, gamemode.ordinal(), fieldsize, difficulty);
 		}
 
 		if (spielthread != null)
@@ -914,7 +915,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			break;
 
 		case DIALOG_JOIN:
-			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
+			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, GameMode.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
 			break;
 
 		case DIALOG_HOST:

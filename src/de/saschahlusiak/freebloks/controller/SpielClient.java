@@ -28,7 +28,7 @@ public class SpielClient {
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
 			spiel = new Spielleiter(fieldsize, fieldsize);
-			spiel.start_new_game(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+			spiel.start_new_game(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 			spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		} else
 			this.spiel = leiter;
@@ -221,10 +221,9 @@ public class SpielClient {
 				if (changed)spiel.set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
 			}
 			spiel.m_gamemode = status.gamemode;
-			if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+			if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0, 2, 1, 3);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS
-				|| spiel.m_gamemode==Spielleiter.GAMEMODE_DUO)
+			if (spiel.m_gamemode==GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.m_gamemode==GameMode.GAMEMODE_DUO)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);
@@ -252,10 +251,10 @@ public class SpielClient {
 				spiel.history.delete_all_turns();
 
 //			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+			if (spiel.m_gamemode==GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0,2,1,3);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-				spiel.m_gamemode==Spielleiter.GAMEMODE_DUO)
+			if (spiel.m_gamemode==GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+				spiel.m_gamemode==GameMode.GAMEMODE_DUO)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);

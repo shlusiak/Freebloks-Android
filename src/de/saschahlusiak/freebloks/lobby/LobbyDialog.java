@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -84,7 +84,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			}
 		});
 
-		adapter = new ChatListAdapter(getContext(), chatEntries, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		adapter = new ChatListAdapter(getContext(), chatEntries, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
 

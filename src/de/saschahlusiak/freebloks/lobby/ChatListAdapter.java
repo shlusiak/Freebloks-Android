@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.lobby;
 import java.util.List;
 
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -12,14 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
-	int gamemode;
+	GameMode gamemode;
 
-	public ChatListAdapter(Context context, List<ChatEntry> values, int gamemode) {
+	public ChatListAdapter(Context context, List<ChatEntry> values, GameMode gamemode) {
 		super(context, R.layout.chat_list_item, R.id.textView, values);
 		setGameMode(gamemode);
 	}
 
-	public void setGameMode(int gamemode) {
+	public void setGameMode(GameMode gamemode) {
 		this.gamemode = gamemode;
 	}
 

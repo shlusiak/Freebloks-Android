@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 
-import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.controller.GameMode;
 
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
@@ -82,9 +82,9 @@ public class Spiel implements Serializable, Cloneable {
 			m_game_field[y * m_field_size_x + x] = PLAYER_BIT_ALLOWED[player];
 	}
 
-	private void set_seeds(int gamemode) {
+	private void set_seeds(GameMode gamemode) {
 
-		if (gamemode == Spielleiter.GAMEMODE_DUO) {
+		if (gamemode == GameMode.GAMEMODE_DUO) {
 			set_seed(4, m_field_size_y - 5, 0);
 			set_seed(m_field_size_x - 5, 4, 2);
 		} else {
@@ -172,7 +172,7 @@ public class Spiel implements Serializable, Cloneable {
 		m_player[player_team2_2].set_nemesis(player_team1_1);
 	}
 
-	public void start_new_game(int gamemode){
+	public void start_new_game(GameMode gamemode){
 		init_field();
 		set_seeds(gamemode);
 		for (int n = 0; n < PLAYER_MAX; n++){
@@ -258,7 +258,7 @@ public class Spiel implements Serializable, Cloneable {
 		return Stone.FIELD_ALLOWED;
 	}
 
-	public void undo_turn(Turnpool turnpool, int gamemode){
+	public void undo_turn(Turnpool turnpool, GameMode gamemode){
 		Turn turn = turnpool.get_last_turn();
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;

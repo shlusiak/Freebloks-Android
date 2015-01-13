@@ -3,8 +3,8 @@ package de.saschahlusiak.freebloks.view.model;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
-
 import de.saschahlusiak.freebloks.Global;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -130,7 +130,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 
 	public int getPlayerColor(int player) {
 		if (spiel == null)
-			return Global.getPlayerColor(player, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+			return Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 		return Global.getPlayerColor(player, spiel.m_gamemode);
 	}
 }

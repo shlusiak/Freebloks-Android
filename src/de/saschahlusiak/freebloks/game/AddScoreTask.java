@@ -4,14 +4,15 @@ import android.app.backup.BackupManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 
 public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
-	int game_mode;
+	GameMode game_mode;
 	Context context;
 
-	public AddScoreTask(Context context, int game_mode) {
+	public AddScoreTask(Context context, GameMode game_mode) {
 		this.game_mode = game_mode;
 		this.context = context;
 	}

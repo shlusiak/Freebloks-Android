@@ -15,14 +15,9 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	static final int PLAYER_COMPUTER = -2;
 	static final int PLAYER_LOCAL = -1;
 
-	public static final int GAMEMODE_2_COLORS_2_PLAYERS = 0;
-	public static final int GAMEMODE_4_COLORS_2_PLAYERS = 1;
-	public static final int GAMEMODE_4_COLORS_4_PLAYERS = 2;
-	public static final int GAMEMODE_DUO = 3;
-
 	int m_current_player;
 	int spieler[] = new int[Spiel.PLAYER_MAX];
-	public int m_gamemode;
+	public GameMode m_gamemode;
 	boolean finished = false;
 	boolean started = false;
 
@@ -31,7 +26,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	public Spielleiter(int size_y, int size_x) {
 		super(size_y, size_x);
 		m_current_player=-1;
-		m_gamemode = GAMEMODE_4_COLORS_4_PLAYERS;
+		m_gamemode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 		for (int i=0;i<PLAYER_MAX;i++)spieler[i]=PLAYER_COMPUTER;
 		history=new Turnpool();
 	}
@@ -59,7 +54,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 			return get_player(m_current_player);
 	}
 
-	int get_gamemode() {
+	GameMode get_gamemode() {
 		return m_gamemode;
 	}
 
@@ -118,20 +113,20 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		PlayerData[] data;
 		int i;
 		switch (m_gamemode) {
-		case Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS:
-		case Spielleiter.GAMEMODE_DUO:
+		case GAMEMODE_2_COLORS_2_PLAYERS:
+		case GAMEMODE_DUO:
 			data = new PlayerData[2];
 			data[0] = new PlayerData(this, 0);
 			data[1] = new PlayerData(this, 2);
 			break;
 
-		case Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS:
+		case GAMEMODE_4_COLORS_2_PLAYERS:
 			data = new PlayerData[2];
 			data[0] = new PlayerData(this, 0, 2);
 			data[1] = new PlayerData(this, 1, 3);
 			break;
 
-		case Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS:
+		case GAMEMODE_4_COLORS_4_PLAYERS:
 		default:
 			data = new PlayerData[4];
 			data[0] = new PlayerData(this, 0);

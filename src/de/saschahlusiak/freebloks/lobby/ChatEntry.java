@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.lobby;
 import java.io.Serializable;
 
 import de.saschahlusiak.freebloks.Global;
-
+import de.saschahlusiak.freebloks.controller.GameMode;
 import android.graphics.Color;
 
 public class ChatEntry implements Serializable {
@@ -25,7 +25,7 @@ public class ChatEntry implements Serializable {
 		this.player = player;
 	}
 
-	int getColor(int gamemode) {
+	int getColor(GameMode gamemode) {
 		final int extra_colors[] = { Color.CYAN, Color.MAGENTA, Color.LTGRAY, Color.WHITE };
 
 		if (player < 0)
