@@ -112,6 +112,7 @@
         <item>2 Players, 4 Colors</item>
         <item>Blokus Classic</item>
         <item>Blokus Duo</item>
+        <item>Blokus Junior</item>
     </string-array>
     <string-array name="game_field_sizes">
         <item>13x13</item>

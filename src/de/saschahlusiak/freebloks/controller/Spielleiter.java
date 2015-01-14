@@ -115,6 +115,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		switch (m_gamemode) {
 		case GAMEMODE_2_COLORS_2_PLAYERS:
 		case GAMEMODE_DUO:
+		case GAMEMODE_JUNIOR:
 			data = new PlayerData[2];
 			data[0] = new PlayerData(this, 0);
 			data[1] = new PlayerData(this, 2);

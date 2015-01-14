@@ -114,6 +114,7 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		if (game_mode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
 			game_mode == GameMode.GAMEMODE_DUO ||
+			game_mode == GameMode.GAMEMODE_JUNIOR ||
 			game_mode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
 			t[2].setVisibility(View.GONE);
 			t[3].setVisibility(View.GONE);

@@ -190,7 +190,8 @@ public class StatisticsActivity extends BaseGameActivity {
 			values[3 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
 		}
 		if (game_mode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-			game_mode == GameMode.GAMEMODE_DUO) {
+			game_mode == GameMode.GAMEMODE_DUO ||
+			game_mode == GameMode.GAMEMODE_JUNIOR) {
 			values[5] = values[6] = null;
 		}
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);

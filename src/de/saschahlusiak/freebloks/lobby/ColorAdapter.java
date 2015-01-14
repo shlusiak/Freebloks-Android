@@ -42,6 +42,8 @@ public class ColorAdapter extends BaseAdapter {
 			return 2;
 		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_DUO)
 			return 2;
+		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
+			return 2;
 		return 4;
 	}
 
@@ -55,7 +57,8 @@ public class ColorAdapter extends BaseAdapter {
 		if (lastStatus == null)
 			return position;
 		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-				lastStatus.gamemode == GameMode.GAMEMODE_DUO)
+			lastStatus.gamemode == GameMode.GAMEMODE_DUO ||
+			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
 				if (position == 1)
 					position = 2;
 		return position;
@@ -68,7 +71,8 @@ public class ColorAdapter extends BaseAdapter {
 
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
 		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-			lastStatus.gamemode == GameMode.GAMEMODE_DUO)
+			lastStatus.gamemode == GameMode.GAMEMODE_DUO ||
+			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
 			if (position == 1)
 				position = 2;
 
@@ -117,6 +121,7 @@ public class ColorAdapter extends BaseAdapter {
 
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
 		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR ||
 			lastStatus.gamemode == GameMode.GAMEMODE_DUO)
 			if (position == 1)
 				position = 2;

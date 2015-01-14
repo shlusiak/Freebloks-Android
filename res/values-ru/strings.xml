@@ -111,6 +111,7 @@
         <item>2 Игрока, 4 Цвета</item>
         <item>Классический Blokus</item>
         <item>Blokus Duo</item>
+        <item>Blokus Junior</item>
     </string-array>
     <string-array name="game_field_sizes">
         <item>13x13</item>

@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.game;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -70,7 +69,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 			@Override
 			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
-				if (position == GameMode.GAMEMODE_DUO.ordinal()) {
+				if (position == GameMode.GAMEMODE_DUO.ordinal() || position == GameMode.GAMEMODE_JUNIOR.ordinal()) {
 					player1.setEnabled(true);
 					player3.setEnabled(true);
 					player2.setEnabled(false);
@@ -196,7 +195,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		if (gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0) * 2;
-		if (gamemode == GameMode.GAMEMODE_DUO)
+		if (gamemode == GameMode.GAMEMODE_DUO || gamemode == GameMode.GAMEMODE_JUNIOR)
 			p = (int)(Math.random() * 2.0) * 2;
 		if (gamemode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0);

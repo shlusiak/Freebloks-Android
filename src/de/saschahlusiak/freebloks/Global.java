@@ -75,7 +75,7 @@ public class Global {
 	public final static float stone_shadow_color_a[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark, stone_orange_dark, stone_purple_dark };
 
 	public final static int getPlayerColor(int player, GameMode game_mode) {
-		if (game_mode == GameMode.GAMEMODE_DUO) {
+		if (game_mode == GameMode.GAMEMODE_DUO || game_mode == GameMode.GAMEMODE_JUNIOR) {
 			/* player 1 is orange */
 			if (player == 0)
 				return 5;
