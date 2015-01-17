@@ -106,6 +106,22 @@ typedef struct
 } NET_CHAT;
 
 
+/**
+ * Client moechte Spielmodus aendern (wenn in Lobby)
+ */
+typedef struct
+{
+	NET_HEADER header;
+	int8 version;	/* Version dieser Nachricht, 1 */
+	int8 width, height;
+	int8 gamemode;	/* Spielmodus */
+	int8 stone_numbers[STONE_COUNT_ALL_SHAPES]; /* Anzahl bestimmter Steine */
+} NET_REQUEST_GAME_MODE;
+
+#define NET_REQUEST_GAME_MODE_VERSION (1)
+
+
+
 /* Unbedingt Byte-Align wieder zuruecksetzen */
 #pragma pack()
 
@@ -124,6 +140,7 @@ const int MSG_UNDO_STONE=10;
 const int MSG_REQUEST_HINT=11;
 const int MSG_STONE_HINT=12;
 const int MSG_REVOKE_PLAYER=13;
+const int MSG_REQUEST_GAME_MODE=14;
 
 
 /* Bereitet die Netzwerknachricht *header vor und schickt sie an target.*/

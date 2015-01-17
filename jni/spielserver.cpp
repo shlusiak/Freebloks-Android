@@ -492,6 +492,44 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 
 			break;
 		}
+		case MSG_REQUEST_GAME_MODE: {
+			NET_REQUEST_GAME_MODE* r = (NET_REQUEST_GAME_MODE*)data;
+			if (m_current_player > -1) {
+				send_server_status();
+				break;
+			}
+			if (r->version >= 1) {
+				if (ntohs(r->header.data_length) < sizeof(NET_HEADER) + 25)
+					break;
+				if (r->width < 4 || r->width > 50)
+					break;
+				if (r->height < 4 || r->height > 50)
+					break;
+
+				set_field_size(r->width, r->height);
+				m_gamemode = (GAMEMODE)r->gamemode;
+
+				if (m_gamemode == GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode == GAMEMODE_DUO || m_gamemode == GAMEMODE_JUNIOR) {
+					NET_REVOKE_PLAYER rev;
+
+					if (spieler[1] != PLAYER_COMPUTER) {
+						rev.player = 1;
+						network_send(spieler[1],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+						spieler[1]=PLAYER_COMPUTER;
+					}
+					if (spieler[3] != PLAYER_COMPUTER) {
+						rev.player = 3;
+						network_send(spieler[3],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+						spieler[3]=PLAYER_COMPUTER;
+					}
+				}
+
+				start_new_game((GAMEMODE)r->gamemode);
+				set_stone_numbers(r->stone_numbers);
+			}
+			send_server_status();
+			break;
+		}
 
 		default: printf("FEHLER: Unbehandelte Netzwerknachricht: #%d\n",data->msg_type);
 			break;
