@@ -24,7 +24,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	final static int DIFFICULTY_VALUES[] = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
-	final static int FIELD_SIZES[] = {
+	public final static int FIELD_SIZES[] = {
 		13, 14, 15, 17, 20, 23
 	};
 

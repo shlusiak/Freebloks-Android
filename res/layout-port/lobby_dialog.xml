@@ -4,30 +4,32 @@
     android:layout_height="match_parent"
     android:padding="8dp" xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/server"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="server"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:id="@+id/spinner_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/clients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/server"
-        android:layout_alignBottom="@+id/server"
-        android:layout_alignParentRight="true"
-        android:text="x Clients"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+       <Spinner
+           android:id="@+id/game_mode"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:entries="@array/game_modes" />
+
+		<Spinner
+           android:id="@+id/field_size"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="0"
+           android:entries="@array/game_field_sizes" />
+	</LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:orientation="horizontal"
-        android:layout_alignLeft="@+id/server"
-        android:layout_below="@+id/server"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 	    <GridView

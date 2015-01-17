@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.util.Log;
-
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -121,6 +120,10 @@ public class SpielClient {
 	public void revoke_player(int player) {
 		new NET_REVOKE_PLAYER(player).send(client_socket);
 	}
+	
+	public void request_game_mode(int width, int height, GameMode g, int stones[]) {
+		new NET_REQUEST_GAME_MODE(width, height, g, stones).send(client_socket);
+	}
 
 	public void request_hint(int player) {
 		if (spiel == null)
@@ -208,22 +211,13 @@ public class SpielClient {
 			NET_SERVER_STATUS status = (NET_SERVER_STATUS)data;
 			/* Wenn Spielfeldgroesse sich von Server unterscheidet,
 			   lokale Spielfeldgroesse hier anpassen */
-			if (status.width != spiel.m_field_size_x || status.height != spiel.m_field_size_y) {
+			if (!spiel.isStarted()) {
 				spiel.set_field_size(status.width, status.height);
 				spiel.start_new_game(status.gamemode);
 				if (status.isVersion(3))
 					spiel.set_stone_numbers(status.stone_numbers);
 			}
-			if (status.isVersion(3)) {
-				boolean changed = false;
-				if (lastStatus == null)
-					changed = true;
-				else {
-					for (i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
-						changed |= (lastStatus.stone_numbers[i] != status.stone_numbers[i]);
-				}
-				if (changed && !spiel.isStarted())spiel.set_stone_numbers(status.stone_numbers);
-			} else {
+			if (!status.isVersion(3)) {
 				boolean changed = false;
 				if (lastStatus == null)
 					changed = true;
