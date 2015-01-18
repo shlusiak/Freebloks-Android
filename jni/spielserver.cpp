@@ -509,18 +509,24 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				set_field_size(r->width, r->height);
 				m_gamemode = (GAMEMODE)r->gamemode;
 
+				/* FIXME: support GAMEMODE_4_COLORS_2_PLAYERS */
 				if (m_gamemode == GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode == GAMEMODE_DUO || m_gamemode == GAMEMODE_JUNIOR) {
 					NET_REVOKE_PLAYER rev;
 
-					if (spieler[1] != PLAYER_COMPUTER) {
-						rev.player = 1;
-						network_send(spieler[1],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
-						spieler[1]=PLAYER_COMPUTER;
-					}
-					if (spieler[3] != PLAYER_COMPUTER) {
-						rev.player = 3;
-						network_send(spieler[3],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
-						spieler[3]=PLAYER_COMPUTER;
+					for (int i = 1; i <= 3; i += 2) if (spieler[i] != PLAYER_COMPUTER) {
+						rev.player = i;
+						network_send(spieler[i],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+
+						// searching for free slot and grant player
+						for (int j = 0; j <= 2; j += 2) if (spieler[j] == PLAYER_COMPUTER) {
+							spieler[j] = spieler[i];
+							NET_GRANT_PLAYER g;
+							g.player = j;
+							network_send(spieler[j],(NET_HEADER*)&g,sizeof(NET_GRANT_PLAYER),MSG_GRANT_PLAYER);
+							break;
+						}
+
+						spieler[i]=PLAYER_COMPUTER;
 					}
 				}
 
