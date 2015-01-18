@@ -15,14 +15,11 @@ import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
-import de.saschahlusiak.freebloks.network.NET_REQUEST_GAME_MODE;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -144,10 +141,11 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		}
 
 	//	TextView server = (TextView)findViewById(R.id.server);
+		/* TODO: this is added again and again on screen rotate */
 		if (client.getLastHost() == null) {
 			try {
-				String s = null;
 				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+				int n = 0;
 				if (interfaces != null)
 					while (interfaces.hasMoreElements()) {
 						NetworkInterface i = interfaces.nextElement();
@@ -165,13 +163,11 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 							String a = addr.getHostAddress();
 							if (a.contains("%"))
 								a = a.substring(0, a.indexOf("%"));
-							if (s == null)
-								s = a;
-							else
-								s += "\n" + a;
+							adapter.add(new ChatEntry(-1, "[" + a + "]", null));
+							n++;
 						}
 					}
-				if (s == null) /* no address found, clients will not be able to connect */
+				if (n == 0) /* no address found, clients will not be able to connect */
 					throw new SocketException("no address found");
 			//	server.setText(s);
 			//	server.setTypeface(Typeface.DEFAULT_BOLD);
