@@ -20,7 +20,7 @@
 					<folderInfo id="com.android.toolchain.gcc.133788523.1181403599" name="/" resourcePath="">
 						<toolChain id="com.android.toolchain.gcc.1281498283" name="Android GCC" superClass="com.android.toolchain.gcc">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.android.targetPlatform.1925462116" isAbstract="false" superClass="com.android.targetPlatform"/>
-							<builder id="com.android.builder.997018137" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder" superClass="com.android.builder">
+							<builder enableCleanBuild="false" id="com.android.builder.997018137" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder" superClass="com.android.builder">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="obj"/>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="libs"/>
@@ -48,5 +48,10 @@
 		<scannerConfigBuildInfo instanceId="com.android.toolchain.gcc.133788523;com.android.toolchain.gcc.133788523.1181403599;com.android.gcc.compiler.1453518315;com.android.gcc.inputType.1263937368">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.android.AndroidPerProjectProfile"/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/Freebloks-Android"/>
+		</configuration>
 	</storageModule>
 </cproject>
