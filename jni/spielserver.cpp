@@ -49,8 +49,9 @@ CSpielServer::CSpielServer(const int v_max_humans,const int v_ki_mode,const GAME
 	m_gamemode=v_gamemode;
 	if (m_gamemode==GAMEMODE_4_COLORS_2_PLAYERS)
 		set_teams(0,2,1,3);
-	/* Per Default mit 1/1/1/1/1 Steinen starten. Wird bei Bedarf anders aufgerufen */
-	set_stone_numbers(1,1,1,1,1);
+	for (i = 0; i < STONE_COUNT_ALL_SHAPES; i++)
+		stone_numbers[i] = 1;
+	set_stone_numbers(stone_numbers);
 	logger=NULL;
 }
 
@@ -293,7 +294,7 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 			/* Ebenso, wenn das Spiel bereits laeuft */
 			if (m_current_player!=-1) return;
 
-			if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode==GAMEMODE_DUO)
+			if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode==GAMEMODE_DUO || m_gamemode==GAMEMODE_JUNIOR)
 			{
 				/* Wenn bereits zwei Spieler drin sind, raus */
 				if (num_players()>=2)return;
@@ -491,6 +492,50 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 
 			break;
 		}
+		case MSG_REQUEST_GAME_MODE: {
+			NET_REQUEST_GAME_MODE* r = (NET_REQUEST_GAME_MODE*)data;
+			if (m_current_player > -1) {
+				send_server_status();
+				break;
+			}
+			if (r->version >= 1) {
+				if (ntohs(r->header.data_length) < sizeof(NET_HEADER) + 25)
+					break;
+				if (r->width < 4 || r->width > 50)
+					break;
+				if (r->height < 4 || r->height > 50)
+					break;
+
+				set_field_size(r->width, r->height);
+				m_gamemode = (GAMEMODE)r->gamemode;
+
+				/* FIXME: support GAMEMODE_4_COLORS_2_PLAYERS */
+				if (m_gamemode == GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode == GAMEMODE_DUO || m_gamemode == GAMEMODE_JUNIOR) {
+					NET_REVOKE_PLAYER rev;
+
+					for (int i = 1; i <= 3; i += 2) if (spieler[i] != PLAYER_COMPUTER) {
+						rev.player = i;
+						network_send(spieler[i],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+
+						// searching for free slot and grant player
+						for (int j = 0; j <= 2; j += 2) if (spieler[j] == PLAYER_COMPUTER) {
+							spieler[j] = spieler[i];
+							NET_GRANT_PLAYER g;
+							g.player = j;
+							network_send(spieler[j],(NET_HEADER*)&g,sizeof(NET_GRANT_PLAYER),MSG_GRANT_PLAYER);
+							break;
+						}
+
+						spieler[i]=PLAYER_COMPUTER;
+					}
+				}
+
+				start_new_game((GAMEMODE)r->gamemode);
+				set_stone_numbers(r->stone_numbers);
+			}
+			send_server_status();
+			break;
+		}
 
 		default: printf("FEHLER: Unbehandelte Netzwerknachricht: #%d\n",data->msg_type);
 			break;
@@ -528,14 +573,14 @@ void CSpielServer::send_server_status()
 {
 	NET_SERVER_STATUS status;
 	int i;
-	int max=(m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode==GAMEMODE_DUO)?2:PLAYER_MAX;
+	int max=(m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode==GAMEMODE_DUO || m_gamemode==GAMEMODE_JUNIOR)?2:PLAYER_MAX;
 	status.player=num_players();
 	status.computer=max-num_players();
 	status.clients=num_clients();
 	status.width=get_field_size_x();
 	status.height=get_field_size_y();
 	for (i=0;i<STONE_SIZE_MAX;i++)
-		status.stone_numbers[i]=stone_numbers[i];
+		status.stone_numbers_obsolete[i]=1; // OBSOLETE, NOT SUPPORTED ANYMORE
 	status.gamemode=m_gamemode;
 	for (i = 0; i < PLAYER_MAX; i++) {
 		if (spieler[i] == PLAYER_COMPUTER || spieler[i] == PLAYER_LOCAL)
@@ -554,6 +599,10 @@ void CSpielServer::send_server_status()
 				strcpy((char*)status.client_names[i], names[i]);
 		}
 	}
+	status.version = NET_SERVER_STATUS_VERSION;
+	status.version_min = 1;
+	for (int i = 0; i < STONE_COUNT_ALL_SHAPES; i++)
+		status.stone_numbers[i] = stone_numbers[i];
 
 	send_all((NET_HEADER*)&status,sizeof(status),MSG_SERVER_STATUS);
 }
@@ -587,10 +636,10 @@ void CSpielServer::start_game()
 	/* Spiel zuruecksetzen */
 	if (history)history->delete_all_turns();
 	CSpiel::start_new_game(m_gamemode);
-	CSpiel::set_stone_numbers(stone_numbers[0],stone_numbers[1],stone_numbers[2],stone_numbers[3],stone_numbers[4]);
+	CSpiel::set_stone_numbers(stone_numbers);
 
 	/* Wenn nur mit zwei Farben gespielt wird, nehme Spieler 1 und 3 alle Steine weg */
-	if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode==GAMEMODE_DUO)
+	if (m_gamemode==GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode==GAMEMODE_DUO || m_gamemode==GAMEMODE_JUNIOR)
 	{
 		for (int n = 0 ; n < STONE_COUNT_ALL_SHAPES; n++){
 			get_player(1)->get_stone(n)->set_available(0);
@@ -653,20 +702,22 @@ void CSpielServer::next_player()
  * Setzt die Anzahl der Steine des Spiels. Die Zahlen werden lokal gemerkt,
  * damit sie an die Clients geschickt werden koennen.
  **/
-void CSpielServer::set_stone_numbers(int einer,int zweier,int dreier,int vierer,int fuenfer)
+void CSpielServer::set_stone_numbers(int8 stone_numbers[])
 {
-	stone_numbers[0]=einer;
-	stone_numbers[1]=zweier;
-	stone_numbers[2]=dreier;
-	stone_numbers[3]=vierer;
-	stone_numbers[4]=fuenfer;
+	if (stone_numbers == NULL) {
+		for (int i = 0; i < STONE_COUNT_ALL_SHAPES; i++)
+			this->stone_numbers[i] = 1;
+	} else {
+		for (int i = 0; i < STONE_COUNT_ALL_SHAPES; i++)
+			this->stone_numbers[i] = stone_numbers[i];
+	}
 	/* Das CSpiel setzt hier die Player richtig */
-	CSpiel::set_stone_numbers(einer,zweier,dreier,vierer,fuenfer);
+	CSpiel::set_stone_numbers(this->stone_numbers);
 }
 
 
-/**
- * Der Server-Thread, der das Spiel parallel hosten soll
+/** 
+ * Der Server-Thread, der das Spiel parallel hosten soll 
  * Wird von CSpielServer::run_server(...) aufgerufen
  **/
 #ifdef WIN32
@@ -709,7 +760,7 @@ void* LocalServerThread(void* param)
  * return 0, bei Erfolg
  * Wird von der GUI aufgerufen, um einen lokalen Server zu starten, fuer single- oder multiplayer
  **/
-int CSpielServer::run_server(const char* interface_,int port,int maxhumans,int ki_mode,int width,int height,GAMEMODE gamemode,int einer,int zweier,int dreier,int vierer,int fuenfer,int ki_threads)
+int CSpielServer::run_server(const char* interface_,int port,int maxhumans,int ki_mode,int width,int height,GAMEMODE gamemode,int8 stone_numbers[],int ki_threads)
 {
 	// Listener erstellen und einrichten
 	CServerListener *listener=new CServerListener();
@@ -725,7 +776,7 @@ int CSpielServer::run_server(const char* interface_,int port,int maxhumans,int k
 	listener->new_game(maxhumans,ki_mode,gamemode,ki_threads,1);
 	listener->get_game()->set_field_size(width, height);
 	listener->get_game()->start_new_game(gamemode);
-	listener->get_game()->set_stone_numbers(einer,zweier,dreier,vierer,fuenfer);
+	listener->get_game()->set_stone_numbers(stone_numbers);
 
 	// Einen Thread starten, der sich um das Spiel kuemmert
 #ifdef WIN32
@@ -907,15 +958,14 @@ int CServerListener::init(const char* interface_,int port)
 	if (listen_sockets[0]==-1)return errno;
 	num_listen_sockets = 1;
 
-#ifndef WIN32
+#ifndef WIN32	
 	/* Unter Linux doch SO_REUSEADDR verwenden, damit bind auch erfolgt, wenn ein Socket
 	   mit dem Port bereits existiert. */
-	int i = 1;
 	if (setsockopt(listen_sockets[0],SOL_SOCKET,SO_REUSEADDR,&i,sizeof(i))==-1)return errno;
 #endif
 
 	/* Socket an Quelladdresse binden */
-	if (bind(listen_sockets[0],(sockaddr*)&addr,sizeof(addr))==-1)return errno;
+	if (bind(listen_socket[0],(sockaddr*)&addr,sizeof(addr))==-1)return errno;
 	if (listen(listen_sockets[0],5)==-1)return errno;
 #endif
 

@@ -2,14 +2,16 @@
  * spielserver.h
  * Autor: Sascha hlusiak
  *
- * Klassen zur Unterhaltung eines SpielServers,
+ * Klassen zur Unterhaltung eines SpielServers, 
  * und eines Listeners, der neue Spiele errichtet
  **/
 
 #ifndef __SPIELSERVER_H_INCLUDED_
 #define __SPIELSERVER_H_INCLUDED_
 
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
+#endif
 #include "constants.h"
 #include "spielleiter.h"
 #include "network.h"
@@ -49,7 +51,7 @@ private:
 	const int forceDelay;
 
 	/* Anzahl der Spielsteine bestimmter Groesse */
-	int8 stone_numbers[STONE_SIZE_MAX];
+	int8 stone_numbers[STONE_COUNT_ALL_SHAPES];
 
 	/* ggf. Logdatei */
 	CLogger* logger;
@@ -96,13 +98,13 @@ public:
 	void start_game();
 
 	/* Setzt die Anzahl der Spielsteine bestimmter Groessen */
-	void set_stone_numbers(int einer,int zweier,int dreier,int vierer,int fuenfer);
+	virtual void set_stone_numbers(int8 stone_numbers[]);
 
 	/* Logdatei setzen */
 	void setLogger(CLogger* l) { logger=l; }
 
 	/* Startet einen Server lokal in einem Thread */
-	static int run_server(const char* interface_,int port,int maxhumans,int ki_mode,int width,int height,GAMEMODE gamemode,int einer,int zweier,int dreier,int vierer,int fuenfer,int ki_threads);
+	static int run_server(const char* interface_,int port,int maxhumans,int ki_mode,int width,int height,GAMEMODE gamemode,int8 stone_numbers[],int ki_threads);
 
 	void set_ki_threads(int ki_threads) { m_ki.set_num_threads(ki_threads); }
 };

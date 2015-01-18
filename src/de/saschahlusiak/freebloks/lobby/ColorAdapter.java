@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.lobby;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import android.content.Context;
@@ -9,8 +10,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.opengl.Visibility;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
 
 public class ColorAdapter extends BaseAdapter {
@@ -40,9 +38,11 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		if (lastStatus != null && lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS)
+		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS)
 			return 2;
-		if (lastStatus != null && lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_DUO)
+			return 2;
+		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
 			return 2;
 		return 4;
 	}
@@ -56,8 +56,9 @@ public class ColorAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		if (lastStatus == null)
 			return position;
-		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-				lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.gamemode == GameMode.GAMEMODE_DUO ||
+			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
 				if (position == 1)
 					position = 2;
 		return position;
@@ -69,12 +70,13 @@ public class ColorAdapter extends BaseAdapter {
 			return false;
 
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
-		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-			lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.gamemode == GameMode.GAMEMODE_DUO ||
+			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
 			if (position == 1)
 				position = 2;
 
-		if (!lastStatus.isAdvanced())
+		if (!lastStatus.isVersion(2))
 			return false;
 
 		if (spiel.isStarted())
@@ -113,22 +115,23 @@ public class ColorAdapter extends BaseAdapter {
 			background.setAlpha(96);
         	t.setText("---");
         	t.clearAnimation();
-        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         	return v;
         }
 
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
-		if (lastStatus.gamemode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-			lastStatus.gamemode == Spielleiter.GAMEMODE_DUO)
+		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR ||
+			lastStatus.gamemode == GameMode.GAMEMODE_DUO)
 			if (position == 1)
 				position = 2;
 
-		if (lastStatus.isAdvanced()) {
+		if (lastStatus.isVersion(2)) {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
-	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -158,7 +161,7 @@ public class ColorAdapter extends BaseAdapter {
 				t.clearAnimation();
 				if (spiel.isStarted()) {
 					t.setVisibility(View.VISIBLE);
-					v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+					v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				} else {
 					v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 					t.setVisibility(View.INVISIBLE);
@@ -166,7 +169,7 @@ public class ColorAdapter extends BaseAdapter {
 			}
 		} else {
 			if (spiel.is_local_player(position)) {
-	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position + 1]);
@@ -189,7 +192,7 @@ public class ColorAdapter extends BaseAdapter {
 
 				t.startAnimation(a);
 			} else {
-	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				background.setAlpha(96);
 				t.setText("---");

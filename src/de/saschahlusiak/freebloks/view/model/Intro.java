@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
-import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.PhysicalStoneEffect;
-
 import android.graphics.PointF;
 import android.opengl.GLU;
 
@@ -256,7 +254,7 @@ public class Intro implements ViewElement {
 
 		/* CPhysicalStone erstellen, aus stones[stone] */
 		Stone st = stones[stone];
-		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS));
+		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS));
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
 		x=(float)(-(Spiel.DEFAULT_FIELD_SIZE_X-1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);

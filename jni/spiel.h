@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "ki.h"
 #include "turnpool.h"
+#include "network.h"
 
 class CSpiel{
 
@@ -21,10 +22,9 @@ class CSpiel{
 
 		CPlayer m_player[PLAYER_MAX];
 		TSingleField* m_game_field;
-
+				
 		const bool is_position_inside_field(const int y, const int x)const;
 		void refresh_player_data();
-
 
 		void set_single_stone_for_player(const int playernumber, const int y, const int x);
 		void free_gamefield(int y, int x);
@@ -40,6 +40,7 @@ class CSpiel{
 		void follow_situation(int vorher_playernumber, const CSpiel* vorher_situation, const CTurn* turn);
 		void init_field();
 		void set_seeds(enum GAMEMODE gamemode);
+		void set_game_field(const int y, const int x, const TSingleField value);
 
 		/*PLAYER*/
 		const int get_player_start_x(const int playernumber)const;
@@ -64,20 +65,19 @@ class CSpiel{
 		const int get_max_stone_size()const;
 
 		void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2);
-		void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer);
-
+		virtual void set_stone_numbers(int8 stone_numbers[]);
+		virtual void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer);
+		
 		CPlayer* get_player(const int playernumber);
 		TSingleField is_valid_turn(CStone* stone, int player, int y, int x)const;
 		TSingleField is_valid_turn(const CTurn* turn);
 
-		void set_game_field(const int y, const int x, const TSingleField value);
-
 		const TSingleField get_game_field(const int playernumber, const int y, const int x)const; //f�r spielerr�ckgaben
 		const TSingleField get_game_field(const int y, const int x)const; //f�r feldr�ckgaben
-
+		
 		const char get_game_field_value(const int y, const int x)const; //f�r �bergabe an andere spiel-klassen
 		TSingleField* get_field_pointer()const;
-
+		
 		TSingleField set_stone(CStone* stone, int playernumber, int y, int x);
 		TSingleField set_stone(const CTurn* turn);
 

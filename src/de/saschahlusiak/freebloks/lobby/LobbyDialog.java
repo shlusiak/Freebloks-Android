@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import de.saschahlusiak.freebloksvip.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -19,8 +20,6 @@ import de.saschahlusiak.freebloks.network.NET_SET_STONE;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -29,14 +28,16 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemClickListener {
+public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemClickListener, OnItemSelectedListener {
 	SpielClient client;
 	Handler handler = new Handler();
 	ListView chatList;
@@ -44,6 +45,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	NET_SERVER_STATUS lastStatus = null;
 	GridView colorGrid;
 	ColorAdapter colorAdapter;
+	Spinner gameMode, fieldSize;
 
 	public LobbyDialog(Context context, OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
 		super(context, true, cancelListener);
@@ -60,6 +62,16 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		colorGrid.setAdapter(colorAdapter);
 
 		colorGrid.setOnItemClickListener(this);
+		
+		gameMode = (Spinner)findViewById(R.id.game_mode);
+		gameMode.setSelection(GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal());
+		gameMode.setEnabled(false);
+		gameMode.setOnItemSelectedListener(this);
+
+		fieldSize = (Spinner)findViewById(R.id.field_size);
+		fieldSize.setSelection(4);
+		fieldSize.setEnabled(false);
+		fieldSize.setOnItemSelectedListener(this);
 
 		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -84,7 +96,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			}
 		});
 
-		adapter = new ChatListAdapter(getContext(), chatEntries, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		adapter = new ChatListAdapter(getContext(), chatEntries, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 		chatList = (ListView)findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
 
@@ -128,11 +140,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			setTitle(R.string.chat);
 		}
 
-		TextView server = (TextView)findViewById(R.id.server);
+	//	TextView server = (TextView)findViewById(R.id.server);
+		/* TODO: this is added again and again on screen rotate */
 		if (client.getLastHost() == null) {
 			try {
-				String s = null;
 				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+				int n = 0;
 				if (interfaces != null)
 					while (interfaces.hasMoreElements()) {
 						NetworkInterface i = interfaces.nextElement();
@@ -150,26 +163,24 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 							String a = addr.getHostAddress();
 							if (a.contains("%"))
 								a = a.substring(0, a.indexOf("%"));
-							if (s == null)
-								s = a;
-							else
-								s += "\n" + a;
+							adapter.add(new ChatEntry(-1, "[" + a + "]", null));
+							n++;
 						}
 					}
-				if (s == null) /* no address found, clients will not be able to connect */
+				if (n == 0) /* no address found, clients will not be able to connect */
 					throw new SocketException("no address found");
-				server.setText(s);
-				server.setTypeface(Typeface.DEFAULT_BOLD);
-				server.setTextColor(Color.WHITE);
+			//	server.setText(s);
+			//	server.setTypeface(Typeface.DEFAULT_BOLD);
+			//	server.setTextColor(Color.WHITE);
 			} catch (SocketException e) {
 				e.printStackTrace();
-				server.setText(R.string.no_addresses_found);
-				server.setTypeface(Typeface.DEFAULT);
-				server.setTextColor(Color.RED);
+			//	server.setText(R.string.no_addresses_found);
+			//	server.setTypeface(Typeface.DEFAULT);
+			//	server.setTextColor(Color.RED);
 			}
 		} else {
-			server.setTypeface(Typeface.DEFAULT);
-			server.setText(client.getLastHost());
+		//	server.setTypeface(Typeface.DEFAULT);
+		//	server.setText(client.getLastHost());
 		}
 		adapter.setGameMode(client.spiel.m_gamemode);
 
@@ -259,11 +270,30 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			return;
 		colorAdapter.setCurrentStatus(client.spiel, lastStatus);
 
-		if (lastStatus == null) {
-			findViewById(R.id.clients).setVisibility(View.INVISIBLE);
+		TextView clients = (TextView)findViewById(R.id.clients);
+		if (clients != null) {
+			if (lastStatus == null) {
+				findViewById(R.id.clients).setVisibility(View.INVISIBLE);
+			} else {
+				findViewById(R.id.clients).setVisibility(View.VISIBLE);
+				((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
+			}
+		}
+		
+		if (lastStatus != null) {
+			gameMode.setSelection(lastStatus.gamemode.ordinal());
+			gameMode.setEnabled(!client.spiel.isStarted() && lastStatus.isVersion(3));
+			
+			int slider = 3;
+			for (int i = 0; i < CustomGameDialog.FIELD_SIZES.length; i++)
+				if (CustomGameDialog.FIELD_SIZES[i] == lastStatus.width)
+					slider = i;
+			fieldSize.setSelection(slider);
+			fieldSize.setEnabled(!client.spiel.isStarted() && lastStatus.isVersion(3));
+
 		} else {
-			findViewById(R.id.clients).setVisibility(View.VISIBLE);
-			((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
+			gameMode.setEnabled(false);
+			fieldSize.setEnabled(false);
 		}
 	}
 
@@ -286,5 +316,26 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		} else {
 			client.request_player((int)id, null);
 		}
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		final int[] stones_default = {
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+		};
+		final int stones_junior[] = {
+			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0
+		};
+		GameMode g = GameMode.from(gameMode.getSelectedItemPosition());
+		if (lastStatus == null)
+			return;
+		int size = CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
+		
+		client.request_game_mode(size, size, g, g == GameMode.GAMEMODE_JUNIOR ? stones_junior : stones_default);
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		
 	}
 }

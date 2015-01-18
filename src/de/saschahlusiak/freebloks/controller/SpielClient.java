@@ -8,7 +8,6 @@ import android.content.Context;
 import android.util.Log;
 
 import de.saschahlusiak.freebloksvip.R;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
@@ -22,6 +21,7 @@ public class SpielClient {
 	public Spielleiter spiel;
 	int lastDifficulty;
 	boolean lastPlayers[];
+	NET_SERVER_STATUS lastStatus;
 
 
 	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
@@ -29,7 +29,7 @@ public class SpielClient {
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
 			spiel = new Spielleiter(fieldsize, fieldsize);
-			spiel.start_new_game(Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+			spiel.start_new_game(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 			spiel.set_stone_numbers(0, 0, 0, 0, 0);
 		} else
 			this.spiel = leiter;
@@ -121,6 +121,10 @@ public class SpielClient {
 	public void revoke_player(int player) {
 		new NET_REVOKE_PLAYER(player).send(client_socket);
 	}
+	
+	public void request_game_mode(int width, int height, GameMode g, int stones[]) {
+		new NET_REQUEST_GAME_MODE(width, height, g, stones).send(client_socket);
+	}
 
 	public void request_hint(int player) {
 		if (spiel == null)
@@ -208,30 +212,33 @@ public class SpielClient {
 			NET_SERVER_STATUS status = (NET_SERVER_STATUS)data;
 			/* Wenn Spielfeldgroesse sich von Server unterscheidet,
 			   lokale Spielfeldgroesse hier anpassen */
-			if (status.width != spiel.m_field_size_x || status.height != spiel.m_field_size_y) {
+			if (!spiel.isStarted()) {
 				spiel.set_field_size(status.width, status.height);
 				spiel.start_new_game(status.gamemode);
+				if (status.isVersion(3))
+					spiel.set_stone_numbers(status.stone_numbers);
 			}
-			{
-				boolean changed=false;
-				for (i = 0; i < Stone.STONE_SIZE_MAX; i++)
-				{
-					changed |= (status.stone_numbers[i] != status.stone_numbers[i]);
-					status.stone_numbers[i]=status.stone_numbers[i];
+			if (!status.isVersion(3)) {
+				boolean changed = false;
+				if (lastStatus == null)
+					changed = true;
+				else {
+					for (i = 0; i < Stone.STONE_SIZE_MAX; i++)
+						changed |= (lastStatus.stone_numbers_obsolete[i] != status.stone_numbers_obsolete[i]);
 				}
-				if (changed)spiel.set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
+				if (changed && !spiel.isStarted()) spiel.set_stone_numbers(status.stone_numbers_obsolete[0],status.stone_numbers_obsolete[1],status.stone_numbers_obsolete[2],status.stone_numbers_obsolete[3],status.stone_numbers_obsolete[4]);
 			}
 			spiel.m_gamemode = status.gamemode;
-			if (spiel.m_gamemode == Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+			if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0, 2, 1, 3);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS
-				|| spiel.m_gamemode==Spielleiter.GAMEMODE_DUO)
+			if (spiel.m_gamemode==GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.m_gamemode==GameMode.GAMEMODE_DUO || spiel.m_gamemode==GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);
 					spiel.get_player(3).get_stone(n).set_available(0);
 				}
 			}
+			lastStatus = status;
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.serverStatus(status);
 		}
@@ -253,10 +260,11 @@ public class SpielClient {
 				spiel.history.delete_all_turns();
 
 //			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_4_COLORS_2_PLAYERS)
+			if (spiel.m_gamemode==GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0,2,1,3);
-			if (spiel.m_gamemode==Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-				spiel.m_gamemode==Spielleiter.GAMEMODE_DUO)
+			if (spiel.m_gamemode==GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+				spiel.m_gamemode==GameMode.GAMEMODE_DUO ||
+				spiel.m_gamemode==GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);

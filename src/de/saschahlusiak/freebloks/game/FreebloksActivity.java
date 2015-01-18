@@ -15,6 +15,7 @@ import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -128,7 +129,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	String clientName;
 	int difficulty;
-	int gamemode;
+	GameMode gamemode;
 	int fieldsize;
 
 	ImageButton chatButton;
@@ -343,7 +344,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		clientName = prefs.getString("player_name", null);
 		difficulty = prefs.getInt("difficulty", 10);	/* TODO: generalize the value */
-		gamemode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		fieldsize = prefs.getInt("fieldsize", Spiel.DEFAULT_FIELD_SIZE_X);
 
 		if (spielthread != null) {
@@ -555,7 +556,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 
-			JNIServer.runServer(spiel1, spiel1.m_gamemode, spiel1.m_field_size_x, difficulty);
+			JNIServer.runServer(spiel1, spiel1.m_gamemode.ordinal(), spiel1.m_field_size_x, difficulty);
 
 			/* this will start a new SpielClient, which needs to be restored
 			 * from saved gamestate first */
@@ -589,7 +590,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void startNewGame(final String server, final boolean show_lobby, final boolean[] request_player) {
 		newCurrentPlayer(-1);
 		if (server == null) {
-			JNIServer.runServer(null, gamemode, fieldsize, difficulty);
+			JNIServer.runServer(null, gamemode.ordinal(), fieldsize, difficulty);
 		}
 
 		if (spielthread != null)
@@ -912,7 +913,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			break;
 
 		case DIALOG_JOIN:
-			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
+			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, GameMode.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
 			break;
 
 		case DIALOG_HOST:
@@ -1229,7 +1230,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		String name = null;
 		int player = -1;
 		if (lastStatus != null && c.client >= 0) {
-			if (lastStatus.isAdvanced())
+			if (lastStatus.isVersion(2))
 				for (int i = 0; i < lastStatus.spieler.length; i++)
 					if (lastStatus.spieler[i] == c.client) {
 						player = i;
@@ -1239,7 +1240,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		} else {
 			/* if we have advanced status, ignore all server messages (c == -1) */
 			/* server messages are generated in serverStatus */
-			if (lastStatus != null && lastStatus.isAdvanced())
+			if (lastStatus != null && lastStatus.isVersion(2))
 				return;
 			name = getString(R.string.client_d, c.client + 1);
 		}
@@ -1289,7 +1290,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void serverStatus(NET_SERVER_STATUS status) {
-		if (lastStatus != null && status != null && lastStatus.isAdvanced()) {
+		if (lastStatus != null && status != null && lastStatus.isVersion(2)) {
 			/* generate server chat messages, aka "joined" and "left" */
 
 			for (int i = 0; i < lastStatus.spieler.length; i++) {

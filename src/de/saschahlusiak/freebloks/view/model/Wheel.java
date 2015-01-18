@@ -289,16 +289,20 @@ public class Wheel implements ViewElement {
 			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
 				final float col = i / 2;
 				final float row = i % 2;
-				final float offset = (float)(s.get_stone_size()) - 1.0f;
+				final float offset = -((float)(s.get_stone_size()) - 1.0f) * BoardRenderer.stone_size;
 
 				final float x = col * stone_spacing;
 				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f));
 				float y = 0.35f + effect * 0.75f;
 				final float z = row * stone_spacing;
+				final float scale = 0.9f + effect * 0.3f;
+				float rotate = 90.0f * model.board.centerPlayer;
+				if (!model.vertical_layout)
+					rotate -= 90.0f;
 
 				float alpha = 1.0f;
 
-				if (highlightStone == s)
+				if (highlightStone == s && s != model.currentStone.stone)
 					y += 1.2f;
 
 				if (!moves_left && !model.spiel.isFinished())
@@ -307,20 +311,31 @@ public class Wheel implements ViewElement {
 
 				gl.glPushMatrix();
 				gl.glTranslatef(x, 0, z);
-
-				gl.glRotatef(90 * model.board.centerPlayer, 0, 1, 0);
-				if (!model.vertical_layout)
-					gl.glRotatef(-90.0f, 0, 1, 0);
-
-				final float scale = 0.9f + effect * 0.3f;
+				
 				gl.glScalef(scale, scale, scale);
-				gl.glTranslatef(-offset * BoardRenderer.stone_size, 0, -offset * BoardRenderer.stone_size);
+
+				
+				if (s.get_available() > 1 && s == highlightStone && s != model.currentStone.stone) {
+					gl.glPushMatrix();
+					gl.glTranslatef(BoardRenderer.stone_size, 0, BoardRenderer.stone_size * 0.6f);
+					gl.glRotatef(rotate, 0, 1, 0);
+					gl.glScalef(0.85f, 0.85f, 0.85f);
+					gl.glTranslatef(offset, 0, offset);
+
+				//	gl.glTranslatef(BoardRenderer.stone_size * 0.5f, y - 1.2f, BoardRenderer.stone_size * 0.5f);
+					renderer.board.renderPlayerStone(gl, model.getPlayerColor(currentPlayer), s, alpha);
+					gl.glPopMatrix();
+				}
+				
+				gl.glRotatef(rotate, 0, 1, 0);
+				gl.glTranslatef(offset, 0, offset);
+
 				gl.glPushMatrix();
 				renderer.board.renderShadow(gl, s, model.getPlayerColor(currentPlayer), y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
 				gl.glPopMatrix();
 
 				gl.glTranslatef(0, y, 0);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone) ? 0 : model.getPlayerColor(currentPlayer), s, alpha);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone && s != model.currentStone.stone) ? 0 : model.getPlayerColor(currentPlayer), s, alpha);
 				gl.glPopMatrix();
 			}
 		}

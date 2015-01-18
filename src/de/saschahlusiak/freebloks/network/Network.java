@@ -22,6 +22,7 @@ public class Network {
 	public static final int MSG_REQUEST_HINT = 11;
 	public static final int MSG_STONE_HINT = 12;
 	public static final int MSG_REVOKE_PLAYER = 13;
+	public static final int MSG_REQUEST_GAME_MODE = 14;
 
 	public static NET_HEADER read_package(Socket socket, boolean block) throws Exception {
 		NET_HEADER p = new NET_HEADER(0, 0);

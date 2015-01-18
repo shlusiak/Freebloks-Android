@@ -2,11 +2,11 @@ package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.security.InvalidParameterException;
 
 import android.content.res.Resources;
 import de.saschahlusiak.freebloksvip.R;
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
@@ -14,29 +14,44 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 
 	public int player, computer, clients; /* int 8 */
 	public int width, height; /* int 8 */
-	public int stone_numbers[] = new int[Stone.STONE_SIZE_MAX]; /* int8[5] */
-	public int gamemode; /* int8 */
+	public int stone_numbers_obsolete[] = new int[Stone.STONE_SIZE_MAX]; /* int8[5] */
+	public GameMode gamemode; /* int8 */
 
 	/* since 1.5, optional */
 	public int spieler[]; /* int8[4] */
 	public String client_names[]; /* uint8[8][16] */
 
+	public int version;
+	public int version_min;
+	
+	public int stone_numbers[] = new int[Stone.STONE_COUNT_ALL_SHAPES];
+	
+	private static final int VERSION_MAX = 3; // highest version we understand.
+	
 
-	public NET_SERVER_STATUS() {
-		super(Network.MSG_SERVER_STATUS, 11);
-	}
-
-	public NET_SERVER_STATUS(NET_HEADER from) {
+	public NET_SERVER_STATUS(NET_HEADER from) throws UnsupportedOperationException {
 		super(from);
 		player = buffer[0];
 		computer = buffer[1];
 		clients = buffer[2];
 		width = buffer[3];
 		height = buffer[4];
-		for (int i = 0; i < Stone.STONE_SIZE_MAX; i++)
-			stone_numbers[i] = buffer[5 + i];
-		gamemode = buffer[10];
-		if (from.data_length >= 11 + 4 + 16 * 8) {
+		gamemode = GameMode.from(buffer[10]);
+		version = 1;
+		version_min = 1;
+		if (from.data_length >= 11 + 4 + 16 * 8)
+			version = 2;
+		if (from.data_length >= 11 + 4 + 16 * 8 + 2) {
+			version = buffer[11 + 4 + 16 * 8 + 0];
+			version_min = buffer[11 + 4 + 16 * 8 + 1];
+		}
+		
+		if (version_min > VERSION_MAX) {
+			/* we don't know how to speak version_min, the minimum required version */
+			throw new UnsupportedOperationException("unsupported protocol version: " + version_min);
+		}
+		
+		if (isVersion(2)) {
 			/* advanced */
 			spieler = new int[4];
 			spieler[0] = buffer[11];
@@ -59,23 +74,21 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 					client_names[i] = null;
 			}
 		}
+		for (int i = 0; i < Stone.STONE_SIZE_MAX; i++)
+			stone_numbers_obsolete[i] = buffer[5 + i];
+		if (isVersion(3)) {
+			for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
+				stone_numbers[i] = buffer[11 + 4 + 16 * 8 + 2 + i];
+		}
+	}
+	
+	public boolean isVersion(int version) {
+		return this.version >= version;
 	}
 
 	@Override
 	void prepare(ByteArrayOutputStream bos) {
-		super.prepare(bos);
-		bos.write(player);
-		bos.write(computer);
-		bos.write(clients);
-		bos.write(width);
-		bos.write(height);
-		for (int i = 0; i < Stone.STONE_SIZE_MAX; i++)
-			bos.write(stone_numbers[i]);
-		bos.write(gamemode);
-	}
-
-	public boolean isAdvanced() {
-		return (spieler != null);
+		throw new RuntimeException("not implemented");
 	}
 
 	public String getClientName(Resources resources, int client) {

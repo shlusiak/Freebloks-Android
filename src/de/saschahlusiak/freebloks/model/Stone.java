@@ -362,7 +362,6 @@ public class Stone implements Serializable, Cloneable {
 	}
 
 	public final void init(int shape) {
-		m_available = 1;
 		m_shape = shape;
 		m_size = STONE_SIZE[m_shape];
 		m_rotate_counter = 0;

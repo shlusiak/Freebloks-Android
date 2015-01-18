@@ -23,6 +23,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
+import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -30,7 +31,7 @@ import de.saschahlusiak.freebloks.model.Stone;
 public class StatisticsActivity extends BaseGameActivity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
-	int game_mode = Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS;
+	GameMode game_mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 
 	String[] labels;
 	String[] values;
@@ -72,16 +73,16 @@ public class StatisticsActivity extends BaseGameActivity {
 		});
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		game_mode = prefs.getInt("gamemode", Spielleiter.GAMEMODE_4_COLORS_4_PLAYERS);
+		game_mode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		refreshData();
 
 		if (Build.VERSION.SDK_INT < 11 || getActionBar() == null) {
-			((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode);
+			((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode.ordinal());
 			((Spinner)findViewById(R.id.game_mode)).setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
 				public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
-					game_mode = position;
+					game_mode = GameMode.from(position);
 					refreshData();
 				}
 
@@ -98,12 +99,12 @@ public class StatisticsActivity extends BaseGameActivity {
 			getActionBar().setListNavigationCallbacks(mSpinnerAdapter, new OnNavigationListener() {
 				@Override
 				public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-					game_mode = itemPosition;
+					game_mode = GameMode.from(itemPosition);
 					refreshData();
 					return true;
 				}
 			});
-			getActionBar().setSelectedNavigationItem(game_mode);
+			getActionBar().setSelectedNavigationItem(game_mode.ordinal());
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
@@ -188,8 +189,9 @@ public class StatisticsActivity extends BaseGameActivity {
 			int n = db.getNumberOfPlace(game_mode, i + 1);
 			values[3 + i] = String.format("%.1f%%", 100.0f * (float)n / (float)games);
 		}
-		if (game_mode == Spielleiter.GAMEMODE_2_COLORS_2_PLAYERS ||
-			game_mode == Spielleiter.GAMEMODE_DUO) {
+		if (game_mode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			game_mode == GameMode.GAMEMODE_DUO ||
+			game_mode == GameMode.GAMEMODE_JUNIOR) {
 			values[5] = values[6] = null;
 		}
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
@@ -216,11 +218,11 @@ public class StatisticsActivity extends BaseGameActivity {
 		Games.Leaderboards.submitScore(
 				getApiClient(),
 				getString(R.string.leaderboard_games_won),
-				db.getNumberOfPlace(-1, 1));
+				db.getNumberOfPlace(null, 1));
 
 		Games.Leaderboards.submitScore(
 				getApiClient(),
 				getString(R.string.leaderboard_points_total),
-				db.getTotalNumberOfPoints(-1));
+				db.getTotalNumberOfPoints(null));
 	}
 }

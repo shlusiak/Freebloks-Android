@@ -78,12 +78,20 @@ typedef struct
 	NET_HEADER header;
 	int8 player,computer,clients; /* Anzahl menschlicher Spieler, Computerspieler und verbundener Clients */
 	int8 width,height; /* Groesse des Spielfelds */
-	int8 stone_numbers[STONE_SIZE_MAX]; /* Anzahl der Steine bestimmter Groessen */
+	int8 stone_numbers_obsolete[STONE_SIZE_MAX]; /* Anzahl der Steine bestimmter Groessen, OBSOLETE */
 	int8 gamemode;
-	/* added in 1.5 */
+	/* added in 1.5, version 2 */
 	int8 spieler[PLAYER_MAX];
 	uint8 client_names[CLIENTS_MAX][16]; /* names for each client */
+	/* added in 1.6, version 3 */
+	int8 version;
+	int8 version_min;
+	int8 stone_numbers[STONE_COUNT_ALL_SHAPES]; /* Anzahl bestimmter Steine */
 } NET_SERVER_STATUS;
+
+#define NET_SERVER_STATUS_VERSION (3)
+
+
 
 /**
  * Eine Chat-Nachricht mit Text. Verschickt vom Client an die Server und zurueck.
@@ -96,6 +104,22 @@ typedef struct
 	uint8 text[1];	/* Array, das den Text beinhaltet. Ist NET_CHAT dynamisch und ausreichend
 			   gross, kann problemlos auf hintere Teile des Arrays zurueckgegriffen werden */
 } NET_CHAT;
+
+
+/**
+ * Client moechte Spielmodus aendern (wenn in Lobby)
+ */
+typedef struct
+{
+	NET_HEADER header;
+	int8 version;	/* Version dieser Nachricht, 1 */
+	int8 width, height;
+	int8 gamemode;	/* Spielmodus */
+	int8 stone_numbers[STONE_COUNT_ALL_SHAPES]; /* Anzahl bestimmter Steine */
+} NET_REQUEST_GAME_MODE;
+
+#define NET_REQUEST_GAME_MODE_VERSION (1)
+
 
 
 /* Unbedingt Byte-Align wieder zuruecksetzen */
@@ -116,6 +140,7 @@ const int MSG_UNDO_STONE=10;
 const int MSG_REQUEST_HINT=11;
 const int MSG_STONE_HINT=12;
 const int MSG_REVOKE_PLAYER=13;
+const int MSG_REQUEST_GAME_MODE=14;
 
 
 /* Bereitet die Netzwerknachricht *header vor und schickt sie an target.*/
