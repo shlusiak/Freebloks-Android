@@ -28,8 +28,7 @@
         android:id="@+id/clients"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/spinner_layout"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/color_grid"
         android:text="x Clients"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -37,8 +36,7 @@
         android:id="@+id/color_grid"
         android:layout_width="130dp"
         android:layout_height="match_parent"
-        android:layout_alignRight="@+id/clients"
-        android:layout_below="@+id/spinner_layout"
+        android:layout_alignParentRight="true"
 		android:layout_above="@+id/startButton"
         android:layout_marginLeft="8dp"
         android:verticalSpacing="2dp"
@@ -52,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/chatButton"
-        android:layout_below="@+id/clients"
+        android:layout_below="@+id/spinner_layout"
         android:layout_toLeftOf="@+id/color_grid"
         android:layout_alignParentLeft="true"
         android:background="#3f000000"

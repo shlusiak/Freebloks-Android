@@ -115,7 +115,7 @@ public class ColorAdapter extends BaseAdapter {
 			background.setAlpha(96);
         	t.setText("---");
         	t.clearAnimation();
-        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         	return v;
         }
 
@@ -131,7 +131,7 @@ public class ColorAdapter extends BaseAdapter {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
-	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -161,7 +161,7 @@ public class ColorAdapter extends BaseAdapter {
 				t.clearAnimation();
 				if (spiel.isStarted()) {
 					t.setVisibility(View.VISIBLE);
-					v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+					v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				} else {
 					v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 					t.setVisibility(View.INVISIBLE);
@@ -169,7 +169,7 @@ public class ColorAdapter extends BaseAdapter {
 			}
 		} else {
 			if (spiel.is_local_player(position)) {
-	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position + 1]);
@@ -192,7 +192,7 @@ public class ColorAdapter extends BaseAdapter {
 
 				t.startAnimation(a);
 			} else {
-	        	v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				background.setAlpha(96);
 				t.setText("---");

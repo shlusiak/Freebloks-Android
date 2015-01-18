@@ -7,7 +7,7 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center|center_vertical"
         android:shadowRadius="3"
         android:shadowDy="2"
         android:shadowColor="#9f000000"
