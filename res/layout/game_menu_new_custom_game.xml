@@ -13,6 +13,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
+   	        android:minWidth="280dp"
 	        android:id="@+id/server_address_layout" >
 
 		    <TextView
@@ -40,6 +41,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
+	        android:minWidth="280dp"
 	        android:id="@+id/player_name_layout" >
 
 		    <TextView
@@ -173,7 +175,7 @@
 
 			<Button
 	           android:id="@android:id/closeButton"
-	           android:layout_width="0dp"
+	           android:layout_width="wrap_content"
 	           android:layout_height="@dimen/menu_button_height"
 	           android:layout_weight="0.5"
 	           android:layout_margin="2dp"
@@ -181,7 +183,7 @@
 	           android:text="@android:string/cancel" />
 	       	<Button
 	           android:id="@android:id/button1"
-	           android:layout_width="0dp"
+	           android:layout_width="wrap_content"
 	           android:layout_height="@dimen/menu_button_height"
 	           android:layout_weight="0.5"
 	           android:layout_margin="2dp"
