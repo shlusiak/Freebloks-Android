@@ -261,7 +261,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 					requestRender();
 				}
 			});
-
 		}
 	}
 

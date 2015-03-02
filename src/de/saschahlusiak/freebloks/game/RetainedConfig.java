@@ -9,4 +9,5 @@ class RetainedConfig {
 	NET_SERVER_STATUS lastStatus;
 	Sounds soundPool;
 	Intro intro;
+	ConnectTask connectTask;
 }

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.lang.Thread.State;
 import java.util.ArrayList;
 
 import com.google.example.games.basegameutils.BaseGameActivity;
@@ -29,7 +28,6 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
-import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
@@ -60,7 +58,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -94,9 +91,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
-	static final int DIALOG_HOST = 9;
+	static final int DIALOG_PROGRESS = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
+	static final int DIALOG_HOST = 9;
 
 	static final int REQUEST_FINISH_GAME = 1;
 
@@ -128,96 +126,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	ImageButton chatButton;
 	ArrayList<ChatEntry> chatEntries;
-
-	class ConnectTask extends AsyncTask<String,Void,String> {
-		ProgressDialog progress;
-		SpielClient myclient = null;
-		boolean show_lobby;
-		Runnable connectedRunnable;
-
-		ConnectTask(SpielClient client, boolean show_lobby, Runnable connectedRunnable) {
-			this.myclient = client;
-			spielthread = new SpielClientThread(myclient);
-			this.show_lobby = show_lobby;
-			this.connectedRunnable = connectedRunnable;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			lastStatus = null;
-			view.setSpiel(null, null);
-			chatButton.setVisibility(View.INVISIBLE);
-			chatEntries.clear();
-			progress = new ProgressDialog(FreebloksActivity.this);
-			progress.setMessage(getString(R.string.connecting));
-			progress.setIndeterminate(true);
-			progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progress.setCancelable(true);
-			progress.show();
-			super.onPreExecute();
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			try {
-				this.myclient.connect(FreebloksActivity.this, params[0], Network.DEFAULT_PORT);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return e.getMessage();
-			}
-			if (connectedRunnable != null)
-				connectedRunnable.run();
-			view.setSpiel(myclient, myclient.spiel);
-			return null;
-		}
-
-		@Override
-		protected void onCancelled() {
-			connectTask = null;
-			super.onCancelled();
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			connectTask = null;
-			FreebloksActivity.this.client = this.myclient;
-			progress.dismiss();
-			if (result != null) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(FreebloksActivity.this);
-				builder.setTitle(android.R.string.dialog_alert_title);
-				builder.setMessage(result);
-				builder.setIcon(android.R.drawable.ic_dialog_alert);
-				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						showDialog(DIALOG_GAME_MENU);
-					}
-				});
-				builder.setOnCancelListener(new OnCancelListener() {
-
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						showDialog(DIALOG_GAME_MENU);
-					}
-				});
-				builder.create().show();
-			} else {
-				if (show_lobby)
-					showDialog(DIALOG_LOBBY);
-
-				myclient.addClientInterface(FreebloksActivity.this);
-				newCurrentPlayer(myclient.spiel.current_player());
-				/* TODO: there is probably a race condition, when the device is
-				 * rotated, the task finishes and a new task is started while
-				 * the thread is running.
-				 */
-				if (spielthread.getState() == State.NEW)
-					spielthread.start();
-			}
-			super.onPostExecute(result);
-		}
-	}
 
 	SharedPreferences prefs;
 
@@ -321,6 +229,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			lastStatus = config.lastStatus;
 			view.model.soundPool = config.soundPool;
 			view.model.intro = config.intro;
+			connectTask = config.connectTask;
+			if (connectTask != null)
+				connectTask.setActivity(this);
 			if (view.model.intro != null)
 				view.model.intro.setModel(view.model, this);
 			canresume = true;
@@ -437,7 +348,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			connectTask.get();
 			connectTask = null;
 		} catch (Exception e) {
-			e.printStackTrace();
+		//	e.printStackTrace();
 		}
 		if (spielthread != null) try {
 			spielthread.client.disconnect();
@@ -524,6 +435,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		config.lastStatus = lastStatus;
 		config.soundPool = view.model.soundPool;
 		config.intro = view.model.intro;
+		config.connectTask = connectTask;
+		this.connectTask = null;
 		view.model.soundPool = null;
 		spielthread = null;
 		return config;
@@ -553,6 +466,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	private boolean readStateFromBundle(Bundle in) {
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
+			if (spiel1 == null)
+				return false;
 
 			JNIServer.runServer(spiel1, spiel1.m_gamemode.ordinal(), spiel1.m_field_size_x, difficulty);
 
@@ -560,7 +475,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			 * from saved gamestate first */
 			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.m_field_size_x);
 			client.spiel.setStarted(true);
+			spielthread = new SpielClientThread(client);
+			
 			connectTask = new ConnectTask(client, false, null);
+			connectTask.setActivity(this);
 			connectTask.execute((String)null);
 
 			return true;
@@ -599,6 +517,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		final SpielClient client = new SpielClient(spiel, difficulty, request_player, fieldsize);
 		spiel.start_new_game(gamemode);
 		spiel.set_stone_numbers(0, 0, 0, 0, 0);
+		
+		spielthread = new SpielClientThread(client);
 
 		connectTask = new ConnectTask(client, show_lobby, new Runnable() {
 			@Override
@@ -614,6 +534,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					client.request_start();
 			}
 		});
+		connectTask.setActivity(this);
 		connectTask.execute(server);
 	}
 
@@ -812,7 +733,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					return true;
 				}
 			});
-
+			
+		case DIALOG_PROGRESS:
+			ProgressDialog p = new ProgressDialog(FreebloksActivity.this);
+			p.setMessage(getString(R.string.connecting));
+			p.setIndeterminate(true);
+			p.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			p.setCancelable(true);
+			return p;
+				
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -921,6 +850,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		case DIALOG_CUSTOM_GAME:
 			((CustomGameDialog)dialog).prepareCustomGameDialog(clientName, difficulty, gamemode, fieldsize);
 			break;
+			
+		case DIALOG_PROGRESS:
+			if (connectTask != null)
+				dialog.setOnCancelListener(connectTask);
+			break;
+
 		}
 		super.onPrepareDialog(id, dialog, args);
 	}
