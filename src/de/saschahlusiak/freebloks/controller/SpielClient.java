@@ -1,7 +1,10 @@
 package de.saschahlusiak.freebloks.controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -13,6 +16,7 @@ import de.saschahlusiak.freebloks.network.*;
 
 public class SpielClient {
 	static final String tag = SpielClient.class.getSimpleName();
+	static final int DEFAULT_TIMEOUT = 10000;
 
 	ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
 	Socket client_socket;
@@ -66,7 +70,14 @@ public class SpielClient {
 	public void connect(Context context, String host, int port) throws Exception {
 		this.lastHost = host;
 		try {
-			client_socket = new Socket(host, port);
+			SocketAddress address;
+			if (host == null)
+				address = new InetSocketAddress((InetAddress)null, port);
+			else
+				address = new InetSocketAddress(host, port);
+			
+			client_socket = new Socket();
+			client_socket.connect(address, DEFAULT_TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(context.getString(R.string.connection_refused));
@@ -82,7 +93,8 @@ public class SpielClient {
 	public synchronized void disconnect() {
 		if (client_socket != null) {
 			try {
-				client_socket.shutdownInput();
+				if(client_socket.isConnected())
+					client_socket.shutdownInput();
 				client_socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();

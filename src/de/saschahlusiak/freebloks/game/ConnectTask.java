@@ -40,7 +40,8 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			this.myclient.connect(activity, params[0], Network.DEFAULT_PORT);
+			Log.d("ConnectTask", "connecting to " + params[0]);
+			myclient.connect(activity, params[0], Network.DEFAULT_PORT);
 		} catch (Exception e) {
 			if (isCancelled())
 				return null;
@@ -59,9 +60,6 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 	@Override
 	protected void onCancelled() {
 		Log.d("ConnectTask", "onCancelled");
-		activity.connectTask = null;
-		activity.dismissDialog(FreebloksActivity.DIALOG_PROGRESS);
-		activity.connectTask = null;
 		super.onCancelled();
 	}
 
@@ -109,7 +107,9 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 
 	@Override
 	public void onCancel(DialogInterface dialog) {
+		myclient.disconnect();
 		cancel(true);
+		activity.connectTask = null;
 		activity.showDialog(FreebloksActivity.DIALOG_GAME_MENU);
 	}
 }
