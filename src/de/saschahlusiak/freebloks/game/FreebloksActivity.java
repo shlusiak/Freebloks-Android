@@ -740,8 +740,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			p.setIndeterminate(true);
 			p.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			p.setCancelable(true);
-			p.setIcon(R.drawable.notification_waiting);
-			p.setTitle(R.string.please_wait);
+			p.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
 			return p;
 				
 		default:

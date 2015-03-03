@@ -13,7 +13,6 @@
     <string name="about">Über</string>
     <string name="about_freebloks">Über Freebloks&#8230;</string>
     <string name="special_thanks_to">Besonderer Dank an</string>
-    <string name="please_wait">Bitte warten</string>
     <string name="connecting">Verbindung wird hergestellt&#8230;</string>
     <string name="connection_refused">Verbindung abgelehnt</string>
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
