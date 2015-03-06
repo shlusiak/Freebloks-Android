@@ -93,6 +93,7 @@
     </string-array>
     <string name="game_finished">Spiel vorbei</string>
 
+    <string name="random_color">Automatisch</string>
     <string-array name="color_names">
         <item>Weiß</item>
         <item>Blau</item>

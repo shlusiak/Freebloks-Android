@@ -95,6 +95,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	static final int DIALOG_HOST = 9;
+	static final int DIALOG_SINGLE_PLAYER = 10;
 
 	static final int REQUEST_FINISH_GAME = 1;
 
@@ -747,7 +748,32 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 			});
 			return p;
-				
+		
+		case DIALOG_SINGLE_PLAYER:
+			ColorListDialog d = new ColorListDialog(this, 
+					new DialogInterface.OnClickListener() {
+		               public void onClick(DialogInterface dialog, int which) {
+		            	   boolean[] players = new boolean[4];
+		            	   
+		            	   if (which == -1)
+		            		   players = null;
+		            	   else
+		            		   players[which] = true;
+		            	   
+		            	   startNewGame(null, false, players);
+		            	   
+		            	   dialog.dismiss();
+		               }
+		           });
+			d.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						showDialog(DIALOG_GAME_MENU);
+					}
+				});
+			
+			return d;
+			
 		default:
 			return super.onCreateDialog(id);
 		}
@@ -788,11 +814,21 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+					showDialog(DIALOG_SINGLE_PLAYER);
+				}
+			});
+			dialog.findViewById(R.id.new_game).setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					dialog.dismiss();
+
 					/* starting new game from dialog creates game with previous settings */
 					startNewGame(
 							null,
 							false,
 							null);
+					
+					return true;
 				}
 			});
 			dialog.findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
@@ -836,13 +872,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					showDialog(DIALOG_CUSTOM_GAME);
 				}
 			});
-			dialog.findViewById(R.id.new_game).setOnLongClickListener(new OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					showDialog(DIALOG_CUSTOM_GAME);
-					return true;
-				}
-			});
 			break;
 
 		case DIALOG_JOIN:
@@ -862,6 +891,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				dialog.setOnCancelListener(connectTask);
 			break;
 
+		case DIALOG_SINGLE_PLAYER:
+			ColorListDialog d = (ColorListDialog)dialog;
+			d.setGameMode(gamemode);
+			break;
+			
 		}
 		super.onPrepareDialog(id, dialog, args);
 	}
