@@ -13,7 +13,7 @@
     <string name="about">About</string>
     <string name="about_freebloks">About Freebloks&#8230;</string>
     <string name="special_thanks_to">Special thanks to</string>
-    <string name="connecting">Connecting&#8230;</string>
+    <string name="connecting">Connecting to server&#8230;</string>
     <string name="connection_refused">Connection refused</string>
     <string name="could_not_restore_game">Could not restore game</string>
     <string name="do_you_want_to_leave_current_game">Are you sure you want to cancel the current game?</string>
@@ -91,6 +91,7 @@
         <item>4th place</item>
     </string-array>
     <string name="game_finished">Game Over</string>
+    <string name="random_color">Random color</string>
     <string-array name="color_names">
         <item>White</item>
         <item>Blue</item>

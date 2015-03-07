@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -49,7 +50,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	public LobbyDialog(Context context, OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
 		super(context, true, cancelListener);
+		
+		requestWindowFeature(Window.FEATURE_LEFT_ICON);
+		
 		setContentView(R.layout.lobby_dialog);
+		
+		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting);
 
 		/* to make sure we have enough real estate. not neccessary on xlarge displays */
 		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) !=

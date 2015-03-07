@@ -13,7 +13,7 @@
     <string name="about">Über</string>
     <string name="about_freebloks">Über Freebloks&#8230;</string>
     <string name="special_thanks_to">Besonderer Dank an</string>
-    <string name="connecting">Verbinde&#8230;</string>
+    <string name="connecting">Verbindung wird hergestellt&#8230;</string>
     <string name="connection_refused">Verbindung abgelehnt</string>
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
     <string name="do_you_want_to_leave_current_game">Aktuelles Spiel abbrechen?</string>
@@ -93,6 +93,7 @@
     </string-array>
     <string name="game_finished">Spiel vorbei</string>
 
+    <string name="random_color">Automatisch</string>
     <string-array name="color_names">
         <item>Weiß</item>
         <item>Blau</item>

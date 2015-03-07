@@ -48,10 +48,10 @@ public class Global {
 
 	public static final int PLAYER_FOREGROUND_COLOR[] = {
 		Color.rgb(255, 255, 255),	/* white */
-		Color.rgb(0, 160, 255),	/* blue */
-		Color.rgb(255, 255, 0),	/* yellow */
+		Color.rgb(32, 80, 255),	/* blue */
+		Color.rgb(230, 230, 0),	/* yellow */
 		Color.rgb(255, 0, 0),	/* red */
-		Color.rgb(0, 255, 0),	/* green */
+		Color.rgb(0, 230, 0),	/* green */
 		Color.rgb(255, 140, 92),/* orange */
 		Color.rgb(180, 64, 255),/* purple */
 	};

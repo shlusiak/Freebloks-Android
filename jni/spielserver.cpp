@@ -802,6 +802,7 @@ CServerListener::CServerListener()
 	for (i=0;i<LISTEN_SOCKETS_MAX; i++)
 		listen_sockets[i]=0;
 	num_listen_sockets = 0;
+	logger=NULL;
 	server=NULL;
 }
 
