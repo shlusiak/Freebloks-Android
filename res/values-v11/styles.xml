@@ -7,4 +7,5 @@
     <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.Holo.NoActionBar"></style>
 
     <style name="Widget.Light.Button.Borderless" parent="android:Widget.Holo.Button.Borderless" />
+    <style name="Widget.Button.Borderless" parent="android:Widget.Holo.Button.Borderless" />
 </resources>

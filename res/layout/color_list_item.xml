@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="46dp"
+    android:minHeight="44dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingStart="16dip"
-	android:paddingEnd="12dip" >
+    android:paddingLeft="12dip"
+	android:paddingRight="12dip" >
 
     <TextView
         android:id="@android:id/text1"
@@ -15,7 +15,6 @@
         android:layout_weight="1"
         android:gravity="center_vertical|start"
         android:singleLine="true"
-        android:text="text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
     <View

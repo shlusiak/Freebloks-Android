@@ -14,6 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:text="@string/random_color"
-        style="@style/Widget.Light.Button.Borderless" />
+        style="@style/Widget.Button.Borderless" />
 
 </LinearLayout>
