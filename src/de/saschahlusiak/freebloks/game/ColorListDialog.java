@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
@@ -18,7 +19,7 @@ import android.widget.ListView;
 
 public class ColorListDialog extends Dialog implements OnItemClickListener {
 	DialogInterface.OnClickListener listener;
-	ListView list;
+	AdapterView<ColorListAdapter> list;
 	ColorListAdapter adapter;
 	
 	public ColorListDialog(Context context, final DialogInterface.OnClickListener listener) {
@@ -27,7 +28,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener {
 		this.listener = listener;
 		
 		setContentView(LayoutInflater.from(context).inflate(R.layout.color_list_dialog, null));
-		list = (ListView)findViewById(android.R.id.list);
+		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);
 		adapter = new ColorListAdapter(context);
 		list.setAdapter(adapter);
 		
