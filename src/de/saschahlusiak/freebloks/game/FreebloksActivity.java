@@ -760,6 +760,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		            	   else
 		            		   players[which] = true;
 		            	   
+		            	   gamemode = ((ColorListDialog)dialog).getGameMode();
 		            	   startNewGame(null, false, players);
 		            	   
 		            	   dialog.dismiss();

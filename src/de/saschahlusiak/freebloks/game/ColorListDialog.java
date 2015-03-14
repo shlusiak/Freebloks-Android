@@ -11,23 +11,30 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.widget.Spinner;
 
-public class ColorListDialog extends Dialog implements OnItemClickListener {
+public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener {
 	DialogInterface.OnClickListener listener;
 	AdapterView<ColorListAdapter> list;
 	ColorListAdapter adapter;
+	Spinner gameMode;
 	
 	public ColorListDialog(Context context, final DialogInterface.OnClickListener listener) {
 		super(context);
 
-		this.listener = listener;
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		setContentView(LayoutInflater.from(context).inflate(R.layout.color_list_dialog, null));
+
+		this.listener = listener;
+		gameMode = (Spinner)findViewById(R.id.game_mode);
+		gameMode.setOnItemSelectedListener(this);
+		
 		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);
 		adapter = new ColorListAdapter(context);
 		list.setAdapter(adapter);
@@ -44,7 +51,8 @@ public class ColorListDialog extends Dialog implements OnItemClickListener {
 	}
 	
 	void setGameMode(GameMode gamemode) {
-		setTitle(getContext().getResources().getStringArray(R.array.game_modes)[gamemode.ordinal()]);
+	//	setTitle(getContext().getResources().getStringArray(R.array.game_modes)[gamemode.ordinal()]);
+		gameMode.setSelection(gamemode.ordinal());
 		adapter.setGameMode(gamemode);
 	}
 
@@ -53,6 +61,17 @@ public class ColorListDialog extends Dialog implements OnItemClickListener {
 		listener.onClick(this, (int)id);
 	}
 	
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		setGameMode(GameMode.from(position));
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		
+	}
+
 
 	static class ColorListAdapter extends ArrayAdapter<String> {
 		String[] colors;
@@ -132,5 +151,8 @@ public class ColorListDialog extends Dialog implements OnItemClickListener {
 			}
 		}
 	}
-
+	
+	public GameMode getGameMode() {
+		return GameMode.from(gameMode.getSelectedItemPosition());
+	}
 }
