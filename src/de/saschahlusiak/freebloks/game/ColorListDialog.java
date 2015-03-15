@@ -22,7 +22,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 	DialogInterface.OnClickListener listener;
 	AdapterView<ColorListAdapter> list;
 	ColorListAdapter adapter;
-	Spinner gameMode;
+	Spinner gameMode, fieldSize;
 	
 	public ColorListDialog(Context context, final DialogInterface.OnClickListener listener) {
 		super(context);
@@ -34,11 +34,12 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		this.listener = listener;
 		gameMode = (Spinner)findViewById(R.id.game_mode);
 		gameMode.setOnItemSelectedListener(this);
+		fieldSize = (Spinner)findViewById(R.id.field_size);
+		fieldSize.setOnItemSelectedListener(this);
 		
-		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);
 		adapter = new ColorListAdapter(context);
+		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);
 		list.setAdapter(adapter);
-		
 		list.setOnItemClickListener(this);
 		
 		findViewById(R.id.random_button).setOnClickListener(new View.OnClickListener() {
@@ -54,6 +55,19 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 	//	setTitle(getContext().getResources().getStringArray(R.array.game_modes)[gamemode.ordinal()]);
 		gameMode.setSelection(gamemode.ordinal());
 		adapter.setGameMode(gamemode);
+		
+		switch (gamemode) {
+		case GAMEMODE_2_COLORS_2_PLAYERS:
+			fieldSize.setSelection(2);
+			break;
+		case GAMEMODE_DUO:
+		case GAMEMODE_JUNIOR:
+			fieldSize.setSelection(1);
+			break;
+		default:
+			fieldSize.setSelection(4);
+			break;
+		}
 	}
 
 	@Override
@@ -64,12 +78,21 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		setGameMode(GameMode.from(position));
+		if (parent == gameMode)
+			setGameMode(GameMode.from(position));
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
 		
+	}
+
+	public GameMode getGameMode() {
+		return GameMode.from(gameMode.getSelectedItemPosition());
+	}
+	
+	public int getBoardSize() {
+		return CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 	}
 
 
@@ -81,6 +104,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			super(context, R.layout.color_list_item, android.R.id.text1);
 
 			colors = context.getResources().getStringArray(R.array.color_names);
+			this.gamemode = null;
 		}
 		
 		@Override
@@ -105,6 +129,9 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		}
 		
 		public void setGameMode(GameMode gamemode) {
+			if (gamemode == this.gamemode)
+				return;
+			
 			clear();
 			
 			switch (gamemode)
@@ -150,9 +177,5 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 				return position;
 			}
 		}
-	}
-	
-	public GameMode getGameMode() {
-		return GameMode.from(gameMode.getSelectedItemPosition());
 	}
 }

@@ -4,14 +4,31 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <Spinner
-        android:id="@+id/game_mode"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/game_modes"
-        android:minHeight="48dp" >
-    </Spinner>
+        android:minHeight="48dp"
+        android:orientation="horizontal" >
 
-    <View style="@style/titleDivider" android:layout_marginBottom="8dp"/>
+        <Spinner
+            android:id="@+id/game_mode"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:entries="@array/game_modes" >
+        </Spinner>
+
+        <Spinner
+            android:id="@+id/field_size"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="0"
+            android:entries="@array/game_field_sizes" >
+        </Spinner>
+    </LinearLayout>
+
+    <View
+        style="@style/titleDivider"
+        android:layout_marginBottom="8dp" />
 
 </LinearLayout>
