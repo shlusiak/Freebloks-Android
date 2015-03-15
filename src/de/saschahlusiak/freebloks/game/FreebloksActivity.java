@@ -184,10 +184,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (hasActionBar) {
 			if (Build.VERSION.SDK_INT >= 14) {
 				getActionBar().setHomeButtonEnabled(true);
-				getActionBar().setIcon(android.R.drawable.ic_dialog_dialer);
+				getActionBar().setDisplayHomeAsUpEnabled(true);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				} else {
+					getActionBar().setIcon(android.R.drawable.ic_dialog_dialer);
+				}
 			} else
-				getActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_HOME);
+				getActionBar().setDisplayShowHomeEnabled(true);
 				
+//			getActionBar().setDisplayShowHomeEnabled(true);
 //			getActionBar().setDisplayUseLogoEnabled(false);
 //			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
 			getActionBar().setBackgroundDrawable(new ColorDrawable(0));
@@ -758,6 +763,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		            	   else
 		            		   players[which] = true;
 		            	   
+		            	   ColorListDialog d = (ColorListDialog)dialog;
+		            	   gamemode = d.getGameMode();
+		            	   fieldsize = d.getBoardSize();
 		            	   startNewGame(null, false, players);
 		            	   
 		            	   dialog.dismiss();

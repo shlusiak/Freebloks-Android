@@ -7,4 +7,11 @@
     <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.Holo.NoActionBar"></style>
 
     <style name="Widget.Light.Button.Borderless" parent="android:Widget.Holo.Button.Borderless" />
+    <style name="Widget.Button.Borderless" parent="android:Widget.Holo.Button.Borderless" />
+    
+    <style name="titleDivider" parent="android:TextAppearance">
+        <item name="android:background">@android:color/holo_blue_light</item>
+        <item name="android:layout_height">2dip</item>
+        <item name="android:layout_width">fill_parent</item>
+    </style>
 </resources>

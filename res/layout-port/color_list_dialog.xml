@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <include layout="@layout/color_list_custom_title" />
-
-    <GridView
+    
+	<include layout="@layout/color_list_custom_title"/>
+    
+    <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        tools:listitem="@layout/color_list_item" />
-
+        android:layout_height="wrap_content" />
+    
     <Button
         android:id="@+id/random_button"
-        style="@style/Widget.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="@dimen/menu_button_height"
-        android:text="@string/random_color" />
+        android:text="@string/random_color"
+        style="@style/Widget.Button.Borderless" />
 
 </LinearLayout>
