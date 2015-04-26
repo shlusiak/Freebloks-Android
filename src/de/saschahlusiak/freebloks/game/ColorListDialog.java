@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.Spinner;
 
 public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener {
@@ -38,7 +39,11 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		fieldSize.setOnItemSelectedListener(this);
 		
 		adapter = new ColorListAdapter(context);
+		// Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
+		// with class cast exception
 		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);
+		if (list == null)
+			list = (AdapterView<ColorListAdapter>)findViewById(R.id.grid);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 		
