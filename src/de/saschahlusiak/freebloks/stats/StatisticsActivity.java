@@ -215,6 +215,9 @@ public class StatisticsActivity extends BaseGameActivity {
 		if (Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 
+		if (db == null)
+			return;
+		
 		Games.Leaderboards.submitScore(
 				getApiClient(),
 				getString(R.string.leaderboard_games_won),
