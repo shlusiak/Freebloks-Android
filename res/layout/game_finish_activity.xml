@@ -79,20 +79,20 @@
         <Button
             android:id="@+id/new_game"
             android:layout_width="0dp"
-            android:layout_height="@dimen/menu_button_height"
+            android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
             android:layout_marginRight="2dp"
             android:text="@string/new_local_game"
-            style="@style/TextAppearance.Medium" />
+            style="@style/TextAppearance.Small" />
 
         <Button
             android:id="@+id/show_main_menu"
             android:layout_width="0dp"
-            android:layout_height="@dimen/menu_button_height"
+            android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
             android:layout_marginLeft="2dp"
             android:text="@string/main_menu"
-            style="@style/TextAppearance.Medium" />
+            style="@style/TextAppearance.Small" />
 
     </LinearLayout>
 
