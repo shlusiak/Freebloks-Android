@@ -114,10 +114,12 @@
             android:id="@+id/ok"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
-            android:layout_width="124dp"
-            android:layout_height="wrap_content"
+            android:minWidth="160dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/menu_button_height"
+            android:textSize="@dimen/menu_button_font_size"
             android:layout_gravity="center"
             android:text="@android:string/ok" />
-
+        
     </LinearLayout>
 </ScrollView>
