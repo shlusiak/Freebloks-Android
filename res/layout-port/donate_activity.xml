@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent" >
 
-    >
-   <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/donation_text_long"
-        android:paddingBottom="16dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:layout_gravity="center" >
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:paddingTop="16dp"
+            android:src="@drawable/coin" />
 
-	    <RadioButton
-	        android:id="@+id/donation_none"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:text="@string/donation_nothing" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingBottom="16dp"
+            android:text="@string/donation_text_long"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-	    <RadioButton
-	        android:id="@+id/donation_freebloksvip"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:text="@string/donation_freebloksvip" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/donation_text_short"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    </RadioGroup>
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingBottom="8dp" >
 
-    <Button
-        android:id="@+id/next"
-        android:layout_width="190dp"
-        android:layout_height="54dp"
-        android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/donation_next" />
+            <RadioButton
+                android:id="@+id/donation_none"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/donation_nothing"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</LinearLayout>
+            <RadioButton
+                android:id="@+id/donation_freebloksvip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/donation_freebloksvip"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="200dp"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:layout_gravity="center"
+            android:text="@string/donation_next"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
 </ScrollView>

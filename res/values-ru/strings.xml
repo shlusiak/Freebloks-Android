@@ -123,7 +123,8 @@
     </string-array>
 
     <string name="please_donate">Помогите разработчикам</string>
-    <string name="donation_text_long">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.\n\n Сколько вы готовы отдать?</string>
+    <string name="donation_text_long">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.\n\n </string>
+    <string name="donation_text_short">Сколько вы готовы отдать?</string>
     <string name="donation_nothing">Нисколько</string>
     <string name="donation_next">Далее</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
