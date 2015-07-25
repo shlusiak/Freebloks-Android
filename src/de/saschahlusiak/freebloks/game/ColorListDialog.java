@@ -26,7 +26,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 	Spinner gameMode, fieldSize;
 	
 	public ColorListDialog(Context context, final DialogInterface.OnClickListener listener) {
-		super(context);
+		super(context, R.style.Theme_Freebloks_Dialog);
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		

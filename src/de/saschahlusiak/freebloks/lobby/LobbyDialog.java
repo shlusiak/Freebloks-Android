@@ -49,7 +49,10 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	Spinner gameMode, fieldSize;
 
 	public LobbyDialog(Context context, OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
-		super(context, true, cancelListener);
+		super(context);
+		
+		setCancelable(true);
+		setOnCancelListener(cancelListener);
 		
 		requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		

@@ -100,7 +100,8 @@
     </string-array>
 
     <string name="please_donate">Soutenez les développeurs</string>
-    <string name="donation_text_long">Freebloks est un logiciel gratuit. Vous pouvez l\'utiliser et le modifier complètement gratuitement!\n\ Mais cela ne signifie qu\'il n\'ait pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et de soutenir le développement des logiciels gratuits. \n\nCombien vaut Freebloks pour vous?</string>
+    <string name="donation_text_long">Freebloks est un logiciel gratuit. Vous pouvez l\'utiliser et le modifier complètement gratuitement!\n\ Mais cela ne signifie qu\'il n\'ait pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et de soutenir le développement des logiciels gratuits.</string>
+    <string name="donation_text_short">Combien vaut Freebloks pour vous?</string>
     <string name="donation_nothing">Rien</string>
     <string name="donation_next">Suivant</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>

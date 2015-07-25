@@ -19,7 +19,8 @@
         android:id="@+id/random_button"
         style="@style/Widget.Button.Borderless"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menu_button_height"
+        android:textSize="@dimen/textSizeMedium"
+        android:layout_height="@dimen/main_menu_button_height"
         android:text="@string/random_color" />
 
 </LinearLayout>
