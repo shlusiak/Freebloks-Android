@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="Theme.Freebloks.Light" parent="Theme.Freebloks.Light.Dialog"></style>
+    
+    <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">18sp</item><!-- 14sp -->
+    </style>
+    <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">22sp</item><!-- 18sp -->
+    </style>
+    <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">28sp</item><!-- 22sp -->
+    </style>
 </resources>
