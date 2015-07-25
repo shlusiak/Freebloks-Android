@@ -50,20 +50,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.saschahlusiak.freebloks.game.GameFinishActivity"
+            android:name=".game.GameFinishActivity"
             android:label="@string/app_name"
+            android:exported="false"
             android:theme="@style/Theme.Freebloks.Dialog" >
         </activity>
    		<activity
             android:name=".preferences.FreebloksPreferences"
             android:icon="@drawable/gears"
             android:theme="@style/Theme.Freebloks.Preferences"
+            android:exported="false"
             android:label="@string/preferences" >
         </activity>
         <activity
             android:name=".stats.StatisticsActivity"
             android:label="@string/statistics"
-            android:theme="@style/Theme.Freebloks.Light"
+            android:theme="@style/Theme.Freebloks.Auto.Light"
             android:icon="@drawable/stats"
             android:exported="false" >
             <intent-filter>
@@ -74,7 +76,7 @@
         <activity
             android:name=".donate.DonateActivity"
             android:label="@string/please_donate"
-            android:icon="@drawable/coin"
+            android:theme="@style/Theme.Freebloks.Light"
             android:exported="false" >
             <intent-filter>
                 <action android:name="de.saschahlusiak.freebloks.SHOW_DONATE" />

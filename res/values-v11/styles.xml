@@ -6,7 +6,12 @@
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
     </style>
-    <style name="Theme.Freebloks.Light" parent="android:Theme.Holo.Light"></style>
+    <style name="Theme.Freebloks.Light" parent="android:Theme.Holo.Light">
+        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+    </style>
     <style name="Theme.Freebloks.Preferences" parent="android:Theme.Holo"></style>
     
     <style name="Theme.Freebloks.Dialog" parent="android:Theme.Holo.Dialog.MinWidth">
@@ -15,7 +20,12 @@
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
     </style>
-    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Holo.Light.Dialog.MinWidth"></style>
+    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Holo.Light.Dialog.MinWidth">
+        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>        
+    </style>
     <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.Holo.NoActionBar"></style>
 
     <style name="Widget.Light.Button.Borderless" parent="android:Widget.Holo.Button.Borderless" />
