@@ -6,9 +6,9 @@
         <item name="android:textSize">18sp</item><!-- 14sp -->
     </style>
     <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">22sp</item><!-- 18sp -->
+        <item name="android:textSize">21sp</item><!-- 18sp -->
     </style>
     <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large">
-        <item name="android:textSize">28sp</item><!-- 22sp -->
+        <item name="android:textSize">27sp</item><!-- 22sp -->
     </style>
 </resources>

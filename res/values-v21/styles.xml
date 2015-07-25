@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Freebloks" parent="android:Theme.Material"></style>
+    <style name="Theme.Freebloks" parent="android:Theme.Material">
+        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+    </style>
     <style name="Theme.Freebloks.Light" parent="android:Theme.Material.Light"></style>
     <style name="Theme.Freebloks.Dialog" parent="android:Theme.Material.Dialog.MinWidth">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
