@@ -4,7 +4,8 @@
     android:versionCode="55"
     android:versionName="0.4.1" >
 
-    <uses-sdk android:minSdkVersion="9"
+    <uses-sdk 
+        android:minSdkVersion="9"
         android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -56,6 +57,7 @@
    		<activity
             android:name=".preferences.FreebloksPreferences"
             android:icon="@drawable/gears"
+            android:theme="@style/Theme.Freebloks.Preferences"
             android:label="@string/preferences" >
         </activity>
         <activity

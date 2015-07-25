@@ -7,6 +7,8 @@
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
     </style>
     <style name="Theme.Freebloks.Light" parent="android:Theme.Holo.Light"></style>
+    <style name="Theme.Freebloks.Preferences" parent="android:Theme.Holo"></style>
+    
     <style name="Theme.Freebloks.Dialog" parent="android:Theme.Holo.Dialog.MinWidth">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>

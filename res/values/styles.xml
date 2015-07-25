@@ -7,6 +7,7 @@
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
     </style>
     <style name="Theme.Freebloks.Light" parent="android:Theme.Light"></style>
+    <style name="Theme.Freebloks.Preferences" parent="android:Theme"></style>
     
     <style name="Theme.Freebloks.Dialog" parent="android:Theme.Dialog">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
