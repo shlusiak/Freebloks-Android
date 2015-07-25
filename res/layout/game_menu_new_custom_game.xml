@@ -169,6 +169,7 @@
 	            android:max="10" />
 
 		</RelativeLayout>
+		
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
@@ -176,18 +177,18 @@
 			<Button
 	           android:id="@android:id/closeButton"
 	           android:layout_width="wrap_content"
-	           android:layout_height="@dimen/menu_button_height"
 	           android:layout_weight="0.5"
 	           android:layout_margin="2dp"
-	           android:textSize="@dimen/menu_button_font_size"
+	           android:layout_height="@dimen/main_menu_button_height"
+               android:textSize="@dimen/menu_button_font_size"
 	           android:text="@android:string/cancel" />
 	       	<Button
 	           android:id="@android:id/button1"
 	           android:layout_width="wrap_content"
-	           android:layout_height="@dimen/menu_button_height"
 	           android:layout_weight="0.5"
 	           android:layout_margin="2dp"
-	           android:textSize="@dimen/menu_button_font_size"
+	           android:layout_height="@dimen/main_menu_button_height"
+    	       android:textSize="@dimen/menu_button_font_size"
 	           android:text="@android:string/ok" />
         </LinearLayout>
     </LinearLayout>

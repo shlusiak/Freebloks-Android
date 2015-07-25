@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Freebloks" parent="android:Theme.DeviceDefault"></style>
-    <style name="Theme.Freebloks.Light" parent="android:Theme.DeviceDefault.Light"></style>
-    <style name="Theme.Freebloks.Dialog" parent="android:Theme.DeviceDefault.Dialog.MinWidth">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-    </style>
-    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.DeviceDefault.Light.Dialog.MinWidth"></style>
-    <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.DeviceDefault.NoActionBar"></style>
-
-    <style name="Widget.Light.Button.Borderless" parent="android:Widget.DeviceDefault.Light.Button.Borderless.Small" />
-    <style name="Widget.Button.Borderless" parent="android:Widget.DeviceDefault.Button.Borderless.Small" />
-    
     <style name="titleDivider" parent="android:TextAppearance">
         <item name="android:background">?android:attr/colorActivatedHighlight</item>
         <item name="android:layout_height">2dip</item>

@@ -16,7 +16,7 @@
 
     <style name="Widget.Light.Button.Borderless" parent="android:Widget.Button.Small" />
     <style name="Widget.Button.Borderless" parent="android:Widget.Button.Small" />
-    
+        
     <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small" />
     <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium" />
     <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large" />
