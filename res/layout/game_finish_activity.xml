@@ -22,7 +22,7 @@
 	        android:gravity="center"
 	        android:layout_gravity="center"
 	        android:text="Large Text"
-	        android:textSize="@dimen/menu_button_font_size" />
+            style="@style/TextAppearance.Medium" />
 
         <ImageButton
 		    android:id="@+id/achievements"
@@ -83,7 +83,7 @@
             android:layout_weight="0.5"
             android:layout_marginRight="2dp"
             android:text="@string/new_local_game"
-			android:textSize="@dimen/menu_button_font_size" />
+            style="@style/TextAppearance.Medium" />
 
         <Button
             android:id="@+id/show_main_menu"
@@ -92,7 +92,7 @@
             android:layout_weight="0.5"
             android:layout_marginLeft="2dp"
             android:text="@string/main_menu"
-			android:textSize="@dimen/menu_button_font_size" />
+            style="@style/TextAppearance.Medium" />
 
     </LinearLayout>
 

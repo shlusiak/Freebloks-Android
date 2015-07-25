@@ -5,10 +5,10 @@
     <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">18sp</item><!-- 14sp -->
     </style>
-    <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Small">
+    <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">22sp</item><!-- 18sp -->
     </style>
-    <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Small">
+    <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large">
         <item name="android:textSize">28sp</item><!-- 22sp -->
     </style>
 </resources>

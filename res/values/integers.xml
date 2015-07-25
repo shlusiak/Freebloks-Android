@@ -2,7 +2,6 @@
 <resources>
     <dimen name="main_menu_button_height">52dp</dimen>
     <dimen name="main_menu_width">240dp</dimen>
-    <dimen name="menu_button_font_size">18sp</dimen>
     <dimen name="menu_app_icon_size">40dp</dimen>
     <dimen name="menu_button_height">48dp</dimen>
 </resources>

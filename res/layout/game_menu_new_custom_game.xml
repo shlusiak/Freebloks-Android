@@ -180,7 +180,7 @@
 	           android:layout_weight="0.5"
 	           android:layout_margin="2dp"
 	           android:layout_height="@dimen/main_menu_button_height"
-               android:textSize="@dimen/menu_button_font_size"
+	           style="@style/TextAppearance.Small"
 	           android:text="@android:string/cancel" />
 	       	<Button
 	           android:id="@android:id/button1"
@@ -188,7 +188,7 @@
 	           android:layout_weight="0.5"
 	           android:layout_margin="2dp"
 	           android:layout_height="@dimen/main_menu_button_height"
-    	       android:textSize="@dimen/menu_button_font_size"
+	           style="@style/TextAppearance.Small"
 	           android:text="@android:string/ok" />
         </LinearLayout>
     </LinearLayout>
