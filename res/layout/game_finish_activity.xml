@@ -83,7 +83,7 @@
             android:layout_weight="0.5"
             android:layout_marginRight="2dp"
             android:text="@string/new_local_game"
-            style="@style/TextAppearance.Small" />
+            android:textSize="@dimen/textSizeSmall" />
 
         <Button
             android:id="@+id/show_main_menu"
@@ -92,7 +92,7 @@
             android:layout_weight="0.5"
             android:layout_marginLeft="2dp"
             android:text="@string/main_menu"
-            style="@style/TextAppearance.Small" />
+            android:textSize="@dimen/textSizeSmall" />
 
     </LinearLayout>
 

@@ -70,8 +70,8 @@
 		    android:layout_height="@dimen/main_menu_button_height"
 		    android:layout_weight="1"
 		    android:text="@string/new_local_game"
-            style="@style/TextAppearance.Medium" />
-
+            android:textSize="@dimen/textSizeMedium" />
+		    
 		<ImageButton
 		    android:id="@+id/new_game_custom"
 		    android:layout_width="@dimen/main_menu_button_height"
@@ -81,7 +81,6 @@
 		    style="?android:attr/buttonStyle"
 		    android:src="@drawable/gears" />
 
-
 	</LinearLayout>
     <Button
         android:id="@+id/resume_game"
@@ -90,7 +89,7 @@
         android:layout_marginBottom="2dp"
         android:minWidth="@dimen/main_menu_width"
         android:text="@string/resume"
-       	style="@style/TextAppearance.Medium" />
+        android:textSize="@dimen/textSizeMedium" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -103,7 +102,7 @@
 	        android:layout_height="@dimen/main_menu_button_height"
 	        android:layout_weight="0.5"
 	        android:text="@string/host_game"
-            style="@style/TextAppearance.Medium" />
+            android:textSize="@dimen/textSizeMedium" />
 	    <Button
 	        android:id="@+id/join_game"
 	        android:layout_width="0dp"
@@ -111,7 +110,7 @@
 	        android:layout_weight="0.5"
 	        android:layout_marginLeft="2dp"
 	        android:text="@string/join_game"
-            style="@style/TextAppearance.Medium" />
+            android:textSize="@dimen/textSizeMedium" />
 	</LinearLayout>
 
 	<Button
@@ -120,6 +119,6 @@
         android:layout_height="@dimen/main_menu_button_height"
         android:layout_marginBottom="2dp"
         android:text="@string/preferences"
-        style="@style/TextAppearance.Medium" />
+        android:textSize="@dimen/textSizeMedium" />
 
 </LinearLayout>

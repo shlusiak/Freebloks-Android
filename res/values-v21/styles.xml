@@ -17,7 +17,7 @@
     <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Material.Light.Dialog.MinWidth"></style>
     <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.Material.NoActionBar"></style>
 
-    <style name="Widget.Light.Button.Borderless" parent="android:Widget.Material.Button.Borderless" />
+    <style name="Widget.Light.Button.Borderless" parent="android:Widget.Material.Light.Button.Borderless" />
     <style name="Widget.Button.Borderless" parent="android:Widget.Material.Button.Borderless" />
     <style name="Widget.Button" parent="android:Widget.Material.Button"></style>
 </resources>

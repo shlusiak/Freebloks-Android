@@ -23,9 +23,15 @@
     <style name="Widget.Light.Button.Borderless" parent="android:Widget.Button.Small" />
     <style name="Widget.Button.Borderless" parent="android:Widget.Button.Small" />
         
-    <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small" />
-    <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium" />
-    <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large" />
+    <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">@dimen/textSizeSmall</item>
+    </style>
+    <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/textSizeMedium</item>
+    </style>
+    <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">@dimen/textSizeLarge</item>
+    </style>
     
     <style name="titleDivider" parent="android:TextAppearance">
         <item name="android:background">@null</item>
