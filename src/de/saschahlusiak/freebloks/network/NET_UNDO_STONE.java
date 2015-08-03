@@ -6,7 +6,7 @@ public class NET_UNDO_STONE extends NET_SET_STONE {
 		super(Network.MSG_UNDO_STONE);
 	}
 
-	public NET_UNDO_STONE(NET_HEADER from) {
+	public NET_UNDO_STONE(NET_HEADER from) throws ProtocolException {
 		super(from);
 	}
 }

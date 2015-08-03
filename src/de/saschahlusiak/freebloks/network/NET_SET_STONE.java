@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
 
+import de.saschahlusiak.freebloks.model.Stone;
+
 public class NET_SET_STONE extends NET_HEADER {
 	public int player; /* int 8 */
 	public int stone; /* uint8 */
@@ -16,7 +18,7 @@ public class NET_SET_STONE extends NET_HEADER {
 		super(msg_type, 6);
 	}
 
-	public NET_SET_STONE(NET_HEADER from) {
+	public NET_SET_STONE(NET_HEADER from) throws ProtocolException {
 		super(from);
 		player = buffer[0];
 		stone = buffer[1];
@@ -24,6 +26,18 @@ public class NET_SET_STONE extends NET_HEADER {
 		rotate_count = buffer[3];
 		x = buffer[4];
 		y = buffer[5];
+		
+		if (player < 0 || player > 3)
+			throw new ProtocolException("invalid player: " + player);
+		
+		if (stone < 0 || stone >= Stone.STONE_COUNT_ALL_SHAPES)
+			throw new ProtocolException("invalid stone: " + stone);
+		
+		if (mirror_count < 0 || mirror_count > 1)
+			throw new ProtocolException("invalid mirror_count " + mirror_count);
+		
+		if (rotate_count < 0 || rotate_count > 3)
+			throw new ProtocolException("invalid rotate_count " + rotate_count);
 	}
 
 	@Override

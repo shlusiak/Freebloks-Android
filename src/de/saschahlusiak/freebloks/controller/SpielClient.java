@@ -112,15 +112,17 @@ public class SpielClient {
 		/* Lese eine Nachricht komplett aus dem Socket in buffer */
 		try {
 			pkg = Network.read_package(client_socket, true);
+			
+			if (pkg != null)
+				process_message(pkg);
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			e.printStackTrace();
 			return e;
 		}
-
-		/* TODO: implement some game specific exceptions, like GameNotInSyncException */
-		if (pkg != null)
-			process_message(pkg);
+		catch (ProtocolException e) {
+			throw new RuntimeException(e);
+		}
 
 		return null;
 	}
