@@ -27,17 +27,22 @@ public class NET_SET_STONE extends NET_HEADER {
 		x = buffer[4];
 		y = buffer[5];
 		
-		if (player < 0 || player > 3)
-			throw new ProtocolException("invalid player: " + player);
-		
-		if (stone < 0 || stone >= Stone.STONE_COUNT_ALL_SHAPES)
-			throw new ProtocolException("invalid stone: " + stone);
-		
-		if (mirror_count < 0 || mirror_count > 1)
-			throw new ProtocolException("invalid mirror_count " + mirror_count);
-		
-		if (rotate_count < 0 || rotate_count > 3)
-			throw new ProtocolException("invalid rotate_count " + rotate_count);
+		/* BUG: MSG_UNDO_STONE is actually a NET_SET_STONE with random payload;
+		 * don't verify
+		 */
+		if (msg_type != Network.MSG_UNDO_STONE) {
+			if (player < 0 || player > 3)
+				throw new ProtocolException("invalid player: " + player);
+			
+			if (stone < 0 || stone >= Stone.STONE_COUNT_ALL_SHAPES)
+				throw new ProtocolException("invalid stone: " + stone);
+			
+			if (mirror_count < 0 || mirror_count > 1)
+				throw new ProtocolException("invalid mirror_count " + mirror_count);
+			
+			if (rotate_count < 0 || rotate_count > 3)
+				throw new ProtocolException("invalid rotate_count " + rotate_count);
+		}
 	}
 
 	@Override

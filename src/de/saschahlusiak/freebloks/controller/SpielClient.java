@@ -66,8 +66,7 @@ public class SpielClient {
 	}
 
 
-
-	public void connect(Context context, String host, int port) throws Exception {
+	public void connect(Context context, String host, int port) throws IOException {
 		this.lastHost = host;
 		try {
 			SocketAddress address;
@@ -78,9 +77,9 @@ public class SpielClient {
 			
 			client_socket = new Socket();
 			client_socket.connect(address, DEFAULT_TIMEOUT);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			throw new Exception(context.getString(R.string.connection_refused));
+			throw new IOException(context.getString(R.string.connection_refused));
 		}
 		for (SpielClientInterface sci : spielClientInterface)
 			sci.onConnected(spiel);
@@ -105,26 +104,23 @@ public class SpielClient {
 		client_socket = null;
 	}
 
-	public Exception poll() {
+	public void poll() throws IOException {
 		NET_HEADER pkg;
 		/* Puffer fuer eine Netzwerknachricht. */
 
-		/* Lese eine Nachricht komplett aus dem Socket in buffer */
 		try {
+			/* Lese eine Nachricht komplett aus dem Socket in buffer */
 			pkg = Network.read_package(client_socket, true);
-			
+				
 			if (pkg != null)
 				process_message(pkg);
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return e;
-		}
-		catch (ProtocolException e) {
+		catch (GameStateException e) {
 			throw new RuntimeException(e);
 		}
-
-		return null;
+		catch (ProtocolException e) {
+			throw new RuntimeException(e);	
+		}		
 	}
 
 	public void request_player(int player, String name) {
@@ -149,7 +145,7 @@ public class SpielClient {
 		new NET_REQUEST_HINT(player).send(client_socket);
 	}
 
-	synchronized void process_message(NET_HEADER data) {
+	synchronized void process_message(NET_HEADER data) throws ProtocolException, GameStateException {
 		int i;
 		switch(data.msg_type)
 		{
@@ -163,11 +159,11 @@ public class SpielClient {
 		case Network.MSG_REVOKE_PLAYER:
 			i=((NET_REVOKE_PLAYER)data).player;
 			if (spiel.spieler[i] != Spielleiter.PLAYER_LOCAL)
-				throw new IllegalStateException("revoked player " + i + " is not local");
+				throw new GameStateException("revoked player " + i + " is not local");
 			spiel.spieler[i] = Spielleiter.PLAYER_COMPUTER;
 			break;
 
-		/* Der Server hat einen aktuellen Spieler festgelegt */
+		/* Der Server hat einen neuen aktuellen Spieler festgelegt */
 		case Network.MSG_CURRENT_PLAYER:
 			spiel.m_current_player=((NET_CURRENT_PLAYER)data).player;
 			for (SpielClientInterface sci : spielClientInterface)
@@ -196,7 +192,7 @@ public class SpielClient {
 			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
 			{	// Spiel scheint nicht mehr synchron zu sein
 				// GAANZ schlecht!!
-				throw new IllegalStateException("game not in sync");
+				throw new GameStateException("game not in sync");
 			}
 
 			for (SpielClientInterface sci : spielClientInterface)
@@ -263,6 +259,7 @@ public class SpielClient {
 				sci.chatReceived((NET_CHAT) data);
 			break;
 		}
+		
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
 			spiel.start_new_game(spiel.m_gamemode);
@@ -302,8 +299,9 @@ public class SpielClient {
 			spiel.undo_turn(spiel.history, spiel.m_gamemode);
 			break;
 		}
-		default: Log.e(tag, "FEHLER: unbekannte Nachricht empfangen: #" + data.msg_type);
-			break;
+		
+		default: 
+			throw new ProtocolException("don't know how to handle message " + data.msg_type);
 		}
 	}
 
@@ -325,7 +323,6 @@ public class SpielClient {
 		data.rotate_count=stone.get_rotate_counter();
 		data.x=x;
 		data.y=y;
-
 
 		/* Nachricht ueber den Stein an den Server schicken */
 		data.send(client_socket);

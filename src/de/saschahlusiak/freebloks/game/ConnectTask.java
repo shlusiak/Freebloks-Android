@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import java.io.IOException;
 import java.lang.Thread.State;
 
 import android.app.AlertDialog;
@@ -42,7 +43,7 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 		try {
 			Log.d("ConnectTask", "connecting to " + params[0]);
 			myclient.connect(activity, params[0], Network.DEFAULT_PORT);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			if (isCancelled())
 				return null;
 			return e.getMessage();
