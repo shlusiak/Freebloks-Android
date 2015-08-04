@@ -112,7 +112,8 @@ public class NET_HEADER implements Serializable {
 		} catch (IOException e) {
 			// TODO: don't silently fail!
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
+//			return false;
 		}
 		return true;
 	}

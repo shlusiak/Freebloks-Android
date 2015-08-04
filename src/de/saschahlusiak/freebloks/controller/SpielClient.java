@@ -120,7 +120,7 @@ public class SpielClient {
 		}
 		catch (ProtocolException e) {
 			throw new RuntimeException(e);	
-		}		
+		}
 	}
 
 	public void request_player(int player, String name) {

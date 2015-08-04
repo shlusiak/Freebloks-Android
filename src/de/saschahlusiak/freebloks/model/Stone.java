@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 
+import de.saschahlusiak.freebloks.controller.GameStateException;
+
 public class Stone implements Serializable, Cloneable {
 	private static final long serialVersionUID = -4949247356899826370L;
 
@@ -316,7 +318,9 @@ public class Stone implements Serializable, Cloneable {
 		m_available++;
 	}
 
-	public final void available_decrement(){
+	public final void available_decrement() throws GameStateException {
+		if (m_available <= 0)
+			throw new GameStateException("stone not available");
 		m_available--;
 	}
 
@@ -383,7 +387,7 @@ public class Stone implements Serializable, Cloneable {
 			} else if (m_rotate_counter == 3){
 				nx = x;
 				ny = m_size - 1 - y;
-			} else return 0; /* ERROR */
+			} else throw new RuntimeException("invalid m_rotate_counter: " + m_rotate_counter);
 		}else{
 			if (m_rotate_counter == 0){
 				nx = m_size - 1 - y;
@@ -398,7 +402,7 @@ public class Stone implements Serializable, Cloneable {
 			if (m_rotate_counter == 3){
 				nx = m_size - 1 - x;
 				ny = m_size - 1 - y;
-			} else return 0; /* ERROR */
+			} else throw new RuntimeException("invalid m_rotate_counter: " + m_rotate_counter);
 		}
 
 		return STONE_FIELD[m_shape][ny + nx * STONE_SIZE_MAX];
@@ -429,7 +433,7 @@ public class Stone implements Serializable, Cloneable {
 			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
 	}
 
-	final int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX){
+	final int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX) {
 		int mirror;
 		int count = 0;
 

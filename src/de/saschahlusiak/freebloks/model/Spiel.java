@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.model;
 import java.io.Serializable;
 
 import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.controller.GameStateException;
 
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
@@ -98,7 +99,7 @@ public class Spiel implements Serializable, Cloneable {
 		return m_game_field;
 	}
 
-	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) {
+	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) throws GameStateException {
 		int i;
 
 		System.arraycopy(vorher_situation.m_game_field, 0, m_game_field, 0, m_game_field.length);
@@ -159,7 +160,7 @@ public class Spiel implements Serializable, Cloneable {
 		refresh_player_data();
 	}
 	
-	public void set_stone_numbers(int stone_numbers[]){
+	public void set_stone_numbers(int stone_numbers[]) {
 		for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 			for (int p = 0; p < PLAYER_MAX; p++){
 				Stone stone = m_player[p].get_stone(n);
@@ -192,11 +193,10 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	public final void refresh_player_data(){
-		for (int n = 0; n < PLAYER_MAX; n++){
+		for (int n = 0; n < PLAYER_MAX; n++) {
 			m_player[n].refresh_data(this);
 		}
 	}
-
 
 	public final int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
 		int valid = Stone.FIELD_DENIED;
@@ -217,28 +217,31 @@ public class Spiel implements Serializable, Cloneable {
 		return valid;
 	}
 
-	public final int is_valid_turn(Turn turn){
+	public final int is_valid_turn(Turn turn) {
 		int playernumber = turn.m_playernumber;
 		Stone stone = m_player[playernumber].get_stone(turn.m_stone_number);
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 		return is_valid_turn(stone, playernumber, turn.m_y, turn.m_x);
 	}
 
-	final void free_gamefield(int y, int x){
+	final void free_gamefield(int y, int x) {
 		m_game_field[y * m_field_size_x + x] = 0;
 	}
 
-	final void set_single_stone_for_player(int playernumber, int startY, int startX){
+	final void set_single_stone_for_player(int playernumber, int startY, int startX) throws GameStateException {
+		if (get_game_field(startY, startX) != Stone.FIELD_FREE)
+			throw new GameStateException("field already set");
+		
 		m_game_field[startY * m_field_size_x + startX] = PLAYER_BIT_HAVE_MIN | playernumber;
-		for (int y = startY-1; y <= startY+1; y++)if (y>=0 && y<m_field_size_y) {
-			for (int x = startX-1; x <= startX+1; x++)if (x>=0 && x<m_field_size_x){
-				if (get_game_field(playernumber, y, x) != Stone.FIELD_DENIED){
+		for (int y = startY-1; y <= startY+1; y++) if (y>=0 && y<m_field_size_y) {
+			for (int x = startX-1; x <= startX+1; x++) if (x>=0 && x<m_field_size_x){
+				if (get_game_field(playernumber, y, x) != Stone.FIELD_DENIED) {
 					int idx = y * m_field_size_x + x;
-					if (y != startY && x != startX){
+					if (y != startY && x != startX) {
 						m_game_field[idx] |= PLAYER_BIT_ALLOWED[playernumber];
-					}else{
+					} else {
 						m_game_field[idx] &= ~PLAYER_BIT_ADDR[playernumber];
-						m_game_field[idx] |= PLAYER_BIT_DENIED[playernumber];
+						m_game_field[idx] |=  PLAYER_BIT_DENIED[playernumber];
 					}
 				}
 			}
@@ -249,13 +252,13 @@ public class Spiel implements Serializable, Cloneable {
 		m_game_field[y * m_field_size_x + x] &= ~PLAYER_BIT_ALLOWED[playernumber];
 	}
 
-	public final int set_stone(Turn turn){
+	public final int set_stone(Turn turn) throws GameStateException{
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 		return set_stone(stone, turn.m_playernumber, turn.m_y, turn.m_x);
 	}
 
-	public final int set_stone(Stone stone, int playernumber, int startY, int startX) {
+	public final int set_stone(Stone stone, int playernumber, int startY, int startX) throws GameStateException {
 		for (int y = 0; y < stone.m_size; y++){
 			for (int x = 0; x < stone.m_size; x++){
 				if (stone.get_stone_field(y,x) != Stone.STONE_FIELD_FREE) {
@@ -269,33 +272,39 @@ public class Spiel implements Serializable, Cloneable {
 		return Stone.FIELD_ALLOWED;
 	}
 
-	public void undo_turn(Turnpool turnpool, GameMode gamemode){
+	public void undo_turn(Turnpool turnpool, GameMode gamemode) throws GameStateException{
 		Turn turn = turnpool.get_last_turn();
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;
 		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 
-		//delete stone
-		for (x = 0; x < stone.get_stone_size(); x++){
-			for (y = 0; y < stone.get_stone_size(); y++){
-				if (stone.get_stone_field(y, x) != Stone.STONE_FIELD_FREE){
+		// remove stone
+		for (x = 0; x < stone.get_stone_size(); x++) {
+			for (y = 0; y < stone.get_stone_size(); y++) {
+				if (stone.get_stone_field(y, x) != Stone.STONE_FIELD_FREE) {
+					if (get_game_field(turn.m_y + y, turn.m_x + x) == Stone.FIELD_FREE)
+						throw new GameStateException("field is free but shouldn't");
 					free_gamefield(turn.m_y + y, turn.m_x + x);
 				}
 			}
 		}
 
-		//redraw gamefield
-		for (x = 0; x < m_field_size_x; x++){
-			for (y = 0; y < m_field_size_y; y++){
-				if (get_game_field(y, x) == Stone.FIELD_FREE ){
+		// clear all markers
+		for (x = 0; x < m_field_size_x; x++) {
+			for (y = 0; y < m_field_size_y; y++) {
+				if (get_game_field(y, x) == Stone.FIELD_FREE ) {
 					free_gamefield(y, x);
 				}
 			}
 		}
-		for (x = 0; x < m_field_size_x; x++){
-			for (y = 0; y < m_field_size_y; y++){
-				if (get_game_field(y, x) != Stone.FIELD_FREE ){
-					set_single_stone_for_player(get_game_field(y, x), y, x);
+		
+		// reset all layed stones to recreate markers
+		for (x = 0; x < m_field_size_x; x++) {
+			for (y = 0; y < m_field_size_y; y++) {
+				if (get_game_field(y, x) != Stone.FIELD_FREE ) {
+					int player = get_game_field(y, x);
+					free_gamefield(y, x);
+					set_single_stone_for_player(player, y, x);
 				}
 			}
 		}
