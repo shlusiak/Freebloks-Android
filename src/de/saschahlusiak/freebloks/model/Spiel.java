@@ -99,18 +99,6 @@ public class Spiel implements Serializable, Cloneable {
 		return m_game_field;
 	}
 
-	void follow_situation(int vorher_playernumber, Spiel vorher_situation, Turn turn) throws GameStateException {
-		int i;
-
-		System.arraycopy(vorher_situation.m_game_field, 0, m_game_field, 0, m_game_field.length);
-
-		for (i = 0; i < PLAYER_MAX; i++) {
-			m_player[i].copyFrom(vorher_situation.m_player[i]);
-		}
-
-		set_stone(turn);
-	}
-
 	final public int get_game_field(int playernumber, int y, int x) {
 		int wert = m_game_field[y * m_field_size_x + x];
 		if (wert >= PLAYER_BIT_HAVE_MIN) return Stone.FIELD_DENIED;

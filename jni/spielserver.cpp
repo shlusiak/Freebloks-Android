@@ -346,7 +346,6 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				/* Speichere socket des Spielers in dem spieler[] Array
 			   	So werden den Spielern wieder die Clients zugeordnet */
 				spieler[n]=clients[client];
-
 			}
 			/* setze Spielernamen */
 			if (names[client] == NULL) {
@@ -395,15 +394,24 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 			break;
 		}
 
-		/* Ein Client hat einen Stein gesetzt */
+		/* Ein Client moechte einen Stein setzen */
 		case MSG_SET_STONE:{
 			NET_SET_STONE *s=(NET_SET_STONE*)data;
 			/* Den entsprechenden Stein aus den Daten zusammensuchen */
+			if (s->player != m_current_player) {
+				logger->logLine("WARNING: Ignoring move from non-current player.\n");
+				return;
+			}
+			if (client != spieler[s->player]) {
+				logger->logLine("WARNING: Client does not own player! Ignoring move.\n");
+				return;
+			}
+
 			CStone *stone=get_player(s->player)->get_stone(s->stone);
 			stone->mirror_rotate_to(s->mirror_count,s->rotate_count);
 
 			/* Den Stein lokal setzen */
- 			if ((CSpiel::is_valid_turn(stone, s->player, s->y, s->x) == FIELD_DENIED) ||
+ 			if ((CSpiel::is_valid_turn(stone, s->player, s->y, s->x) == FIELD_ALLOWED) &&
 			   (CSpiel::set_stone(stone, s->player,s->y,s->x)==FIELD_ALLOWED))
 			{
 				/* Bei Erfolg wird die Nachricht direkt an alle Clients zurueck-
@@ -415,9 +423,11 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				next_player();
 			}else{ // Spiel scheint nicht synchron zu sein
 				if (logger) {
-					logger->logLine("Game seems to be out of sync.\n");
+					logger->logLine("WARNING: Game seems to be out of sync, ignoring move.\n");
+//					delete_client(client, true);
 				}
 			}
+
 			/* Aktuellen Spieler den Clients mitteilen */
 			send_current_player();
 			break;
