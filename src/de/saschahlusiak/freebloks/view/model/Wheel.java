@@ -314,6 +314,8 @@ public class Wheel implements ViewElement {
 				
 				gl.glScalef(scale, scale, scale);
 
+				final int mirror_count = 0;
+				final int rotate_count = 0;
 				
 				if (s.get_available() > 1 && s == highlightStone && s != model.currentStone.stone) {
 					gl.glPushMatrix();
@@ -323,7 +325,7 @@ public class Wheel implements ViewElement {
 					gl.glTranslatef(offset, 0, offset);
 
 				//	gl.glTranslatef(BoardRenderer.stone_size * 0.5f, y - 1.2f, BoardRenderer.stone_size * 0.5f);
-					renderer.board.renderPlayerStone(gl, model.getPlayerColor(currentPlayer), s, alpha);
+					renderer.board.renderPlayerStone(gl, model.getPlayerColor(currentPlayer), s, mirror_count, rotate_count, alpha);
 					gl.glPopMatrix();
 				}
 				
@@ -331,11 +333,11 @@ public class Wheel implements ViewElement {
 				gl.glTranslatef(offset, 0, offset);
 
 				gl.glPushMatrix();
-				renderer.board.renderShadow(gl, s, model.getPlayerColor(currentPlayer), y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
+				renderer.board.renderShadow(gl, s, model.getPlayerColor(currentPlayer), mirror_count, rotate_count, y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
 				gl.glPopMatrix();
 
 				gl.glTranslatef(0, y, 0);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone && s != model.currentStone.stone) ? 0 : model.getPlayerColor(currentPlayer), s, alpha);
+				renderer.board.renderPlayerStone(gl, (s == highlightStone && s != model.currentStone.stone) ? 0 : model.getPlayerColor(currentPlayer), s, mirror_count, rotate_count, alpha);
 				gl.glPopMatrix();
 			}
 		}

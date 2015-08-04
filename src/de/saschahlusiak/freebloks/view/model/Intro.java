@@ -19,6 +19,40 @@ public class Intro implements ViewElement {
 	public interface OnIntroCompleteListener {
 		public void OnIntroCompleted();
 	}
+	
+	/* TODO: refactor this class */
+	static class OrientedStone extends Stone {
+		public int m_rotate_counter;
+		public int m_mirror_counter;
+		
+		public OrientedStone() {
+			
+		}
+		
+		public final void rotate_left(){
+			m_rotate_counter--;
+			if (m_rotate_counter < 0) m_rotate_counter += get_rotateable();
+		}
+
+		public final void rotate_right(){
+			m_rotate_counter = (m_rotate_counter+1) % get_rotateable();
+		}
+
+		public final void mirror_over_x(){
+			if (get_rotateable() == Stone.MIRRORABLE_NOT) return;
+			m_mirror_counter = (m_mirror_counter + 1) % 2;
+			if (m_rotate_counter%2 == 1)
+				m_rotate_counter = (m_rotate_counter + 2) % (get_rotateable());
+		}
+
+		public final void mirror_over_y(){
+			if (get_rotateable() == Stone.MIRRORABLE_NOT) return;
+			m_mirror_counter = (m_mirror_counter + 1) % 2;
+			if (m_rotate_counter%2 == 0)
+				m_rotate_counter = (m_rotate_counter + 2) % (get_rotateable());
+		}
+
+	}
 
 	final static float INTRO_SPEED = 1.0f;
 
@@ -37,7 +71,7 @@ public class Intro implements ViewElement {
 	int phase = 0;
 	boolean field_up = false;
 	float field_anim = 0.0f;
-	Stone stones[] = new Stone[14];
+	OrientedStone stones[] = new OrientedStone[14];
 
 
 	public Intro(ViewModel model, OnIntroCompleteListener listener) {
@@ -52,7 +86,7 @@ public class Intro implements ViewElement {
 
 	void init() {
 		for (int i = 0; i < stones.length; i++)
-			stones[i] = new Stone();
+			stones[i] = new OrientedStone();
 
 		stones[0].init(5);			// XXX
 		stones[0].rotate_left();	//   X
@@ -253,8 +287,8 @@ public class Intro implements ViewElement {
 		float axe_z=(float)(Math.cos(angx)*Math.cos(angy));
 
 		/* CPhysicalStone erstellen, aus stones[stone] */
-		Stone st = stones[stone];
-		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS));
+		OrientedStone st = stones[stone];
+		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.m_mirror_counter, st.m_rotate_counter);
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
 		x=(float)(-(Spiel.DEFAULT_FIELD_SIZE_X-1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);

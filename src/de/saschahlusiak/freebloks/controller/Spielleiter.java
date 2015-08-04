@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.model.Turnpool;
 
@@ -58,18 +57,11 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		return m_gamemode;
 	}
 
-	void addHistory(Turn turn)
-	{
+	void addHistory(Turn turn) {
 		history.add_turn(turn);
 	}
 
-	void addHistory(int player, Stone stone, int y, int x)
-	{
-		history.add_turn(player, stone, y, x);
-	}
-
-	int num_players()
-	{
+	int num_players() {
 		int n;
 		n=0;
 		for (int i=0;i<PLAYER_MAX;i++)if (spieler[i]!=PLAYER_COMPUTER)n++;

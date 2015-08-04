@@ -18,6 +18,6 @@ public interface SpielClientInterface {
 	void gameFinished();
 	void chatReceived(NET_CHAT c);
 	void gameStarted();
-	void stoneUndone(Stone s, Turn t);
+	void stoneUndone(Turn t);
 	void serverStatus(NET_SERVER_STATUS status);
 }

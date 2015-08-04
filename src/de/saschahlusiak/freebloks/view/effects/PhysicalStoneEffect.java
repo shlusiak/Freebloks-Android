@@ -20,8 +20,8 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	   um kleine Rechenungenauigkeiten waehrend der Animation auszugleichen. */
 	float dx,dy,dz;
 
-	public PhysicalStoneEffect(ViewModel model, Stone stone, int color) {
-		super(model, stone, color, 0, 0);
+	public PhysicalStoneEffect(ViewModel model, Stone stone, int color, int mirror, int rotate) {
+		super(model, stone, color, 0, 0, mirror, rotate);
 		this.x = this.y = this.z = 0.0f;
 		ang = 0.0f;
 		angspeed = 0.0f;
@@ -46,7 +46,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
  				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
  				0.0f,
 			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);
-		renderer.renderStoneShadow(gl, color, stone, m_alpha);
+		renderer.renderStoneShadow(gl, color, stone, mirror, rotate, m_alpha);
 		gl.glPopMatrix();
 	}
 
@@ -61,7 +61,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
  				0.0f,
 			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);
 
-		renderer.renderPlayerStone(gl, color, stone, BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 

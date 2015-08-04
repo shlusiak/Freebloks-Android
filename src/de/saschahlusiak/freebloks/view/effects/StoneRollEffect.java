@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -13,8 +13,8 @@ public class StoneRollEffect extends AbsStoneEffect {
 	boolean done = false;
 	static final float GRAVITY = 61.0f;
 
-	public StoneRollEffect(ViewModel model, Stone stone, int color, int x, int y, float z, float vz) {
-		super(model, stone, color, x, y);
+	public StoneRollEffect(ViewModel model, Turn turn, float z, float vz) {
+		super(model, turn);
 
 		this.z = z;
 		this.vz = vz;
@@ -79,7 +79,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * y);
 
 		renderer.renderShadow(gl,
-				stone, color,
+				stone, color, mirror, rotate,
 				z,
 				r, ax, ay, az,
 				90 * model.board.centerPlayer,
@@ -107,7 +107,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * offset,
 	    		0,
 	    		-BoardRenderer.stone_size * offset);
-		renderer.renderPlayerStone(gl, color, stone, BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, BoardRenderer.DEFAULT_ALPHA);
 
 		gl.glPopMatrix();
 	}

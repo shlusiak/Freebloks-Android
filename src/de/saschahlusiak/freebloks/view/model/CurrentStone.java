@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.view.model;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.util.Log;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.SimpleModel;
@@ -33,6 +35,8 @@ public class CurrentStone implements ViewElement {
 	SimpleModel overlay;
 	Status status;
 	ViewModel model;
+	
+	int m_mirror_counter, m_rotate_counter;
 
 	public final float hover_height_low = 0.55f;
 	public final float hover_height_high = 0.55f;
@@ -54,6 +58,9 @@ public class CurrentStone implements ViewElement {
 		overlay.addIndex(0, 2, 3);
 
 		overlay.commit();
+		
+		m_mirror_counter = 0;
+		m_rotate_counter = 0;
 	}
 
 	public void updateTexture(Context context, GL10 gl) {
@@ -143,7 +150,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 
-		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, 0.80f);
+		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone, m_mirror_counter, m_rotate_counter, 0.80f);
 		gl.glPopMatrix();
 
 
@@ -210,7 +217,7 @@ public class CurrentStone implements ViewElement {
 				-BoardRenderer.stone_size * offset);
 
 	    gl.glEnable(GL10.GL_DEPTH_TEST);
-		renderer.board.renderPlayerStone(gl, current_color, stone,
+		renderer.board.renderPlayerStone(gl, current_color, stone, m_mirror_counter, m_rotate_counter, 
 				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
 
 		gl.glPopMatrix();
@@ -381,9 +388,37 @@ public class CurrentStone implements ViewElement {
 		}
 		return true;
 	}
+	
+	public final void mirror_rotate_to(int mirror, int rotate) {
+		this.m_mirror_counter = mirror;
+		this.m_rotate_counter = rotate;
+	}
+	
+	public final void rotate_left(){
+		m_rotate_counter--;
+		if (m_rotate_counter < 0) m_rotate_counter += stone.get_rotateable();
+	}
+
+	public final void rotate_right(){
+		m_rotate_counter=(m_rotate_counter+1) % stone.get_rotateable();
+	}
+
+	public final void mirror_over_x(){
+		if (stone.get_rotateable() == Stone.MIRRORABLE_NOT) return;
+		m_mirror_counter = (m_mirror_counter + 1) % 2;
+		if (m_rotate_counter%2 == 1)
+			m_rotate_counter = (m_rotate_counter + 2) % (stone.get_rotateable());
+	}
+
+	public final void mirror_over_y(){
+		if (stone.get_rotateable() == Stone.MIRRORABLE_NOT) return;
+		m_mirror_counter = (m_mirror_counter + 1) % 2;
+		if (m_rotate_counter%2 == 0)
+			m_rotate_counter = (m_rotate_counter + 2) % (stone.get_rotateable());
+	}
 
 	public boolean is_valid_turn(float x, float y) {
-		if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f)) == Stone.FIELD_ALLOWED)
+		if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Stone.FIELD_ALLOWED)
 			return true;
 		return false;
 	}
@@ -446,7 +481,8 @@ public class CurrentStone implements ViewElement {
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				if (model.activity.commitCurrentStone(stone, (int)Math.floor(pos.x + 0.5f), (int)Math.floor(pos.y + 0.5f))) {
+				Turn turn = new Turn(model.spiel.current_player(), stone.get_number(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
+				if (model.activity.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;
 					model.wheel.setCurrentStone(null);
@@ -458,25 +494,25 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.ROTATING) {
 			while (rotate_angle < -45.0f) {
 				rotate_angle += 90.0f;
-				stone.rotate_right();
+				rotate_right();
 			}
 			while (rotate_angle > 45.0f) {
 				rotate_angle -= 90.0f;
-				stone.rotate_left();
+				rotate_left();
 			}
 			rotate_angle = 0.0f;
 			snap(pos.x, pos.y, true);
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
-				stone.mirror_over_y();
+				mirror_over_y();
 
 			rotate_angle = 0.0f;
 			snap(pos.x, pos.y, true);
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			if (Math.abs(rotate_angle) > 90.0f)
-				stone.mirror_over_x();
+				mirror_over_x();
 
 			rotate_angle = 0.0f;
 			snap(pos.x, pos.y, true);

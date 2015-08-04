@@ -310,7 +310,7 @@ public class BoardRenderer {
 	    stone.drawElements(gl);
 	}
 
-	public void renderStoneShadow(GL10 gl, int color, Stone stone, float alpha) {
+	public void renderStoneShadow(GL10 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
 		final float c[] = Global.stone_shadow_color_a[color];
 		c[3] = alpha;
 
@@ -331,7 +331,7 @@ public class BoardRenderer {
 		for (int i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {
-				if (stone.get_stone_field(i, j) != Stone.STONE_FIELD_FREE)
+				if (stone.get_stone_field(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
 					shadow.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
@@ -343,7 +343,7 @@ public class BoardRenderer {
 	}
 
 	public void renderShadow(GL10 gl,
-			Stone stone, int color,
+			Stone stone, int color, int mirror, int rotate,
 			float height,
 			float ang, float ax, float ay, float az,
 			float light_angle,
@@ -374,10 +374,10 @@ public class BoardRenderer {
 	    		0,
 	    		-BoardRenderer.stone_size * offset);
 
-		renderStoneShadow(gl, color, stone, m_alpha * alpha);
+		renderStoneShadow(gl, color, stone, mirror, rotate, m_alpha * alpha);
 	}
 
-	public void renderPlayerStone(GL10 gl, int color, Stone stone, float alpha) {
+	public void renderPlayerStone(GL10 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
 		int i;
 		final float c[] = Global.stone_color_a[color];
 		c[3] = alpha;
@@ -395,7 +395,7 @@ public class BoardRenderer {
 		for (i = 0; i < stone.get_stone_size(); i++) {
 			int j;
 			for (j = 0; j < stone.get_stone_size(); j++) {
-				if (stone.get_stone_field(i, j) != Stone.STONE_FIELD_FREE)
+				if (stone.get_stone_field(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
 					this.stone.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}

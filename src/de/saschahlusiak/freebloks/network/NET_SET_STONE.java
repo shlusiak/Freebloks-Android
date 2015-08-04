@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.network;
 import java.io.ByteArrayOutputStream;
 
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Turn;
 
 public class NET_SET_STONE extends NET_HEADER {
 	public int player; /* int 8 */
@@ -43,6 +44,10 @@ public class NET_SET_STONE extends NET_HEADER {
 			if (rotate_count < 0 || rotate_count > 3)
 				throw new ProtocolException("invalid rotate_count " + rotate_count);
 		}
+	}
+	
+	public Turn toTurn() {
+		return new Turn(player, stone, y, x, mirror_count, rotate_count);
 	}
 
 	@Override

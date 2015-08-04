@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -12,9 +12,9 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	private static final float ALPHA_MAX = 1.0f;
 
 	private float NUMBER_OF_PERIODS;
-
-	public StoneFadeEffect(ViewModel model, Stone stone, int color, int x, int y, float cycles) {
-		super(model, stone, color, x, y);
+	
+	public StoneFadeEffect(ViewModel model, Turn turn, float cycles) {
+		super(model, turn);
 		this.NUMBER_OF_PERIODS = cycles;
 	}
 
@@ -37,7 +37,7 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 
-		renderer.renderPlayerStone(gl, color, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 }

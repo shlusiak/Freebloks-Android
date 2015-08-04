@@ -256,7 +256,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void stoneUndone(Stone s, Turn t) {
+	public void stoneUndone(Turn t) {
 
 	}
 

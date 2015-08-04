@@ -173,14 +173,14 @@ public class SpielClient {
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
 		case Network.MSG_SET_STONE: {
 			NET_SET_STONE s=(NET_SET_STONE)data;
-			/* Entsprechenden Stein des Spielers holen */
-			Stone stone = spiel.get_player(s.player).get_stone(s.stone);
-			/* Stein in richtige Position drehen */
-			stone.mirror_rotate_to(s.mirror_count, s.rotate_count);
+			
+			Turn turn = s.toTurn();
+			
 			/* Stein aufs echte Spielfeld setzen */
 //			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
 			/* Zug der History anhaengen */
-			spiel.addHistory(s.player, stone, s.y, s.x);
+
+			spiel.addHistory(turn);
 			/* inform listeners first, so that effects can be added before the stone
 			 * is committed. fixes drawing glitches, where stone is set, but
 			 * effect hasn't been added yet
@@ -188,10 +188,9 @@ public class SpielClient {
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneWillBeSet(s);
 
-			if ((spiel.is_valid_turn(stone, s.player, s.y, s.x) == Stone.FIELD_DENIED) ||
-			   (spiel.set_stone(stone, s.player, s.y, s.x) != Stone.FIELD_ALLOWED))
-			{	// Spiel scheint nicht mehr synchron zu sein
-				// GAANZ schlecht!!
+			if ((spiel.is_valid_turn(turn) == Stone.FIELD_DENIED) ||
+			   (spiel.set_stone(turn) != Stone.FIELD_ALLOWED))
+			{
 				throw new GameStateException("game not in sync");
 			}
 
@@ -291,11 +290,9 @@ public class SpielClient {
 		/* Server laesst den letzten Zug rueckgaengig machen */
 		case Network.MSG_UNDO_STONE: {
 			Turn t = spiel.history.get_last_turn();
-			Stone stone = spiel.get_player(t.m_playernumber).get_stone(t.m_stone_number);
-			stone.mirror_rotate_to(t.m_mirror_count, t.m_rotate_count);
 			Log.d(tag, "stone undone: " + t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
-				sci.stoneUndone(stone, t);
+				sci.stoneUndone( t);
 			spiel.undo_turn(spiel.history, spiel.m_gamemode);
 			break;
 		}
@@ -310,26 +307,28 @@ public class SpielClient {
 	 * Aktion wird nur an den Server geschickt, der Stein wird NICHT lokal
 	 * gesetzt
 	 **/
-	public int set_stone(Stone stone, int y, int x)
+	public int set_stone(Turn turn)
 	{
 		NET_SET_STONE data;
-		if (spiel.m_current_player==-1)return Stone.FIELD_DENIED;
+		if (spiel.m_current_player==-1)
+			return Stone.FIELD_DENIED;
+		
+		/* Lokal keinen Spieler als aktiv setzen.
+	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
+		spiel.set_noplayer();
 
 		data = new NET_SET_STONE();
 		/* Datenstruktur mit Daten der Aktion fuellen */
-		data.player=spiel.m_current_player;
-		data.stone=stone.get_number();
-		data.mirror_count=stone.get_mirror_counter();
-		data.rotate_count=stone.get_rotate_counter();
-		data.x=x;
-		data.y=y;
+		data.player=turn.m_playernumber;
+		data.stone=turn.m_stone_number;
+		data.mirror_count=turn.m_mirror_count;
+		data.rotate_count=turn.m_rotate_count;
+		data.x=turn.m_x;
+		data.y=turn.m_y;
 
 		/* Nachricht ueber den Stein an den Server schicken */
 		data.send(client_socket);
 
-		/* Lokal keinen Spieler als aktiv setzen.
-	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
-		spiel.set_noplayer();
 		return Stone.FIELD_ALLOWED;
 	}
 

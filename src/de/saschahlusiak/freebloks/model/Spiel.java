@@ -198,13 +198,13 @@ public class Spiel implements Serializable, Cloneable {
 		}
 	}
 
-	public final int is_valid_turn(Stone stone, int playernumber, int startY, int startX) {
+	public final int is_valid_turn(Stone stone, int playernumber, int startY, int startX, int mirror, int rotate) {
 		int valid = Stone.FIELD_DENIED;
 		int field_value;
 
 		for (int y = 0; y < stone.get_stone_size(); y++){
 			for (int x = 0; x < stone.get_stone_size(); x++){
-				if (stone.get_stone_field(y,x) != Stone.STONE_FIELD_FREE) {
+				if (stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
 					if (y + startY < 0 || y + startY >= m_field_size_y || x + startX < 0 || x + startX >= m_field_size_x)
 						return Stone.FIELD_DENIED;
 
@@ -220,8 +220,7 @@ public class Spiel implements Serializable, Cloneable {
 	public final int is_valid_turn(Turn turn) {
 		int playernumber = turn.m_playernumber;
 		Stone stone = m_player[playernumber].get_stone(turn.m_stone_number);
-		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
-		return is_valid_turn(stone, playernumber, turn.m_y, turn.m_x);
+		return is_valid_turn(stone, playernumber, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
 	}
 
 	final void free_gamefield(int y, int x) {
@@ -254,14 +253,13 @@ public class Spiel implements Serializable, Cloneable {
 
 	public final int set_stone(Turn turn) throws GameStateException{
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
-		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
-		return set_stone(stone, turn.m_playernumber, turn.m_y, turn.m_x);
+		return set_stone(stone, turn.m_playernumber, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
 	}
 
-	public final int set_stone(Stone stone, int playernumber, int startY, int startX) throws GameStateException {
+	private final int set_stone(Stone stone, int playernumber, int startY, int startX, int mirror, int rotate) throws GameStateException {
 		for (int y = 0; y < stone.m_size; y++){
 			for (int x = 0; x < stone.m_size; x++){
-				if (stone.get_stone_field(y,x) != Stone.STONE_FIELD_FREE) {
+				if (stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
 					set_single_stone_for_player(playernumber, startY+y, startX+x);
 				}
 			}
@@ -276,12 +274,11 @@ public class Spiel implements Serializable, Cloneable {
 		Turn turn = turnpool.get_last_turn();
 		Stone stone = m_player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;
-		stone.mirror_rotate_to(turn.m_mirror_count, turn.m_rotate_count);
 
 		// remove stone
 		for (x = 0; x < stone.get_stone_size(); x++) {
 			for (y = 0; y < stone.get_stone_size(); y++) {
-				if (stone.get_stone_field(y, x) != Stone.STONE_FIELD_FREE) {
+				if (stone.get_stone_field(y, x, turn.m_mirror_count, turn.m_rotate_count) != Stone.STONE_FIELD_FREE) {
 					if (get_game_field(turn.m_y + y, turn.m_x + x) == Stone.FIELD_FREE)
 						throw new GameStateException("field is free but shouldn't");
 					free_gamefield(turn.m_y + y, turn.m_x + x);
