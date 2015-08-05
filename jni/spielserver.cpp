@@ -483,12 +483,16 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				send_all((NET_HEADER*)(&undo),sizeof(undo),MSG_UNDO_STONE);
 				// Spieler von zurueckgenommenen Stein ist wieder dran
 				m_current_player=turn->get_playernumber();
-				// Aktuellen Spieler uebermitteln
-				send_current_player();
 				// Und lokal den Zug zuruecknehmen
 				undo_turn(history, m_gamemode);
 				// Solange Zuege des Computers zurueckgenommen werden
+
+				timer.sleep(100);
 			}while (spieler[m_current_player]==PLAYER_COMPUTER);
+
+			// Aktuellen Spieler uebermitteln
+			send_current_player();
+
 // 			printf("Removed %d turns.\n",i);
 			break;
 		}
