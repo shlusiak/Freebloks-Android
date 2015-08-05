@@ -107,6 +107,9 @@ public:
 	static int run_server(const char* interface_,int port,int maxhumans,int ki_mode,int width,int height,GAMEMODE gamemode,int8 stone_numbers[],int ki_threads);
 
 	void set_ki_threads(int ki_threads) { m_ki.set_num_threads(ki_threads); }
+
+	/* assigns all PLAYER_LOCAL player to the first connected client */
+	void assign_local_players();
 };
 
 

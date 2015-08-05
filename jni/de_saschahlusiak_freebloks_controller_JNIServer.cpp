@@ -47,7 +47,12 @@ static int EstablishGame(CServerListener* listener)
 		if (listener->get_game()->num_clients() <= 0)
 			return -1;
 		/* Solange, wie kein aktueller Spieler festgelegt ist: Spiel laeuft noch nicht */
+
+		/* assign all PLAYER_LOCAL players to first client */
+		listener->get_game()->assign_local_players();
+
 	}while (listener->get_game()->current_player()==-1);
+
 	return 0;
 }
 
@@ -120,7 +125,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	jint *tmp = je->GetIntArrayElements(spieler, 0);
 	for (i = 0; i < PLAYER_MAX; i++) {
 		if (tmp[i] == PLAYER_LOCAL)
-			game->setSpieler(i, 0); /* local players are mapped to first client */
+			game->setSpieler(i, PLAYER_LOCAL); /* local players will later be mapped to first connecting client */
 		else
 			game->setSpieler(i, PLAYER_COMPUTER);
 	}
