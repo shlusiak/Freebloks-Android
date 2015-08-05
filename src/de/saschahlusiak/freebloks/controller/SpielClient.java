@@ -368,7 +368,7 @@ public class SpielClient {
 		return lastHost;
 	}
 
-	public void send(NET_HEADER msg) {
+	synchronized public void send(NET_HEADER msg) {
 		msg.send(client_socket);
 	}
 }
