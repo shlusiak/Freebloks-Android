@@ -520,15 +520,17 @@ public class CurrentStone implements ViewElement {
 		status = Status.IDLE;
 		return false;
 	}
+	
+	synchronized public void stopDragging() {
+		this.stone = null;
+		this.current_color = 0;
+		status = Status.IDLE;
+	}
 
-	synchronized public void startDragging(PointF fieldPoint, Stone stone, int color) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone, int mirror, int rotate, int color) {
 		this.stone = stone;
 		this.current_color = color;
-		if (stone == null) {
-			status = Status.IDLE;
-			return;
-		}
-
+		
 		status = Status.DRAGGING;
 
 		hasMoved = false;
@@ -538,8 +540,8 @@ public class CurrentStone implements ViewElement {
 		stone_rel_x = 0;
 		stone_rel_y = 0;
 		
-		m_mirror_counter = 0;
-		m_rotate_counter = 0;
+		m_mirror_counter = mirror;
+		m_rotate_counter = rotate;
 
 
 		if (fieldPoint != null) {

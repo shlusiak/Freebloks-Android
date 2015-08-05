@@ -209,8 +209,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		PointF p = new PointF();
 		p.x = s.x - 0.5f + st.get_stone_size() / 2;
 		p.y = s.y - 0.5f + st.get_stone_size() / 2;
-		model.currentStone.mirror_rotate_to(s.mirror_count, s.rotate_count);
-		model.currentStone.startDragging(p, st, model.getPlayerColor(s.player));
+		model.currentStone.startDragging(p, st, s.mirror_count, s.rotate_count, model.getPlayerColor(s.player));
 
 		requestRender();
 	}
@@ -245,7 +244,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			Effect e = new StoneUndoEffect(model, t);
 			model.addEffect(e);
 		}
-		model.currentStone.startDragging(null, null, 0);
+		model.currentStone.stopDragging();
 		requestRender();
 	}
 

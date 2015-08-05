@@ -953,7 +953,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				return true;
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
-			view.model.currentStone.startDragging(null, null, 0);
+			view.model.currentStone.stopDragging();
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
