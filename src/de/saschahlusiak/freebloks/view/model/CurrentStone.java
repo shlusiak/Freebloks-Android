@@ -537,6 +537,10 @@ public class CurrentStone implements ViewElement {
 		 * when started dragging */
 		stone_rel_x = 0;
 		stone_rel_y = 0;
+		
+		m_mirror_counter = 0;
+		m_rotate_counter = 0;
+
 
 		if (fieldPoint != null) {
 			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
