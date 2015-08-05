@@ -399,11 +399,15 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 			NET_SET_STONE *s=(NET_SET_STONE*)data;
 			/* Den entsprechenden Stein aus den Daten zusammensuchen */
 			if (s->player != m_current_player) {
-				logger->logLine("WARNING: Ignoring move from non-current player.\n");
+				if (logger)
+					logger->logLine("WARNING: Ignoring move from non-current player.\n");
+				send_current_player();
 				return;
 			}
-			if (client != spieler[s->player]) {
-				logger->logLine("WARNING: Client does not own player! Ignoring move.\n");
+			if (clients[client] != spieler[s->player]) {
+				if (logger)
+					logger->logLine("WARNING: Client does not own player! Ignoring move.\n");
+				send_current_player();
 				return;
 			}
 
