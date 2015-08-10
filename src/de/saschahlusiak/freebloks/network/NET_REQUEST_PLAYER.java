@@ -12,7 +12,7 @@ public class NET_REQUEST_PLAYER extends NET_HEADER {
 		this.name = name;
 	}
 
-	public NET_REQUEST_PLAYER(NET_HEADER from) {
+	public NET_REQUEST_PLAYER(NET_HEADER from) throws ProtocolException {
 		super(from);
 		if (data_length >= 17) {
 			player = buffer[0];
@@ -21,6 +21,9 @@ public class NET_REQUEST_PLAYER extends NET_HEADER {
 			name = null;
 			player = -1;
 		}
+		
+		if (player < -1 || player > 3)
+			throw new ProtocolException("invalid player: " + player);
 	}
 
 	@Override

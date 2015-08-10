@@ -8,6 +8,20 @@
 #include "spielserver.h"
 
 
+class CAndroidLogWriter: public CLogWriter {
+public:
+	virtual void log(const char* fmt, va_list va);
+};
+
+void CAndroidLogWriter::log(const char* fmt, va_list va)
+{
+	CLogWriter::log(fmt, va);
+	__android_log_vprint(ANDROID_LOG_INFO, "server", fmt, va);
+}
+
+
+
+
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_get_1number_1of_1processors
   (JNIEnv *je, jclass jc)
 {
@@ -33,7 +47,12 @@ static int EstablishGame(CServerListener* listener)
 		if (listener->get_game()->num_clients() <= 0)
 			return -1;
 		/* Solange, wie kein aktueller Spieler festgelegt ist: Spiel laeuft noch nicht */
+
+		/* assign all PLAYER_LOCAL players to first client */
+		listener->get_game()->assign_local_players();
+
 	}while (listener->get_game()->current_player()==-1);
+
 	return 0;
 }
 
@@ -41,10 +60,14 @@ void* gameRunThread(void* param)
 {
 	CServerListener *listener = (CServerListener*)param;
 
+	CLogger logger(new CAndroidLogWriter());
+	listener->setLogger(&logger);
+	listener->get_game()->setLogger(&logger);
+
 	if (EstablishGame(listener) == -1) {
 		listener->close();
 		delete listener;
-		D("game not established");
+		logger.logLine("game not established");
 		return NULL;
 	}
 
@@ -56,7 +79,7 @@ void* gameRunThread(void* param)
 	game->run();
 
 	delete listener;
-	D("server thread going down");
+	logger.logLine("server thread going down");
 
 	return NULL;
 }
@@ -102,7 +125,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	jint *tmp = je->GetIntArrayElements(spieler, 0);
 	for (i = 0; i < PLAYER_MAX; i++) {
 		if (tmp[i] == PLAYER_LOCAL)
-			game->setSpieler(i, 0); /* local players are mapped to first client */
+			game->setSpieler(i, PLAYER_LOCAL); /* local players will later be mapped to first connecting client */
 		else
 			game->setSpieler(i, PLAYER_COMPUTER);
 	}

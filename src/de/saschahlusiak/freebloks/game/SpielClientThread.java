@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
+import java.io.IOException;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -55,27 +57,33 @@ class SpielClientThread extends Thread {
 		try {
 			sleep(200);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			/* nothing */
 		}
 
-		do {
-			Exception e = client.poll();
+		try {
+			do {
+				client.poll();
+				if (getGoDown()) {
+					return;
+				}
+			} while (client.isConnected());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
 			synchronized(client) {
 				error = e;
 			}
-			if (error != null)
-				break;
-			if (getGoDown()) {
-				return;
-			}
-		} while (client.isConnected());
+			return;
+		}
+		finally {
+			client.disconnect();
+			if (sendThread.looper != null)
+				sendThread.looper.quit();
+			else
+				sendThread.interrupt();
+			Log.i(tag, "disconnected, thread going down");
+		}
 
-		client.disconnect();
-		if (sendThread.looper != null)
-			sendThread.looper.quit();
-		else
-			sendThread.interrupt();
-		Log.i(tag, "disconnected, thread going down");
 	}
 
 	public void post(Runnable r) {

@@ -93,7 +93,7 @@ void CLogFileWriter::flush()
 void CLogFileWriter::log(const char* fmt, va_list va)
 {
 	CLogWriter::log(fmt, va);
-	vfprintf(logfile, fmt,va);
+	vfprintf(logfile, fmt, va);
 	flush();
 }
 
@@ -116,7 +116,7 @@ void CLogger::log(const char* fmt, ...)
 void CLogger::logLine(const char* fmt, ...)
 {
 	va_list va;
-	va_start(va,fmt);
+	va_start(va, fmt);
 	logHeader();
 	logva(fmt, va);
 	if (fmt[strlen(fmt)-1]!='\n')

@@ -32,7 +32,7 @@ public class Player implements Serializable, Cloneable {
 		return c;
 	}
 
-	void init(Spiel spiel, int playernumber){
+	void init(Spiel spiel, int playernumber) {
 		m_number = playernumber;
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
 			m_stone[i].init(i);
@@ -72,7 +72,7 @@ public class Player implements Serializable, Cloneable {
 	}
 
 
-	void refresh_data(Spiel spiel){
+	void refresh_data(Spiel spiel) {
 		m_stone_points = 0;
 		m_number_of_possible_turns = 0;
 		m_position_points = 0;

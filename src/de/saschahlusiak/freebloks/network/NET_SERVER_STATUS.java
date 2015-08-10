@@ -29,8 +29,10 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 	private static final int VERSION_MAX = 3; // highest version we understand.
 	
 
-	public NET_SERVER_STATUS(NET_HEADER from) throws UnsupportedOperationException {
+	public NET_SERVER_STATUS(NET_HEADER from) throws ProtocolException {
 		super(from);
+		
+		/* TODO: verify information, throw ProtocolException */
 		player = buffer[0];
 		computer = buffer[1];
 		clients = buffer[2];
@@ -39,8 +41,10 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		gamemode = GameMode.from(buffer[10]);
 		version = 1;
 		version_min = 1;
+		
 		if (from.data_length >= 11 + 4 + 16 * 8)
 			version = 2;
+		
 		if (from.data_length >= 11 + 4 + 16 * 8 + 2) {
 			version = buffer[11 + 4 + 16 * 8 + 0];
 			version_min = buffer[11 + 4 + 16 * 8 + 1];
@@ -48,7 +52,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		
 		if (version_min > VERSION_MAX) {
 			/* we don't know how to speak version_min, the minimum required version */
-			throw new UnsupportedOperationException("unsupported protocol version: " + version_min);
+			throw new ProtocolException("unsupported protocol version: " + version_min);
 		}
 		
 		if (isVersion(2)) {

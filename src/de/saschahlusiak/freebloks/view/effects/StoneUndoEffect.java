@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -11,8 +11,8 @@ public class StoneUndoEffect extends AbsStoneEffect {
 
 	float phase, z, alpha, rot;
 
-	public StoneUndoEffect(ViewModel model, Stone stone, int color, int x, int y) {
-		super(model, stone, color, x, y);
+	public StoneUndoEffect(ViewModel model, Turn turn) {
+		super(model, turn);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class StoneUndoEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * y);
 
 		renderer.renderShadow(gl,
-				stone, color,
+				stone, color, mirror, rotate,
 				z,
 				rot, 0, 1, 0,
 				90 * model.board.centerPlayer,
@@ -63,7 +63,7 @@ public class StoneUndoEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_y - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 
 	    gl.glRotatef(rot, 0, 1, 0);
-		renderer.renderPlayerStone(gl, color, stone, alpha * BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 }

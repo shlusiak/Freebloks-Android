@@ -18,15 +18,6 @@ public class Turnpool implements Serializable {
 		}
 	}
 
-	final public void add_turn(int playernumber, Stone stone, int y, int x) {
-		current++;
-		if (turns.size() < current){
-			turns.add(new Turn(playernumber, stone, y, x));
-		} else {
-			turns.get(current - 1).init(playernumber, stone, y, x);
-		}
-	}
-
 	final void begin_add() {
 		current = 0;
 	}
@@ -37,8 +28,6 @@ public class Turnpool implements Serializable {
 	}
 
 	final void delete_last() {
-		if (current <= 0)
-			return;
 		current--;
 		turns.remove(current);
 	}

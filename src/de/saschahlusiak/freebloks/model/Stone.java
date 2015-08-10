@@ -2,19 +2,21 @@ package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 
+import de.saschahlusiak.freebloks.controller.GameStateException;
+
 public class Stone implements Serializable, Cloneable {
 	private static final long serialVersionUID = -4949247356899826370L;
 
 	public static final int STONE_COUNT_ALL_SHAPES = 21;
 	public static final int STONE_SIZE_MAX  =  5;
 
-	static final int MIRRORABLE_NOT = 0;
-	static final int MIRRORABLE_OPTIONAL = 1;
-	static final int MIRRORABLE_IMPORTANT = 2;
+	public static final int MIRRORABLE_NOT = 0;
+	public static final int MIRRORABLE_OPTIONAL = 1;
+	public static final int MIRRORABLE_IMPORTANT = 2;
 
-	static final int ROTATEABLE_NOT   = 1;
-	static final int ROTATEABLE_TWO   = 2;
-	static final int ROTATEABLE_FOUR  = 4;
+	public static final int ROTATEABLE_NOT   = 1;
+	public static final int ROTATEABLE_TWO   = 2;
+	public static final int ROTATEABLE_FOUR  = 4;
 
 	public static final int FIELD_FREE   =  240;
 	public static final int FIELD_ALLOWED=  241;
@@ -282,12 +284,14 @@ public class Stone implements Serializable, Cloneable {
 	int m_available;
 	int m_shape;
 	int m_size;
-	int m_mirror_counter;
-	int m_rotate_counter;
 
 
 	public Stone() {
-		m_available = m_shape = m_size = m_mirror_counter = m_rotate_counter = 0;
+		m_available = m_shape = m_size = 0;
+	}
+	
+	public Stone(int shape) {
+		init(shape);
 	}
 
 	@Override
@@ -299,13 +303,6 @@ public class Stone implements Serializable, Cloneable {
 		this.m_available = from.m_available;
 		this.m_shape = from.m_shape;
 		this.m_size = from.m_size;
-		this.m_mirror_counter = from.m_mirror_counter;
-		this.m_rotate_counter = from.m_rotate_counter;
-	}
-
-	public final void mirror_rotate_to(int mirror_counter, int rotate_counter){
-		this.m_mirror_counter = mirror_counter;
-		this.m_rotate_counter = rotate_counter;
 	}
 
 	public final void set_available(int value){
@@ -316,7 +313,9 @@ public class Stone implements Serializable, Cloneable {
 		m_available++;
 	}
 
-	public final void available_decrement(){
+	public final void available_decrement() throws GameStateException {
+		if (m_available <= 0)
+			throw new GameStateException("stone not available");
 		m_available--;
 	}
 
@@ -336,14 +335,6 @@ public class Stone implements Serializable, Cloneable {
 		return STONE_POSITION_POINTS[m_shape];
 	}
 
-	public final int get_rotate_counter() {
-		return m_rotate_counter;
-	}
-
-	public final int get_mirror_counter() {
-		return m_mirror_counter;
-	}
-
 	public final int get_stone_shape() {
 		return m_shape;
 	}
@@ -351,7 +342,6 @@ public class Stone implements Serializable, Cloneable {
 	public final int get_number() {
 		return m_shape;
 	}
-
 
 	public final int get_stone_size() {
 		return m_size;
@@ -364,89 +354,61 @@ public class Stone implements Serializable, Cloneable {
 	public final void init(int shape) {
 		m_shape = shape;
 		m_size = STONE_SIZE[m_shape];
-		m_rotate_counter = 0;
-		m_mirror_counter = 0;
 	}
 
-	public final int get_stone_field(int y, int x) {
+	public final int get_stone_field(int y, int x, int mirror, int rotate) {
 		int nx=x, ny=y;
-		if (m_mirror_counter == 0){
-			if (m_rotate_counter == 0){
+		if (mirror == 0){
+			if (rotate == 0){
 				nx = y;
 				ny = x;
-			} else if (m_rotate_counter == 1){
+			} else if (rotate == 1){
 				nx = m_size - 1 - x;
 				ny = y;
-			} else if (m_rotate_counter == 2){
+			} else if (rotate == 2){
 				nx = m_size - 1 - y;
 				ny = m_size - 1 - x;
-			} else if (m_rotate_counter == 3){
+			} else if (rotate == 3){
 				nx = x;
 				ny = m_size - 1 - y;
-			} else return 0; /* ERROR */
+			} else throw new RuntimeException("invalid m_rotate_counter: " + rotate);
 		}else{
-			if (m_rotate_counter == 0){
+			if (rotate == 0){
 				nx = m_size - 1 - y;
 				ny = x;
-			} else if (m_rotate_counter == 1){
+			} else if (rotate == 1){
 				nx = x;
 				ny = y;
-			} else if (m_rotate_counter == 2){
+			} else if (rotate == 2){
 				nx = y;
 				ny = m_size - 1 - x;
 			} else
-			if (m_rotate_counter == 3){
+			if (rotate == 3){
 				nx = m_size - 1 - x;
 				ny = m_size - 1 - y;
-			} else return 0; /* ERROR */
+			} else throw new RuntimeException("invalid m_rotate_counter: " + rotate);
 		}
 
 		return STONE_FIELD[m_shape][ny + nx * STONE_SIZE_MAX];
 	}
 
-
-
-	public final void rotate_left(){
-		m_rotate_counter--;
-		if (m_rotate_counter < 0) m_rotate_counter += STONE_ROTATEABLE[m_shape];
-	}
-
-	public final void rotate_right(){
-		m_rotate_counter=(m_rotate_counter+1)%STONE_ROTATEABLE[m_shape];
-	}
-
-	public final void mirror_over_x(){
-		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
-		m_mirror_counter = (m_mirror_counter + 1) % 2;
-		if (m_rotate_counter%2 == 1)
-			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
-	}
-
-	public final void mirror_over_y(){
-		if (STONE_ROTATEABLE[m_shape] == MIRRORABLE_NOT) return;
-		m_mirror_counter = (m_mirror_counter + 1) % 2;
-		if (m_rotate_counter%2 == 0)
-			m_rotate_counter = (m_rotate_counter + 2)%(STONE_ROTATEABLE[m_shape]);
-	}
-
-	final int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX){
-		int mirror;
+	final int calculate_possible_turns_in_position(Spiel spiel, int playernumber, int fieldY, int fieldX) {
 		int count = 0;
 
-		int rotate_count = m_rotate_counter;
-		int mirror_count = m_mirror_counter;
+		int mirror, mirror_max;
+		int rotate;
 
-		if (STONE_MIRRORABLE[m_shape] == MIRRORABLE_IMPORTANT) mirror = 1;
-		else mirror = 0;
+		if (STONE_MIRRORABLE[m_shape] == MIRRORABLE_IMPORTANT)
+			mirror_max = 1;
+		else 
+			mirror_max = 0;
 
-		for (m_mirror_counter = 0; m_mirror_counter <= mirror; m_mirror_counter++){
-			for (m_rotate_counter = 0; m_rotate_counter < STONE_ROTATEABLE[m_shape]; m_rotate_counter++){
-
-				for (int x = 0; x < STONE_SIZE[m_shape]; x++){
-					for (int y = 0; y < STONE_SIZE[m_shape]; y++){
-
-						if (get_stone_field(y, x) == STONE_FIELD_ALLOWED) {
-							if (spiel.is_valid_turn(this, playernumber, fieldY-y, fieldX-x) == FIELD_ALLOWED){
+		for (mirror = 0; mirror <= mirror_max; mirror++) {
+			for (rotate = 0; rotate < STONE_ROTATEABLE[m_shape]; rotate++) {
+				for (int x = 0; x < STONE_SIZE[m_shape]; x++) {
+					for (int y = 0; y < STONE_SIZE[m_shape]; y++) {
+						if (get_stone_field(y, x, mirror, rotate) == STONE_FIELD_ALLOWED) {
+							if (spiel.is_valid_turn(this, playernumber, fieldY - y, fieldX - x, mirror, rotate) == FIELD_ALLOWED) {
 								count++;
 							}
 						}
@@ -454,8 +416,7 @@ public class Stone implements Serializable, Cloneable {
 				}
 			}
 		}
-		m_rotate_counter = rotate_count;
-		m_mirror_counter = mirror_count;
+		
 		return count;
 	}
 }

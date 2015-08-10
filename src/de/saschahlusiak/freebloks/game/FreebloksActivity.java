@@ -951,7 +951,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				return true;
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
-			view.model.currentStone.startDragging(null, null, 0);
+			view.model.currentStone.stopDragging();
 			spielthread.post(new Runnable() {
 				@Override
 				public void run() {
@@ -1263,7 +1263,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void stoneUndone(Stone s, Turn t) {
+	public void stoneUndone(Turn t) {
 
 	}
 
@@ -1362,24 +1362,23 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public boolean commitCurrentStone(final Stone stone, final int x, final int y) {
+	public boolean commitCurrentStone(final Turn turn) {
 		if (client == null)
 			return false;
 		
 		if (!client.spiel.is_local_player())
 			return false;
-		if (client.spiel.is_valid_turn(stone, client.spiel.current_player(), y, x) != Stone.FIELD_ALLOWED)
+		if (client.spiel.is_valid_turn(turn) != Stone.FIELD_ALLOWED)
 			return false;
 
 		if (view.model.hasAnimations()) {
 			Stone st = new Stone();
-			int player = client.spiel.current_player();
-			st.copyFrom(stone);
-			StoneRollEffect e = new StoneRollEffect(view.model, st, view.model.getPlayerColor(player), x, y, view.model.currentStone.hover_height_high, -15.0f);
+			st.copyFrom(client.spiel.get_player(turn.m_playernumber).get_stone(turn.m_stone_number));
+			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
 
 			EffectSet set = new EffectSet();
 			set.add(e);
-			set.add(new StoneFadeEffect(view.model, st, view.model.getPlayerColor(player), x, y, 1.0f));
+			set.add(new StoneFadeEffect(view.model, turn, 1.0f));
 			view.model.addEffect(set);
 		}
 
@@ -1389,7 +1388,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		spielthread.post(new Runnable() {
 			@Override
 			public void run() {
-				client.set_stone(stone, y, x);
+				client.set_stone(turn);
 			}
 		});
 		return true;

@@ -8,11 +8,13 @@
     <item
         android:id="@+id/sound_toggle_button"
         android:icon="@android:drawable/ic_lock_silent_mode_off"
+        android:showAsAction="ifRoom"
         android:title="@string/sound_on" >
     </item>
     <item
         android:id="@+id/hint"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_action_about"
+        android:showAsAction="ifRoom"
         android:title="@string/hint">
     </item>
     <item

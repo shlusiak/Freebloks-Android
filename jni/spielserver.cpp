@@ -346,7 +346,6 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				/* Speichere socket des Spielers in dem spieler[] Array
 			   	So werden den Spielern wieder die Clients zugeordnet */
 				spieler[n]=clients[client];
-
 			}
 			/* setze Spielernamen */
 			if (names[client] == NULL) {
@@ -395,15 +394,28 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 			break;
 		}
 
-		/* Ein Client hat einen Stein gesetzt */
+		/* Ein Client moechte einen Stein setzen */
 		case MSG_SET_STONE:{
 			NET_SET_STONE *s=(NET_SET_STONE*)data;
 			/* Den entsprechenden Stein aus den Daten zusammensuchen */
+			if (s->player != m_current_player) {
+				if (logger)
+					logger->logLine("WARNING: Ignoring move from non-current player.\n");
+				send_current_player();
+				return;
+			}
+			if (clients[client] != spieler[s->player]) {
+				if (logger)
+					logger->logLine("WARNING: Client does not own player! Ignoring move.\n");
+				send_current_player();
+				return;
+			}
+
 			CStone *stone=get_player(s->player)->get_stone(s->stone);
 			stone->mirror_rotate_to(s->mirror_count,s->rotate_count);
 
 			/* Den Stein lokal setzen */
- 			if ((CSpiel::is_valid_turn(stone, s->player, s->y, s->x) == FIELD_DENIED) ||
+ 			if ((CSpiel::is_valid_turn(stone, s->player, s->y, s->x) == FIELD_ALLOWED) &&
 			   (CSpiel::set_stone(stone, s->player,s->y,s->x)==FIELD_ALLOWED))
 			{
 				/* Bei Erfolg wird die Nachricht direkt an alle Clients zurueck-
@@ -415,9 +427,11 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				next_player();
 			}else{ // Spiel scheint nicht synchron zu sein
 				if (logger) {
-					logger->logLine("Game seems to be out of sync.\n");
+					logger->logLine("WARNING: Game seems to be out of sync, ignoring move.\n");
+//					delete_client(client, true);
 				}
 			}
+
 			/* Aktuellen Spieler den Clients mitteilen */
 			send_current_player();
 			break;
@@ -469,12 +483,16 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				send_all((NET_HEADER*)(&undo),sizeof(undo),MSG_UNDO_STONE);
 				// Spieler von zurueckgenommenen Stein ist wieder dran
 				m_current_player=turn->get_playernumber();
-				// Aktuellen Spieler uebermitteln
-				send_current_player();
 				// Und lokal den Zug zuruecknehmen
 				undo_turn(history, m_gamemode);
 				// Solange Zuege des Computers zurueckgenommen werden
+
+				timer.sleep(100);
 			}while (spieler[m_current_player]==PLAYER_COMPUTER);
+
+			// Aktuellen Spieler uebermitteln
+			send_current_player();
+
 // 			printf("Removed %d turns.\n",i);
 			break;
 		}
@@ -788,6 +806,31 @@ int CSpielServer::run_server(const char* interface_,int port,int maxhumans,int k
 #endif
 	// Erfolg
 	return 0;
+}
+
+/**
+ * Assigns all players that have been marked as PLAYER_LOCAL to the first connected client.
+ * This is for the server, which does not have local players to support "resume", where local players
+ * can only be assigned to clients after they have joined.
+ */
+void CSpielServer::assign_local_players()
+{
+	int s = -1;
+	int i;
+	for (i = 0; i < CLIENTS_MAX; i++) {
+		if (clients[i] != -1) {
+			s = clients[i];
+			break;
+		}
+	}
+	if (s == -1)
+		return;
+
+	for (i = 0; i < PLAYER_MAX; i++) {
+		if (spieler[i] == PLAYER_LOCAL) {
+			setSpieler(i, s);
+		}
+	}
 }
 
 

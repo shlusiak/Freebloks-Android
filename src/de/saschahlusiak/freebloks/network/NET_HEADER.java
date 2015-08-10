@@ -16,6 +16,10 @@ public class NET_HEADER implements Serializable {
 	public static final int HEADER_SIZE = 5;
 
 	byte buffer[];
+	
+	NET_HEADER() {
+		this(0, 0);
+	}
 
 	public NET_HEADER(int msg_type, int data_length) {
 		this.msg_type = msg_type;
@@ -37,7 +41,7 @@ public class NET_HEADER implements Serializable {
 		return (b & 0xFF);
 	}
 
-	boolean read(Socket socket, boolean block) throws Exception {
+	boolean read(Socket socket, boolean block) throws ProtocolException,IOException {
 		InputStream is;
 		int r;
 		int check1, check2;
@@ -54,7 +58,7 @@ public class NET_HEADER implements Serializable {
 
 		r = is.read(buffer, 0, HEADER_SIZE);
 		if (r < HEADER_SIZE)
-			throw new Exception("read error");
+			throw new IOException("read error");
 
 		check1 = unsigned(buffer[0]);
 		data_length = unsigned(buffer[1]) << 8 | unsigned(buffer[2]);
@@ -62,24 +66,24 @@ public class NET_HEADER implements Serializable {
 		check2 = unsigned(buffer[4]);
 
 		if (data_length < HEADER_SIZE)
-			throw new Exception("invalid header data length");
+			throw new ProtocolException("invalid header data length: " + data_length);
 
 		/* Beiden Checksums erneut berechnen */
 		int c1 = (byte) (data_length & 0x0055) ^ msg_type;
 		int c2 = (c1 ^ 0xD6) + msg_type;
 		/* Bei Ungleichheit Fehler, sonst Nachricht ok */
 		if (c1 != check1 || c2 != check2)
-			throw new Exception("header checksum failed");
+			throw new ProtocolException("header checksum failed");
 
 		data_length -= HEADER_SIZE;
 
 		if (is.available() < data_length)
-			throw new Exception("short read for package payload");
+			throw new ProtocolException("short read for package payload, expected " + data_length + " more bytes");
 		buffer = new byte[data_length];
 
 		r = is.read(buffer, 0, data_length);
 		if (r < data_length)
-			throw new Exception("short read for package payload");
+			throw new ProtocolException("short read for package payload, got " + r + " out of " + data_length + " bytes");
 
 		return true;
 
@@ -106,8 +110,10 @@ public class NET_HEADER implements Serializable {
 		try {
 			socket.getOutputStream().write(bos.toByteArray());
 		} catch (IOException e) {
+			// TODO: don't silently fail!
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
+//			return false;
 		}
 		return true;
 	}
