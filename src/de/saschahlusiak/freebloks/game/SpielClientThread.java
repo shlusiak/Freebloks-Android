@@ -69,6 +69,8 @@ class SpielClientThread extends Thread {
 			} while (client.isConnected());
 		}
 		catch (IOException e) {
+			if (getGoDown())
+				return;
 			e.printStackTrace();
 			synchronized(client) {
 				error = e;

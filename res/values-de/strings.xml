@@ -145,6 +145,9 @@
         <item>Blauer Teppich</item>
         <item>Gras</item>
 	</string-array>
+	
+    <string name="notification_continue">Fortsetzen</string>
+    <string name="notification_disconnect">Trennen</string>
 
     <string name="prefs_interface">Oberfläche</string>
     <string name="prefs_display">Anzeige</string>

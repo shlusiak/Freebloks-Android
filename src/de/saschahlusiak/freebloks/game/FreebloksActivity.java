@@ -45,6 +45,8 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
+import android.app.Notification.Action;
+import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -358,8 +360,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		//	e.printStackTrace();
 		}
 		if (spielthread != null) try {
-			spielthread.client.disconnect();
 			spielthread.goDown();
+			spielthread.client.disconnect();
 			spielthread.join();
 			spielthread = null;
 		} catch (Exception e) {
@@ -392,7 +394,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	protected void onStop() {
-		if (client != null && client.isConnected()) {
+		if (!isFinishing() && client != null && client.isConnected()) {
 			if ((lastStatus != null && lastStatus.clients > 1) ||
 				(!client.spiel.isStarted()))
 				updateMultiplayerNotification(true, null);
@@ -1332,7 +1334,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
 		final Exception error = spielthread == null ? null : spielthread.getError();
-
+		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1456,6 +1458,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		return lastStatus.getPlayerName(getResources(), player, view.model.getPlayerColor(player));
 	}
 
+	Notification.Builder notificationBuilder;
+
 	void updateMultiplayerNotification(boolean forceShow, String chat) {
 		if (client == null || client.spiel == null)
 			return;
@@ -1476,65 +1480,88 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (chat != null)
 			intent.putExtra("showChat", true);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		if (notificationBuilder == null) {
+			notificationBuilder = new Notification.Builder(this);
+			
+			notificationBuilder.setContentIntent(pendingIntent);
+			
+			if (Build.VERSION.SDK_INT >= 16) {
+				notificationBuilder.addAction(android.R.drawable.ic_media_play, getString(R.string.notification_continue), pendingIntent);
+				
+				intent = new Intent(this, FreebloksActivity.class);
+				intent.setAction(Intent.ACTION_DELETE);
+				intent.addCategory(Intent.CATEGORY_DEFAULT);
+				intent.putExtra("disconnect", true);
+				PendingIntent disconnectIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				
+				notificationBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.notification_disconnect), disconnectIntent);
+			}
+		}
+		
+		notificationBuilder.setContentTitle(getString(R.string.app_name))
+			.setOngoing(false)
+			.setDefaults(0)
+			.setTicker(null)
+			.setAutoCancel(true)
+			.setSound(null);
 
-		n.flags = Notification.FLAG_AUTO_CANCEL;
-		if (forceShow && chat == null)
-			n.flags |= Notification.FLAG_ONGOING_EVENT;
-		if (multiplayerNotification != null)
-			n.flags |= Notification.FLAG_ONGOING_EVENT;
+		if ((forceShow && chat == null) || multiplayerNotification != null)
+			notificationBuilder.setOngoing(true);
 
 		if (!client.spiel.isStarted()) {
-			n.icon = R.drawable.notification_waiting;
-			n.setLatestEventInfo(this,
-					getString(R.string.app_name),
-					getString(R.string.lobby_waiting_for_players),
-					pendingIntent);
+			notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
+			notificationBuilder.setContentText(getString(R.string.lobby_waiting_for_players));
+			notificationBuilder.setTicker(getString(R.string.lobby_waiting_for_players));
 		} else if (client.spiel.isFinished()) {
-			n.icon = R.drawable.notification_main;
-			n.setLatestEventInfo(this,
-					getString(R.string.app_name),
-					getString(R.string.game_finished),
-					pendingIntent);
+			notificationBuilder.setSmallIcon(R.drawable.notification_main);
+			notificationBuilder.setContentText(getString(R.string.game_finished));
+			notificationBuilder.setOngoing(false);
 		} else {
 			if (client.spiel.current_player() < 0)
 				return;
 			if (client.spiel.is_local_player()) {
-				n.icon = R.drawable.notification_your_turn;
-				n.setLatestEventInfo(this,
-						getString(R.string.app_name),
-						getString(R.string.your_turn, getPlayerName(client.spiel.current_player())),
-						pendingIntent);
+				notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
+				notificationBuilder.setContentText(getString(R.string.your_turn, getPlayerName(client.spiel.current_player())));
+				notificationBuilder.setTicker(getString(R.string.your_turn, getPlayerName(client.spiel.current_player())));
+				
 				if (!forceShow) {
-					n.tickerText = getString(R.string.your_turn, getPlayerName(client.spiel.current_player()));
-					n.defaults = Notification.DEFAULT_VIBRATE;
+					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
 				}
 			} else {
-				n.icon = R.drawable.notification_waiting;
-				n.setLatestEventInfo(this,
-						getString(R.string.app_name),
-						getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())),
-						pendingIntent);
+				notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
+				notificationBuilder.setContentText(getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())));
+				notificationBuilder.setTicker(getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())));
 			}
 		}
+		
 		if (chat != null) {
-			n.icon = R.drawable.notification_chat;
-			n.setLatestEventInfo(this,
-					getString(R.string.app_name),
-					chat,
-					pendingIntent);
-			n.tickerText = chat;
-			n.defaults = Notification.DEFAULT_VIBRATE;
-			n.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat);
-		} else
-			multiplayerNotification = n;
+			notificationBuilder.setSmallIcon(R.drawable.notification_chat);
+			notificationBuilder.setContentText(chat);
+			notificationBuilder.setTicker(chat);
 
+			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
+		}
+
+		Notification n = notificationBuilder.build();
+		
+		if (chat == null)
+			multiplayerNotification = n;
+		
 		notificationManager.notify(NOTIFICATION_GAME_ID, n);
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		if (intent.hasExtra("showChat") && client != null && client.spiel.isStarted())
-			showDialog(DIALOG_LOBBY);
+		if (intent.getAction().equals(Intent.ACTION_DELETE)) {
+			Log.d(tag, "ACTION_DELETE");
+			finish();
+			return;
+		} else {
+			if (intent.hasExtra("showChat") && client != null && client.spiel.isStarted())
+				showDialog(DIALOG_LOBBY);
+		}
 		super.onNewIntent(intent);
 	}
 
