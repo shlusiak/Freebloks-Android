@@ -1465,9 +1465,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return;
 		if (!show_notifications)
 			return;
-
-		Notification n = new Notification();
-
+		if (Build.VERSION.SDK_INT < 11)
+			return;
+		if (spielthread == null)
+			return;
+		
 		Intent intent = new Intent(this, FreebloksActivity.class);
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
