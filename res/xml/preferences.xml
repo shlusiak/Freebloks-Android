@@ -75,7 +75,7 @@
 
 	</PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/prefs_misc" >
+    <PreferenceCategory android:title="@string/prefs_misc" android:key="misc_category" >
         <EditTextPreference
             android:key="player_name"
             android:persistent="true"
