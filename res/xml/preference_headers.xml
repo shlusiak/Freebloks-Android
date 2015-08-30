@@ -23,7 +23,14 @@
 
     <header android:fragment="de.saschahlusiak.freebloks.preferences.AboutFragment"
             android:title="@string/about"
+            android:breadCrumbTitle="Hallooo"
             android:icon="@drawable/ic_action_about" >
+    </header>
+    
+    <header android:id="@+id/prefs_header_donate"
+        	android:title="@string/prefs_donate"
+        	android:icon="@drawable/ic_action_favorite" >
+        <intent android:action="de.saschahlusiak.freebloks.SHOW_DONATE" />
     </header>
 
 </preference-headers>

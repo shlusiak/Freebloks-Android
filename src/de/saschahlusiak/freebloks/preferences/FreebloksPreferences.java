@@ -119,6 +119,14 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			return;
 		hasHeaders = true;
         loadHeadersFromResource(R.xml.preference_headers, target);
+        
+        if (Global.IS_VIP) {
+	        for (Header header: target) {
+	        	if (header.id == R.id.prefs_header_donate) {
+	        		target.remove(header);
+	        	}
+	        }
+        }
 	}
 
 	@Override

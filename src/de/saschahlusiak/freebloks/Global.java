@@ -7,6 +7,9 @@ public class Global {
 	public final static int VIBRATE_START_DRAGGING = 85;
 	public final static int VIBRATE_SET_STONE = 65;
 	public final static int VIBRATE_STONE_SNAP = 40;
+	
+	/* is this Freebloks VIP? */
+	public final static boolean IS_VIP = false;
 
 	/* minimum number of starts before rating dialog appears */
 	public final static int RATE_MIN_STARTS = 8;
