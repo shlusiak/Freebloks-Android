@@ -5,7 +5,9 @@ import de.saschahlusiak.freebloksvip.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -18,6 +20,11 @@ public class DonateActivity extends Activity {
 		super.onCreate(savedInstanceState);
 	    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	    setContentView(R.layout.donate_activity);
+	    
+		if (Build.VERSION.SDK_INT >= 11) {
+			if (getActionBar() != null)
+				getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 
 		((RadioButton)findViewById(R.id.donation_freebloksvip)).setChecked(true);
 
@@ -29,6 +36,17 @@ public class DonateActivity extends Activity {
 		});
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
 	void onNextButtonPress() {
 		RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
 	//	RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());

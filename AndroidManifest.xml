@@ -78,7 +78,7 @@
             android:name="de.saschahlusiak.freebloks.donate.DonateActivity"
 
             android:label="@string/please_donate"
-            android:theme="@style/Theme.Freebloks.Light"
+            android:theme="@style/Theme.Freebloks.Preferences"
             android:exported="false" >
             <intent-filter>
                 <action android:name="de.saschahlusiak.freebloks.SHOW_DONATE" />

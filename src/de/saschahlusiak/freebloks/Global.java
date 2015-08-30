@@ -7,6 +7,9 @@ public class Global {
 	public final static int VIBRATE_START_DRAGGING = 85;
 	public final static int VIBRATE_SET_STONE = 65;
 	public final static int VIBRATE_STONE_SNAP = 40;
+	
+	/* is this Freebloks VIP? */
+	public final static boolean IS_VIP = true;
 
 	/* minimum number of starts before rating dialog appears */
 	public final static int RATE_MIN_STARTS = 8;
@@ -15,7 +18,7 @@ public class Global {
 	public static final long RATE_MIN_ELAPSED = 4 * (24 * 60 * 60 * 1000);
 
 	/* number of starts before the donate dialog appears */
-	public final static int DONATE_STARTS = 50;
+	public final static int DONATE_STARTS = 30;
 
 	/* the default server address: blokus.saschahlusiak.de */
 	public static final String DEFAULT_SERVER_ADDRESS = "blokus.saschahlusiak.de";
