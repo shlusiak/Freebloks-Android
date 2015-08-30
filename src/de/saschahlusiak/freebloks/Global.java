@@ -18,7 +18,7 @@ public class Global {
 	public static final long RATE_MIN_ELAPSED = 4 * (24 * 60 * 60 * 1000);
 
 	/* number of starts before the donate dialog appears */
-	public final static int DONATE_STARTS = 50;
+	public final static int DONATE_STARTS = 30;
 
 	/* the default server address: blokus.saschahlusiak.de */
 	public static final String DEFAULT_SERVER_ADDRESS = "blokus.saschahlusiak.de";

@@ -249,7 +249,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		} else {
 			view.setScale(prefs.getFloat("view_scale", 1.0f));
 			showRateDialog = RateAppDialog.checkShowRateDialog(this);
-			if (prefs.getLong("rate_number_of_starts", 0) == Global.DONATE_STARTS) {
+
+			if (!Global.IS_VIP && prefs.getLong("rate_number_of_starts", 0) == Global.DONATE_STARTS) {
 				Intent intent = new Intent(this, DonateActivity.class);
 				startActivity(intent);
 			}
