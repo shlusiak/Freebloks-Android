@@ -145,6 +145,9 @@
         <item>Blauer Teppich</item>
         <item>Gras</item>
 	</string-array>
+	
+    <string name="notification_continue">Fortsetzen</string>
+    <string name="notification_disconnect">Trennen</string>
 
     <string name="prefs_interface">Oberfläche</string>
     <string name="prefs_display">Anzeige</string>
@@ -179,6 +182,7 @@
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
     <string name="prefs_donation">Unterstützen&#8230;</string>
+    <string name="prefs_donate">Spenden</string>
     <string name="prefs_player_name">Spielername</string>
     <string name="prefs_player_name_default">[nicht gesetzt]</string>
     <string name="prefs_theme">Hintergrund</string>

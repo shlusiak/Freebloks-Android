@@ -155,7 +155,10 @@
         <item>texture_carpet_blue</item>
         <item>texture_grass</item>
     </string-array>
-
+    
+    <string name="notification_continue">Continue</string>
+    <string name="notification_disconnect">Disconnect</string>
+    
     <string name="prefs_interface">Interface</string>
     <string name="prefs_display">Display</string>
     <string name="prefs_misc">Miscellaneous</string>

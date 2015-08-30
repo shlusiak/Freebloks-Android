@@ -99,6 +99,7 @@ public class SpielClient {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.onDisconnected(spiel);
 		}

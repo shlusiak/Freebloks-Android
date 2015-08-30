@@ -62,6 +62,10 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			Preference p = findPreference("immersive_mode");
 			((PreferenceGroup)findPreference("interface_category")).removePreference(p);
 		}
+		
+		if (Build.VERSION.SDK_INT < 11) {
+			((PreferenceGroup)findPreference("misc_category")).removePreference(findPreference("notifications"));
+		}
 
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
