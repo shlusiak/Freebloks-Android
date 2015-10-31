@@ -163,6 +163,9 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		server = (EditText)findViewById(R.id.server);
 		server.setText("");
 
+		if (name != null)
+			name.requestFocus();
+
 		updateNames();
 
 		setDifficultyLabel();
