@@ -18,7 +18,7 @@ public class SpielClient {
 	static final String tag = SpielClient.class.getSimpleName();
 	static final int DEFAULT_TIMEOUT = 10000;
 
-	ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
+	private ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
 	Socket client_socket;
 	String lastHost;
 	public Spielleiter spiel;
@@ -61,11 +61,6 @@ public class SpielClient {
 		this.spielClientInterface.remove(sci);
 	}
 
-	public synchronized void clearClientInterface() {
-		spielClientInterface.clear();
-	}
-
-
 	public void connect(Context context, String host, int port) throws IOException {
 		this.lastHost = host;
 		try {
@@ -81,12 +76,10 @@ public class SpielClient {
 			e.printStackTrace();
 			throw new IOException(context.getString(R.string.connection_refused));
 		}
-		for (SpielClientInterface sci : spielClientInterface)
-			sci.onConnected(spiel);
-	}
-
-	void setSocket(Socket client_socket) {
-		this.client_socket = client_socket;
+		synchronized(this) {
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.onConnected(spiel);
+		}
 	}
 
 	public synchronized void disconnect() {
@@ -98,7 +91,7 @@ public class SpielClient {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.onDisconnected(spiel);
 		}
