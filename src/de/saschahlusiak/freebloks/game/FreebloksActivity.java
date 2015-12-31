@@ -1466,6 +1466,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	Notification.Builder notificationBuilder;
 
+	@TargetApi(11)
 	void updateMultiplayerNotification(boolean forceShow, String chat) {
 		if (client == null || client.spiel == null)
 			return;
@@ -1532,7 +1533,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				notificationBuilder.setTicker(getString(R.string.your_turn, getPlayerName(client.spiel.current_player())));
 				
 				if (!forceShow) {
-					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
 				}
 			} else {
 				notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
@@ -1546,11 +1547,16 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			notificationBuilder.setContentText(chat);
 			notificationBuilder.setTicker(chat);
 
-			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
 			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
 		}
 
-		Notification n = notificationBuilder.build();
+		Notification n = null;
+
+		if (Build.VERSION.SDK_INT >= 16)
+			n = notificationBuilder.build();
+		else
+			n = notificationBuilder.getNotification();
 		
 		if (chat == null)
 			multiplayerNotification = n;
