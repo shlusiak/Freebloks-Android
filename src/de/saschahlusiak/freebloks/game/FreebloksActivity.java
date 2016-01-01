@@ -1513,6 +1513,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			.setAutoCancel(true)
 			.setSound(null);
 
+		if (Build.VERSION.SDK_INT >= 16)
+			notificationBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+
 		if ((forceShow && chat == null) || multiplayerNotification != null)
 			notificationBuilder.setOngoing(true);
 
@@ -1534,6 +1537,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				
 				if (!forceShow) {
 					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+
+					if (Build.VERSION.SDK_INT >= 16)
+						notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 				}
 			} else {
 				notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
@@ -1546,6 +1552,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			notificationBuilder.setSmallIcon(R.drawable.notification_chat);
 			notificationBuilder.setContentText(chat);
 			notificationBuilder.setTicker(chat);
+			if (Build.VERSION.SDK_INT >= 16)
+				notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
 			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
 			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
