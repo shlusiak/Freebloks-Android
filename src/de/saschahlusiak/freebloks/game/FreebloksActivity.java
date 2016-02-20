@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -1520,11 +1522,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			notificationBuilder.setOngoing(true);
 
 		if (!client.spiel.isStarted()) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
+			notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
+			notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.appicon_small));
 			notificationBuilder.setContentText(getString(R.string.lobby_waiting_for_players));
 			notificationBuilder.setTicker(getString(R.string.lobby_waiting_for_players));
 		} else if (client.spiel.isFinished()) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_main);
+			notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
 			notificationBuilder.setContentText(getString(R.string.game_finished));
 			notificationBuilder.setOngoing(false);
 		} else {
@@ -1542,7 +1545,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 				}
 			} else {
-				notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
+				notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
 				notificationBuilder.setContentText(getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())));
 				notificationBuilder.setTicker(getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())));
 			}
