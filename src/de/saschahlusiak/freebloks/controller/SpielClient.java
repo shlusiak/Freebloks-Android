@@ -145,12 +145,19 @@ public class SpielClient {
 		{
 		/* Der Server gewaehrt dem Client einen lokalen Spieler */
 		case Network.MSG_GRANT_PLAYER:
+			if (spiel.isStarted())
+				throw new GameStateException("received MSG_REVOKE_PLAYER but game is running");
+
 			i=((NET_GRANT_PLAYER)data).player;
+
 			/* Merken, dass es sich bei i um einen lokalen Spieler handelt */
 			spiel.spieler[i] = Spielleiter.PLAYER_LOCAL;
 			break;
 
 		case Network.MSG_REVOKE_PLAYER:
+			if (spiel.isStarted())
+				throw new GameStateException("received MSG_REVOKE_PLAYER but game is running");
+
 			i=((NET_REVOKE_PLAYER)data).player;
 			if (spiel.spieler[i] != Spielleiter.PLAYER_LOCAL)
 				throw new GameStateException("revoked player " + i + " is not local");
@@ -166,6 +173,9 @@ public class SpielClient {
 
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
 		case Network.MSG_SET_STONE: {
+			if (!spiel.isStarted() && !spiel.isFinished())
+				throw new GameStateException("received MSG_SET_STONE but game not running");
+
 			NET_SET_STONE s=(NET_SET_STONE)data;
 			
 			Turn turn = s.toTurn();
@@ -283,6 +293,9 @@ public class SpielClient {
 
 		/* Server laesst den letzten Zug rueckgaengig machen */
 		case Network.MSG_UNDO_STONE: {
+			if (!spiel.isStarted() && !spiel.isFinished())
+				throw new GameStateException("received MSG_UNDO_STONE but game not running");
+
 			Turn t = spiel.history.get_last_turn();
 			Log.d(tag, "stone undone: " + t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
