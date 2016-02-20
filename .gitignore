@@ -2,4 +2,5 @@
 /bin
 /gen
 /obj
+/stuff/textures/*.ktx
 .DS_Store

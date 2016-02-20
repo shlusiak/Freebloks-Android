@@ -54,7 +54,6 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 		}
 		if (connectedRunnable != null)
 			connectedRunnable.run();
-		activity.view.setSpiel(myclient, myclient.spiel);
 		return null;
 	}
 
@@ -69,6 +68,7 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 		activity.connectTask = null;
 		activity.client = this.myclient;
 		activity.connectTask = null;
+		activity.view.setSpiel(myclient, myclient.spiel);
 		activity.dismissDialog(FreebloksActivity.DIALOG_PROGRESS);
 		if (result != null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);

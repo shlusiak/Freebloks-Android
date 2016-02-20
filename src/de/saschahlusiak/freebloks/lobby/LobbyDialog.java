@@ -58,7 +58,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		
 		setContentView(R.layout.lobby_dialog);
 		
-		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting);
+		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting_large);
 
 		/* to make sure we have enough real estate. not neccessary on xlarge displays */
 		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) !=

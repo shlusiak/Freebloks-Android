@@ -496,6 +496,7 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 // 			printf("Removed %d turns.\n",i);
 			break;
 		}
+
 		case MSG_REQUEST_HINT: {
 			CTurn *turn=m_ki.get_ki_turn(this,((NET_REQUEST_HINT*)data)->player,KI_HARD);
 			NET_SET_STONE d;
@@ -510,6 +511,7 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 
 			break;
 		}
+
 		case MSG_REQUEST_GAME_MODE: {
 			NET_REQUEST_GAME_MODE* r = (NET_REQUEST_GAME_MODE*)data;
 			if (m_current_player > -1) {
@@ -527,7 +529,6 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 				set_field_size(r->width, r->height);
 				m_gamemode = (GAMEMODE)r->gamemode;
 
-				/* FIXME: support GAMEMODE_4_COLORS_2_PLAYERS */
 				if (m_gamemode == GAMEMODE_2_COLORS_2_PLAYERS || m_gamemode == GAMEMODE_DUO || m_gamemode == GAMEMODE_JUNIOR) {
 					NET_REVOKE_PLAYER rev;
 
@@ -545,6 +546,28 @@ void CSpielServer::process_message(int client,NET_HEADER* data)
 						}
 
 						spieler[i]=PLAYER_COMPUTER;
+					}
+				}
+
+				if (m_gamemode == GAMEMODE_4_COLORS_2_PLAYERS) {
+					for (int i = 0; i <= 3; i ++) if (spieler[i] != PLAYER_COMPUTER) {
+						int j = (i+2)%PLAYER_MAX;
+						if (spieler[i] == spieler[j])
+							continue;
+
+						if (spieler[j] == PLAYER_COMPUTER) {
+							// if next one is free, grant
+							spieler[j] = spieler[i];
+							NET_GRANT_PLAYER g;
+							g.player = j;
+							network_send(spieler[i],(NET_HEADER*)&g,sizeof(NET_GRANT_PLAYER),MSG_GRANT_PLAYER);
+						} else {
+							// otherwise revoke
+							NET_REVOKE_PLAYER rev;
+							rev.player = i;
+							network_send(spieler[i],(NET_HEADER*)&rev,sizeof(NET_REVOKE_PLAYER),MSG_REVOKE_PLAYER);
+							spieler[i] = PLAYER_COMPUTER;
+						}
 					}
 				}
 

@@ -7,13 +7,12 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import de.saschahlusiak.freebloksvip.BuildConfig;
 
 import com.google.android.gms.games.Games;
+import android.graphics.BitmapFactory;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloksvip.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.PlayerData;
@@ -86,6 +85,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.saschahlusiak.freebloksvip.BuildConfig;
+import de.saschahlusiak.freebloksvip.R;
 
 public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
@@ -182,6 +183,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //	        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 	    }
+
+		if (hasActionBar) {
+			// failsafe, there might be Android versions >= 3.0 without an actual ActionBar
+			if (getActionBar() == null)
+				hasActionBar = false;
+		}
 
 		if (hasActionBar) {
 			if (Build.VERSION.SDK_INT >= 14) {
@@ -1462,6 +1469,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	Notification.Builder notificationBuilder;
 
+	@TargetApi(11)
 	void updateMultiplayerNotification(boolean forceShow, String chat) {
 		if (client == null || client.spiel == null)
 			return;
@@ -1508,15 +1516,19 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			.setAutoCancel(true)
 			.setSound(null);
 
+		if (Build.VERSION.SDK_INT >= 16)
+			notificationBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+
 		if ((forceShow && chat == null) || multiplayerNotification != null)
 			notificationBuilder.setOngoing(true);
 
 		if (!client.spiel.isStarted()) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
+			notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
+			notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.appicon_small));
 			notificationBuilder.setContentText(getString(R.string.lobby_waiting_for_players));
 			notificationBuilder.setTicker(getString(R.string.lobby_waiting_for_players));
 		} else if (client.spiel.isFinished()) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_main);
+			notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
 			notificationBuilder.setContentText(getString(R.string.game_finished));
 			notificationBuilder.setOngoing(false);
 		} else {
@@ -1528,10 +1540,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				notificationBuilder.setTicker(getString(R.string.your_turn, getPlayerName(client.spiel.current_player())));
 				
 				if (!forceShow) {
-					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+
+					if (Build.VERSION.SDK_INT >= 16)
+						notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 				}
 			} else {
-				notificationBuilder.setSmallIcon(R.drawable.notification_waiting);
+				notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
 				notificationBuilder.setContentText(getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())));
 				notificationBuilder.setTicker(getString(R.string.waiting_for_color, getPlayerName(client.spiel.current_player())));
 			}
@@ -1541,12 +1556,19 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			notificationBuilder.setSmallIcon(R.drawable.notification_chat);
 			notificationBuilder.setContentText(chat);
 			notificationBuilder.setTicker(chat);
+			if (Build.VERSION.SDK_INT >= 16)
+				notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
-			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
 			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
 		}
 
-		Notification n = notificationBuilder.build();
+		Notification n = null;
+
+		if (Build.VERSION.SDK_INT >= 16)
+			n = notificationBuilder.build();
+		else
+			n = notificationBuilder.getNotification();
 		
 		if (chat == null)
 			multiplayerNotification = n;

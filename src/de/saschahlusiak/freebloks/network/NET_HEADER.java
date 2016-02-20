@@ -77,11 +77,9 @@ public class NET_HEADER implements Serializable {
 
 		data_length -= HEADER_SIZE;
 
-		if (is.available() < data_length)
-			throw new ProtocolException("short read for package payload, expected " + data_length + " more bytes");
 		buffer = new byte[data_length];
 
-		r = is.read(buffer, 0, data_length);
+		r = is.read(buffer);
 		if (r < data_length)
 			throw new ProtocolException("short read for package payload, got " + r + " out of " + data_length + " bytes");
 

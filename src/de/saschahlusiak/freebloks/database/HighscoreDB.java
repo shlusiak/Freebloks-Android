@@ -12,19 +12,9 @@ public class HighscoreDB extends FreebloksDB {
 	public static final String GAME_MODE_ID = "gamemode";			/* 1 */
 	public static final String POINTS_ID = "points";				/* 2 */
 	public static final String STONES_LEFT_ID = "stonesleft";		/* 3 */
-	public static final String PLAYER_COLOR_ID = "playercolor";	/* 4 */
+	public static final String PLAYER_COLOR_ID = "playercolor";		/* 4 */
 	public static final String PLACE_ID = "place";					/* 5 */
 	public static final String FLAGS_ID = "flags";					/* 6 */
-
-	/* NEVER CHANGE THE INDEX OF COLUMNS FOR BACKWARDS COMPATIBILITY */
-	public static final int HIGHSCORE_INDEX = 0;
-	public static final int GAME_MODE_INDEX = 1;
-	public static final int POINTS_INDEX = 2;
-	public static final int STONES_LEFT_INDEX = 3;
-	public static final int PLAYER_COLOR_INDEX = 4;
-	public static final int PLACE_INDEX = 5;
-	public static final int FLAGS_INDEX = 6;
-
 
 	public static final int FLAG_IS_PERFECT = 0x01;
 
