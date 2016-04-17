@@ -30,10 +30,10 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	    color1 = Global.stone_color_a[color];
 	    color2 = Global.stone_color_a[0];
 
-	    this.color[0] = color1[0];
-	    this.color[1] = color1[1];
-	    this.color[2] = color1[2];
 	    this.color[3] = BoardRenderer.DEFAULT_ALPHA;
+	    this.color[0] = color1[0] * this.color[3];
+	    this.color[1] = color1[1] * this.color[3];
+	    this.color[2] = color1[2] * this.color[3];
 	}
 
 	@Override
@@ -52,11 +52,10 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	    if (time < 0.0f || time > BLEND_END)
 	    	blend = 0.0f;
 
-
-	    color[0] = color1[0] * (1.0f - blend) + color2[0] * blend;
-	    color[1] = color1[1] * (1.0f - blend) + color2[1] * blend;
-	    color[2] = color1[2] * (1.0f - blend) + color2[2] * blend;
-	    color[3] = BoardRenderer.DEFAULT_ALPHA;
+		color[3] = BoardRenderer.DEFAULT_ALPHA;
+	    color[0] = (color1[0] * (1.0f - blend) + color2[0] * blend) * color[3];
+	    color[1] = (color1[1] * (1.0f - blend) + color2[1] * blend) * color[3];
+	    color[2] = (color1[2] * (1.0f - blend) + color2[2] * blend) * color[3];
 
 		return super.execute(elapsed);
 	}
@@ -64,7 +63,7 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	@Override
 	public void render(GL10 gl, BoardRenderer renderer) {
 		gl.glEnable(GL10.GL_BLEND);
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 		gl.glPushMatrix();
 

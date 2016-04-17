@@ -147,8 +147,14 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	    gl.glPushMatrix();
 	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
 		gl.glEnable(GL10.GL_BLEND);
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-	    synchronized (model.effects) {
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board.stone_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board.stone_shininess, 0);
+
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, board.stone.getVertexBuffer());
+		gl.glNormalPointer(GL10.GL_FLOAT, 0, board.stone.getNormalBuffer());
+
+		synchronized (model.effects) {
 		    for (int y = 0; y < model.spiel.m_field_size_y; y++) {
 		    	int x;
 		    	for (x = 0; x < model.spiel.m_field_size_x; x++) {

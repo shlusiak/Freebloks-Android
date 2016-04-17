@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.opengl.GLUtils;
 import android.util.Log;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -78,7 +79,7 @@ public class CurrentStone implements ViewElement {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
 
 		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_red);
@@ -90,7 +91,7 @@ public class CurrentStone implements ViewElement {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
 
 		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_shadow);
@@ -102,7 +103,7 @@ public class CurrentStone implements ViewElement {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
 	}
 
@@ -157,6 +158,8 @@ public class CurrentStone implements ViewElement {
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_LIGHTING);
+
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
 	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
 	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
