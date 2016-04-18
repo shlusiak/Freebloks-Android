@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -30,7 +31,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	}
 
 	@Override
-	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+	public void renderShadow(GL11 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
 		gl.glScalef(1, 0.01f, 1);
 		gl.glTranslatef(x, 0, z);
@@ -51,7 +52,7 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {
+	public void render(GL11 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
 		gl.glTranslatef(x, y, z);
 		gl.glRotatef(ang, ax, ay, az);

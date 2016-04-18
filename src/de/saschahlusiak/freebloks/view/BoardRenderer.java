@@ -40,6 +40,17 @@ public class BoardRenderer {
 
     int texture[];
 
+
+	final float board_diffuse_normal[] = {0.6f,0.6f,0.6f,1.0f};
+	final float board_diffuse_available[] = {0.50f,0.8f,0.60f,1.0f};
+	final float board_specular[] = {0.25f,0.24f,0.24f,1.0f};
+	final float board_shininess[] = {35.0f};
+
+	public final float stone_specular[]={0.3f, 0.3f, 0.3f, 1.0f};
+	public final float stone_shininess[]={ 30.0f };
+
+	final float no_mat[] = {0,0,0,1};
+
 	BoardRenderer(int field_size) {
 		initField();
 		initBorder(field_size);
@@ -172,11 +183,6 @@ public class BoardRenderer {
 		border.commit();
 	}
 
-	final float board_diffuse_normal[] = {0.6f,0.6f,0.6f,1.0f};
-	final float board_diffuse_available[] = {0.50f,0.8f,0.60f,1.0f};
-	final float board_specular[] = {0.25f,0.24f,0.24f,1.0f};
-	final float board_shininess[] = {35.0f};
-
 	void updateTexture(Context context, GL10 gl) {
 		texture = new int[2];
 
@@ -206,7 +212,7 @@ public class BoardRenderer {
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 	}
 
-	public void renderBoard(GL10 gl, Spiel spiel, int currentPlayer) {
+	public void renderBoard(GL11 gl, Spiel spiel, int currentPlayer) {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board_shininess, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
@@ -214,9 +220,7 @@ public class BoardRenderer {
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, field.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, field.getNormalBuffer());
-	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, field.getTextureBuffer());
+		field.bindBuffers(gl);
 
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    gl.glLoadIdentity();
@@ -258,9 +262,8 @@ public class BoardRenderer {
 	    gl.glPopMatrix();
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, border.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, border.getNormalBuffer());
-	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, border.getTextureBuffer());
+		border.bindBuffers(gl);
+
 	    gl.glMatrixMode(GL10.GL_TEXTURE);
     	gl.glPopMatrix();
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -280,9 +283,6 @@ public class BoardRenderer {
 		gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 
-	public final float stone_specular[]={0.3f, 0.3f, 0.3f, 1.0f};
-	public final float stone_shininess[]={ 30.0f };
-
 	public void renderStone(GL10 gl, int color, float alpha) {
 		final float c[] = Global.stone_color_a[color];
 		tmp[0] = c[0] * alpha;
@@ -295,20 +295,18 @@ public class BoardRenderer {
 	    stone.drawElements(gl);
 	}
 
-	public final void renderStone(GL10 gl, float[] color) {
+	public final void renderStone(GL11 gl, float[] color) {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, color, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, stone.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, stone.getNormalBuffer());
-
+		stone.bindBuffers(gl);
 	    stone.drawElements(gl);
 	}
 
 	final float tmp[] = new float[4];
 
-	public void renderStoneShadow(GL10 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
+	public void renderStoneShadow(GL11 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
 		final float c[] = Global.stone_shadow_color_a[color];
 		tmp[0] = c[0] * alpha;
 		tmp[1] = c[1] * alpha;
@@ -316,12 +314,10 @@ public class BoardRenderer {
 		tmp[3] = alpha;
 
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, tmp, 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, no_mat, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, no_mat, 0);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, shadow.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, shadow.getNormalBuffer());
-	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, shadow.getTextureBuffer());
+		shadow.bindBuffers(gl);
 
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
@@ -343,7 +339,7 @@ public class BoardRenderer {
 	    gl.glDisable(GL10.GL_BLEND);
 	}
 
-	public void renderShadow(GL10 gl,
+	public void renderShadow(GL11 gl,
 			Stone stone, int color, int mirror, int rotate,
 			float height,
 			float ang, float ax, float ay, float az,
@@ -378,7 +374,7 @@ public class BoardRenderer {
 		renderStoneShadow(gl, color, stone, mirror, rotate, m_alpha * alpha);
 	}
 
-	public void renderPlayerStone(GL10 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
+	public void renderPlayerStone(GL11 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
 		int i;
 		final float c[] = Global.stone_color_a[color];
 		tmp[0] = c[0] * alpha;
@@ -393,8 +389,7 @@ public class BoardRenderer {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, stone_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, this.stone.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, this.stone.getNormalBuffer());
+		this.stone.bindBuffers(gl);
 
 		for (i = 0; i < stone.get_stone_size(); i++) {
 			int j;

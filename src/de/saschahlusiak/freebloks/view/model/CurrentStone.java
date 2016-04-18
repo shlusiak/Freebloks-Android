@@ -111,7 +111,7 @@ public class CurrentStone implements ViewElement {
 //	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
 //	final float diffuse_white[] = { 1.0f, 1.0f, 1.0f, 0.6f };
 
-	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
+	public synchronized void render(FreebloksRenderer renderer, GL11 gl) {
 		if (stone == null)
 			return;
 
@@ -161,10 +161,7 @@ public class CurrentStone implements ViewElement {
 
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
-	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
-
+		overlay.bindBuffers(gl);
 
 	    /* OVERLAY SHADOW */
 	    gl.glPushMatrix();

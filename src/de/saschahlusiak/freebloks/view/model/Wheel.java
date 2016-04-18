@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import android.graphics.PointF;
 import android.os.Handler;
@@ -278,7 +279,7 @@ public class Wheel implements ViewElement {
 		return false;
 	}
 
-	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
+	public synchronized void render(FreebloksRenderer renderer, GL11 gl) {
 		if (model.spiel == null)
 			return;
 

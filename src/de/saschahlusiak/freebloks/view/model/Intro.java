@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.view.model;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -438,7 +439,7 @@ public class Intro implements ViewElement {
 			effects.get(i).execute(elapsed);
 	}
 
-	public void render(GL10 gl, FreebloksRenderer renderer) {
+	public void render(GL11 gl, FreebloksRenderer renderer) {
 		gl.glLoadIdentity();
 		/* Kamera positionieren */
 		if (model.vertical_layout) {

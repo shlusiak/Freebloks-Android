@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -61,7 +62,7 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {
+	public void render(GL11 gl, BoardRenderer renderer) {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -79,7 +80,7 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	}
 
 	@Override
-	public void renderShadow(GL10 gl, BoardRenderer renderer) {
-		return;
+	public void renderShadow(GL11 gl, BoardRenderer renderer) {
+
 	}
 }
