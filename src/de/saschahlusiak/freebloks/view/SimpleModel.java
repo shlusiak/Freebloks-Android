@@ -14,8 +14,12 @@ public class SimpleModel {
     private ShortBuffer _indexBuffer;
     private FloatBuffer _vertexBuffer;
 
-    public SimpleModel(int num_vertices, int num_triangles) {
+	boolean useVBO;
+	int vbo[];
+
+    public SimpleModel(int num_vertices, int num_triangles, boolean useVBO) {
     	this.num_triangles = num_triangles;
+		this.useVBO = useVBO;
 
 	    // float has 4 bytes
 	    ByteBuffer vbb = ByteBuffer.allocateDirect(num_vertices * 8 * 4);
@@ -51,12 +55,57 @@ public class SimpleModel {
 	}
 
 	public void bindBuffers(GL11 gl) {
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 8 * 4, _vertexBuffer.position(0));
-		gl.glNormalPointer(GL10.GL_FLOAT, 8 * 4, _vertexBuffer.position(3));
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 8 * 4, _vertexBuffer.position(6));
+		if (!useVBO) {
+			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
+			gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 4 * 8, _vertexBuffer.position(0));
+			gl.glNormalPointer(GL10.GL_FLOAT, 4 * 8, _vertexBuffer.position(3));
+			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 4 * 8, _vertexBuffer.position(6));
+		} else {
+			if (vbo == null)
+				updateVBO(gl);
+
+			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, vbo[0]);
+
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 4 * 8, 0);
+			gl.glNormalPointer(GL10.GL_FLOAT, 4 * 8, 3 * 4);
+			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 4 * 8, 6 * 4);
+
+			gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+		}
 	}
 
-	public final void drawElements(GL10 gl) {
-		gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, _indexBuffer);
+	public final void drawElements(GL11 gl) {
+		if (useVBO)
+			gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, 0);
+		else
+			gl.glDrawElements(GL10.GL_TRIANGLES, num_triangles * 3, GL10.GL_UNSIGNED_SHORT, _indexBuffer);
+	}
+
+	public final void invalidate(GL11 gl) {
+		if (gl != null && useVBO) {
+			updateVBO(gl);
+		} else
+			vbo = null;
+	}
+
+	private void updateVBO(GL11 gl) {
+		vbo = new int[2];
+		gl.glGenBuffers(2, vbo, 0);
+
+		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, vbo[0]);
+		gl.glBufferData(GL11.GL_ARRAY_BUFFER,
+			_vertexBuffer.capacity() * 4,
+			_vertexBuffer.rewind(),
+			GL11.GL_STATIC_DRAW);
+		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
+
+		gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+		gl.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER,
+			_indexBuffer.capacity() * 2,
+			_indexBuffer,
+			GL11.GL_STATIC_DRAW);
+		gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 }

@@ -267,7 +267,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
-		board.updateTexture(context, gl);
+		board.updateTexture(context, (GL11) gl);
 		backgroundRenderer.updateTexture(gl);
 	}
 

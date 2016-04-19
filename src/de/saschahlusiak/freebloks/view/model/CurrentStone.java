@@ -50,7 +50,7 @@ public class CurrentStone implements ViewElement {
 
 		texture = null;
 
-		overlay = new SimpleModel(4, 2);
+		overlay = new SimpleModel(4, 2, false);
 		overlay.addVertex(-overlay_radius, 0, overlay_radius, 0, -1, 0, 0, 0);
 		overlay.addVertex(+overlay_radius, 0, overlay_radius, 0, -1, 0, 1, 0);
 		overlay.addVertex(+overlay_radius, 0, -overlay_radius, 0, -1, 0, 1, 1);

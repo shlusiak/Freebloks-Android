@@ -24,7 +24,7 @@ public class BackgroundRenderer extends SimpleModel {
     Resources resources;
 
     public BackgroundRenderer(Resources resources) {
-		super(num_vertices, num_triangles);
+		super(num_vertices, num_triangles, false);
 
 		this.resources = resources;
 		hasTexture = false;

@@ -59,7 +59,7 @@ public class BoardRenderer {
 	}
 
 	private void initField() {
-		field = new SimpleModel(8, 10);
+		field = new SimpleModel(8, 10, true);
 		/* bottom, inner */
 		field.addVertex(-r2, y1, +r2,  0, 1, 0,  -r2, r2);
 		field.addVertex(+r2, y1, +r2,  0, 1, 0,  r2, r2);
@@ -87,7 +87,7 @@ public class BoardRenderer {
 	}
 
 	void initShadow() {
-		shadow = new SimpleModel(4, 2);
+		shadow = new SimpleModel(4, 2, false);
 
 		shadow.addVertex(-r1, 0, +r1, 0, 1, 0, 0, 0);
 		shadow.addVertex(+r1, 0, +r1, 0, 1, 0, 1, 0);
@@ -101,7 +101,7 @@ public class BoardRenderer {
 	}
 
 	private void initStone() {
-		stone = new SimpleModel(12, 20);
+		stone = new SimpleModel(12, 20, true);
 		/* top, inner */
 		stone.addVertex(-r2, -y1, +r2,  0, 1, 0,  0, 0);
 		stone.addVertex(+r2, -y1, +r2,  0, 1, 0,  0, 0);
@@ -148,7 +148,7 @@ public class BoardRenderer {
 	}
 
 	public void initBorder(int field_size) {
-		border = new SimpleModel(12, 6);
+		border = new SimpleModel(12, 6, true);
 		float w1, w2;
 		w1 = stone_size * field_size;
 		w2 = w1 + border_width;
@@ -183,18 +183,16 @@ public class BoardRenderer {
 		border.commit();
 	}
 
-	void updateTexture(Context context, GL10 gl) {
+	void updateTexture(Context context, GL11 gl) {
+		stone.invalidate(gl);
+
 		texture = new int[2];
 
 		gl.glGenTextures(texture.length, texture, 0);
 
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
-		if (gl instanceof GL11) {
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
-			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
-		} else {
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-		}
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
+		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 
         FreebloksRenderer.loadKTXTexture(gl, context.getResources(), R.raw.field_wood);
@@ -202,12 +200,8 @@ public class BoardRenderer {
 
 		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_shadow);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);
-		if (gl instanceof GL11) {
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
-			gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
-		} else {
-			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-		}
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST);
+		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 	}
@@ -283,7 +277,7 @@ public class BoardRenderer {
 		gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 
-	public void renderStone(GL10 gl, int color, float alpha) {
+	public void renderStone(GL11 gl, int color, float alpha) {
 		final float c[] = Global.stone_color_a[color];
 		tmp[0] = c[0] * alpha;
 		tmp[1] = c[1] * alpha;
