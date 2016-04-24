@@ -75,7 +75,6 @@ class SpielClientThread extends Thread {
 			synchronized(client) {
 				error = e;
 			}
-			return;
 		}
 		finally {
 			client.disconnect();
@@ -85,7 +84,6 @@ class SpielClientThread extends Thread {
 				sendThread.interrupt();
 			Log.i(tag, "disconnected, thread going down");
 		}
-
 	}
 
 	public void post(Runnable r) {

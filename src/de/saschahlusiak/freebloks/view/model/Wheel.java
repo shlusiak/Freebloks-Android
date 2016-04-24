@@ -50,7 +50,7 @@ public class Wheel implements ViewElement {
 
 	public Wheel(ViewModel model) {
 		this.model = model;
-		stones = new ArrayList<Stone>();
+		stones = new ArrayList<>();
 		currentPlayer = -1;
 	}
 

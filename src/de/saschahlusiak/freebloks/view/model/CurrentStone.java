@@ -360,7 +360,7 @@ public class CurrentStone implements ViewElement {
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
-			float p = 0.0f;
+			float p;
 			p = (stone_rel_x - rx) / (stone_rel_x * 2.0f);
 			if (p < 0)
 				p = 0;
@@ -374,7 +374,7 @@ public class CurrentStone implements ViewElement {
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
-			float p = 0.0f;
+			float p;
 			p = (stone_rel_y - ry) / (stone_rel_y * 2.0f);
 			if (p < 0)
 				p = 0;
@@ -388,12 +388,7 @@ public class CurrentStone implements ViewElement {
 		}
 		return true;
 	}
-	
-	public final void mirror_rotate_to(int mirror, int rotate) {
-		this.m_mirror_counter = mirror;
-		this.m_rotate_counter = rotate;
-	}
-	
+
 	public final void rotate_left(){
 		m_rotate_counter--;
 		if (m_rotate_counter < 0) m_rotate_counter += stone.get_rotateable();
@@ -424,7 +419,7 @@ public class CurrentStone implements ViewElement {
 	}
 
 	boolean snap(float x, float y, boolean forceSound) {
-		boolean hasMoved = false;
+		boolean hasMoved;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
 			isValid = is_valid_turn(x, y);

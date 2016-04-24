@@ -37,7 +37,7 @@ public class NET_HEADER implements Serializable {
 	 * casting (byte)-1 to int will result in (int)-1
 	 *
 	 */
-	public static final int unsigned(byte b) {
+	public static int unsigned(byte b) {
 		return (b & 0xFF);
 	}
 

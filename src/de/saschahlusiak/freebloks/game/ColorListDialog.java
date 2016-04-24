@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.Spinner;
 
 public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener {

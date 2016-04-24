@@ -22,11 +22,11 @@ public class AboutActivity extends Activity {
 			        Configuration.SCREENLAYOUT_SIZE_XLARGE)
 		{
 			LayoutParams params = getWindow().getAttributes();
-			params.width = LayoutParams.FILL_PARENT;
+			params.width = LayoutParams.MATCH_PARENT;
 			getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
 		}
 
-		((Button)findViewById(R.id.ok)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.ok).setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -38,7 +38,7 @@ public class AboutActivity extends Activity {
 			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			((TextView)findViewById(R.id.version)).setText("v" + pinfo.versionName);
 		} catch (NameNotFoundException e) {
-			((TextView)findViewById(R.id.version)).setVisibility(View.GONE);
+			findViewById(R.id.version).setVisibility(View.GONE);
 			e.printStackTrace();
 		}
 		((TextView)findViewById(R.id.url1)).setText(Global.getMarketURLString(getPackageName()));

@@ -7,8 +7,6 @@ import de.saschahlusiak.freebloks.view.model.Theme;
 
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.opengl.GLUtils;
 
 public class BackgroundRenderer extends SimpleModel {
 	float rgba[] = { 0, 0, 0, 1 };

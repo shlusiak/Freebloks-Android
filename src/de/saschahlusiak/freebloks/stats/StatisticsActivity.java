@@ -24,7 +24,6 @@ import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
 

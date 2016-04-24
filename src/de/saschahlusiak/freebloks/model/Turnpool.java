@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Turnpool implements Serializable {
 	private static final long serialVersionUID = 4356065376532513833L;
 
-	ArrayList<Turn> turns = new ArrayList<Turn>();
+	ArrayList<Turn> turns = new ArrayList<>();
 	int current = 0;
 
 	final public void add_turn(Turn turn) {

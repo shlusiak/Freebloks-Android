@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.view.BoardRenderer;

@@ -42,7 +42,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 
 	public interface OnStartCustomGameListener {
-		public boolean OnStart(CustomGameDialog dialog);
+		boolean OnStart(CustomGameDialog dialog);
 	}
 
 	public CustomGameDialog(Context context, final OnStartCustomGameListener listener) {
@@ -189,7 +189,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		editor.putString("player_name", getName());
 		editor.putInt("gamemode", getGameMode().ordinal());
 		editor.putInt("fieldsize", getFieldSize());
-		editor.commit();
+		editor.apply();
 	}
 
 	private void prepare(String name, int difficulty, GameMode gamemode, int fieldsize) {

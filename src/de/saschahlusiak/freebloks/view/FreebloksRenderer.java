@@ -33,7 +33,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	ViewModel model;
 	Context context;
 	public float fixed_zoom;
-	float density;
 	float mAngleX;
 	float zoom;
 
@@ -90,7 +89,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public synchronized void onDrawFrame(GL10 gl) {
 		GL11 gl11 = (GL11)gl;
 		final float camera_distance = zoom;
-		long t = System.currentTimeMillis();
+//		long t = System.currentTimeMillis();
 		float cameraAngle = model.board.getCameraAngle();
 		float boardAngle = model.board.mAngleY;
 

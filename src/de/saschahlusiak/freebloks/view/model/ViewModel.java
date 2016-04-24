@@ -42,7 +42,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		wheel = new Wheel(this);
 		board = new Board(this, Spiel.DEFAULT_FIELD_SIZE_X);
 
-		effects = new ArrayList<Effect>();
+		effects = new ArrayList<>();
 
 		add(currentStone);
 		add(wheel);
@@ -94,7 +94,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public boolean execute(float elapsed) {
 		boolean redraw = false;
 		if (intro != null) {
-			redraw |= intro.execute(elapsed);
+			redraw = intro.execute(elapsed);
 			return redraw;
 		}
 

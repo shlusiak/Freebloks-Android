@@ -38,7 +38,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		super(context, attrs);
 
 		renderer = new FreebloksRenderer(context, model);
-		renderer.density = getResources().getDisplayMetrics().density;
+//		renderer.density = getResources().getDisplayMetrics().density;
 		setRenderer(renderer);
 		renderer.zoom = scale;
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
@@ -93,7 +93,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		});
 	}
 
-	private final static float spacing(MotionEvent event) {
+	private static float spacing(MotionEvent event) {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
 		return (float)Math.sqrt(x * x + y * y);
@@ -275,8 +275,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	class UpdateThread extends Thread {
 		boolean goDown = false;
-		private static final int FPS_ANIMATIONS = 60;
-		private static final int FPS_NO_ANIMATIONS = 5;
 
 		@Override
 		public void run() {

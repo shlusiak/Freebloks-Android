@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -43,12 +42,9 @@ import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
-import android.app.Notification.Action;
-import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -215,8 +211,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view = (Freebloks3DView)findViewById(R.id.board);
 		view.setActivity(this);
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && prefs.getBoolean("immersive_mode", true)) {
-			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			if (prefs.getBoolean("immersive_mode", true))
+				view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 		}
 
 
@@ -235,7 +232,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (savedInstanceState != null)
 			chatEntries = (ArrayList<ChatEntry>)savedInstanceState.getSerializable("chatEntries");
 		else
-			chatEntries = new ArrayList<ChatEntry>();
+			chatEntries = new ArrayList<>();
 
 		newCurrentPlayer(-1);
 
@@ -410,7 +407,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.onPause();
 		Editor editor = prefs.edit();
 		editor.putFloat("view_scale", view.getScale());
-		editor.commit();
+		editor.apply();
 		Log.d(tag, "onStop");
 		super.onStop();
 	}
@@ -566,11 +563,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			   bos.write(b, 0, bytesRead);
 			}
 			fis.close();
-			fis = null;
 
 			byte[] bytes = bos.toByteArray();
 			bos.close();
-			bos = null;
 
 			Bundle bundle;
 			p.unmarshall(bytes, 0, bytes.length);
@@ -611,7 +606,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			};
+			}
 		}.start();
 	}
 
@@ -954,7 +949,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			Editor editor = prefs.edit();
 			view.model.soundPool.toggle();
 			editor.putBoolean("sounds", view.model.soundPool.isEnabled());
-			editor.commit();
+			editor.apply();
 			updateSoundMenuEntry();
 			Toast.makeText(this, getString(view.model.soundPool.isEnabled() ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			return true;
@@ -1219,7 +1214,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void chatReceived(final NET_CHAT c) {
-		String name = null;
+		String name;
 		int player = -1;
 		if (lastStatus != null && c.client >= 0) {
 			if (lastStatus.isVersion(2))
@@ -1562,7 +1557,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
 		}
 
-		Notification n = null;
+		Notification n;
 
 		if (Build.VERSION.SDK_INT >= 16)
 			n = notificationBuilder.build();

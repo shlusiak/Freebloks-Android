@@ -1,8 +1,6 @@
 package de.saschahlusiak.freebloks.view.model;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
