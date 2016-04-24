@@ -1,12 +1,14 @@
 package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 
 public interface Effect {
-	public boolean isEffected(int x, int y);
-	public void render(GL10 gl, BoardRenderer renderer);
-	public void renderShadow(GL10 gl, BoardRenderer renderer);
-	public boolean isDone();
-	public boolean execute(float elapsed);
+	boolean isEffected(int x, int y);
+	void render(GL11 gl, BoardRenderer renderer);
+	void renderShadow(GL11 gl, BoardRenderer renderer);
+	boolean isDone();
+	boolean execute(float elapsed);
 }

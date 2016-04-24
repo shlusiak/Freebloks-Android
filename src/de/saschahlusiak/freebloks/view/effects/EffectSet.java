@@ -2,7 +2,8 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 
 public class EffectSet extends ArrayList<AbsStoneEffect> implements Effect {
@@ -16,13 +17,13 @@ public class EffectSet extends ArrayList<AbsStoneEffect> implements Effect {
 	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {
+	public void render(GL11 gl, BoardRenderer renderer) {
 		if (size() > 0)
 			get(0).render(gl, renderer);
 	}
 
 	@Override
-	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+	public void renderShadow(GL11 gl, BoardRenderer renderer) {
 		if (size() > 0)
 			get(0).renderShadow(gl, renderer);
 	}

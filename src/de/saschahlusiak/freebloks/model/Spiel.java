@@ -244,7 +244,7 @@ public class Spiel implements Serializable, Cloneable {
 		return set_stone(stone, turn.m_playernumber, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
 	}
 
-	private final int set_stone(Stone stone, int playernumber, int startY, int startX, int mirror, int rotate) throws GameStateException {
+	private int set_stone(Stone stone, int playernumber, int startY, int startX, int mirror, int rotate) throws GameStateException {
 		for (int y = 0; y < stone.m_size; y++){
 			for (int x = 0; x < stone.m_size; x++){
 				if (stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {

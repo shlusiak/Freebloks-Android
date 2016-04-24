@@ -20,9 +20,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class ColorAdapter extends BaseAdapter {
-	Context context;
-	NET_SERVER_STATUS lastStatus;
-	Spielleiter spiel;
+	private Context context;
+	private NET_SERVER_STATUS lastStatus;
+	private Spielleiter spiel;
 
 	public ColorAdapter(Context context, Spielleiter spiel, NET_SERVER_STATUS lastStatus) {
 		this.context = context;

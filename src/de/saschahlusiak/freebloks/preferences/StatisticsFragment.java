@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.preferences;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.games.Games;
@@ -13,6 +15,7 @@ import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceClickListener;
 import de.saschahlusiak.freebloksvip.R;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class StatisticsFragment extends PreferenceFragment implements GameHelperListener {
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;

@@ -357,7 +357,7 @@ public class Stone implements Serializable, Cloneable {
 	}
 
 	public final int get_stone_field(int y, int x, int mirror, int rotate) {
-		int nx=x, ny=y;
+		int nx, ny;
 		if (mirror == 0){
 			if (rotate == 0){
 				nx = y;

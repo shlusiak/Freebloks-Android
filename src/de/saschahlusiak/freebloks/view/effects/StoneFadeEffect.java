@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -24,7 +25,7 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	}
 
 	@Override
-	public void render(GL10 gl, BoardRenderer renderer) {
+	public void render(GL11 gl, BoardRenderer renderer) {
 		float alpha;
 		/* every TIME_PER_PERIOD needs to match 2 * PI */
 		alpha = (float)Math.cos(time / TIME_PER_PERIOD * (float)Math.PI * 2.0f) / 2.0f + 0.5f;

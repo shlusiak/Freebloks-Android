@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.opengl.GLUtils;
 import android.util.Log;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
@@ -49,7 +50,7 @@ public class CurrentStone implements ViewElement {
 
 		texture = null;
 
-		overlay = new SimpleModel(4, 2);
+		overlay = new SimpleModel(4, 2, false);
 		overlay.addVertex(-overlay_radius, 0, overlay_radius, 0, -1, 0, 0, 0);
 		overlay.addVertex(+overlay_radius, 0, overlay_radius, 0, -1, 0, 1, 0);
 		overlay.addVertex(+overlay_radius, 0, -overlay_radius, 0, -1, 0, 1, 1);
@@ -78,7 +79,7 @@ public class CurrentStone implements ViewElement {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
 
 		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_red);
@@ -90,7 +91,7 @@ public class CurrentStone implements ViewElement {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
 
 		bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_overlay_shadow);
@@ -102,7 +103,7 @@ public class CurrentStone implements ViewElement {
 			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 		}
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		BoardRenderer.myTexImage2D(gl, bitmap);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 		bitmap.recycle();
 	}
 
@@ -110,7 +111,7 @@ public class CurrentStone implements ViewElement {
 //	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
 //	final float diffuse_white[] = { 1.0f, 1.0f, 1.0f, 0.6f };
 
-	public synchronized void render(FreebloksRenderer renderer, GL10 gl) {
+	public synchronized void render(FreebloksRenderer renderer, GL11 gl) {
 		if (stone == null)
 			return;
 
@@ -158,10 +159,9 @@ public class CurrentStone implements ViewElement {
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glDisable(GL10.GL_LIGHTING);
 
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, overlay.getVertexBuffer());
-	    gl.glNormalPointer(GL10.GL_FLOAT, 0, overlay.getNormalBuffer());
-	    gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, overlay.getTextureBuffer());
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
+		overlay.bindBuffers(gl);
 
 	    /* OVERLAY SHADOW */
 	    gl.glPushMatrix();
@@ -360,7 +360,7 @@ public class CurrentStone implements ViewElement {
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
-			float p = 0.0f;
+			float p;
 			p = (stone_rel_x - rx) / (stone_rel_x * 2.0f);
 			if (p < 0)
 				p = 0;
@@ -374,7 +374,7 @@ public class CurrentStone implements ViewElement {
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
-			float p = 0.0f;
+			float p;
 			p = (stone_rel_y - ry) / (stone_rel_y * 2.0f);
 			if (p < 0)
 				p = 0;
@@ -388,12 +388,7 @@ public class CurrentStone implements ViewElement {
 		}
 		return true;
 	}
-	
-	public final void mirror_rotate_to(int mirror, int rotate) {
-		this.m_mirror_counter = mirror;
-		this.m_rotate_counter = rotate;
-	}
-	
+
 	public final void rotate_left(){
 		m_rotate_counter--;
 		if (m_rotate_counter < 0) m_rotate_counter += stone.get_rotateable();
@@ -424,7 +419,7 @@ public class CurrentStone implements ViewElement {
 	}
 
 	boolean snap(float x, float y, boolean forceSound) {
-		boolean hasMoved = false;
+		boolean hasMoved;
 		if (!model.snapAid) {
 			hasMoved = moveTo(x, y);
 			isValid = is_valid_turn(x, y);

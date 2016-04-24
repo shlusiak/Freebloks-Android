@@ -1,7 +1,9 @@
 package de.saschahlusiak.freebloks.preferences;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -9,6 +11,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloksvip.R;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AboutFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {

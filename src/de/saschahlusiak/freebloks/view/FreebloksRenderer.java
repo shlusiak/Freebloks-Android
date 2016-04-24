@@ -33,7 +33,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	ViewModel model;
 	Context context;
 	public float fixed_zoom;
-	float density;
 	float mAngleX;
 	float zoom;
 
@@ -88,8 +87,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	boolean updateModelViewMatrix = true;
 
 	public synchronized void onDrawFrame(GL10 gl) {
+		GL11 gl11 = (GL11)gl;
 		final float camera_distance = zoom;
-		long t = System.currentTimeMillis();
+//		long t = System.currentTimeMillis();
 		float cameraAngle = model.board.getCameraAngle();
 		float boardAngle = model.board.mAngleY;
 
@@ -103,7 +103,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 			gl.glClearColor(0.05f, 0.10f, 0.25f, 1.0f); /* the default background when textured */
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
-			intro.render(gl, this);
+			intro.render(gl11, this);
 			return;
 		}
 
@@ -121,7 +121,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 				0.0f, 0.0f, 0.0f,
 				0.0f, 1.0f, 0.0f);
 		if (updateModelViewMatrix) synchronized(outputfar) {
-			GL11 gl11 = (GL11)gl;
 //				Log.w("onDrawFrame", "updating modelViewMatrix");
 			if (isSoftwareRenderer) {
 				/* FIXME: add path for software renderer */
@@ -137,8 +136,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		gl.glRotatef(boardAngle, 0, 1, 0);
-		backgroundRenderer.render(gl);
-		board.renderBoard(gl, model.spiel, model.board.getShowSeedsPlayer());
+		backgroundRenderer.render(gl11);
+		board.renderBoard(gl11, model.spiel, model.board.getShowSeedsPlayer());
 
 		if (model.spiel == null)
 			return;
@@ -147,8 +146,13 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	    gl.glPushMatrix();
 	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
 		gl.glEnable(GL10.GL_BLEND);
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-	    synchronized (model.effects) {
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board.stone_specular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board.stone_shininess, 0);
+
+		board.stone.bindBuffers(gl11);
+
+		synchronized (model.effects) {
 		    for (int y = 0; y < model.spiel.m_field_size_y; y++) {
 		    	int x;
 		    	for (x = 0; x < model.spiel.m_field_size_x; x++) {
@@ -161,7 +165,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 								break;
 		    				}
 		    			if (!effected)
-		    				board.renderStone(gl, model.getPlayerColor(field), BoardRenderer.DEFAULT_ALPHA);
+		    				board.renderStone(gl11, model.getPlayerColor(field), BoardRenderer.DEFAULT_ALPHA);
 		    		}
 		    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
 		    	}
@@ -176,13 +180,13 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		/* render all effects */
 		synchronized (model.effects) {
 			for (int i = 0; i < model.effects.size(); i++) {
-				model.effects.get(i).renderShadow(gl, board);
+				model.effects.get(i).renderShadow(gl11, board);
 			}
 
 			gl.glEnable(GL10.GL_DEPTH_TEST);
 
 			for (int i = 0; i < model.effects.size(); i++) {
-				model.effects.get(i).render(gl, board);
+				model.effects.get(i).render(gl11, board);
 			}
 		}
 		gl.glDisable(GL10.GL_DEPTH_TEST);
@@ -194,12 +198,12 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glRotatef(cameraAngle, 0, 1, 0);
 		if (!model.vertical_layout)
 			gl.glRotatef(90.0f, 0, 1, 0);
-		model.wheel.render(this, gl);
+		model.wheel.render(this, gl11);
 		gl.glPopMatrix();
 
 		/* render current player stone on the field */
 		if (model.spiel.is_local_player())
-			model.currentStone.render(this, gl);
+			model.currentStone.render(this, gl11);
 
 //		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");
 	}
@@ -262,7 +266,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
-		board.updateTexture(context, gl);
+		board.updateTexture(context, (GL11) gl);
 		backgroundRenderer.updateTexture(gl);
 	}
 

@@ -36,7 +36,7 @@ public class RateAppDialog extends Dialog {
 				Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(Global.getMarketURLString(getContext().getPackageName())));
 				Editor editor = prefs.edit();
 				editor.putBoolean("rate_show_again", false);
-				editor.commit();
+				editor.apply();
 				dismiss();
 				getContext().startActivity(intent);
 			}
@@ -52,7 +52,7 @@ public class RateAppDialog extends Dialog {
 			public void onClick(View v) {
 				Editor editor = prefs.edit();
 				editor.putBoolean("rate_show_again", false);
-				editor.commit();
+				editor.apply();
 				dismiss();
 			}
 		});
@@ -94,7 +94,7 @@ public class RateAppDialog extends Dialog {
 			editor.putLong("rate_first_started", first_started);
 		}
 		editor.putLong("rate_number_of_starts", starts);
-		editor.commit();
+		editor.apply();
 		return show;
 	}
 }

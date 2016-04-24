@@ -7,8 +7,6 @@ import de.saschahlusiak.freebloks.view.model.Theme;
 
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.opengl.GLUtils;
 
 public class BackgroundRenderer extends SimpleModel {
 	float rgba[] = { 0, 0, 0, 1 };
@@ -24,7 +22,7 @@ public class BackgroundRenderer extends SimpleModel {
     Resources resources;
 
     public BackgroundRenderer(Resources resources) {
-		super(num_vertices, num_triangles);
+		super(num_vertices, num_triangles, false);
 
 		this.resources = resources;
 		hasTexture = false;
@@ -81,7 +79,7 @@ public class BackgroundRenderer extends SimpleModel {
 
 	final float specular[] = {0, 0, 0, 1};
 
-	public void render(GL10 gl) {
+	public void render(GL11 gl) {
 		if (!valid)
 			updateTexture(gl);
 
@@ -102,9 +100,7 @@ public class BackgroundRenderer extends SimpleModel {
 			gl.glEnable(GL10.GL_TEXTURE_2D);
 
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, getVertexBuffer());
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, getNormalBuffer());
-			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, getTextureBuffer());
+			bindBuffers(gl);
 
 			drawElements(gl);
 

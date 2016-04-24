@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.view.effects;
 
-import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -38,14 +38,11 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 		if (y >= stone.get_stone_size())
 			return false;
 
-		if (stone.get_stone_field(y, x, mirror, rotate) == Stone.STONE_FIELD_FREE)
-			return false;
-
-		return true;
+		return stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE;
 	}
 
 	@Override
-	public void renderShadow(GL10 gl, BoardRenderer renderer) {
+	public void renderShadow(GL11 gl, BoardRenderer renderer) {
 
 	}
 

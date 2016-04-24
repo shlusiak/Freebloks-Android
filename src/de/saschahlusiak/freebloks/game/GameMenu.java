@@ -45,7 +45,7 @@ public class GameMenu extends Dialog {
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 				Editor editor = prefs.edit();
 				editor.putBoolean("sounds", isChecked);
-				editor.commit();
+				editor.apply();
 
 				Toast.makeText(getContext(), getContext().getString(isChecked ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			}

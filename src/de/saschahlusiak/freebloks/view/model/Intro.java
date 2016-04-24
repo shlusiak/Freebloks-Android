@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.view.model;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -17,7 +18,7 @@ import android.opengl.GLU;
 
 public class Intro implements ViewElement {
 	public interface OnIntroCompleteListener {
-		public void OnIntroCompleted();
+		void OnIntroCompleted();
 	}
 	
 	/* TODO: refactor this class */
@@ -51,7 +52,6 @@ public class Intro implements ViewElement {
 			if (m_rotate_counter%2 == 0)
 				m_rotate_counter = (m_rotate_counter + 2) % (get_rotateable());
 		}
-
 	}
 
 	final static float INTRO_SPEED = 1.0f;
@@ -67,7 +67,7 @@ public class Intro implements ViewElement {
 	OnIntroCompleteListener listener;
 
 	float anim = 0.0f;
-	ArrayList<PhysicalStoneEffect> effects = new ArrayList<PhysicalStoneEffect>();
+	ArrayList<PhysicalStoneEffect> effects = new ArrayList<>();
 	int phase = 0;
 	boolean field_up = false;
 	float field_anim = 0.0f;
@@ -438,7 +438,7 @@ public class Intro implements ViewElement {
 			effects.get(i).execute(elapsed);
 	}
 
-	public void render(GL10 gl, FreebloksRenderer renderer) {
+	public void render(GL11 gl, FreebloksRenderer renderer) {
 		gl.glLoadIdentity();
 		/* Kamera positionieren */
 		if (model.vertical_layout) {

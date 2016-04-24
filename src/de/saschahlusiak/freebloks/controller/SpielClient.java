@@ -19,7 +19,7 @@ public class SpielClient {
 	static final String tag = SpielClient.class.getSimpleName();
 	static final int DEFAULT_TIMEOUT = 10000;
 
-	private ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<SpielClientInterface>();
+	private ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<>();
 	Socket client_socket;
 	String lastHost;
 	public Spielleiter spiel;
