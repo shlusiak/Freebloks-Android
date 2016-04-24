@@ -183,6 +183,9 @@ public class BoardRenderer {
 
 	void updateTexture(Context context, GL11 gl) {
 		stone.invalidate(gl);
+		field.invalidate(gl);
+		border.invalidate(gl);
+		shadow.invalidate(gl);
 
 		texture = new int[2];
 
