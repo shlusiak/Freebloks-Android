@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -125,7 +126,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	GameMode gamemode;
 	int fieldsize;
 
-	ImageButton chatButton;
+	FloatingActionButton chatButton;
 	ArrayList<ChatEntry> chatEntries;
 
 	SharedPreferences prefs;
@@ -137,15 +138,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		if (Build.VERSION.SDK_INT >= 11 && BuildConfig.DEBUG) {
 	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-	         		 .detectCustomSlowCalls()
-	                 .detectNetwork()
-	                 .penaltyDeath()
-	                 .build());
+				 .detectCustomSlowCalls()
+				 .detectNetwork()
+				 .penaltyDeath()
+				 .build());
 	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-	                 .detectLeakedSqlLiteObjects()
-	                 .detectLeakedClosableObjects()
-	                 .penaltyDeath()
-	                 .build());
+				 .detectLeakedSqlLiteObjects()
+				 .detectLeakedClosableObjects()
+				 .penaltyDeath()
+				 .build());
 	    }
 
 		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
@@ -219,7 +220,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		chatButton = (ImageButton)findViewById(R.id.chatButton);
+		chatButton = (FloatingActionButton)findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
 		chatButton.setOnClickListener(new OnClickListener() {
 			@Override
