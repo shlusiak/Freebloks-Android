@@ -138,16 +138,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (Build.VERSION.SDK_INT >= 11 && BuildConfig.DEBUG) {
 	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 	         		 .detectCustomSlowCalls()
-	                 .detectDiskReads()
-	                 .detectDiskWrites()
-	                 .detectNetwork()   // or .detectAll() for all detectable problems
-	                 .penaltyLog()
+	                 .detectNetwork()
+	                 .penaltyDeath()
 	                 .build());
 	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 	                 .detectLeakedSqlLiteObjects()
 	                 .detectLeakedClosableObjects()
-	                 .detectAll()
-	                 .penaltyLog()
+	                 .penaltyDeath()
 	                 .build());
 	    }
 
