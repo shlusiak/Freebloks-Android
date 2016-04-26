@@ -960,24 +960,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
 			view.model.currentStone.stopDragging();
-			spielthread.post(new Runnable() {
-				@Override
-				public void run() {
-					client.request_hint(client.spiel.current_player());
-				}
-			});
+			spielthread.client.request_hint(client.spiel.current_player());
 			return true;
 
 		case R.id.undo:
 			if (client == null)
 				return true;
 			view.model.clearEffects();
-			spielthread.post(new Runnable() {
-				@Override
-				public void run() {
-					client.request_undo();
-				}
-			});
+			spielthread.client.request_undo();
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return true;
 
@@ -1393,12 +1383,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
 		vibrate(Global.VIBRATE_SET_STONE);
 
-		spielthread.post(new Runnable() {
-			@Override
-			public void run() {
-				client.set_stone(turn);
-			}
-		});
+		client.set_stone(turn);
 		return true;
 	}
 
@@ -1413,12 +1398,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (undo_with_back && client != null && client.isConnected()) {
 			view.model.clearEffects();
 
-			spielthread.post(new Runnable() {
-				@Override
-				public void run() {
-					client.request_undo();
-				}
-			});
+			client.request_undo();
+
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
