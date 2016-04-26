@@ -1,8 +1,12 @@
 package de.saschahlusiak.freebloks.controller;
 
+import android.app.Application;
+import android.util.Log;
 import de.saschahlusiak.freebloks.model.Stone;
 
 public class JNIServer {
+	final static String tag = JNIServer.class.getSimpleName();
+
 	/* unfortunately Runtime.availableProcessors() returns only the number of online cores */
 	public static native int get_number_of_processors();
 
@@ -47,6 +51,7 @@ public class JNIServer {
 	}
 
 	static {
+		Log.d(tag, "loading server.so");
 		System.loadLibrary("server");
 	}
 }

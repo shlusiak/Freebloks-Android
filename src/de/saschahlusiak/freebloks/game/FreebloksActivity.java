@@ -148,6 +148,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	                 .build());
 	    }
 
+		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
+
 		hasActionBar = false;
 		/* by default, don't show title bar */
 		if (Build.VERSION.SDK_INT >= 11) {
