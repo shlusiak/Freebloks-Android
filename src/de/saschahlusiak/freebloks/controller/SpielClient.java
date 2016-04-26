@@ -8,6 +8,9 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 
 import de.saschahlusiak.freebloksvip.R;
@@ -26,7 +29,8 @@ public class SpielClient {
 	int lastDifficulty;
 	boolean lastPlayers[];
 	NET_SERVER_STATUS lastStatus;
-
+	HandlerThread sendThread;
+	Handler sendHandler;
 
 	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
 		this.lastDifficulty = difficulty;
@@ -78,6 +82,10 @@ public class SpielClient {
 			throw new IOException(context.getString(R.string.connection_refused));
 		}
 		synchronized(this) {
+			sendThread = new HandlerThread("SendThread");
+			sendThread.start();
+			sendHandler = new SendHandler(client_socket, sendThread.getLooper());
+
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.onConnected(spiel);
 		}
@@ -89,6 +97,8 @@ public class SpielClient {
 				if(client_socket.isConnected())
 					client_socket.shutdownInput();
 				client_socket.close();
+				sendThread.quit();
+				sendThread = null;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -119,15 +129,15 @@ public class SpielClient {
 	}
 
 	public void request_player(int player, String name) {
-		new NET_REQUEST_PLAYER(player, name).send(client_socket);
+		send(new NET_REQUEST_PLAYER(player, name));
 	}
 
 	public void revoke_player(int player) {
-		new NET_REVOKE_PLAYER(player).send(client_socket);
+		send(new NET_REVOKE_PLAYER(player));
 	}
 	
 	public void request_game_mode(int width, int height, GameMode g, int stones[]) {
-		new NET_REQUEST_GAME_MODE(width, height, g, stones).send(client_socket);
+		send(new NET_REQUEST_GAME_MODE(width, height, g, stones));
 	}
 
 	public void request_hint(int player) {
@@ -137,7 +147,7 @@ public class SpielClient {
 			return;
 		if (!spiel.is_local_player())
 			return;
-		new NET_REQUEST_HINT(player).send(client_socket);
+		send(new NET_REQUEST_HINT(player));
 	}
 
 	synchronized void process_message(NET_HEADER data) throws ProtocolException, GameStateException {
@@ -335,7 +345,7 @@ public class SpielClient {
 		data.y=turn.m_y;
 
 		/* Nachricht ueber den Stein an den Server schicken */
-		data.send(client_socket);
+		send(data);
 
 		return Stone.FIELD_ALLOWED;
 	}
@@ -344,7 +354,7 @@ public class SpielClient {
 	 * Erbittet den Spielstart beim Server
 	 **/
 	public void request_start() {
-		new NET_START_GAME().send(client_socket);
+		send(new NET_START_GAME());
 	}
 
 	/**
@@ -357,7 +367,7 @@ public class SpielClient {
 			return;
 		if (!spiel.is_local_player())
 			return;
-		new NET_REQUEST_UNDO().send(client_socket);
+		send(new NET_REQUEST_UNDO());
 	}
 
 	/**
@@ -369,7 +379,7 @@ public class SpielClient {
 		/* Bei Textlaenge von 0 wird nix verschickt */
 		if (text.length() < 1)return;
 
-		new NET_CHAT(text, -1).send(client_socket);
+		send(new NET_CHAT(text, -1));
 	}
 
 	public String getLastHost() {
@@ -377,6 +387,7 @@ public class SpielClient {
 	}
 
 	synchronized public void send(NET_HEADER msg) {
-		msg.send(client_socket);
+		Message m = sendHandler.obtainMessage(1, msg);
+		m.sendToTarget();
 	}
 }

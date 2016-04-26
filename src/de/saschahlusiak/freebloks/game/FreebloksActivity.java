@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.google.android.gms.games.Games;
 import android.graphics.BitmapFactory;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
@@ -127,7 +128,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	GameMode gamemode;
 	int fieldsize;
 
-	ImageButton chatButton;
+	FloatingActionButton chatButton;
 	ArrayList<ChatEntry> chatEntries;
 
 	SharedPreferences prefs;
@@ -139,19 +140,18 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		if (Build.VERSION.SDK_INT >= 11 && BuildConfig.DEBUG) {
 	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-	         		 .detectCustomSlowCalls()
-	                 .detectDiskReads()
-	                 .detectDiskWrites()
-	                 .detectNetwork()   // or .detectAll() for all detectable problems
-	                 .penaltyLog()
-	                 .build());
+				 .detectCustomSlowCalls()
+				 .detectNetwork()
+				 .penaltyDeath()
+				 .build());
 	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-	                 .detectLeakedSqlLiteObjects()
-	                 .detectLeakedClosableObjects()
-	                 .detectAll()
-	                 .penaltyLog()
-	                 .build());
+				 .detectLeakedSqlLiteObjects()
+				 .detectLeakedClosableObjects()
+				 .penaltyDeath()
+				 .build());
 	    }
+
+		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
 
 		hasActionBar = false;
 		/* by default, don't show title bar */
@@ -222,7 +222,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		chatButton = (ImageButton)findViewById(R.id.chatButton);
+		chatButton = (FloatingActionButton)findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
 		chatButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -962,24 +962,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
 			view.model.currentStone.stopDragging();
-			spielthread.post(new Runnable() {
-				@Override
-				public void run() {
-					client.request_hint(client.spiel.current_player());
-				}
-			});
+			spielthread.client.request_hint(client.spiel.current_player());
 			return true;
 
 		case R.id.undo:
 			if (client == null)
 				return true;
 			view.model.clearEffects();
-			spielthread.post(new Runnable() {
-				@Override
-				public void run() {
-					client.request_undo();
-				}
-			});
+			spielthread.client.request_undo();
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return true;
 
@@ -1395,12 +1385,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float)Math.random() * 0.2f);
 		vibrate(Global.VIBRATE_SET_STONE);
 
-		spielthread.post(new Runnable() {
-			@Override
-			public void run() {
-				client.set_stone(turn);
-			}
-		});
+		client.set_stone(turn);
 		return true;
 	}
 
@@ -1415,12 +1400,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (undo_with_back && client != null && client.isConnected()) {
 			view.model.clearEffects();
 
-			spielthread.post(new Runnable() {
-				@Override
-				public void run() {
-					client.request_undo();
-				}
-			});
+			client.request_undo();
+
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
