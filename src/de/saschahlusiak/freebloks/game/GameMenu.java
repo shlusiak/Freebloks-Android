@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import android.widget.ImageButton;
 import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloksvip.R;
 import android.app.Dialog;
@@ -14,8 +15,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class GameMenu extends Dialog {
-	ToggleButton soundButton;
+	ImageButton soundButton;
 	FreebloksActivity activity;
+	boolean soundon;
 
 	public GameMenu(Context context) {
 		super(context);
@@ -29,25 +31,21 @@ public class GameMenu extends Dialog {
 				getContext().startActivity(intent);
 			}
 		});
-		soundButton = (ToggleButton)findViewById(R.id.sound_toggle_button);
+		soundButton = (ImageButton)findViewById(R.id.sound_toggle_button);
 		soundButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean isChecked = soundButton.isChecked();
+				soundon = !soundon;
 				activity = (FreebloksActivity)getOwnerActivity();
-				soundButton.setCompoundDrawablesWithIntrinsicBounds(
-						isChecked ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp,
-								0,
-								0,
-								0);
-				activity.view.model.soundPool.setEnabled(isChecked);
+				soundButton.setImageResource(soundon ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
+				activity.view.model.soundPool.setEnabled(soundon);
 				activity.updateSoundMenuEntry();
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 				Editor editor = prefs.edit();
-				editor.putBoolean("sounds", isChecked);
+				editor.putBoolean("sounds", soundon);
 				editor.apply();
 
-				Toast.makeText(getContext(), getContext().getString(isChecked ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), getContext().getString(soundon ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -57,12 +55,9 @@ public class GameMenu extends Dialog {
 		super.onWindowFocusChanged(hasFocus);
 		activity = (FreebloksActivity)getOwnerActivity();
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-		soundButton.setChecked(prefs.getBoolean("sounds", true));
-		soundButton.setCompoundDrawablesWithIntrinsicBounds(
-				prefs.getBoolean("sounds", true) ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp,
-				0,
-				0,
-				0);
+
+		soundon = prefs.getBoolean("sounds", true);
+		soundButton.setImageResource(soundon ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
 
 	@Override
