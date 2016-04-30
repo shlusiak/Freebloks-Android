@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.saschahlusiak.freebloksvip"
     android:installLocation="auto"
-    android:versionCode="63"
-    android:versionName="0.4.9" >
+    android:versionCode="64"
+    android:versionName="0.5.0" >
 
     <uses-sdk 
         android:minSdkVersion="9"

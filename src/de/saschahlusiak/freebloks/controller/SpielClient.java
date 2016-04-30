@@ -97,7 +97,8 @@ public class SpielClient {
 				if(client_socket.isConnected())
 					client_socket.shutdownInput();
 				client_socket.close();
-				sendThread.quit();
+				if (sendThread != null)
+					sendThread.quit();
 				sendThread = null;
 			} catch (IOException e) {
 				e.printStackTrace();

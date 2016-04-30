@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import com.google.android.gms.games.Games;
 import android.graphics.BitmapFactory;
-import com.github.clans.fab.FloatingActionButton;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
@@ -128,7 +127,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	GameMode gamemode;
 	int fieldsize;
 
-	FloatingActionButton chatButton;
+	ImageButton chatButton;
 	ArrayList<ChatEntry> chatEntries;
 
 	SharedPreferences prefs;
@@ -222,7 +221,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		chatButton = (FloatingActionButton)findViewById(R.id.chatButton);
+		chatButton = (ImageButton)findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
 		chatButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -642,7 +641,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (view != null && view.model != null && view.model.soundPool != null)
 			on = view.model.soundPool.isEnabled();
 		optionsMenu.findItem(R.id.sound_toggle_button).setTitle(on ? R.string.sound_on : R.string.sound_off);
-		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode);
+		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
 
 	@Override
