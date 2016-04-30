@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
-import com.github.clans.fab.FloatingActionButton;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -126,7 +125,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	GameMode gamemode;
 	int fieldsize;
 
-	FloatingActionButton chatButton;
+	ImageButton chatButton;
 	ArrayList<ChatEntry> chatEntries;
 
 	SharedPreferences prefs;
@@ -220,7 +219,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		chatButton = (FloatingActionButton)findViewById(R.id.chatButton);
+		chatButton = (ImageButton)findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
 		chatButton.setOnClickListener(new OnClickListener() {
 			@Override
