@@ -639,7 +639,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (view != null && view.model != null && view.model.soundPool != null)
 			on = view.model.soundPool.isEnabled();
 		optionsMenu.findItem(R.id.sound_toggle_button).setTitle(on ? R.string.sound_on : R.string.sound_off);
-		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode);
+		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
 
 	@Override

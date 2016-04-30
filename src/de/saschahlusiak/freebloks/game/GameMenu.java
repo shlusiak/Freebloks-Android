@@ -36,7 +36,7 @@ public class GameMenu extends Dialog {
 				boolean isChecked = soundButton.isChecked();
 				activity = (FreebloksActivity)getOwnerActivity();
 				soundButton.setCompoundDrawablesWithIntrinsicBounds(
-						isChecked ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode,
+						isChecked ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp,
 								0,
 								0,
 								0);
@@ -59,7 +59,7 @@ public class GameMenu extends Dialog {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 		soundButton.setChecked(prefs.getBoolean("sounds", true));
 		soundButton.setCompoundDrawablesWithIntrinsicBounds(
-				prefs.getBoolean("sounds", true) ? android.R.drawable.ic_lock_silent_mode_off : android.R.drawable.ic_lock_silent_mode,
+				prefs.getBoolean("sounds", true) ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp,
 				0,
 				0,
 				0);
