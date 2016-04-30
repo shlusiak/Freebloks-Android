@@ -38,25 +38,22 @@
 
         <Button
             android:id="@+id/star"
-            style="?android:attr/buttonStyleSmall"
+            style="?android:attr/buttonStyle"
             android:drawableLeft="@drawable/star"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:text="" />
 
-        <ToggleButton
+        <ImageButton
             android:id="@+id/sound_toggle_button"
-            style="?android:attr/buttonStyleSmall"
+            style="?android:attr/buttonStyle"
+            android:layout_weight="0"
             android:layout_width="@dimen/main_menu_button_height"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center"
-            android:checked="true"
-            android:drawableLeft="@drawable/ic_volume_up_white_48dp"
-            android:text=""
-            android:textOff=""
-            android:textOn="" />
+            android:src="@drawable/ic_volume_up_white_48dp" />
 
     </LinearLayout>
 
