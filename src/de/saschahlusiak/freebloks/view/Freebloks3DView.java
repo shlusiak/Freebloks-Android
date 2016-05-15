@@ -22,7 +22,6 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class Freebloks3DView extends GLSurfaceView implements SpielClientInterface {
@@ -273,8 +272,12 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 
-	class UpdateThread extends Thread {
+	private class AnimateThread extends Thread {
 		boolean goDown = false;
+
+		AnimateThread() {
+			super("AnimateThread");
+		}
 
 		@Override
 		public void run() {
@@ -286,8 +289,6 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				e1.printStackTrace();
 				return;
 			}
-
-			
 
 			long time, tmp, lastExecTime;
 			time = System.currentTimeMillis();
@@ -355,7 +356,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		}
 	}
 
-	UpdateThread thread = null;
+	AnimateThread thread = null;
 
 	@Override
 	public void onPause() {
@@ -376,7 +377,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		super.onResume();
 		model.clearEffects();
 		if (thread == null) {
-			thread = new UpdateThread();
+			thread = new AnimateThread();
 			thread.start();
 		}
 	}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import android.graphics.PointF;
@@ -19,11 +18,11 @@ import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 public class Wheel implements ViewElement {
 	private final static String tag = Wheel.class.getSimpleName();
 
-	final float MAX_FLING_SPEED = 100.0f;
-	final float MIN_FLING_SPEED = 2.0f;
-	final float MAX_STONE_DRAG_DISTANCE = 3.5f;
+	private final float MAX_FLING_SPEED = 100.0f;
+	private final float MIN_FLING_SPEED = 2.0f;
+	private final float MAX_STONE_DRAG_DISTANCE = 3.5f;
 
-	enum Status {
+	private enum Status {
 		IDLE, SPINNING, FLINGING
 	}
 
