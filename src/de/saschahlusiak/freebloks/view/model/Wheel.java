@@ -1,8 +1,6 @@
 package de.saschahlusiak.freebloks.view.model;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.microedition.khronos.opengles.GL11;
 
@@ -40,12 +38,38 @@ public class Wheel implements ViewElement {
 	private ViewModel model;
 	private boolean moves_left;
 
+	private PointF lastPointerLocation = new PointF();
 	private PointF tmp = new PointF();
 	private Handler handler = new Handler();
-	private Timer timer = new Timer();
-	private TimerTask task;
 
 	private static final float stone_spacing = 5.5f * BoardRenderer.stone_size * 2.0f;
+
+	private Runnable hapticTimerRunnable = new Runnable() {
+		@Override
+		public void run() {
+			if (status != Status.SPINNING)
+				return;
+			if (highlightStone == null)
+				return;
+			if (Math.abs(currentOffset - lastOffset) > 3.0f)
+				return;
+			if (!model.spiel.is_local_player())
+				return;
+
+			tmp.x = lastPointerLocation.x;
+			tmp.y = lastPointerLocation.y;
+			model.board.modelToBoard(tmp);
+
+			if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
+				model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
+			showStone(highlightStone.get_number());
+			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
+			model.currentStone.hasMoved = true;
+			model.board.resetRotation();
+			status = Status.IDLE;
+			model.view.requestRender();
+		}
+	};
 
 	public Wheel(ViewModel model) {
 		this.model = model;
@@ -121,6 +145,9 @@ public class Wheel implements ViewElement {
 		lastFlingOffset = currentOffset;
 		flingSpeed = 0.0f;
 
+		lastPointerLocation.x = m.x;
+		lastPointerLocation.y = m.y;
+
 		tmp.x = m.x;
 		tmp.y = m.y;
 		model.board.modelToBoard(tmp);
@@ -154,48 +181,13 @@ public class Wheel implements ViewElement {
 			highlightStone = null;
 		else if (highlightStone != null) {
 			/* we tapped on a stone; start timer */
-			if (task != null)
-				task.cancel();
+			handler.removeCallbacks(hapticTimerRunnable);
 			if (model.currentStone.stone != null && model.currentStone.stone != highlightStone) {
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 				status = Status.SPINNING;
 			} else {
 				status = Status.SPINNING;
-				timer.schedule(task = new TimerTask() {
-
-					@Override
-					public void run() {
-						if (status != Status.SPINNING)
-							return;
-						if (highlightStone == null)
-							return;
-						if (Math.abs(currentOffset - lastOffset) > 3.0f)
-							return;
-						if (!model.spiel.is_local_player())
-							return;
-
-						handler.post(new Runnable() {
-							@Override
-							public void run() {
-								if (highlightStone == null)
-									return;
-								tmp.x = m.x;
-								tmp.y = m.y;
-								model.board.modelToBoard(tmp);
-
-								if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
-									model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
-								showStone(highlightStone.get_number());
-								model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
-								model.currentStone.hasMoved = true;
-								model.board.resetRotation();
-								status = Status.IDLE;
-								model.view.requestRender();
-							}
-						});
-						status = Status.IDLE;
-					}
-				}, 500);
+				handler.postDelayed(hapticTimerRunnable, 500);
 			}
 		} else
 			status = Status.SPINNING;
@@ -256,9 +248,7 @@ public class Wheel implements ViewElement {
 
 	@Override
 	public boolean handlePointerUp(PointF m) {
-		if (task != null)
-			task.cancel();
-		task = null;
+		handler.removeCallbacks(hapticTimerRunnable);
 		if (status == Status.SPINNING) {
 			if (highlightStone != null && model.currentStone.stone != highlightStone && (Math.abs(lastOffset - currentOffset) < 0.5f)) {
 				if (model.currentStone.stone != null)
