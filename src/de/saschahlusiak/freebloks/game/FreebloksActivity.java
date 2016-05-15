@@ -144,7 +144,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 				 .detectLeakedSqlLiteObjects()
 				 .detectLeakedClosableObjects()
-				 .penaltyDeath()
+				 .detectActivityLeaks()
+				 .penaltyLog()
+//				 .penaltyDeath()
 				 .build());
 	    }
 
@@ -262,7 +264,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 		}
 		if (view.model.soundPool == null)
-			view.model.soundPool = new Sounds(this);
+			view.model.soundPool = new Sounds(getApplicationContext());
 
 		clientName = prefs.getString("player_name", null);
 		difficulty = prefs.getInt("difficulty", 10);	/* TODO: generalize the value */
@@ -311,6 +313,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
+				if (isDestroyed())
+					return;
 				boolean local = false;
 				View t = findViewById(R.id.currentPlayer);
 				t.postDelayed(this, 5000);

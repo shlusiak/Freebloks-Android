@@ -27,7 +27,7 @@ import android.view.MotionEvent;
 public class Freebloks3DView extends GLSurfaceView implements SpielClientInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
-	public ViewModel model = new ViewModel(this);
+	public final ViewModel model = new ViewModel(this);
 
 	FreebloksRenderer renderer;
 	private float scale = 1.0f;
