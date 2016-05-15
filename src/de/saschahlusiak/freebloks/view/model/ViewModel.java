@@ -13,13 +13,13 @@ import de.saschahlusiak.freebloks.view.effects.Effect;
 
 @SuppressWarnings("serial")
 public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
-	public Wheel wheel;
-	public CurrentStone currentStone;
+	public final Wheel wheel;
+	public final CurrentStone currentStone;
 	public Spielleiter spiel;
-	public Board board;
+	public final Board board;
 	public ActivityInterface activity;
-	public Freebloks3DView view;
-	public ArrayList<Effect> effects;
+	public final Freebloks3DView view;
+	public final ArrayList<Effect> effects;
 	public Intro intro;
 	public Sounds soundPool;
 

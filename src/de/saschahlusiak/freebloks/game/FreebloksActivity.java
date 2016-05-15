@@ -185,7 +185,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			if (getActionBar() == null)
 				hasActionBar = false;
 		}
-
+		
 		if (hasActionBar) {
 			if (Build.VERSION.SDK_INT >= 14) {
 				getActionBar().setHomeButtonEnabled(true);
