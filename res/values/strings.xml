@@ -2,14 +2,14 @@
 <resources>
     <string name="app_name">Freebloks</string>
 
-    <string name="new_local_game">New game</string>
+    <string name="new_local_game">New Game</string>
     <string name="resume">Resume</string>
     <string name="join_game">Join</string>
     <string name="host_game">Host</string>
     <string name="preferences">Settings</string>
     <string name="hint">Hint</string>
     <string name="undo">Undo</string>
-    <string name="main_menu">Main menu</string>
+    <string name="main_menu">Main Menu</string>
     <string name="about">About</string>
     <string name="about_freebloks">About Freebloks&#8230;</string>
     <string name="special_thanks_to">Special thanks to</string>
@@ -29,12 +29,12 @@
     <string name="your_turn">It\'s your turn, %1$s!</string>
     <string name="difficulty">Difficulty</string>
     <string name="start">Start</string>
-    <string name="custom_game_title">Custom game</string>
-    <string name="sound_on">Sound on</string>
-    <string name="sound_off">Sound off</string>
+    <string name="custom_game_title">Custom Game</string>
+    <string name="sound_on">Sound On</string>
+    <string name="sound_off">Sound Off</string>
 
     <string name="statistics">Statistics</string>
-    <string name="clear_statistics">Reset all</string>
+    <string name="clear_statistics">Reset All</string>
     <string-array name="statistics_labels">
         <item>Games played</item>
         <item>Good games (+15)</item>
@@ -169,9 +169,9 @@
     <string name="prefs_notifications_long">Show notifications in multiplayer games</string>
     <string name="prefs_notifications">Notifications</string>
     <string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
-    <string name="prefs_snap_to_corners">Snap to corners</string>
+    <string name="prefs_snap_to_corners">Snap to Corners</string>
     <string name="prefs_undo_long">Undo last move with back button</string>
-    <string name="prefs_undo">Undo with back</string>
+    <string name="prefs_undo">Undo with Back</string>
     <string name="prefs_immersive_long">Hide software navigation buttons</string>
     <string name="prefs_immersive">Fullscreen</string>
     <string name="prefs_show_corners_long">Show possible corners of your stones</string>
@@ -192,7 +192,7 @@
     </string-array> 
     
     <string name="prefs_skip_intro_long">Skip intro animation on app start</string>
-    <string name="prefs_skip_intro">Skip intro</string>
+    <string name="prefs_skip_intro">Skip Intro</string>
     <string name="prefs_auto_resume_long">Automatically resume last game</string>
     <string name="prefs_auto_resume">Auto-resume</string>
     <string name="prefs_rate_review_long">Please rate or leave a comment</string>
@@ -200,7 +200,7 @@
     <string name="prefs_donation_long">Please support the development with a donation</string>
     <string name="prefs_donation">Support Freebloks&#8230;</string>
     <string name="prefs_donate">Donate</string>
-    <string name="prefs_player_name">Player name</string>
+    <string name="prefs_player_name">Player Name</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_theme">Background</string>
     <string name="prefs_statistics">Statistics</string>

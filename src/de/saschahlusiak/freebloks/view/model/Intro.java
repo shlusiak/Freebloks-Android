@@ -67,7 +67,7 @@ public class Intro implements ViewElement {
 	OnIntroCompleteListener listener;
 
 	float anim = 0.0f;
-	ArrayList<PhysicalStoneEffect> effects = new ArrayList<>();
+	final ArrayList<PhysicalStoneEffect> effects = new ArrayList<>();
 	int phase = 0;
 	boolean field_up = false;
 	float field_anim = 0.0f;
@@ -218,7 +218,7 @@ public class Intro implements ViewElement {
 				phase=1;
 				wipe();
 			}
-		}else synchronized(effects) {
+		} else synchronized(effects) {
 			/* Effekte animieren */
 			executeEffects(elapsed);
 			/* Bei den Phasen fallen Steine vom Himmel, diese sollen zuegig fallen */

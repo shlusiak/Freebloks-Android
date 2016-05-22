@@ -7,11 +7,12 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 
 
 class SpielClientThread extends Thread {
-	static final String tag = SpielClientThread.class.getSimpleName();
-	SpielClient client;
-	boolean godown;
+	private static final String tag = SpielClientThread.class.getSimpleName();
+	final SpielClient client;
+	private boolean godown;
 
 	SpielClientThread(SpielClient spiel) {
+		super("SpielClientThread");
 		this.client = spiel;
 	}
 
@@ -23,7 +24,7 @@ class SpielClientThread extends Thread {
 		godown = true;
 	}
 
-	Exception error = null;
+	private Exception error = null;
 
 	public Exception getError() {
 		return error;
