@@ -315,7 +315,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				if (isDestroyed())
+				if (view == null)
 					return;
 				boolean local = false;
 				View t = findViewById(R.id.currentPlayer);
@@ -385,6 +385,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (view.model.soundPool != null)
 			view.model.soundPool.release();
 		view.model.soundPool = null;
+		view = null;
 		super.onDestroy();
 	}
 
