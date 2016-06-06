@@ -1024,6 +1024,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if (view == null)
+					return;
 				if (multiplayerNotification != null)
 					updateMultiplayerNotification(false, null);
 				boolean local = false;

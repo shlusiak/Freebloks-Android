@@ -387,6 +387,9 @@ public class SpielClient {
 	}
 
 	synchronized public void send(NET_HEADER msg) {
+		if (sendHandler == null)
+			return;
+
 		Message m = sendHandler.obtainMessage(1, msg);
 		m.sendToTarget();
 	}
