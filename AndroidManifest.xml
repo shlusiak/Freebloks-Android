@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
     package="de.saschahlusiak.freebloks"
     android:installLocation="auto"
     android:versionCode="67"
     android:versionName="0.5.2" >
 
-    <uses-sdk 
+    <uses-sdk
+        tools:overrideLibrary="com.github.clans.fab"
         android:minSdkVersion="9"
         android:targetSdkVersion="23" />
 

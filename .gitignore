@@ -3,4 +3,7 @@
 /gen
 /obj
 /stuff/textures/*.ktx
+/stuff/video/
 .DS_Store
+
+local.properties
