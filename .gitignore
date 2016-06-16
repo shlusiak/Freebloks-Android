@@ -4,6 +4,11 @@
 /obj
 /stuff/textures/*.ktx
 /stuff/video/
+/stuff/screenshots/
 .DS_Store
+.gradle/
+.idea/
+*.iml
+build/
 
 local.properties
