@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameActivity;
+import android.app.Activity;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -30,7 +29,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
-public class GameFinishActivity extends BaseGameActivity {
+public class GameFinishActivity extends Activity {
 	public static final int RESULT_NEW_GAME = RESULT_FIRST_USER + 1;
 	public static final int RESULT_SHOW_MENU = RESULT_FIRST_USER + 2;
 
@@ -50,7 +49,6 @@ public class GameFinishActivity extends BaseGameActivity {
 			firstRun = true;
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getGameHelper().setMaxAutoSignInAttempts(0);
 
 		super.onCreate(savedInstanceState);
 
@@ -86,18 +84,6 @@ public class GameFinishActivity extends BaseGameActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(GameFinishActivity.this, StatisticsActivity.class);
 				startActivity(intent);
-			}
-		});
-		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
-			}
-		});
-		findViewById(R.id.leaderboard).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			}
 		});
 	}
@@ -226,75 +212,5 @@ public class GameFinishActivity extends BaseGameActivity {
 		}
 
 		return l;
-	}
-
-	@Override
-	public void onSignInFailed() {
-		findViewById(R.id.achievements).setVisibility(View.GONE);
-		findViewById(R.id.leaderboard).setVisibility(View.GONE);
-	}
-
-	@Override
-	public void onSignInSucceeded() {
-		findViewById(R.id.achievements).setVisibility(View.VISIBLE);
-		findViewById(R.id.leaderboard).setVisibility(View.VISIBLE);
-
-		if (!firstRun)
-			return;
-
-		HighscoreDB db = new HighscoreDB(this);
-		if (db.open()) {
-			for (int i = 0; i < data.length; i++) if (data[i].is_local) {
-					if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-							&& data[i].place == 1)
-						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_classic));
-
-					if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-							&& data[i].is_perfect)
-						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_perfect));
-
-					if (spiel.m_gamemode == GameMode.GAMEMODE_DUO
-							&& data[i].place == 1)
-						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_duo));
-
-					Games.Achievements.increment(getApiClient(), getString(R.string.achievement_1000_points), data[i].points);
-
-					if (data[i].place == 1)
-						Games.Achievements.increment(getApiClient(), getString(R.string.achievement_winner), 1);
-
-					if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-							&& data[i].place == 4)
-						Games.Achievements.increment(getApiClient(), getString(R.string.achievement_loser), 1);
-
-					if (lastStatus != null && lastStatus.clients >= 4 && data[i].place == 1)
-						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_multiplayer));
-				}
-
-			Games.Achievements.increment(getApiClient(), getString(R.string.achievement_addicted), 1);
-
-			int n = 0;
-			for (int i = 0; i < 4; i++)
-				if (db.getNumberOfPlace(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 1, i) > 0)
-					n++;
-			if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 0) > 0)
-				n++;
-			if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 2) > 0)
-				n++;
-			if (n == 6)
-				Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_all_colors));
-
-			Games.Leaderboards.submitScore(
-				getApiClient(),
-				getString(R.string.leaderboard_games_won),
-				db.getNumberOfPlace(null, 1));
-
-			Games.Leaderboards.submitScore(
-				getApiClient(),
-				getString(R.string.leaderboard_points_total),
-				db.getTotalNumberOfPoints(null));
-
-			db.close();
-		} else
-			throw new IllegalStateException("could not open highscore db");
 	}
 }

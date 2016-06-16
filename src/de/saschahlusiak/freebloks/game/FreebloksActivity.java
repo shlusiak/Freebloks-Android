@@ -7,8 +7,8 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import android.app.*;
 import android.graphics.BitmapFactory;
-import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
@@ -42,12 +42,6 @@ import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -83,7 +77,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
+public class FreebloksActivity extends Activity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -170,7 +164,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		else
 			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
-		getGameHelper().setMaxAutoSignInAttempts(0);
 		super.onCreate(savedInstanceState);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -1568,15 +1561,5 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				showDialog(DIALOG_LOBBY);
 		}
 		super.onNewIntent(intent);
-	}
-
-	@Override
-	public void onSignInFailed() {
-
-	}
-
-	@Override
-	public void onSignInSucceeded() {
-
 	}
 }

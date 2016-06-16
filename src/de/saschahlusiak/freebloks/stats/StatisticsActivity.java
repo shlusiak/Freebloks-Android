@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.stats;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,17 +18,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameActivity;
-
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
 
-public class StatisticsActivity extends BaseGameActivity {
+public class StatisticsActivity extends Activity {
 	HighscoreDB db;
 	StatisticsAdapter adapter;
 	GameMode game_mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
@@ -44,8 +40,6 @@ public class StatisticsActivity extends BaseGameActivity {
 		db = new HighscoreDB(this);
 		db.open();
 		
-		getGameHelper().setMaxAutoSignInAttempts(0);
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistics_activity);
 
@@ -61,13 +55,6 @@ public class StatisticsActivity extends BaseGameActivity {
 			@Override
 			public void onClick(View v) {
 				finish();
-			}
-		});
-		findViewById(R.id.signin).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				beginUserInitiatedSignIn();
 			}
 		});
 
@@ -107,8 +94,6 @@ public class StatisticsActivity extends BaseGameActivity {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
-			findViewById(R.id.signin).setVisibility(View.GONE);
 	}
 
 	@Override
@@ -126,9 +111,9 @@ public class StatisticsActivity extends BaseGameActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.signout).setVisible(isSignedIn());
-		menu.findItem(R.id.achievements).setVisible(isSignedIn());
-		menu.findItem(R.id.leaderboard).setVisible(isSignedIn());
+		menu.findItem(R.id.signout).setVisible(false);
+		menu.findItem(R.id.achievements).setVisible(false);
+		menu.findItem(R.id.leaderboard).setVisible(false);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -143,18 +128,8 @@ public class StatisticsActivity extends BaseGameActivity {
 			refreshData();
 			return true;
 		case R.id.signout:
-			signOut();
-			findViewById(R.id.signin).setVisibility(View.VISIBLE);
 			findViewById(R.id.leaderboard).setVisibility(View.GONE);
 			findViewById(R.id.achievements).setVisibility(View.GONE);
-			return true;
-		case R.id.achievements:
-			if (isSignedIn())
-				startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
-			return true;
-		case R.id.leaderboard:
-			if (isSignedIn())
-				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -196,35 +171,5 @@ public class StatisticsActivity extends BaseGameActivity {
 		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
 
 		adapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onSignInFailed() {
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
-			return;
-
-		findViewById(R.id.signin).setVisibility(View.VISIBLE);
-		if (Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu();
-	}
-
-	@Override
-	public void onSignInSucceeded() {
-		findViewById(R.id.signin).setVisibility(View.GONE);
-		if (Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu();
-
-		if (db == null)
-			return;
-		
-		Games.Leaderboards.submitScore(
-				getApiClient(),
-				getString(R.string.leaderboard_games_won),
-				db.getNumberOfPlace(null, 1));
-
-		Games.Leaderboards.submitScore(
-				getApiClient(),
-				getString(R.string.leaderboard_points_total),
-				db.getTotalNumberOfPoints(null));
 	}
 }

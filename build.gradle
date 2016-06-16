@@ -16,8 +16,6 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.google.android.gms:play-services-games:9.0.2'
-    compile 'com.google.android.gms:play-services-plus:9.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 
