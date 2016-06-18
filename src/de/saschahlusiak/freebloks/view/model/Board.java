@@ -5,7 +5,7 @@ import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
 public class Board implements ViewElement {
-	ViewModel model;
+	private ViewModel model;
 	public int last_size;
 	public float mAngleY;
 	public int centerPlayer; /* the "center" position of the board, usually the first local */

@@ -199,6 +199,8 @@ public class Wheel implements ViewElement {
 	synchronized public boolean handlePointerMove(PointF m) {
 		if (status != Status.SPINNING)
 			return false;
+		if (model.spiel == null)
+			return false;
 
 		tmp.x = m.x;
 		tmp.y = m.y;
