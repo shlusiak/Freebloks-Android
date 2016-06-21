@@ -22,7 +22,10 @@
 
     <string name="waiting_for_color">En attente de %1$s</string>
     <string name="color_is_out_of_moves">%1$s n\'a plus de tours</string>
-    <string name="player_status_moves">%1$d tour(s)</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d tour</item>
+        <item quantity="other">%1$d tours</item>
+    </plurals>
     <string name="touch_to_skip">Toucher pour passer</string>
     <string name="no_player">aucun joueur</string>
     <string name="not_connected">non connecté</string>
@@ -58,7 +61,10 @@
     <string name="googleplus_achievements_long">Montrer les succès gagnés</string>
 
     <string name="lobby_waiting_for_players">En attente de joueurs</string>
-    <string name="connected_clients">%1$d client(s)</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d client</item>
+        <item quantity="other">%1$d clients</item>
+    </plurals>
     <string name="chat">Chat</string>
     <string name="join_server_address">Serveur&#160;:</string>
     <string name="join_player_name">Votre nom&#160;:</string>

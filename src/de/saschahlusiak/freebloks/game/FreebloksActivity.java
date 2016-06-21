@@ -1078,7 +1078,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 							status.setText(getString(R.string.your_turn, getPlayerName(player)));
 
 							movesLeft.setVisibility(View.VISIBLE);
-							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
+							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.m_number_of_possible_turns, p.m_number_of_possible_turns));
 						}
 					} else {
 						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(showPlayer)]);
@@ -1092,7 +1092,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 							status.setText(getPlayerName(showPlayer));
 
 							movesLeft.setVisibility((local || player < 0) ? View.VISIBLE : View.INVISIBLE);
-							movesLeft.setText(getString(R.string.player_status_moves, p.m_number_of_possible_turns));
+							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.m_number_of_possible_turns, p.m_number_of_possible_turns));
 						}
 					}
 
