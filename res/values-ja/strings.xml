@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Freebloks</string>
+
+    <string name="new_local_game">新しいゲーム</string>
+    <string name="resume">再開</string>
+    <string name="join_game">参加</string>
+    <string name="host_game">ホスト</string>
+    <string name="preferences">設定</string>
+    <string name="hint">ヒント</string>
+    <string name="undo">元に戻す</string>
+    <string name="main_menu">メインメニュー</string>
+    <string name="about">アプリについて</string>
+    <string name="about_freebloks">Freebloks について&#8230;</string>
+    <string name="special_thanks_to">スペシャルサンクス</string>
+    <string name="connecting">サーバーに接続中&#8230;</string>
+    <string name="connection_refused">接続を拒否されました</string>
+    <string name="could_not_restore_game">ゲームを復元できませんでした</string>
+    <string name="do_you_want_to_leave_current_game">現在のゲームをキャンセルしてもよろしいですか?</string>
+    <string name="disconnect_error">接続を閉じました: %1$s。 オフラインです。</string>
+    <string name="default_server">デフォルト</string>
+
+    <string name="waiting_for_color">%1$s の待機中</string>
+    <string name="color_is_out_of_moves">%1$s は移動範囲外です</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d 移動</item>
+        <item quantity="other">%1$d 移動</item>
+    </plurals>
+    <string name="touch_to_skip">タッチしてスキップ</string>
+    <string name="no_player">プレイヤーなし</string>
+    <string name="not_connected">接続されていません</string>
+    <string name="your_turn">あなたの番です %1$s!</string>
+    <string name="difficulty">難易度</string>
+    <string name="start">開始</string>
+    <string name="custom_game_title">カスタム ゲーム</string>
+    <string name="sound_on">サウンド オン</string>
+    <string name="sound_off">サウンド オフ</string>
+
+    <string name="statistics">状態</string>
+    <string name="clear_statistics">すべてリセット</string>
+    <string-array name="statistics_labels">
+        <item>プレイしたゲーム</item>
+        <item>グッド ゲーム (+15)</item>
+        <item>パーフェクト ゲーム (+20)</item>
+        <item>最初の場所</item>
+        <item>二番目の場所</item>
+        <item>三番目の場所</item>
+        <item>四番目の場所</item>
+        <item>使用ストーン</item>
+        <item>ポイント合計</item>
+    </string-array>
+
+    <string name="googleplus">Google+</string>
+    <string name="googleplus_signin">サインイン</string>
+    <string name="googleplus_signin_long">Google+ でサインイン</string>
+    <string name="googleplus_signout">サインアウト</string>
+    <string name="googleplus_signout_long">Google+ に %1$s としてサインインしました</string>
+    <string name="googleplus_leaderboard">リーダーボード</string>
+    <string name="googleplus_leaderboard_long">人々のスコアをサークルに表示します</string>
+    <string name="googleplus_achievements">成果</string>
+    <string name="googleplus_achievements_long">獲得した成果を表示します</string>
+
+    <string name="lobby_waiting_for_players">プレイヤーを待機しています</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d クライアント</item>
+        <item quantity="other">%1$d クライアント</item>
+    </plurals>
+    <string name="chat">チャット</string>
+    <string name="join_server_address">サーバー:</string>
+    <string name="join_player_name">あなたの名前:</string>
+    <string name="client_d">プレイヤー %1$d</string>
+    <string name="player_joined_color">%1$s は %2$s をプレイ中</string>
+    <string name="player_left_color">%1$s (%2$s) 残り</string>
+    <string name="no_addresses_found">[IP アドレスが見つかりません]</string>
+    <string name="lobby_message_hint">メッセージを入力</string>
+
+    <string name="rate_now">はい</string>
+    <string name="rate_later">後で</string>
+    <string name="rate_never">いいえ</string>
+    <string name="rate_freebloks_title">Freebloks を評価する</string>
+    <string name="rate_freebloks_text">Freebloks を楽しんでいただけたら、少しお時間をいただいて評価していただけませんか?</string>
+    <string name="rate_freebloks_donate_link"><u>Freebloks をサポートしてください</u></string>
+
+
+    <plurals name="number_of_stones_left">
+        <item quantity="one">残り %1$d ストーン</item>
+        <item quantity="other">残り %1$d ストーン</item>
+    </plurals>
+    <plurals name="number_of_points">
+        <item quantity="one">%1$d ポイント</item>
+        <item quantity="other">%1$d ポイント</item>
+    </plurals>
+    <string-array name="places">
+        <item>最初の場所</item>
+        <item>二番目の場所</item>
+        <item>三番目の場所</item>
+        <item>四番目の場所</item>
+    </string-array>
+    <string name="game_finished">ゲームオーバー</string>
+    <string name="random_color">ランダム色</string>
+    <string-array name="color_names">
+        <item>白</item>
+        <item>青</item>
+        <item>黄</item>
+        <item>赤</item>
+        <item>緑</item>
+        <item>オレンジ</item>
+        <item>紫</item>
+    </string-array>
+    <string-array name="difficulties">
+        <item>狂気</item>
+        <item>難しい</item>
+        <item>中</item>
+        <item>簡単</item>
+        <item>非常に簡単</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 プレイヤー, 2 色</item>
+        <item>2 プレイヤー, 4 色</item>
+        <item>ブロックス クラシック</item>
+        <item>ブロックス デュオ</item>
+        <item>ブロックス ジュニア</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
+
+    <string name="please_donate">開発者をサポートする</string>
+    <string name="donation_text_long">Freebloks はフリーソフトウェアです。 完全に無料で使用および変更することができます!\n\nでも、それは価値がないという意味ではありません。 ゲームがどのくらいの価値があるかをあなたが決めて、フリーソフトウェアの開発をサポートすることができるようにするためです。</string>
+    <string name="donation_text_short">Freebloks の価値はあなたにとって何ですか?</string>
+    <string name="donation_nothing">ない</string>
+    <string name="donation_next">次へ</string>
+    <string name="donation_freebloksvip">Freebloks VIP</string>
+
+    <string-array name="theme_labels">
+        <item>黒</item>
+        <item>青</item>
+        <item>花柄</item>
+        <item>縞模様</item>
+        <item>木目</item>
+        <item>レンガ</item>
+        <item>メタル</item>
+        <item>ベルベット</item>
+        <item>カーペット</item>
+        <item>草原</item>
+    </string-array>
+    
+    <string name="notification_continue">続ける</string>
+    <string name="notification_disconnect">切断</string>
+    
+    <string name="prefs_interface">インターフェイス</string>
+    <string name="prefs_display">ディスプレイ</string>
+    <string name="prefs_misc">その他</string>
+    <string name="prefs_sounds_long">効果音を再生します</string>
+    <string name="prefs_sounds">サウンド</string>
+    <string name="prefs_vibrate_long">ストーンを移動する際に振動します</string>
+    <string name="prefs_vibrate">振動</string>
+    <string name="prefs_notifications_long">マルチプレイヤーゲームでの通知を表示します</string>
+    <string name="prefs_notifications">通知</string>
+    <string name="prefs_snap_to_corners_long">ピースをスナップする手助けをして、正しい位置に近づけます</string>
+    <string name="prefs_snap_to_corners">角にスナップ</string>
+    <string name="prefs_undo_long">戻るボタンで直前の移動を元に戻します</string>
+    <string name="prefs_undo">戻るで元に戻す</string>
+    <string name="prefs_immersive_long">ソフトウェア ナビゲーションボタンを非表示します</string>
+    <string name="prefs_immersive">全画面</string>
+    <string name="prefs_show_corners_long">ストーンの可能な角を表示します</string>
+    <string name="prefs_show_corners">角</string>
+    <string name="prefs_show_opponents_long">相手のストーンを表示します</string>
+    <string name="prefs_show_opponents">相手</string>
+    <string name="prefs_show_animations">アニメーション</string>
+    
+    <string-array name="prefs_animations_labels">
+        <item>オフ</item>
+        <item>縮小 (30 fps)</item>
+        <item>完全 (60 fps)</item>
+    </string-array> 
+    
+    <string name="prefs_skip_intro_long">アプリ起動時のイントロアニメーションをスキップします</string>
+    <string name="prefs_skip_intro">イントロをスキップ</string>
+    <string name="prefs_auto_resume_long">直前のゲームを自動的に再開します</string>
+    <string name="prefs_auto_resume">自動再開</string>
+    <string name="prefs_rate_review_long">評価またはコメントを残してください</string>
+    <string name="prefs_rate_review">%1$s の Freebloks&#8230;</string>
+    <string name="prefs_donation_long">寄付をして開発をサポートしてください</string>
+    <string name="prefs_donation">Freebloks をサポート&#8230;</string>
+    <string name="prefs_donate">寄付</string>
+    <string name="prefs_player_name">プレイヤー名</string>
+    <string name="prefs_player_name_default">[デフォルト]</string>
+    <string name="prefs_theme">背景</string>
+    <string name="prefs_statistics">状態</string>
+    <string name="prefs_statistics_long">ゲームの状態を表示します</string>
+</resources>
