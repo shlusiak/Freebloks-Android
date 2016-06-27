@@ -21,7 +21,9 @@
 
     <string name="waiting_for_color">Ожидание %1$s</string>
     <string name="color_is_out_of_moves">У %1$s кончились ходы</string>
-    <string name="player_status_moves">%1$d ходов</string>
+    <plurals name="player_status_moves">
+        <item quantity="other">%1$d ходов</item>
+    </plurals>
     <string name="touch_to_skip">нажмите чтобы продолжить</string>
     <string name="no_player">нет игрока</string>
     <string name="not_connected">нет подключения</string>
@@ -57,7 +59,9 @@
     <string name="googleplus_achievements_long">Показать заработанные достижения</string>
 
     <string name="lobby_waiting_for_players">Ожидание хода игроков</string>
-    <string name="connected_clients">%1$d игрок</string>
+    <plurals name="connected_clients">
+        <item quantity="other">%1$d игрок</item>
+    </plurals>
     <string name="chat">Чат</string>
     <string name="join_server_address">Сервер:</string>
     <string name="join_player_name">Ваше имя:</string>

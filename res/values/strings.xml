@@ -22,7 +22,10 @@
 
     <string name="waiting_for_color">Waiting for %1$s</string>
     <string name="color_is_out_of_moves">%1$s is out of moves</string>
-    <string name="player_status_moves">%1$d moves</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d move</item>
+        <item quantity="other">%1$d moves</item>
+    </plurals>
     <string name="touch_to_skip">touch to skip</string>
     <string name="no_player">no player</string>
     <string name="not_connected">not connected</string>
@@ -58,7 +61,10 @@
     <string name="googleplus_achievements_long">Show earned achievements</string>
 
     <string name="lobby_waiting_for_players">Waiting for players</string>
-    <string name="connected_clients">%1$d clients</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d client</item>
+        <item quantity="other">%1$d clients</item>
+    </plurals>
     <string name="chat">Chat</string>
     <string name="join_server_address">Server:</string>
     <string name="join_player_name">Your name:</string>
