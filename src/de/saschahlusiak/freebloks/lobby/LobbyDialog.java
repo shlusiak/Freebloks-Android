@@ -285,7 +285,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 				findViewById(R.id.clients).setVisibility(View.INVISIBLE);
 			} else {
 				findViewById(R.id.clients).setVisibility(View.VISIBLE);
-				((TextView)findViewById(R.id.clients)).setText(getContext().getString(R.string.connected_clients, lastStatus.clients));
+				((TextView)findViewById(R.id.clients)).setText(getContext().getResources().getQuantityString(R.plurals.connected_clients, lastStatus.clients, lastStatus.clients));
 			}
 		}
 		

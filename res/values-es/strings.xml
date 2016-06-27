@@ -20,7 +20,10 @@
     <string name="disconnect_error">Conexión cerrada: %1$s. Ahora estás desconectado.</string>
     <string name="waiting_for_color">Esperando a %1$s</string>
     <string name="color_is_out_of_moves">%1$s no tiene más turnos</string>
-    <string name="player_status_moves">%1$d turnos</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d turno</item>
+        <item quantity="other">%1$d turnos</item>
+    </plurals>
     <string name="touch_to_skip">toca para omitir</string>
     <string name="no_player">ningún jugador</string>
     <string name="not_connected">desconectado</string>
@@ -31,7 +34,10 @@
     <string name="sound_on">Sonidos activados</string>
     <string name="sound_off">Sonidos desactivados</string>
     <string name="lobby_waiting_for_players">Esperando a los jugadores</string>
-    <string name="connected_clients">%1$d clientes</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d cliente</item>
+        <item quantity="other">%1$d clientes</item>
+    </plurals>
     <string name="chat">Chatear</string>
     <string name="join_server_address">Servidor:</string>
     <string name="join_player_name">Tu nombre:</string>

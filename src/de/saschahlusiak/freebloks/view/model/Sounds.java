@@ -21,7 +21,7 @@ public class Sounds extends SoundPool {
 	public int SOUND_PLAYER_OUT;
 	public int SOUND_CHAT;
 
-	public Sounds(Context context) {
+	public Sounds(final Context context) {
 		super(10, AudioManager.STREAM_MUSIC, 0);
 		enabled = true;
 
