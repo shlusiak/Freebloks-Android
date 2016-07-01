@@ -12,7 +12,7 @@
     <string name="main_menu">Menu principal</string>
     <string name="about">À propos&#8230;</string>
     <string name="about_freebloks">À propos de Freebloks&#8230;</string>
-    <string name="special_thanks_to">Remerciements à</string>
+    <string name="special_thanks_to">Remerciements à&#160;:</string>
     <string name="connecting">Connection en cours&#8230;</string>
     <string name="connection_refused">Connexion refusée</string>
     <string name="could_not_restore_game">Impossible de récupérer la partie</string>
@@ -192,6 +192,6 @@
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_theme">Fond d\'écran </string>
-    <string name="prefs_statistics">Statistics</string>
-    <string name="prefs_statistics_long">Show game statistics</string>
+    <string name="prefs_statistics">Statistiques</string>
+    <string name="prefs_statistics_long">Afficher les statistiques de parties</string>
 </resources>
