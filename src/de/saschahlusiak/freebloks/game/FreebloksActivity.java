@@ -1561,7 +1561,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		if (intent.getAction().equals(Intent.ACTION_DELETE)) {
+		if (Intent.ACTION_DELETE.equals(intent.getAction())) {
 			Log.d(tag, "ACTION_DELETE");
 			finish();
 			return;
