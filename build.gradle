@@ -25,8 +25,8 @@ android {
     defaultConfig {
         applicationId "de.saschahlusiak.freebloks"
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
