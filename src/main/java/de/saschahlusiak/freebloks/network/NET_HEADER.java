@@ -56,6 +56,7 @@ public class NET_HEADER implements Serializable {
 		if (!block && (is.available() < HEADER_SIZE))
 			return false;
 
+		// FIXME: handle -1 return value
 		r = is.read(buffer, 0, HEADER_SIZE);
 		if (r < HEADER_SIZE)
 			throw new IOException("read error");

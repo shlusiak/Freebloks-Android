@@ -16,27 +16,39 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.google.android.gms:play-services-games:9.0.2'
-    compile 'com.google.android.gms:play-services-plus:9.0.2'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.google.android.gms:play-services-games:10.0.1'
+    compile 'com.google.android.gms:play-services-plus:10.0.1'
 }
 
 android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
     defaultConfig {
-        applicationId "de.saschahlusiak.freebloks"
+        minSdkVersion 9
+        targetSdkVersion 25
+
+        versionCode 69
+        versionName "0.5.4"
     }
-    compileSdkVersion 24
-    buildToolsVersion "25.0.0"
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
+    productFlavors {
+        standard {
+            applicationId 'de.saschahlusiak.freebloks'
+        }
+        vip {
+            applicationId 'de.saschahlusiak.freebloksvip'
+        }
+    }
+    externalNativeBuild {
+         ndkBuild {
+            path "jni/Android.mk"
+         }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     lintOptions {
