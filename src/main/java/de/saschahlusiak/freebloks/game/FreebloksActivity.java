@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
+import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -1332,7 +1333,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void onDisconnected(Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
-		final Exception error = spielthread == null ? null : spielthread.getError();
+		final Exception error = (spielthread == null) ? null : spielthread.getError();
 		
 		runOnUiThread(new Runnable() {
 			@Override
@@ -1577,6 +1578,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void onSignInSucceeded() {
-
+		if (Global.IS_VIP) {
+			Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_vip));
+		}
 	}
 }

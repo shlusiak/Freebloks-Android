@@ -29,7 +29,7 @@
         android:killAfterRestore="true" >
 
         <meta-data android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIR_4yQhng55BwxHabL4lnZTsSeT7G8uIACcuntQ" />
+            android:value="@string/android_backup_key" />
 
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
