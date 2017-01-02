@@ -56,7 +56,6 @@ public class NET_HEADER implements Serializable {
 		if (!block && (is.available() < HEADER_SIZE))
 			return false;
 
-		// FIXME: handle -1 return value
 		r = is.read(buffer, 0, HEADER_SIZE);
 		if (r < HEADER_SIZE)
 			throw new IOException("read error");
@@ -81,8 +80,11 @@ public class NET_HEADER implements Serializable {
 		buffer = new byte[data_length];
 
 		r = is.read(buffer);
+		if (r == -1)
+			throw new IOException("EOF when reading packet payload");
+
 		if (r < data_length)
-			throw new ProtocolException("short read for package payload, got " + r + " out of " + data_length + " bytes");
+			throw new ProtocolException("short read for package payload, got " + r + " out of " + data_length + " bytes (type " + msg_type + ")");
 
 		return true;
 
