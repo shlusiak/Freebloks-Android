@@ -63,7 +63,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:textStyle="bold"
-            android:text="Copyright (c) Sascha Hlusiak, 2012-2016."
+            android:text="@string/copyright_string"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
