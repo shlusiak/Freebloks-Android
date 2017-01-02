@@ -8,6 +8,7 @@ import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 import com.google.android.gms.games.Games;
 
+import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import android.app.backup.BackupManager;
@@ -71,7 +72,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				String url;
-				if (Global.IS_AMAZON)
+				if (BuildConfig.IS_AMAZON)
 					url = Global.getMarketURLString(getPackageName());
 				else
 					url = "market://details?id=" + getApplication().getPackageName();
@@ -80,7 +81,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 				return true;
 			}
 		});
-		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
+		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, BuildConfig.IS_AMAZON ? "Amazon App Store" : "Google Play"));
 
 		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (avail != ConnectionResult.SUCCESS) {

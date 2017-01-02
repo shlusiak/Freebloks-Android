@@ -23,12 +23,9 @@ public class Global {
 	/* the default server address: blokus.saschahlusiak.de */
 	public static final String DEFAULT_SERVER_ADDRESS = "blokus.saschahlusiak.de";
 
-	/* set to true for Amazon export */
-	public final static boolean IS_AMAZON = false;
-
 
 	public static String getMarketURLString(String packageName) {
-		if (IS_AMAZON)
+		if (BuildConfig.IS_AMAZON)
 			return "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
 		else
 			return "https://play.google.com/store/apps/details?id=" + packageName;

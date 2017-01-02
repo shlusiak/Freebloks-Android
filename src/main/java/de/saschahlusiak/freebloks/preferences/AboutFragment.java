@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceClickListener;
+import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 
@@ -19,7 +20,7 @@ public class AboutFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.preferences_about);
 
-		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, Global.IS_AMAZON ? "Amazon App Store" : "Google Play"));
+		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, BuildConfig.IS_AMAZON ? "Amazon App Store" : "Google Play"));
     }
 
     @Override
@@ -28,7 +29,7 @@ public class AboutFragment extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				String url;
-				if (Global.IS_AMAZON)
+				if (BuildConfig.IS_AMAZON)
 					url = Global.getMarketURLString(getActivity().getPackageName());
 				else
 					url = "market://details?id=" + getActivity().getApplication().getPackageName();

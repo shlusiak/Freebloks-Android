@@ -31,12 +31,23 @@ android {
         versionCode 69
         versionName "0.5.4"
     }
+    flavorDimensions 'app', 'store'
     productFlavors {
         standard {
+            dimension 'app'
             applicationId 'de.saschahlusiak.freebloks'
         }
         vip {
+            dimension 'app'
             applicationId 'de.saschahlusiak.freebloksvip'
+        }
+        Google {
+            dimension 'store'
+            buildConfigField 'boolean', 'IS_AMAZON', 'false'
+        }
+        Amazon {
+            dimension 'store'
+            buildConfigField 'boolean', 'IS_AMAZON', 'true'
         }
     }
     externalNativeBuild {
