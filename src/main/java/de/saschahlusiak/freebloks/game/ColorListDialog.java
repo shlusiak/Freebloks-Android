@@ -115,9 +115,9 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = super.getView(position, convertView, parent);
 			View c = v.findViewById(R.id.color);
-			
-			
+
 			LayerDrawable ld = (LayerDrawable)getContext().getResources().getDrawable(R.drawable.bg_card_1);
+			ld.mutate();
 			GradientDrawable item;
 			
 			item = ((GradientDrawable)ld.findDrawableByLayerId(R.id.shadow));

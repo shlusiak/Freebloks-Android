@@ -215,9 +215,9 @@ public class GameFinishActivity extends BaseGameActivity {
 		LayerDrawable l;
 
 		if (data.player2 >= 0)
-			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_2);
+			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_2).mutate();
 		else
-			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1);
+			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1).mutate();
 
 		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		if (data.player2 >= 0) {

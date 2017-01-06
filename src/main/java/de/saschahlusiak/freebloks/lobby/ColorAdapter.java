@@ -102,7 +102,7 @@ public class ColorAdapter extends BaseAdapter {
 
 		TextView t;
 
-		LayerDrawable ld = (LayerDrawable)context.getResources().getDrawable(R.drawable.bg_card_1);
+		LayerDrawable ld = (LayerDrawable)context.getResources().getDrawable(R.drawable.bg_card_1).mutate();
 		GradientDrawable background = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
 		v.setBackgroundDrawable(ld);
 
