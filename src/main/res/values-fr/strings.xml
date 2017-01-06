@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Freebloks</string>
+
+    <string name="new_local_game">Nouvelle partie</string>
+    <string name="resume">Reprendre</string>
+    <string name="join_game">Rejoindre </string>
+    <string name="host_game">Hôte</string>
+    <string name="preferences">Préférences</string>
+    <string name="hint">Indice</string>
+    <string name="undo">Annuler</string>
+    <string name="main_menu">Menu principal</string>
+    <string name="about">À propos&#8230;</string>
+    <string name="about_freebloks">À propos de Freebloks&#8230;</string>
+    <string name="special_thanks_to">Remerciements à&#160;:</string>
+    <string name="connecting">Connection en cours&#8230;</string>
+    <string name="connection_refused">Connexion refusée</string>
+    <string name="could_not_restore_game">Impossible de récupérer la partie</string>
+    <string name="do_you_want_to_leave_current_game">Êtes-vous sûr de vouloir quitter la partie en cours&#160;?</string>
+    <string name="disconnect_error">Connexion fermée&#160;: %1$s. Vous êtes maintenant déconnecté.</string>
+    <string name="default_server">Défaut</string>
+
+    <string name="waiting_for_color">En attente de %1$s</string>
+    <string name="color_is_out_of_moves">%1$s n\'a plus de tours</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d tour</item>
+        <item quantity="other">%1$d tours</item>
+    </plurals>
+    <string name="touch_to_skip">Toucher pour passer</string>
+    <string name="no_player">aucun joueur</string>
+    <string name="not_connected">non connecté</string>
+    <string name="your_turn">À vous de jouer, %1$s&#160;!</string>
+    <string name="difficulty">Difficulté</string>
+    <string name="start">Commencer</string>
+    <string name="custom_game_title">Jeu personnalisé</string>
+    <string name="sound_on">Effets sonores activés</string>
+    <string name="sound_off">Effets sonores désactivés</string>
+
+    <string name="statistics">Statistiques</string>
+    <string name="clear_statistics">Rémettre à zéro</string>
+    <string-array name="statistics_labels">
+        <item>Parties jouées</item>
+        <item>Bonnes parties (+15)</item>
+        <item>Parties parfaites (+20)</item>
+        <item>1re place</item>
+        <item>2e place</item>
+        <item>3e place</item>
+        <item>4e place</item>
+        <item>Pièces jouées</item>
+        <item>Total des points</item>
+    </string-array>
+
+    <string name="googleplus">Google+</string>
+    <string name="googleplus_signin">Se connecter</string>
+    <string name="googleplus_signin_long">Se connecter avec Google+</string>
+    <string name="googleplus_signout">Se déconnecter</string>
+    <string name="googleplus_signout_long">Se connecter avec Google+ en tant que %1$s</string>
+    <string name="googleplus_leaderboard">Meilleurs scores</string>
+    <string name="googleplus_leaderboard_long">Afficher les scores des personnes de vos cercles</string>
+    <string name="googleplus_achievements">Succès</string>
+    <string name="googleplus_achievements_long">Montrer les succès gagnés</string>
+
+    <string name="lobby_waiting_for_players">En attente de joueurs</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d client</item>
+        <item quantity="other">%1$d clients</item>
+    </plurals>
+    <string name="chat">Chat</string>
+    <string name="join_server_address">Serveur&#160;:</string>
+    <string name="join_player_name">Votre nom&#160;:</string>
+    <string name="client_d">Joueur %1$d</string>
+    <string name="player_joined_color">%1$s joue %2$s</string>
+    <string name="player_left_color">%1$s (%2$s) a abandonné</string>
+    <string name="no_addresses_found">[aucune adresse IP trouvée]</string>
+    <string name="lobby_message_hint">Tapez votre message</string>
+
+    <string name="rate_now">Oui</string>
+    <string name="rate_later">Plus tard</string>
+    <string name="rate_never">Non</string>
+    <string name="rate_freebloks_title">Classez Freebloks</string>
+    <string name="rate_freebloks_text">Si vous aimez Freebloks, voudriez-vous prendre une minute pour le noter&#160;?</string>
+    <string name="rate_freebloks_donate_link"><u>S\'il vous plaît, soutenez Freebloks</u></string>
+
+
+    <plurals name="number_of_stones_left">
+        <item quantity="one">%1$d pièce restante</item>
+        <item quantity="other">%1$d pièces restantes</item>
+    </plurals>
+    <plurals name="number_of_points">
+        <item quantity="one">%1$d point</item>
+        <item quantity="other">%1$d points</item>
+    </plurals>
+    <string-array name="places">
+        <item>1re place</item>
+        <item>2e place</item>
+        <item>3e place</item>
+        <item>4e place</item>
+    </string-array>
+    <string name="game_finished">Fin de la partie</string>
+    <string name="random_color">Couleur aléatoire</string>
+    <string-array name="color_names">
+        <item>Blanc</item>
+        <item>Bleu</item>
+        <item>Jaune</item>
+        <item>Rouge</item>
+        <item>Vert</item>
+        <item>Orange</item>
+        <item>Violet</item>
+    </string-array>
+    <string-array name="difficulties">
+        <item>dingue</item>
+        <item>difficile</item>
+        <item>moyen</item>
+        <item>facile</item>
+        <item>très facile</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 joueurs, 2 couleurs</item>
+        <item>2 joueurs, 4 couleurs</item>
+        <item>Blokus Classique</item>
+        <item>Blokus Duo</item>
+        <item>Blokus Junior</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
+
+    <string name="please_donate">Soutenez les développeurs</string>
+    <string name="donation_text_long">Freebloks est un logiciel gratuit. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!\n\ Mais cela ne signifie qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels gratuits.</string>
+    <string name="donation_text_short">Combien Freebloks vaut-il pour vous&#160;?</string>
+    <string name="donation_nothing">Rien</string>
+    <string name="donation_next">Suivant</string>
+    <string name="donation_freebloksvip">Freebloks VIP</string>
+
+    <string-array name="theme_labels">
+        <item>Noir</item>
+        <item>Bleu</item>
+        <item>Tissu fleuri</item>
+        <item>Tissu rayé</item>
+        <item>Bois</item>
+        <item>Briques</item>
+        <item>Métal</item>
+        <item>Velours</item>
+        <item>Tapis</item>
+        <item>Pelouse</item>
+    </string-array>
+
+    <string name="notification_continue">Continuer</string>
+    <string name="notification_disconnect">Déconnecter</string>
+
+    <string name="prefs_interface">Interface</string>
+    <string name="prefs_display">Affichage</string>
+    <string name="prefs_misc">Divers</string>
+    <string name="prefs_sounds_long">Activer les effets sonores</string>
+    <string name="prefs_sounds">Effets sonores</string>
+    <string name="prefs_vibrate_long">Vibrer lors du déplacement des pièces</string>
+    <string name="prefs_vibrate">Vibrer</string>
+    <string name="prefs_notifications_long">Montrer les notifications dans les parties multi-joueurs</string>
+    <string name="prefs_notifications">Notifications</string>
+    <string name="prefs_snap_to_corners_long">Aide en aimantant les pièces auprès des positions valides</string>
+    <string name="prefs_snap_to_corners">Aimanter les coins des pièces</string>
+    <string name="prefs_undo_long">Annuler le dernier tour avec le bouton retour</string>
+    <string name="prefs_undo">Annuler avec retour</string>
+    <string name="prefs_immersive_long">Cacher la barre de navigation</string>
+    <string name="prefs_immersive">Plein écran</string>
+    <string name="prefs_show_corners_long">Montrer les coins jouables</string>
+    <string name="prefs_show_corners">Coins</string>
+    <string name="prefs_show_opponents_long">Montrer les pièces des adversaires</string>
+    <string name="prefs_show_opponents">Pièces adverses</string>
+    <string name="prefs_show_animations">Animations</string>
+
+    <string-array name="prefs_animations_labels">
+        <item>Aucune</item>
+        <item>Ralenties (30 fps)</item>
+        <item>Complètes (60 fps)</item>
+    </string-array>
+
+    <string name="prefs_skip_intro_long">Omettre l\'intro animée</string>
+    <string name="prefs_skip_intro">Omettre l\'intro</string>
+    <string name="prefs_auto_resume_long">Reprendre automatiquement la dernière partie</string>
+    <string name="prefs_auto_resume">Reprise automatique</string>
+    <string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
+    <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
+    <string name="prefs_donation_long">Veuillez soutenir le développement par un don</string>
+    <string name="prefs_donation">Soutenez Freebloks&#8230;</string>
+    <string name="prefs_donate">Faire un don</string>
+    <string name="prefs_player_name">Nom du joueur</string>
+    <string name="prefs_player_name_default">[par défaut]</string>
+    <string name="prefs_theme">Fond d\'écran </string>
+    <string name="prefs_statistics">Statistiques</string>
+    <string name="prefs_statistics_long">Afficher les statistiques de parties</string>
+</resources>

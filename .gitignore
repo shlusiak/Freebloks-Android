@@ -10,5 +10,6 @@
 .idea/
 *.iml
 build/
+.externalNativeBuild/
 
 local.properties

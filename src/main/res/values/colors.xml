@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chat_button_color">#B0505050</color>
+    <color name="chat_button_color_pressed">#FFEF8F3F</color>
+
+    <color name="mylocation_button_color">#B0505050</color>
+    <color name="mylocation_button_color_pressed">#FF4090DF</color>
+
+    <color name="theme_background_black">#000000</color>
+    <color name="theme_background_blue">#0D1A40</color>
+
+    <!-- Background color for player status / lobby -->
+    <color name="player_background_white">#5C5C5C</color>
+    <color name="player_background_blue">#00007F</color>
+    <color name="player_background_yellow">#8C8C00</color>
+    <color name="player_background_red">#600000</color>
+    <color name="player_background_green">#006000</color>
+    <color name="player_background_orange">#AA6018</color>
+    <color name="player_background_purple">#60008C</color>
+
+    <!-- Foreground color for player text in lobby chat -->
+    <color name="player_foreground_white">#FFFFFF</color>
+    <color name="player_foreground_blue">#2050ff</color>
+    <color name="player_foreground_yellow">#e6e600</color>
+    <color name="player_foreground_red">#ff0000</color>
+    <color name="player_foreground_green">#00e600</color>
+    <color name="player_foreground_orange">#ff8c5c</color>
+    <color name="player_foreground_purple">#b440ff</color>
+
+</resources>
