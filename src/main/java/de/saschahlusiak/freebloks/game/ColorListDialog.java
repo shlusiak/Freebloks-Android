@@ -29,7 +29,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-		setContentView(LayoutInflater.from(context).inflate(R.layout.color_list_dialog, null));
+		setContentView(R.layout.color_list_dialog);
 
 		this.listener = listener;
 		gameMode = (Spinner)findViewById(R.id.game_mode);
@@ -121,10 +121,12 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			GradientDrawable item;
 			
 			item = ((GradientDrawable)ld.findDrawableByLayerId(R.id.shadow));
-			item.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor((int)getItemId(position), gamemode)]);
+			int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor((int)getItemId(position), gamemode)];
+			item.setColor(getContext().getResources().getColor(res));
 
 			item = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
-			item.setColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor((int)getItemId(position), gamemode)]);
+			res = Global.PLAYER_FOREGROUND_COLOR_RESOURCE[Global.getPlayerColor((int)getItemId(position), gamemode)];
+			item.setColor(getContext().getResources().getColor(res));
 //			c.setBackgroundColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor((int)getItemId(position), gamemode)]);
 			
 			c.setBackgroundDrawable(ld);

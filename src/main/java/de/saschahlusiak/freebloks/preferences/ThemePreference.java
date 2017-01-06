@@ -24,7 +24,7 @@ public class ThemePreference extends ListPreference {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = super.getView(position, convertView, parent);
-			Theme t = Theme.get(getEntryValues()[position].toString(), true);
+			Theme t = Theme.get(getContext(), getEntryValues()[position].toString(), true);
 			if (t != null)
 				t.apply(v);
 			return v;

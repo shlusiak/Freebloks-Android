@@ -1,9 +1,11 @@
 package de.saschahlusiak.freebloks.view.model;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
 import de.saschahlusiak.freebloks.R;
 
@@ -62,6 +64,16 @@ public class Theme {
 		this.rgba[2] = b;
 	}
 
+	private void setColor(int r, int g, int b) {
+		this.rgba[0] = (float)r / 255.0f;
+		this.rgba[1] = (float)g / 255.0f;
+		this.rgba[2] = (float)b / 255.0f;
+	}
+
+	private void setColor(int color) {
+		setColor(Color.red(color), Color.green(color), Color.blue(color));
+	}
+
 	public void apply(View view) {
 		if (isDrawable)
 			view.setBackgroundDrawable(getDrawable(view.getResources()));
@@ -73,45 +85,52 @@ public class Theme {
 		return texture;
 	}
 
-	public static Theme get(String theme, boolean preview) {
+	public static Theme get(Context context, String theme, boolean preview) {
 		Theme t = new Theme();
 		t.isPreview = preview;
 
-		if (theme.equals("black")) {
-			t.setRGB(0, 0, 0);
-		} else if (theme.equals("blue")) {
-			t.setRGB(0.05f, 0.10f, 0.25f);
-		} else if (theme.equals("texture_table_cloth_1")) {
-			t.setDrawable(R.drawable.texture_table_1, R.raw.texture_table_1);
-			t.setRGB(0.8f, 0.8f, 0.8f);
-		} else if (theme.equals("texture_table_cloth_2")) {
-			t.setDrawable(R.drawable.texture_table_2, R.raw.texture_table_2);
-			t.setRGB(0.7f, 0.7f, 0.7f);
-		} else if (theme.equals("texture_wood")) {
-			t.setDrawable(R.drawable.texture_wood_fine, R.raw.texture_wood_fine);
-			t.setRGB(0.7f, 0.7f, 0.7f);
-		} else if (theme.equals("texture_metal")) {
-			t.setDrawable(R.drawable.texture_metal, R.raw.texture_metal);
-			t.setRGB(0.8f, 0.8f, 0.8f);
-		} else if (theme.equals("texture_bricks")) {
-			t.setDrawable(R.drawable.texture_bricks, R.raw.texture_bricks);
-			t.setRGB(0.85f, 0.85f, 0.85f);
-		} else if (theme.equals("texture_carpet_blue")) {
-			t.setDrawable(R.drawable.texture_carpet_blue, R.raw.texture_carpet_blue);
-			t.setRGB(0.85f, 0.85f, 0.85f);
-		} else if (theme.equals("texture_velvet")) {
-			t.setDrawable(R.drawable.texture_velvet, R.raw.texture_velvet);
-			t.setRGB(0.85f, 0.85f, 0.85f);
-		} else if (theme.equals("texture_metal")) {
-			t.setDrawable(R.drawable.texture_metal, R.raw.texture_metal);
-			t.setRGB(0.85f, 0.85f, 0.85f);
-		} else if (theme.equals("texture_grass")) {
-			t.setDrawable(R.drawable.texture_grass, R.raw.texture_grass);
-			t.setRGB(0.85f, 0.85f, 0.85f);
+		switch (theme) {
+			default:
+				Log.e("Theme", "theme not found: " + theme);
+			case "blue":
+				t.setColor(context.getResources().getColor(R.color.theme_background_blue));
+				break;
+			case "black":
+				t.setColor(context.getResources().getColor(R.color.theme_background_black));
+				break;
+			case "texture_table_cloth_1":
+				t.setDrawable(R.drawable.texture_table_1, R.raw.texture_table_1);
+				t.setRGB(0.8f, 0.8f, 0.8f);
+				break;
+			case "texture_table_cloth_2":
+				t.setDrawable(R.drawable.texture_table_2, R.raw.texture_table_2);
+				t.setRGB(0.7f, 0.7f, 0.7f);
+				break;
+			case "texture_wood":
+				t.setDrawable(R.drawable.texture_wood_fine, R.raw.texture_wood_fine);
+				t.setRGB(0.7f, 0.7f, 0.7f);
+				break;
+			case "texture_metal":
+				t.setDrawable(R.drawable.texture_metal, R.raw.texture_metal);
+				t.setRGB(0.85f, 0.85f, 0.85f);
+				break;
+			case "texture_bricks":
+				t.setDrawable(R.drawable.texture_bricks, R.raw.texture_bricks);
+				t.setRGB(0.85f, 0.85f, 0.85f);
+				break;
+			case "texture_carpet_blue":
+				t.setDrawable(R.drawable.texture_carpet_blue, R.raw.texture_carpet_blue);
+				t.setRGB(0.85f, 0.85f, 0.85f);
+				break;
+			case "texture_velvet":
+				t.setDrawable(R.drawable.texture_velvet, R.raw.texture_velvet);
+				t.setRGB(0.85f, 0.85f, 0.85f);
+				break;
+			case "texture_grass":
+				t.setDrawable(R.drawable.texture_grass, R.raw.texture_grass);
+				t.setRGB(0.85f, 0.85f, 0.85f);
+				break;
 		}
-
-
-
 
 		return t;
 	}

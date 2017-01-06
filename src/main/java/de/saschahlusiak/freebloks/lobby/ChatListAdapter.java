@@ -36,7 +36,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
 			t.setTextColor(Color.LTGRAY);
 			t.setGravity(Gravity.RIGHT);
 		} else {
-			t.setTextColor(c.getColor(gamemode));
+			t.setTextColor(c.getColor(getContext(), gamemode));
 			t.setGravity(Gravity.LEFT);
 		}
 

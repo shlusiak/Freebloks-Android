@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.lobby;
 
 import java.io.Serializable;
 
+import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import android.graphics.Color;
@@ -25,13 +26,13 @@ public class ChatEntry implements Serializable {
 		this.player = player;
 	}
 
-	int getColor(GameMode gamemode) {
+	int getColor(Context context, GameMode gamemode) {
 		final int extra_colors[] = { Color.CYAN, Color.MAGENTA, Color.LTGRAY, Color.WHITE };
 
 		if (player < 0)
 			return extra_colors[client % extra_colors.length];
 		else
-			return Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor(player, gamemode)];
+			return context.getResources().getColor(Global.PLAYER_FOREGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, gamemode)]);
 	}
 
 	@Override

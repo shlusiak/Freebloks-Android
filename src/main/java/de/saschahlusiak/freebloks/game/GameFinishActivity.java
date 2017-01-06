@@ -219,10 +219,10 @@ public class GameFinishActivity extends BaseGameActivity {
 		else
 			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1);
 
-		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		if (data.player2 >= 0) {
 			color = Global.getPlayerColor(data.player2, spiel.m_gamemode);
-			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(Global.PLAYER_BACKGROUND_COLOR[color]);
+			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		}
 
 		return l;

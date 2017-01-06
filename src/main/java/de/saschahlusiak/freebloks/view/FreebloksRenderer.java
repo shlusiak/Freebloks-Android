@@ -51,7 +51,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 
-		backgroundRenderer.setTheme(Theme.get("blue", false));
+		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
 	}
 
 	public void init(int field_size) {
@@ -100,9 +100,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		Intro intro = model.intro;
 		if (intro != null) {
-			gl.glClearColor(0.05f, 0.10f, 0.25f, 1.0f); /* the default background when textured */
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
 			intro.render(gl11, this);
 			return;
 		}

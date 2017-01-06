@@ -32,24 +32,24 @@ public class Global {
 	}
 
 
-	public static final int PLAYER_BACKGROUND_COLOR[] = {
-		Color.rgb(92, 92, 92),	/* white */
-		Color.rgb(0, 0, 128),	/* blue */
-		Color.rgb(140, 140, 0),	/* yellow */
-		Color.rgb(96, 0, 0),	/* red */
-		Color.rgb(0, 96, 0),	/* green */
-		Color.rgb(170, 96, 24),	/* orange */
-		Color.rgb(96, 0, 140)	/* purple */
+	public static final int PLAYER_BACKGROUND_COLOR_RESOURCE[] = {
+		R.color.player_background_white,
+		R.color.player_background_blue,
+		R.color.player_background_yellow,
+		R.color.player_background_red,
+		R.color.player_background_green,
+		R.color.player_background_orange,
+		R.color.player_background_purple,
 	};
 
-	public static final int PLAYER_FOREGROUND_COLOR[] = {
-		Color.rgb(255, 255, 255),	/* white */
-		Color.rgb(32, 80, 255),	/* blue */
-		Color.rgb(230, 230, 0),	/* yellow */
-		Color.rgb(255, 0, 0),	/* red */
-		Color.rgb(0, 230, 0),	/* green */
-		Color.rgb(255, 140, 92),/* orange */
-		Color.rgb(180, 64, 255),/* purple */
+	public static final int PLAYER_FOREGROUND_COLOR_RESOURCE[] = {
+		R.color.player_foreground_white,
+		R.color.player_foreground_blue,
+		R.color.player_foreground_yellow,
+		R.color.player_foreground_red,
+		R.color.player_foreground_green,
+		R.color.player_foreground_orange,
+		R.color.player_foreground_purple,
 	};
 
 	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};

@@ -286,7 +286,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 		} else {
 			if (prefs.getBoolean("show_animations", true) && ! prefs.getBoolean("skip_intro", false)) {
-				view.model.intro = new Intro(view.model, this);
+				view.model.intro = new Intro(getApplicationContext(), view.model, this);
 				newCurrentPlayer(-1);
 			} else
 				OnIntroCompleted();
@@ -438,7 +438,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		clientName = prefs.getString("player_name", null);
 		if (clientName != null && clientName.equals(""))
 			clientName = null;
-		Theme t = Theme.get(prefs.getString("theme", "texture_wood"), false);
+		Theme t = Theme.get(this, prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
 
 		updateSoundMenuEntry();
@@ -1060,16 +1060,18 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					status.setText(R.string.not_connected);
 				else if (client.spiel.isFinished()) {
 					int pl = view.model.board.getShowWheelPlayer();
+					int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(pl)];
 					Player p = client.spiel.get_player(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
-					statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(pl)]);
+					statusView.setBackgroundColor(getResources().getColor(res));
 					points.setVisibility(View.VISIBLE);
 					points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 					movesLeft.setVisibility(View.VISIBLE);
 					movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
-						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(player)]);
+						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(player)];
+						statusView.setBackgroundColor(getResources().getColor(res));
 						Player p = client.spiel.get_player(player);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
@@ -1082,7 +1084,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.m_number_of_possible_turns, p.m_number_of_possible_turns));
 						}
 					} else {
-						statusView.setBackgroundColor(Global.PLAYER_BACKGROUND_COLOR[view.model.getPlayerColor(showPlayer)]);
+						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(showPlayer)];
+						statusView.setBackgroundColor(getResources().getColor(res));
 						Player p = client.spiel.get_player(showPlayer);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));

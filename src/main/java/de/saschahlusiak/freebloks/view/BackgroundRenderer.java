@@ -84,6 +84,7 @@ public class BackgroundRenderer extends SimpleModel {
 			updateTexture(gl);
 
 		if (hasTexture)
+			// TODO: make this a resource?
 			gl.glClearColor(0.05f, 0.10f, 0.25f, 1.0f); /* the default background when textured */
 		else
 			gl.glClearColor(rgba[0], rgba[1], rgba[2], rgba[3]);

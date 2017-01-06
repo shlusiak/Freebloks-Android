@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.effects.PhysicalStoneEffect;
@@ -72,9 +74,12 @@ public class Intro implements ViewElement {
 	boolean field_up = false;
 	float field_anim = 0.0f;
 	OrientedStone stones[] = new OrientedStone[14];
+	BackgroundRenderer backgroundRenderer;
 
 
-	public Intro(ViewModel model, OnIntroCompleteListener listener) {
+	public Intro(Context context, ViewModel model, OnIntroCompleteListener listener) {
+		backgroundRenderer = new BackgroundRenderer(context.getResources());
+		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
 		setModel(model, listener);
 		init();
 	}
@@ -440,6 +445,9 @@ public class Intro implements ViewElement {
 
 	public void render(GL11 gl, FreebloksRenderer renderer) {
 		gl.glLoadIdentity();
+
+		backgroundRenderer.render(gl);
+
 		/* Kamera positionieren */
 		if (model.vertical_layout) {
 			gl.glTranslatef(0, 4.5f, 0);

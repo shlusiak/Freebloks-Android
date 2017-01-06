@@ -126,11 +126,11 @@ public class ColorAdapter extends BaseAdapter {
 			if (position == 1)
 				position = 2;
 
+		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(position, spiel.m_gamemode)]));
 		if (lastStatus.isVersion(2)) {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
-		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				if (spiel.is_local_player(position)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
@@ -155,7 +155,6 @@ public class ColorAdapter extends BaseAdapter {
 				}
 			} else {
 				/* computer player */
-				background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				background.setAlpha(96);
 				t.setText("---");
 				t.clearAnimation();
@@ -170,7 +169,6 @@ public class ColorAdapter extends BaseAdapter {
 		} else {
 			if (spiel.is_local_player(position)) {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-		        background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[position + 1]);
 
@@ -193,7 +191,6 @@ public class ColorAdapter extends BaseAdapter {
 				t.startAnimation(a);
 			} else {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				background.setColor(Global.PLAYER_BACKGROUND_COLOR[Global.getPlayerColor(position, spiel.m_gamemode)]);
 				background.setAlpha(96);
 				t.setText("---");
 				t.clearAnimation();
