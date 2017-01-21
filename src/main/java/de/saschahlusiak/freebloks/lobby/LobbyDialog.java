@@ -57,7 +57,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		
 		setContentView(R.layout.lobby_dialog);
-		
+
+		setCanceledOnTouchOutside(false);
+
 		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting_large);
 
 		/* to make sure we have enough real estate. not neccessary on xlarge displays */
@@ -110,7 +112,9 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		chatList.setAdapter(adapter);
 
 		if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		else
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 
 	@Override

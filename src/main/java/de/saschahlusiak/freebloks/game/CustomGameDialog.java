@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import android.view.WindowManager;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -51,6 +52,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		this.listener = listener;
 
 		setContentView(R.layout.game_menu_new_custom_game);
+
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 		difficulty = (SeekBar)findViewById(R.id.difficulty);
 		difficulty_label = (TextView)findViewById(R.id.difficulty_label);
