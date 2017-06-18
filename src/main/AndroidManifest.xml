@@ -22,6 +22,7 @@
     <application
         android:icon="@drawable/appicon_small"
         android:label="@string/app_name"
+        android:isGame="true"
         android:allowBackup="true">
 
         <meta-data android:name="android.max_aspect" android:value="3.0" />
