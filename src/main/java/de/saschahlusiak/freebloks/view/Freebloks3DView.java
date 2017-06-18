@@ -167,6 +167,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void newCurrentPlayer(int player) {
+		if (model == null)
+			return;
+
 		if (model.spiel.is_local_player() || model.wheel.getCurrentPlayer() != model.board.getShowWheelPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 		requestRender();
@@ -174,6 +177,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
+		if (model == null)
+			return;
+
 		if (model.hasAnimations() && !model.spiel.is_local_player(s.player)) {
 			Turn turn = s.toTurn();
 			StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
@@ -186,6 +192,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	public void stoneHasBeenSet(NET_SET_STONE s) {
+		if (model == null)
+			return;
+
 		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getCurrentPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 
