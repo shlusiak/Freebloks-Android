@@ -1143,8 +1143,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
 						if (view != null) {
+							Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
+
 							if (view.model.soundPool != null)
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.hasAnimations()) {
