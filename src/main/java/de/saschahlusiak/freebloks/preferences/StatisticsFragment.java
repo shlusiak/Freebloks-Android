@@ -97,6 +97,8 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 
 	@Override
 	public void onSignInFailed() {
+		if (!isVisible())
+			return;
 		if (findPreference("googleplus_category") == null)
 			return;
 
@@ -108,6 +110,8 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 
 	@Override
 	public void onSignInSucceeded() {
+    	if (!isVisible())
+    		return;
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signout);
 		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, Games.Players.getCurrentPlayer(mHelper.getApiClient()).getDisplayName()));
 		findPreference("googleplus_leaderboard").setEnabled(true);
