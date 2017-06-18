@@ -597,8 +597,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	private void saveGameState(final String filename) {
 		final Parcel p = Parcel.obtain();
 		Bundle b = new Bundle();
-		writeStateToBundle(b);
-		p.writeBundle(b);
+		synchronized (client) {
+			writeStateToBundle(b);
+			p.writeBundle(b);
+		}
 		new Thread() {
 			public void run() {
 				try {
