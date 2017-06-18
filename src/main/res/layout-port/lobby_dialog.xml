@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp" xmlns:tools="http://schemas.android.com/tools">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="8dp" xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
 	    android:orientation="horizontal"
@@ -74,7 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true"
+        android:gravity="bottom" >
 
 	    <EditText
 	        android:id="@+id/chatText"
@@ -89,11 +90,15 @@
 	        <requestFocus />
 	    </EditText>
 
-  		<ImageButton
-	        android:id="@+id/chatButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:src="@android:drawable/ic_menu_send" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/chatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@android:drawable/ic_menu_send"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/send_button_color"
+            app:fab_colorPressed="@color/send_button_color_pressed" />
 
     </LinearLayout>
 </RelativeLayout>

@@ -6,13 +6,15 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
@@ -47,6 +49,8 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	GridView colorGrid;
 	ColorAdapter colorAdapter;
 	Spinner gameMode, fieldSize;
+	FloatingActionButton chatButton;
+	EditText chatText;
 
 	public LobbyDialog(Context context, OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
 		super(context);
@@ -84,26 +88,46 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		fieldSize.setEnabled(false);
 		fieldSize.setOnItemSelectedListener(this);
 
+
 		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				LobbyDialog.this.client.request_start();
 			}
 		});
-		findViewById(R.id.chatButton).setOnClickListener(new View.OnClickListener() {
+		chatButton = (FloatingActionButton) findViewById(R.id.chatButton);
+		chatButton.setEnabled(false);
+		chatButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sendChat();
+				sendChat(chatText.getText().toString());
 			}
 		});
 		((EditText)findViewById(R.id.chatText)).setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_NULL) {
-					sendChat();
+					sendChat(chatText.getText().toString());
 					return true;
 				}
 				return false;
+			}
+		});
+		chatText = (EditText)findViewById(R.id.chatText);
+		chatText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				chatButton.setEnabled(s.length() > 0);
 			}
 		});
 
@@ -201,15 +225,13 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		adapter.notifyDataSetChanged();
 	}
 
-	void sendChat() {
-		EditText edit = (EditText)findViewById(R.id.chatText);
-		String s = edit.getText().toString();
-		if (s.length() < 1)
+	void sendChat(String text) {
+		if (text.length() < 1)
 			return;
 
-		NET_CHAT chat = new NET_CHAT(s + "\n");
+		NET_CHAT chat = new NET_CHAT(text + "\n");
 		LobbyDialog.this.client.send(chat);
-		edit.setText("");
+		chatText.setText("");
 	}
 
 	@Override

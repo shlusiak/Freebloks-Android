@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp" >
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="8dp">
 
     <LinearLayout
 	    android:orientation="horizontal"
@@ -49,7 +49,7 @@
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chatButton"
+        android:layout_above="@+id/chatLayout"
         android:layout_below="@+id/spinner_layout"
         android:layout_toLeftOf="@+id/color_grid"
         android:layout_alignParentLeft="true"
@@ -59,29 +59,40 @@
         android:transcriptMode="normal" >
     </ListView>
 
-    <EditText
-        android:id="@+id/chatText"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/chatButton"
-        android:imeOptions="actionSend|flagNoExtractUi"
-        android:inputType="textNoSuggestions|textCapSentences"
-        android:singleLine="true"
-	    android:hint="@string/lobby_message_hint" >
-
-        <requestFocus />
-    </EditText>
-
-    <ImageButton
-        android:id="@+id/chatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/chatText"
-        android:layout_alignBottom="@+id/chatText"
         android:layout_alignRight="@+id/chatList"
-        android:src="@android:drawable/ic_menu_send" />
+        android:layout_alignLeft="@+id/chatList"
+        android:id="@+id/chatLayout"
+        android:gravity="bottom">
+
+        <EditText
+            android:id="@+id/chatText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSend|flagNoExtractUi"
+            android:inputType="textNoSuggestions|textCapSentences"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:hint="@string/lobby_message_hint" >
+
+            <requestFocus />
+        </EditText>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/chatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:src="@android:drawable/ic_menu_send"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/send_button_color"
+            app:fab_colorPressed="@color/send_button_color_pressed" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/startButton"
