@@ -18,7 +18,7 @@
 	    android:smallScreens="true"
 	    android:normalScreens="true"
 	    android:largeScreens="true"
-	    android:xlargeScreens="true" />
+	    android:xlargeScreens="true"/>
 
     <application
         android:icon="@drawable/appicon_small"
@@ -27,6 +27,8 @@
         android:restoreAnyVersion="true"
         android:allowBackup="true"
         android:killAfterRestore="true" >
+
+        <meta-data android:name="android.max_aspect" android:value="3.0" />
 
         <meta-data android:name="com.google.android.backup.api_key"
             android:value="@string/android_backup_key" />
