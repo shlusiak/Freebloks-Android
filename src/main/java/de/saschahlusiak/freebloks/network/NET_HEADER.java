@@ -78,13 +78,15 @@ public class NET_HEADER implements Serializable {
 		data_length -= HEADER_SIZE;
 
 		buffer = new byte[data_length];
+		int offset = 0;
 
-		r = is.read(buffer);
-		if (r == -1)
-			throw new IOException("EOF when reading packet payload");
+		do {
+			r = is.read(buffer, offset, data_length - offset);
+			if (r == -1)
+				throw new IOException("EOF when reading packet payload");
 
-		if (r < data_length)
-			throw new ProtocolException("short read for package payload, got " + r + " out of " + data_length + " bytes (type " + msg_type + ")");
+			offset += r;
+		} while (offset < data_length);
 
 		return true;
 
