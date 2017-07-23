@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="titleDivider" parent="android:TextAppearance">
-        <item name="android:background">?android:attr/colorActivatedHighlight</item>
-        <item name="android:layout_height">2dip</item>
-        <item name="android:layout_width">fill_parent</item>
-    </style>
-</resources>

@@ -1,13 +1,11 @@
 package de.saschahlusiak.freebloks.preferences;
 
-import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.ViewConfiguration;
 import de.saschahlusiak.freebloks.R;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class InterfaceFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {

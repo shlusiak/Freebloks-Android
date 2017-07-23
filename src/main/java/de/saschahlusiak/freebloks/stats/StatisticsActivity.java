@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.stats;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -75,7 +74,7 @@ public class StatisticsActivity extends BaseGameActivity {
 		game_mode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		refreshData();
 
-		if (Build.VERSION.SDK_INT < 11 || getActionBar() == null) {
+		if (getActionBar() == null) {
 			((Spinner)findViewById(R.id.game_mode)).setSelection(game_mode.ordinal());
 			((Spinner)findViewById(R.id.game_mode)).setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -204,15 +203,13 @@ public class StatisticsActivity extends BaseGameActivity {
 			return;
 
 		findViewById(R.id.signin).setVisibility(View.VISIBLE);
-		if (Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu();
+		invalidateOptionsMenu();
 	}
 
 	@Override
 	public void onSignInSucceeded() {
 		findViewById(R.id.signin).setVisibility(View.GONE);
-		if (Build.VERSION.SDK_INT >= 11)
-			invalidateOptionsMenu();
+		invalidateOptionsMenu();
 
 		if (db == null)
 			return;

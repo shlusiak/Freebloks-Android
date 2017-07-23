@@ -21,10 +21,8 @@ public class DonateActivity extends Activity {
 	    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	    setContentView(R.layout.donate_activity);
 	    
-		if (Build.VERSION.SDK_INT >= 11) {
-			if (getActionBar() != null)
-				getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		if (getActionBar() != null)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		((RadioButton)findViewById(R.id.donation_freebloksvip)).setChecked(true);
 

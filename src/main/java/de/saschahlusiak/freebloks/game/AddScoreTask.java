@@ -1,9 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
-import android.app.backup.BackupManager;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
@@ -37,11 +35,6 @@ public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 				}
 
 			db.close();
-
-			if (Build.VERSION.SDK_INT >= 8) {
-				BackupManager backupManager = new BackupManager(context);
-				backupManager.dataChanged();
-			}
 		}
 		return null;
 	}

@@ -42,7 +42,6 @@ import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -131,12 +130,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	SharedPreferences prefs;
 
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(tag, "onCreate");
 
-		if (Build.VERSION.SDK_INT >= 11 && BuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				 .detectCustomSlowCalls()
 				 .detectNetwork()
@@ -153,18 +151,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
 
-		hasActionBar = false;
-		/* by default, don't show title bar */
-		if (Build.VERSION.SDK_INT >= 11) {
-			/* all honeycomb tablets had no menu button; leave action bar visible */
-			hasActionBar = true;
-			if (Build.VERSION.SDK_INT >= 14) {
-				/* tablets/phone with ICS may or may not have physical buttons. Show action bar if mising */
-				ViewConfiguration viewConfig = ViewConfiguration.get(this);
-				/* we need the action bar if we don't have a menu key */
-				hasActionBar = !viewConfig.hasPermanentMenuKey();
-			}
-		}
+
+		/* tablets/phone with ICS may or may not have physical buttons. Show action bar if mising */
+		ViewConfiguration viewConfig = ViewConfiguration.get(this);
+		/* we need the action bar if we don't have a menu key */
+		hasActionBar = !viewConfig.hasPermanentMenuKey();
 
 		if (!hasActionBar)
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -188,16 +179,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 		
 		if (hasActionBar) {
-			if (Build.VERSION.SDK_INT >= 14) {
-				getActionBar().setHomeButtonEnabled(true);
-				getActionBar().setDisplayHomeAsUpEnabled(true);
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				} else {
-					getActionBar().setIcon(android.R.drawable.ic_dialog_dialer);
-				}
-			} else
-				getActionBar().setDisplayShowHomeEnabled(true);
-				
+			getActionBar().setHomeButtonEnabled(true);
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			} else {
+				getActionBar().setIcon(android.R.drawable.ic_dialog_dialer);
+			}
+
 //			getActionBar().setDisplayShowHomeEnabled(true);
 //			getActionBar().setDisplayUseLogoEnabled(false);
 //			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
@@ -1457,7 +1445,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	Notification.Builder notificationBuilder;
 
-	@TargetApi(11)
 	void updateMultiplayerNotification(boolean forceShow, String chat) {
 		if (client == null || client.spiel == null)
 			return;
@@ -1466,8 +1453,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (multiplayerNotification == null && !forceShow)
 			return;
 		if (!show_notifications)
-			return;
-		if (Build.VERSION.SDK_INT < 11)
 			return;
 		if (spielthread == null)
 			return;

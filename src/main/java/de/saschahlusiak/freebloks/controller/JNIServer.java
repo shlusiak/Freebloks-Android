@@ -27,6 +27,8 @@ public class JNIServer {
 	public static void runServer(Spielleiter spiel, int game_mode, int field_size, int ki_mode) {
 		int ki_threads = get_number_of_processors();
 
+		Log.d(tag, "spawning server with " + ki_threads + " threads");
+
 		if (spiel == null)
 			native_run_server(game_mode, field_size, field_size, ki_mode, ki_threads);
 		else {

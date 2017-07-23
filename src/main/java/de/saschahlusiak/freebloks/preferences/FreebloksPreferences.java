@@ -11,7 +11,6 @@ import com.google.android.gms.games.Games;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -37,10 +36,8 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (Build.VERSION.SDK_INT >= 11) {
-			if (getActionBar() != null)
-				getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		if (getActionBar() != null)
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		if (savedInstanceState != null) {
 			hasHeaders = savedInstanceState.getBoolean("hasHeaders");
@@ -64,10 +61,6 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			((PreferenceGroup)findPreference("interface_category")).removePreference(p);
 		}
 		
-		if (Build.VERSION.SDK_INT < 11) {
-			((PreferenceGroup)findPreference("misc_category")).removePreference(findPreference("notifications"));
-		}
-
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -138,15 +131,6 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean("hasHeaders", hasHeaders);
 		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onDestroy() {
-		if (Build.VERSION.SDK_INT >= 8) {
-			BackupManager backupManager = new BackupManager(this);
-			backupManager.dataChanged();
-		}
-		super.onDestroy();
 	}
 
 	@Override

@@ -1,15 +1,12 @@
 package de.saschahlusiak.freebloks.preferences;
 
-import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import de.saschahlusiak.freebloks.R;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MiscFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
     @Override
