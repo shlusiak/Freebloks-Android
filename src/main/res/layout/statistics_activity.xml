@@ -19,6 +19,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+	    <com.google.android.gms.common.SignInButton
+	        android:id="@+id/signin"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5" />
+
 	    <Button
 	        android:id="@+id/ok"
 	        android:layout_width="0dp"
@@ -26,12 +32,7 @@
 	        android:layout_weight="0.5"
 	        style="@style/Widget.Light.Button.Borderless"
 	        android:text="@android:string/ok" />
-	    
-	    <com.google.android.gms.common.SignInButton
-	        android:id="@+id/signin"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5" />
+
 	</LinearLayout>
 
     <ListView

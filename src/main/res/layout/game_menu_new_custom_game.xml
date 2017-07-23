@@ -1,194 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp" >
+        android:padding="@dimen/dialog_padding">
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-   	        android:minWidth="280dp"
-	        android:id="@+id/server_address_layout" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dialog_button_margin"
+            android:minWidth="280dp"
+            android:id="@+id/server_address_layout">
 
-		    <TextView
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.4"
-		        android:text="@string/join_server_address"
-		        android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/join_server_address"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-		    <EditText
-		        android:id="@+id/server"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.6"
-		        android:gravity="center"
-		        android:hint="@string/default_server"
-		        android:imeOptions="flagNoExtractUi"
-		        android:inputType="textNoSuggestions"
-		        android:singleLine="true" >
+            <EditText
+                android:id="@+id/server"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:hint="@string/default_server"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textNoSuggestions"
+                android:singleLine="true">
 
-		    </EditText>
-	    </LinearLayout>
+            </EditText>
+        </LinearLayout>
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-	        android:minWidth="280dp"
-	        android:id="@+id/player_name_layout" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dialog_button_margin"
+            android:minWidth="280dp"
+            android:id="@+id/player_name_layout">
 
-		    <TextView
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.4"
-		        android:text="@string/join_player_name"
-		        android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/join_player_name"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-		    <EditText
-		        android:id="@+id/name"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.6"
-		        android:gravity="center"
-		        android:imeOptions="flagNoExtractUi"
-		        android:inputType="textCapWords|textPersonName"
-		        android:singleLine="true"
-		        android:text="" >
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textCapWords|textPersonName"
+                android:singleLine="true"
+                android:text="">
 
-		    </EditText>
-	    </LinearLayout>
+            </EditText>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/spinner_layout"
+            android:layout_marginBottom="@dimen/dialog_button_margin"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
-	        <Spinner
-	            android:id="@+id/game_mode"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:entries="@array/game_modes" />
+            <Spinner
+                android:id="@+id/game_mode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/game_modes"/>
 
-			<Spinner
-	            android:id="@+id/field_size"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	            android:entries="@array/game_field_sizes" />
-		</LinearLayout>
+            <Spinner
+                android:id="@+id/field_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:entries="@array/game_field_sizes"/>
+        </LinearLayout>
 
-	    <LinearLayout
-	        android:id="@+id/players_layout"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal" >
+        <LinearLayout
+            android:id="@+id/players_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-	        <LinearLayout
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0.5"
-	            android:paddingLeft="16dp"
-	            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
 
-	            <CheckBox
-	                android:id="@+id/player2"
-	                android:layout_width="match_parent"
-	                android:layout_height="wrap_content"
-	                android:text="Yellow" />
+                <CheckBox
+                    android:id="@+id/player2"
+                    android:padding="@dimen/dialog_button_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Yellow"/>
 
-	            <CheckBox
-	                android:id="@+id/player1"
-	                android:layout_width="match_parent"
-	                android:layout_height="wrap_content"
-	                android:text="Blue" />
-	        </LinearLayout>
+                <CheckBox
+                    android:id="@+id/player1"
+                    android:padding="@dimen/dialog_button_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Blue"/>
+            </LinearLayout>
 
-	        <LinearLayout
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0.5"
-	            android:paddingRight="16dp"
-	            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
 
-	            <CheckBox
-	                android:id="@+id/player3"
-	                android:layout_width="match_parent"
-	                android:layout_height="wrap_content"
-	                android:text="Red" />
+                <CheckBox
+                    android:id="@+id/player3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dialog_button_margin"
+                    android:text="Red"/>
 
-	            <CheckBox
-	                android:id="@+id/player4"
-	                android:layout_width="match_parent"
-	                android:layout_height="wrap_content"
-	                android:text="Green" />
-	        </LinearLayout>
+                <CheckBox
+                    android:id="@+id/player4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dialog_button_margin"
+                    android:text="Green"/>
+            </LinearLayout>
 
-	    </LinearLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/difficulty_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
-	        <TextView
-	            android:id="@+id/textView2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentTop="true"
-	            android:layout_marginTop="8dp"
-	            android:text="@string/difficulty"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/difficulty"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"/>
 
-	        <TextView
-	            android:id="@+id/difficulty_label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/textView2"
-	            android:layout_centerHorizontal="true"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:typeface="monospace" />
+            <TextView
+                android:id="@+id/difficulty_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView2"
+                android:layout_centerHorizontal="true"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:typeface="monospace"/>
 
-	        <SeekBar
-	            android:id="@+id/difficulty"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_below="@+id/difficulty_label"
-	            android:max="10" />
-		</RelativeLayout>
-		
+            <SeekBar
+                android:id="@+id/difficulty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/difficulty_label"
+                android:max="10"/>
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dialog_button_margin">
 
-			<Button
-	           android:id="@android:id/closeButton"
-	           android:layout_width="wrap_content"
-	           android:layout_weight="0.5"
-	           android:layout_margin="2dp"
-	           android:layout_height="@dimen/main_menu_button_height"
-	           android:textSize="@dimen/textSizeSmall"
-	           android:text="@android:string/cancel" />
-	       	<Button
-	           android:id="@android:id/button1"
-	           android:layout_width="wrap_content"
-	           android:layout_weight="0.5"
-	           android:layout_margin="2dp"
-	           android:layout_height="@dimen/main_menu_button_height"
-	           android:textSize="@dimen/textSizeSmall"
-	           android:text="@android:string/ok" />
+            <Button
+                android:id="@android:id/closeButton"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_height="@dimen/main_menu_button_height"
+                android:textSize="@dimen/textSizeSmall"
+                android:text="@android:string/cancel"/>
+            <Button
+                android:id="@android:id/button1"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="@dimen/dialog_button_margin"
+                android:layout_height="@dimen/main_menu_button_height"
+                android:textSize="@dimen/textSizeSmall"
+                android:text="@android:string/ok"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

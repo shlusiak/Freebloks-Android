@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp" >
+    android:padding="@dimen/dialog_padding" >
 
 
     <LinearLayout
@@ -26,24 +26,24 @@
 
         <ImageButton
 		    android:id="@+id/achievements"
-            android:layout_width="@dimen/menu_button_height"
-            android:layout_height="@dimen/menu_button_height"
+            android:layout_width="@dimen/dialog_button_height"
+            android:layout_height="@dimen/dialog_button_height"
 		    android:layout_weight="0"
     	    android:visibility="gone"
 		    android:src="@drawable/ic_play_games_badge_achievements_white" />
 
         <ImageButton
 		    android:id="@+id/leaderboard"
-            android:layout_width="@dimen/menu_button_height"
-            android:layout_height="@dimen/menu_button_height"
+            android:layout_width="@dimen/dialog_button_height"
+            android:layout_height="@dimen/dialog_button_height"
 		    android:layout_weight="0"
 	        android:visibility="gone"
 		    android:src="@drawable/ic_play_games_badge_leaderboards_white" />
 
 		<ImageButton
 		    android:id="@+id/statistics"
-            android:layout_width="@dimen/menu_button_height"
-            android:layout_height="@dimen/menu_button_height"
+            android:layout_width="@dimen/dialog_button_height"
+            android:layout_height="@dimen/dialog_button_height"
 		    android:layout_weight="0"
 		    style="?android:attr/buttonStyle"
 		    android:src="@drawable/stats" />
@@ -81,7 +81,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
-            android:layout_marginRight="2dp"
             android:text="@string/new_local_game"
             android:textSize="@dimen/textSizeSmall" />
 
@@ -90,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="@dimen/dialog_button_margin"
             android:text="@string/main_menu"
             android:textSize="@dimen/textSizeSmall" />
 

@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class GameMenu extends Dialog {
 	ImageButton soundButton;
@@ -24,7 +23,7 @@ public class GameMenu extends Dialog {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.game_menu_dialog);
 
-		findViewById(R.id.imageView1).setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.appIcon).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getContext(), AboutActivity.class);

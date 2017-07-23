@@ -846,13 +846,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					dialog.dismiss();
 				}
 			});
-			dialog.findViewById(R.id.star).setVisibility(showRateDialog ? View.VISIBLE : View.GONE);
-			dialog.findViewById(R.id.star).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showDialog(DIALOG_RATE_ME);
-				}
-			});
 //			dialog.findViewById(R.id.sound_toggle_button).setVisibility(hasActionBar ? View.GONE : View.VISIBLE);
 			dialog.findViewById(R.id.resume_game).setEnabled(canresume);
 			dialog.setCanceledOnTouchOutside(canresume);

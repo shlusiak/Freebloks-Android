@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:padding="@dimen/dialog_padding"
+    android:orientation="horizontal">
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <ImageView
             android:id="@+id/imageView1"
@@ -17,7 +19,7 @@
             android:layout_centerVertical="true"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:src="@drawable/appicon_big" />
+            android:src="@drawable/appicon_big"/>
 
         <TextView
             android:id="@+id/version"
@@ -26,20 +28,20 @@
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
             android:paddingRight="8dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/url1"
@@ -48,7 +50,7 @@
                 android:autoLink="web"
                 android:gravity="center"
                 android:linksClickable="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <TextView
                 android:id="@+id/url2"
@@ -59,7 +61,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:text="https://github.com/shlusiak/Freebloks-Android"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <TextView
                 android:id="@+id/textView2"
@@ -70,7 +72,7 @@
                 android:singleLine="true"
                 android:textStyle="bold"
                 android:text="@string/copyright_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <TextView
                 android:id="@+id/textView3"
@@ -80,7 +82,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:text="apps@saschahlusiak.de"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <TextView
                 android:id="@+id/textView42"
@@ -92,7 +94,7 @@
                 android:singleLine="true"
                 android:text="@string/special_thanks_to"
                 android:textStyle="bold"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
                 android:layout_width="fill_parent"
@@ -100,34 +102,34 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Alina Bilciurescu"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-			<TextView
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Martin Hollingsworth"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-			<TextView
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:gravity="center"
-	            android:singleLine="true"
-	            android:text="Egor Ponomarev"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Egor Ponomarev"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <Button
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/menu_button_height"
+                android:layout_height="@dimen/dialog_button_height"
                 android:minWidth="160dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-        	    android:textSize="@dimen/textSizeSmall"
-                android:text="@android:string/ok" />
+                android:textSize="@dimen/textSizeSmall"
+                android:text="@android:string/ok"/>
         </LinearLayout>
     </ScrollView>
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dialog_padding">12dp</dimen>
+    <dimen name="dialog_button_margin">4dp</dimen>
+    <dimen name="dialog_button_height">48dp</dimen>
+
+    <dimen name="main_menu_padding">12dp</dimen>
+    <dimen name="main_menu_button_margin">2dp</dimen>
+    <dimen name="main_menu_button_height">52dp</dimen>
+    <dimen name="main_menu_width">240dp</dimen>
+    <dimen name="main_menu_app_icon_size">40dp</dimen>
+
+    <dimen name="textSizeSmall">14sp</dimen>
+    <dimen name="textSizeMedium">18sp</dimen>
+    <dimen name="textSizeLarge">22sp</dimen>
+</resources>
