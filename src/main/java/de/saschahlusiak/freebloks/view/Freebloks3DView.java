@@ -176,19 +176,24 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void stoneWillBeSet(NET_SET_STONE s) {
-		if (model == null)
-			return;
+	public void stoneWillBeSet(final NET_SET_STONE s) {
+		queueEvent(new Runnable() {
+			@Override
+			public void run() {
+				if (model == null || model.spiel == null)
+					return;
 
-		if (model.hasAnimations() && !model.spiel.is_local_player(s.player)) {
-			Turn turn = s.toTurn();
-			StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
+				if (model.hasAnimations() && !model.spiel.is_local_player(s.player)) {
+					Turn turn = s.toTurn();
+					StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
 
-			EffectSet set = new EffectSet();
-			set.add(e);
-			set.add(new StoneFadeEffect(model, turn, 2.0f));
-			model.addEffect(set);
-		}
+					EffectSet set = new EffectSet();
+					set.add(e);
+					set.add(new StoneFadeEffect(model, turn, 2.0f));
+					model.addEffect(set);
+				}
+			}
+		});
 	}
 
 	public void stoneHasBeenSet(NET_SET_STONE s) {
@@ -202,26 +207,33 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void hintReceived(NET_SET_STONE s) {
-		if (s.player != model.spiel.current_player())
-			return;
-		if (!model.spiel.is_local_player())
-			return;
+	public void hintReceived(final NET_SET_STONE s) {
+		queueEvent(new Runnable() {
+			@Override
+			public void run() {
+				if (model == null || model.spiel == null)
+					return;
+				if (s.player != model.spiel.current_player())
+					return;
+				if (!model.spiel.is_local_player())
+					return;
 
-		model.board.resetRotation();
-		model.wheel.update(s.player);
-		model.wheel.showStone(s.stone);
+				model.board.resetRotation();
+				model.wheel.update(s.player);
+				model.wheel.showStone(s.stone);
 
-		model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
+				model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 
-		Stone st = model.spiel.get_current_player().get_stone(s.stone);
-		
-		PointF p = new PointF();
-		p.x = s.x - 0.5f + st.get_stone_size() / 2;
-		p.y = s.y - 0.5f + st.get_stone_size() / 2;
-		model.currentStone.startDragging(p, st, s.mirror_count, s.rotate_count, model.getPlayerColor(s.player));
+				Stone st = model.spiel.get_current_player().get_stone(s.stone);
 
-		requestRender();
+				PointF p = new PointF();
+				p.x = s.x - 0.5f + st.get_stone_size() / 2;
+				p.y = s.y - 0.5f + st.get_stone_size() / 2;
+				model.currentStone.startDragging(p, st, s.mirror_count, s.rotate_count, model.getPlayerColor(s.player));
+
+				requestRender();
+			}
+		});
 	}
 
 	@Override
