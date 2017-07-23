@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
@@ -16,8 +16,8 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.google.android.gms:play-services-games:11.0.0'
-    compile 'com.google.android.gms:play-services-plus:11.0.0'
+    compile 'com.google.android.gms:play-services-games:11.0.2'
+    compile 'com.google.android.gms:play-services-plus:11.0.2'
 }
 
 android {
