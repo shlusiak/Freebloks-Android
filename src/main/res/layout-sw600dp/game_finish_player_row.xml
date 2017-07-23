@@ -80,10 +80,11 @@
             android:layout_alignTop="@+id/linearLayout1"
             android:layout_alignBottom="@+id/linearLayout1"
             android:gravity="center_vertical"
-            android:shadowColor="#9f000000"
+            android:shadowColor="#7f000000"
             android:shadowDy="3"
             android:shadowRadius="5"
             android:text="Stones"
+            android:textColor="#dfdfdf"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 

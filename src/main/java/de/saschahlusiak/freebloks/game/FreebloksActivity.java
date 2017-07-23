@@ -644,12 +644,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		case DIALOG_LOBBY:
 			if (client == null)
 				return null;
-			return new LobbyDialog(this, new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface arg0) {
-					client.disconnect();
-				}
-			}, chatEntries);
+			return new LobbyDialog(this, chatEntries);
 
 		case DIALOG_QUIT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -806,6 +801,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						}
 					}
 				});
+				if (client.spiel.isStarted()) {
+					dialog.setCanceledOnTouchOutside(true);
+				} else {
+					dialog.setCanceledOnTouchOutside(false);
+				}
 			} else {
 				/* this can happen when the app is saved but purged from memory
 				 * upon resume, the open dialog is reopened but the client connection

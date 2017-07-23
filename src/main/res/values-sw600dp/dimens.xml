@@ -12,5 +12,5 @@
 
     <dimen name="textSizeSmall">18sp</dimen>
     <dimen name="textSizeMedium">21sp</dimen>
-    <dimen name="textSizeLarge">27sp</dimen>
+    <dimen name="textSizeLarge">26sp</dimen>
 </resources>

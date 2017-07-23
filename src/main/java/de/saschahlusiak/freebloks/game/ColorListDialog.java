@@ -36,7 +36,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		fieldSize = (Spinner)findViewById(R.id.field_size);
 		fieldSize.setOnItemSelectedListener(this);
 		
-		adapter = new ColorListAdapter(context);
+		adapter = new ColorListAdapter(getContext());
 		// Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
 		// with class cast exception
 		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);

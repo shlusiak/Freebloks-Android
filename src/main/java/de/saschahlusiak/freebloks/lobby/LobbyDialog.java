@@ -52,12 +52,11 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	FloatingActionButton chatButton;
 	EditText chatText;
 
-	public LobbyDialog(Context context, OnCancelListener cancelListener, ArrayList<ChatEntry> chatEntries) {
-		super(context);
+	public LobbyDialog(Context context, ArrayList<ChatEntry> chatEntries) {
+		super(context, R.style.Theme_Freebloks_Light_Dialog);
 		
 		setCancelable(true);
-		setOnCancelListener(cancelListener);
-		
+
 		requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		
 		setContentView(R.layout.lobby_dialog);
