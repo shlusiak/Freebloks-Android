@@ -22,6 +22,10 @@
     <color name="player_background_purple">#60008C</color>
 
     <!-- Foreground color for player text in lobby chat -->
+    <color name="lobby_background_border">#6f6f7f</color>
+    <color name="lobby_background_color">#3f000000</color>
+
+    <color name="player_foreground_servermessage">#A0AAAAAA</color>
     <color name="player_foreground_white">#FFFFFF</color>
     <color name="player_foreground_blue">#2050ff</color>
     <color name="player_foreground_yellow">#e6e600</color>

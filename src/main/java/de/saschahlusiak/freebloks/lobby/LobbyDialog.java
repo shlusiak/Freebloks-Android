@@ -53,7 +53,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	EditText chatText;
 
 	public LobbyDialog(Context context, ArrayList<ChatEntry> chatEntries) {
-		super(context, R.style.Theme_Freebloks_Light_Dialog);
+		super(context);
 		
 		setCancelable(true);
 

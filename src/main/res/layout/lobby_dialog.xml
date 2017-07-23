@@ -55,10 +55,11 @@
         android:layout_below="@+id/spinner_layout"
         android:layout_toLeftOf="@+id/color_grid"
         android:layout_alignParentLeft="true"
-        android:background="#3f000000"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/layout_chat_background"
         android:isScrollContainer="true"
         android:stackFromBottom="true"
-        android:transcriptMode="normal" >
+        android:transcriptMode="normal">
     </ListView>
 
     <LinearLayout

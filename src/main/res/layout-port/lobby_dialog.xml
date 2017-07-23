@@ -63,11 +63,10 @@
         android:layout_above="@+id/linearLayout1"
         android:layout_below="@+id/linearLayout2"
         android:layout_centerHorizontal="true"
-        android:background="#3f000000"
+        android:background="@drawable/layout_chat_background"
         android:isScrollContainer="true"
         android:stackFromBottom="true"
         android:transcriptMode="normal" >
-
     </ListView>
 
     <LinearLayout
