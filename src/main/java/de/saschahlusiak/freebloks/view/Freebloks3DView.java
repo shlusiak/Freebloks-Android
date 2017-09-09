@@ -199,6 +199,8 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	public void stoneHasBeenSet(NET_SET_STONE s) {
 		if (model == null)
 			return;
+		if (model.spiel == null)
+			return;
 
 		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getCurrentPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
