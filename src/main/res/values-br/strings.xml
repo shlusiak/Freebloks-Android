@@ -151,8 +151,8 @@
         <item>Grama</item>
     </string-array>
     <string-array name="theme_values" translatable="false" >
-        <item>preto</item>
-        <item>azul</item>
+        <item>black</item>
+        <item>blue</item>
         <item>texture_table_cloth_1</item>
         <item>texture_table_cloth_2</item>
         <item>texture_wood</item>
