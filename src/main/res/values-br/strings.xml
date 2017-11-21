@@ -22,7 +22,7 @@
     <string name="default_server">Padrão</string>
 
     <string name="waiting_for_color">Esperando por %1$s</string>
-    <string name="color_is_out_of_moves">%1$s Está sem movimentos</string>
+    <string name="color_is_out_of_moves">%1$s está sem movimentos</string>
     <plurals name="player_status_moves">
         <item quantity="one">%1$d movimento</item>
         <item quantity="other">%1$d movimentos</item>
@@ -59,7 +59,7 @@
     <string name="googleplus_leaderboard">Classificação</string>
     <string name="googleplus_leaderboard_long">Mostrar pontos das pessoas nos seus círculos</string>
     <string name="googleplus_achievements">Conquistas</string>
-    <string name="googleplus_achievements_long">Mostrar conquistas adquiridas</string>
+    <string name="googleplus_achievements_long">Mostrar conquistas obtidas</string>
 
     <string name="lobby_waiting_for_players">Esperando por jogadores</string>
     <plurals name="connected_clients">
@@ -80,11 +80,11 @@
     <string name="rate_never">Não</string>
     <string name="rate_freebloks_title">Avaliar Freebloks</string>
     <string name="rate_freebloks_text">Se você gostou do Freebloks, gostaria de levar um minuto para avaliá-lo?</string>
-    <string name="rate_freebloks_donate_link"><u>Por favor apoie o Freebloks</u></string>
+    <string name="rate_freebloks_donate_link"><u>Por favor, apoie o Freebloks</u></string>
 
 
     <plurals name="number_of_stones_left">
-        <item quantity="one">%1$d pedra restantes</item>
+        <item quantity="one">%1$d pedra restante</item>
         <item quantity="other">%1$d pedras restantes</item>
     </plurals>
     <plurals name="number_of_points">
@@ -97,7 +97,7 @@
         <item>3o lugar</item>
         <item>4o lugar</item>
     </string-array>
-    <string name="game_finished">Game Over</string>
+    <string name="game_finished">O jogo terminou</string>
     <string name="random_color">Cor aleatória</string>
     <string-array name="color_names">
         <item>Branco</item>
@@ -132,7 +132,7 @@
     </string-array>
 
     <string name="please_donate">Apoie os desenvolvedores</string>
-    <string name="donation_text_long">O Freebloks é um software livre. Você pode usá-lo e modificá-lo completamente livre de custos!\n\nMas não significa que não tenha valor. Por isso você pode decidir quanto o jogo vale para você e apoiar o desenvolvimento de software livre.</string>
+    <string name="donation_text_long">O Freebloks é um software livre. Você pode usá-lo e modificá-lo livre de custos!\n\nMas não significa que não tenha valor. Por isso você pode decidir quanto o jogo vale para você e apoiar o desenvolvimento de software livre.</string>
     <string name="donation_text_short">O quanto o Freebloks vale para você?</string>
     <string name="donation_nothing">Nada</string>
     <string name="donation_next">Próximo</string>
@@ -141,8 +141,8 @@
     <string-array name="theme_labels">
         <item>Preto</item>
         <item>Azul</item>
-        <item>Flowery cloth</item>
-        <item>Striped cloth</item>
+        <item>Pano florido</item>
+        <item>Pano listrado</item>
         <item>Madeira</item>
         <item>Tijolos</item>
         <item>Metal</item>
@@ -151,8 +151,8 @@
         <item>Grama</item>
     </string-array>
     <string-array name="theme_values" translatable="false" >
-        <item>black</item>
-        <item>blue</item>
+        <item>preto</item>
+        <item>azul</item>
         <item>texture_table_cloth_1</item>
         <item>texture_table_cloth_2</item>
         <item>texture_wood</item>
@@ -173,13 +173,13 @@
     <string name="prefs_sounds">Sons</string>
     <string name="prefs_vibrate_long">Vibrar ao mover pedras</string>
     <string name="prefs_vibrate">Vibrar</string>
-    <string name="prefs_notifications_long">Mostar notificaçõesem partidas multiplayer</string>
+    <string name="prefs_notifications_long">Mostar notificações em partidas com mais de 1 jogador</string>
     <string name="prefs_notifications">Notificações</string>
-    <string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
+    <string name="prefs_snap_to_corners_long">Ajuda para retirar peças para fechar posições válidas</string>
     <string name="prefs_snap_to_corners">Snap to Corners</string>
     <string name="prefs_undo_long">Desfazer último movimento com o botão voltar</string>
     <string name="prefs_undo">Desfazer com Voltar</string>
-    <string name="prefs_immersive_long">Esconder botões de navagação virtuais</string>
+    <string name="prefs_immersive_long">Esconder botões de navagação</string>
     <string name="prefs_immersive">Tela Cheia</string>
     <string name="prefs_show_corners_long">Mostar cantos possíveis de suas pedras</string>
     <string name="prefs_show_corners">Cantos</string>
@@ -190,7 +190,7 @@
     <string-array name="prefs_animations_labels">
         <item>Desligado</item>
         <item>Reduzido (30 fps)</item>
-        <item>Total (60 fps)</item>
+        <item>Completo (60 fps)</item>
     </string-array> 
     <string-array name="prefs_animations_values" translatable="false" >
         <item>2</item>
@@ -198,13 +198,13 @@
         <item>0</item>
     </string-array> 
     
-    <string name="prefs_skip_intro_long">Pular animação inicial no início do app</string>
-    <string name="prefs_skip_intro">Pular Intro</string>
+    <string name="prefs_skip_intro_long">Pular animação de introdução do app</string>
+    <string name="prefs_skip_intro">Pular introdução</string>
     <string name="prefs_auto_resume_long">Continuar automaticamente a última partida</string>
     <string name="prefs_auto_resume">Auto-continuar</string>
-    <string name="prefs_rate_review_long">Por favor avalie o app ou deixe um comentário</string>
+    <string name="prefs_rate_review_long">Por favor, avalie o app ou deixe um comentário</string>
     <string name="prefs_rate_review">Freebloks em %1$s&#8230;</string>
-    <string name="prefs_donation_long">Por favor apoie o desenvolvimento com uma doação</string>
+    <string name="prefs_donation_long">Por favor, apoie o desenvolvimento do app com uma doação</string>
     <string name="prefs_donation">Apoie o Freebloks&#8230;</string>
     <string name="prefs_donate">Doar</string>
     <string name="prefs_player_name">Nome do Jogador</string>
