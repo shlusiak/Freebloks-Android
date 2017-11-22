@@ -13,7 +13,7 @@
     <string name="about">À propos&#8230;</string>
     <string name="about_freebloks">À propos de Freebloks&#8230;</string>
     <string name="special_thanks_to">Remerciements à&#160;:</string>
-    <string name="connecting">Connection en cours&#8230;</string>
+    <string name="connecting">Connexion en cours&#8230;</string>
     <string name="connection_refused">Connexion refusée</string>
     <string name="could_not_restore_game">Impossible de récupérer la partie</string>
     <string name="do_you_want_to_leave_current_game">Êtes-vous sûr de vouloir quitter la partie en cours&#160;?</string>
@@ -77,7 +77,7 @@
     <string name="rate_now">Oui</string>
     <string name="rate_later">Plus tard</string>
     <string name="rate_never">Non</string>
-    <string name="rate_freebloks_title">Classez Freebloks</string>
+    <string name="rate_freebloks_title">Évaluez Freebloks</string>
     <string name="rate_freebloks_text">Si vous aimez Freebloks, voudriez-vous prendre une minute pour le noter&#160;?</string>
     <string name="rate_freebloks_donate_link"><u>S\'il vous plaît, soutenez Freebloks</u></string>
 
@@ -131,7 +131,7 @@
     </string-array>
 
     <string name="please_donate">Soutenez les développeurs</string>
-    <string name="donation_text_long">Freebloks est un logiciel gratuit. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!\n\ Mais cela ne signifie qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels gratuits.</string>
+    <string name="donation_text_long">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!\n\ Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
     <string name="donation_text_short">Combien Freebloks vaut-il pour vous&#160;?</string>
     <string name="donation_nothing">Rien</string>
     <string name="donation_next">Suivant</string>
@@ -193,5 +193,5 @@
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_theme">Fond d\'écran </string>
     <string name="prefs_statistics">Statistiques</string>
-    <string name="prefs_statistics_long">Afficher les statistiques de parties</string>
+    <string name="prefs_statistics_long">Afficher les statistiques des parties</string>
 </resources>
