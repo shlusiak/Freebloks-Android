@@ -16,16 +16,25 @@ repositories {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 dependencies {
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.google.android.gms:play-services-games:11.0.4'
-    compile 'com.google.android.gms:play-services-plus:11.0.4'
+
+    // for Google+ integration. See "foss" branch without this dependency
+    compile 'com.google.android.gms:play-services-games:11.8.0'
+    compile 'com.google.android.gms:play-services-plus:11.8.0'
+
+    // for crash reporting through firebase. See "foss" branch without this dependency.
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
+    }
+    compile 'com.google.firebase:firebase-core:11.8.0'
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
 
     defaultConfig {
         minSdkVersion 14
@@ -33,6 +42,10 @@ android {
 
         versionCode 72
         versionName "1.0.2"
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
     }
     flavorDimensions 'app', 'store'
     productFlavors {
