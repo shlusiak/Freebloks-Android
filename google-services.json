@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "786410326200",
+    "firebase_url": "https://freebloks-project.firebaseio.com",
+    "project_id": "freebloks-project",
+    "storage_bucket": "freebloks-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786410326200:android:4f533eff64a09254",
+        "android_client_info": {
+          "package_name": "de.saschahlusiak.freebloks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786410326200-oscq6pdnjr83pj9ndovv9ud6r9f0uhp9.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "786410326200-o6uao0fih42surq9jhmr1nrigbvf00mh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.saschahlusiak.freebloks",
+            "certificate_hash": "45b4aa486c7f290f03488c8e7054fb63ab76f508"
+          }
+        },
+        {
+          "client_id": "786410326200.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.saschahlusiak.freebloks",
+            "certificate_hash": "3f720d337c64624f5bd3f92be5016c6469c42b01"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfn-x8hnuopJlI2HZgTO049rAflVv5az4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786410326200-oscq6pdnjr83pj9ndovv9ud6r9f0uhp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786410326200:android:467595ee35548ab3",
+        "android_client_info": {
+          "package_name": "de.saschahlusiak.freebloksvip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786410326200-oscq6pdnjr83pj9ndovv9ud6r9f0uhp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfn-x8hnuopJlI2HZgTO049rAflVv5az4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786410326200-oscq6pdnjr83pj9ndovv9ud6r9f0uhp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

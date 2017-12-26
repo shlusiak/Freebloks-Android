@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.game;
 import java.io.IOException;
 
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 
 
@@ -44,6 +45,7 @@ class SpielClientThread extends Thread {
 		catch (IOException e) {
 			if (getGoDown())
 				return;
+			Crashlytics.logException(e);
 			e.printStackTrace();
 			synchronized(client) {
 				error = e;

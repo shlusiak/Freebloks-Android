@@ -9,6 +9,9 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.network.Network;
@@ -43,10 +46,12 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 	protected String doInBackground(String... params) {
 		try {
 			Log.d("ConnectTask", "connecting to " + params[0]);
+			Crashlytics.setString("server", params[0]);
 			myclient.connect(activity, params[0], Network.DEFAULT_PORT);
 		} catch (IOException e) {
 			if (isCancelled())
 				return null;
+			Crashlytics.logException(e);
 			return e.getMessage();
 		}
 		Log.d("ConnectTask", "connected");
