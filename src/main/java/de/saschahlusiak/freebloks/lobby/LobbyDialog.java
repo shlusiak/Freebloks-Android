@@ -338,7 +338,16 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	@Override
 	public void onDisconnected(Spiel spiel) {
-		dismiss();
+		// dismiss may stop the dialog and remove this instance from the client listeners, modifying the underlying
+		// list, so we have do run the dismiss() outside of this method.
+		handler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				dismiss();
+			}
+		});
 	}
 
 	@Override
