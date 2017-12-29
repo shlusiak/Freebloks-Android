@@ -65,7 +65,7 @@ public class GameFinishActivity extends BaseGameActivity {
 		clientName = getIntent().getStringExtra("clientName");
 
 		data = spiel.getResultData();
-		updateViews(data, spiel.m_gamemode);
+		updateViews(data, spiel.getGameMode());
 
 		findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
 			@Override
@@ -211,7 +211,7 @@ public class GameFinishActivity extends BaseGameActivity {
 	}
 
 	Drawable getScoreDrawable(PlayerData data) {
-		int color = Global.getPlayerColor(data.player1, spiel.m_gamemode);
+		int color = Global.getPlayerColor(data.player1, spiel.getGameMode());
 		LayerDrawable l;
 
 		if (data.player2 >= 0)
@@ -221,7 +221,7 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		if (data.player2 >= 0) {
-			color = Global.getPlayerColor(data.player2, spiel.m_gamemode);
+			color = Global.getPlayerColor(data.player2, spiel.getGameMode());
 			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		}
 
@@ -245,15 +245,15 @@ public class GameFinishActivity extends BaseGameActivity {
 		HighscoreDB db = new HighscoreDB(this);
 		if (db.open()) {
 			for (int i = 0; i < data.length; i++) if (data[i].is_local) {
-					if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+					if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].place == 1)
 						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_classic));
 
-					if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+					if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].is_perfect)
 						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_perfect));
 
-					if (spiel.m_gamemode == GameMode.GAMEMODE_DUO
+					if (spiel.getGameMode() == GameMode.GAMEMODE_DUO
 							&& data[i].place == 1)
 						Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_duo));
 
@@ -262,7 +262,7 @@ public class GameFinishActivity extends BaseGameActivity {
 					if (data[i].place == 1)
 						Games.Achievements.increment(getApiClient(), getString(R.string.achievement_winner), 1);
 
-					if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+					if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 							&& data[i].place == 4)
 						Games.Achievements.increment(getApiClient(), getString(R.string.achievement_loser), 1);
 

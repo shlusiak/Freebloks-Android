@@ -8,9 +8,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -475,7 +477,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			if (spiel1 == null)
 				return false;
 
-			JNIServer.runServer(spiel1, spiel1.m_gamemode.ordinal(), spiel1.m_field_size_x, difficulty);
+			JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.m_field_size_x, difficulty);
 
 			/* this will start a new SpielClient, which needs to be restored
 			 * from saved gamestate first */
@@ -538,6 +540,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 				if (! show_lobby)
 					client.request_start();
+				else {
+					Bundle b = new Bundle();
+					b.putString("server", server);
+					FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("show_lobby", b);
+				}
 			}
 		});
 		connectTask.setActivity(this);
@@ -598,6 +605,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					fos.close();
 					p.recycle();
 				} catch (Exception e) {
+					Crashlytics.logException(e);
 					e.printStackTrace();
 				}
 			}
@@ -719,6 +727,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			});
 
 		case DIALOG_HOST:
+			// TODO: hosting does not need dialog at all once all things can be configured through lobby dialog
 			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
 				@Override
 				public boolean OnStart(CustomGameDialog dialog) {
@@ -794,8 +803,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					@Override
 					public void onCancel(DialogInterface arg0) {
 						if (!client.spiel.isStarted() && !client.spiel.isFinished()) {
+							FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
 							canresume = false;
-							client.disconnect();
+							spielthread.goDown();
 							showDialog(DIALOG_GAME_MENU);
 						}
 					}
@@ -1166,6 +1176,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void hintReceived(NET_SET_STONE s) {
+		FirebaseAnalytics.getInstance(this).logEvent("hint_received", null);
+
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1178,13 +1190,23 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void gameFinished() {
 		deleteFile(GAME_STATE_FILE);
+
+		Bundle b = new Bundle();
+		b.putString("server", client.getLastHost());
+		b.putString("game_mode", client.spiel.getGameMode().toString());
+		b.putInt("w", client.spiel.m_field_size_x);
+		b.putInt("h", client.spiel.m_field_size_y);
+		b.putInt("clients", lastStatus.clients);
+		b.putInt("players", lastStatus.player);
+		FirebaseAnalytics.getInstance(this).logEvent("game_finished", b);
+
 		/* TODO: play sound on game finish */
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				updateMultiplayerNotification(false, null);
 				PlayerData[] data = client.spiel.getResultData();
-				new AddScoreTask(getApplicationContext(), client.spiel.m_gamemode).execute(data);
+				new AddScoreTask(getApplicationContext(), client.spiel.getGameMode()).execute(data);
 
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);
@@ -1247,6 +1269,16 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void gameStarted() {
 		gameStartTime = System.currentTimeMillis();
 
+		Bundle b = new Bundle();
+		b.putString("server", client.getLastHost());
+		b.putString("game_mode", client.spiel.getGameMode().toString());
+		b.putInt("w", client.spiel.m_field_size_x);
+		b.putInt("h", client.spiel.m_field_size_y);
+		b.putInt("clients", lastStatus.clients);
+		b.putInt("players", lastStatus.player);
+
+		FirebaseAnalytics.getInstance(this).logEvent("game_started", b);
+
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
 			if (client.spiel.is_local_player(i))
@@ -1255,7 +1287,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void stoneUndone(Turn t) {
-
+		FirebaseAnalytics.getInstance(this).logEvent("undo_move", null);
 	}
 
 	@Override

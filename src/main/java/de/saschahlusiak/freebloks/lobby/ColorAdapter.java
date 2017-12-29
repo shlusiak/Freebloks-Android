@@ -126,7 +126,7 @@ public class ColorAdapter extends BaseAdapter {
 			if (position == 1)
 				position = 2;
 
-		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(position, spiel.m_gamemode)]));
+		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(position, spiel.getGameMode())]));
 		if (lastStatus.isVersion(2)) {
 			if (lastStatus.spieler[position] >= 0) {
 				/* it is a human player */

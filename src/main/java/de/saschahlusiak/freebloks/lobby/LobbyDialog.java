@@ -218,7 +218,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		//	server.setTypeface(Typeface.DEFAULT);
 		//	server.setText(client.getLastHost());
 		}
-		adapter.setGameMode(client.spiel.m_gamemode);
+		adapter.setGameMode(client.spiel.getGameMode());
 
 		updateStatus();
 		adapter.notifyDataSetChanged();
@@ -291,7 +291,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 			@Override
 			public void run() {
 				lastStatus = status;
-				adapter.setGameMode(client.spiel.m_gamemode);
+				adapter.setGameMode(client.spiel.getGameMode());
 				updateStatus();
 				adapter.notifyDataSetChanged();
 			}

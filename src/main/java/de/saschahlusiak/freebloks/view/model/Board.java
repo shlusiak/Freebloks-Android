@@ -88,9 +88,9 @@ public class Board implements ViewElement {
 
 		final Spielleiter spiel = model.spiel;
 		if (spiel != null) {
-			if (spiel.m_gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-				spiel.m_gamemode == GameMode.GAMEMODE_DUO ||
-				spiel.m_gamemode == GameMode.GAMEMODE_JUNIOR) {
+			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||
+				spiel.getGameMode() == GameMode.GAMEMODE_JUNIOR) {
 				if (lastDetailsPlayer == 1)
 					lastDetailsPlayer = 0;
 				if (lastDetailsPlayer == 3)

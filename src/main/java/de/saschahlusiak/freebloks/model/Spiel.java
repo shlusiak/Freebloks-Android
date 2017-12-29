@@ -84,7 +84,6 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	private void set_seeds(GameMode gamemode) {
-
 		if (gamemode == GameMode.GAMEMODE_DUO || gamemode == GameMode.GAMEMODE_JUNIOR) {
 			set_seed(4, m_field_size_y - 5, 0);
 			set_seed(m_field_size_x - 5, 4, 2);

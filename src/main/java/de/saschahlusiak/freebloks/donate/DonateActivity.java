@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.donate;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import android.app.Activity;
@@ -40,6 +41,7 @@ public class DonateActivity extends Activity {
 		case android.R.id.home:
 			finish();
 			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -50,6 +52,8 @@ public class DonateActivity extends Activity {
 	//	RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
 
 		if (group.getCheckedRadioButtonId() == R.id.donation_freebloksvip) {
+			FirebaseAnalytics.getInstance(this).logEvent("view_donate", null);
+
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Global.getMarketURLString("de.saschahlusiak.freebloksvip")));
 			startActivity(intent);
 			finish();

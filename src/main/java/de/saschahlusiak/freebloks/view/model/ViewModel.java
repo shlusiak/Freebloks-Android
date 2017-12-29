@@ -131,6 +131,6 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public int getPlayerColor(int player) {
 		if (spiel == null)
 			return Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-		return Global.getPlayerColor(player, spiel.m_gamemode);
+		return Global.getPlayerColor(player, spiel.getGameMode());
 	}
 }

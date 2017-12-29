@@ -22,14 +22,14 @@ public class SpielClient {
 	static final int DEFAULT_TIMEOUT = 10000;
 
 	private final ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<>();
-	Socket client_socket;
-	String lastHost;
+	private Socket client_socket;
+	private String lastHost;
 	public Spielleiter spiel;
-	int lastDifficulty;
-	boolean lastPlayers[];
-	NET_SERVER_STATUS lastStatus;
-	HandlerThread sendThread;
-	Handler sendHandler;
+	private int lastDifficulty;
+	private boolean lastPlayers[];
+	private NET_SERVER_STATUS lastStatus;
+	private HandlerThread sendThread;
+	private Handler sendHandler;
 
 	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
 		this.lastDifficulty = difficulty;
@@ -251,10 +251,10 @@ public class SpielClient {
 				}
 				if (changed && !spiel.isStarted()) spiel.set_stone_numbers(status.stone_numbers_obsolete[0],status.stone_numbers_obsolete[1],status.stone_numbers_obsolete[2],status.stone_numbers_obsolete[3],status.stone_numbers_obsolete[4]);
 			}
-			spiel.m_gamemode = status.gamemode;
-			if (spiel.m_gamemode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
+			spiel.setGameMode(status.gamemode);
+			if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0, 2, 1, 3);
-			if (spiel.m_gamemode==GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.m_gamemode==GameMode.GAMEMODE_DUO || spiel.m_gamemode==GameMode.GAMEMODE_JUNIOR)
+			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.getGameMode() == GameMode.GAMEMODE_DUO || spiel.getGameMode()==GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);
@@ -276,7 +276,7 @@ public class SpielClient {
 		
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
-			spiel.start_new_game(spiel.m_gamemode);
+			spiel.start_new_game(spiel.getGameMode());
 			spiel.setFinished(false);
 			spiel.setStarted(true);
 			/* Unbedingt history leeren. */
@@ -284,11 +284,11 @@ public class SpielClient {
 				spiel.history.delete_all_turns();
 
 //			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
-			if (spiel.m_gamemode==GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
+			if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
 				spiel.set_teams(0,2,1,3);
-			if (spiel.m_gamemode==GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-				spiel.m_gamemode==GameMode.GAMEMODE_DUO ||
-				spiel.m_gamemode==GameMode.GAMEMODE_JUNIOR)
+			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||
+				spiel.getGameMode()== GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 					spiel.get_player(1).get_stone(n).set_available(0);
@@ -311,7 +311,7 @@ public class SpielClient {
 			Log.d(tag, "stone undone: " + t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone( t);
-			spiel.undo_turn(spiel.history, spiel.m_gamemode);
+			spiel.undo_turn(spiel.history, spiel.getGameMode());
 			break;
 		}
 		
