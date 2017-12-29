@@ -408,7 +408,7 @@ public class Stone implements Serializable, Cloneable {
 				for (int x = 0; x < STONE_SIZE[m_shape]; x++) {
 					for (int y = 0; y < STONE_SIZE[m_shape]; y++) {
 						if (get_stone_field(y, x, mirror, rotate) == STONE_FIELD_ALLOWED) {
-							if (spiel.is_valid_turn(this, playernumber, fieldY - y, fieldX - x, mirror, rotate) == FIELD_ALLOWED) {
+							if (spiel.isValidTurn(this, playernumber, fieldY - y, fieldX - x, mirror, rotate) == FIELD_ALLOWED) {
 								count++;
 							}
 						}

@@ -15,7 +15,7 @@ public class PlayerData implements Comparable<PlayerData> {
 		this.player2 = -1;
 		this.is_local = spiel.is_local_player(player);
 		this.is_perfect = true;
-		addPoints(spiel.get_player(player));
+		addPoints(spiel.getPlayer(player));
 	}
 
 	PlayerData(Spielleiter spiel, int player1, int player2) {
@@ -25,8 +25,8 @@ public class PlayerData implements Comparable<PlayerData> {
 		this.is_local = spiel.is_local_player(player1);
 		this.is_perfect = true;
 
-		addPoints(spiel.get_player(player1));
-		addPoints(spiel.get_player(player2));
+		addPoints(spiel.getPlayer(player1));
+		addPoints(spiel.getPlayer(player2));
 	}
 
 	void addPoints(Player p) {

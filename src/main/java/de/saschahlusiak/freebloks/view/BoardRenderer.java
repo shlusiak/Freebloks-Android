@@ -226,8 +226,8 @@ public class BoardRenderer {
 
 	    int w = 20, h = 20;
 	    if (spiel != null) {
-	    	w = spiel.m_field_size_x;
-	    	h = spiel.m_field_size_y;
+	    	w = spiel.width;
+	    	h = spiel.height;
 	    }
 
 	    gl.glPushMatrix();
@@ -236,7 +236,7 @@ public class BoardRenderer {
 	    	int x;
 	    	for (x = 0; x < w; x++) {
 	    		if (currentPlayer >= 0) {
-	    			if (spiel.get_game_field(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
+	    			if (spiel.getFieldStatus(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);
 	    			else
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);

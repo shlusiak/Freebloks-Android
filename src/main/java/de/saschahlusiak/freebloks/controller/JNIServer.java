@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.controller;
 
-import android.app.Application;
 import android.util.Log;
 import de.saschahlusiak.freebloks.model.Stone;
 
@@ -37,14 +36,14 @@ public class JNIServer {
 
 			for (i = 0; i < 4; i++)
 				for (j = 0; j < Stone.STONE_COUNT_ALL_SHAPES; j++)
-					player_stones_available[i * Stone.STONE_COUNT_ALL_SHAPES + j] = spiel.get_player(i).get_stone(j).get_available();
+					player_stones_available[i * Stone.STONE_COUNT_ALL_SHAPES + j] = spiel.getPlayer(i).get_stone(j).get_available();
 
 			native_resume_server(
-					spiel.m_field_size_x,
-					spiel.m_field_size_y,
+					spiel.width,
+					spiel.height,
 					spiel.current_player(),
 					spiel.spieler,
-					spiel.get_game_field(),
+					spiel.getFields(),
 					player_stones_available,
 					game_mode,
 					ki_mode,

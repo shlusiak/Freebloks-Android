@@ -35,9 +35,9 @@ public class SpielClient {
 		this.lastDifficulty = difficulty;
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
-			spiel = new Spielleiter(fieldsize, fieldsize);
-			spiel.start_new_game(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-			spiel.set_stone_numbers(0, 0, 0, 0, 0);
+			spiel = new Spielleiter(fieldsize);
+			spiel.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
+			spiel.setAvailableStones(0, 0, 0, 0, 0);
 		} else
 			this.spiel = leiter;
 		client_socket = null;
@@ -203,11 +203,12 @@ public class SpielClient {
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneWillBeSet(s);
 
-			if ((spiel.is_valid_turn(turn) == Stone.FIELD_DENIED) ||
-			   (spiel.set_stone(turn) != Stone.FIELD_ALLOWED))
+			if (spiel.isValidTurn(turn) == Stone.FIELD_DENIED)
 			{
 				throw new GameStateException("game not in sync");
 			}
+
+			spiel.setStone(turn);
 
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneHasBeenSet(s);
@@ -236,10 +237,9 @@ public class SpielClient {
 			/* Wenn Spielfeldgroesse sich von Server unterscheidet,
 			   lokale Spielfeldgroesse hier anpassen */
 			if (!spiel.isStarted()) {
-				spiel.set_field_size(status.width, status.height);
-				spiel.start_new_game(status.gamemode);
+				spiel.startNewGame(status.gamemode, status.width, status.height);
 				if (status.isVersion(3))
-					spiel.set_stone_numbers(status.stone_numbers);
+					spiel.setAvailableStones(status.stone_numbers);
 			}
 			if (!status.isVersion(3)) {
 				boolean changed = false;
@@ -249,16 +249,16 @@ public class SpielClient {
 					for (i = 0; i < Stone.STONE_SIZE_MAX; i++)
 						changed |= (lastStatus.stone_numbers_obsolete[i] != status.stone_numbers_obsolete[i]);
 				}
-				if (changed && !spiel.isStarted()) spiel.set_stone_numbers(status.stone_numbers_obsolete[0],status.stone_numbers_obsolete[1],status.stone_numbers_obsolete[2],status.stone_numbers_obsolete[3],status.stone_numbers_obsolete[4]);
+				if (changed && !spiel.isStarted()) spiel.setAvailableStones(status.stone_numbers_obsolete[0],status.stone_numbers_obsolete[1],status.stone_numbers_obsolete[2],status.stone_numbers_obsolete[3],status.stone_numbers_obsolete[4]);
 			}
 			spiel.setGameMode(status.gamemode);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
-				spiel.set_teams(0, 2, 1, 3);
+				spiel.setTeams(0, 2, 1, 3);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.getGameMode() == GameMode.GAMEMODE_DUO || spiel.getGameMode()==GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
-					spiel.get_player(1).get_stone(n).set_available(0);
-					spiel.get_player(3).get_stone(n).set_available(0);
+					spiel.getPlayer(1).get_stone(n).set_available(0);
+					spiel.getPlayer(3).get_stone(n).set_available(0);
 				}
 			}
 			lastStatus = status;
@@ -276,27 +276,27 @@ public class SpielClient {
 		
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
-			spiel.start_new_game(spiel.getGameMode());
+			spiel.startNewGame(spiel.getGameMode());
 			spiel.setFinished(false);
 			spiel.setStarted(true);
 			/* Unbedingt history leeren. */
 			if (spiel.history != null)
-				spiel.history.delete_all_turns();
+				spiel.history.clear();
 
-//			set_stone_numbers(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
+//			setAvailableStones(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
-				spiel.set_teams(0,2,1,3);
+				spiel.setTeams(0, 2, 1, 3);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
 				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||
 				spiel.getGameMode()== GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
-					spiel.get_player(1).get_stone(n).set_available(0);
-					spiel.get_player(3).get_stone(n).set_available(0);
+					spiel.getPlayer(1).get_stone(n).set_available(0);
+					spiel.getPlayer(3).get_stone(n).set_available(0);
 				}
 			}
 			spiel.m_current_player=-1;
-			spiel.refresh_player_data();
+			spiel.refreshPlayerData();
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.gameStarted();
 			break;
@@ -307,11 +307,11 @@ public class SpielClient {
 			if (!spiel.isStarted() && !spiel.isFinished())
 				throw new GameStateException("received MSG_UNDO_STONE but game not running");
 
-			Turn t = spiel.history.get_last_turn();
+			Turn t = spiel.history.get();
 			Log.d(tag, "stone undone: " + t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone( t);
-			spiel.undo_turn(spiel.history, spiel.getGameMode());
+			spiel.undo(spiel.history, spiel.getGameMode());
 			break;
 		}
 		

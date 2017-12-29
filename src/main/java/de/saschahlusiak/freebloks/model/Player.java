@@ -83,9 +83,9 @@ public class Player implements Serializable, Cloneable {
 			m_stone_count += stone.get_available();
 		}
 
-		for (int x = 0; x < spiel.m_field_size_x; x++){
-			for (int y = 0; y < spiel.m_field_size_y; y++){
-				if (spiel.get_game_field(m_number, y, x) == Stone.FIELD_ALLOWED){
+		for (int x = 0; x < spiel.width; x++){
+			for (int y = 0; y < spiel.height; y++){
+				if (spiel.getFieldStatus(m_number, y, x) == Stone.FIELD_ALLOWED){
 					int turns_in_pos = 0;
 					for (int n = 0; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
 						Stone stone = m_stone[n];
@@ -100,9 +100,9 @@ public class Player implements Serializable, Cloneable {
 					m_number_of_possible_turns += turns_in_pos;
 					if (turns_in_pos == 0) {
 						/* there is no available turn in this position. mark as not allowed */
-						spiel.set_field_free_bit(m_number, y, x);
+						spiel.clearAllowedBit(m_number, y, x);
 					}
-				} else if (spiel.get_game_field(y, x) == m_number)
+				} else if (spiel.getFieldPlayer(y, x) == m_number)
 					m_stone_points++;
 			}
 		}

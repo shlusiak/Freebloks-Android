@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.opengl.GLUtils;
-import android.util.Log;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -125,9 +124,9 @@ public class CurrentStone implements ViewElement {
 		gl.glDisable(GL10.GL_CULL_FACE);
 		gl.glPushMatrix();
 		gl.glTranslatef(
-				BoardRenderer.stone_size * (-(float)(model.spiel.m_field_size_x - 1) + 2.0f * pos.x + offset),
+				BoardRenderer.stone_size * (-(float)(model.spiel.width - 1) + 2.0f * pos.x + offset),
 				0,
-				BoardRenderer.stone_size * (-(float)(model.spiel.m_field_size_x - 1) + 2.0f * pos.y + offset));
+				BoardRenderer.stone_size * (-(float)(model.spiel.width - 1) + 2.0f * pos.y + offset));
 
 		/* STONE SHADOW */
 	    gl.glPushMatrix();
@@ -271,10 +270,10 @@ public class CurrentStone implements ViewElement {
 //					if (y + j < 0)
 //						y = -j;
 
-					if (x + i + 1 >= model.spiel.m_field_size_x)
-						x = model.spiel.m_field_size_x - i - 1;
-					if (y + j + 1 >= model.spiel.m_field_size_y)
-						y = model.spiel.m_field_size_y - j - 1;
+					if (x + i + 1 >= model.spiel.width)
+						x = model.spiel.width - i - 1;
+					if (y + j + 1 >= model.spiel.height)
+						y = model.spiel.height - j - 1;
 				}
 			}
 			*/
@@ -413,7 +412,7 @@ public class CurrentStone implements ViewElement {
 	}
 
 	public boolean is_valid_turn(float x, float y) {
-		if (model.spiel.is_valid_turn(stone, model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Stone.FIELD_ALLOWED)
+		if (model.spiel.isValidTurn(stone, model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Stone.FIELD_ALLOWED)
 			return true;
 		return false;
 	}
@@ -469,7 +468,7 @@ public class CurrentStone implements ViewElement {
 			fieldPoint.y = y;
 			model.board.boardToUnified(fieldPoint);
 			if (!model.vertical_layout)
-				fieldPoint.y = model.spiel.m_field_size_x - fieldPoint.x - 1;
+				fieldPoint.y = model.spiel.width - fieldPoint.x - 1;
 
 			if (fieldPoint.y < -2.0f && (hasMoved)) {
 				model.wheel.setCurrentStone(stone);

@@ -17,7 +17,6 @@ import android.content.res.Resources;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import android.util.Log;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.model.Intro;
@@ -48,7 +47,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
-		board = new BoardRenderer(Spiel.DEFAULT_FIELD_SIZE_X);
+		board = new BoardRenderer(Spiel.DEFAULT_BOARD_SIZE);
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 
 		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
@@ -141,7 +140,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		/* render player stones on board, unless they are "effected" */
 	    gl.glPushMatrix();
-	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.m_field_size_x - 1) );
+	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.width - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.width - 1) );
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board.stone_specular, 0);
@@ -150,10 +149,10 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board.stone.bindBuffers(gl11);
 
 		synchronized (model.effects) {
-		    for (int y = 0; y < model.spiel.m_field_size_y; y++) {
+		    for (int y = 0; y < model.spiel.height; y++) {
 		    	int x;
-		    	for (x = 0; x < model.spiel.m_field_size_x; x++) {
-		    		int field = model.spiel.get_game_field(y, x);
+		    	for (x = 0; x < model.spiel.width; x++) {
+		    		int field = model.spiel.getFieldPlayer(y, x);
 		    		if (field != Stone.FIELD_FREE) {
 		    			boolean effected = false;
 						for (int i = 0; i < model.effects.size(); i++)

@@ -260,7 +260,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		clientName = prefs.getString("player_name", null);
 		difficulty = prefs.getInt("difficulty", 10);	/* TODO: generalize the value */
 		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
-		fieldsize = prefs.getInt("fieldsize", Spiel.DEFAULT_FIELD_SIZE_X);
+		fieldsize = prefs.getInt("fieldsize", Spiel.DEFAULT_BOARD_SIZE);
 
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
@@ -477,11 +477,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			if (spiel1 == null)
 				return false;
 
-			JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.m_field_size_x, difficulty);
+			JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.width, difficulty);
 
 			/* this will start a new SpielClient, which needs to be restored
 			 * from saved gamestate first */
-			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.m_field_size_x);
+			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.width);
 			client.spiel.setStarted(true);
 			spielthread = new SpielClientThread(client);
 			
@@ -521,10 +521,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			spielthread.goDown();
 
 		view.model.clearEffects();
-		Spielleiter spiel = new Spielleiter(fieldsize, fieldsize);
+		Spielleiter spiel = new Spielleiter(fieldsize);
 		final SpielClient client = new SpielClient(spiel, difficulty, request_player, fieldsize);
-		spiel.start_new_game(gamemode);
-		spiel.set_stone_numbers(0, 0, 0, 0, 0);
+		spiel.startNewGame(gamemode, fieldsize, fieldsize);
+		spiel.setAvailableStones(0, 0, 0, 0, 0);
 		
 		spielthread = new SpielClientThread(client);
 
@@ -1053,7 +1053,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				else if (client.spiel.isFinished()) {
 					int pl = view.model.board.getShowWheelPlayer();
 					int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(pl)];
-					Player p = client.spiel.get_player(pl);
+					Player p = client.spiel.getPlayer(pl);
 					status.setText("[" + getPlayerName(pl) + "]");
 					statusView.setBackgroundColor(getResources().getColor(res));
 					points.setVisibility(View.VISIBLE);
@@ -1064,7 +1064,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					if (showPlayer < 0) {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(player)];
 						statusView.setBackgroundColor(getResources().getColor(res));
-						Player p = client.spiel.get_player(player);
+						Player p = client.spiel.getPlayer(player);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 						if (!local)
@@ -1078,7 +1078,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					} else {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(showPlayer)];
 						statusView.setBackgroundColor(getResources().getColor(res));
-						Player p = client.spiel.get_player(showPlayer);
+						Player p = client.spiel.getPlayer(showPlayer);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
 
@@ -1105,7 +1105,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void stoneWillBeSet(NET_SET_STONE s) {
 		for (int i = 0; i < 4; i++)
-			number_of_possible_turns[i] = client.spiel.get_player(i).m_number_of_possible_turns;
+			number_of_possible_turns[i] = client.spiel.getPlayer(i).m_number_of_possible_turns;
 	}
 
 	@Override
@@ -1130,7 +1130,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		});
 
 		for (int i = 0; i < 4; i++) {
-			final Player p = client.spiel.get_player(i);
+			final Player p = client.spiel.getPlayer(i);
 			if (p.m_number_of_possible_turns <= 0 && number_of_possible_turns[i] > 0) {
 				runOnUiThread(new Runnable() {
 					@Override
@@ -1142,11 +1142,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.hasAnimations()) {
 								int sx, sy;
-								sx = client.spiel.get_player_start_x(p.getPlayerNumber());
-								sy = client.spiel.get_player_start_y(p.getPlayerNumber());
-								for (int x = 0; x < client.spiel.m_field_size_x; x++)
-									for (int y = 0; y < client.spiel.m_field_size_y; y++)
-										if (client.spiel.get_game_field(y, x) == p.getPlayerNumber()) {
+								sx = client.spiel.getPlayerStartX(p.getPlayerNumber());
+								sy = client.spiel.getPlayerStartY(p.getPlayerNumber());
+								for (int x = 0; x < client.spiel.width; x++)
+									for (int y = 0; y < client.spiel.height; y++)
+										if (client.spiel.getFieldPlayer(y, x) == p.getPlayerNumber()) {
 											boolean effected = false;
 											synchronized (view.model.effects) {
 												for (int j = 0; j < view.model.effects.size(); j++)
@@ -1194,8 +1194,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		Bundle b = new Bundle();
 		b.putString("server", client.getLastHost());
 		b.putString("game_mode", client.spiel.getGameMode().toString());
-		b.putInt("w", client.spiel.m_field_size_x);
-		b.putInt("h", client.spiel.m_field_size_y);
+		b.putInt("w", client.spiel.width);
+		b.putInt("h", client.spiel.height);
 		b.putInt("clients", lastStatus.clients);
 		b.putInt("players", lastStatus.player);
 		FirebaseAnalytics.getInstance(this).logEvent("game_finished", b);
@@ -1272,8 +1272,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		Bundle b = new Bundle();
 		b.putString("server", client.getLastHost());
 		b.putString("game_mode", client.spiel.getGameMode().toString());
-		b.putInt("w", client.spiel.m_field_size_x);
-		b.putInt("h", client.spiel.m_field_size_y);
+		b.putInt("w", client.spiel.width);
+		b.putInt("h", client.spiel.height);
 		b.putInt("clients", lastStatus.clients);
 		b.putInt("players", lastStatus.player);
 
@@ -1391,12 +1391,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		
 		if (!client.spiel.is_local_player())
 			return false;
-		if (client.spiel.is_valid_turn(turn) != Stone.FIELD_ALLOWED)
+		if (client.spiel.isValidTurn(turn) != Stone.FIELD_ALLOWED)
 			return false;
 
 		if (view.model.hasAnimations()) {
 			Stone st = new Stone();
-			st.copyFrom(client.spiel.get_player(turn.m_playernumber).get_stone(turn.m_stone_number));
+			st.copyFrom(client.spiel.getPlayer(turn.m_playernumber).get_stone(turn.m_stone_number));
 			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
 
 			EffectSet set = new EffectSet();

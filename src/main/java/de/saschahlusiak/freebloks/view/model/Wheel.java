@@ -6,7 +6,6 @@ import javax.microedition.khronos.opengles.GL11;
 
 import android.graphics.PointF;
 import android.os.Handler;
-import android.util.Log;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -83,7 +82,7 @@ public class Wheel implements ViewElement {
 			return;
 		if (model.spiel == null)
 			return;
-		Player p = model.spiel.get_player(player);
+		Player p = model.spiel.getPlayer(player);
 		moves_left = p.m_number_of_possible_turns > 0;
 		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++) {
 			Stone s = p.get_stone(i);
@@ -155,7 +154,7 @@ public class Wheel implements ViewElement {
 		if (!model.vertical_layout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
-			tmp.y = model.spiel.m_field_size_x - t - 1;
+			tmp.y = model.spiel.width - t - 1;
 		}
 
 		originalX = tmp.x;
@@ -165,7 +164,7 @@ public class Wheel implements ViewElement {
 			return false;
 
 		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
-		int col = (int) ((tmp.x - (float) model.spiel.m_field_size_x / 2.0f + lastOffset) / stone_spacing + 0.5f);
+		int col = (int) ((tmp.x - (float) model.spiel.width / 2.0f + lastOffset) / stone_spacing + 0.5f);
 
 		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
 			status = Status.SPINNING;
@@ -210,7 +209,7 @@ public class Wheel implements ViewElement {
 		if (!model.vertical_layout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
-			tmp.y = model.spiel.m_field_size_x - t - 1;
+			tmp.y = model.spiel.width - t - 1;
 		}
 
 		/* everything underneath row 0 spins the wheel */
@@ -274,7 +273,7 @@ public class Wheel implements ViewElement {
 		if (model.spiel == null)
 			return;
 
-		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.m_field_size_x + 10));
+		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.width + 10));
 		for (int i = stones.size() - 1; i >= 0; i--) {
 			Stone s = stones.get(i);
 

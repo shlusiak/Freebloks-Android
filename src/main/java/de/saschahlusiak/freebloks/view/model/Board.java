@@ -29,8 +29,8 @@ public class Board implements ViewElement {
 		point.x = point.x / (BoardRenderer.stone_size * 2.0f);
 		point.y = point.y / (BoardRenderer.stone_size * 2.0f);
 
-		point.x = point.x + 0.5f * (float)(model.spiel.m_field_size_x - 1);
-		point.y = point.y + 0.5f * (float)(model.spiel.m_field_size_y - 1);
+		point.x = point.x + 0.5f * (float)(model.spiel.width - 1);
+		point.y = point.y + 0.5f * (float)(model.spiel.height - 1);
 
 		return point;
 	}
@@ -47,7 +47,7 @@ public class Board implements ViewElement {
 		switch (centerPlayer) {
 		default:
 		case 0: /* nothing */
-			p.y = model.spiel.m_field_size_y - p.y - 1;
+			p.y = model.spiel.height - p.y - 1;
 			break;
 		case 1:
 			tmp = p.x;
@@ -55,12 +55,12 @@ public class Board implements ViewElement {
 			p.y = tmp;
 			break;
 		case 2: /* 180 degree */
-			p.x = model.spiel.m_field_size_x - p.x - 1;
+			p.x = model.spiel.width - p.x - 1;
 			break;
 		case 3:
 			tmp = p.y;
-			p.y = model.spiel.m_field_size_x - p.x - 1;
-			p.x = model.spiel.m_field_size_y - tmp - 1;
+			p.y = model.spiel.width - p.x - 1;
+			p.x = model.spiel.height - tmp - 1;
 			break;
 		}
 	}

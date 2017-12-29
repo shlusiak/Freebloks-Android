@@ -296,8 +296,8 @@ public class Intro implements ViewElement {
 		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.m_mirror_counter, st.m_rotate_counter);
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
-		x=(float)(-(Spiel.DEFAULT_FIELD_SIZE_X-1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
-		z=(float)(-(Spiel.DEFAULT_FIELD_SIZE_Y-1)*BoardRenderer.stone_size+((double)dy+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		x=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		z=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
 		/* Zufaellige Hoehe geben. */
 		y=22.0f+(float)(Math.random() * 18.0f);
 

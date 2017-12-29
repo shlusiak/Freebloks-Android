@@ -22,8 +22,8 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 
 	Turnpool history;
 
-	public Spielleiter(int size_y, int size_x) {
-		super(size_y, size_x);
+	public Spielleiter(int size) {
+		super(size);
 		m_current_player=-1;
 		m_gamemode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 		for (int i=0;i<PLAYER_MAX;i++)spieler[i]=PLAYER_COMPUTER;
@@ -50,7 +50,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		if (m_current_player == -1)
 			return null;
 		else
-			return get_player(m_current_player);
+			return getPlayer(m_current_player);
 	}
 
 	public GameMode getGameMode() {
@@ -63,7 +63,7 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 	}
 
 	void addHistory(Turn turn) {
-		history.add_turn(turn);
+		history.add(new Turn(turn));
 	}
 
 	int num_players() {

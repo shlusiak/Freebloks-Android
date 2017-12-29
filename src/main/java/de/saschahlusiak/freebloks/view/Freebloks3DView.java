@@ -79,7 +79,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 				model.setSpiel(spiel);
 				if (spiel != null) {
 					client.addClientInterface(Freebloks3DView.this);
-					model.board.last_size = spiel.m_field_size_x;
+					model.board.last_size = spiel.width;
 					for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
 						model.board.centerPlayer = i;
 						break;
@@ -279,7 +279,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			queueEvent(new Runnable() {
 				@Override
 				public void run() {
-					renderer.board.initBorder(model.spiel.m_field_size_x);
+					renderer.board.initBorder(model.spiel.width);
 					requestRender();
 				}
 			});

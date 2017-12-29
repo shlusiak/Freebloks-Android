@@ -1,46 +1,30 @@
 package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 
+/**
+ * Simple Stack to contain Turns for the undo history
+ */
 public class Turnpool implements Serializable {
 	private static final long serialVersionUID = 4356065376532513833L;
 
-	ArrayList<Turn> turns = new ArrayList<>();
-	int current = 0;
+	private final Deque<Turn> turns = new LinkedList<>();
 
-	final public void add_turn(Turn turn) {
-		current++;
-		if (turns.size() < current) {
-			turns.add(new Turn(turn));
-		} else {
-			turns.get(current - 1).copy(turn);
-		}
+	public final void add(Turn turn) {
+		turns.add(turn);
 	}
 
-	final void begin_add() {
-		current = 0;
-	}
-
-	final public void delete_all_turns() {
-		current = 0;
+	public final void clear() {
 		turns.clear();
 	}
 
-	final void delete_last() {
-		current--;
-		turns.remove(current);
+	public final Turn pop() {
+		return turns.pollLast();
 	}
 
-	final public Turn get_last_turn() {
-		return turns.get(current - 1);
-	}
-
-	final Turn get_turn(int i) {
-		return turns.get(i - 1);
-	}
-
-	final int get_number_of_stored_turns() {
-		return current;
+	public final Turn get() {
+		return turns.peekLast();
 	}
 }
