@@ -262,7 +262,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
-			client = spielthread.client;
+			client = spielthread.getClient();
 			client.addClientInterface(this);
 			view.setSpiel(client, client.spiel);
 			newCurrentPlayer(client.spiel.current_player());
@@ -358,7 +358,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 		if (spielthread != null) try {
 			spielthread.goDown();
-			spielthread.client.disconnect();
 			spielthread.join();
 			spielthread = null;
 		} catch (Exception e) {
@@ -517,7 +516,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 
 		if (spielthread != null)
-			spielthread.client.disconnect();
+			spielthread.goDown();
 
 		view.model.clearEffects();
 		Spielleiter spiel = new Spielleiter(fieldsize, fieldsize);
@@ -948,14 +947,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
 			view.model.currentStone.stopDragging();
-			spielthread.client.request_hint(client.spiel.current_player());
+			client.request_hint(client.spiel.current_player());
 			return true;
 
 		case R.id.undo:
 			if (client == null)
 				return true;
 			view.model.clearEffects();
-			spielthread.client.request_undo();
+			client.request_undo();
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return true;
 

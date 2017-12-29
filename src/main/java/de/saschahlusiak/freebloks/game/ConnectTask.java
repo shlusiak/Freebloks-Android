@@ -10,17 +10,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsListener;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.network.Network;
 
 class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListener {
+	private static final String tag = ConnectTask.class.getSimpleName();
+
 	private FreebloksActivity activity;
-	SpielClient myclient = null;
-	boolean show_lobby;
-	Runnable connectedRunnable;
+	private SpielClient myclient = null;
+	private boolean show_lobby;
+	private Runnable connectedRunnable;
 
 	ConnectTask(SpielClient client, boolean show_lobby, Runnable connectedRunnable) {
 		this.myclient = client;
@@ -45,8 +44,9 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			Log.d("ConnectTask", "connecting to " + params[0]);
-			Crashlytics.setString("server", params[0]);
+			Crashlytics.log(Log.INFO, tag, "Connecting to " + params[0]);
+			Crashlytics.setString("server", params[0] == null ? "(null)" : params[0]);
+
 			myclient.connect(activity, params[0], Network.DEFAULT_PORT);
 		} catch (IOException e) {
 			if (isCancelled())
@@ -54,7 +54,7 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 			Crashlytics.logException(e);
 			return e.getMessage();
 		}
-		Log.d("ConnectTask", "connected");
+		Crashlytics.log(Log.INFO, tag, "connected");
 		if (isCancelled()) {
 			return null;
 		}
@@ -65,7 +65,7 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 
 	@Override
 	protected void onCancelled() {
-		Log.d("ConnectTask", "onCancelled");
+		Crashlytics.log(Log.INFO, tag, "cancelled");
 		super.onCancelled();
 	}
 

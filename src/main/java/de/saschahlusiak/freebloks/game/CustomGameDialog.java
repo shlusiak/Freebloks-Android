@@ -315,8 +315,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	}
 
 	public String getServer() {
-		if (server.getText().toString().isEmpty())
+		if (server.getText().toString().trim().isEmpty())
 			return Global.DEFAULT_SERVER_ADDRESS;
-		return server.getText().toString();
+		return server.getText().toString().trim();
 	}
 }

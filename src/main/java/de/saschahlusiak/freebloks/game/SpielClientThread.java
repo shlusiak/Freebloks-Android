@@ -9,12 +9,18 @@ import de.saschahlusiak.freebloks.controller.SpielClient;
 
 class SpielClientThread extends Thread {
 	private static final String tag = SpielClientThread.class.getSimpleName();
-	final SpielClient client;
+
+	private final SpielClient client;
 	private boolean godown;
 
 	SpielClientThread(SpielClient spiel) {
 		super("SpielClientThread");
 		this.client = spiel;
+	}
+
+	public SpielClient getClient()
+	{
+		return client;
 	}
 
 	private synchronized boolean getGoDown() {
@@ -23,6 +29,7 @@ class SpielClientThread extends Thread {
 
 	public synchronized void goDown() {
 		godown = true;
+		client.disconnect();
 	}
 
 	private Exception error = null;
@@ -45,6 +52,7 @@ class SpielClientThread extends Thread {
 		catch (IOException e) {
 			if (getGoDown())
 				return;
+
 			Crashlytics.logException(e);
 			e.printStackTrace();
 			synchronized(client) {
