@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 public abstract class FreebloksDB {
 	Context context;
@@ -12,20 +13,15 @@ public abstract class FreebloksDB {
 		this.context = context;
 	}
 
-	public boolean open() {
+	public void open() throws SQLiteException {
 		db = null;
 		dbHelper = new FreebloksDBOpenHandler(context);
-		try {
-			db = dbHelper.getWritableDatabase();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return (db != null);
+		db = dbHelper.getWritableDatabase();
 	}
 
 	public void close() {
-		dbHelper.close();
+		if (dbHelper != null)
+			dbHelper.close();
 	}
 
 	public void beginTransaction() {

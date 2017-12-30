@@ -6,7 +6,7 @@ import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.GameStateException;
 
 /**
- * State of a game (model).
+ * Game state (model)
  */
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
@@ -377,7 +377,7 @@ public class Spiel implements Serializable, Cloneable {
 	 * Undo the last turn in the turnpool for the given gamemode
 	 */
 	public void undo(Turnpool turnpool, GameMode gamemode) throws GameStateException{
-		final Turn turn = turnpool.pop();
+		final Turn turn = turnpool.pollLast();
 		final Stone stone = player[turn.m_playernumber].get_stone(turn.m_stone_number);
 		int x, y;
 

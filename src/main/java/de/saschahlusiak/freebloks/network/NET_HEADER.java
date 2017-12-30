@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.network;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,10 +115,8 @@ public class NET_HEADER implements Serializable {
 		try {
 			socket.getOutputStream().write(bos.toByteArray());
 		} catch (IOException e) {
-			// TODO: don't silently fail!
-			e.printStackTrace();
-			throw new RuntimeException(e);
-//			return false;
+			Crashlytics.logException(e);
+			return false;
 		}
 		return true;
 	}

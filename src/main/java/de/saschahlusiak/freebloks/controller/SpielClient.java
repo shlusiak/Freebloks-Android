@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -152,6 +153,7 @@ public class SpielClient {
 
 	synchronized void process_message(NET_HEADER data) throws ProtocolException, GameStateException {
 		int i;
+
 		switch(data.msg_type)
 		{
 		/* Der Server gewaehrt dem Client einen lokalen Spieler */
@@ -175,7 +177,7 @@ public class SpielClient {
 			spiel.spieler[i] = Spielleiter.PLAYER_COMPUTER;
 			break;
 
-		/* Der Server hat einen neuen aktuellen Spieler festgelegt */
+		/* server sent new current player number */
 		case Network.MSG_CURRENT_PLAYER:
 			spiel.m_current_player=((NET_CURRENT_PLAYER)data).player;
 			for (SpielClientInterface sci : spielClientInterface)
@@ -188,17 +190,21 @@ public class SpielClient {
 				throw new GameStateException("received MSG_SET_STONE but game not running");
 
 			NET_SET_STONE s=(NET_SET_STONE)data;
-			
+
 			Turn turn = s.toTurn();
-			
-			/* Stein aufs echte Spielfeld setzen */
-//			Log.d(tag, "player " + s.player + " stone " + stone.get_number() + " to (" + s.x + "," + s.y + ")");
-			/* Zug der History anhaengen */
+
+			Crashlytics.log(String.format("player %d, stone %d (x%d), x %d, y %d",
+				s.player,
+				s.stone,
+				spiel.getPlayer(s.player).get_stone(s.stone).get_available(),
+				s.x,
+				s.y));
 
 			spiel.addHistory(turn);
+
 			/* inform listeners first, so that effects can be added before the stone
 			 * is committed. fixes drawing glitches, where stone is set, but
-			 * effect hasn't been added yet
+			 * effect hasn't been added yet.
 			 */
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneWillBeSet(s);
@@ -307,7 +313,14 @@ public class SpielClient {
 			if (!spiel.isStarted() && !spiel.isFinished())
 				throw new GameStateException("received MSG_UNDO_STONE but game not running");
 
-			Turn t = spiel.history.get();
+			Turn t = spiel.history.getLast();
+
+			Crashlytics.log(String.format("undo: player %d, stone %d, x %d, y %d",
+				t.m_playernumber,
+				t.m_stone_number,
+				t.m_x,
+				t.m_y));
+
 			Log.d(tag, "stone undone: " + t.m_stone_number);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone( t);
