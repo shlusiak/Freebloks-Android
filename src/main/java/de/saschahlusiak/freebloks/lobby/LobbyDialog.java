@@ -6,8 +6,12 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -24,10 +28,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -72,7 +72,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		}
 
 		colorGrid = (GridView)findViewById(R.id.color_grid);
-		colorAdapter = new ColorAdapter(getContext(), null, null);
+		colorAdapter = new ColorAdapter(this, getContext(), null, null);
 		colorGrid.setAdapter(colorAdapter);
 
 		colorGrid.setOnItemClickListener(this);
@@ -157,6 +157,44 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
+	public void editPlayerName(final int player) {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+		LayoutInflater inflater = this.getLayoutInflater();
+		final View dialogView = inflater.inflate(R.layout.edit_name_dialog, null);
+		dialogBuilder.setView(dialogView);
+
+		final EditText edt = dialogView.findViewById(android.R.id.edit);
+
+		edt.setText(lastStatus.getClientName(getContext().getResources(), lastStatus.spieler[player]));
+
+		dialogBuilder.setTitle(R.string.prefs_player_name);
+		dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				final String name = edt.getText().toString();
+
+				PreferenceManager.getDefaultSharedPreferences(getContext())
+					.edit()
+					.putString("player_name", name)
+					.apply();
+
+				client.revoke_player(player);
+				client.request_player(player, name);
+			}
+		});
+		dialogBuilder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				//pass
+			}
+		});
+		AlertDialog b = dialogBuilder.create();
+		b.show();
+
+		edt.selectAll();
+		edt.requestFocus();
+
+		b.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+		b.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+	}
 
 	public void setSpiel(SpielClient client) {
 		this.client = client;

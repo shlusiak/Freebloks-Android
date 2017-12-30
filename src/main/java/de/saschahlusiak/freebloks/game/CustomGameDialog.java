@@ -247,13 +247,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		findViewById(R.id.spinner_layout).setVisibility(View.GONE);
 	}
 
-	void prepareHostDialog(String name, int difficulty, GameMode gamemode, int fieldsize) {
-		prepare(name, difficulty, gamemode, fieldsize);
-		setTitle(R.string.host_game);
-		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
-		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
-	}
-
 	void setDifficultyLabel() {
 		final String labels[] = getContext().getResources().getStringArray(R.array.difficulties);
 		int value = getDifficulty();

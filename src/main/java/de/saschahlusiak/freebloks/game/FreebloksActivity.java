@@ -96,7 +96,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	static final int DIALOG_PROGRESS = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
-	static final int DIALOG_HOST = 9;
 	static final int DIALOG_SINGLE_PLAYER = 10;
 
 	static final int REQUEST_FINISH_GAME = 1;
@@ -726,24 +725,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 			});
 
-		case DIALOG_HOST:
-			// TODO: hosting does not need dialog at all once all things can be configured through lobby dialog
-			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
-				@Override
-				public boolean OnStart(CustomGameDialog dialog) {
-					clientName = dialog.getName();
-					gamemode = dialog.getGameMode();
-					fieldsize = dialog.getFieldSize();
-					/* TODO: host should have configurable difficulty */
-					startNewGame(
-							null,
-							true,
-							dialog.getPlayers());
-					dismissDialog(DIALOG_GAME_MENU);
-					return true;
-				}
-			});
-			
 		case DIALOG_PROGRESS:
 			ProgressDialog p = new ProgressDialog(FreebloksActivity.this);
 			p.setMessage(getString(R.string.connecting));
@@ -874,7 +855,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			dialog.findViewById(R.id.host_game).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					showDialog(DIALOG_HOST);
+					dismissDialog(DIALOG_GAME_MENU);
+					startNewGame(null, true, null);
 				}
 			});
 			dialog.findViewById(R.id.new_game_custom).setOnClickListener(new OnClickListener() {
@@ -887,10 +869,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		case DIALOG_JOIN:
 			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, GameMode.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
-			break;
-
-		case DIALOG_HOST:
-			((CustomGameDialog)dialog).prepareHostDialog(clientName, difficulty, gamemode, fieldsize);
 			break;
 
 		case DIALOG_CUSTOM_GAME:

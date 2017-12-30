@@ -47,13 +47,6 @@
 
 	    </GridView>
 
-	    <Button
-	        android:id="@+id/startButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_weight="0"
-	        android:text="@string/start"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
     <ListView
@@ -74,8 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_above="@+id/startButton"
         android:gravity="bottom" >
 
 	    <EditText
@@ -102,4 +95,13 @@
             app:fab_colorPressed="@color/send_button_color_pressed" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/start"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>

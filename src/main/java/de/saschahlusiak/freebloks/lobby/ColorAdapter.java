@@ -23,8 +23,10 @@ public class ColorAdapter extends BaseAdapter {
 	private Context context;
 	private NET_SERVER_STATUS lastStatus;
 	private Spielleiter spiel;
+	private LobbyDialog lobby;
 
-	public ColorAdapter(Context context, Spielleiter spiel, NET_SERVER_STATUS lastStatus) {
+	public ColorAdapter(LobbyDialog lobby, Context context, Spielleiter spiel, NET_SERVER_STATUS lastStatus) {
+		this.lobby = lobby;
 		this.context = context;
 		this.lastStatus = lastStatus;
 		this.spiel = spiel;
@@ -94,7 +96,7 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View v;
+		final View v;
 		if (convertView == null)
 			v = LayoutInflater.from(context).inflate(R.layout.color_grid_item, parent, false);
 		else
@@ -106,7 +108,7 @@ public class ColorAdapter extends BaseAdapter {
 		GradientDrawable background = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
 		v.setBackgroundDrawable(ld);
 
-		t = (TextView)v.findViewById(R.id.text);
+		t = v.findViewById(R.id.text);
 		t.setTextColor(Color.WHITE);
 		t.setVisibility(View.VISIBLE);
         if (lastStatus == null || spiel == null) {
@@ -116,24 +118,35 @@ public class ColorAdapter extends BaseAdapter {
         	t.setText("---");
         	t.clearAnimation();
         	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-        	return v;
+			v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+
+			return v;
         }
 
+        final int player;
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
-		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+		if ((lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
 			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR ||
-			lastStatus.gamemode == GameMode.GAMEMODE_DUO)
-			if (position == 1)
-				position = 2;
+			lastStatus.gamemode == GameMode.GAMEMODE_DUO) && position == 1)
+				player = 2;
+		else player = position;
 
-		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(position, spiel.getGameMode())]));
+		v.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
+		   @Override
+		   public void onClick(View view) {
+			   lobby.editPlayerName(player);
+		   }
+	   });
+
+		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, spiel.getGameMode())]));
 		if (lastStatus.isVersion(2)) {
-			if (lastStatus.spieler[position] >= 0) {
+			if (lastStatus.spieler[player] >= 0) {
 				/* it is a human player */
-				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[position]));
+				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[player]));
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				if (spiel.is_local_player(position)) {
+				if (spiel.is_local_player(player)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
+					v.findViewById(R.id.editButton).setVisibility(View.VISIBLE);
 
 					Animation a = new TranslateAnimation(
 							TranslateAnimation.RELATIVE_TO_SELF,
@@ -152,6 +165,7 @@ public class ColorAdapter extends BaseAdapter {
 					t.startAnimation(a);
 				} else {
 		        	t.clearAnimation();
+					v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
 				}
 			} else {
 				/* computer player */
@@ -165,12 +179,13 @@ public class ColorAdapter extends BaseAdapter {
 					v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 					t.setVisibility(View.INVISIBLE);
 				}
+				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
 			}
 		} else {
-			if (spiel.is_local_player(position)) {
+			if (spiel.is_local_player(player)) {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
-				t.setText(colorNames[position + 1]);
+				t.setText(colorNames[player + 1]);
 
 				t.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -189,11 +204,13 @@ public class ColorAdapter extends BaseAdapter {
 				a.setRepeatCount(Animation.INFINITE);
 
 				t.startAnimation(a);
+				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
 			} else {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				background.setAlpha(96);
 				t.setText("---");
 				t.clearAnimation();
+				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
 			}
 		}
 
