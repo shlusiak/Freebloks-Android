@@ -6,6 +6,7 @@
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:windowBackground">@null</item>
+        <item name="android:dialogTheme">@style/Theme.Freebloks.Dialog</item>
     </style>
     <style name="Theme.Freebloks.Light" parent="android:Theme.Holo.Light">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
@@ -16,14 +17,14 @@
     <style name="Theme.Freebloks.Auto.Light" parent="Theme.Freebloks.Light"></style>
     <style name="Theme.Freebloks.Preferences" parent="android:Theme.Holo"></style>
     
-    <style name="Theme.Freebloks.Dialog" parent="android:Theme.Holo.Dialog.MinWidth">
+    <style name="Theme.Freebloks.Dialog" parent="android:Theme.Holo.Dialog">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
     </style>
     
-    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Holo.Light.Dialog.MinWidth">
+    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Holo.Light.Dialog">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>

@@ -713,14 +713,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		case DIALOG_JOIN:
 			return new JoinDialog(this, new JoinDialog.OnStartCustomGameListener() {
 				@Override
-				public boolean onJoinGame(String name, String server) {
+				public void onJoinGame(String name, String server) {
 					clientName = name;
 					startNewGame(
 							server,
 							true,
 							null);
 					dismissDialog(DIALOG_GAME_MENU);
-					return true;
 				}
 			});
 

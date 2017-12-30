@@ -19,11 +19,11 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 	private SharedPreferences prefs;
 
 	public interface OnStartCustomGameListener {
-		boolean onJoinGame(String name, String server);
+		void onJoinGame(String name, String server);
 	}
 
 	public JoinDialog(Context context, final OnStartCustomGameListener listener) {
-		super(context, R.style.Theme_Freebloks_Dialog);
+		super(context, R.style.Theme_Freebloks_Light_Dialog);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -31,7 +31,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 		setContentView(R.layout.join_dialog);
 
-		setTitle(R.string.join_game);
+		setTitle(R.string.join_multiplayer_game);
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 

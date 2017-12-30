@@ -20,6 +20,7 @@ public class GameMenu extends Dialog {
 
 	public GameMenu(Context context) {
 		super(context);
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.game_menu_dialog);
 

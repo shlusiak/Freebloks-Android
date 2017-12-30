@@ -45,7 +45,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	}
 
 	public CustomGameDialog(Context context, final OnStartCustomGameListener listener) {
-		super(context, R.style.Theme_Freebloks_Dialog);
+		super(context, R.style.Theme_Freebloks_Light_Dialog);
 
 		this.listener = listener;
 
