@@ -99,7 +99,8 @@
     <Button
         android:id="@+id/startButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/main_menu_button_height"
+        android:padding="4dp"
         android:layout_alignParentBottom="true"
         android:text="@string/start"
         android:textAppearance="?android:attr/textAppearanceMedium" />

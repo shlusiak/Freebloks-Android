@@ -711,15 +711,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			});
 
 		case DIALOG_JOIN:
-			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
+			return new JoinDialog(this, new JoinDialog.OnStartCustomGameListener() {
 				@Override
-				public boolean OnStart(CustomGameDialog dialog) {
-					clientName = dialog.getName();
-					gamemode = dialog.getGameMode();
+				public boolean onJoinGame(String name, String server) {
+					clientName = name;
 					startNewGame(
-							dialog.getServer(),
+							server,
 							true,
-							dialog.getPlayers());
+							null);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
 				}
@@ -868,11 +867,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			break;
 
 		case DIALOG_JOIN:
-			((CustomGameDialog)dialog).prepareJoinDialog(clientName, difficulty, GameMode.GAMEMODE_4_COLORS_4_PLAYERS, fieldsize);
+			((JoinDialog)dialog).setName(clientName);
 			break;
 
 		case DIALOG_CUSTOM_GAME:
-			((CustomGameDialog)dialog).prepareCustomGameDialog(clientName, difficulty, gamemode, fieldsize);
+			((CustomGameDialog)dialog).prepareCustomGameDialog(difficulty, gamemode, fieldsize);
 			break;
 			
 		case DIALOG_PROGRESS:

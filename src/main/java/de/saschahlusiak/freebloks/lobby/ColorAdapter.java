@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.lobby;
 
+import android.widget.CheckBox;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -103,6 +104,7 @@ public class ColorAdapter extends BaseAdapter {
 			v = convertView;
 
 		TextView t;
+		CheckBox c = v.findViewById(R.id.checkBox);
 
 		LayerDrawable ld = (LayerDrawable)context.getResources().getDrawable(R.drawable.bg_card_1).mutate();
 		GradientDrawable background = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
@@ -119,6 +121,7 @@ public class ColorAdapter extends BaseAdapter {
         	t.clearAnimation();
         	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 			v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+			c.setChecked(false);
 
 			return v;
         }
@@ -163,9 +166,16 @@ public class ColorAdapter extends BaseAdapter {
 					a.setRepeatCount(Animation.INFINITE);
 
 					t.startAnimation(a);
+
+					c.setChecked(true);
+					c.setEnabled(true);
+					c.setVisibility(View.VISIBLE);
 				} else {
 		        	t.clearAnimation();
 					v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+					c.setChecked(false);
+					c.setEnabled(false);
+					c.setVisibility(View.INVISIBLE);
 				}
 			} else {
 				/* computer player */
@@ -180,6 +190,9 @@ public class ColorAdapter extends BaseAdapter {
 					t.setVisibility(View.INVISIBLE);
 				}
 				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+				c.setChecked(false);
+				c.setEnabled(false);
+				c.setVisibility(View.VISIBLE);
 			}
 		} else {
 			if (spiel.is_local_player(player)) {
@@ -205,12 +218,15 @@ public class ColorAdapter extends BaseAdapter {
 
 				t.startAnimation(a);
 				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+				c.setVisibility(View.VISIBLE);
+				c.setChecked(true);
 			} else {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				background.setAlpha(96);
 				t.setText("---");
 				t.clearAnimation();
 				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+				c.setVisibility(View.INVISIBLE);
 			}
 		}
 

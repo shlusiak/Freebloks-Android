@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -29,17 +28,16 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		13, 14, 15, 17, 20, 23
 	};
 
-	CheckBox player1;
-	CheckBox player2;
-	CheckBox player3;
-	CheckBox player4;
+	private CheckBox player1;
+	private CheckBox player2;
+	private CheckBox player3;
+	private CheckBox player4;
 
-	SeekBar difficulty;
-	TextView difficulty_label;
-	Spinner game_mode, field_size;
+	private SeekBar difficulty;
+	private TextView difficulty_label;
+	private Spinner game_mode, field_size;
 
-	EditText name, server;
-	OnStartCustomGameListener listener;
+	private OnStartCustomGameListener listener;
 
 
 	public interface OnStartCustomGameListener {
@@ -55,19 +53,19 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-		difficulty = (SeekBar)findViewById(R.id.difficulty);
-		difficulty_label = (TextView)findViewById(R.id.difficulty_label);
+		difficulty = findViewById(R.id.difficulty);
+		difficulty_label = findViewById(R.id.difficulty_label);
 		difficulty.setOnSeekBarChangeListener(this);
 		difficulty.setMax(DIFFICULTY_MAX);
 
-		player1 = (CheckBox)findViewById(R.id.player1);
-		player2 = (CheckBox)findViewById(R.id.player2);
-		player3 = (CheckBox)findViewById(R.id.player3);
-		player4 = (CheckBox)findViewById(R.id.player4);
+		player1 = findViewById(R.id.player1);
+		player2 = findViewById(R.id.player2);
+		player3 = findViewById(R.id.player3);
+		player4 = findViewById(R.id.player4);
 
-		field_size = (Spinner) findViewById(R.id.field_size);
+		field_size = findViewById(R.id.field_size);
 
-		game_mode = (Spinner) findViewById(R.id.game_mode);
+		game_mode = findViewById(R.id.game_mode);
 		game_mode.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -162,13 +160,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 			}
 		});
 
-		name = (EditText)findViewById(R.id.name);
-		server = (EditText)findViewById(R.id.server);
-		server.setText("");
-
-		if (name != null)
-			name.requestFocus();
-
 		updateNames();
 
 		setDifficultyLabel();
@@ -189,13 +180,12 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		Editor editor = prefs.edit();
 		editor.putInt("difficulty", getDifficulty());
-		editor.putString("player_name", getName());
 		editor.putInt("gamemode", getGameMode().ordinal());
 		editor.putInt("fieldsize", getFieldSize());
 		editor.apply();
 	}
 
-	private void prepare(String name, int difficulty, GameMode gamemode, int fieldsize) {
+	private void prepare(int difficulty, GameMode gamemode, int fieldsize) {
 		int p = (int)(Math.random() * 4.0);
 		game_mode.setSelection(gamemode.ordinal());
 
@@ -216,7 +206,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 			player4.setChecked(player2.isChecked());
 		}
 
-		this.name.setText(name);
 		updateNames();
 
 		int slider = DIFFICULTY_DEFAULT;
@@ -232,19 +221,9 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 		field_size.setSelection(slider);
 	}
 
-	void prepareCustomGameDialog(String name, int difficulty, GameMode gamemode, int fieldsize) {
-		prepare(name, difficulty, gamemode, fieldsize);
+	void prepareCustomGameDialog(int difficulty, GameMode gamemode, int fieldsize) {
+		prepare(difficulty, gamemode, fieldsize);
 		setTitle(R.string.custom_game_title);
-		findViewById(R.id.player_name_layout).setVisibility(View.GONE);
-		findViewById(R.id.server_address_layout).setVisibility(View.GONE);
-	}
-
-	void prepareJoinDialog(String name, int difficulty, GameMode gamemode, int fieldsize) {
-		/* NOTE: if the spinner is hidden, the callback to enable the colors is not called! */
-		prepare(name, difficulty, gamemode, fieldsize);
-		setTitle(R.string.join_game);
-		findViewById(R.id.difficulty_layout).setVisibility(View.GONE);
-		findViewById(R.id.spinner_layout).setVisibility(View.GONE);
 	}
 
 	void setDifficultyLabel() {
@@ -301,15 +280,5 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 
-	}
-
-	public String getName() {
-		return name.getText().toString();
-	}
-
-	public String getServer() {
-		if (server.getText().toString().trim().isEmpty())
-			return Global.DEFAULT_SERVER_ADDRESS;
-		return server.getText().toString().trim();
 	}
 }

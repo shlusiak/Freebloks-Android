@@ -11,62 +11,6 @@
         android:padding="@dimen/dialog_padding">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/dialog_button_margin"
-            android:minWidth="280dp"
-            android:id="@+id/server_address_layout">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:text="@string/join_server_address"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <EditText
-                android:id="@+id/server"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:hint="@string/default_server"
-                android:imeOptions="flagNoExtractUi"
-                android:inputType="textNoSuggestions"
-                android:singleLine="true">
-
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/dialog_button_margin"
-            android:minWidth="280dp"
-            android:id="@+id/player_name_layout">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:text="@string/join_player_name"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:imeOptions="flagNoExtractUi"
-                android:inputType="textCapWords|textPersonName"
-                android:singleLine="true"
-                android:text="">
-
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/spinner_layout"
             android:layout_marginBottom="@dimen/dialog_button_margin"
@@ -175,22 +119,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="?android:attr/buttonBarStyle"
+            android:gravity="right"
             android:layout_marginTop="@dimen/dialog_button_margin">
 
             <Button
                 android:id="@android:id/closeButton"
                 android:layout_width="wrap_content"
-                android:layout_weight="0.5"
                 android:layout_height="@dimen/main_menu_button_height"
                 android:textSize="@dimen/textSizeSmall"
+                style="?android:attr/buttonBarButtonStyle"
                 android:text="@android:string/cancel"/>
             <Button
                 android:id="@android:id/button1"
                 android:layout_width="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_marginLeft="@dimen/dialog_button_margin"
                 android:layout_height="@dimen/main_menu_button_height"
                 android:textSize="@dimen/textSizeSmall"
+                style="?android:attr/buttonBarButtonStyle"
                 android:text="@android:string/ok"/>
         </LinearLayout>
     </LinearLayout>
