@@ -167,7 +167,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		if (model == null)
+		if (model == null || model.spiel == null)
 			return;
 
 		if (model.spiel.is_local_player() || model.wheel.getCurrentPlayer() != model.board.getShowWheelPlayer())
