@@ -24,7 +24,7 @@ Binaries
 About
 -----
 
-Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2017.
+Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2018.
 
 Email: apps@saschahlusiak.de
 Project homepage: http://www.saschahlusiak.de/freebloks-3d-android/
