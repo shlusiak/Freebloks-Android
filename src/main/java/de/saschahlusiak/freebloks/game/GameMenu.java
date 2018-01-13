@@ -1,7 +1,9 @@
 package de.saschahlusiak.freebloks.game;
 
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import de.saschahlusiak.freebloks.AboutActivity;
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
+import de.saschahlusiak.freebloks.donate.DonateActivity;
 
 public class GameMenu extends Dialog {
 	ImageButton soundButton;
@@ -21,13 +24,23 @@ public class GameMenu extends Dialog {
 	public GameMenu(Context context) {
 		super(context);
 
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.game_menu_dialog);
 
-		findViewById(R.id.appIcon).setOnClickListener(new View.OnClickListener() {
+		final long starts = prefs.getLong("rate_number_of_starts", 0);
+		final ImageView appIcon = findViewById(R.id.appIcon);
+		final boolean appIconIsDonate = (starts % Global.DONATE_STARTS) == 0;
+
+		if (appIconIsDonate) {
+			appIcon.setImageResource(R.drawable.ic_action_favorite);
+		}
+		appIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getContext(), AboutActivity.class);
+				Intent intent;
+				intent = new Intent(getContext(), appIconIsDonate ? DonateActivity.class : AboutActivity.class);
 				getContext().startActivity(intent);
 			}
 		});

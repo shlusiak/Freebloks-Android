@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
+import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
@@ -248,7 +249,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			view.setScale(prefs.getFloat("view_scale", 1.0f));
 			showRateDialog = RateAppDialog.checkShowRateDialog(this);
 
-			if (!Global.IS_VIP && prefs.getLong("rate_number_of_starts", 0) == Global.DONATE_STARTS) {
+			long starts = prefs.getLong("rate_number_of_starts", 0);
+
+			if (!Global.IS_VIP && starts == Global.DONATE_STARTS) {
 				Intent intent = new Intent(this, DonateActivity.class);
 				startActivity(intent);
 			}
