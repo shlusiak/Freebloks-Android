@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
@@ -29,6 +30,8 @@ public class RateAppDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.rate_app_dialog);
 		setTitle(R.string.rate_freebloks_title);
+
+		FirebaseAnalytics.getInstance(getContext()).logEvent("show_rate", null);
 
 		findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
 			@Override

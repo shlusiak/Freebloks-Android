@@ -64,6 +64,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/donation_freebloksvip"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <RadioButton
+                android:text="@string/donation_paypal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/donation_paypal"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </RadioGroup>
 
         <Button

@@ -6,7 +6,6 @@ import de.saschahlusiak.freebloks.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +32,8 @@ public class DonateActivity extends Activity {
 				onNextButtonPress();
 			}
 		});
+
+		FirebaseAnalytics.getInstance(this).logEvent("show_donate", null);
 	}
 
 	@Override
@@ -48,17 +49,30 @@ public class DonateActivity extends Activity {
 	}
 	
 	void onNextButtonPress() {
-		RadioGroup group = (RadioGroup)findViewById(R.id.radioGroup);
-	//	RadioButton button = (RadioButton)findViewById(group.getCheckedRadioButtonId());
+		RadioGroup group = findViewById(R.id.radioGroup);
+		int id = group.getCheckedRadioButtonId();
+		Intent intent;
 
-		if (group.getCheckedRadioButtonId() == R.id.donation_freebloksvip) {
-			FirebaseAnalytics.getInstance(this).logEvent("view_donate", null);
+		switch (id) {
+			case R.id.donation_freebloksvip:
+				FirebaseAnalytics.getInstance(this).logEvent("donate_freebloksvip", null);
 
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Global.getMarketURLString("de.saschahlusiak.freebloksvip")));
-			startActivity(intent);
-			finish();
-			return;
+				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Global.getMarketURLString("de.saschahlusiak.freebloksvip")));
+				startActivity(intent);
+				finish();
+				break;
+
+			case R.id.donation_paypal:
+				FirebaseAnalytics.getInstance(this).logEvent("donate_paypal", null);
+
+				intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://paypal.me/saschahlusiak/3eur"));
+				startActivity(intent);
+				finish();
+				break;
+
+			default:
+				finish();
+				break;
 		}
-		finish();
 	}
 }
