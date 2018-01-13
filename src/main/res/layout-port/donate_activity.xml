@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingTop="16dp"
-            android:src="@drawable/coin" />
+            android:src="@drawable/donate_black" />
 
         <TextView
             android:id="@+id/textView1"
@@ -38,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingTop="4dp"
             android:paddingBottom="8dp" >
 
             <RadioButton

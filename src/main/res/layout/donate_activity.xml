@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/coin" />
+            android:src="@drawable/donate_black" />
 
         <TextView
             android:id="@+id/textView1"
