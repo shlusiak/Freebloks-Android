@@ -173,7 +173,7 @@ void CSpielServer::run()
 		if (forceDelay && timer.elapsed() < 800)
 			timer.sleep(800 - timer.elapsed());
 
-		if (turn!=0)
+		if (turn != NULL)
 		{
 			/* Datenstruktur fuellen, die an die Clients geschickt werden soll. */
 			NET_SET_STONE data;

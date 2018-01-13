@@ -162,7 +162,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	ret=listener->init(_interface, port);
 	if (ret!=0)
 	{
-	    return -1;
+	    return ret;
 	}
 
 	listener->new_game(max_humans, ki_mode, (GAMEMODE)gamemode, ki_threads, force_delay);

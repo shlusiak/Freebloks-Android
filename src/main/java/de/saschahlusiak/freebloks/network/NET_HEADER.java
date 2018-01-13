@@ -43,24 +43,21 @@ public class NET_HEADER implements Serializable {
 		return (b & 0xFF);
 	}
 
-	boolean read(Socket socket, boolean block) throws ProtocolException,IOException {
-		InputStream is;
+	boolean read(InputStream is, boolean block) throws ProtocolException,IOException {
 		int r;
 		int check1, check2;
-		if (socket == null)
-			return false;
-		if (socket.isInputShutdown())
-			return false;
 
 		buffer = new byte[HEADER_SIZE];
-		is = socket.getInputStream();
 
 		if (!block && (is.available() < HEADER_SIZE))
 			return false;
 
 		r = is.read(buffer, 0, HEADER_SIZE);
+		if (r == -1)
+			throw new IOException("EOF when reading packet header");
+
 		if (r < HEADER_SIZE)
-			throw new IOException("read error");
+			throw new IOException(String.format("short read: %d out of %d", r, HEADER_SIZE));
 
 		check1 = unsigned(buffer[0]);
 		data_length = unsigned(buffer[1]) << 8 | unsigned(buffer[2]);

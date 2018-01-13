@@ -32,8 +32,6 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
-import java.sql.SQLException;
-
 public class GameFinishActivity extends BaseGameActivity {
 	public static final int RESULT_NEW_GAME = RESULT_FIRST_USER + 1;
 	public static final int RESULT_SHOW_MENU = RESULT_FIRST_USER + 2;
@@ -58,15 +56,16 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		super.onCreate(savedInstanceState);
 
-
 		setContentView(R.layout.game_finish_activity);
-
 
 		place = findViewById(R.id.place);
 
 		spiel = (Spielleiter)getIntent().getSerializableExtra("game");
 		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
+
+		if (spiel == null)
+			throw new IllegalArgumentException("Game cannot be null");
 
 		data = spiel.getResultData();
 		updateViews(data, spiel.getGameMode());

@@ -412,6 +412,8 @@ public class CurrentStone implements ViewElement {
 	}
 
 	public boolean is_valid_turn(float x, float y) {
+		if (!model.spiel.is_local_player())
+			return false;
 		if (model.spiel.isValidTurn(stone, model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Stone.FIELD_ALLOWED)
 			return true;
 		return false;

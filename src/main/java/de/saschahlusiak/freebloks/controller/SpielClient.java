@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -26,14 +27,12 @@ public class SpielClient {
 	private Socket client_socket;
 	private String lastHost;
 	public Spielleiter spiel;
-	private int lastDifficulty;
 	private boolean lastPlayers[];
 	private NET_SERVER_STATUS lastStatus;
 	private HandlerThread sendThread;
 	private Handler sendHandler;
 
 	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
-		this.lastDifficulty = difficulty;
 		this.lastPlayers = lastPlayers;
 		if (leiter == null) {
 			spiel = new Spielleiter(fieldsize);
@@ -112,20 +111,20 @@ public class SpielClient {
 
 	public void poll() throws IOException {
 		NET_HEADER pkg;
-		/* Puffer fuer eine Netzwerknachricht. */
 
+		final InputStream is = client_socket.getInputStream();
 		try {
-			/* Lese eine Nachricht komplett aus dem Socket in buffer */
-			pkg = Network.read_package(client_socket, true);
+			if (client_socket == null || client_socket.isInputShutdown())
+				return;
+
+			/* Read a complete network message into buffer */
+			pkg = Network.read_package(is, true);
 				
 			if (pkg != null)
 				process_message(pkg);
 		}
-		catch (GameStateException e) {
+		catch (GameStateException | ProtocolException e) {
 			throw new RuntimeException(e);
-		}
-		catch (ProtocolException e) {
-			throw new RuntimeException(e);	
 		}
 	}
 
@@ -180,6 +179,7 @@ public class SpielClient {
 		/* server sent new current player number */
 		case Network.MSG_CURRENT_PLAYER:
 			spiel.m_current_player=((NET_CURRENT_PLAYER)data).player;
+			Crashlytics.log("New player: " + spiel.m_current_player);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.newCurrentPlayer(spiel.m_current_player);
 			break;
@@ -230,6 +230,7 @@ public class SpielClient {
 
 		/* Server hat entschlossen, dass das Spiel vorbei ist */
 		case Network.MSG_GAME_FINISH: {
+			Crashlytics.log("Game finished");
 			spiel.setFinished(true);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.gameFinished();
@@ -282,6 +283,8 @@ public class SpielClient {
 		
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
+			Crashlytics.log("Start game");
+
 			spiel.startNewGame(spiel.getGameMode());
 			spiel.setFinished(false);
 			spiel.setStarted(true);

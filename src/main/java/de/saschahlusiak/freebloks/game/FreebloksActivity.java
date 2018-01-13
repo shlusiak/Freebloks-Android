@@ -479,6 +479,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			if (spiel1 == null)
 				return false;
 
+			Crashlytics.log("restore from bundle");
 			JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.width, difficulty);
 
 			/* this will start a new SpielClient, which needs to be restored
@@ -516,7 +517,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void startNewGame(final String server, final boolean show_lobby, final boolean[] request_player) {
 		newCurrentPlayer(-1);
 		if (server == null) {
-			JNIServer.runServer(null, gamemode.ordinal(), fieldsize, difficulty);
+			int ret = JNIServer.runServer(null, gamemode.ordinal(), fieldsize, difficulty);
+			if (ret != 0) {
+				Crashlytics.logException(new RuntimeException("Error starting server: " + ret));
+			}
 		}
 
 		if (spielthread != null)
@@ -1186,6 +1190,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				updateMultiplayerNotification(false, null);
 				PlayerData[] data = client.spiel.getResultData();
 				new AddScoreTask(getApplicationContext(), client.spiel.getGameMode()).execute(data);
+
+				if (client.spiel == null) {
+					Crashlytics.logException(new IllegalStateException("gameFinished, but no game running"));
+					return;
+				}
 
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable)client.spiel);

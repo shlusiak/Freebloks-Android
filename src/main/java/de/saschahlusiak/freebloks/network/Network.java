@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.network;
 
 import java.io.IOException;
-import java.net.Socket;
+import java.io.InputStream;
 
 import android.util.Log;
 
@@ -25,9 +25,9 @@ public class Network {
 	public static final int MSG_REVOKE_PLAYER = 13;
 	public static final int MSG_REQUEST_GAME_MODE = 14;
 
-	public static NET_HEADER read_package(Socket socket, boolean block) throws IOException, ProtocolException {
+	public static NET_HEADER read_package(InputStream is, boolean block) throws IOException, ProtocolException {
 		NET_HEADER p = new NET_HEADER();
-		if (! p.read(socket, block))
+		if (! p.read(is, block))
 			return null;
 
 //		Log.d(tag, "Received network package type " + p.msg_type);
