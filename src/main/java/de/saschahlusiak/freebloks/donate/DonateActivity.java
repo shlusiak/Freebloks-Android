@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.donate;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -32,6 +34,8 @@ public class DonateActivity extends Activity {
 				onNextButtonPress();
 			}
 		});
+
+		findViewById(R.id.donate_icon).startAnimation(AnimationUtils.loadAnimation(this, R.anim.heart));
 
 		FirebaseAnalytics.getInstance(this).logEvent("show_donate", null);
 	}

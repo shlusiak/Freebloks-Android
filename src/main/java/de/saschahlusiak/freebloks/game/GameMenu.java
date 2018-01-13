@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import de.saschahlusiak.freebloks.AboutActivity;
@@ -21,6 +23,9 @@ public class GameMenu extends Dialog {
 	FreebloksActivity activity;
 	boolean soundon;
 
+	private final boolean appIconIsDonate;
+	private final ImageView appIcon;
+
 	public GameMenu(Context context) {
 		super(context);
 
@@ -30,8 +35,9 @@ public class GameMenu extends Dialog {
 		setContentView(R.layout.game_menu_dialog);
 
 		final long starts = prefs.getLong("rate_number_of_starts", 0);
-		final ImageView appIcon = findViewById(R.id.appIcon);
-		final boolean appIconIsDonate = (starts % Global.DONATE_STARTS) == 0;
+		appIconIsDonate = (!Global.IS_VIP) && (starts % Global.DONATE_STARTS) == 0;
+
+		appIcon = findViewById(R.id.appIcon);
 
 		if (appIconIsDonate) {
 			appIcon.setImageResource(R.drawable.ic_action_favorite);
@@ -44,7 +50,7 @@ public class GameMenu extends Dialog {
 				getContext().startActivity(intent);
 			}
 		});
-		soundButton = (ImageButton)findViewById(R.id.sound_toggle_button);
+		soundButton = findViewById(R.id.sound_toggle_button);
 		soundButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -61,6 +67,15 @@ public class GameMenu extends Dialog {
 				Toast.makeText(getContext(), getContext().getString(soundon ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		if (appIconIsDonate) {
+			appIcon.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.heart));
+		}
 	}
 
 	@Override
