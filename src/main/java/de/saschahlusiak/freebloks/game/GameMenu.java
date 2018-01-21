@@ -4,6 +4,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -40,6 +41,8 @@ public class GameMenu extends Dialog {
 		appIcon = findViewById(R.id.appIcon);
 
 		if (appIconIsDonate) {
+			FirebaseAnalytics.getInstance(context).logEvent("show_donate_button", null);
+
 			appIcon.setImageResource(R.drawable.ic_action_favorite);
 		}
 		appIcon.setOnClickListener(new View.OnClickListener() {

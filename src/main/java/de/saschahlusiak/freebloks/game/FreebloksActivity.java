@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
-import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
@@ -200,7 +199,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
 		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-		view = (Freebloks3DView)findViewById(R.id.board);
+		view = findViewById(R.id.board);
 		view.setActivity(this);
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -209,10 +208,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 
 
-		statusView = (ViewGroup)findViewById(R.id.currentPlayerLayout);
+		statusView = findViewById(R.id.currentPlayerLayout);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		chatButton = (ImageButton)findViewById(R.id.chatButton);
+		chatButton = findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
 		chatButton.setOnClickListener(new OnClickListener() {
 			@Override
