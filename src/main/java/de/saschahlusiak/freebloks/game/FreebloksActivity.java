@@ -270,13 +270,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			client.addClientInterface(this);
 			view.setSpiel(client, client.spiel);
 			newCurrentPlayer(client.spiel.current_player());
-		} else if (savedInstanceState != null) {
-			/* this can happen, when there is no game running and we rotate the device */
-			if (!readStateFromBundle(savedInstanceState)) {
-				canresume = false;
-				newCurrentPlayer(-1);
-			}
-		} else {
+		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && ! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(getApplicationContext(), view.model, this);
 				newCurrentPlayer(-1);
@@ -321,6 +315,20 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 		};
 		findViewById(R.id.currentPlayer).postDelayed(r, 1000);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+		Log.d(tag, "onRestoreInstanceState (bundle=" + savedInstanceState + ")");
+
+		if (spielthread == null) {
+			if (!readStateFromBundle(savedInstanceState)) {
+				canresume = false;
+				newCurrentPlayer(-1);
+			}
+		}
 	}
 
 	boolean canresume = false;
@@ -490,7 +498,17 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			
 			connectTask = new ConnectTask(client, false, null);
 			connectTask.setActivity(this);
-			connectTask.execute((String)null);
+
+			// this call would execute the onPreTask method, which calls through to show the progress
+			// dialog. But because performRestoreInstanceState calls restoreManagedDialogs, those
+			// dialogs would be overwritten. To mitigate this, we need to defer starting the connectTask
+			// until all restore is definitely complete.
+			view.post(new Runnable() {
+				@Override
+				public void run() {
+					connectTask.execute((String)null);
+				}
+			});
 
 			return true;
 		}
@@ -889,7 +907,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			ColorListDialog d = (ColorListDialog)dialog;
 			d.setGameMode(gamemode);
 			break;
-			
 		}
 		super.onPrepareDialog(id, dialog, args);
 	}
