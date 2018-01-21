@@ -91,6 +91,7 @@ public class SpielClient {
 	}
 
 	public synchronized void disconnect() {
+		Crashlytics.log("Disconnecting from " + lastHost);
 		if (client_socket != null) {
 			try {
 				if(client_socket.isConnected())

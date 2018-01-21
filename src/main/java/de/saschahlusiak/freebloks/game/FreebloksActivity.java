@@ -326,6 +326,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			if (!readStateFromBundle(savedInstanceState)) {
 				canresume = false;
 				newCurrentPlayer(-1);
+			} else {
+				canresume = true;
 			}
 		}
 	}
@@ -487,15 +489,23 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				return false;
 
 			Crashlytics.log("restore from bundle");
-			JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.width, difficulty);
+			int ret = JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.width, difficulty);
+			if (ret != 0) {
+				Crashlytics.log("Error starting server: " + ret);
+			}
 
 			/* this will start a new SpielClient, which needs to be restored
 			 * from saved gamestate first */
-			SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.width);
+			final SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.width);
 			client.spiel.setStarted(true);
-			spielthread = new SpielClientThread(client);
-			
-			connectTask = new ConnectTask(client, false, null);
+
+			connectTask = new ConnectTask(client, false, new Runnable() {
+				@Override
+				public void run() {
+					spielthread = new SpielClientThread(client);
+					spielthread.start();
+				}
+			});
 			connectTask.setActivity(this);
 
 			// this call would execute the onPreTask method, which calls through to show the progress
@@ -505,7 +515,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			view.post(new Runnable() {
 				@Override
 				public void run() {
-					connectTask.execute((String)null);
+					if (connectTask != null) connectTask.execute((String)null);
 				}
 			});
 
@@ -536,24 +546,27 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (server == null) {
 			int ret = JNIServer.runServer(null, gamemode.ordinal(), fieldsize, difficulty);
 			if (ret != 0) {
-				Crashlytics.logException(new RuntimeException("Error starting server: " + ret));
+				Crashlytics.log("Error starting server: " + ret);
 			}
 		}
 
 		if (spielthread != null)
 			spielthread.goDown();
+		spielthread = null;
+		client = null;
 
 		view.model.clearEffects();
 		Spielleiter spiel = new Spielleiter(fieldsize);
 		final SpielClient client = new SpielClient(spiel, difficulty, request_player, fieldsize);
 		spiel.startNewGame(gamemode, fieldsize, fieldsize);
 		spiel.setAvailableStones(0, 0, 0, 0, 0);
-		
-		spielthread = new SpielClientThread(client);
 
 		connectTask = new ConnectTask(client, show_lobby, new Runnable() {
 			@Override
 			public void run() {
+				spielthread = new SpielClientThread(client);
+				spielthread.start();
+
 				if (request_player == null)
 					client.request_player(-1, clientName);
 				else {
@@ -565,7 +578,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					client.request_start();
 				else {
 					Bundle b = new Bundle();
-					b.putString("server", server);
+					b.putString("server", server == null ? "localhost" : server);
 					FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("show_lobby", b);
 				}
 			}
@@ -808,7 +821,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						if (!client.spiel.isStarted() && !client.spiel.isFinished()) {
 							FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
 							canresume = false;
-							spielthread.goDown();
+							if (spielthread != null)
+								spielthread.goDown();
+							spielthread = null;
+							client = null;
 							showDialog(DIALOG_GAME_MENU);
 						}
 					}

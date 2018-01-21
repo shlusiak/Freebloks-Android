@@ -13,11 +13,11 @@ import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.network.Network;
 
-class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListener {
+class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelListener {
 	private static final String tag = ConnectTask.class.getSimpleName();
 
 	private FreebloksActivity activity;
-	private SpielClient myclient = null;
+	private SpielClient myclient;
 	private boolean show_lobby;
 	private Runnable connectedRunnable;
 
@@ -42,24 +42,22 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 	}
 
 	@Override
-	protected String doInBackground(String... params) {
+	protected Exception doInBackground(String... params) {
 		try {
-			Crashlytics.log(Log.INFO, tag, "Connecting to " + params[0]);
-			Crashlytics.setString("server", params[0] == null ? "(null)" : params[0]);
+			final String name = params[0] == null ? "(null)" : params[0];
+			Crashlytics.log(Log.INFO, tag, "Connecting to: " + name);
+			Crashlytics.setString("server", name);
 
 			myclient.connect(activity, params[0], Network.DEFAULT_PORT);
 		} catch (IOException e) {
 			if (isCancelled())
 				return null;
-			Crashlytics.logException(e);
-			return e.getMessage();
+			return e;
 		}
 		Crashlytics.log(Log.INFO, tag, "connected");
 		if (isCancelled()) {
 			return null;
 		}
-		if (connectedRunnable != null)
-			connectedRunnable.run();
 		return null;
 	}
 
@@ -70,17 +68,30 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
+	protected void onPostExecute(Exception result) {
 		activity.connectTask = null;
+		if (activity.client != null)
+		{
+			activity.client.disconnect();
+			activity.client = null;
+		}
 		activity.client = this.myclient;
 		activity.connectTask = null;
 		activity.view.setSpiel(myclient, myclient.spiel);
 		activity.dismissDialog(FreebloksActivity.DIALOG_PROGRESS);
 		if (result != null) {
+			Crashlytics.logException(result);
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle(android.R.string.dialog_alert_title);
-			builder.setMessage(result);
+			builder.setMessage(result.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
+			activity.canresume = false;
+			if (activity.spielthread != null)
+				activity.spielthread.goDown();
+			activity.spielthread = null;
+			activity.client.disconnect();
+			activity.client = null;
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -101,13 +112,11 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 				activity.showDialog(FreebloksActivity.DIALOG_LOBBY);
 
 			myclient.addClientInterface(activity);
+
+			if (connectedRunnable != null)
+				connectedRunnable.run();
+
 			activity.newCurrentPlayer(myclient.spiel.current_player());
-			/* TODO: there is probably a race condition, when the device is
-			 * rotated, the task finishes and a new task is started while
-			 * the thread is running.
-			 */
-			if (activity.spielthread.getState() == State.NEW)
-				activity.spielthread.start();
 		}
 		super.onPostExecute(result);
 	}
@@ -117,6 +126,7 @@ class ConnectTask extends AsyncTask<String,Void,String> implements OnCancelListe
 		myclient.disconnect();
 		cancel(true);
 		activity.connectTask = null;
+		activity.canresume = false;
 		activity.showDialog(FreebloksActivity.DIALOG_GAME_MENU);
 	}
 }

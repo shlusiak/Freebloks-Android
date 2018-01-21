@@ -55,6 +55,7 @@ class SpielClientThread extends Thread {
 
 			Crashlytics.logException(e);
 			e.printStackTrace();
+
 			synchronized(client) {
 				error = e;
 			}
