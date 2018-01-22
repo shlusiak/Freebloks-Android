@@ -7,6 +7,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import android.util.Log;
 import nl.weeaboo.jktx.KTXFile;
 import nl.weeaboo.jktx.KTXFormatException;
 import nl.weeaboo.jktx.KTXHeader;
@@ -24,6 +25,8 @@ import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
+	private static final String tag = FreebloksRenderer.class.getSimpleName();
+
 	public final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
 	public final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 	public final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -38,7 +41,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	int viewport[] = new int[4];
 	float projectionMatrix[] = new float[16];
 	float modelViewMatrix[] = new float[16];
-	public boolean isSoftwareRenderer;
+	public static boolean isSoftwareRenderer, isEmulator;
 
 	public BoardRenderer board;
 	BackgroundRenderer backgroundRenderer;
@@ -242,7 +245,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		String renderer = gl.glGetString(GL10.GL_RENDERER);
-		isSoftwareRenderer = renderer.contains("PixelFlinger");
+		isEmulator = renderer.contains("Android Emulator OpenGL");
+		isSoftwareRenderer = renderer.contains("PixelFlinger") || isEmulator;
+		Log.i(tag, "Renderer: " + renderer);
 
 		gl.glDisable(GL10.GL_DITHER);
 
@@ -268,6 +273,9 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 	public static void loadKTXTexture(GL10 gl, Resources resources, int resId) {
 		InputStream input;
+
+		if (isEmulator)
+			return;
 
 	    try {
 	    	input = resources.openRawResource(resId);

@@ -21,7 +21,7 @@ class GLConfigChooser implements GLSurfaceView.EGLConfigChooser {
 		mValue = new int[1];
 		int numConfigs;
 		int configSpec[] = null;
-		
+
 		if (msaa >= 2) {
 			/* try multisampling first, if requested */
 			configSpec = new int[] {
