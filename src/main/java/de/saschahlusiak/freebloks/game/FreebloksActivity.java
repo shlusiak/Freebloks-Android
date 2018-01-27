@@ -847,62 +847,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			break;
 
 		case DIALOG_GAME_MENU:
-			dialog.findViewById(R.id.new_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-					showDialog(DIALOG_SINGLE_PLAYER);
-				}
-			});
-			dialog.findViewById(R.id.new_game).setOnLongClickListener(new OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					dialog.dismiss();
-
-					/* starting new game from dialog creates game with previous settings */
-					startNewGame(
-							null,
-							false,
-							null);
-					
-					return true;
-				}
-			});
-			dialog.findViewById(R.id.resume_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-//			dialog.findViewById(R.id.sound_toggle_button).setVisibility(hasActionBar ? View.GONE : View.VISIBLE);
-			dialog.findViewById(R.id.resume_game).setEnabled(canresume);
-			dialog.setCanceledOnTouchOutside(canresume);
-			dialog.findViewById(R.id.preferences).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(FreebloksActivity.this, FreebloksPreferences.class);
-					startActivity(intent);
-				}
-			});
-			dialog.findViewById(R.id.join_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showDialog(DIALOG_JOIN);
-				}
-			});
-			dialog.findViewById(R.id.host_game).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dismissDialog(DIALOG_GAME_MENU);
-					startNewGame(null, true, null);
-				}
-			});
-			dialog.findViewById(R.id.new_game_custom).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showDialog(DIALOG_CUSTOM_GAME);
-				}
-			});
+			GameMenu g = (GameMenu) dialog;
+			g.setResumeEnabled(canresume);
 			break;
 
 		case DIALOG_JOIN:

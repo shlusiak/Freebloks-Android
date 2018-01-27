@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game;
 
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,11 +17,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 
-public class GameMenu extends Dialog {
-	ImageButton soundButton;
-	FreebloksActivity activity;
-	boolean soundon;
+public class GameMenu extends Dialog implements View.OnClickListener, View.OnLongClickListener {
+	private ImageButton soundButton;
+	private FreebloksActivity activity;
+	private boolean soundon;
 
 	private final boolean appIconIsDonate;
 	private final ImageView appIcon;
@@ -35,6 +35,14 @@ public class GameMenu extends Dialog {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.game_menu_dialog);
 
+		findViewById(R.id.new_game).setOnClickListener(this);
+		findViewById(R.id.new_game).setOnLongClickListener(this);
+		findViewById(R.id.resume_game).setOnClickListener(this);
+		findViewById(R.id.preferences).setOnClickListener(this);
+		findViewById(R.id.join_game).setOnClickListener(this);
+		findViewById(R.id.host_game).setOnClickListener(this);
+		findViewById(R.id.new_game_custom).setOnClickListener(this);
+
 		final long starts = prefs.getLong("rate_number_of_starts", 0);
 		appIconIsDonate = (!Global.IS_VIP) && (starts % Global.DONATE_STARTS) == 0;
 
@@ -45,14 +53,7 @@ public class GameMenu extends Dialog {
 
 			appIcon.setImageResource(R.drawable.ic_action_favorite);
 		}
-		appIcon.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent;
-				intent = new Intent(getContext(), appIconIsDonate ? DonateActivity.class : AboutActivity.class);
-				getContext().startActivity(intent);
-			}
-		});
+		appIcon.setOnClickListener(this);
 		soundButton = findViewById(R.id.sound_toggle_button);
 		soundButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -70,6 +71,11 @@ public class GameMenu extends Dialog {
 				Toast.makeText(getContext(), getContext().getString(soundon ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	public void setResumeEnabled(boolean canresume) {
+		findViewById(R.id.resume_game).setEnabled(canresume);
+		setCanceledOnTouchOutside(canresume);
 	}
 
 	@Override
@@ -94,5 +100,58 @@ public class GameMenu extends Dialog {
 	@Override
 	public void onBackPressed() {
 		getOwnerActivity().finish();
+	}
+
+	@Override
+	public void onClick(View v) {
+		Intent intent;
+		switch (v.getId())
+		{
+			case R.id.new_game:
+				dismiss();
+				activity.showDialog(FreebloksActivity.DIALOG_SINGLE_PLAYER);
+				break;
+
+			case R.id.resume_game:
+				dismiss();
+				break;
+
+			case R.id.preferences:
+				intent = new Intent(getContext(), FreebloksPreferences.class);
+				getContext().startActivity(intent);
+				break;
+
+			case R.id.appIcon:
+				intent = new Intent(getContext(), appIconIsDonate ? DonateActivity.class : AboutActivity.class);
+				getContext().startActivity(intent);
+				break;
+
+			case R.id.join_game:
+				activity.showDialog(FreebloksActivity.DIALOG_JOIN);
+				break;
+
+			case R.id.host_game:
+				dismiss();
+				activity.startNewGame(null, true, null);
+				break;
+
+			case R.id.new_game_custom:
+				activity.showDialog(FreebloksActivity.DIALOG_CUSTOM_GAME);
+				break;
+		}
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		switch (v.getId())
+		{
+			case R.id.new_game:
+				activity.startNewGame(null, false, null);
+				dismiss();
+				return true;
+
+			default:
+				return false;
+		}
 	}
 }
