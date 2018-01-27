@@ -138,6 +138,8 @@
     <string name="donation_next">Weiter</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
+    <string name="advanced">Erweitert</string>
+
     <string-array name="theme_labels">
         <item>Schwarz</item>
         <item>Blau</item>

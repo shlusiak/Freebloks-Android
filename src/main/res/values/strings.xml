@@ -143,6 +143,8 @@
     <string name="donation_freebloksvip">Freebloks VIP</string>
     <string name="donation_paypal">PayPal</string>
 
+    <string name="advanced">Advanced</string>
+
     <string-array name="theme_labels">
         <item>Black</item>
         <item>Blue</item>

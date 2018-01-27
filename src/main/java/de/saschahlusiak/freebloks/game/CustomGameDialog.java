@@ -18,7 +18,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener {
+public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
 	final static int DIFFICULTY_DEFAULT = 8;
 	final static int DIFFICULTY_VALUES[] = {
@@ -39,7 +39,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 	private OnStartCustomGameListener listener;
 
-
 	public interface OnStartCustomGameListener {
 		boolean OnStart(CustomGameDialog dialog);
 	}
@@ -49,7 +48,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		this.listener = listener;
 
-		setContentView(R.layout.game_menu_new_custom_game);
+		setContentView(R.layout.custom_game_dialog);
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -65,104 +64,114 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener 
 
 		field_size = findViewById(R.id.field_size);
 
+		findViewById(R.id.advanced).setOnClickListener(this);
+		// TODO: implement me
+		findViewById(R.id.advanced).setVisibility(View.GONE);
+
 		game_mode = findViewById(R.id.game_mode);
-		game_mode.setOnItemSelectedListener(new OnItemSelectedListener() {
+		game_mode.setOnItemSelectedListener(this);
 
-			@Override
-			public void onItemSelected(AdapterView<?> adapter, View view, int position, long id) {
-				if (position == GameMode.GAMEMODE_DUO.ordinal() || position == GameMode.GAMEMODE_JUNIOR.ordinal()) {
-					player1.setEnabled(true);
-					player3.setEnabled(true);
-					player2.setEnabled(false);
-					player4.setEnabled(false);
+		player1.setOnClickListener(this);
+		player2.setOnClickListener(this);
 
-					if (player2.isChecked())
-						player1.setChecked(true);
-					if (player4.isChecked())
-						player3.setChecked(true);
-					player2.setChecked(false);
-					player4.setChecked(false);
-					/* FIXME: on first create this is called after prepare, which does seem to not persiste the
-					 * last set size if != 14 */
-					field_size.setSelection(1); /* 14x14 */
-				} else if (position == GameMode.GAMEMODE_2_COLORS_2_PLAYERS.ordinal()) {
-					player1.setEnabled(true);
-					player3.setEnabled(true);
-					player2.setEnabled(false);
-					player4.setEnabled(false);
-
-					if (player2.isChecked())
-						player1.setChecked(true);
-					if (player4.isChecked())
-						player3.setChecked(true);
-					player2.setChecked(false);
-					player4.setChecked(false);
-					/* FIXME: on first create this is called after prepare, which does seem to not persiste the
-					 * last set size if != 15 */
-					field_size.setSelection(2); /* 15x15 */
-				} else if (position == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
-					player1.setEnabled(true);
-					player2.setEnabled(true);
-					player3.setEnabled(false);
-					player4.setEnabled(false);
-
-					boolean e;
-					e = player1.isChecked() || player3.isChecked();
-					player1.setChecked(e);
-					player3.setChecked(e);
-
-					e = player2.isChecked() || player4.isChecked();
-					player2.setChecked(e);
-					player4.setChecked(e);
-				} else {
-					player1.setEnabled(true);
-					player2.setEnabled(true);
-					player3.setEnabled(true);
-					player4.setEnabled(true);
-				}
-				updateNames();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-
-			}
-		});
-
-		player1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (game_mode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
-					player3.setChecked(player1.isChecked());
-				}
-			}
-		});
-		player2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (game_mode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
-					player4.setChecked(player2.isChecked());
-				}
-			}
-		});
-		findViewById(android.R.id.closeButton).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dismiss();
-			}
-		});
-		findViewById(android.R.id.button1).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				saveSettings();
-				if (listener.OnStart(CustomGameDialog.this))
-					dismiss();
-			}
-		});
+		findViewById(R.id.cancel).setOnClickListener(this);
+		findViewById(R.id.ok).setOnClickListener(this);
 
 		updateNames();
 
 		setDifficultyLabel();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId())
+		{
+			case R.id.cancel:
+				dismiss();
+				break;
+
+			case R.id.ok:
+				saveSettings();
+				if (listener.OnStart(CustomGameDialog.this))
+					dismiss();
+				break;
+
+			case R.id.advanced:
+				// TODO
+				break;
+
+			case R.id.player1:
+				if (game_mode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
+					player3.setChecked(player1.isChecked());
+				}
+				break;
+
+			case R.id.player2:
+				if (game_mode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
+					player4.setChecked(player2.isChecked());
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		if (position == GameMode.GAMEMODE_DUO.ordinal() || position == GameMode.GAMEMODE_JUNIOR.ordinal()) {
+			player1.setEnabled(true);
+			player3.setEnabled(true);
+			player2.setEnabled(false);
+			player4.setEnabled(false);
+
+			if (player2.isChecked())
+				player1.setChecked(true);
+			if (player4.isChecked())
+				player3.setChecked(true);
+			player2.setChecked(false);
+			player4.setChecked(false);
+			/* FIXME: on first create this is called after prepare, which does seem to not persiste the
+			 * last set size if != 14 */
+			field_size.setSelection(1); /* 14x14 */
+		} else if (position == GameMode.GAMEMODE_2_COLORS_2_PLAYERS.ordinal()) {
+			player1.setEnabled(true);
+			player3.setEnabled(true);
+			player2.setEnabled(false);
+			player4.setEnabled(false);
+
+			if (player2.isChecked())
+				player1.setChecked(true);
+			if (player4.isChecked())
+				player3.setChecked(true);
+			player2.setChecked(false);
+			player4.setChecked(false);
+			/* FIXME: on first create this is called after prepare, which does seem to not persiste the
+			 * last set size if != 15 */
+			field_size.setSelection(2); /* 15x15 */
+		} else if (position == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
+			player1.setEnabled(true);
+			player2.setEnabled(true);
+			player3.setEnabled(false);
+			player4.setEnabled(false);
+
+			boolean e;
+			e = player1.isChecked() || player3.isChecked();
+			player1.setChecked(e);
+			player3.setChecked(e);
+
+			e = player2.isChecked() || player4.isChecked();
+			player2.setChecked(e);
+			player4.setChecked(e);
+		} else {
+			player1.setEnabled(true);
+			player2.setEnabled(true);
+			player3.setEnabled(true);
+			player4.setEnabled(true);
+		}
+		updateNames();
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+
 	}
 
 	void updateNames() {
