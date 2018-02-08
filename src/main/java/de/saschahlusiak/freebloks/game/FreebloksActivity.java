@@ -97,6 +97,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	static final int DIALOG_SINGLE_PLAYER = 10;
+	static final int DIALOG_CONFIGURE_STONES = 11;
 
 	static final int REQUEST_FINISH_GAME = 1;
 
@@ -729,6 +730,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		case DIALOG_GAME_MENU:
 			return new GameMenu(this);
+
+		case DIALOG_CONFIGURE_STONES:
+			return new ConfigureStonesDialog(this);
 
 		case DIALOG_CUSTOM_GAME:
 			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {

@@ -135,6 +135,7 @@
                     style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/advanced"/>
             </LinearLayout>
+
             <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"

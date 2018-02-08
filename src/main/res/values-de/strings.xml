@@ -139,6 +139,7 @@
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
     <string name="advanced">Erweitert</string>
+    <string name="configure_stones_dialog_title">Spielsteine</string>
 
     <string-array name="theme_labels">
         <item>Schwarz</item>

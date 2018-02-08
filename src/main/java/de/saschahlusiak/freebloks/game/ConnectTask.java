@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
 import java.io.IOException;
-import java.lang.Thread.State;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

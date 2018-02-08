@@ -65,8 +65,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		field_size = findViewById(R.id.field_size);
 
 		findViewById(R.id.advanced).setOnClickListener(this);
-		// TODO: implement me
-		findViewById(R.id.advanced).setVisibility(View.GONE);
 
 		game_mode = findViewById(R.id.game_mode);
 		game_mode.setOnItemSelectedListener(this);
@@ -97,6 +95,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 				break;
 
 			case R.id.advanced:
+				getOwnerActivity().showDialog(FreebloksActivity.DIALOG_CONFIGURE_STONES);
 				// TODO
 				break;
 
