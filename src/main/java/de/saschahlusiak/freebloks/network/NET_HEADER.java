@@ -88,7 +88,6 @@ public class NET_HEADER implements Serializable {
 		} while (offset < data_length);
 
 		return true;
-
 	}
 
 	void prepare(ByteArrayOutputStream bos) {
@@ -112,7 +111,8 @@ public class NET_HEADER implements Serializable {
 		try {
 			socket.getOutputStream().write(bos.toByteArray());
 		} catch (IOException e) {
-			Crashlytics.logException(e);
+			// this is usually a broken pipe exception, which happens when the connection
+			// is closed. This is non-fatal here and does not need to be logged.
 			return false;
 		}
 		return true;

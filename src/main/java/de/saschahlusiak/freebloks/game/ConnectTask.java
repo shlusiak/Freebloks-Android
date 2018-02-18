@@ -74,6 +74,9 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			activity.client.disconnect();
 			activity.client = null;
 		}
+		if (activity.view == null)
+			return;
+
 		activity.client = this.myclient;
 		activity.connectTask = null;
 		activity.view.setSpiel(myclient, myclient.spiel);
