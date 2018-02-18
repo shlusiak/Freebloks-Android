@@ -2,12 +2,14 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:animateLayoutChanges="true"
         android:padding="@dimen/dialog_padding">
 
         <LinearLayout
@@ -115,6 +117,146 @@
                 android:layout_below="@+id/difficulty_label"
                 android:max="10"/>
         </RelativeLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:id="@+id/custom_stones_layout"
+            android:stretchColumns="1">
+
+            <TableRow>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/textSizeLarge"
+                    android:text="1"/>
+
+                <TextView
+                    android:layout_column="1"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/monomino"/>
+
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/picker1"
+                    android:layout_column="1"
+                    app:np_max="9"
+                    app:np_min="0"
+                    app:np_value="1"
+                    app:np_selectedTextColor="@color/configure_stones_picker"
+                    app:np_textColor="@color/configure_stones_picker"
+                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_wrapSelectorWheel="false"
+                    app:np_orientation="horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/textSizeLarge"
+                    android:text="2"/>
+
+                <TextView
+                    android:layout_column="1"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/domino"/>
+
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/picker2"
+                    android:layout_column="1"
+                    app:np_max="9"
+                    app:np_min="0"
+                    app:np_value="1"
+                    app:np_selectedTextColor="@color/configure_stones_picker"
+                    app:np_textColor="@color/configure_stones_picker"
+                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_wrapSelectorWheel="false"
+                    app:np_orientation="horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/textSizeLarge"
+                    android:text="3"/>
+
+                <TextView
+                    android:layout_column="1"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/tromino"/>
+
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/picker3"
+                    android:layout_column="1"
+                    app:np_max="9"
+                    app:np_min="0"
+                    app:np_value="1"
+                    app:np_selectedTextColor="@color/configure_stones_picker"
+                    app:np_textColor="@color/configure_stones_picker"
+                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_wrapSelectorWheel="false"
+                    app:np_orientation="horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/textSizeLarge"
+                    android:text="4"/>
+
+                <TextView
+                    android:layout_column="1"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/tetromino"/>
+
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/picker4"
+                    android:layout_column="1"
+                    app:np_max="9"
+                    app:np_min="0"
+                    app:np_value="1"
+                    app:np_selectedTextColor="@color/configure_stones_picker"
+                    app:np_textColor="@color/configure_stones_picker"
+                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_wrapSelectorWheel="false"
+                    app:np_orientation="horizontal"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/textSizeLarge"
+                    android:text="5"/>
+
+                <TextView
+                    android:layout_column="1"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/pentomino"/>
+
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/picker5"
+                    android:layout_column="1"
+                    app:np_max="9"
+                    app:np_min="0"
+                    app:np_value="1"
+                    app:np_selectedTextColor="@color/configure_stones_picker"
+                    app:np_textColor="@color/configure_stones_picker"
+                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_wrapSelectorWheel="false"
+                    app:np_orientation="horizontal"/>
+            </TableRow>
+        </TableLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
 import android.view.WindowManager;
+import com.shawnlin.numberpicker.NumberPicker;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -36,6 +37,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	private SeekBar difficulty;
 	private TextView difficulty_label;
 	private Spinner game_mode, field_size;
+	private NumberPicker picker[];
 
 	private OnStartCustomGameListener listener;
 
@@ -61,6 +63,13 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		player2 = findViewById(R.id.player2);
 		player3 = findViewById(R.id.player3);
 		player4 = findViewById(R.id.player4);
+
+		picker = new NumberPicker[5];
+		picker[0] = findViewById(R.id.picker1);
+		picker[1] = findViewById(R.id.picker2);
+		picker[2] = findViewById(R.id.picker3);
+		picker[3] = findViewById(R.id.picker4);
+		picker[4] = findViewById(R.id.picker5);
 
 		field_size = findViewById(R.id.field_size);
 
@@ -95,8 +104,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 				break;
 
 			case R.id.advanced:
-				getOwnerActivity().showDialog(FreebloksActivity.DIALOG_CONFIGURE_STONES);
-				// TODO
+				findViewById(R.id.advanced).setVisibility(View.GONE);
+				findViewById(R.id.custom_stones_layout).setVisibility(View.VISIBLE);
 				break;
 
 			case R.id.player1:
@@ -142,7 +151,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 				player3.setChecked(true);
 			player2.setChecked(false);
 			player4.setChecked(false);
-			/* FIXME: on first create this is called after prepare, which does seem to not persiste the
+			/* FIXME: on first create this is called after prepare, which does seem to not persist the
 			 * last set size if != 15 */
 			field_size.setSelection(2); /* 15x15 */
 		} else if (position == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
@@ -227,7 +236,10 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 			if (FIELD_SIZES[i] == fieldsize)
 				slider = i;
 		field_size.setSelection(slider);
-	}
+
+		findViewById(R.id.advanced).setVisibility(View.VISIBLE);
+		findViewById(R.id.custom_stones_layout).setVisibility(View.GONE);
+		}
 
 	void prepareCustomGameDialog(int difficulty, GameMode gamemode, int fieldsize) {
 		prepare(difficulty, gamemode, fieldsize);
@@ -273,6 +285,13 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 			p[2] = p[3] = false;
 		}
 		return p;
+	}
+
+	public int[] getStones() {
+		int result[] = new int[5];
+		for (int i = 0; i < 5; i++)
+			result[i] = picker[0].getValue();
+		return result;
 	}
 
 	@Override

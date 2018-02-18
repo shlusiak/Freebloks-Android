@@ -35,6 +35,9 @@ dependencies {
         transitive = true
     }
     compile 'com.google.firebase:firebase-core:11.8.0'
+
+    // number picker for configure stones dialog
+    compile 'com.shawnlin:number-picker:2.4.5'
 }
 
 android {
@@ -42,7 +45,7 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 26
 
         versionCode 75

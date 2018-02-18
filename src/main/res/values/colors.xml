@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="color_accent">@android:color/holo_blue_light</color>
+
+    <color name="configure_stones_picker">@color/color_accent</color>
+
     <color name="chat_button_color">#B0505050</color>
     <color name="chat_button_color_pressed">#FFEF8F3F</color>
 
