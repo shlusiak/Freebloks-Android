@@ -88,7 +88,6 @@ public class NET_HEADER implements Serializable {
 		} while (offset < data_length);
 
 		return true;
-
 	}
 
 	void prepare(ByteArrayOutputStream bos) {
