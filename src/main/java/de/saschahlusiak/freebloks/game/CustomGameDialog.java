@@ -18,6 +18,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.saschahlusiak.freebloks.model.Stone;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
@@ -239,7 +240,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 
 		findViewById(R.id.advanced).setVisibility(View.VISIBLE);
 		findViewById(R.id.custom_stones_layout).setVisibility(View.GONE);
-		}
+	}
 
 	void prepareCustomGameDialog(int difficulty, GameMode gamemode, int fieldsize) {
 		prepare(difficulty, gamemode, fieldsize);
@@ -262,19 +263,19 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		difficulty_label.setText(String.format("%s (%d)", labels[text], difficulty.getProgress()));
 	}
 
-	public int getDifficulty() {
+	private int getDifficulty() {
 		return DIFFICULTY_VALUES[difficulty.getProgress()];
 	}
 
-	public GameMode getGameMode() {
+	private GameMode getGameMode() {
 		return GameMode.from((int)game_mode.getSelectedItemPosition());
 	}
 
-	public int getFieldSize() {
+	private int getFieldSize() {
 		return FIELD_SIZES[field_size.getSelectedItemPosition()];
 	}
 
-	public boolean[] getPlayers() {
+	private boolean[] getPlayers() {
 		boolean p[] = new boolean[4];
 		p[0] = player1.isChecked();
 		p[1] = player2.isChecked();
@@ -287,11 +288,23 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		return p;
 	}
 
-	public int[] getStones() {
-		int result[] = new int[5];
-		for (int i = 0; i < 5; i++)
-			result[i] = picker[0].getValue();
+	private int[] getStones() {
+		int result[] = new int[Stone.STONE_COUNT_ALL_SHAPES];
+		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
+			result[i] = picker[Stone.STONE_POINTS[i] - 1].getValue();
 		return result;
+	}
+
+	public GameConfiguration getConfiguration() {
+		return GameConfiguration.builder()
+			.stones(getStones())
+			.requestPlayers(getPlayers())
+			.gameMode(getGameMode())
+			.fieldSize(getFieldSize())
+			.difficulty(getDifficulty())
+			.showLobby(false)
+			.server(null)
+			.build();
 	}
 
 	@Override

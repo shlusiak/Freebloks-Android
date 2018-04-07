@@ -9,7 +9,7 @@ public class JNIServer {
 	/* unfortunately Runtime.availableProcessors() returns only the number of online cores */
 	public static native int get_number_of_processors();
 
-	private static native int native_run_server(int game_mode, int field_size_x, int field_size_y, int ki_mode, int ki_threads);
+	private static native int native_run_server(int game_mode, int field_size_x, int field_size_y, int[] stones, int ki_mode, int ki_threads);
 
 	private static native int native_resume_server(
 			int field_size_x,
@@ -23,13 +23,13 @@ public class JNIServer {
 			int ki_threads);
 
 
-	public static int runServer(Spielleiter spiel, int game_mode, int field_size, int ki_mode) {
+	public static int runServer(Spielleiter spiel, int game_mode, int field_size, int stones[], int ki_mode) {
 		int ki_threads = get_number_of_processors();
 
 		Log.d(tag, "spawning server with " + ki_threads + " threads");
 
 		if (spiel == null)
-			return native_run_server(game_mode, field_size, field_size, ki_mode, ki_threads);
+			return native_run_server(game_mode, field_size, field_size, stones, ki_mode, ki_threads);
 		else {
 			int player_stones_available[] = new int[Stone.STONE_COUNT_ALL_SHAPES * 4];
 			int i, j;

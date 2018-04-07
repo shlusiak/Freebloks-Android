@@ -17,7 +17,7 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_get_
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1run_1server
-  (JNIEnv *, jclass, jint, jint, jint, jint, jint);
+  (JNIEnv *, jclass, jint, jint, jint, jintArray stones, jint, jint);
 
 /*
  * Class:     de_saschahlusiak_freebloks_controller_JNIServer

@@ -18,6 +18,7 @@ import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
+import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
@@ -216,7 +217,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	//	TextView server = (TextView)findViewById(R.id.server);
 		/* TODO: this is added again and again on screen rotate */
-		if (client.getLastHost() == null) {
+		if (client.getConfig().getServer() == null) {
 			try {
 				Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 				int n = 0;
@@ -401,18 +402,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		final int[] stones_default = {
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-		};
-		final int stones_junior[] = {
-			2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0
-		};
 		GameMode g = GameMode.from(gameMode.getSelectedItemPosition());
 		if (lastStatus == null)
 			return;
 		int size = CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 		
-		client.request_game_mode(size, size, g, g == GameMode.GAMEMODE_JUNIOR ? stones_junior : stones_default);
+		client.request_game_mode(size, size, g, g == GameMode.GAMEMODE_JUNIOR ? GameConfiguration.JUNIOR_STONE_SET : GameConfiguration.DEFAULT_STONE_SET);
 	}
 
 	@Override

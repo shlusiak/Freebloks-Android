@@ -77,7 +77,7 @@ public class Stone implements Serializable, Cloneable {
 						};
 
 
-	static final int STONE_POINTS[] =
+	public static final int STONE_POINTS[] =
 						{
 							1, //0
 							2, //1
@@ -315,7 +315,7 @@ public class Stone implements Serializable, Cloneable {
 
 	public final void available_decrement() throws GameStateException {
 		if (m_available <= 0)
-			throw new GameStateException("stone not available");
+			throw new GameStateException("stone " + m_shape + " not available");
 		m_available--;
 	}
 

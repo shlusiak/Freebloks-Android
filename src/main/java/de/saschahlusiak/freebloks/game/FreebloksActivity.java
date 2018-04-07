@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import android.graphics.BitmapFactory;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameActivity;
 
@@ -71,7 +72,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -84,6 +84,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import io.fabric.sdk.android.Fabric;
 
 public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
@@ -148,7 +149,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				 .penaltyLog()
 //				 .penaltyDeath()
 				 .build());
+
 	    }
+
+		Crashlytics crashlyticsKit = new Crashlytics.Builder()
+			.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+			.build();
+
+		Fabric.with(this, crashlyticsKit);
 
 		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
 
@@ -255,11 +263,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				startActivity(intent);
 			}
 		}
+
 		if (view.model.soundPool == null)
 			view.model.soundPool = new Sounds(getApplicationContext());
 
 		clientName = prefs.getString("player_name", null);
-		difficulty = prefs.getInt("difficulty", 10);	/* TODO: generalize the value */
+		difficulty = prefs.getInt("difficulty", GameConfiguration.DEFAULT_DIFFICULTY);
 		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		fieldsize = prefs.getInt("fieldsize", Spiel.DEFAULT_BOARD_SIZE);
 
@@ -489,14 +498,18 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				return false;
 
 			Crashlytics.log("restore from bundle");
-			int ret = JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.width, difficulty);
+			int ret = JNIServer.runServer(spiel1, spiel1.getGameMode().ordinal(), spiel1.width, null, difficulty);
 			if (ret != 0) {
 				Crashlytics.log("Error starting server: " + ret);
 			}
 
-			/* this will start a new SpielClient, which needs to be restored
-			 * from saved gamestate first */
-			final SpielClient client = new SpielClient(spiel1, difficulty, null, spiel1.width);
+			/* this will start a new SpielClient, which needs to be restored from saved gamestate first */
+			final GameConfiguration config = GameConfiguration.builder()
+				.difficulty(difficulty)
+				.fieldSize(spiel1.width)
+				.build();
+
+			final SpielClient client = new SpielClient(spiel1, config);
 			client.spiel.setStarted(true);
 
 			connectTask = new ConnectTask(client, false, new Runnable() {
@@ -530,21 +543,26 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	long gameStartTime = 0;
 
 	public void startNewGame() {
-		boolean players[] = null;
-
-		/* when starting a new game from the options menu, keep previous
-		 * selected settings / players, etc.
-		 */
-		if (client != null && client.spiel != null) {
-			players = client.getLastPlayers();
+		if (client != null) {
+			// when starting a new game from the options menu, keep previous config
+			startNewGame(client.getConfig());
+		} else {
+			// else start default game
+			startNewGame(GameConfiguration.builder().build());
 		}
-		startNewGame(null, false, players);
 	}
 
-	public void startNewGame(final String server, final boolean show_lobby, final boolean[] request_player) {
+	public void startNewGame(final GameConfiguration config) {
 		newCurrentPlayer(-1);
-		if (server == null) {
-			int ret = JNIServer.runServer(null, gamemode.ordinal(), fieldsize, difficulty);
+		if (config.getServer() == null) {
+			int ret = JNIServer.runServer(
+				null,
+				config.getGameMode().ordinal(),
+				config.getFieldSize(),
+				config.getStones(),
+				config.getDifficulty()
+			);
+
 			if (ret != 0) {
 				Crashlytics.log("Error starting server: " + ret);
 			}
@@ -557,34 +575,34 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		view.model.clearEffects();
 		Spielleiter spiel = new Spielleiter(fieldsize);
-		final SpielClient client = new SpielClient(spiel, difficulty, request_player, fieldsize);
-		spiel.startNewGame(gamemode, fieldsize, fieldsize);
+		final SpielClient client = new SpielClient(spiel, config);
+		spiel.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 		spiel.setAvailableStones(0, 0, 0, 0, 0);
 
-		connectTask = new ConnectTask(client, show_lobby, new Runnable() {
+		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
 			@Override
 			public void run() {
 				spielthread = new SpielClientThread(client);
 				spielthread.start();
 
-				if (request_player == null)
+				if (config.getRequestPlayers() == null)
 					client.request_player(-1, clientName);
 				else {
 					for (int i = 0; i < 4; i++)
-						if (request_player[i])
+						if (config.getRequestPlayers()[i])
 							client.request_player(i, clientName);
 				}
-				if (! show_lobby)
+				if (! config.getShowLobby())
 					client.request_start();
 				else {
 					Bundle b = new Bundle();
-					b.putString("server", server == null ? "localhost" : server);
+					b.putString("server", config.getServer() == null ? "localhost" : config.getServer());
 					FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("show_lobby", b);
 				}
 			}
 		});
 		connectTask.setActivity(this);
-		connectTask.execute(server);
+		connectTask.execute(config.getServer());
 	}
 
 	boolean restoreOldGame() throws Exception {
@@ -734,13 +752,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
 				@Override
 				public boolean OnStart(CustomGameDialog dialog) {
-					difficulty = dialog.getDifficulty();
-					gamemode = dialog.getGameMode();
-					fieldsize = dialog.getFieldSize();
-					startNewGame(
-							null,
-							false,
-							dialog.getPlayers());
+					startNewGame(dialog.getConfiguration());
 					dismissDialog(DIALOG_CUSTOM_GAME);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
@@ -752,10 +764,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				@Override
 				public void onJoinGame(String name, String server) {
 					clientName = name;
-					startNewGame(
-							server,
-							true,
-							null);
+					startNewGame(GameConfiguration.builder()
+							.server(server)
+							.showLobby(true)
+							.build()
+					);
 					dismissDialog(DIALOG_GAME_MENU);
 				}
 			});
@@ -788,8 +801,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		            	   ColorListDialog d = (ColorListDialog)dialog;
 		            	   gamemode = d.getGameMode();
 		            	   fieldsize = d.getBoardSize();
-		            	   startNewGame(null, false, players);
-		            	   
+		            	   startNewGame(GameConfiguration.builder().requestPlayers(players).build());
+
 		            	   dialog.dismiss();
 		               }
 		           });
@@ -954,15 +967,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		switch (requestCode) {
 		case REQUEST_FINISH_GAME:
 			if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
-				if (client == null) {
-					/* TODO: find out why client can be null here */
-					startNewGame(null, false, null);
-				} else {
-					startNewGame(
-						client.getLastHost(),
-						client.getLastHost() != null,
-						client.getLastPlayers());
-				}
+				startNewGame();
 			}
 			if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
 				showDialog(DIALOG_GAME_MENU);
@@ -1153,7 +1158,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		deleteFile(GAME_STATE_FILE);
 
 		Bundle b = new Bundle();
-		b.putString("server", client.getLastHost());
+		b.putString("server", client.getConfig().getServer());
 		b.putString("game_mode", client.spiel.getGameMode().toString());
 		b.putInt("w", client.spiel.width);
 		b.putInt("h", client.spiel.height);
@@ -1236,7 +1241,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		gameStartTime = System.currentTimeMillis();
 
 		Bundle b = new Bundle();
-		b.putString("server", client.getLastHost());
+		b.putString("server", client.getConfig().getServer());
 		b.putString("game_mode", client.spiel.getGameMode().toString());
 		b.putInt("w", client.spiel.width);
 		b.putInt("h", client.spiel.height);

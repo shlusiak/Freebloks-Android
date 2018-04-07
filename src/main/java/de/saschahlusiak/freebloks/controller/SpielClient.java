@@ -15,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
@@ -25,17 +26,16 @@ public class SpielClient {
 
 	private final ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<>();
 	private Socket client_socket;
-	private String lastHost;
 	public Spielleiter spiel;
-	private boolean lastPlayers[];
 	private NET_SERVER_STATUS lastStatus;
 	private HandlerThread sendThread;
 	private Handler sendHandler;
+	private GameConfiguration config;
 
-	public SpielClient(Spielleiter leiter, int difficulty, boolean[] lastPlayers, int fieldsize) {
-		this.lastPlayers = lastPlayers;
+	public SpielClient(Spielleiter leiter, GameConfiguration config) {
+		this.config = config;
 		if (leiter == null) {
-			spiel = new Spielleiter(fieldsize);
+			spiel = new Spielleiter(config.getFieldSize());
 			spiel.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 			spiel.setAvailableStones(0, 0, 0, 0, 0);
 		} else
@@ -49,8 +49,8 @@ public class SpielClient {
 		super.finalize();
 	}
 
-	public boolean[] getLastPlayers() {
-		return lastPlayers;
+	public GameConfiguration getConfig() {
+		return this.config;
 	}
 
 	public boolean isConnected() {
@@ -66,7 +66,6 @@ public class SpielClient {
 	}
 
 	public void connect(Context context, String host, int port) throws IOException {
-		this.lastHost = host;
 		try {
 			SocketAddress address;
 			if (host == null)
@@ -91,7 +90,7 @@ public class SpielClient {
 	}
 
 	public synchronized void disconnect() {
-		Crashlytics.log("Disconnecting from " + lastHost);
+		Crashlytics.log("Disconnecting from " + config.getServer());
 		if (client_socket != null) {
 			try {
 				if(client_socket.isConnected())
@@ -387,21 +386,6 @@ public class SpielClient {
 		send(new NET_REQUEST_UNDO());
 	}
 
-	/**
-	 * Schickt eine Chat-Nachricht an den Server. Dieser wird sie
-	 * schnellstmoeglich an alle Clients weiterleiten (darunter auch dieser
-	 * Client selbst).
-	 **/
-	void chat(String text) {
-		/* Bei Textlaenge von 0 wird nix verschickt */
-		if (text.length() < 1)return;
-
-		send(new NET_CHAT(text, -1));
-	}
-
-	public String getLastHost() {
-		return lastHost;
-	}
 
 	synchronized public void send(NET_HEADER msg) {
 		if (sendHandler == null)

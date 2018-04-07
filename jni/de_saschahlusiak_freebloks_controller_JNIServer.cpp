@@ -90,14 +90,6 @@ static int force_delay = 1;
 static int port = 59995;
 static char* _interface = NULL;
 
-static int8 JUNIOR_STONE_SET[STONE_COUNT_ALL_SHAPES] = {
-					2,
-					2,
-					2, 2,
-					2, 2, 2, 2, 2,
-					2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0
-			};
-
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1resume_1server
   (JNIEnv *je, jclass jc, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
@@ -150,10 +142,8 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 	return 0;
 }
 
-
-
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_native_1run_1server
-  (JNIEnv * je, jclass jc, jint gamemode, jint field_size_x, jint field_size_y, jint ki_mode, jint ki_threads)
+  (JNIEnv * je, jclass jc, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
 {
 	int ret;
 	pthread_t pt;
@@ -167,9 +157,15 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_nati
 
 	listener->new_game(max_humans, ki_mode, (GAMEMODE)gamemode, ki_threads, force_delay);
 	listener->get_game()->set_field_size(field_size_x, field_size_y);
-	if (gamemode == GAMEMODE_JUNIOR)
-	{
-		listener->get_game()->set_stone_numbers(JUNIOR_STONE_SET);
+
+	if (stones != NULL) {
+		jint *tmp = je->GetIntArrayElements(stones, 0);
+		int8 stones[STONE_COUNT_ALL_SHAPES];
+		for (int i = 0; i < STONE_COUNT_ALL_SHAPES; i++)
+		{
+			stones[i] = tmp[i];
+		}
+		listener->get_game()->set_stone_numbers(stones);
 	}
 	listener->get_game()->start_new_game((GAMEMODE)gamemode);
 

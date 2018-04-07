@@ -126,7 +126,7 @@ CTurn* CKi::get_ultimate_turn(CSpiel* spiel, const char current_player, const in
 	HANDLE threads[8];
 #endif
 	volatile THREADDATA data[8];
-	if (num_threads>8)return 0;
+	if (num_threads>8) num_threads = 8;
 
 // 	printf("AI using %d threads\n",num_threads);
 	for (i=0;i<num_threads;i++)
