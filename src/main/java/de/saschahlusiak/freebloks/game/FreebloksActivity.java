@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import android.app.*;
 import android.graphics.BitmapFactory;
+import android.support.annotation.RequiresApi;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.games.Games;
@@ -45,12 +47,6 @@ import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -1440,6 +1436,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	Notification.Builder notificationBuilder;
 
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	private void createNotificationChannels() {
+		NotificationChannel channel = new NotificationChannel("default", getString(R.string.notification_channel_default), NotificationManager.IMPORTANCE_DEFAULT);
+		channel.enableVibration(true);
+		channel.enableLights(true);
+		notificationManager.createNotificationChannel(channel);
+	}
+
 	void updateMultiplayerNotification(boolean forceShow, String chat) {
 		if (client == null || client.spiel == null)
 			return;
@@ -1451,6 +1455,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return;
 		if (spielthread == null)
 			return;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createNotificationChannels();
+		}
 		
 		Intent intent = new Intent(this, FreebloksActivity.class);
 		intent.setAction(Intent.ACTION_MAIN);
@@ -1529,6 +1537,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
 			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			notificationBuilder.setChannelId("default");
 		}
 
 		Notification n;

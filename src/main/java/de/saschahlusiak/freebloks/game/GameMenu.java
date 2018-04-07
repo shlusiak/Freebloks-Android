@@ -132,7 +132,7 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 
 			case R.id.host_game:
 				dismiss();
-				activity.startNewGame(null, true, null);
+				activity.startNewGame(GameConfiguration.builder().showLobby(true).build());
 				break;
 
 			case R.id.new_game_custom:
@@ -146,7 +146,7 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 		switch (v.getId())
 		{
 			case R.id.new_game:
-				activity.startNewGame(null, false, null);
+				activity.startNewGame();
 				dismiss();
 				return true;
 

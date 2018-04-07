@@ -69,6 +69,7 @@ public class GameConfiguration implements Serializable {
 
 			configuration.fieldSize = Spiel.DEFAULT_BOARD_SIZE;
 			configuration.difficulty = DEFAULT_DIFFICULTY;
+			configuration.gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 		}
 
 		public GameConfiguration build() {
