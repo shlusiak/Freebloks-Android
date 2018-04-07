@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceClickListener;
+import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 
-public class AboutFragment extends PreferenceFragment {
+public class AboutFragment extends PreferenceFragment implements OnPreferenceClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,19 +23,32 @@ public class AboutFragment extends PreferenceFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
+		findPreference("rate_review").setOnPreferenceClickListener(this);
+		findPreference("about").setOnPreferenceClickListener(this);
+    	super.onActivityCreated(savedInstanceState);
+    }
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+    	final Intent intent;
+
+    	switch (preference.getKey()) {
+			case "rate_review":
 				String url;
 				if (BuildConfig.IS_AMAZON)
 					url = Global.getMarketURLString(getActivity().getPackageName());
 				else
 					url = "market://details?id=" + getActivity().getApplication().getPackageName();
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				startActivity(intent);
-				return true;
-			}
-		});
-    	super.onActivityCreated(savedInstanceState);
-    }
+				break;
+
+			case "about":
+				intent = new Intent(getActivity(), AboutActivity.class);
+				startActivity(intent);
+				break;
+		}
+
+		return true;
+	}
 }

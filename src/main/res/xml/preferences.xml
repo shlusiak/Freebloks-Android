@@ -151,9 +151,9 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+            android:key="about"
             android:summary="@string/copyright_string"
             android:title="@string/about_freebloks" >
-            <intent android:action="de.saschahlusiak.freebloks.SHOW_ABOUT" />
         </PreferenceScreen>
     </PreferenceCategory>
 

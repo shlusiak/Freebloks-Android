@@ -8,6 +8,7 @@ import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 import com.google.android.gms.games.Games;
 
+import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -70,6 +71,14 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 				else
 					url = "market://details?id=" + getApplication().getPackageName();
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				startActivity(intent);
+				return true;
+			}
+		});
+		findPreference("about").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(FreebloksPreferences.this, AboutActivity.class);
 				startActivity(intent);
 				return true;
 			}
