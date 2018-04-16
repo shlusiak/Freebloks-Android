@@ -26,6 +26,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
+import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 
 public class FreebloksPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, GameHelperListener {
 	private static final int REQUEST_LEADERBOARD = 1;
@@ -83,6 +85,23 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 				return true;
 			}
 		});
+		findPreference("donate").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(FreebloksPreferences.this, DonateActivity.class);
+				startActivity(intent);
+				return true;
+			}
+		});
+		findPreference("statistics").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(FreebloksPreferences.this, StatisticsActivity.class);
+				startActivity(intent);
+				return true;
+			}
+		});
+
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, BuildConfig.IS_AMAZON ? "Amazon App Store" : "Google Play"));
 
 		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);

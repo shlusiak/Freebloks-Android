@@ -10,6 +10,7 @@ import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.donate.DonateActivity;
 
 public class AboutFragment extends PreferenceFragment implements OnPreferenceClickListener {
     @Override
@@ -25,6 +26,7 @@ public class AboutFragment extends PreferenceFragment implements OnPreferenceCli
     public void onActivityCreated(Bundle savedInstanceState) {
 		findPreference("rate_review").setOnPreferenceClickListener(this);
 		findPreference("about").setOnPreferenceClickListener(this);
+		findPreference("donate").setOnPreferenceClickListener(this);
     	super.onActivityCreated(savedInstanceState);
     }
 
@@ -45,6 +47,11 @@ public class AboutFragment extends PreferenceFragment implements OnPreferenceCli
 
 			case "about":
 				intent = new Intent(getActivity(), AboutActivity.class);
+				startActivity(intent);
+				break;
+
+			case "donate":
+				intent = new Intent(getActivity(), DonateActivity.class);
 				startActivity(intent);
 				break;
 		}

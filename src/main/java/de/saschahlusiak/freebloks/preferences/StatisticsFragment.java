@@ -12,8 +12,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceClickListener;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 
-public class StatisticsFragment extends PreferenceFragment implements GameHelperListener {
+public class StatisticsFragment extends PreferenceFragment implements GameHelperListener, OnPreferenceClickListener {
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;
 
@@ -37,6 +38,8 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
         /* XXX: this is a hack, because the onActivityResult of the activity will be called instead of the fragment */
         /* make sure that the activity knows about the helper, which is created in the context of the fragment. bah. */
         ((FreebloksPreferences)getActivity()).mHelper = mHelper;
+
+        findPreference("statistics").setOnPreferenceClickListener(this);
 
 		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
 		if (avail != ConnectionResult.SUCCESS) {
@@ -113,5 +116,20 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, Games.Players.getCurrentPlayer(mHelper.getApiClient()).getDisplayName()));
 		findPreference("googleplus_leaderboard").setEnabled(true);
 		findPreference("googleplus_achievements").setEnabled(true);
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+    	Intent intent;
+    	switch (preference.getKey()) {
+			case "statistics":
+				intent = new Intent(getActivity(), StatisticsActivity.class);
+				startActivity(intent);
+				break;
+
+			default:
+				return false;
+		}
+		return true;
 	}
 }

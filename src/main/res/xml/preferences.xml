@@ -112,7 +112,6 @@
             android:summary="@string/prefs_statistics_long"
             android:title="@string/prefs_statistics"
             android:key="statistics" >
-            <intent android:action="de.saschahlusiak.freebloks.SHOW_STATISTICS" />
         </PreferenceScreen>
     </PreferenceCategory>
 
@@ -147,7 +146,6 @@
             android:summary="@string/prefs_donation_long"
             android:title="@string/prefs_donation"
             android:key="donate" >
-            <intent android:action="de.saschahlusiak.freebloks.SHOW_DONATE" />
         </PreferenceScreen>
 
         <PreferenceScreen
