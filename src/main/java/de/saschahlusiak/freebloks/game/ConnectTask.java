@@ -69,8 +69,10 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	@Override
 	protected void onPostExecute(Exception result) {
 		activity.connectTask = null;
-		if (activity.client != null)
-		{
+		if (activity.client != null) {
+			if (activity.spielthread != null)
+				activity.spielthread.goDown();
+
 			activity.client.disconnect();
 			activity.client = null;
 		}

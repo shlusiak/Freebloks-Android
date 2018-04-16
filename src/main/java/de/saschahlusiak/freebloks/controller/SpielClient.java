@@ -90,9 +90,9 @@ public class SpielClient {
 	}
 
 	public synchronized void disconnect() {
-		Crashlytics.log("Disconnecting from " + config.getServer());
 		if (client_socket != null) {
 			try {
+				Crashlytics.log("Disconnecting from " + config.getServer());
 				if(client_socket.isConnected())
 					client_socket.shutdownInput();
 				client_socket.close();
