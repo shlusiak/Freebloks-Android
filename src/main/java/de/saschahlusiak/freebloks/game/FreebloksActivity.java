@@ -1012,20 +1012,23 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				findViewById(R.id.myLocation).setVisibility((showPlayer >= 0) ? View.VISIBLE : View.INVISIBLE);
 				if (player < 0)
 					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
+
 				if (view.model.intro != null)
 					status.setText(R.string.touch_to_skip);
 				else if (client == null || !client.isConnected())
 					status.setText(R.string.not_connected);
 				else if (client.spiel.isFinished()) {
 					int pl = view.model.board.getShowWheelPlayer();
-					int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(pl)];
-					Player p = client.spiel.getPlayer(pl);
-					status.setText("[" + getPlayerName(pl) + "]");
-					statusView.setBackgroundColor(getResources().getColor(res));
-					points.setVisibility(View.VISIBLE);
-					points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
-					movesLeft.setVisibility(View.VISIBLE);
-					movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
+					if (pl >= 0) {
+						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(pl)];
+						Player p = client.spiel.getPlayer(pl);
+						status.setText("[" + getPlayerName(pl) + "]");
+						statusView.setBackgroundColor(getResources().getColor(res));
+						points.setVisibility(View.VISIBLE);
+						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+						movesLeft.setVisibility(View.VISIBLE);
+						movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
+					}
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(player)];

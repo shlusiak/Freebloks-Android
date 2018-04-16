@@ -133,8 +133,9 @@ public class Board implements ViewElement {
 	}
 
 	/**
-	 * the player that should be shown on the wheel
-	 * @return
+	 * the player that should be shown on the wheel.
+	 *
+	 * @return number between 0 and 3
 	 */
 	public int getShowWheelPlayer() {
 		if (getShowDetailsPlayer() >= 0)
