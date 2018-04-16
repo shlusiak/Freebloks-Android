@@ -1087,6 +1087,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			@Override
 			public void run() {
+				if (client == null) return;
+				if (client.spiel == null) return;
 				if (!client.spiel.is_local_player(s.player)) {
 					if (view == null)
 						return;
