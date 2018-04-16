@@ -19,7 +19,7 @@ void CAndroidLogWriter::log(const char* fmt, va_list va)
 	__android_log_vprint(ANDROID_LOG_INFO, "server", fmt, va);
 }
 
-
+static int server_count = 0;
 
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_controller_JNIServer_get_1number_1of_1processors
@@ -60,17 +60,22 @@ void* gameRunThread(void* param)
 {
 	CServerListener *listener = (CServerListener*)param;
 
+	int server_id = server_count++;
+
 	CLogger logger(new CAndroidLogWriter());
 	listener->setLogger(&logger);
 	listener->get_game()->setLogger(&logger);
 
+	logger.logLine("[%d] waiting for players", server_id);
+
 	if (EstablishGame(listener) == -1) {
 		listener->close();
 		delete listener;
-		logger.logLine("game not established");
+		logger.logLine("[%d] game not established", server_id);
 		return NULL;
 	}
 
+	logger.logLine("[%d] game started", server_id);
 
 	CSpielServer* game = listener->get_game();
 
@@ -79,7 +84,7 @@ void* gameRunThread(void* param)
 	game->run();
 
 	delete listener;
-	logger.logLine("server thread going down");
+	logger.logLine("[%d] server thread going down", server_id);
 
 	return NULL;
 }

@@ -483,7 +483,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return;
 		synchronized (client) {
 			Spielleiter l = client.spiel;
-			outState.putSerializable("game", l);
+			if (!l.isFinished())
+				outState.putSerializable("game", l);
 		}
 	}
 
@@ -491,6 +492,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		try {
 			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
 			if (spiel1 == null)
+				return false;
+			// don't restore games that have finished; the server would not detach the listener
+			if (spiel1.isFinished())
 				return false;
 
 			Crashlytics.log("restore from bundle");
