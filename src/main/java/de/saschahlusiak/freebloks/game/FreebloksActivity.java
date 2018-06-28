@@ -1083,13 +1083,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return;
 		if (view == null)
 			return;
+		final Spielleiter spiel = client.spiel;
+		if (spiel == null)
+			return;
 		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				if (client == null) return;
-				if (client.spiel == null) return;
-				if (!client.spiel.is_local_player(s.player)) {
+				if (!spiel.is_local_player(s.player)) {
 					if (view == null)
 						return;
 					if (view.model.soundPool == null)
@@ -1101,7 +1102,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		});
 
 		for (int i = 0; i < 4; i++) {
-			final Player p = client.spiel.getPlayer(i);
+			final Player p = spiel.getPlayer(i);
 			if (p.m_number_of_possible_turns <= 0 && number_of_possible_turns[i] > 0) {
 				runOnUiThread(new Runnable() {
 					@Override
@@ -1113,11 +1114,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.hasAnimations()) {
 								int sx, sy;
-								sx = client.spiel.getPlayerStartX(p.getPlayerNumber());
-								sy = client.spiel.getPlayerStartY(p.getPlayerNumber());
-								for (int x = 0; x < client.spiel.width; x++)
-									for (int y = 0; y < client.spiel.height; y++)
-										if (client.spiel.getFieldPlayer(y, x) == p.getPlayerNumber()) {
+								sx = spiel.getPlayerStartX(p.getPlayerNumber());
+								sy = spiel.getPlayerStartY(p.getPlayerNumber());
+								for (int x = 0; x < spiel.width; x++)
+									for (int y = 0; y < spiel.height; y++)
+										if (spiel.getFieldPlayer(y, x) == p.getPlayerNumber()) {
 											boolean effected = false;
 											synchronized (view.model.effects) {
 												for (int j = 0; j < view.model.effects.size(); j++)
