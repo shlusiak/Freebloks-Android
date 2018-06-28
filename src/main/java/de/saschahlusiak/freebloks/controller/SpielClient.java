@@ -112,10 +112,14 @@ public class SpielClient {
 	public void poll() throws IOException {
 		NET_HEADER pkg;
 
-		final InputStream is = client_socket.getInputStream();
 		try {
-			if (client_socket == null || client_socket.isInputShutdown())
-				return;
+			final InputStream is;
+
+			synchronized (this) {
+				if (client_socket == null || client_socket.isInputShutdown())
+					return;
+				is = client_socket.getInputStream();
+			}
 
 			/* Read a complete network message into buffer */
 			pkg = Network.read_package(is, true);
