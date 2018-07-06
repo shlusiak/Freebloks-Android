@@ -801,7 +801,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		            	   ColorListDialog d = (ColorListDialog)dialog;
 		            	   gamemode = d.getGameMode();
 		            	   fieldsize = d.getBoardSize();
-		            	   startNewGame(GameConfiguration.builder().requestPlayers(players).build());
+		            	   final GameConfiguration config = GameConfiguration.builder()
+							   .requestPlayers(players)
+							   .fieldSize(fieldsize)
+							   .gameMode(gamemode)
+							   .showLobby(false)
+							   .build();
+		            	   startNewGame(config);
 
 		            	   dialog.dismiss();
 		               }
