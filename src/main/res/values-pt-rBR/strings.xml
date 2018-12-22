@@ -50,9 +50,9 @@
         <item>Total de Pontos</item>
     </string-array>
 
-    <string name="googleplus">Google+</string>
+    <string name="googleplus">Google Play Games</string>
     <string name="googleplus_signin">Entrar</string>
-    <string name="googleplus_signin_long">Entrar com Google+</string>
+    <string name="googleplus_signin_long">Entrar com Google Play Games</string>
     <string name="googleplus_signout">Sair</string>
     <string name="googleplus_signout_long">Entrou com Google+ como %1$s</string>
     <string name="googleplus_leaderboard">Classificação</string>

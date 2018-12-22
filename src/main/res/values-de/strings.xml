@@ -6,6 +6,7 @@
     <string name="resume">Fortsetzen</string>
     <string name="join_game">Beitreten</string>
     <string name="host_game">Erstellen</string>
+    <string name="join_multiplayer_game">Spiel beitreten</string>
     <string name="preferences">Einstellungen</string>
     <string name="hint">Hinweis</string>
     <string name="undo">Rückgängig</string>
@@ -50,18 +51,19 @@
         <item>Punkte insgesamt</item>
     </string-array>
 
-    <string name="googleplus">Google+</string>
+    <string name="googleplus">Google Play Games</string>
     <string name="googleplus_signin">Anmelden</string>
-    <string name="googleplus_signin_long">Über Google+ anmelden</string>
+    <string name="googleplus_signin_long">Bei Google Play Games anmelden</string>
     <string name="googleplus_signout">Abmelden</string>
     <string name="googleplus_signout_long">Als %1$s angemeldet</string>
     <string name="googleplus_leaderboard">Bestenliste</string>
-    <string name="googleplus_leaderboard_long">Zeige Punktzahlen ihrer Kreise an</string>
+    <string name="googleplus_leaderboard_long">Zeige globale Bestenliste an</string>
     <string name="googleplus_achievements">Erfolge</string>
     <string name="googleplus_achievements_long">Zeige erspielte Erfolge an</string>
 
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <plurals name="connected_clients">
+        <item quantity="one">%1$d Spieler</item>
         <item quantity="other">%1$d Spieler</item>
     </plurals>
     <string name="chat">Chat</string>

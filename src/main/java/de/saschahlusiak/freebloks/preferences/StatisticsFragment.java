@@ -1,16 +1,16 @@
 package de.saschahlusiak.freebloks.preferences;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.GameHelper;
-import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceFragment;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import de.saschahlusiak.freebloks.game.GameHelper;
+import de.saschahlusiak.freebloks.game.GameHelper.GameHelperListener;
+
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 
@@ -31,8 +31,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
 
-		mHelper = new GameHelper(getActivity(), GameHelper.CLIENT_GAMES);
-		mHelper.setMaxAutoSignInAttempts(0);
+		mHelper = new GameHelper(getActivity());
         mHelper.setup(this);
 
         /* XXX: this is a hack, because the onActivityResult of the activity will be called instead of the fragment */
@@ -49,7 +48,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					if (mHelper.isSignedIn()) {
-						mHelper.signOut();
+						mHelper.startSignOut();
 						onSignInFailed();
 					} else
 						mHelper.beginUserInitiatedSignIn();
@@ -61,15 +60,14 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 				public boolean onPreferenceClick(Preference preference) {
 					if (!mHelper.isSignedIn())
 						return false;
-	//				startActivityForResult(mHelper.getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
-					startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mHelper.getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+					mHelper.startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 					return true;
 				}
 			});
 			findPreference("googleplus_achievements").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					startActivityForResult(Games.Achievements.getAchievementsIntent(mHelper.getApiClient()), REQUEST_ACHIEVEMENTS);
+					mHelper.startAchievementsIntent(REQUEST_ACHIEVEMENTS);
 					return true;
 				}
 			});
@@ -113,7 +111,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
     	if (!isVisible())
     		return;
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signout);
-		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, Games.Players.getCurrentPlayer(mHelper.getApiClient()).getDisplayName()));
+		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, mHelper.getCurrentPlayer().getDisplayName()));
 		findPreference("googleplus_leaderboard").setEnabled(true);
 		findPreference("googleplus_achievements").setEnabled(true);
 	}

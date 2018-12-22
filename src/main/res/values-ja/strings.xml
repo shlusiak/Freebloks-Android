@@ -50,7 +50,7 @@
         <item>ポイント合計</item>
     </string-array>
 
-    <string name="googleplus">Google+</string>
+    <string name="googleplus">Google Play Games</string>
     <string name="googleplus_signin">サインイン</string>
     <string name="googleplus_signin_long">Google+ でサインイン</string>
     <string name="googleplus_signout">サインアウト</string>

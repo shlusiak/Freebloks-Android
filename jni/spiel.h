@@ -61,13 +61,11 @@ class CSpiel{
 		const int get_field_size_x()const;
 		const int get_field_size_y()const;
 		const int get_player_max()const;
-		const int get_stone_count_max()const;
 		const int get_max_stone_size()const;
 
 		void set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2);
 		virtual void set_stone_numbers(int8 stone_numbers[]);
-		virtual void set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer);
-		
+
 		CPlayer* get_player(const int playernumber);
 		TSingleField is_valid_turn(CStone* stone, int player, int y, int x)const;
 		TSingleField is_valid_turn(const CTurn* turn);
@@ -85,8 +83,8 @@ class CSpiel{
 };
 
 
+//fuer folgesituationen von CTurn
 inline
-//f�r folgesituationen von CTurn
 const char CSpiel::get_game_field_value(const int y, const int x)const{
 	return CSpiel::m_game_field[y * CSpiel::m_field_size_x + x];
 }

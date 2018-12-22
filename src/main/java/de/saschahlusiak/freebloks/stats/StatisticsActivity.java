@@ -18,8 +18,8 @@ import android.widget.SpinnerAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameActivity;
+
+import de.saschahlusiak.freebloks.game.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
@@ -43,8 +43,6 @@ public class StatisticsActivity extends BaseGameActivity {
 		db = new HighscoreDB(this);
 		db.open();
 		
-		getGameHelper().setMaxAutoSignInAttempts(0);
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistics_activity);
 
@@ -149,11 +147,11 @@ public class StatisticsActivity extends BaseGameActivity {
 			return true;
 		case R.id.achievements:
 			if (isSignedIn())
-				startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
+				startAchievementsIntent(REQUEST_ACHIEVEMENTS);
 			return true;
 		case R.id.leaderboard:
 			if (isSignedIn())
-				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+				startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -214,13 +212,11 @@ public class StatisticsActivity extends BaseGameActivity {
 		if (db == null)
 			return;
 		
-		Games.Leaderboards.submitScore(
-				getApiClient(),
+		submitScore(
 				getString(R.string.leaderboard_games_won),
 				db.getNumberOfPlace(null, 1));
 
-		Games.Leaderboards.submitScore(
-				getApiClient(),
+		submitScore(
 				getString(R.string.leaderboard_points_total),
 				db.getTotalNumberOfPoints(null));
 	}

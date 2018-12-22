@@ -52,9 +52,7 @@ const int CSpiel::get_player_start_y(const int playernumber)const{
 	case 2 : return 0;
 	default: return CSpiel::m_field_size_y -1;
 	}
-
 }
-
 
 void CSpiel::set_stone_numbers(int8 stone_numbers[]){
 	for (int n = 0 ; n < STONE_COUNT_ALL_SHAPES; n++){  
@@ -66,18 +64,6 @@ void CSpiel::set_stone_numbers(int8 stone_numbers[]){
 
 	CSpiel::refresh_player_data();
 }
-
-void CSpiel::set_stone_numbers(int einer, int zweier, int dreier, int vierer, int fuenfer) {
-	int8 a[STONE_COUNT_ALL_SHAPES] = {
-			einer,
-			zweier,
-			dreier, dreier,
-			vierer, vierer, vierer, vierer, vierer,
-			fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer, fuenfer,
-	};
-	set_stone_numbers(a);
-}
-
 
 void CSpiel::set_teams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2){
 	

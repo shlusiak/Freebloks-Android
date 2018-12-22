@@ -301,8 +301,8 @@ class CStone{
 		const int get_stone_points()const;
 		const int get_stone_shape()const;
 		const int get_number()const; // = stone_shape
-		const int get_rotateable()const; //siehe constants.h für die Rückgabe
-		const int get_mirrorable()const; //siehe constants.h für die Rückgabe
+		const int get_rotateable()const; //siehe constants.h fuer die Rueckgabe
+		const int get_mirrorable()const; //siehe constants.h fuer die Rueckgabe
 		const int get_rotate_counter()const;
 		const int get_mirror_counter()const;
 		const int get_stone_position_points()const;

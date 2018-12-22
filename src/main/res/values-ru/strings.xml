@@ -48,9 +48,9 @@
         <item>Всего очков</item>
     </string-array>
 
-    <string name="googleplus">Google+</string>
+    <string name="googleplus">Google Play Games</string>
     <string name="googleplus_signin">Войти</string>
-    <string name="googleplus_signin_long">Войти через Google+</string>
+    <string name="googleplus_signin_long">Войти через Google Play Games</string>
     <string name="googleplus_signout">Выйти</string>
     <string name="googleplus_signout_long">Вошли через Google+ как %1$s</string>
     <string name="googleplus_leaderboard">Список лучших</string>

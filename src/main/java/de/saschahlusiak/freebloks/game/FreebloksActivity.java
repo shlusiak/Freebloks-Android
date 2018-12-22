@@ -12,8 +12,6 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.RequiresApi;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameActivity;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -167,7 +165,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		else
 			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
-		getGameHelper().setMaxAutoSignInAttempts(0);
 		super.onCreate(savedInstanceState);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -1593,7 +1590,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void onSignInSucceeded() {
 		if (Global.IS_VIP) {
-			Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_vip));
+			unlock(getString(R.string.achievement_vip));
 		}
 	}
 }

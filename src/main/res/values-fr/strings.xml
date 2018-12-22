@@ -50,11 +50,11 @@
         <item>Total des points</item>
     </string-array>
 
-    <string name="googleplus">Google+</string>
+    <string name="googleplus">Google Play Games</string>
     <string name="googleplus_signin">Se connecter</string>
-    <string name="googleplus_signin_long">Se connecter avec Google+</string>
+    <string name="googleplus_signin_long">Se connecter avec Google Play Games</string>
     <string name="googleplus_signout">Se déconnecter</string>
-    <string name="googleplus_signout_long">Se connecter avec Google+ en tant que %1$s</string>
+    <string name="googleplus_signout_long">Se connecter  en tant que %1$s</string>
     <string name="googleplus_leaderboard">Meilleurs scores</string>
     <string name="googleplus_leaderboard_long">Afficher les scores des personnes de vos cercles</string>
     <string name="googleplus_achievements">Succès</string>

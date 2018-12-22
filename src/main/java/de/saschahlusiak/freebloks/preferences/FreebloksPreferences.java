@@ -4,9 +4,8 @@ import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.example.games.basegameutils.GameHelper;
-import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
-import com.google.android.gms.games.Games;
+import de.saschahlusiak.freebloks.game.GameHelper;
+import de.saschahlusiak.freebloks.game.GameHelper.GameHelperListener;
 
 import de.saschahlusiak.freebloks.AboutActivity;
 import de.saschahlusiak.freebloks.BuildConfig;
@@ -52,8 +51,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		if (hasHeaders)
 			return;
 
-		mHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
-		mHelper.setMaxAutoSignInAttempts(0);
+		mHelper = new GameHelper(this);
         mHelper.setup(this);
 
 		addPreferencesFromResource(R.xml.preferences);
@@ -112,7 +110,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					if (mHelper.isSignedIn()) {
-						mHelper.signOut();
+						mHelper.startSignOut();
 						onSignInFailed();
 					} else
 						mHelper.beginUserInitiatedSignIn();
@@ -124,15 +122,14 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 				public boolean onPreferenceClick(Preference preference) {
 					if (!mHelper.isSignedIn())
 						return false;
-	//				startActivityForResult(mHelper.getGamesClient().getAllLeaderboardsIntent(), REQUEST_LEADERBOARD);
-					startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mHelper.getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+					mHelper.startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 					return true;
 				}
 			});
 			findPreference("googleplus_achievements").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					startActivityForResult(Games.Achievements.getAchievementsIntent(mHelper.getApiClient()), REQUEST_ACHIEVEMENTS);
+					mHelper.startAchievementsIntent(REQUEST_ACHIEVEMENTS);
 					return true;
 				}
 			});
@@ -244,7 +241,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		if (hasHeaders)
 			return;
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signout);
-		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, Games.Players.getCurrentPlayer(mHelper.getApiClient()).getDisplayName()));
+		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, mHelper.getCurrentPlayer().getDisplayName()));
 		findPreference("googleplus_leaderboard").setEnabled(true);
 		findPreference("googleplus_achievements").setEnabled(true);
 	}

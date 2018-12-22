@@ -2,8 +2,6 @@ package de.saschahlusiak.freebloks.game;
 
 import android.database.sqlite.SQLiteException;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
@@ -52,7 +50,6 @@ public class GameFinishActivity extends BaseGameActivity {
 			firstRun = true;
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getGameHelper().setMaxAutoSignInAttempts(0);
 
 		super.onCreate(savedInstanceState);
 
@@ -94,13 +91,13 @@ public class GameFinishActivity extends BaseGameActivity {
 		findViewById(R.id.achievements).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
+				startAchievementsIntent(REQUEST_ACHIEVEMENTS);
 			}
 		});
 		findViewById(R.id.leaderboard).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(getApiClient(), getString(R.string.leaderboard_points_total)), REQUEST_LEADERBOARD);
+				startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 			}
 		});
 	}
@@ -248,30 +245,30 @@ public class GameFinishActivity extends BaseGameActivity {
 		for (int i = 0; i < data.length; i++) if (data[i].is_local) {
 				if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 						&& data[i].place == 1)
-					Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_classic));
+					unlock(getString(R.string.achievement_blokus_classic));
 
 				if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 						&& data[i].is_perfect)
-					Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_perfect));
+					unlock(getString(R.string.achievement_perfect));
 
 				if (spiel.getGameMode() == GameMode.GAMEMODE_DUO
 						&& data[i].place == 1)
-					Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_blokus_duo));
+					unlock(getString(R.string.achievement_blokus_duo));
 
-				Games.Achievements.increment(getApiClient(), getString(R.string.achievement_1000_points), data[i].points);
+				increment(getString(R.string.achievement_1000_points), data[i].points);
 
 				if (data[i].place == 1)
-					Games.Achievements.increment(getApiClient(), getString(R.string.achievement_winner), 1);
+					increment(getString(R.string.achievement_winner), 1);
 
 				if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 						&& data[i].place == 4)
-					Games.Achievements.increment(getApiClient(), getString(R.string.achievement_loser), 1);
+					increment(getString(R.string.achievement_loser), 1);
 
 				if (lastStatus != null && lastStatus.clients >= 4 && data[i].place == 1)
-					Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_multiplayer));
+					unlock(getString(R.string.achievement_multiplayer));
 			}
 
-		Games.Achievements.increment(getApiClient(), getString(R.string.achievement_addicted), 1);
+		increment(getString(R.string.achievement_addicted), 1);
 
 		HighscoreDB db = new HighscoreDB(this);
 		try {
@@ -291,15 +288,13 @@ public class GameFinishActivity extends BaseGameActivity {
 		if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 2) > 0)
 			n++;
 		if (n == 6)
-			Games.Achievements.unlock(getApiClient(), getString(R.string.achievement_all_colors));
+			unlock(getString(R.string.achievement_all_colors));
 
-		Games.Leaderboards.submitScore(
-			getApiClient(),
+		submitScore(
 			getString(R.string.leaderboard_games_won),
 			db.getNumberOfPlace(null, 1));
 
-		Games.Leaderboards.submitScore(
-			getApiClient(),
+		submitScore(
 			getString(R.string.leaderboard_points_total),
 			db.getTotalNumberOfPoints(null));
 
