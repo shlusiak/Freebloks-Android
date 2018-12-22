@@ -5,8 +5,8 @@
     <string name="new_local_game">Neues Spiel</string>
     <string name="resume">Fortsetzen</string>
     <string name="join_game">Beitreten</string>
-    <string name="host_game">Erstellen</string>
-    <string name="join_multiplayer_game">Spiel beitreten</string>
+    <string name="host_game">Hosten</string>
+    <string name="join_multiplayer_game">Netzwerk Spiel beitreten</string>
     <string name="preferences">Einstellungen</string>
     <string name="hint">Hinweis</string>
     <string name="undo">Rückgängig</string>
@@ -19,8 +19,10 @@
     <string name="could_not_restore_game">Letztes Spiel konnte nicht fortgesetzt werden</string>
     <string name="do_you_want_to_leave_current_game">Aktuelles Spiel abbrechen?</string>
     <string name="disconnect_error">Verbindung getrennt: %1$s. Du bist jetzt offline.</string>
-    <string name="default_server">Standard</string>
-    
+    <string name="server_address_hint">Server Name oder Adresse</string>
+    <string name="join_default_server">Internet</string>
+    <string name="join_custom_server">Lokales Netzwerk</string>
+
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>
     <string name="waiting_for_color">Warte auf %1$s</string>
@@ -60,6 +62,7 @@
     <string name="googleplus_leaderboard_long">Zeige globale Bestenliste an</string>
     <string name="googleplus_achievements">Erfolge</string>
     <string name="googleplus_achievements_long">Zeige erspielte Erfolge an</string>
+    <string name="playgames_sign_in_failed">Anmelden fehlgeschlagen. Bitte überprüfe deine Internetverbindung und versuche es erneut.</string>
 
     <string name="lobby_waiting_for_players">Warte auf Spieler</string>
     <plurals name="connected_clients">

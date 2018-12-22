@@ -20,11 +20,10 @@
     <string name="could_not_restore_game">Could not restore game</string>
     <string name="do_you_want_to_leave_current_game">Are you sure you want to cancel the current game?</string>
     <string name="disconnect_error">Connection closed: %1$s. You are now offline.</string>
-    <string name="default_server">Default</string>
     <string name="server_address_hint">Server name or address</string>
     <string name="join_default_server">Internet</string>
     <string name="join_custom_server">Local network</string>
-    <string name="notification_channel_default">General</string>
+    <string name="notification_channel_default" translatable="false">General</string>
 
     <string name="monomino">Monominos</string>
     <string name="domino">Dominos</string>
@@ -149,7 +148,7 @@
     <string name="donation_nothing">Nothing</string>
     <string name="donation_next">Next</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
-    <string name="donation_paypal">PayPal</string>
+    <string name="donation_paypal" translatable="false">PayPal</string>
 
     <string name="advanced">Advanced</string>
     <string name="configure_stones_dialog_title">Configure Tiles</string>
