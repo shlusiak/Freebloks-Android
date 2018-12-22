@@ -71,30 +71,48 @@
                 android:singleLine="true">
 
             </EditText>
+
         </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:animateLayoutChanges="true"
+            android:gravity="center_vertical"
             style="?android:attr/buttonBarStyle"
-            android:gravity="right"
             android:layout_marginTop="@dimen/dialog_button_margin">
 
             <Button
-                android:id="@android:id/closeButton"
+                android:id="@+id/host_game"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/main_menu_button_height"
                 android:textSize="@dimen/textSizeSmall"
                 style="?android:attr/buttonBarButtonStyle"
-                android:text="@android:string/cancel"/>
+                android:text="@string/host_game"/>
 
-            <Button
-                android:id="@android:id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/main_menu_button_height"
-                android:textSize="@dimen/textSizeSmall"
-                style="?android:attr/buttonBarButtonStyle"
-                android:text="@android:string/ok"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right|center_vertical">
+
+                <Button
+                    android:id="@android:id/closeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/main_menu_button_height"
+                    android:textSize="@dimen/textSizeSmall"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:text="@android:string/cancel"/>
+
+                <Button
+                    android:id="@android:id/button1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/main_menu_button_height"
+                    android:textSize="@dimen/textSizeSmall"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:text="@android:string/ok"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

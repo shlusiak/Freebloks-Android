@@ -5,21 +5,49 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 
-public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
+public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher {
 	private EditText name, server;
 	private OnStartCustomGameListener listener;
 	private RadioGroup serverType;
+	private Button hostGame;
 
 	private SharedPreferences prefs;
 
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		updateOkButtonEnabled();
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+
+	}
+
+	private void updateOkButtonEnabled() {
+		boolean enabled = true;
+		if (serverType.getCheckedRadioButtonId() == R.id.radioButton2 && getCustomServer().isEmpty())
+			enabled = false;
+
+		findViewById(android.R.id.button1).setEnabled(enabled);
+	}
+
 	public interface OnStartCustomGameListener {
 		void onJoinGame(String name, String server);
+		void onHostGame(String name);
 	}
 
 	public JoinDialog(Context context, final OnStartCustomGameListener listener) {
@@ -42,10 +70,20 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			}
 		});
 		findViewById(android.R.id.button1).setOnClickListener(this);
+		hostGame = findViewById(R.id.host_game);
+		hostGame.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				saveSettings();
+				dismiss();
+				listener.onHostGame(getName());
+			}
+		});
 
 		name = findViewById(R.id.name);
 		server = findViewById(R.id.server_address);
 		server.setText(prefs.getString("custom_server", ""));
+		server.addTextChangedListener(this);
 
 		serverType = findViewById(R.id.server_type);
 		serverType.setOnCheckedChangeListener(this);
@@ -93,9 +131,11 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 	@Override
 	public void onCheckedChanged(RadioGroup radioGroup, int i) {
 		server.setVisibility(i == R.id.radioButton2 ? View.VISIBLE : View.GONE);
+		hostGame.setVisibility(i == R.id.radioButton2 ? View.VISIBLE : View.INVISIBLE);
 
 		if (i == R.id.radioButton2) {
 			server.requestFocus();
 		}
+		updateOkButtonEnabled();
 	}
 }

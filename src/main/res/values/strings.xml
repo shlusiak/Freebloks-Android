@@ -6,8 +6,9 @@
     <string name="new_local_game">New Game</string>
     <string name="resume">Resume</string>
     <string name="join_game">Join</string>
-    <string name="join_multiplayer_game">Join multiplayer game</string>
     <string name="host_game">Host</string>
+    <string name="multiplayer">Multiplayer</string>
+    <string name="join_multiplayer_game">Join multiplayer game</string>
     <string name="preferences">Settings</string>
     <string name="hint">Hint</string>
     <string name="undo">Undo</string>

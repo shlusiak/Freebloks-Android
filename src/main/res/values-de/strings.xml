@@ -5,7 +5,8 @@
     <string name="new_local_game">Neues Spiel</string>
     <string name="resume">Fortsetzen</string>
     <string name="join_game">Beitreten</string>
-    <string name="host_game">Hosten</string>
+    <string name="host_game">Erstellen</string>
+    <string name="multiplayer">Mehrspieler</string>
     <string name="join_multiplayer_game">Netzwerk Spiel beitreten</string>
     <string name="preferences">Einstellungen</string>
     <string name="hint">Hinweis</string>

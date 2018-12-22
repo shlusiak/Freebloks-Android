@@ -74,28 +74,14 @@
         android:text="@string/resume"
         android:textSize="@dimen/textSizeMedium" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/join_game"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/main_menu_button_margin" >
-        
-	    <Button
-	        android:id="@+id/host_game"
-	        android:layout_width="0dp"
-	        android:layout_height="@dimen/main_menu_button_height"
-	        android:layout_weight="0.5"
-	        android:text="@string/host_game"
-            android:textSize="@dimen/textSizeMedium" />
-
-	    <Button
-	        android:id="@+id/join_game"
-	        android:layout_width="0dp"
-	        android:layout_height="@dimen/main_menu_button_height"
-	        android:layout_weight="0.5"
-	        android:layout_marginLeft="@dimen/main_menu_button_margin"
-	        android:text="@string/join_game"
-            android:textSize="@dimen/textSizeMedium" />
-	</LinearLayout>
+        android:layout_height="@dimen/main_menu_button_height"
+        android:layout_marginBottom="@dimen/main_menu_button_margin"
+        android:minWidth="@dimen/main_menu_width"
+        android:text="@string/multiplayer"
+        android:textSize="@dimen/textSizeMedium" />
 
 	<Button
         android:id="@+id/preferences"

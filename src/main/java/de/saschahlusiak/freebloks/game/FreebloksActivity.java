@@ -768,6 +768,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					);
 					dismissDialog(DIALOG_GAME_MENU);
 				}
+
+				@Override
+				public void onHostGame(String name) {
+					clientName = name;
+					startNewGame(GameConfiguration.builder().showLobby(true).build());
+					dismissDialog(DIALOG_GAME_MENU);
+				}
 			});
 
 		case DIALOG_PROGRESS:
