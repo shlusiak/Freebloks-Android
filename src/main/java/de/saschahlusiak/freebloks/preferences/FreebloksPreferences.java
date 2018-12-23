@@ -26,6 +26,7 @@ import android.preference.PreferenceGroup;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.game.RulesActivity;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 
 public class FreebloksPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, GameHelperListener {
@@ -61,7 +62,16 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 			Preference p = findPreference("immersive_mode");
 			((PreferenceGroup)findPreference("interface_category")).removePreference(p);
 		}
-		
+
+		findPreference("rules").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(FreebloksPreferences.this, RulesActivity.class);
+				startActivity(intent);
+				return true;
+			}
+		});
+
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {

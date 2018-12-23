@@ -11,6 +11,7 @@ import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.game.RulesActivity;
 
 public class AboutFragment extends PreferenceFragment implements OnPreferenceClickListener {
     @Override
@@ -24,6 +25,7 @@ public class AboutFragment extends PreferenceFragment implements OnPreferenceCli
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+		findPreference("rules").setOnPreferenceClickListener(this);
 		findPreference("rate_review").setOnPreferenceClickListener(this);
 		findPreference("about").setOnPreferenceClickListener(this);
 		findPreference("donate").setOnPreferenceClickListener(this);
@@ -35,6 +37,11 @@ public class AboutFragment extends PreferenceFragment implements OnPreferenceCli
     	final Intent intent;
 
     	switch (preference.getKey()) {
+			case "rules":
+				intent = new Intent(getActivity(), RulesActivity.class);
+				startActivity(intent);
+				break;
+
 			case "rate_review":
 				String url;
 				if (BuildConfig.IS_AMAZON)

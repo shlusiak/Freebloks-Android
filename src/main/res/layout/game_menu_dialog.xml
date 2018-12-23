@@ -40,6 +40,15 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_volume_up_white_48dp" />
+
+        <ImageButton
+            android:id="@+id/rules"
+            style="?android:attr/buttonStyle"
+            android:layout_weight="0"
+            android:layout_width="@dimen/main_menu_button_height"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_action_help" />
     </LinearLayout>
 
     <LinearLayout

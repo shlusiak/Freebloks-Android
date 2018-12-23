@@ -137,6 +137,12 @@
 
     <PreferenceCategory android:title="@string/about" android:key="about_category" >
         <PreferenceScreen
+            android:key="rules"
+            android:summary="@string/prefs_rules_long"
+            android:title="@string/prefs_rules" >
+        </PreferenceScreen>
+
+        <PreferenceScreen
             android:key="rate_review"
             android:summary="@string/prefs_rate_review_long"
             android:title="@string/prefs_rate_review" >

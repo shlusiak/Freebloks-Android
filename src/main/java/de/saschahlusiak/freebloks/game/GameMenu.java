@@ -40,6 +40,7 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 		findViewById(R.id.resume_game).setOnClickListener(this);
 		findViewById(R.id.preferences).setOnClickListener(this);
 		findViewById(R.id.join_game).setOnClickListener(this);
+		findViewById(R.id.rules).setOnClickListener(this);
 		findViewById(R.id.new_game_custom).setOnClickListener(this);
 
 		final long starts = prefs.getLong("rate_number_of_starts", 0);
@@ -131,6 +132,11 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 
 			case R.id.new_game_custom:
 				activity.showDialog(FreebloksActivity.DIALOG_CUSTOM_GAME);
+				break;
+
+			case R.id.rules:
+				intent = new Intent(getContext(), RulesActivity.class);
+				getContext().startActivity(intent);
 				break;
 		}
 	}

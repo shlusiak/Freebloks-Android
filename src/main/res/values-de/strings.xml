@@ -193,6 +193,8 @@
     <string name="prefs_skip_intro">Intro überspringen</string>
     <string name="prefs_auto_resume_long">Beim Start letztes Spiel fortsetzen</string>
     <string name="prefs_auto_resume">Auto-Fortsetzen</string>
+    <string name="prefs_rules_long">Zeige die Spielregeln </string>
+    <string name="prefs_rules">Spielregeln&#8230;</string>
     <string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
@@ -203,5 +205,7 @@
     <string name="prefs_theme">Hintergrund</string>
     <string name="prefs_statistics">Statistiken</string>
     <string name="prefs_statistics_long">Spielstatistiken zeigen</string>
+
+    <string name="rules_title">Blokus Spielregeln</string>
 </resources>
 

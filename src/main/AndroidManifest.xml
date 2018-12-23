@@ -41,7 +41,7 @@
         <activity
             android:name=".game.FreebloksActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Freebloks"
+            android:theme="@style/Theme.Freebloks.Game"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -83,6 +83,12 @@
             android:label="@string/about_freebloks"
             android:exported="false"
             android:theme="@style/Theme.Freebloks.Dialog" >
+        </activity>
+        <activity
+            android:name=".game.RulesActivity"
+            android:label="@string/rules_title"
+            android:exported="false"
+            android:theme="@style/Theme.Freebloks.Light">
         </activity>
     </application>
 
