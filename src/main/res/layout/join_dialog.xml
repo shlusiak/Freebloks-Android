@@ -79,6 +79,15 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/radioButton3"/>
 
+            <LinearLayout
+                android:id="@+id/bluetoothList"
+                android:orientation="vertical"
+                android:layout_marginLeft="32dp"
+                android:visibility="gone"
+                android:animateLayoutChanges="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </RadioGroup>
 
         <LinearLayout
