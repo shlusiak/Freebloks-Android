@@ -22,7 +22,8 @@
     <string name="disconnect_error">Verbindung getrennt: %1$s. Du bist jetzt offline.</string>
     <string name="server_address_hint">Server Name oder Adresse</string>
     <string name="join_default_server">Internet</string>
-    <string name="join_custom_server">Lokales Netzwerk</string>
+    <string name="join_bluetooth">Bluetooth</string>
+    <string name="join_custom_server">Wireless LAN</string>
 
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>

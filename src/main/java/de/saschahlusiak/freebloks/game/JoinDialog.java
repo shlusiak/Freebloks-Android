@@ -1,24 +1,34 @@
 package de.saschahlusiak.freebloks.game;
 
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
+
+import java.util.Set;
+
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 
 public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher {
+	private static final String tag = JoinDialog.class.getSimpleName();
+
 	private EditText name, server;
 	private OnStartCustomGameListener listener;
 	private RadioGroup serverType;
 	private Button hostGame;
+	private BluetoothAdapter bluetoothAdapter;
 
 	private SharedPreferences prefs;
 
@@ -89,6 +99,11 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 		serverType.setOnCheckedChangeListener(this);
 
 		((RadioButton)findViewById(R.id.radioButton1)).setChecked(true);
+
+		// TODO: implement bluetooth
+		findViewById(R.id.radioButton3).setVisibility(View.GONE);
+
+		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	@Override
@@ -137,5 +152,34 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			server.requestFocus();
 		}
 		updateOkButtonEnabled();
+	}
+
+	private void updateDeviceList(BluetoothDeviceAdapter adapter) {
+		Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+
+		adapter.clear();
+		for (BluetoothDevice device: pairedDevices) {
+			Log.d(tag, String.format("device %s [%s]", device.getName(), device.getAddress()));
+		}
+		adapter.addAll(pairedDevices);
+		adapter.notifyDataSetChanged();
+	}
+
+	private static class BluetoothDeviceAdapter extends ArrayAdapter<BluetoothDevice> {
+
+		public BluetoothDeviceAdapter(Context context) {
+			super(context, R.layout.join_bluetooth_device);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = LayoutInflater.from(getContext()).inflate(R.layout.join_bluetooth_device, parent, false);
+			BluetoothDevice device = getItem(position);
+
+			TextView t = v.findViewById(android.R.id.text1);
+			t.setText(device.getName());
+
+			return v;
+		}
 	}
 }
