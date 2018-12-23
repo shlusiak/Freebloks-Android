@@ -1266,6 +1266,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		FirebaseAnalytics.getInstance(this).logEvent("game_started", b);
 
+		if (lastStatus.clients >= 2) {
+			FirebaseAnalytics.getInstance(this).logEvent("game_start_multiplayer", b);
+		}
+
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
 			if (client.spiel.is_local_player(i))
