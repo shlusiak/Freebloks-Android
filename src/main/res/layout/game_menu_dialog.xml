@@ -44,6 +44,7 @@
         <ImageButton
             android:id="@+id/rules"
             style="?android:attr/buttonStyle"
+			android:layout_marginLeft="@dimen/main_menu_button_margin"
             android:layout_weight="0"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
