@@ -4,19 +4,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class SendHandler extends Handler {
-	Socket socket;
+	private final OutputStream os;
 
-	public SendHandler(Socket socket, Looper looper) {
+	public SendHandler(OutputStream os, Looper looper) {
 		super(looper);
-		this.socket = socket;
+		this.os = os;
 	}
 
 	@Override
 	public void handleMessage(Message msg) {
-		NET_HEADER m = (NET_HEADER)msg.obj;
-		m.send(socket);
+		final NET_HEADER m = (NET_HEADER)msg.obj;
+
+		m.send(os);
 	}
 }

@@ -4,10 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.app.*;
+import android.bluetooth.BluetoothSocket;
 import android.graphics.BitmapFactory;
 import android.support.annotation.RequiresApi;
 import com.crashlytics.android.Crashlytics;
@@ -33,6 +35,7 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
@@ -542,14 +545,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void startNewGame() {
 		if (client != null) {
 			// when starting a new game from the options menu, keep previous config
-			startNewGame(client.getConfig());
+			startNewGame(client.getConfig(), null);
 		} else {
 			// else start default game
-			startNewGame(GameConfiguration.builder().build());
+			startNewGame(GameConfiguration.builder().build(), null);
 		}
 	}
 
-	public void startNewGame(final GameConfiguration config) {
+	public void startNewGame(final GameConfiguration config, final Runnable runAfter) {
 		newCurrentPlayer(-1);
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServer(
@@ -596,10 +599,57 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					b.putString("server", config.getServer() == null ? "localhost" : config.getServer());
 					FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("show_lobby", b);
 				}
+
+				if (config.getServer() == null) {
+					// hosting a local game. start bluetooth bridge.
+					BluetoothServer bluetoothServer = new BluetoothServer(new BluetoothServer.OnBluetoothConnectedListener() {
+						@Override
+						public void onBluetoothClientConnected(BluetoothSocket socket) {
+							new BluetoothClientBridge(socket, "localhost", Network.DEFAULT_PORT).start();
+						}
+					});
+					bluetoothServer.start();
+					client.addClientInterface(bluetoothServer);
+				}
+
+				if (runAfter != null)
+					runAfter.run();
 			}
 		});
 		connectTask.setActivity(this);
 		connectTask.execute(config.getServer());
+	}
+
+	public void establishBluetoothGame(BluetoothSocket socket) throws IOException {
+		final GameConfiguration config = GameConfiguration.builder().build();
+		newCurrentPlayer(-1);
+
+		if (spielthread != null)
+			spielthread.goDown();
+		spielthread = null;
+		client = null;
+		view.model.clearEffects();
+		Log.d(tag, "Establishing game with existing bluetooth connection");
+
+		Spielleiter spiel = new Spielleiter(fieldsize);
+		spiel.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
+		spiel.setAvailableStones(0, 0, 0, 0, 0);
+
+		client = new SpielClient(spiel, config);
+		view.setSpiel(client, spiel);
+
+		client.addClientInterface(this);
+		client.setSocket(socket);
+
+		spielthread = new SpielClientThread(client);
+		spielthread.start();
+
+		if (config.getRequestPlayers() == null)
+			client.request_player(-1, clientName);
+
+		showDialog(FreebloksActivity.DIALOG_LOBBY);
+
+		FirebaseAnalytics.getInstance(this).logEvent("bluetooth_connected", null);
 	}
 
 	boolean restoreOldGame() throws Exception {
@@ -749,7 +799,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
 				@Override
 				public boolean OnStart(CustomGameDialog dialog) {
-					startNewGame(dialog.getConfiguration());
+					startNewGame(dialog.getConfiguration(), null);
 					dismissDialog(DIALOG_CUSTOM_GAME);
 					dismissDialog(DIALOG_GAME_MENU);
 					return true;
@@ -759,21 +809,48 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		case DIALOG_JOIN:
 			return new JoinDialog(this, new JoinDialog.OnStartCustomGameListener() {
 				@Override
-				public void onJoinGame(String name, String server) {
+				public void setClientName(String name) {
 					clientName = name;
+				}
+
+				@Override
+				public void onJoinGame(String server) {
 					startNewGame(GameConfiguration.builder()
 							.server(server)
 							.showLobby(true)
-							.build()
+							.build(),
+						null
 					);
 					dismissDialog(DIALOG_GAME_MENU);
 				}
 
 				@Override
-				public void onHostGame(String name) {
-					clientName = name;
-					startNewGame(GameConfiguration.builder().showLobby(true).build());
+				public void onHostGame() {
+					startNewGame(GameConfiguration.builder().showLobby(true).build(), null);
 					dismissDialog(DIALOG_GAME_MENU);
+				}
+
+				@Override
+				public void onHostBluetoothGameWithClient(final BluetoothSocket clientSocket) {
+					dismissDialog(DIALOG_GAME_MENU);
+					startNewGame(GameConfiguration.builder().showLobby(true).build(), new Runnable() {
+						@Override
+						public void run() {
+							new BluetoothClientBridge(clientSocket, "localhost", Network.DEFAULT_PORT).start();
+						}
+					});
+				}
+
+				@Override
+				public void onJoinGame(BluetoothSocket socket) {
+					// got a connected bluetooth socket to a server
+					dismissDialog(DIALOG_GAME_MENU);
+
+					try {
+						establishBluetoothGame(socket);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			});
 
@@ -811,7 +888,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 							   .gameMode(gamemode)
 							   .showLobby(false)
 							   .build();
-		            	   startNewGame(config);
+		            	   startNewGame(config, null);
 
 		            	   dialog.dismiss();
 		               }

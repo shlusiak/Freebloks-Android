@@ -5,6 +5,7 @@ import com.crashlytics.android.Crashlytics;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
@@ -103,13 +104,13 @@ public class NET_HEADER implements Serializable {
 		bos.write(check2);
 	}
 
-	public boolean send(Socket socket) {
-		if (socket == null)
+	public boolean send(OutputStream os) {
+		if (os == null)
 			return false;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		prepare(bos);
 		try {
-			socket.getOutputStream().write(bos.toByteArray());
+			os.write(bos.toByteArray());
 		} catch (IOException e) {
 			// this is usually a broken pipe exception, which happens when the connection
 			// is closed. This is non-fatal here and does not need to be logged.

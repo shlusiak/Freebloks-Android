@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -13,40 +14,49 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
 import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.network.Network;
 
 import java.io.IOException;
 import java.util.UUID;
 
-public class BluetoothBridge extends Thread implements SpielClientInterface {
-	private final static String tag = BluetoothBridge.class.getSimpleName();
+public class BluetoothServer extends Thread implements SpielClientInterface {
+	private final static String tag = BluetoothServer.class.getSimpleName();
 
-	private final static String SERVICE_UUID = "B4C72729-2E7F-48B2-B15C-BDD73CED0D13";
+	public final static UUID SERVICE_UUID = UUID.fromString("B4C72729-2E7F-48B2-B15C-BDD73CED0D13");
 
-	private final SpielClient client;
-	private final Context context;
 	private final BluetoothAdapter bluetoothAdapter;
 	private BluetoothServerSocket serverSocket;
+	private OnBluetoothConnectedListener listener;
+	private Handler handler = new Handler();
 
-	public BluetoothBridge(Context context, SpielClient client) {
+	public interface OnBluetoothConnectedListener {
+		void onBluetoothClientConnected(BluetoothSocket socket);
+	}
+
+	public BluetoothServer(OnBluetoothConnectedListener listener) {
 		super("BluetoothServerBridge");
 
-		this.client = client;
-		this.context = context;
-
-		client.addClientInterface(this);
+		this.listener = listener;
 
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		Log.i(tag, "name " + bluetoothAdapter.getName());
-		Log.i(tag, "address " + bluetoothAdapter.getAddress());
-		Log.i(tag, "enabled " + bluetoothAdapter.isEnabled());
+		if (bluetoothAdapter != null) {
+			Log.i(tag, "name " + bluetoothAdapter.getName());
+			Log.i(tag, "address " + bluetoothAdapter.getAddress());
+			Log.i(tag, "enabled " + bluetoothAdapter.isEnabled());
+		}
 	}
 
 	public void run() {
-		Log.i(tag, "starting");
+		if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+			Log.w(tag, "Bluetooth disabled, not starting bridge");
+			return;
+		}
+
+		Log.i(tag, "Starting Bluetooth server");
 
 		try {
-			serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("freebloks", UUID.fromString(SERVICE_UUID));
+			serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("freebloks", SERVICE_UUID);
 			if (serverSocket == null) {
 				Log.e(tag, "Failed to create server socket");
 			}
@@ -58,25 +68,26 @@ public class BluetoothBridge extends Thread implements SpielClientInterface {
 
 		try {
 			while (true) {
-				BluetoothSocket clientSocket = serverSocket.accept();
+				final BluetoothSocket clientSocket = serverSocket.accept();
 				Log.i(tag, "client connected: " + clientSocket.getRemoteDevice().getName());
 
-
-				// TODO: connect to localhost and establish duplex connection between sockets in background thread
-
-				clientSocket.close();
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						listener.onBluetoothClientConnected(clientSocket);
+					}
+				});
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+
 		}
 
-		stopListening();
-		client.removeClientInterface(this);
+		shutdown();
 
-		Log.i(tag, "stopping");
+		Log.i(tag, "Stopping Bluetooth server");
 	}
 
-	public void stopListening() {
+	public void shutdown() {
 		if (serverSocket == null)
 			return;
 
@@ -88,10 +99,6 @@ public class BluetoothBridge extends Thread implements SpielClientInterface {
 		}
 	}
 
-	@Override
-	public void gameStarted() {
-		stopListening();
-	}
 
 	@Override
 	public void onConnected(Spiel spiel) {
@@ -100,7 +107,7 @@ public class BluetoothBridge extends Thread implements SpielClientInterface {
 
 	@Override
 	public void onDisconnected(Spiel spiel) {
-		stopListening();
+		shutdown();
 	}
 
 	@Override
@@ -131,6 +138,11 @@ public class BluetoothBridge extends Thread implements SpielClientInterface {
 	@Override
 	public void chatReceived(NET_CHAT c) {
 
+	}
+
+	@Override
+	public void gameStarted() {
+		shutdown();
 	}
 
 	@Override

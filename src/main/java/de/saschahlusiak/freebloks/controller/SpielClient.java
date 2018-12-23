@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.controller;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -8,6 +9,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,7 +27,7 @@ public class SpielClient {
 	static final int DEFAULT_TIMEOUT = 10000;
 
 	private final ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<>();
-	private Socket client_socket;
+	private Object client_socket;
 	public Spielleiter spiel;
 	private NET_SERVER_STATUS lastStatus;
 	private HandlerThread sendThread;
@@ -54,7 +56,11 @@ public class SpielClient {
 	}
 
 	public boolean isConnected() {
-		return (client_socket != null) && (!client_socket.isClosed());
+		if (client_socket == null) return false;
+		if (client_socket instanceof Socket && ((Socket)client_socket).isClosed()) return false;
+		if (client_socket instanceof BluetoothSocket && !((BluetoothSocket)client_socket).isConnected()) return false;
+
+		return true;
 	}
 
 	public synchronized void addClientInterface(SpielClientInterface sci) {
@@ -66,6 +72,7 @@ public class SpielClient {
 	}
 
 	public void connect(Context context, String host, int port) throws IOException {
+		final Socket socket = new Socket();
 		try {
 			SocketAddress address;
 			if (host == null)
@@ -73,8 +80,7 @@ public class SpielClient {
 			else
 				address = new InetSocketAddress(host, port);
 			
-			client_socket = new Socket();
-			client_socket.connect(address, DEFAULT_TIMEOUT);
+			socket.connect(address, DEFAULT_TIMEOUT);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IOException(context.getString(R.string.connection_refused));
@@ -82,7 +88,22 @@ public class SpielClient {
 		synchronized(this) {
 			sendThread = new HandlerThread("SendThread");
 			sendThread.start();
-			sendHandler = new SendHandler(client_socket, sendThread.getLooper());
+			sendHandler = new SendHandler(socket.getOutputStream(), sendThread.getLooper());
+
+			for (SpielClientInterface sci : spielClientInterface)
+				sci.onConnected(spiel);
+
+			this.client_socket = socket;
+		}
+	}
+
+	public void setSocket(BluetoothSocket socket) throws IOException {
+		synchronized(this) {
+			this.client_socket = socket;
+
+			sendThread = new HandlerThread("SendThread");
+			sendThread.start();
+			sendHandler = new SendHandler(socket.getOutputStream(), sendThread.getLooper());
 
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.onConnected(spiel);
@@ -93,9 +114,16 @@ public class SpielClient {
 		if (client_socket != null) {
 			try {
 				Crashlytics.log("Disconnecting from " + config.getServer());
-				if(client_socket.isConnected())
-					client_socket.shutdownInput();
-				client_socket.close();
+				if (client_socket instanceof Socket) {
+					Socket socket = (Socket) client_socket;
+					if (socket.isConnected())
+						socket.shutdownInput();
+					socket.close();
+				}
+				if (client_socket instanceof BluetoothSocket) {
+					BluetoothSocket socket = (BluetoothSocket) client_socket;
+					socket.close();
+				}
 				if (sendThread != null)
 					sendThread.quit();
 				sendThread = null;
@@ -116,9 +144,14 @@ public class SpielClient {
 			final InputStream is;
 
 			synchronized (this) {
-				if (client_socket == null || client_socket.isInputShutdown())
+				if (client_socket == null)
 					return;
-				is = client_socket.getInputStream();
+				if (client_socket instanceof Socket && !((Socket)client_socket).isInputShutdown())
+					is = ((Socket)client_socket).getInputStream();
+				else if (client_socket instanceof BluetoothSocket)
+					is = ((BluetoothSocket)client_socket).getInputStream();
+				else
+					return;
 			}
 
 			/* Read a complete network message into buffer */

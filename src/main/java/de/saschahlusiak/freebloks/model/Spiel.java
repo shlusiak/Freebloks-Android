@@ -241,8 +241,7 @@ public class Spiel implements Serializable, Cloneable {
 	/**
 	 * Initialise board and player state
 	 */
-	public void startNewGame(GameMode gamemode)
-	{
+	public void startNewGame(GameMode gamemode) {
 		startNewGame(gamemode, width, height);
 	}
 

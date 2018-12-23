@@ -1,11 +1,15 @@
 package de.saschahlusiak.freebloks.game;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
@@ -16,16 +20,16 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
 
+import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.network.Network;
 
-public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher {
+public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, BluetoothServer.OnBluetoothConnectedListener {
 	private static final String tag = JoinDialog.class.getSimpleName();
-
-	// TODO: implement bluetooth
-	private static final boolean ENABLE_BLUETOOTH = false;
 
 	private EditText name, server;
 	private OnStartCustomGameListener listener;
@@ -34,39 +38,16 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 	private ViewGroup bluetoothList;
 	private BluetoothAdapter bluetoothAdapter;
+	private BluetoothServer bluetoothServer;
 
 	private SharedPreferences prefs;
 
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-	}
-
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		updateOkButtonEnabled();
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
-
-	}
-
-	private void updateOkButtonEnabled() {
-		boolean enabled = true;
-		int checkedId = serverType.getCheckedRadioButtonId();
-		if (checkedId == R.id.radioButton2 && getCustomServer().isEmpty())
-			enabled = false;
-
-		if (checkedId == R.id.radioButton3)
-			enabled = false;
-
-		findViewById(android.R.id.button1).setEnabled(enabled);
-	}
-
 	public interface OnStartCustomGameListener {
-		void onJoinGame(String name, String server);
-		void onHostGame(String name);
+		void setClientName(String name);
+		void onJoinGame(String server);
+		void onJoinGame(BluetoothSocket bluetooth);
+		void onHostGame();
+		void onHostBluetoothGameWithClient(BluetoothSocket clientSocket);
 	}
 
 	public JoinDialog(Context context, final OnStartCustomGameListener listener) {
@@ -95,7 +76,8 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			public void onClick(View v) {
 				saveSettings();
 				dismiss();
-				listener.onHostGame(getName());
+				listener.setClientName(getName());
+				listener.onHostGame();
 			}
 		});
 
@@ -107,7 +89,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		bluetoothList = findViewById(R.id.bluetoothList);
 		bluetoothList.setVisibility(View.GONE);
-		if (bluetoothAdapter == null || !ENABLE_BLUETOOTH) {
+		if (bluetoothAdapter == null) {
 			// bluetooth not supported
 			findViewById(R.id.radioButton3).setVisibility(View.GONE);
 		}
@@ -118,17 +100,64 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+
+		if (bluetoothServer == null && bluetoothAdapter != null) {
+			bluetoothServer = new BluetoothServer(this);
+			bluetoothServer.start();
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (bluetoothServer != null) {
+			bluetoothServer.shutdown();
+			bluetoothServer = null;
+		}
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		updateOkButtonEnabled();
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+
+	}
+
+	private void updateOkButtonEnabled() {
+		boolean enabled = true;
+		int checkedId = serverType.getCheckedRadioButtonId();
+		if (checkedId == R.id.radioButton2 && getCustomServer().isEmpty())
+			enabled = false;
+
+		if (checkedId == R.id.radioButton3)
+			enabled = false;
+
+		findViewById(android.R.id.button1).setEnabled(enabled);
+	}
+
+	@Override
 	public void onClick(View view) {
+		listener.setClientName(getName());
 		switch (serverType.getCheckedRadioButtonId())
 		{
 			case R.id.radioButton1:
-				listener.onJoinGame(getName(), Global.DEFAULT_SERVER_ADDRESS);
+				listener.onJoinGame(Global.DEFAULT_SERVER_ADDRESS);
 				break;
 			case R.id.radioButton2:
 				if (getCustomServer().isEmpty())
 					return;
 
-				listener.onJoinGame(getName(), getCustomServer());
+				listener.onJoinGame(getCustomServer());
 				break;
 		}
 		saveSettings();
@@ -172,13 +201,75 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 		updateOkButtonEnabled();
 	}
 
+	private class ConnectBluetoothTask extends AsyncTask<BluetoothDevice, Void, BluetoothSocket> {
+		private ProgressDialog progress;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progress = new ProgressDialog(getContext());
+			progress.setIndeterminate(true);
+			progress.setMessage(getContext().getString(R.string.connecting));
+			progress.setCancelable(true);
+			progress.setOnCancelListener(new OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					Log.w(tag, "Cancelling connect task");
+					cancel(true);
+				}
+			});
+			progress.show();
+		}
+
+		@Override
+		protected BluetoothSocket doInBackground(BluetoothDevice... bluetoothDevices) {
+			BluetoothDevice device = bluetoothDevices[0];
+			BluetoothSocket socket;
+			try {
+				Log.i(tag, "Connecting to " + device.getName() + "/" + device.getAddress());
+				socket = device.createInsecureRfcommSocketToServiceRecord(BluetoothServer.SERVICE_UUID);
+
+				socket.connect();
+				Log.i(tag, "Connection successful");
+				return socket;
+			} catch (IOException e) {
+				Log.e(tag, "Connection failed");
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			progress.dismiss();
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(BluetoothSocket bluetoothSocket) {
+			progress.dismiss();
+			if (bluetoothSocket != null) {
+				// success
+				dismiss();
+				listener.setClientName(getName());
+				listener.onJoinGame(bluetoothSocket);
+			} else {
+				// error
+				Toast.makeText(getContext(), R.string.connection_refused, Toast.LENGTH_LONG).show();
+			}
+			super.onPostExecute(bluetoothSocket);
+		}
+	}
+
 	private void updateDeviceList() {
 		final View.OnClickListener deviceSelectedListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				saveSettings();
 				BluetoothDevice device = (BluetoothDevice) v.getTag();
 
 				Log.i(tag, "Device selected: " + device.getName());
+				new ConnectBluetoothTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, device);
 			}
 		};
 
@@ -192,8 +283,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			View v = getLayoutInflater().inflate(R.layout.join_bluetooth_device, bluetoothList, false);
 			v.findViewById(R.id.image).setVisibility(View.GONE);
 			t = v.findViewById(android.R.id.text1);
-			// TODO: translate me
-			t.setText("Bluetooth turned off or no devices found");
+			t.setText(R.string.bluetooth_disabled);
 
 			bluetoothList.addView(v, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			return;
@@ -211,5 +301,14 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 			bluetoothList.addView(v, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		}
+	}
+
+	@Override
+	public void onBluetoothClientConnected(final BluetoothSocket socket) {
+		// a client has connected to us. quickly host a game and get the two together
+
+		dismiss();
+		listener.setClientName(getName());
+		listener.onHostBluetoothGameWithClient(socket);
 	}
 }
