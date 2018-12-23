@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Freebloks</string>
 
     <string name="new_local_game">Nouvelle partie</string>
     <string name="resume">Reprendre</string>
     <string name="join_game">Rejoindre </string>
-    <string name="host_game">Hôte</string>
+    <string name="host_game">Hôte&#8230;</string>
     <string name="preferences">Préférences</string>
     <string name="hint">Indice</string>
     <string name="undo">Annuler</string>
@@ -18,7 +17,6 @@
     <string name="could_not_restore_game">Impossible de récupérer la partie</string>
     <string name="do_you_want_to_leave_current_game">Êtes-vous sûr de vouloir quitter la partie en cours&#160;?</string>
     <string name="disconnect_error">Connexion fermée&#160;: %1$s. Vous êtes maintenant déconnecté.</string>
-    <string name="default_server">Défaut</string>
 
     <string name="waiting_for_color">En attente de %1$s</string>
     <string name="color_is_out_of_moves">%1$s n\'a plus de tours</string>

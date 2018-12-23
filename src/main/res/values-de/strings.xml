@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Freebloks</string>
 
     <string name="new_local_game">Neues Spiel</string>
     <string name="resume">Fortsetzen</string>
     <string name="join_game">Beitreten</string>
-    <string name="host_game">Erstellen</string>
+    <string name="host_game">Erstellen&#8230;</string>
     <string name="multiplayer">Mehrspieler</string>
     <string name="join_multiplayer_game">Netzwerk Spiel beitreten</string>
     <string name="preferences">Einstellungen</string>
@@ -207,5 +206,27 @@
     <string name="prefs_statistics_long">Spielstatistiken zeigen</string>
 
     <string name="rules_title">Blokus Spielregeln</string>
+    <string name="rules_youtube">HowTo Video anzeigen</string>
+    <string name="rules_how_to_play">Bedienung</string>
+    <string name="rules_how_to_play_1">Durchsuche mit dem Finger die Liste der verfügbaren Steine und ziehe einen Stein auf das Spielbrett.</string>
+    <string name="rules_how_to_play_2">Der Stein kann auf dem Spielfeld mit den 4 \"Griffen\" bewegt, gedreht und gespiegelt werden. Gültige Positionen werden grün hervorgehoben. Tippe auf den Stein, um ihn abzulegen.</string>
+    <string name="rules_blokus_classic">Blokus Classic</string>
+    <string name="rules_classic_1">Jeder Spieler started mit 21 Spielsteinen in seiner Farbe. Der Reihe nach versucht jeder Spieler einen seiner Steine auf das Spielfeld abzulegen. Der Spieler mit den meisten bedeckten Spielfeldern auf dem Brett gewinnt.</string>
+    <string name="rules_classic_2">Jeder Spieler beginnt in seiner Ecke des Spielfeldes.</string>
+    <string name="rules_classic_3">Jeder neue Spielstein muss so gelegt werden, dass er mindestens eine Ecke mit einem vorherigen Stein gemein hat, aber nie eine Kante. Es ist erlaubt, Kanten mit Spielsteinen einer anderen Farbe gemein zu haben.</string>
+    <string name="rules_classic_4">Wenn ein Spieler nicht mehr legen kann, scheidet er aus. Das Spiel geht wie bisher weiter, bis keiner mehr legen kann.</string>
+    <string name="rules_variants">Zwei Spieler Varianten</string>
+    <string name="rules_variants_1">Zwei Spieler spielen entweder mit je zwei Farben, oder indem zwei Farben aus dem Spiel gelassen werden.</string>
+    <string name="rules_scoring">Punktezählung</string>
+    <string name="rules_scoring_1">Am Ende werden alle einzelnen Quadrate, die von einem Spieler auf dem Brett belegt werden, zusammen gezählt (z.B. ein 5-er Stein zählt 5 Punkte). Wenn ein Spieler alle seine Steine gelegt hat, bekommt er +20 Punkte, wenn sein letzter Stein der \"Einer\" war, ansonsten +15 Punkte.</string>
+    <string name="rules_scoring_2">Die maximale Punktezahl is somit 89+20=109. Der Spieler mit den meisten Punkten gewinnt.</string>
+
+    <string name="rules_duo_1">Blokus Duo ist eine zwei Spieler Version, die auf einem kleineren Brett gespielt wird. Die beiden Startpositionen befinden sich näher der Mitte des Bretts.</string>
+    <string name="rules_junior_1">Blokus Junior ist an jüngere Kinder gerichtet. Wie Blokus Duo ist es eine zwei Spieler Variante auf einem 14x14 Spielbrett, aber nur eine Untermenge der Spielsteine wird verwendet, die eine einfachere Form besitzen. Jeder Spieler erhält zwei der insgesamt 12 verschiedenen Spielsteine. </string>
+    <string name="monomino">Monominos</string>
+    <string name="domino">Dominos</string>
+    <string name="tromino">Trominos</string>
+    <string name="tetromino">Tetrominos</string>
+    <string name="pentomino">Pentominos</string>
 </resources>
 

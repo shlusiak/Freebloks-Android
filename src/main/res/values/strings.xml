@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Freebloks</string>
+    <string name="app_name" translatable="false">Freebloks</string>
     <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2019.</string>
 
     <string name="new_local_game">New Game</string>
     <string name="resume">Resume</string>
     <string name="join_game">Join</string>
-    <string name="host_game">Host</string>
+    <string name="host_game">Host&#8230;</string>
     <string name="multiplayer">Multiplayer</string>
     <string name="join_multiplayer_game">Join multiplayer game</string>
     <string name="preferences">Settings</string>
@@ -150,7 +150,7 @@
     <string name="donation_nothing">Nothing</string>
     <string name="donation_next">Next</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
-    <string name="donation_paypal" translatable="false">PayPal</string>
+    <string name="donation_paypal">PayPal</string>
 
     <string name="advanced">Advanced</string>
     <string name="configure_stones_dialog_title">Configure Tiles</string>

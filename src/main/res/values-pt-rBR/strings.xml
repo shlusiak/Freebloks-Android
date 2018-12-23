@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Freebloks</string>
 
     <string name="new_local_game">Novo Jogo</string>
     <string name="resume">Continuar</string>
     <string name="join_game">Entrar</string>
-    <string name="host_game">Host</string>
+    <string name="host_game">Host&#8230;</string>
     <string name="preferences">Configurações</string>
     <string name="hint">Dica</string>
     <string name="undo">Desfazer</string>
@@ -18,7 +17,6 @@
     <string name="could_not_restore_game">Impossível restaurar o jogo</string>
     <string name="do_you_want_to_leave_current_game">Tem certeza de que deseja cancelar o jogo atual?</string>
     <string name="disconnect_error">Conexão fechada: %1$s. Agora você está offline.</string>
-    <string name="default_server">Padrão</string>
 
     <string name="waiting_for_color">Esperando por %1$s</string>
     <string name="color_is_out_of_moves">%1$s está sem movimentos</string>

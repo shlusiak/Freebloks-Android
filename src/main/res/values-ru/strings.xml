@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Freebloks</string>
 
     <string name="new_local_game">Новая игра</string>
     <string name="resume">Продолжить</string>
     <string name="join_game">Присоединиться</string>
-    <string name="host_game">Хост</string>
+    <string name="host_game">Хост&#8230;</string>
     <string name="preferences">Настройки</string>
     <string name="hint">Подсказка</string>
     <string name="undo">Отменить ход</string>
