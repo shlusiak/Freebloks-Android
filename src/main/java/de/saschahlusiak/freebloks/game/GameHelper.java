@@ -139,6 +139,8 @@ public class GameHelper implements OnCompleteListener<Player>, OnSuccessListener
     private void setGoogleAccount(GoogleSignInAccount account) {
         if (account == this.googleAccount)
             return;
+        if (mActivity == null)
+        	return;
 
         this.googleAccount = account;
 
