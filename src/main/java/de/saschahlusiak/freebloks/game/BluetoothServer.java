@@ -60,7 +60,7 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 			if (serverSocket == null) {
 				Log.e(tag, "Failed to create server socket");
 			}
-		} catch (IOException e) {
+		} catch (IOException | SecurityException e) {
 			e.printStackTrace();
 			Crashlytics.logException(e);
 			return;

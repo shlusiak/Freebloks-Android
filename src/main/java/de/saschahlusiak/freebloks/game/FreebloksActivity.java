@@ -1263,6 +1263,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if (client == null || client.spiel == null)
+					return;
 				updateMultiplayerNotification(false, null);
 				PlayerData[] data = client.spiel.getResultData();
 				new AddScoreTask(getApplicationContext(), client.spiel.getGameMode()).execute(data);
