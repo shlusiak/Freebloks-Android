@@ -1,5 +1,7 @@
 package de.saschahlusiak.freebloks.model;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 import de.saschahlusiak.freebloks.controller.GameStateException;
@@ -25,7 +27,7 @@ public class Stone implements Serializable, Cloneable {
 	public static final int STONE_FIELD_FREE = 0;
 	public static final int STONE_FIELD_ALLOWED = 1;
 
-	static final int STONE_SIZE[] =
+	private static final int STONE_SIZE[] =
 						{
 							1, //0
 							2, //1
@@ -51,7 +53,7 @@ public class Stone implements Serializable, Cloneable {
 						};
 
 
-	static final int STONE_POSITION_POINTS[] =
+	private static final int STONE_POSITION_POINTS[] =
 						{
 							8, //0
 							4, //1
@@ -299,7 +301,7 @@ public class Stone implements Serializable, Cloneable {
 		return super.clone();
 	}
 
-	public final void copyFrom(Stone from) {
+	public final void copyFrom(@NonNull Stone from) {
 		this.m_available = from.m_available;
 		this.m_shape = from.m_shape;
 		this.m_size = from.m_size;

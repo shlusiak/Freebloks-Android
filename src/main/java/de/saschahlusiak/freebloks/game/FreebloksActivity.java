@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import android.app.*;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -1159,13 +1160,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	private int number_of_possible_turns[] = new int[4];
 
 	@Override
-	public void stoneWillBeSet(NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull NET_SET_STONE s) {
 		for (int i = 0; i < 4; i++)
 			number_of_possible_turns[i] = client.spiel.getPlayer(i).m_number_of_possible_turns;
 	}
 
 	@Override
-	public void stoneHasBeenSet(final NET_SET_STONE s) {
+	public void stoneHasBeenSet(@NonNull final NET_SET_STONE s) {
 		if (client == null)
 			return;
 		if (view == null)
@@ -1234,7 +1235,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void hintReceived(NET_SET_STONE s) {
+	public void hintReceived(@NonNull NET_SET_STONE s) {
 		FirebaseAnalytics.getInstance(this).logEvent("hint_received", null);
 
 		runOnUiThread(new Runnable() {
@@ -1284,7 +1285,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void chatReceived(final NET_CHAT c) {
+	public void chatReceived(@NonNull final NET_CHAT c) {
 		String name;
 		int player = -1;
 		if (lastStatus != null && c.client >= 0) {
@@ -1356,13 +1357,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void stoneUndone(Turn t) {
+	public void stoneUndone(@NonNull Turn t) {
 		FirebaseAnalytics.getInstance(this).logEvent("undo_move", null);
 	}
 
 	@Override
-	public void serverStatus(NET_SERVER_STATUS status) {
-		if (lastStatus != null && status != null && lastStatus.isVersion(2)) {
+	public void serverStatus(@NonNull NET_SERVER_STATUS status) {
+		if (lastStatus != null && lastStatus.isVersion(2)) {
 			/* generate server chat messages, aka "joined" and "left" */
 
 			for (int i = 0; i < lastStatus.spieler.length; i++) {
@@ -1381,8 +1382,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				name = s.getClientName(getResources(), s.spieler[i]);
 
 				if (view == null)
-					return;
-				if (view.model == null)
 					return;
 				if (view.model.spiel == null)
 					return;
@@ -1414,12 +1413,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void onConnected(Spiel spiel) {
+	public void onConnected(@NonNull Spiel spiel) {
 
 	}
 
 	@Override
-	public void onDisconnected(Spiel spiel) {
+	public void onDisconnected(@NonNull Spiel spiel) {
 		Log.w(tag, "onDisconnected()");
 		final Exception error = (spielthread == null) ? null : spielthread.getError();
 		
@@ -1455,7 +1454,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public boolean commitCurrentStone(final Turn turn) {
+	public boolean commitCurrentStone(@NonNull final Turn turn) {
 		if (client == null)
 			return false;
 		

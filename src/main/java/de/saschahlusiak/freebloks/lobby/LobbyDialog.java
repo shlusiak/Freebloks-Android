@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
@@ -285,17 +286,17 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void stoneWillBeSet(NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull NET_SET_STONE s) {
 
 	}
 
 	@Override
-	public void stoneHasBeenSet(NET_SET_STONE s) {
+	public void stoneHasBeenSet(@NonNull NET_SET_STONE s) {
 
 	}
 
 	@Override
-	public void hintReceived(NET_SET_STONE s) {
+	public void hintReceived(@NonNull NET_SET_STONE s) {
 
 	}
 
@@ -305,7 +306,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void chatReceived(final NET_CHAT c) {
+	public void chatReceived(@NonNull final NET_CHAT c) {
 		chatList.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -320,12 +321,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void stoneUndone(Turn t) {
+	public void stoneUndone(@NonNull Turn t) {
 
 	}
 
 	@Override
-	public void serverStatus(final NET_SERVER_STATUS status) {
+	public void serverStatus(@NonNull final NET_SERVER_STATUS status) {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -371,12 +372,12 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void onConnected(Spiel spiel) {
+	public void onConnected(@NonNull Spiel spiel) {
 
 	}
 
 	@Override
-	public void onDisconnected(Spiel spiel) {
+	public void onDisconnected(@NonNull Spiel spiel) {
 		// dismiss may stop the dialog and remove this instance from the client listeners, modifying the underlying
 		// list, so we have do run the dismiss() outside of this method.
 		handler.post(new Runnable()

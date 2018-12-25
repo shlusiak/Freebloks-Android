@@ -21,6 +21,7 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -176,7 +177,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void stoneWillBeSet(final NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull final NET_SET_STONE s) {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -196,7 +197,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		});
 	}
 
-	public void stoneHasBeenSet(NET_SET_STONE s) {
+	public void stoneHasBeenSet(@NonNull NET_SET_STONE s) {
 		if (model == null)
 			return;
 		if (model.spiel == null)
@@ -209,7 +210,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void hintReceived(final NET_SET_STONE s) {
+	public void hintReceived(@NonNull final NET_SET_STONE s) {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -245,7 +246,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void chatReceived(NET_CHAT c) {
+	public void chatReceived(@NonNull NET_CHAT c) {
 
 	}
 
@@ -263,7 +264,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void stoneUndone(Turn t) {
+	public void stoneUndone(@NonNull Turn t) {
 		if (model.hasAnimations()) {
 			Effect e = new StoneUndoEffect(model, t);
 			model.addEffect(e);
@@ -273,7 +274,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void serverStatus(NET_SERVER_STATUS status) {
+	public void serverStatus(@NonNull NET_SERVER_STATUS status) {
 		if (status.width != model.board.last_size) {
 			model.board.last_size = status.width;
 			queueEvent(new Runnable() {
@@ -287,12 +288,12 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void onConnected(Spiel spiel) {
+	public void onConnected(@NonNull Spiel spiel) {
 
 	}
 
 	@Override
-	public void onDisconnected(Spiel spiel) {
+	public void onDisconnected(@NonNull Spiel spiel) {
 
 	}
 

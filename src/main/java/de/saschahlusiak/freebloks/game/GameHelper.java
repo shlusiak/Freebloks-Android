@@ -268,7 +268,7 @@ public class GameHelper implements OnCompleteListener<Player>, OnSuccessListener
 	public void submitScore(String leaderboard, long score) {
 		if (!isSignedIn())
 			return;
-		if (achievementsClient == null)
+		if (leaderboardsClient == null)
 			return;
 
 		leaderboardsClient.submitScore(leaderboard, score);

@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClient;
@@ -101,12 +102,12 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 
 
 	@Override
-	public void onConnected(Spiel spiel) {
+	public void onConnected(@NonNull Spiel spiel) {
 
 	}
 
 	@Override
-	public void onDisconnected(Spiel spiel) {
+	public void onDisconnected(@NonNull Spiel spiel) {
 		shutdown();
 	}
 
@@ -116,17 +117,17 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 	}
 
 	@Override
-	public void stoneWillBeSet(NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull NET_SET_STONE s) {
 
 	}
 
 	@Override
-	public void stoneHasBeenSet(NET_SET_STONE s) {
+	public void stoneHasBeenSet(@NonNull NET_SET_STONE s) {
 
 	}
 
 	@Override
-	public void hintReceived(NET_SET_STONE s) {
+	public void hintReceived(@NonNull NET_SET_STONE s) {
 
 	}
 
@@ -136,7 +137,7 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 	}
 
 	@Override
-	public void chatReceived(NET_CHAT c) {
+	public void chatReceived(@NonNull NET_CHAT c) {
 
 	}
 
@@ -146,12 +147,12 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 	}
 
 	@Override
-	public void stoneUndone(Turn t) {
+	public void stoneUndone(@NonNull Turn t) {
 
 	}
 
 	@Override
-	public void serverStatus(NET_SERVER_STATUS status) {
+	public void serverStatus(@NonNull NET_SERVER_STATUS status) {
 
 	}
 }

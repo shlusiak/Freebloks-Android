@@ -103,10 +103,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 	protected void onStart() {
 		super.onStart();
 
-		if (bluetoothServer == null && bluetoothAdapter != null) {
-			bluetoothServer = new BluetoothServer(this);
-			bluetoothServer.start();
-		}
+		startBluetoothServer();
 	}
 
 	@Override
@@ -115,6 +112,13 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 		if (bluetoothServer != null) {
 			bluetoothServer.shutdown();
 			bluetoothServer = null;
+		}
+	}
+
+	private void startBluetoothServer() {
+		if (bluetoothServer == null && bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+			bluetoothServer = new BluetoothServer(this);
+			bluetoothServer.start();
 		}
 	}
 
@@ -196,6 +200,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 		// bluetooth
 		if (i == R.id.radioButton3) {
+			startBluetoothServer();
 			updateDeviceList();
 		}
 		updateOkButtonEnabled();
