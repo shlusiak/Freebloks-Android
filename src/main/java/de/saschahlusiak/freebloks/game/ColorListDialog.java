@@ -18,13 +18,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Spinner;
 
 public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener {
-	DialogInterface.OnClickListener listener;
-	AdapterView<ColorListAdapter> list;
-	ColorListAdapter adapter;
-	Spinner gameMode, fieldSize;
+	private DialogInterface.OnClickListener listener;
+	private AdapterView<ColorListAdapter> list;
+	private ColorListAdapter adapter;
+	private Spinner gameMode, fieldSize;
 	
 	public ColorListDialog(Context context, final DialogInterface.OnClickListener listener) {
-		super(context, R.style.Theme_Freebloks_Dialog);
+		super(context, R.style.Theme_Freebloks_Light_Dialog);
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -39,9 +39,9 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		adapter = new ColorListAdapter(getContext());
 		// Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
 		// with class cast exception
-		list = (AdapterView<ColorListAdapter>)findViewById(android.R.id.list);
+		list = findViewById(android.R.id.list);
 		if (list == null)
-			list = (AdapterView<ColorListAdapter>)findViewById(R.id.grid);
+			list = findViewById(R.id.grid);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 		
