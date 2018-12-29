@@ -27,6 +27,15 @@
         </Spinner>
     </LinearLayout>
 
+    <Switch
+        android:id="@+id/pass_and_play"
+        android:paddingLeft="@dimen/dialog_padding"
+        android:paddingRight="@dimen/dialog_button_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/multiple_players"/>
+
     <View
         style="@style/titleDivider"
         android:layout_marginBottom="8dp" />

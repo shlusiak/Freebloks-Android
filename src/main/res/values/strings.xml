@@ -27,6 +27,7 @@
     <string name="join_bluetooth">Bluetooth</string>
     <string name="bluetooth_disabled">Bluetooth turned off or no devices paired</string>
     <string name="notification_channel_default" translatable="false">General</string>
+    <string name="multiple_players">Multiple players</string>
 
     <string name="monomino">Monominos</string>
     <string name="domino">Dominos</string>

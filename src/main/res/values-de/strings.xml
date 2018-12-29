@@ -24,6 +24,7 @@
     <string name="join_bluetooth">Bluetooth</string>
     <string name="join_custom_server">Wireless LAN</string>
     <string name="bluetooth_disabled">Bluetooth ausgeschaltet oder kein Gerät gepaart</string>
+    <string name="multiple_players">Mehrere Spieler</string>
 
     <string name="sound_on">Töne an</string>
     <string name="sound_off">Töne aus</string>

@@ -5,9 +5,11 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -15,15 +17,29 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener {
-	private DialogInterface.OnClickListener listener;
+public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+	private OnColorSelectedListener listener;
 	private AdapterView<ColorListAdapter> list;
 	private ColorListAdapter adapter;
 	private Spinner gameMode, fieldSize;
+	private CompoundButton passAndPlay;
+	private Button button;
+	private boolean selection[] = new boolean[4];
+	// TODO: names per color in passAndPlay mode
+
+	public interface OnColorSelectedListener {
+		void onColorSelected(ColorListDialog dialog, int color);
+		void onRandomColorSelected(ColorListDialog dialog);
+		void onColorsSelected(ColorListDialog dialog, boolean[] colors);
+	}
 	
-	public ColorListDialog(Context context, final DialogInterface.OnClickListener listener) {
+	public ColorListDialog(Context context, final OnColorSelectedListener listener) {
 		super(context, R.style.Theme_Freebloks_Light_Dialog);
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -31,9 +47,9 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		setContentView(R.layout.color_list_dialog);
 
 		this.listener = listener;
-		gameMode = (Spinner)findViewById(R.id.game_mode);
+		gameMode = findViewById(R.id.game_mode);
 		gameMode.setOnItemSelectedListener(this);
-		fieldSize = (Spinner)findViewById(R.id.field_size);
+		fieldSize = findViewById(R.id.field_size);
 		fieldSize.setOnItemSelectedListener(this);
 		
 		adapter = new ColorListAdapter(getContext());
@@ -44,38 +60,63 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			list = findViewById(R.id.grid);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
-		
-		findViewById(R.id.random_button).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				listener.onClick(ColorListDialog.this, -1);
-			}
-		});
+
+		button = findViewById(R.id.startButton);
+		button.setOnClickListener(this);
+		passAndPlay = findViewById(R.id.pass_and_play);
+		passAndPlay.setOnCheckedChangeListener(this);
+
+		adapter.setPassAndPlay(passAndPlay.isChecked());
 	}
-	
+
+	@NonNull
+	@Override
+	public Bundle onSaveInstanceState() {
+		Bundle b = super.onSaveInstanceState();
+		b.putBooleanArray("color_selection", selection);
+		return b;
+	}
+
+	@Override
+	public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		selection = savedInstanceState.getBooleanArray("color_selection");
+		adapter.notifyDataSetChanged();
+	}
+
 	void setGameMode(GameMode gamemode) {
 	//	setTitle(getContext().getResources().getStringArray(R.array.game_modes)[gamemode.ordinal()]);
 		gameMode.setSelection(gamemode.ordinal());
-		adapter.setGameMode(gamemode);
-		
+
 		switch (gamemode) {
 		case GAMEMODE_2_COLORS_2_PLAYERS:
 			fieldSize.setSelection(2);
+			selection[1] = selection[3] = false;
 			break;
 		case GAMEMODE_DUO:
 		case GAMEMODE_JUNIOR:
 			fieldSize.setSelection(1);
+			selection[1] = selection[3] = false;
+			break;
+		case GAMEMODE_4_COLORS_2_PLAYERS:
+			selection[2] = selection[3] = false;
 			break;
 		default:
 			fieldSize.setSelection(4);
 			break;
 		}
+
+		adapter.setGameMode(gamemode);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		listener.onClick(this, (int)id);
+		if (passAndPlay.isChecked()) {
+			selection[(int)id] = !selection[(int)id];
+			this.adapter.notifyDataSetChanged();
+		} else {
+			listener.onColorSelected(this, (int) id);
+		}
 	}
 	
 
@@ -94,43 +135,108 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		return GameMode.from(gameMode.getSelectedItemPosition());
 	}
 	
-	public int getBoardSize() {
+	int getBoardSize() {
 		return CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 	}
 
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		adapter.setPassAndPlay(passAndPlay.isChecked());
+		if (passAndPlay.isChecked()) {
+			button.setText(R.string.start);
+		} else {
+			button.setText(R.string.random_color);
+		}
+	}
 
-	static class ColorListAdapter extends ArrayAdapter<String> {
-		String[] colors;
-		GameMode gamemode;
-		
-		public ColorListAdapter(Context context) {
-			super(context, R.layout.color_list_item, android.R.id.text1);
+	@Override
+	public void onClick(View v) {
+		if (passAndPlay.isChecked()) {
+			listener.onColorsSelected(this, selection);
+		} else {
+			listener.onRandomColorSelected(this);
+		}
+	}
+
+	class ColorListAdapter extends ArrayAdapter<String> {
+		private String[] colors;
+		private GameMode gamemode;
+		private boolean passAndPlay;
+
+		ColorListAdapter(Context context) {
+			super(context, R.layout.color_list_item);
 
 			colors = context.getResources().getStringArray(R.array.color_names);
 			this.gamemode = null;
 		}
-		
+
+		public void setPassAndPlay(boolean passAndPlay) {
+			this.passAndPlay = passAndPlay;
+			notifyDataSetChanged();
+		}
+
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View v = super.getView(position, convertView, parent);
-			View c = v.findViewById(R.id.color);
+		public boolean areAllItemsEnabled() {
+			return false;
+		}
+
+		@Override
+		public boolean isEnabled(int position) {
+			if (passAndPlay && gamemode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
+				if (getItemId(position) > 1)
+					return false;
+			}
+
+			return true;
+		}
+
+		@NonNull
+		@Override
+		public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+			final View view;
+			if (convertView == null) {
+				view = LayoutInflater.from(getContext()).inflate(R.layout.color_list_item, parent, false);
+			} else {
+				view = convertView;
+			}
+
+			TextView t = view.findViewById(android.R.id.text1);
+			t.setText(getItem(position));
+
+			View color = view.findViewById(R.id.color);
 
 			LayerDrawable ld = (LayerDrawable)getContext().getResources().getDrawable(R.drawable.bg_card_1);
 			ld.mutate();
-			GradientDrawable item;
+			GradientDrawable drawable;
 			
-			item = ((GradientDrawable)ld.findDrawableByLayerId(R.id.shadow));
+			drawable = ((GradientDrawable)ld.findDrawableByLayerId(R.id.shadow));
 			int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor((int)getItemId(position), gamemode)];
-			item.setColor(getContext().getResources().getColor(res));
+			drawable.setColor(getContext().getResources().getColor(res));
 
-			item = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
+			drawable = ((GradientDrawable)ld.findDrawableByLayerId(R.id.color1));
 			res = Global.PLAYER_FOREGROUND_COLOR_RESOURCE[Global.getPlayerColor((int)getItemId(position), gamemode)];
-			item.setColor(getContext().getResources().getColor(res));
+			drawable.setColor(getContext().getResources().getColor(res));
 //			c.setBackgroundColor(Global.PLAYER_FOREGROUND_COLOR[Global.getPlayerColor((int)getItemId(position), gamemode)]);
 			
-			c.setBackgroundDrawable(ld);
+			color.setBackgroundDrawable(ld);
 
-			return v;
+			if (passAndPlay) {
+				CheckBox c = view.findViewById(R.id.checkBox);
+				c.setEnabled(true);
+				int itemId = (int)getItemId(position);
+				if (gamemode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
+					if (itemId > 1) {
+						itemId -= 2;
+						c.setEnabled(false);
+					}
+				}
+				c.setVisibility(View.VISIBLE);
+				c.setChecked(selection[itemId]);
+			} else {
+				view.findViewById(R.id.checkBox).setVisibility(View.GONE);
+			}
+
+			return view;
 		}
 		
 		public void setGameMode(GameMode gamemode) {

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
 	<include layout="@layout/color_list_custom_title"/>
-    
+
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
+
+
     <Button
-        android:id="@+id/random_button"
+        android:id="@+id/startButton"
         android:layout_width="match_parent"
         android:textSize="@dimen/textSizeMedium"
         android:layout_height="@dimen/main_menu_button_height"

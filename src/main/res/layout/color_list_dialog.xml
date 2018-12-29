@@ -16,7 +16,7 @@
         tools:listitem="@layout/color_list_item" />
 
     <Button
-        android:id="@+id/random_button"
+        android:id="@+id/startButton"
         style="@style/Widget.Button.Borderless"
         android:layout_width="match_parent"
         android:textSize="@dimen/textSizeMedium"

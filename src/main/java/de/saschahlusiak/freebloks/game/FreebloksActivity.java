@@ -871,18 +871,23 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		
 		case DIALOG_SINGLE_PLAYER:
 			ColorListDialog d = new ColorListDialog(this, 
-					new DialogInterface.OnClickListener() {
-		               public void onClick(DialogInterface dialog, int which) {
-		            	   boolean[] players = new boolean[4];
-		            	   
-		            	   if (which == -1)
-		            		   players = null;
-		            	   else
-		            		   players[which] = true;
-		            	   
-		            	   ColorListDialog d = (ColorListDialog)dialog;
-		            	   gamemode = d.getGameMode();
-		            	   fieldsize = d.getBoardSize();
+					new ColorListDialog.OnColorSelectedListener() {
+						@Override
+						public void onColorSelected(ColorListDialog dialog, int color) {
+							boolean[] players = new boolean[4];
+							players[color] = true;
+							onColorsSelected(dialog, players);
+						}
+
+						@Override
+						public void onRandomColorSelected(ColorListDialog dialog) {
+							onColorsSelected(dialog, null);
+						}
+
+						@Override
+						public void onColorsSelected(ColorListDialog dialog, boolean[] players) {
+		            	   gamemode = dialog.getGameMode();
+		            	   fieldsize = dialog.getBoardSize();
 		            	   final GameConfiguration config = GameConfiguration.builder()
 							   .requestPlayers(players)
 							   .fieldSize(fieldsize)
@@ -892,7 +897,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		            	   startNewGame(config, null);
 
 		            	   dialog.dismiss();
-		               }
+						}
 		           });
 			d.setOnCancelListener(new DialogInterface.OnCancelListener() {
 					@Override

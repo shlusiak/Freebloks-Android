@@ -5,8 +5,20 @@
     android:minHeight="@dimen/dialog_button_height"
     android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:animateLayoutChanges="true"
     android:paddingLeft="12dip"
 	android:paddingRight="12dip" >
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text=""/>
 
     <TextView
         android:id="@android:id/text1"
