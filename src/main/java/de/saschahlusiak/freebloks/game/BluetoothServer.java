@@ -42,9 +42,15 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		if (bluetoothAdapter != null) {
-			Log.i(tag, "name " + bluetoothAdapter.getName());
-			Log.i(tag, "address " + bluetoothAdapter.getAddress());
-			Log.i(tag, "enabled " + bluetoothAdapter.isEnabled());
+			try {
+				Log.i(tag, "name " + bluetoothAdapter.getName());
+				Log.i(tag, "address " + bluetoothAdapter.getAddress());
+				Log.i(tag, "enabled " + bluetoothAdapter.isEnabled());
+			} catch (SecurityException e) {
+				// doesn't matter, but is interesting
+				e.printStackTrace();
+				Crashlytics.logException(e);
+			}
 		}
 	}
 
@@ -72,6 +78,11 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 				final BluetoothSocket clientSocket = serverSocket.accept();
 				Log.i(tag, "client connected: " + clientSocket.getRemoteDevice().getName());
 
+				if (serverSocket == null || isInterrupted()) {
+					clientSocket.close();
+					break;
+				}
+
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -80,7 +91,7 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 				});
 			}
 		} catch (IOException e) {
-
+			// nop
 		}
 
 		shutdown();
@@ -88,18 +99,18 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 		Log.i(tag, "Stopping Bluetooth server");
 	}
 
-	public void shutdown() {
+	public synchronized void shutdown() {
 		if (serverSocket == null)
 			return;
 
 		try {
 			serverSocket.close();
+			interrupt();
 			serverSocket = null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public void onConnected(@NonNull Spiel spiel) {

@@ -22,11 +22,9 @@ import android.widget.*;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.network.Network;
 
 public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, BluetoothServer.OnBluetoothConnectedListener {
 	private static final String tag = JoinDialog.class.getSimpleName();
@@ -108,11 +106,11 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 	@Override
 	protected void onStop() {
-		super.onStop();
 		if (bluetoothServer != null) {
 			bluetoothServer.shutdown();
 			bluetoothServer = null;
 		}
+		super.onStop();
 	}
 
 	private void startBluetoothServer() {
