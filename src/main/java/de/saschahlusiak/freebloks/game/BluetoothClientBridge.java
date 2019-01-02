@@ -31,19 +31,7 @@ public class BluetoothClientBridge extends Thread {
 				e.printStackTrace();
 			}
 
-			// close both connections
-			try {
-				if (local != null) local.close();
-				local = null;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				if (remote != null) remote.close();
-				remote = null;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			shutdownSockets();
 		}
 	};
 
@@ -63,19 +51,7 @@ public class BluetoothClientBridge extends Thread {
 				e.printStackTrace();
 			}
 
-			// close both connections
-			try {
-				if (local != null) local.close();
-				local = null;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				if (remote != null) remote.close();
-				remote = null;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			shutdownSockets();
 		}
 	};
 
@@ -84,6 +60,23 @@ public class BluetoothClientBridge extends Thread {
 		this.remote = remote;
 		this.hostname = host;
 		this.port = port;
+	}
+
+	private synchronized void shutdownSockets() {
+		try {
+			if (local != null)
+				local.close();
+			local = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			if (remote != null)
+				remote.close();
+			remote = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -115,13 +108,6 @@ public class BluetoothClientBridge extends Thread {
 			e.printStackTrace();
 		}
 
-		try {
-			if (remote != null)
-				remote.close();
-			if (local != null)
-				local.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		shutdownSockets();
 	}
 }
