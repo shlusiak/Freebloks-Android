@@ -8,9 +8,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.google.gms:google-services:4.0.1'
-        classpath 'io.fabric.tools:gradle:1.25.4'
+        // https://developer.android.com/studio/releases/gradle-plugin
+        classpath 'com.android.tools.build:gradle:3.3.2'
+
+        // https://developers.google.com/android/guides/releases
+        classpath 'com.google.gms:google-services:4.2.0'
+
+        // https://docs.fabric.io/android/changelog.html
+        classpath 'io.fabric.tools:gradle:1.28.1'
     }
 }
 
@@ -30,7 +35,7 @@ dependencies {
     // for Google+ integration. See "foss" branch without this dependency
     // https://developers.google.com/android/guides/releases
     //noinspection GradleCompatible
-    implementation 'com.google.android.gms:play-services-games:16.0.0'
+    implementation 'com.google.android.gms:play-services-games:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     // for crash reporting through firebase. See "foss" branch without this dependency.
@@ -38,7 +43,7 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
 
     // number picker for configure stones dialog
     implementation 'com.shawnlin:number-picker:2.4.5'
@@ -99,3 +104,6 @@ android {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+// work around a bug in com.google.gms:google-services:4.2.0
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
