@@ -27,7 +27,9 @@
         android:icon="@drawable/appicon_small"
         android:label="@string/app_name"
         android:isGame="true"
-        android:allowBackup="true">
+        android:allowBackup="true"
+        android:extractNativeLibs="false"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data android:name="android.max_aspect" android:value="3.0" />
 

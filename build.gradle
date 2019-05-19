@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.1'
 
         // https://developers.google.com/android/guides/releases
         classpath 'com.google.gms:google-services:4.2.0'
@@ -43,7 +43,7 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
 
     // number picker for configure stones dialog
     implementation 'com.shawnlin:number-picker:2.4.5'
