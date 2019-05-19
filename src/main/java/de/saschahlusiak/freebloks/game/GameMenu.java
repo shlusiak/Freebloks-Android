@@ -105,6 +105,7 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 	@Override
 	public void onClick(View v) {
 		Intent intent;
+		activity = (FreebloksActivity)getOwnerActivity();
 		switch (v.getId())
 		{
 			case R.id.new_game:
@@ -143,6 +144,7 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 
 	@Override
 	public boolean onLongClick(View v) {
+		activity = (FreebloksActivity)getOwnerActivity();
 		switch (v.getId())
 		{
 			case R.id.new_game:

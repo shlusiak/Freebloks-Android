@@ -28,7 +28,7 @@ public class SpielClient {
 
 	private final ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<>();
 	private Object client_socket;
-	public Spielleiter spiel;
+	public final Spielleiter spiel;
 	private NET_SERVER_STATUS lastStatus;
 	private HandlerThread sendThread;
 	private Handler sendHandler;
@@ -224,7 +224,7 @@ public class SpielClient {
 		/* Nachricht des Servers ueber ein endgueltiges Setzen eines Steins auf das Feld */
 		case Network.MSG_SET_STONE: {
 			if (!spiel.isStarted() && !spiel.isFinished())
-				throw new GameStateException("received MSG_SET_STONE but game not running");
+				throw new GameStateException("received MSG_SET_STONE but game not yet running");
 
 			NET_SET_STONE s=(NET_SET_STONE)data;
 
