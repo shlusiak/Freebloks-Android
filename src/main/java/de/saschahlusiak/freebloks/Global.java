@@ -83,6 +83,6 @@ public class Global {
 	}
 
 	static {
-		IS_VIP = (BuildConfig.FLAVOR.equals("vip"));
+		IS_VIP = (BuildConfig.FLAVOR_app.equals("vip"));
 	}
 }
