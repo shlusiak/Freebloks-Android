@@ -11,5 +11,5 @@
 *.iml
 build/
 .externalNativeBuild/
-
+.cxx/
 local.properties

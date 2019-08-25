@@ -9,10 +9,10 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.5.0'
 
         // https://developers.google.com/android/guides/releases
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.google.gms:google-services:4.3.0'
 
         // https://docs.fabric.io/android/changelog.html
         classpath 'io.fabric.tools:gradle:1.28.1'
@@ -30,23 +30,23 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 dependencies {
+    // https://github.com/Clans/FloatingActionButton
     implementation 'com.github.clans:fab:1.6.4'
 
     // for Google+ integration. See "foss" branch without this dependency
     // https://developers.google.com/android/guides/releases
-    //noinspection GradleCompatible
-    implementation 'com.google.android.gms:play-services-games:17.0.0'
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.android.gms:play-services-games:18.0.1'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     // for crash reporting through firebase. See "foss" branch without this dependency.
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
     }
 
-    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
 
-    // number picker for configure stones dialog
-    implementation 'com.shawnlin:number-picker:2.4.5'
+    // https://github.com/ShawnLin013/NumberPicker
+    implementation 'com.shawnlin:number-picker:2.4.8'
 }
 
 android {
@@ -54,7 +54,7 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
 
         versionCode 85
@@ -104,6 +104,3 @@ android {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
-// work around a bug in com.google.gms:google-services:4.2.0
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

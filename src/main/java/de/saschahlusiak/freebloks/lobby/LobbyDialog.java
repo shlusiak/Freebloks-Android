@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;

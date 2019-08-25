@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import de.saschahlusiak.freebloks.model.Turn;
 
