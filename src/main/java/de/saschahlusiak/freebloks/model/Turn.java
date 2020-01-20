@@ -5,26 +5,18 @@ import java.io.Serializable;
 public class Turn implements Serializable {
 	private static final long serialVersionUID = -1715006791524885742L;
 
-	public int m_playernumber;
+	public final int m_playernumber;
 
-	public int m_stone_number;
+	public final int m_stone_number;
 
-	public int m_mirror_count;
-	public int m_rotate_count;
+	public final int m_mirror_count;
+	public final int m_rotate_count;
 
-	public int m_y;
-	public int m_x;
+	public final int m_y;
+	public final int m_x;
 
 
 	public Turn(Turn from) {
-		copy(from);
-	}
-
-	public Turn(int player, int stone, int y, int x, int mirror, int rotate) {
-		init(player, stone, y, x, mirror, rotate);
-	}
-
-	final void copy(Turn from) {
 		m_playernumber = from.m_playernumber;
 		m_stone_number = from.m_stone_number;
 		m_mirror_count = from.m_mirror_count;
@@ -33,7 +25,7 @@ public class Turn implements Serializable {
 		m_x = from.m_x;
 	}
 
-	final void init(int player, int stone, int y, int x, int mirror, int rotate) {
+	public Turn(int player, int stone, int y, int x, int mirror, int rotate) {
 		m_playernumber = player;
 		m_stone_number = stone;
 		m_mirror_count = mirror;
