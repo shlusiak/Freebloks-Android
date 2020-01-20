@@ -9,13 +9,13 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.3'
 
         // https://developers.google.com/android/guides/releases
-        classpath 'com.google.gms:google-services:4.3.0'
+        classpath 'com.google.gms:google-services:4.3.3'
 
         // https://docs.fabric.io/android/changelog.html
-        classpath 'io.fabric.tools:gradle:1.28.1'
+        classpath 'io.fabric.tools:gradle:1.31.2'
     }
 }
 
@@ -35,7 +35,7 @@ dependencies {
 
     // for Google+ integration. See "foss" branch without this dependency
     // https://developers.google.com/android/guides/releases
-    implementation 'com.google.android.gms:play-services-games:18.0.1'
+    implementation 'com.google.android.gms:play-services-games:19.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     // for crash reporting through firebase. See "foss" branch without this dependency.
@@ -43,19 +43,19 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.google.firebase:firebase-core:17.1.0'
+    implementation 'com.google.firebase:firebase-core:17.2.2'
 
     // https://github.com/ShawnLin013/NumberPicker
     implementation 'com.shawnlin:number-picker:2.4.8'
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode 85
         versionName "1.1.5"
