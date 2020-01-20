@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -288,7 +287,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			t = v.findViewById(android.R.id.text1);
 			t.setText(R.string.bluetooth_disabled);
 
-			bluetoothList.addView(v, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			bluetoothList.addView(v, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			return;
 		}
 
@@ -302,7 +301,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			v.setTag(device);
 			v.setOnClickListener(deviceSelectedListener);
 
-			bluetoothList.addView(v, new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			bluetoothList.addView(v, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		}
 	}
 
