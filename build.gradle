@@ -55,6 +55,9 @@ dependencies {
 
     // https://github.com/ShawnLin013/NumberPicker
     implementation 'com.shawnlin:number-picker:2.4.8'
+
+    // for unit tests
+    testImplementation 'junit:junit:4.13'
 }
 
 android {

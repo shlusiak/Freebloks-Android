@@ -4,14 +4,12 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
 public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 	int x, y;
 	ViewModel model;
-	Stone stone;
 
 	private static final float BLEND_END = 0.55f;
 
@@ -24,9 +22,6 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 		this.x = x;
 		this.y = y;
 		this.time = -0.6f - distance * 0.025f;
-
-		this.stone = new Stone();
-		stone.init(0);
 
 	    color1 = Global.stone_color_a[color];
 	    color2 = Global.stone_color_a[0];
