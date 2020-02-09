@@ -14,6 +14,7 @@ class Shape(
     val size: Int,
     val mirrorable: Mirrorable,
     val rotatable: Rotatable,
+    
     /**
      * Field values.
      *

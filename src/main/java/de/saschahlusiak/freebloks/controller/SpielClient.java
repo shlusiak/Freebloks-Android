@@ -296,8 +296,6 @@ public class SpielClient {
 				if (changed && !spiel.isStarted()) spiel.setAvailableStones(status.stone_numbers_obsolete[0],status.stone_numbers_obsolete[1],status.stone_numbers_obsolete[2],status.stone_numbers_obsolete[3],status.stone_numbers_obsolete[4]);
 			}
 			spiel.setGameMode(status.gamemode);
-			if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
-				spiel.setTeams(0, 2, 1, 3);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.getGameMode() == GameMode.GAMEMODE_DUO || spiel.getGameMode()==GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0; n < Shape.COUNT; n++){
@@ -330,8 +328,6 @@ public class SpielClient {
 				spiel.history.clear();
 
 //			setAvailableStones(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
-			if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS)
-				spiel.setTeams(0, 2, 1, 3);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
 				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||
 				spiel.getGameMode()== GameMode.GAMEMODE_JUNIOR)

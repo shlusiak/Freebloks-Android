@@ -78,7 +78,7 @@ class SpielTest {
         val p = spiel.getPlayer(player)
         if (p.m_number_of_possible_turns == 0) return null
 
-        var availableStones = p.m_stone.filter { it.isAvailable() }
+        var availableStones = p.stones.filter { it.isAvailable() }
         if (reversed) availableStones = availableStones.asReversed()
 
         for (x in 0 until spiel.width) for (y in 0 until spiel.height) {
@@ -136,6 +136,11 @@ class SpielTest {
         assertEquals(9, s.getPlayer(1).m_stone_count)
         assertEquals(7, s.getPlayer(2).m_stone_count)
         assertEquals(2, s.getPlayer(3).m_stone_count)
+
+        assertEquals(60, s.getPlayer(0).m_stone_points)
+        assertEquals(53, s.getPlayer(1).m_stone_points)
+        assertEquals(57, s.getPlayer(2).m_stone_points)
+        assertEquals(81, s.getPlayer(3).m_stone_points)
 
         assertEquals(0, s.getPlayer(0).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
@@ -195,6 +200,11 @@ class SpielTest {
         assertEquals(0, s.getPlayer(2).m_stone_count)
         assertEquals(21, s.getPlayer(3).m_stone_count)
 
+        assertEquals(81, s.getPlayer(0).m_stone_points)
+        assertEquals(0, s.getPlayer(1).m_stone_points)
+        assertEquals(104, s.getPlayer(2).m_stone_points)
+        assertEquals(0, s.getPlayer(3).m_stone_points)
+
         assertEquals(0, s.getPlayer(0).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(2).m_number_of_possible_turns)
@@ -249,6 +259,11 @@ class SpielTest {
         assertEquals(10, s.getPlayer(1).m_stone_count)
         assertEquals(3, s.getPlayer(2).m_stone_count)
         assertEquals(1, s.getPlayer(3).m_stone_count)
+
+        assertEquals(64, s.getPlayer(0).m_stone_points)
+        assertEquals(39, s.getPlayer(1).m_stone_points)
+        assertEquals(74, s.getPlayer(2).m_stone_points)
+        assertEquals(84, s.getPlayer(3).m_stone_points)
 
         assertEquals(0, s.getPlayer(0).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)

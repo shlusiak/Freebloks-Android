@@ -228,21 +228,6 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Sets the members of team1 and team2 (for 2 players 4 colors mode)
-	 */
-	public void setTeams(int player_team1_1, int player_team1_2, int player_team2_1, int player_team2_2) {
-		player[player_team1_1].set_teammate(player_team1_2);
-		player[player_team1_2].set_teammate(player_team1_1);
-		player[player_team1_1].set_nemesis(player_team2_1);
-		player[player_team1_2].set_nemesis(player_team2_1);
-
-		player[player_team2_1].set_teammate(player_team2_2);
-		player[player_team2_2].set_teammate(player_team2_1);
-		player[player_team2_1].set_nemesis(player_team1_1);
-		player[player_team2_2].set_nemesis(player_team1_1);
-	}
-
-	/**
 	 * Initialise board and player state
 	 */
 	public void startNewGame(GameMode gamemode) {

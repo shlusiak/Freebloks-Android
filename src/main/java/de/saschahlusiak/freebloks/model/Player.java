@@ -11,11 +11,9 @@ public class Player implements Serializable, Cloneable {
 	public int m_stone_count;
 	public int m_number_of_possible_turns;
 
-	int m_teammate;
-	int m_nemesis;
-	int m_number;
+	private int m_number;
 
-	Stone m_stone[] = new Stone[Shape.COUNT];
+	private Stone[] m_stone = new Stone[Shape.COUNT];
 	public Stone m_lastStone;
 
 	public Player() {
@@ -51,14 +49,9 @@ public class Player implements Serializable, Cloneable {
 		return m_stone[n];
 	}
 
-	void set_teammate(int player) {
-		m_teammate = player;
+	public final Stone[] getStones() {
+		return m_stone;
 	}
-
-	void set_nemesis(int player) {
-		m_nemesis = player;
-	}
-
 
 	void refresh_data(Spiel spiel) {
 		m_stone_points = 0;
