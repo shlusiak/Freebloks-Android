@@ -33,4 +33,8 @@ public class Turn implements Serializable {
 		m_y = y;
 		m_x = x;
 	}
+
+	public Turn(int player, int stone, int y, int x, Orientation orientation) {
+		this(player, stone, y, x, orientation.getMirrored() ? 1 : 0, orientation.getRotation().getValue());
+	}
 }
