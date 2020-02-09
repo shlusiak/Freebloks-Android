@@ -17,7 +17,7 @@ class Stone(val shape: Shape, var available: Int = 0) : Serializable {
 
     @Throws(GameStateException::class)
     fun availableDecrement() {
-        if (available <= 0) throw GameStateException("stone " + shape.shape + " not available")
+        if (available <= 0) throw GameStateException("stone " + shape.number + " not available")
         available--
     }
 }

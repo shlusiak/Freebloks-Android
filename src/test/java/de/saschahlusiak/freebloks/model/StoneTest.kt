@@ -10,7 +10,7 @@ class StoneTest {
         val stone = Stone(0)
 
         assertEquals(0, stone.available)
-        assertEquals(0, stone.shape.shape)
+        assertEquals(0, stone.shape.number)
         assertEquals(1, stone.shape.size)
 
         assertEquals(Mirrorable.Not, stone.shape.mirrorable)

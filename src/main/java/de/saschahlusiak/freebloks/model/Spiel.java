@@ -304,10 +304,9 @@ public class Spiel implements Serializable, Cloneable {
 	 * Check whether the given stone/player/position is a valid move.
 	 */
 	public final int isValidTurn(Turn turn) {
-		final int player = turn.m_playernumber;
-		final Stone stone = this.player[player].get_stone(turn.m_stone_number);
+		final int player = turn.getPlayer();
 
-		return isValidTurn(stone.getShape(), player, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
+		return isValidTurn(turn.getShape(), player, turn.getY(), turn.getX(), turn.getOrientation());
 	}
 
 	/**
@@ -358,18 +357,18 @@ public class Spiel implements Serializable, Cloneable {
 	 * Execute a Turn and place the stone on the field
 	 */
 	public final void setStone(Turn turn) throws GameStateException{
-		final Stone stone = player[turn.m_playernumber].get_stone(turn.m_stone_number);
-		setStone(stone, turn.m_playernumber, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
+		final Stone stone = player[turn.getPlayer()].get_stone(turn.getShape().getNumber());
+		setStone(stone, turn.getPlayer(), turn.getY(), turn.getX(), turn.getOrientation());
 	}
 
 	/**
 	 * Places given stone onto field
 	 */
-	private void setStone(Stone stone, int player, int startY, int startX, int mirror, int rotate) throws GameStateException {
+	private void setStone(Stone stone, int player, int startY, int startX, Orientation orientation) throws GameStateException {
 		final Shape type = stone.getShape();
 		for (int y = 0; y < type.getSize(); y++){
 			for (int x = 0; x < type.getSize(); x++){
-				if (type.isStone(x, y, mirror, rotate)) {
+				if (type.isStone(x, y, orientation)) {
 					setSingleStone(player, startY+y, startX+x);
 				}
 			}
@@ -386,17 +385,16 @@ public class Spiel implements Serializable, Cloneable {
 	 */
 	public void undo(Turnpool turnpool, GameMode gamemode) throws GameStateException{
 		final Turn turn = turnpool.pollLast();
-		final Stone stone = player[turn.m_playernumber].get_stone(turn.m_stone_number);
-		final Shape type = stone.getShape();
+		final Shape shape = turn.getShape();
 		int x, y;
 
 		// remove stone
-		for (x = 0; x < type.getSize(); x++) {
-			for (y = 0; y < type.getSize(); y++) {
-				if (type.isStone(x, y, turn.m_mirror_count, turn.m_rotate_count)) {
-					if (getFieldPlayer(turn.m_y + y, turn.m_x + x) == FIELD_FREE)
+		for (x = 0; x < shape.getSize(); x++) {
+			for (y = 0; y < shape.getSize(); y++) {
+				if (shape.isStone(x, y, turn.getOrientation())) {
+					if (getFieldPlayer(turn.getY() + y, turn.getX() + x) == FIELD_FREE)
 						throw new GameStateException("field is free but shouldn't");
-					clearField(turn.m_x + x, turn.m_y + y);
+					clearField(turn.getX() + x, turn.getY() + y);
 				}
 			}
 		}
@@ -424,6 +422,7 @@ public class Spiel implements Serializable, Cloneable {
 		// try to set all seeds again, in case we cleared up the starting points
 		setSeeds(gamemode);
 
+		final Stone stone = player[turn.getPlayer()].get_stone(shape.getNumber());
 		stone.availableIncrement();
 		refreshPlayerData();
 	}

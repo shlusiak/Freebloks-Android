@@ -49,7 +49,7 @@ class SpielTest {
 
         //  X
         // XX
-        val turn = Turn(0, stone.shape.shape, 18, 0, 0, 3)
+        val turn = Turn(0, stone.shape.number, 18, 0, 0, 3)
         assertEquals(FIELD_ALLOWED, s.isValidTurn(turn))
         s.setStone(turn)
         assertEquals(0, stone.available)
@@ -89,7 +89,7 @@ class SpielTest {
                 shape.orientations.forEach { orientation ->
 
                     for (sx in 0 until shape.size) for (sy in 0 until shape.size) {
-                        val turn = Turn(player, shape.shape, y - sy, x - sx, orientation)
+                        val turn = Turn(player, shape.number, y - sy, x - sx, orientation)
                         if (spiel.isValidTurn(turn) == FIELD_ALLOWED) return turn
                     }
                 }
@@ -99,20 +99,25 @@ class SpielTest {
     }
 
     @Test
-    fun test_full_game() {
+    fun test_full_game_4_4() {
         val s = Spiel(20)
+        val turnpool = Turnpool()
+        val mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
-        s.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        s.startNewGame(mode, 20, 20)
         s.refreshPlayerData()
 
         assertEquals(58, s.getPlayer(0).m_number_of_possible_turns)
         assertEquals(58, s.getPlayer(1).m_number_of_possible_turns)
         assertEquals(58, s.getPlayer(2).m_number_of_possible_turns)
         assertEquals(58, s.getPlayer(3).m_number_of_possible_turns)
+        assertEquals(21, s.getPlayer(0).m_stone_count)
+        assertEquals(21, s.getPlayer(1).m_stone_count)
+        assertEquals(21, s.getPlayer(2).m_stone_count)
+        assertEquals(21, s.getPlayer(3).m_stone_count)
 
-        var moves = 0
         do {
             var moved = false
             for (player in 0 until 4) {
@@ -120,13 +125,13 @@ class SpielTest {
 
                 if (turn != null ) {
                     moved = true
-                    moves++
+                    turnpool.add(turn)
                     s.setStone(turn)
                 }
             }
         } while (moved)
 
-        assertEquals(59, moves)
+        assertEquals(59, turnpool.size)
         assertEquals(7, s.getPlayer(0).m_stone_count)
         assertEquals(9, s.getPlayer(1).m_stone_count)
         assertEquals(7, s.getPlayer(2).m_stone_count)
@@ -136,11 +141,85 @@ class SpielTest {
         assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(2).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(3).m_number_of_possible_turns)
+
+        // and backwards
+        while (!turnpool.isEmpty()) {
+            s.undo(turnpool, mode)
+        }
+        assertEquals(58, s.getPlayer(0).m_number_of_possible_turns)
+        assertEquals(58, s.getPlayer(1).m_number_of_possible_turns)
+        assertEquals(58, s.getPlayer(2).m_number_of_possible_turns)
+        assertEquals(58, s.getPlayer(3).m_number_of_possible_turns)
+        assertEquals(21, s.getPlayer(0).m_stone_count)
+        assertEquals(21, s.getPlayer(1).m_stone_count)
+        assertEquals(21, s.getPlayer(2).m_stone_count)
+        assertEquals(21, s.getPlayer(3).m_stone_count)
+    }
+
+    @Test
+    fun test_full_game_duo() {
+        val s = Spiel(15)
+        val turnpool = Turnpool()
+        val mode = GameMode.GAMEMODE_DUO
+
+        // we have to make stones available before starting a new game, otherwise we won't get seeds set
+        s.setAvailableStones(1, 1, 1, 1, 1)
+        s.startNewGame(mode, 15, 15)
+        s.refreshPlayerData()
+
+        assertEquals(309, s.getPlayer(0).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
+        assertEquals(309, s.getPlayer(2).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(3).m_number_of_possible_turns)
+        assertEquals(21, s.getPlayer(0).m_stone_count)
+        assertEquals(21, s.getPlayer(1).m_stone_count)
+        assertEquals(21, s.getPlayer(2).m_stone_count)
+        assertEquals(21, s.getPlayer(3).m_stone_count)
+
+        do {
+            var moved = false
+            for (player in 0 until 4) {
+                val turn = findTurn(s, player, true)
+
+                if (turn != null ) {
+                    moved = true
+                    turnpool.add(turn)
+                    s.setStone(turn)
+                }
+            }
+        } while (moved)
+
+        assertEquals(40, turnpool.size)
+        assertEquals(2, s.getPlayer(0).m_stone_count)
+        assertEquals(21, s.getPlayer(1).m_stone_count)
+        assertEquals(0, s.getPlayer(2).m_stone_count)
+        assertEquals(21, s.getPlayer(3).m_stone_count)
+
+        assertEquals(0, s.getPlayer(0).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(2).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(3).m_number_of_possible_turns)
+
+        // and backwards
+        while (!turnpool.isEmpty()) {
+            s.undo(turnpool, mode)
+        }
+
+        assertEquals(309, s.getPlayer(0).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
+        assertEquals(309, s.getPlayer(2).m_number_of_possible_turns)
+        assertEquals(0, s.getPlayer(3).m_number_of_possible_turns)
+        assertEquals(21, s.getPlayer(0).m_stone_count)
+        assertEquals(21, s.getPlayer(1).m_stone_count)
+        assertEquals(21, s.getPlayer(2).m_stone_count)
+        assertEquals(21, s.getPlayer(3).m_stone_count)
     }
 
     @Test
     fun test_full_game_reversed() {
         val s = Spiel(20)
+        val turnpool = Turnpool()
+        val mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
@@ -152,7 +231,6 @@ class SpielTest {
         assertEquals(58, s.getPlayer(2).m_number_of_possible_turns)
         assertEquals(58, s.getPlayer(3).m_number_of_possible_turns)
 
-        var moves = 0
         do {
             var moved = false
             for (player in 0 until 4) {
@@ -160,13 +238,13 @@ class SpielTest {
 
                 if (turn != null ) {
                     moved = true
-                    moves++
+                    turnpool.add(turn)
                     s.setStone(turn)
                 }
             }
         } while (moved)
 
-        assertEquals(65, moves)
+        assertEquals(65, turnpool.size)
         assertEquals(5, s.getPlayer(0).m_stone_count)
         assertEquals(10, s.getPlayer(1).m_stone_count)
         assertEquals(3, s.getPlayer(2).m_stone_count)
@@ -176,5 +254,19 @@ class SpielTest {
         assertEquals(0, s.getPlayer(1).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(2).m_number_of_possible_turns)
         assertEquals(0, s.getPlayer(3).m_number_of_possible_turns)
+
+
+        // and backwards
+        while (!turnpool.isEmpty()) {
+            s.undo(turnpool, mode)
+        }
+        assertEquals(58, s.getPlayer(0).m_number_of_possible_turns)
+        assertEquals(58, s.getPlayer(1).m_number_of_possible_turns)
+        assertEquals(58, s.getPlayer(2).m_number_of_possible_turns)
+        assertEquals(58, s.getPlayer(3).m_number_of_possible_turns)
+        assertEquals(21, s.getPlayer(0).m_stone_count)
+        assertEquals(21, s.getPlayer(1).m_stone_count)
+        assertEquals(21, s.getPlayer(2).m_stone_count)
+        assertEquals(21, s.getPlayer(3).m_stone_count)
     }
 }

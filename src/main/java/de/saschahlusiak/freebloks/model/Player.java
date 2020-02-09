@@ -94,7 +94,7 @@ public class Player implements Serializable, Cloneable {
 		}
 		if (m_stone_count == 0 && m_lastStone != null) {
 			m_stone_points += 15;
-			if (m_lastStone.getShape().getShape() == 0)
+			if (m_lastStone.getShape().getNumber() == 0)
 				m_stone_points += 5;
 		}
 	}

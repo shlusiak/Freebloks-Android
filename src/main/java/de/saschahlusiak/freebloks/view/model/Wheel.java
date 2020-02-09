@@ -62,7 +62,7 @@ public class Wheel implements ViewElement {
 
 			if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 				model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
-			showStone(highlightStone.getShape().getShape());
+			showStone(highlightStone.getShape().getNumber());
 			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
 			model.currentStone.hasMoved = true;
 			model.board.resetRotation();
@@ -111,7 +111,7 @@ public class Wheel implements ViewElement {
 
 	private int getStonePositionInWheel(int stone) {
 		for (int i = 0; i < stones.size(); i++)
-			if (stones.get(i).getShape().getShape() == stone)
+			if (stones.get(i).getShape().getNumber() == stone)
 				return i;
 		return 0;
 	}
@@ -238,7 +238,7 @@ public class Wheel implements ViewElement {
 			tmp.x = m.x;
 			tmp.y = m.y;
 			model.board.modelToBoard(tmp);
-			showStone(highlightStone.getShape().getShape());
+			showStone(highlightStone.getShape().getNumber());
 			if (model.currentStone.stone != highlightStone)
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
@@ -256,7 +256,7 @@ public class Wheel implements ViewElement {
 				if (model.currentStone.stone != null)
 					model.currentStone.startDragging(null, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
 				model.currentStone.status = CurrentStone.Status.IDLE;
-				showStone(highlightStone.getShape().getShape());
+				showStone(highlightStone.getShape().getNumber());
 				status = Status.IDLE;
 			} else {
 				lastOffset = currentOffset;

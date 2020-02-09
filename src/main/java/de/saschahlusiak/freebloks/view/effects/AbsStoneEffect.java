@@ -24,7 +24,7 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 	}
 	
 	AbsStoneEffect(ViewModel model, Turn turn) {
-		this(model, Shape.get(turn.m_stone_number), model.getPlayerColor(turn.m_playernumber), turn.m_x, turn.m_y, turn.m_mirror_count, turn.m_rotate_count);
+		this(model, turn.getShape(), model.getPlayerColor(turn.getPlayer()), turn.getX(), turn.getY(), turn.getMirrorCount(), turn.getRotationCount());
 	}
 
 	@Override

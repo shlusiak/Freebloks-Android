@@ -479,7 +479,7 @@ public class CurrentStone implements ViewElement {
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				Turn turn = new Turn(model.spiel.current_player(), stone.getShape().getShape(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
+				Turn turn = new Turn(model.spiel.current_player(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
 				if (model.activity.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;

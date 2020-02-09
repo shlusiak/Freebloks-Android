@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 class Shape(
     // the number of the shape of this stone. must match with the number of this stone on the API.
-    val shape: Int,
+    val number: Int,
     // the effective size of this stone, between 1 and 5
     val size: Int,
     val mirrorable: Mirrorable,

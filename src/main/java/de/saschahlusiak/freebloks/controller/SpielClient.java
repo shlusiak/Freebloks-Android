@@ -356,12 +356,12 @@ public class SpielClient {
 			Turn t = spiel.history.getLast();
 
 			Crashlytics.log(String.format("undo: player %d, stone %d, x %d, y %d",
-				t.m_playernumber,
-				t.m_stone_number,
-				t.m_x,
-				t.m_y));
+				t.getPlayer(),
+				t.getShapeNumber(),
+				t.getX(),
+				t.getY()));
 
-			Log.d(tag, "stone undone: " + t.m_stone_number);
+			Log.d(tag, "stone undone: " + t.getShapeNumber());
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.stoneUndone( t);
 			spiel.undo(spiel.history, spiel.getGameMode());
@@ -390,12 +390,12 @@ public class SpielClient {
 
 		data = new NET_SET_STONE();
 		/* Datenstruktur mit Daten der Aktion fuellen */
-		data.player=turn.m_playernumber;
-		data.stone=turn.m_stone_number;
-		data.mirror_count=turn.m_mirror_count;
-		data.rotate_count=turn.m_rotate_count;
-		data.x=turn.m_x;
-		data.y=turn.m_y;
+		data.player=turn.getPlayer();
+		data.stone=turn.getShape().getNumber();
+		data.mirror_count=turn.getMirrorCount();
+		data.rotate_count=turn.getRotationCount();
+		data.x=turn.getX();
+		data.y=turn.getY();
 
 		/* Nachricht ueber den Stein an den Server schicken */
 		send(data);

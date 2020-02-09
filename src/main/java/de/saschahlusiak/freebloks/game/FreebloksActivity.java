@@ -30,6 +30,7 @@ import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
+import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -1469,8 +1470,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return false;
 
 		if (view.model.hasAnimations()) {
-			final Stone original = client.spiel.getPlayer(turn.m_playernumber).get_stone(turn.m_stone_number);
-			Stone st = new Stone(original.getShape(), original.getAvailable());
 			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
 
 			EffectSet set = new EffectSet();
