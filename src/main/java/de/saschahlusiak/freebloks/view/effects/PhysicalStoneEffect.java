@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.view.effects;
 
-import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import de.saschahlusiak.freebloks.model.Stone;
@@ -44,9 +43,9 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 
 
 	    gl.glTranslatef(
- 				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
+ 				+BoardRenderer.stone_size-(float)stone.getSize()/2.0f*BoardRenderer.stone_size*2.0f,
  				0.0f,
-			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);
+			    +BoardRenderer.stone_size-(float)stone.getSize()/2.0f*BoardRenderer.stone_size*2.0f);
 		renderer.renderStoneShadow(gl, color, stone, mirror, rotate, m_alpha);
 		gl.glPopMatrix();
 	}
@@ -58,9 +57,9 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 		gl.glRotatef(ang, ax, ay, az);
 
 		gl.glTranslatef(
- 				+BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f,
+ 				+BoardRenderer.stone_size-(float)stone.getSize()/2.0f*BoardRenderer.stone_size*2.0f,
  				0.0f,
-			    +BoardRenderer.stone_size-(float)stone.get_stone_size()/2.0f*BoardRenderer.stone_size*2.0f);
+			    +BoardRenderer.stone_size-(float)stone.getSize()/2.0f*BoardRenderer.stone_size*2.0f);
 
 		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();

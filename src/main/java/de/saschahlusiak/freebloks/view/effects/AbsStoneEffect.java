@@ -33,12 +33,12 @@ public abstract class AbsStoneEffect extends AbsEffect implements Effect {
 
 		if (x < 0 || y < 0)
 			return false;
-		if (x >= stone.get_stone_size())
+		if (x >= stone.getSize())
 			return false;
-		if (y >= stone.get_stone_size())
+		if (y >= stone.getSize())
 			return false;
 
-		return stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE;
+		return stone.getStoneField(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ class SpielTest {
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
         s.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        s.refreshPlayerData()
 
         assertEquals(20, s.width)
         assertEquals(20, s.height)
@@ -26,9 +27,11 @@ class SpielTest {
         val p = s.getPlayer(0)
         assertNotNull(p)
 
+        assertEquals(58, p.m_number_of_possible_turns)
+
         val stone = p.get_stone(2)
         assertNotNull(stone)
-        assertEquals(1, stone._available)
+        assertEquals(1, stone.availableCount)
 
         // start for blue is bottom left
         assertEquals(0, s.getPlayerStartX(0))
@@ -45,10 +48,10 @@ class SpielTest {
 
         //  X
         // XX
-        val turn = Turn(0, stone._stone_shape, 18, 0, 0, 3)
+        val turn = Turn(0, stone.shape, 18, 0, 0, 3)
         assertEquals(FIELD_ALLOWED, s.isValidTurn(turn))
         s.setStone(turn)
-        assertEquals(0, stone._available)
+        assertEquals(0, stone.availableCount)
         assertEquals(0, s.getFieldPlayer(19, 0))
         assertEquals(0, s.getFieldPlayer(19, 1))
         assertEquals(FIELD_FREE, s.getFieldPlayer(18, 0))
@@ -65,5 +68,8 @@ class SpielTest {
         assertEquals(FIELD_FREE, s.getFieldStatus(0, 17, 3))
 
         assertEquals(FIELD_DENIED, s.isValidTurn(turn))
+
+        s.refreshPlayerData()
+        assertEquals(141, s.getPlayer(0).m_number_of_possible_turns)
     }
 }

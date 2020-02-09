@@ -2,6 +2,9 @@ package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 
+import static de.saschahlusiak.freebloks.model.Stone.FIELD_ALLOWED;
+import static de.saschahlusiak.freebloks.model.Stone.STONE_FIELD_ALLOWED;
+
 public class Player implements Serializable, Cloneable {
 	private static final long serialVersionUID = -7320011705508155304L;
 
@@ -14,11 +17,11 @@ public class Player implements Serializable, Cloneable {
 	int m_nemesis;
 	int m_number;
 
-	Stone m_stone[] = new Stone[Stone.STONE_COUNT_ALL_SHAPES];
+	Stone m_stone[] = new Stone[StoneType.COUNT];
 	public Stone m_lastStone;
 
 	public Player() {
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
+		for (int i = 0; i < StoneType.COUNT; i++){
 			m_stone[i] = new Stone();
 		}
 	}
@@ -27,14 +30,14 @@ public class Player implements Serializable, Cloneable {
 	public Object clone() throws CloneNotSupportedException {
 		Player c = (Player) super.clone();
 		c.m_stone = m_stone.clone();
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
+		for (int i = 0; i < StoneType.COUNT; i++)
 			c.m_stone[i] = (Stone)m_stone[i].clone();
 		return c;
 	}
 
 	void init(Spiel spiel, int playernumber) {
 		m_number = playernumber;
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++){
+		for (int i = 0; i < StoneType.COUNT; i++){
 			m_stone[i].init(i);
 		}
 		refresh_data(spiel);
@@ -78,23 +81,23 @@ public class Player implements Serializable, Cloneable {
 		m_position_points = 0;
 		m_stone_count = 0;
 
-		for (int n = 0; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
+		for (int n = 0; n < StoneType.COUNT; n++){
 			Stone stone = m_stone[n];
-			m_stone_count += stone.get_available();
+			m_stone_count += stone.getAvailableCount();
 		}
 
 		for (int x = 0; x < spiel.width; x++){
 			for (int y = 0; y < spiel.height; y++){
-				if (spiel.getFieldStatus(m_number, y, x) == Stone.FIELD_ALLOWED){
+				if (spiel.getFieldStatus(m_number, y, x) == FIELD_ALLOWED){
 					int turns_in_pos = 0;
-					for (int n = 0; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
+					for (int n = 0; n < StoneType.COUNT; n++){
 						Stone stone = m_stone[n];
-						if (stone.get_available() > 0){
+						if (stone.getAvailableCount() > 0){
 							int turns;
 
-							turns = stone.calculate_possible_turns_in_position(spiel, m_number, y, x);
+							turns = calculate_possible_turns_in_position(spiel, stone, y, x);
 							turns_in_pos += turns;
-							m_position_points += turns * stone.get_stone_position_points() * stone.get_stone_points();
+							m_position_points += turns * stone.getPositionPoints() * stone.getPoints();
 						}
 					}
 					m_number_of_possible_turns += turns_in_pos;
@@ -108,8 +111,36 @@ public class Player implements Serializable, Cloneable {
 		}
 		if (m_stone_count == 0 && m_lastStone != null) {
 			m_stone_points += 15;
-			if (m_lastStone.m_shape == 0)
+			if (m_lastStone.getShape() == 0)
 				m_stone_points += 5;
 		}
+	}
+
+	private final int calculate_possible_turns_in_position(Spiel spiel, Stone stone, int fieldY, int fieldX) {
+		int count = 0;
+
+		int mirror, mirror_max;
+		int rotate;
+
+		if (stone.getMirrorable() == Mirrorable.Important)
+			mirror_max = 1;
+		else
+			mirror_max = 0;
+
+		for (mirror = 0; mirror <= mirror_max; mirror++) {
+			for (rotate = 0; rotate < stone.getRotateable().getValue(); rotate++) {
+				for (int x = 0; x < stone.getSize(); x++) {
+					for (int y = 0; y < stone.getSize(); y++) {
+						if (stone.getStoneField(y, x, mirror, rotate) == STONE_FIELD_ALLOWED) {
+							if (spiel.isValidTurn(stone, m_number, fieldY - y, fieldX - x, mirror, rotate) == FIELD_ALLOWED) {
+								count++;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return count;
 	}
 }

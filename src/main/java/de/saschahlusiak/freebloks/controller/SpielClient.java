@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.controller;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -19,6 +18,7 @@ import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.StoneType;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 
@@ -233,7 +233,7 @@ public class SpielClient {
 			Crashlytics.log(String.format("player %d, stone %d (x%d), x %d, y %d",
 				s.player,
 				s.stone,
-				spiel.getPlayer(s.player).get_stone(s.stone).get_available(),
+				spiel.getPlayer(s.player).get_stone(s.stone).getAvailableCount(),
 				s.x,
 				s.y));
 
@@ -290,7 +290,7 @@ public class SpielClient {
 				if (lastStatus == null)
 					changed = true;
 				else {
-					for (i = 0; i < Stone.STONE_SIZE_MAX; i++)
+					for (i = 0; i < StoneType.SIZE_MAX; i++)
 						changed |= (lastStatus.stone_numbers_obsolete[i] != status.stone_numbers_obsolete[i]);
 				}
 				if (changed && !spiel.isStarted()) spiel.setAvailableStones(status.stone_numbers_obsolete[0],status.stone_numbers_obsolete[1],status.stone_numbers_obsolete[2],status.stone_numbers_obsolete[3],status.stone_numbers_obsolete[4]);
@@ -300,9 +300,9 @@ public class SpielClient {
 				spiel.setTeams(0, 2, 1, 3);
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.getGameMode() == GameMode.GAMEMODE_DUO || spiel.getGameMode()==GameMode.GAMEMODE_JUNIOR)
 			{
-				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
-					spiel.getPlayer(1).get_stone(n).set_available(0);
-					spiel.getPlayer(3).get_stone(n).set_available(0);
+				for (int n = 0 ; n < StoneType.COUNT; n++){
+					spiel.getPlayer(1).get_stone(n).setAvailable(0);
+					spiel.getPlayer(3).get_stone(n).setAvailable(0);
 				}
 			}
 			lastStatus = status;
@@ -336,9 +336,9 @@ public class SpielClient {
 				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||
 				spiel.getGameMode()== GameMode.GAMEMODE_JUNIOR)
 			{
-				for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
-					spiel.getPlayer(1).get_stone(n).set_available(0);
-					spiel.getPlayer(3).get_stone(n).set_available(0);
+				for (int n = 0 ; n < StoneType.COUNT; n++){
+					spiel.getPlayer(1).get_stone(n).setAvailable(0);
+					spiel.getPlayer(3).get_stone(n).setAvailable(0);
 				}
 			}
 			spiel.m_current_player=-1;

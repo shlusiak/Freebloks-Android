@@ -199,10 +199,10 @@ public class Spiel implements Serializable, Cloneable {
 	public void setAvailableStones(int one, int two, int three, int four, int five){
 		int counts[] = {one, two, three, four, five};
 
-		for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++) {
+		for (int n = 0 ; n < StoneType.COUNT; n++) {
 			for (int p = 0; p < PLAYER_MAX; p++) {
 				final Stone stone = player[p].get_stone(n);
-				stone.set_available(counts[stone.get_stone_points() - 1]);
+				stone.setAvailable(counts[stone.getPoints() - 1]);
 			}
 		}
 
@@ -213,10 +213,10 @@ public class Spiel implements Serializable, Cloneable {
 	 * Sets the number of available stones for each stone.
 	 */
 	public void setAvailableStones(int stone_numbers[]) {
-		for (int n = 0 ; n < Stone.STONE_COUNT_ALL_SHAPES; n++){
+		for (int n = 0 ; n < StoneType.COUNT; n++){
 			for (int p = 0; p < PLAYER_MAX; p++){
 				final Stone stone = player[p].get_stone(n);
-				stone.set_available(stone_numbers[n]);
+				stone.setAvailable(stone_numbers[n]);
 			}
 		}
 
@@ -277,9 +277,9 @@ public class Spiel implements Serializable, Cloneable {
 		int valid = Stone.FIELD_DENIED;
 		int field_value;
 
-		for (int y = 0; y < stone.get_stone_size(); y++){
-			for (int x = 0; x < stone.get_stone_size(); x++){
-				if (stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
+		for (int y = 0; y < stone.getSize(); y++){
+			for (int x = 0; x < stone.getSize(); x++){
+				if (stone.getStoneField(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
 					if (y + startY < 0 || y + startY >= height || x + startX < 0 || x + startX >= width)
 						return Stone.FIELD_DENIED;
 
@@ -358,15 +358,15 @@ public class Spiel implements Serializable, Cloneable {
 	 * Places given stone onto field
 	 */
 	private void setStone(Stone stone, int player, int startY, int startX, int mirror, int rotate) throws GameStateException {
-		for (int y = 0; y < stone.m_size; y++){
-			for (int x = 0; x < stone.m_size; x++){
-				if (stone.get_stone_field(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
+		for (int y = 0; y < stone.getSize(); y++){
+			for (int x = 0; x < stone.getSize(); x++){
+				if (stone.getStoneField(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
 					setSingleStone(player, startY+y, startX+x);
 				}
 			}
 		}
 
-		stone.available_decrement();
+		stone.availableDecrement();
 
 		this.player[player].m_lastStone = stone;
 		refreshPlayerData();
@@ -381,9 +381,9 @@ public class Spiel implements Serializable, Cloneable {
 		int x, y;
 
 		// remove stone
-		for (x = 0; x < stone.get_stone_size(); x++) {
-			for (y = 0; y < stone.get_stone_size(); y++) {
-				if (stone.get_stone_field(y, x, turn.m_mirror_count, turn.m_rotate_count) != Stone.STONE_FIELD_FREE) {
+		for (x = 0; x < stone.getSize(); x++) {
+			for (y = 0; y < stone.getSize(); y++) {
+				if (stone.getStoneField(y, x, turn.m_mirror_count, turn.m_rotate_count) != Stone.STONE_FIELD_FREE) {
 					if (getFieldPlayer(turn.m_y + y, turn.m_x + x) == Stone.FIELD_FREE)
 						throw new GameStateException("field is free but shouldn't");
 					clearField(turn.m_x + x, turn.m_y + y);
@@ -414,7 +414,7 @@ public class Spiel implements Serializable, Cloneable {
 		// try to set all seeds again, in case we cleared up the starting points
 		setSeeds(gamemode);
 
-		stone.available_increment();
+		stone.availableIncrement();
 		refreshPlayerData();
 	}
 }

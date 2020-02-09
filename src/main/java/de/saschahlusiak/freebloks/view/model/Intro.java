@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL11;
 import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.Mirrorable;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
@@ -34,25 +35,25 @@ public class Intro implements ViewElement {
 		
 		public final void rotate_left(){
 			m_rotate_counter--;
-			if (m_rotate_counter < 0) m_rotate_counter += get_rotateable();
+			if (m_rotate_counter < 0) m_rotate_counter += getRotateable().getValue();
 		}
 
 		public final void rotate_right(){
-			m_rotate_counter = (m_rotate_counter+1) % get_rotateable();
+			m_rotate_counter = (m_rotate_counter+1) % getRotateable().getValue();
 		}
 
 		public final void mirror_over_x(){
-			if (get_rotateable() == Stone.MIRRORABLE_NOT) return;
+			if (getMirrorable() == Mirrorable.Not) return;
 			m_mirror_counter = (m_mirror_counter + 1) % 2;
 			if (m_rotate_counter%2 == 1)
-				m_rotate_counter = (m_rotate_counter + 2) % (get_rotateable());
+				m_rotate_counter = (m_rotate_counter + 2) % (getRotateable().getValue());
 		}
 
 		public final void mirror_over_y(){
-			if (get_rotateable() == Stone.MIRRORABLE_NOT) return;
+			if (getMirrorable() == Mirrorable.Not) return;
 			m_mirror_counter = (m_mirror_counter + 1) % 2;
 			if (m_rotate_counter%2 == 0)
-				m_rotate_counter = (m_rotate_counter + 2) % (get_rotateable());
+				m_rotate_counter = (m_rotate_counter + 2) % (getRotateable().getValue());
 		}
 	}
 
@@ -296,8 +297,8 @@ public class Intro implements ViewElement {
 		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.m_mirror_counter, st.m_rotate_counter);
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
-		x=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
-		z=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)st.get_stone_size()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		x=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)st.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		z=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)st.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
 		/* Zufaellige Hoehe geben. */
 		y=22.0f+(float)(Math.random() * 18.0f);
 

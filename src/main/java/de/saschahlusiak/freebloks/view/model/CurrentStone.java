@@ -10,6 +10,7 @@ import android.graphics.PointF;
 import android.opengl.GLUtils;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.model.Mirrorable;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -115,7 +116,7 @@ public class CurrentStone implements ViewElement {
 			return;
 
 		float hover_height = (status == Status.IDLE) ? hover_height_low : hover_height_high;
-		final float offset = (float)(stone.get_stone_size()) - 1.0f;
+		final float offset = (float)(stone.getSize()) - 1.0f;
 
 		if (status == Status.FLIPPING_HORIZONTAL ||
 			status == Status.FLIPPING_VERTICAL)
@@ -262,9 +263,9 @@ public class CurrentStone implements ViewElement {
 
 		/* FIXME: lock stone inside 3 top walls, when board is always in the same orientation */
 		/*
-		for (int i = 0; i < stone.get_stone_size(); i++)
-			for (int j = 0; j < stone.get_stone_size(); j++) {
-				if (stone.get_stone_field(j, i) == Stone.STONE_FIELD_ALLOWED) {
+		for (int i = 0; i < stone.getSize(); i++)
+			for (int j = 0; j < stone.getSize(); j++) {
+				if (stone.getStoneField(j, i) == Stone.STONE_FIELD_ALLOWED) {
 					if (x + i < 0)
 						x = -i;
 //					if (y + j < 0)
@@ -304,8 +305,8 @@ public class CurrentStone implements ViewElement {
 			screenPoint.x = fieldPoint.x;
 			screenPoint.y = fieldPoint.y;
 
-			stone_rel_x = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
-			stone_rel_y = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
+			stone_rel_x = (pos.x - fieldPoint.x) + stone.getSize() / 2;
+			stone_rel_y = (pos.y - fieldPoint.y) + stone.getSize() / 2;
 
 //			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
 			if ((Math.abs(stone_rel_x) <= overlay_radius + 3.0f) && (Math.abs(stone_rel_y) <= overlay_radius + 3.0f)) {
@@ -335,8 +336,8 @@ public class CurrentStone implements ViewElement {
 
 		if (status == Status.DRAGGING) {
 			final float THRESHOLD = 1.0f;
-			float x = (fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-			float y = (fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
+			float x = (fieldPoint.x + stone_rel_x - stone.getSize() / 2);
+			float y = (fieldPoint.y + stone_rel_y - stone.getSize() / 2);
 			if (!hasMoved && (Math.abs(screenPoint.x - fieldPoint.x) < THRESHOLD) && Math.abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
 				return true;
 
@@ -346,8 +347,8 @@ public class CurrentStone implements ViewElement {
 			model.redraw |= model.hasAnimations();
 		}
 		if (status == Status.ROTATING) {
-			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
-			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
+			float rx = (pos.x - fieldPoint.x) + stone.getSize() / 2;
+			float ry = (pos.y - fieldPoint.y) + stone.getSize() / 2;
 			float a1 = (float)Math.atan2(stone_rel_y, stone_rel_x);
 			float a2 = (float)Math.atan2(ry, rx);
 			rotate_angle = (a1 - a2) * 180.0f / (float)Math.PI;
@@ -358,7 +359,7 @@ public class CurrentStone implements ViewElement {
 			model.redraw = true;
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
-			float rx = (pos.x - fieldPoint.x) + stone.get_stone_size() / 2;
+			float rx = (pos.x - fieldPoint.x) + stone.getSize() / 2;
 			float p;
 			p = (stone_rel_x - rx) / (stone_rel_x * 2.0f);
 			if (p < 0)
@@ -372,7 +373,7 @@ public class CurrentStone implements ViewElement {
 			model.redraw = true;
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
-			float ry = (pos.y - fieldPoint.y) + stone.get_stone_size() / 2;
+			float ry = (pos.y - fieldPoint.y) + stone.getSize() / 2;
 			float p;
 			p = (stone_rel_y - ry) / (stone_rel_y * 2.0f);
 			if (p < 0)
@@ -390,25 +391,25 @@ public class CurrentStone implements ViewElement {
 
 	public final void rotate_left(){
 		m_rotate_counter--;
-		if (m_rotate_counter < 0) m_rotate_counter += stone.get_rotateable();
+		if (m_rotate_counter < 0) m_rotate_counter += stone.getRotateable().getValue();
 	}
 
 	public final void rotate_right(){
-		m_rotate_counter=(m_rotate_counter+1) % stone.get_rotateable();
+		m_rotate_counter=(m_rotate_counter+1) % stone.getRotateable().getValue();
 	}
 
 	public final void mirror_over_x(){
-		if (stone.get_rotateable() == Stone.MIRRORABLE_NOT) return;
+		if (stone.getMirrorable() == Mirrorable.Not) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
 		if (m_rotate_counter%2 == 1)
-			m_rotate_counter = (m_rotate_counter + 2) % (stone.get_rotateable());
+			m_rotate_counter = (m_rotate_counter + 2) % (stone.getRotateable().getValue());
 	}
 
 	public final void mirror_over_y(){
-		if (stone.get_rotateable() == Stone.MIRRORABLE_NOT) return;
+		if (stone.getMirrorable() == Mirrorable.Not) return;
 		m_mirror_counter = (m_mirror_counter + 1) % 2;
 		if (m_rotate_counter%2 == 0)
-			m_rotate_counter = (m_rotate_counter + 2) % (stone.get_rotateable());
+			m_rotate_counter = (m_rotate_counter + 2) % (stone.getRotateable().getValue());
 	}
 
 	public boolean is_valid_turn(float x, float y) {
@@ -464,8 +465,8 @@ public class CurrentStone implements ViewElement {
 			fieldPoint.y = m.y;
 			model.board.modelToBoard(fieldPoint);
 
-			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
+			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.getSize() / 2);
+			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.getSize() / 2);
 			fieldPoint.x = x;
 			fieldPoint.y = y;
 			model.board.boardToUnified(fieldPoint);
@@ -477,7 +478,7 @@ public class CurrentStone implements ViewElement {
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				Turn turn = new Turn(model.spiel.current_player(), stone.get_number(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
+				Turn turn = new Turn(model.spiel.current_player(), stone.getShape(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
 				if (model.activity.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;
@@ -541,8 +542,8 @@ public class CurrentStone implements ViewElement {
 
 
 		if (fieldPoint != null) {
-			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.get_stone_size() / 2);
-			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.get_stone_size() / 2);
+			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.getSize() / 2);
+			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.getSize() / 2);
 
 			moveTo(x, y);
 		}

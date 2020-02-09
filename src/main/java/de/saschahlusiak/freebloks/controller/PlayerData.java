@@ -33,7 +33,7 @@ public class PlayerData implements Comparable<PlayerData> {
 		this.points += p.m_stone_points;
 		this.stones_left += p.m_stone_count;
 		if (p.m_stone_count == 0 && p.m_lastStone != null) {
-			if (p.m_lastStone.get_stone_shape() == 0) {
+			if (p.m_lastStone.getShape() == 0) {
 				bonus += 20;
 			}
 			else {

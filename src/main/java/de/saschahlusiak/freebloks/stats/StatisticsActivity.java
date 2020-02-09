@@ -25,6 +25,7 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.StoneType;
 
 public class StatisticsActivity extends BaseGameActivity {
 	HighscoreDB db;
@@ -163,7 +164,7 @@ public class StatisticsActivity extends BaseGameActivity {
 		int perfect = db.getNumberOfPerfectGames(game_mode);
 		int good = db.getNumberOfGoodGames(game_mode);
 		int stones_left = db.getTotalNumberOfStonesLeft(game_mode);
-		int stones_used = games * Stone.STONE_COUNT_ALL_SHAPES - stones_left;
+		int stones_used = games * StoneType.COUNT - stones_left;
 		int i;
 
 
@@ -190,7 +191,7 @@ public class StatisticsActivity extends BaseGameActivity {
 			game_mode == GameMode.GAMEMODE_JUNIOR) {
 			values[5] = values[6] = null;
 		}
-		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)Stone.STONE_COUNT_ALL_SHAPES);
+		values[7] = String.format("%.1f%%", 100.0f * (float)stones_used / (float)games / (float)StoneType.COUNT);
 
 		adapter.notifyDataSetChanged();
 	}

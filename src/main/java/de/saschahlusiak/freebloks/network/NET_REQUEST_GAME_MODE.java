@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.StoneType;
 
 public class NET_REQUEST_GAME_MODE extends NET_HEADER {
 	private int version; /* int8 */
@@ -30,7 +31,7 @@ public class NET_REQUEST_GAME_MODE extends NET_HEADER {
 		bos.write(width);
 		bos.write(height);
 		bos.write(gamemode.ordinal());
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++)
+		for (int i = 0; i < StoneType.COUNT; i++)
 			bos.write(stone_numbers[i]);
 	}
 }

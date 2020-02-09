@@ -320,10 +320,10 @@ public class BoardRenderer {
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);
 
-		for (int i = 0; i < stone.get_stone_size(); i++) {
+		for (int i = 0; i < stone.getSize(); i++) {
 			int j;
-			for (j = 0; j < stone.get_stone_size(); j++) {
-				if (stone.get_stone_field(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
+			for (j = 0; j < stone.getSize(); j++) {
+				if (stone.getStoneField(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
 					shadow.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
@@ -342,7 +342,7 @@ public class BoardRenderer {
 			float alpha, float scale) {
 
 
-		float offset = (float)(stone.get_stone_size()) - 1.0f;
+		float offset = (float)(stone.getSize()) - 1.0f;
 		float m_alpha = 0.80f - height / 16.0f;
 
 		/* TODO: remove this and always show the board at the exact same angle,
@@ -386,10 +386,10 @@ public class BoardRenderer {
 
 		this.stone.bindBuffers(gl);
 
-		for (i = 0; i < stone.get_stone_size(); i++) {
+		for (i = 0; i < stone.getSize(); i++) {
 			int j;
-			for (j = 0; j < stone.get_stone_size(); j++) {
-				if (stone.get_stone_field(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
+			for (j = 0; j < stone.getSize(); j++) {
+				if (stone.getStoneField(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
 					this.stone.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}

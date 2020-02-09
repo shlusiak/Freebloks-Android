@@ -9,6 +9,7 @@ import android.os.Handler;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.StoneType;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 
@@ -61,7 +62,7 @@ public class Wheel implements ViewElement {
 
 			if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 				model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
-			showStone(highlightStone.get_number());
+			showStone(highlightStone.getShape());
 			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
 			model.currentStone.hasMoved = true;
 			model.board.resetRotation();
@@ -84,9 +85,9 @@ public class Wheel implements ViewElement {
 			return;
 		Player p = model.spiel.getPlayer(player);
 		moves_left = p.m_number_of_possible_turns > 0;
-		for (int i = 0; i < Stone.STONE_COUNT_ALL_SHAPES; i++) {
+		for (int i = 0; i < StoneType.COUNT; i++) {
 			Stone s = p.get_stone(i);
-			if (s != null && s.get_available() > 0)
+			if (s != null && s.getAvailableCount() > 0)
 				stones.add(s);
 		}
 		this.highlightStone = null;
@@ -110,7 +111,7 @@ public class Wheel implements ViewElement {
 
 	private int getStonePositionInWheel(int stone) {
 		for (int i = 0; i < stones.size(); i++)
-			if (stones.get(i).get_number() == stone)
+			if (stones.get(i).getShape() == stone)
 				return i;
 		return 0;
 	}
@@ -176,7 +177,7 @@ public class Wheel implements ViewElement {
 			highlightStone = null;
 		else
 			highlightStone = stones.get(nr);
-		if (highlightStone != null && highlightStone.get_available() <= 0)
+		if (highlightStone != null && highlightStone.getAvailableCount() <= 0)
 			highlightStone = null;
 		else if (highlightStone != null) {
 			/* we tapped on a stone; start timer */
@@ -237,7 +238,7 @@ public class Wheel implements ViewElement {
 			tmp.x = m.x;
 			tmp.y = m.y;
 			model.board.modelToBoard(tmp);
-			showStone(highlightStone.get_number());
+			showStone(highlightStone.getShape());
 			if (model.currentStone.stone != highlightStone)
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
@@ -255,7 +256,7 @@ public class Wheel implements ViewElement {
 				if (model.currentStone.stone != null)
 					model.currentStone.startDragging(null, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
 				model.currentStone.status = CurrentStone.Status.IDLE;
-				showStone(highlightStone.get_number());
+				showStone(highlightStone.getShape());
 				status = Status.IDLE;
 			} else {
 				lastOffset = currentOffset;
@@ -277,10 +278,10 @@ public class Wheel implements ViewElement {
 		for (int i = stones.size() - 1; i >= 0; i--) {
 			Stone s = stones.get(i);
 
-			if (s.get_available() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
+			if (s.getAvailableCount() - ((s == model.currentStone.stone) ? 1 : 0) > 0) {
 				final float col = i / 2;
 				final float row = i % 2;
-				final float offset = -((float)(s.get_stone_size()) - 1.0f) * BoardRenderer.stone_size;
+				final float offset = -((float)(s.getSize()) - 1.0f) * BoardRenderer.stone_size;
 
 				final float x = col * stone_spacing;
 				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f));
@@ -308,7 +309,7 @@ public class Wheel implements ViewElement {
 				final int mirror_count = 0;
 				final int rotate_count = 0;
 				
-				if (s.get_available() > 1 && s == highlightStone && s != model.currentStone.stone) {
+				if (s.getAvailableCount() > 1 && s == highlightStone && s != model.currentStone.stone) {
 					gl.glPushMatrix();
 					gl.glTranslatef(BoardRenderer.stone_size, 0, BoardRenderer.stone_size * 0.6f);
 					gl.glRotatef(rotate, 0, 1, 0);

@@ -9,7 +9,7 @@ class PlayerTest {
         val p = Player()
 
         val stone = p.get_stone(2)
-        assertEquals(0, stone._available)
+        assertEquals(0, stone.availableCount)
     }
 
     // TODO

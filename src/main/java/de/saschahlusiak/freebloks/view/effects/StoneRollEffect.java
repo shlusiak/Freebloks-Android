@@ -92,7 +92,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	public void render(GL11 gl, BoardRenderer renderer) {
 		gl.glPushMatrix();
 
-		float offset = (float)(stone.get_stone_size()) - 1.0f;
+		float offset = (float)(stone.getSize()) - 1.0f;
 
 	    gl.glTranslatef(
 	    		-BoardRenderer.stone_size * (float)(model.spiel.width - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
