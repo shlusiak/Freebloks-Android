@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.model
 
 import de.saschahlusiak.freebloks.controller.GameMode
-import de.saschahlusiak.freebloks.model.Stone.*
+import de.saschahlusiak.freebloks.model.Spiel.*
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -31,7 +31,7 @@ class SpielTest {
 
         val stone = p.get_stone(2)
         assertNotNull(stone)
-        assertEquals(1, stone.availableCount)
+        assertEquals(1, stone.available)
 
         // start for blue is bottom left
         assertEquals(0, s.getPlayerStartX(0))
@@ -44,14 +44,14 @@ class SpielTest {
         // but there is no player on that field yet
         assertEquals(FIELD_FREE, s.getFieldPlayer(19, 0))
 
-        assertEquals(FIELD_DENIED, s.isValidTurn(stone, 0, 0, 0, 0, 0))
+        assertEquals(FIELD_DENIED, s.isValidTurn(stone.shape, 0, 0, 0, 0, 0))
 
         //  X
         // XX
-        val turn = Turn(0, stone.shape, 18, 0, 0, 3)
+        val turn = Turn(0, stone.shape.shape, 18, 0, 0, 3)
         assertEquals(FIELD_ALLOWED, s.isValidTurn(turn))
         s.setStone(turn)
-        assertEquals(0, stone.availableCount)
+        assertEquals(0, stone.available)
         assertEquals(0, s.getFieldPlayer(19, 0))
         assertEquals(0, s.getFieldPlayer(19, 1))
         assertEquals(FIELD_FREE, s.getFieldPlayer(18, 0))

@@ -1465,12 +1465,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		
 		if (!client.spiel.is_local_player())
 			return false;
-		if (client.spiel.isValidTurn(turn) != Stone.FIELD_ALLOWED)
+		if (client.spiel.isValidTurn(turn) != Spiel.FIELD_ALLOWED)
 			return false;
 
 		if (view.model.hasAnimations()) {
-			Stone st = new Stone();
-			st.copyFrom(client.spiel.getPlayer(turn.m_playernumber).get_stone(turn.m_stone_number));
+			final Stone original = client.spiel.getPlayer(turn.m_playernumber).get_stone(turn.m_stone_number);
+			Stone st = new Stone(original.getShape(), original.getAvailable());
 			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
 
 			EffectSet set = new EffectSet();

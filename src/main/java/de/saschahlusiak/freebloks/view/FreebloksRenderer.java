@@ -156,7 +156,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		    	int x;
 		    	for (x = 0; x < model.spiel.width; x++) {
 		    		int field = model.spiel.getFieldPlayer(y, x);
-		    		if (field != Stone.FIELD_FREE) {
+		    		if (field != Spiel.FIELD_FREE) {
 		    			boolean effected = false;
 						for (int i = 0; i < model.effects.size(); i++)
 							if (model.effects.get(i).isEffected(x, y)) {

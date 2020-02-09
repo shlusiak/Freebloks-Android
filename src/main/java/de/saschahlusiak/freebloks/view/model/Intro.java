@@ -8,9 +8,10 @@ import javax.microedition.khronos.opengles.GL11;
 import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.model.Mirrorable;
+import de.saschahlusiak.freebloks.model.OrientedShape;
+import de.saschahlusiak.freebloks.model.Rotation;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
@@ -22,39 +23,6 @@ import android.opengl.GLU;
 public class Intro implements ViewElement {
 	public interface OnIntroCompleteListener {
 		void OnIntroCompleted();
-	}
-	
-	/* TODO: refactor this class */
-	static class OrientedStone extends Stone {
-		public int m_rotate_counter;
-		public int m_mirror_counter;
-		
-		public OrientedStone() {
-			
-		}
-		
-		public final void rotate_left(){
-			m_rotate_counter--;
-			if (m_rotate_counter < 0) m_rotate_counter += getRotateable().getValue();
-		}
-
-		public final void rotate_right(){
-			m_rotate_counter = (m_rotate_counter+1) % getRotateable().getValue();
-		}
-
-		public final void mirror_over_x(){
-			if (getMirrorable() == Mirrorable.Not) return;
-			m_mirror_counter = (m_mirror_counter + 1) % 2;
-			if (m_rotate_counter%2 == 1)
-				m_rotate_counter = (m_rotate_counter + 2) % (getRotateable().getValue());
-		}
-
-		public final void mirror_over_y(){
-			if (getMirrorable() == Mirrorable.Not) return;
-			m_mirror_counter = (m_mirror_counter + 1) % 2;
-			if (m_rotate_counter%2 == 0)
-				m_rotate_counter = (m_rotate_counter + 2) % (getRotateable().getValue());
-		}
 	}
 
 	final static float INTRO_SPEED = 1.0f;
@@ -74,7 +42,7 @@ public class Intro implements ViewElement {
 	int phase = 0;
 	boolean field_up = false;
 	float field_anim = 0.0f;
-	OrientedStone stones[] = new OrientedStone[14];
+	OrientedShape stones[] = new OrientedShape[14];
 	BackgroundRenderer backgroundRenderer;
 
 
@@ -91,60 +59,76 @@ public class Intro implements ViewElement {
 	}
 
 	void init() {
-		for (int i = 0; i < stones.length; i++)
-			stones[i] = new OrientedStone();
+		stones[0] = new OrientedShape(5, false, Rotation.Left);
+		// XXX
+		//   X
 
-		stones[0].init(5);			// XXX
-		stones[0].rotate_left();	//   X
+		stones[1] = new OrientedShape(8);
+		// X
+		// X
+		// X
+		// X
 
-		stones[1].init(8);		// X
-								// X
-								// X
-								// X
+		stones[2] = new OrientedShape(10);
+		// XX
+		//  X
+		// XX
 
-		stones[2].init(10);		// XX
-								//  X
-								// XX
+		stones[3] = new OrientedShape(12);
+		// X
+		// X
+		// XXX
 
-		stones[3].init(12);		// X
-								// X
-								// XXX
+		stones[4] = new OrientedShape(1);
+		// X
+		// X
 
-		stones[4].init(1);		// X
-								// X
+		stones[5] = new OrientedShape(20);
+		// X
+		// X
+		// X
+		// X
+		// X
 
-		stones[5].init(20);		// X
-								// X
-								// X
-								// X
-								// X
+		stones[6] = new OrientedShape(5);
+		//  X
+		//  X
+		// XX
 
-		stones[6].init(5);		//  X
-								//  X
-								// XX
+		stones[7] = new OrientedShape(2);
+		// XX
+		//  X
+		stones[7].rotateLeft();
+		stones[7].rotateLeft();
 
-		stones[7].init(2);			// XX
-		stones[7].rotate_left();	//  X
-		stones[7].rotate_left();
-		stones[8].init(0);			// X
+		stones[8] = new OrientedShape(0);
+		// X
 
-		stones[9].init(3);		// X
-								// X
-								// X
+		stones[9] = new OrientedShape(3);
+		// X
+		// X
+		// X
 
-		stones[10].init(10);		// X X
-		stones[10].rotate_right();	// XXX
+		stones[10] = new OrientedShape(10);
+		// X X
+		// XXX
+		stones[10].rotateRight();
 
-		stones[11].init(1);			// XX
-		stones[11].rotate_right();
+		stones[11] = new OrientedShape(1);
+		// XX
+		stones[11].rotateRight();
 
-		stones[12].init(5);			//   X
-		stones[12].rotate_left();	// XXX
-		stones[12].mirror_over_x();
+		stones[12] = new OrientedShape(5);
+		//   X
+		// XXX
+		stones[12].rotateLeft();
+		stones[12].mirrorVertically();
 
-		stones[13].init(5);			// XXX
-		stones[13].rotate_right();	// X
-		stones[13].mirror_over_x();
+		stones[13] = new OrientedShape(5);
+		// XXX
+		// X
+		stones[13].rotateRight();
+		stones[13].mirrorVertically();
 
 		addChar('f',3,4,5);
 		addChar('r',2,7,6);
@@ -293,12 +277,13 @@ public class Intro implements ViewElement {
 		float axe_z=(float)(Math.cos(angx)*Math.cos(angy));
 
 		/* CPhysicalStone erstellen, aus stones[stone] */
-		OrientedStone st = stones[stone];
-		PhysicalStoneEffect s = new PhysicalStoneEffect(model, st, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.m_mirror_counter, st.m_rotate_counter);
+		OrientedShape st = stones[stone];
+		Shape shape = st.getShape();
+		PhysicalStoneEffect s = new PhysicalStoneEffect(model, shape, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.getOrientation());
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
-		x=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)st.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
-		z=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)st.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		x=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		z=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
 		/* Zufaellige Hoehe geben. */
 		y=22.0f+(float)(Math.random() * 18.0f);
 

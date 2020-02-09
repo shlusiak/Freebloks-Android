@@ -7,15 +7,14 @@ import java.security.InvalidParameterException;
 import android.content.res.Resources;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.model.StoneType;
+import de.saschahlusiak.freebloks.model.Shape;
 
 public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public int player, computer, clients; /* int 8 */
 	public int width, height; /* int 8 */
-	public int stone_numbers_obsolete[] = new int[StoneType.SIZE_MAX]; /* int8[5] */
+	public int stone_numbers_obsolete[] = new int[Shape.SIZE_MAX]; /* int8[5] */
 	public GameMode gamemode; /* int8 */
 
 	/* since 1.5, optional */
@@ -25,7 +24,7 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 	public int version;
 	public int version_min;
 	
-	public int stone_numbers[] = new int[StoneType.COUNT];
+	public int stone_numbers[] = new int[Shape.COUNT];
 	
 	private static final int VERSION_MAX = 3; // highest version we understand.
 	
@@ -79,10 +78,10 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 					client_names[i] = null;
 			}
 		}
-		for (int i = 0; i < StoneType.SIZE_MAX; i++)
+		for (int i = 0; i < Shape.SIZE_MAX; i++)
 			stone_numbers_obsolete[i] = buffer[5 + i];
 		if (isVersion(3)) {
-			for (int i = 0; i < StoneType.COUNT; i++)
+			for (int i = 0; i < Shape.COUNT; i++)
 				stone_numbers[i] = buffer[11 + 4 + 16 * 8 + 2 + i];
 		}
 	}

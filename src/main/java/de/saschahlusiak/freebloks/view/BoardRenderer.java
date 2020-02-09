@@ -10,7 +10,7 @@ import android.opengl.GLUtils;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Shape;
 
 
 public class BoardRenderer {
@@ -236,7 +236,7 @@ public class BoardRenderer {
 	    	int x;
 	    	for (x = 0; x < w; x++) {
 	    		if (currentPlayer >= 0) {
-	    			if (spiel.getFieldStatus(currentPlayer, y, x) == Stone.FIELD_ALLOWED)
+	    			if (spiel.getFieldStatus(currentPlayer, y, x) == Spiel.FIELD_ALLOWED)
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);
 	    			else
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
@@ -301,7 +301,7 @@ public class BoardRenderer {
 
 	final float tmp[] = new float[4];
 
-	public void renderStoneShadow(GL11 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
+	public void renderStoneShadow(GL11 gl, int color, Shape stone, int mirror, int rotate, float alpha) {
 		final float c[] = Global.stone_shadow_color_a[color];
 		tmp[0] = c[0] * alpha;
 		tmp[1] = c[1] * alpha;
@@ -323,7 +323,7 @@ public class BoardRenderer {
 		for (int i = 0; i < stone.getSize(); i++) {
 			int j;
 			for (j = 0; j < stone.getSize(); j++) {
-				if (stone.getStoneField(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
+				if (stone.isStone(j, i, mirror, rotate))
 					shadow.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
@@ -335,11 +335,11 @@ public class BoardRenderer {
 	}
 
 	public void renderShadow(GL11 gl,
-			Stone stone, int color, int mirror, int rotate,
-			float height,
-			float ang, float ax, float ay, float az,
-			float light_angle,
-			float alpha, float scale) {
+							 Shape stone, int color, int mirror, int rotate,
+							 float height,
+							 float ang, float ax, float ay, float az,
+							 float light_angle,
+							 float alpha, float scale) {
 
 
 		float offset = (float)(stone.getSize()) - 1.0f;
@@ -369,7 +369,7 @@ public class BoardRenderer {
 		renderStoneShadow(gl, color, stone, mirror, rotate, m_alpha * alpha);
 	}
 
-	public void renderPlayerStone(GL11 gl, int color, Stone stone, int mirror, int rotate, float alpha) {
+	public void renderPlayerStone(GL11 gl, int color, Shape stone, int mirror, int rotate, float alpha) {
 		int i;
 		final float c[] = Global.stone_color_a[color];
 		tmp[0] = c[0] * alpha;
@@ -389,7 +389,7 @@ public class BoardRenderer {
 		for (i = 0; i < stone.getSize(); i++) {
 			int j;
 			for (j = 0; j < stone.getSize(); j++) {
-				if (stone.getStoneField(i, j, mirror, rotate) != Stone.STONE_FIELD_FREE)
+				if (stone.isStone(j, i, mirror, rotate))
 					this.stone.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}

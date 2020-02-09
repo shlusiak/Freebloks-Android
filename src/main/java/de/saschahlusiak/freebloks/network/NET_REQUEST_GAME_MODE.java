@@ -3,8 +3,7 @@ package de.saschahlusiak.freebloks.network;
 import java.io.ByteArrayOutputStream;
 
 import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.model.StoneType;
+import de.saschahlusiak.freebloks.model.Shape;
 
 public class NET_REQUEST_GAME_MODE extends NET_HEADER {
 	private int version; /* int8 */
@@ -31,7 +30,7 @@ public class NET_REQUEST_GAME_MODE extends NET_HEADER {
 		bos.write(width);
 		bos.write(height);
 		bos.write(gamemode.ordinal());
-		for (int i = 0; i < StoneType.COUNT; i++)
+		for (int i = 0; i < Shape.COUNT; i++)
 			bos.write(stone_numbers[i]);
 	}
 }

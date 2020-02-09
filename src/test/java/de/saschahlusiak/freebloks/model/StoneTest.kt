@@ -6,51 +6,41 @@ import org.junit.Test
 
 class StoneTest {
     @Test
-    fun test_constructor() {
-        val stone = Stone()
-
-        assertEquals(0, stone.availableCount)
-        assertEquals(0, stone.shape)
-        assertEquals(1, stone.size)
-    }
-
-    @Test
     fun test_single_stone() {
-        val stone = Stone()
-        stone.init(0)
+        val stone = Stone(0)
 
-        assertEquals(0, stone.availableCount)
-        assertEquals(0, stone.shape)
-        assertEquals(1, stone.size)
+        assertEquals(0, stone.available)
+        assertEquals(0, stone.shape.shape)
+        assertEquals(1, stone.shape.size)
 
-        assertEquals(Mirrorable.Not, stone.mirrorable)
-        assertEquals(Rotateable.Not, stone.rotateable)
-        assertEquals(1, stone.points)
+        assertEquals(Mirrorable.Not, stone.shape.mirrorable)
+        assertEquals(Rotatable.Not, stone.shape.rotatable)
+        assertEquals(1, stone.shape.points)
 
-        assertEquals(1, stone.getStoneField(0, 0, 0, 0))
-        assertEquals(1, stone.getStoneField(0, 0, 1, 0))
-        assertEquals(1, stone.getStoneField(0, 0, 0, 1))
-        assertEquals(8, stone.getStoneField(0, 1, 0, 0))
-        assertEquals(8, stone.getStoneField(1, 0, 0, 0))
+        assertEquals(1, stone.shape.getStoneField(0, 0, false, Rotation.None))
+        assertEquals(1, stone.shape.getStoneField(0, 0, true, Rotation.None))
+        assertEquals(1, stone.shape.getStoneField(0, 0, false, Rotation.Right))
+        assertEquals(8, stone.shape.getStoneField(0, 1, false, Rotation.None))
+        assertEquals(8, stone.shape.getStoneField(1, 0, false, Rotation.None))
     }
 
     @Test
     fun test_stone_20() {
         val stone = Stone(19)
-        assertEquals(5, stone.points)
+        assertEquals(5, stone.shape.points)
     }
 
     @Test(expected = GameStateException::class)
     fun test_available_decrement_illegal() {
-        val s = Stone()
+        val s = Stone(2)
         s.availableDecrement()
     }
 
     @Test
     fun test_available_decrement() {
-        val s = Stone()
-        s.setAvailable(1)
-        assertEquals(1, s.availableCount)
+        val s = Stone(3)
+        s.available = 1
+        assertEquals(1, s.available)
         s.availableDecrement()
     }
 }

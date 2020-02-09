@@ -2,7 +2,8 @@ package de.saschahlusiak.freebloks.view.effects;
 
 import javax.microedition.khronos.opengles.GL11;
 
-import de.saschahlusiak.freebloks.model.Stone;
+import de.saschahlusiak.freebloks.model.Orientation;
+import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -20,8 +21,8 @@ public class PhysicalStoneEffect extends AbsStoneEffect {
 	   um kleine Rechenungenauigkeiten waehrend der Animation auszugleichen. */
 	float dx,dy,dz;
 
-	public PhysicalStoneEffect(ViewModel model, Stone stone, int color, int mirror, int rotate) {
-		super(model, stone, color, 0, 0, mirror, rotate);
+	public PhysicalStoneEffect(ViewModel model, Shape stone, int color, Orientation orientation) {
+		super(model, stone, color, 0, 0, orientation.getMirrored() ? 1 : 0, orientation.getRotation().getValue());
 		this.x = this.y = this.z = 0.0f;
 		ang = 0.0f;
 		angspeed = 0.0f;

@@ -11,6 +11,10 @@ import de.saschahlusiak.freebloks.controller.GameStateException;
 public class Spiel implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3803056324652460783L;
 
+	public static final int FIELD_FREE    =  240;
+	public static final int FIELD_ALLOWED =  241;
+	public static final int FIELD_DENIED  =  255;
+
 	/**
 	 * Maximum number of players possible
 	 */
@@ -24,9 +28,9 @@ public class Spiel implements Serializable, Cloneable {
 	/**
 	 * A field is encoded in 8 bits, or 2 bits per player.
 	 *
-	 * No bit set: Stone.FIELD_FREE
-	 * first bit set: Stone.FIELD_ALLOWED (shares a corner)
-	 * second bit set: Stone.FIELD_DENIED (shares an edge)
+	 * No bit set: FIELD_FREE
+	 * first bit set: FIELD_ALLOWED (shares a corner)
+	 * second bit set: FIELD_DENIED (shares an edge)
 	 *
 	 * if first 6 bits are set, the lower most two bits encode the player number occupying the field
 	 */
@@ -105,10 +109,10 @@ public class Spiel implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Mark field as Stone.FIELD_ALLOWED for given player, if field is free
+	 * Mark field as FIELD_ALLOWED for given player, if field is free
 	 */
 	private void setSeed(int x, int y, int player) {
-		if (getFieldStatus(player, y, x) == Stone.FIELD_FREE)
+		if (getFieldStatus(player, y, x) == FIELD_FREE)
 			field[y * width + x] = PLAYER_BIT_ALLOWED[player];
 	}
 
@@ -136,29 +140,29 @@ public class Spiel implements Serializable, Cloneable {
 	/**
 	 * Returns whether for a given player the given field is allowed, denied or free
 	 *
-	 * @return One of Stone.FIELD_ALLOWED, Stone.FIELD_DENIED or Stone.FIELD_FREE.
+	 * @return One of FIELD_ALLOWED, FIELD_DENIED or FIELD_FREE.
 	 */
 	final public int getFieldStatus(int player, int y, int x) {
 		int value = field[y * width + x];
 
 		// if a field is occupied, it's denied
-		if (value >= PLAYER_BIT_HAVE_MIN) return Stone.FIELD_DENIED;
+		if (value >= PLAYER_BIT_HAVE_MIN) return FIELD_DENIED;
 		value &= PLAYER_BIT_ADDR[player];
 
 		// otherwise it is either allowed, denied or free
-		if (value == PLAYER_BIT_ALLOWED[player]) return Stone.FIELD_ALLOWED;
-		if (value == PLAYER_BIT_DENIED[player]) return Stone.FIELD_DENIED;
+		if (value == PLAYER_BIT_ALLOWED[player]) return FIELD_ALLOWED;
+		if (value == PLAYER_BIT_DENIED[player]) return FIELD_DENIED;
 
-		return Stone.FIELD_FREE;
+		return FIELD_FREE;
 	}
 
 	/**
-	 * @return The value of the player occupying the field or Stone.FIELD_FREE
+	 * @return The value of the player occupying the field or FIELD_FREE
 	 */
 	public final int getFieldPlayer(int y, int x) {
 		int value = field[y * width + x];
 		if (value < PLAYER_BIT_HAVE_MIN)
-			return Stone.FIELD_FREE;
+			return FIELD_FREE;
 		return value & 3;
 	}
 
@@ -199,10 +203,10 @@ public class Spiel implements Serializable, Cloneable {
 	public void setAvailableStones(int one, int two, int three, int four, int five){
 		int counts[] = {one, two, three, four, five};
 
-		for (int n = 0 ; n < StoneType.COUNT; n++) {
+		for (int n = 0; n < Shape.COUNT; n++) {
 			for (int p = 0; p < PLAYER_MAX; p++) {
 				final Stone stone = player[p].get_stone(n);
-				stone.setAvailable(counts[stone.getPoints() - 1]);
+				stone.setAvailable(counts[stone.getShape().getPoints() - 1]);
 			}
 		}
 
@@ -213,7 +217,7 @@ public class Spiel implements Serializable, Cloneable {
 	 * Sets the number of available stones for each stone.
 	 */
 	public void setAvailableStones(int stone_numbers[]) {
-		for (int n = 0 ; n < StoneType.COUNT; n++){
+		for (int n = 0; n < Shape.COUNT; n++){
 			for (int p = 0; p < PLAYER_MAX; p++){
 				final Stone stone = player[p].get_stone(n);
 				stone.setAvailable(stone_numbers[n]);
@@ -253,10 +257,10 @@ public class Spiel implements Serializable, Cloneable {
 		this.height = height;
 
 		field = new int[this.width * this.height];
-		setSeeds(gamemode);
 		for (int n = 0; n < PLAYER_MAX; n++) {
 			player[n].init(this, n);
 		}
+		setSeeds(gamemode);
 	}
 
 	/**
@@ -271,25 +275,29 @@ public class Spiel implements Serializable, Cloneable {
 	/**
 	 * Check whether the given stone/player/position is a valid move.
 	 *
-	 * @return Stone.FIELD_ALLOWED if allowed, Stone.FIELD_DENIED otherwise
+	 * @return FIELD_ALLOWED if allowed, FIELD_DENIED otherwise
 	 */
-	public final int isValidTurn(Stone stone, int player, int startY, int startX, int mirror, int rotate) {
-		int valid = Stone.FIELD_DENIED;
+	public final int isValidTurn(Shape stone, int player, int startY, int startX, int mirror, int rotate) {
+		int valid = FIELD_DENIED;
 		int field_value;
 
 		for (int y = 0; y < stone.getSize(); y++){
 			for (int x = 0; x < stone.getSize(); x++){
-				if (stone.getStoneField(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
+				if (stone.isStone(x, y, mirror, rotate)) {
 					if (y + startY < 0 || y + startY >= height || x + startX < 0 || x + startX >= width)
-						return Stone.FIELD_DENIED;
+						return FIELD_DENIED;
 
 					field_value = getFieldStatus(player, y + startY , x + startX);
-					if (field_value == Stone.FIELD_DENIED) return Stone.FIELD_DENIED;
-					if (field_value == Stone.FIELD_ALLOWED) valid = Stone.FIELD_ALLOWED;
+					if (field_value == FIELD_DENIED) return FIELD_DENIED;
+					if (field_value == FIELD_ALLOWED) valid = FIELD_ALLOWED;
 				}
 			}
 		}
 		return valid;
+	}
+
+	public final int isValidTurn(Shape stone, int player, int startY, int startX, Orientation orientation) {
+		return isValidTurn(stone, player, startY, startX, orientation.getMirrored() ? 1 : 0, orientation.getRotation().getValue());
 	}
 
 	/**
@@ -299,11 +307,11 @@ public class Spiel implements Serializable, Cloneable {
 		final int player = turn.m_playernumber;
 		final Stone stone = this.player[player].get_stone(turn.m_stone_number);
 
-		return isValidTurn(stone, player, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
+		return isValidTurn(stone.getShape(), player, turn.m_y, turn.m_x, turn.m_mirror_count, turn.m_rotate_count);
 	}
 
 	/**
-	 * Clear the given field (set to 0) [Stone.FIELD_FREE]
+	 * Clear the given field (set to 0) [FIELD_FREE]
 	 */
 	private void clearField(int x, int y) {
 		field[y * width + x] = 0;
@@ -317,14 +325,14 @@ public class Spiel implements Serializable, Cloneable {
 	 * 3. mark corners as allowed (unless already denied)
 	 */
 	private void setSingleStone(int player, int fieldY, int fieldX) throws GameStateException {
-		if (getFieldPlayer(fieldY, fieldX) != Stone.FIELD_FREE)
+		if (getFieldPlayer(fieldY, fieldX) != FIELD_FREE)
 			throw new GameStateException("field already set");
 		
 		field[fieldY * width + fieldX] = PLAYER_BIT_HAVE_MIN | player;
 
 		for (int y = fieldY - 1; y <= fieldY + 1; y++) if (y >= 0 && y < height) {
 			for (int x = fieldX - 1; x <= fieldX + 1; x++) if (x >= 0 && x < width){
-				if (getFieldStatus(player, y, x) != Stone.FIELD_DENIED) {
+				if (getFieldStatus(player, y, x) != FIELD_DENIED) {
 					final int idx = y * width + x;
 					if (y != fieldY && x != fieldX) {
 						// mark the corners as allowed (unless already denied)
@@ -358,9 +366,10 @@ public class Spiel implements Serializable, Cloneable {
 	 * Places given stone onto field
 	 */
 	private void setStone(Stone stone, int player, int startY, int startX, int mirror, int rotate) throws GameStateException {
-		for (int y = 0; y < stone.getSize(); y++){
-			for (int x = 0; x < stone.getSize(); x++){
-				if (stone.getStoneField(y, x, mirror, rotate) != Stone.STONE_FIELD_FREE) {
+		final Shape type = stone.getShape();
+		for (int y = 0; y < type.getSize(); y++){
+			for (int x = 0; x < type.getSize(); x++){
+				if (type.isStone(x, y, mirror, rotate)) {
 					setSingleStone(player, startY+y, startX+x);
 				}
 			}
@@ -378,13 +387,14 @@ public class Spiel implements Serializable, Cloneable {
 	public void undo(Turnpool turnpool, GameMode gamemode) throws GameStateException{
 		final Turn turn = turnpool.pollLast();
 		final Stone stone = player[turn.m_playernumber].get_stone(turn.m_stone_number);
+		final Shape type = stone.getShape();
 		int x, y;
 
 		// remove stone
-		for (x = 0; x < stone.getSize(); x++) {
-			for (y = 0; y < stone.getSize(); y++) {
-				if (stone.getStoneField(y, x, turn.m_mirror_count, turn.m_rotate_count) != Stone.STONE_FIELD_FREE) {
-					if (getFieldPlayer(turn.m_y + y, turn.m_x + x) == Stone.FIELD_FREE)
+		for (x = 0; x < type.getSize(); x++) {
+			for (y = 0; y < type.getSize(); y++) {
+				if (type.isStone(x, y, turn.m_mirror_count, turn.m_rotate_count)) {
+					if (getFieldPlayer(turn.m_y + y, turn.m_x + x) == FIELD_FREE)
 						throw new GameStateException("field is free but shouldn't");
 					clearField(turn.m_x + x, turn.m_y + y);
 				}
@@ -394,7 +404,7 @@ public class Spiel implements Serializable, Cloneable {
 		// clear all markers for the entire board
 		for (x = 0; x < width; x++) {
 			for (y = 0; y < height; y++) {
-				if (getFieldPlayer(y, x) == Stone.FIELD_FREE ) {
+				if (getFieldPlayer(y, x) == FIELD_FREE ) {
 					clearField(x, y);
 				}
 			}
@@ -403,7 +413,7 @@ public class Spiel implements Serializable, Cloneable {
 		// place all existing stones again to recreate the markers
 		for (x = 0; x < width; x++) {
 			for (y = 0; y < height; y++) {
-				if (getFieldPlayer(y, x) != Stone.FIELD_FREE ) {
+				if (getFieldPlayer(y, x) != FIELD_FREE ) {
 					int player = getFieldPlayer(y, x);
 					clearField(x, y);
 					setSingleStone(player, y, x);

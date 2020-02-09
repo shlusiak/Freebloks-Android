@@ -18,8 +18,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import de.saschahlusiak.freebloks.model.Stone;
-import de.saschahlusiak.freebloks.model.StoneType;
+
+import de.saschahlusiak.freebloks.model.Shape;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
 	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
@@ -290,9 +290,9 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	}
 
 	private int[] getStones() {
-		final int[] result = new int[StoneType.COUNT];
-		for (int i = 0; i < StoneType.COUNT; i++)
-			result[i] = picker[StoneType.get(i).getPoints() - 1].getValue();
+		final int[] result = new int[Shape.COUNT];
+		for (int i = 0; i < Shape.COUNT; i++)
+			result[i] = picker[Shape.get(i).getPoints() - 1].getValue();
 		return result;
 	}
 
