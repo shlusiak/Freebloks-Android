@@ -1,9 +1,11 @@
 package de.saschahlusiak.freebloks.model
 
+import java.io.Serializable
+
 /**
  * An orientation of a stone, with mirroring over x-axis (vertical) and rotation
  */
-data class Orientation(val mirrored: Boolean = false, val rotation: Rotation = Rotation.None) {
+data class Orientation(val mirrored: Boolean = false, val rotation: Rotation = Rotation.None): Serializable {
 
     fun rotatedLeft(rotatable: Rotatable = Rotatable.Four) = Orientation(mirrored, rotation.rotateLeft(rotatable))
 
