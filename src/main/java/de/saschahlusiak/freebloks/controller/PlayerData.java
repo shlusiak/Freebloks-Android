@@ -30,10 +30,10 @@ public class PlayerData implements Comparable<PlayerData> {
 	}
 
 	void addPoints(Player p) {
-		this.points += p.m_stone_points;
-		this.stones_left += p.m_stone_count;
-		if (p.m_stone_count == 0 && p.m_lastStone != null) {
-			if (p.m_lastStone.getShape().getNumber() == 0) {
+		this.points += p.getTotalPoints();
+		this.stones_left += p.getStonesLeft();
+		if (p.getStonesLeft() == 0 && p.getLastStone() != null) {
+			if (p.getLastStone().getShape().getNumber() == 0) {
 				bonus += 20;
 			}
 			else {

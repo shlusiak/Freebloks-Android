@@ -227,7 +227,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 
 				model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 
-				Stone st = model.spiel.get_current_player().get_stone(s.stone);
+				Stone st = model.spiel.get_current_player().getStone(s.stone);
 
 				PointF p = new PointF();
 				p.x = s.x - 0.5f + st.getShape().getSize() / 2;

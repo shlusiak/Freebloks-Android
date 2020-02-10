@@ -37,7 +37,7 @@ public class JNIServer {
 
 			for (i = 0; i < 4; i++)
 				for (j = 0; j < Shape.COUNT; j++)
-					player_stones_available[i * Shape.COUNT + j] = spiel.getPlayer(i).get_stone(j).getAvailable();
+					player_stones_available[i * Shape.COUNT + j] = spiel.getPlayer(i).getStone(j).getAvailable();
 
 			return native_resume_server(
 					spiel.width,

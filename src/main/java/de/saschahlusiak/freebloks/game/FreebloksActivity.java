@@ -30,9 +30,7 @@ import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
-import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
@@ -1119,9 +1117,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						status.setText("[" + getPlayerName(pl) + "]");
 						statusView.setBackgroundColor(getResources().getColor(res));
 						points.setVisibility(View.VISIBLE);
-						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
 						movesLeft.setVisibility(View.VISIBLE);
-						movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.m_stone_count, p.m_stone_count));
+						movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.getStonesLeft(), p.getStonesLeft()));
 					}
 				} else if (player >= 0 || showPlayer >= 0) {
 					if (showPlayer < 0) {
@@ -1129,29 +1127,29 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						statusView.setBackgroundColor(getResources().getColor(res));
 						Player p = client.spiel.getPlayer(player);
 						points.setVisibility(View.VISIBLE);
-						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
 						if (!local)
 							status.setText(getString(R.string.waiting_for_color, getPlayerName(player)));
 						else {
 							status.setText(getString(R.string.your_turn, getPlayerName(player)));
 
 							movesLeft.setVisibility(View.VISIBLE);
-							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.m_number_of_possible_turns, p.m_number_of_possible_turns));
+							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.getNumberOfPossibleTurns(), p.getNumberOfPossibleTurns()));
 						}
 					} else {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(showPlayer)];
 						statusView.setBackgroundColor(getResources().getColor(res));
 						Player p = client.spiel.getPlayer(showPlayer);
 						points.setVisibility(View.VISIBLE);
-						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.m_stone_points, p.m_stone_points));
+						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
 
-						if (p.m_number_of_possible_turns <= 0)
+						if (p.getNumberOfPossibleTurns() <= 0)
 							status.setText("[" + getString(R.string.color_is_out_of_moves, getPlayerName(showPlayer)) + "]");
 						else {
 							status.setText(getPlayerName(showPlayer));
 
 							movesLeft.setVisibility((local || player < 0) ? View.VISIBLE : View.INVISIBLE);
-							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.m_number_of_possible_turns, p.m_number_of_possible_turns));
+							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.getNumberOfPossibleTurns(), p.getNumberOfPossibleTurns()));
 						}
 					}
 
@@ -1168,7 +1166,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void stoneWillBeSet(@NonNull NET_SET_STONE s) {
 		for (int i = 0; i < 4; i++)
-			number_of_possible_turns[i] = client.spiel.getPlayer(i).m_number_of_possible_turns;
+			number_of_possible_turns[i] = client.spiel.getPlayer(i).getNumberOfPossibleTurns();
 	}
 
 	@Override
@@ -1197,22 +1195,22 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		for (int i = 0; i < 4; i++) {
 			final Player p = spiel.getPlayer(i);
-			if (p.m_number_of_possible_turns <= 0 && number_of_possible_turns[i] > 0) {
+			if (p.getNumberOfPossibleTurns() <= 0 && number_of_possible_turns[i] > 0) {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						if (view != null) {
-							Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getPlayerNumber())), Toast.LENGTH_SHORT).show();
+							Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getNumber())), Toast.LENGTH_SHORT).show();
 
 							if (view.model.soundPool != null)
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.hasAnimations()) {
 								int sx, sy;
-								sx = spiel.getPlayerStartX(p.getPlayerNumber());
-								sy = spiel.getPlayerStartY(p.getPlayerNumber());
+								sx = spiel.getPlayerStartX(p.getNumber());
+								sy = spiel.getPlayerStartY(p.getNumber());
 								for (int x = 0; x < spiel.width; x++)
 									for (int y = 0; y < spiel.height; y++)
-										if (spiel.getFieldPlayer(y, x) == p.getPlayerNumber()) {
+										if (spiel.getFieldPlayer(y, x) == p.getNumber()) {
 											boolean effected = false;
 											synchronized (view.model.effects) {
 												for (int j = 0; j < view.model.effects.size(); j++)
@@ -1225,7 +1223,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 												final float distance = (float)Math.sqrt((x - sx)*(x - sx) + (y - sy)*(y - sy));
 												Effect effect = new BoardStoneGlowEffect(
 														view.model,
-														view.model.getPlayerColor(p.getPlayerNumber()),
+														view.model.getPlayerColor(p.getNumber()),
 														x,
 														y,
 														distance);

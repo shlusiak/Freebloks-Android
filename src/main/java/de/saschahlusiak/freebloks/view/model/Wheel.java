@@ -84,9 +84,9 @@ public class Wheel implements ViewElement {
 		if (model.spiel == null)
 			return;
 		Player p = model.spiel.getPlayer(player);
-		moves_left = p.m_number_of_possible_turns > 0;
+		moves_left = p.getNumberOfPossibleTurns() > 0;
 		for (int i = 0; i < Shape.COUNT; i++) {
-			Stone s = p.get_stone(i);
+			Stone s = p.getStone(i);
 			if (s != null && s.isAvailable())
 				stones.add(s);
 		}

@@ -233,7 +233,7 @@ public class SpielClient {
 			Crashlytics.log(String.format("player %d, stone %d (x%d), x %d, y %d",
 				s.player,
 				s.stone,
-				spiel.getPlayer(s.player).get_stone(s.stone).getAvailable(),
+				spiel.getPlayer(s.player).getStone(s.stone).getAvailable(),
 				s.x,
 				s.y));
 
@@ -299,8 +299,8 @@ public class SpielClient {
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.getGameMode() == GameMode.GAMEMODE_DUO || spiel.getGameMode()==GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0; n < Shape.COUNT; n++){
-					spiel.getPlayer(1).get_stone(n).setAvailable(0);
-					spiel.getPlayer(3).get_stone(n).setAvailable(0);
+					spiel.getPlayer(1).getStone(n).setAvailable(0);
+					spiel.getPlayer(3).getStone(n).setAvailable(0);
 				}
 			}
 			lastStatus = status;
@@ -333,8 +333,8 @@ public class SpielClient {
 				spiel.getGameMode()== GameMode.GAMEMODE_JUNIOR)
 			{
 				for (int n = 0; n < Shape.COUNT; n++){
-					spiel.getPlayer(1).get_stone(n).setAvailable(0);
-					spiel.getPlayer(3).get_stone(n).setAvailable(0);
+					spiel.getPlayer(1).getStone(n).setAvailable(0);
+					spiel.getPlayer(3).getStone(n).setAvailable(0);
 				}
 			}
 			spiel.m_current_player=-1;

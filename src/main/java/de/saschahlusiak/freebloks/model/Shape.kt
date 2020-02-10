@@ -7,14 +7,14 @@ import java.io.Serializable
  *
  * See [Stone] for the member of [Player], which adds attributes like count and orientation.
  */
-class Shape(
+class Shape private constructor(
     // the number of the shape of this stone. must match with the number of this stone on the API.
     val number: Int,
     // the effective size of this stone, between 1 and 5
     val size: Int,
     val mirrorable: Mirrorable,
     val rotatable: Rotatable,
-    
+
     /**
      * Field values.
      *
@@ -54,6 +54,10 @@ class Shape(
             }
         }.toList()
     }
+
+    override fun hashCode() = number
+
+    override fun equals(other: Any?) = other is Shape && other.number == number
 
     /**
      * Returns the raw field value within the stone.

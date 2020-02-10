@@ -79,7 +79,7 @@ public class Spiel implements Serializable, Cloneable {
 	/**
 	 * Encapsulated player information
 	 */
-	private Player player[] = new Player[PLAYER_MAX];
+	protected Player player[] = new Player[PLAYER_MAX];
 
 	/**
 	 * One dimensional field [y * width + x]
@@ -94,7 +94,7 @@ public class Spiel implements Serializable, Cloneable {
 		this.height = size;
 		this.width = size;
 		for (int i = 0; i < PLAYER_MAX; i++)
-			player[i] = new Player();
+			player[i] = new Player(i);
 		field = new int[this.width * this.height];
 	}
 
@@ -103,7 +103,7 @@ public class Spiel implements Serializable, Cloneable {
 		Spiel c = (Spiel)super.clone();
 		c.player = player.clone();
 		for (int i = 0; i < PLAYER_MAX; i++)
-			c.player[i] = (Player) player[i].clone();
+			c.player[i] = new Player(player[i]);
 		c.field = field.clone();
 		return c;
 	}
@@ -205,7 +205,7 @@ public class Spiel implements Serializable, Cloneable {
 
 		for (int n = 0; n < Shape.COUNT; n++) {
 			for (int p = 0; p < PLAYER_MAX; p++) {
-				final Stone stone = player[p].get_stone(n);
+				final Stone stone = player[p].getStone(n);
 				stone.setAvailable(counts[stone.getShape().getPoints() - 1]);
 			}
 		}
@@ -219,7 +219,7 @@ public class Spiel implements Serializable, Cloneable {
 	public void setAvailableStones(int stone_numbers[]) {
 		for (int n = 0; n < Shape.COUNT; n++){
 			for (int p = 0; p < PLAYER_MAX; p++){
-				final Stone stone = player[p].get_stone(n);
+				final Stone stone = player[p].getStone(n);
 				stone.setAvailable(stone_numbers[n]);
 			}
 		}
@@ -243,7 +243,7 @@ public class Spiel implements Serializable, Cloneable {
 
 		field = new int[this.width * this.height];
 		for (int n = 0; n < PLAYER_MAX; n++) {
-			player[n].init(this, n);
+			player[n].refreshData(this);
 		}
 		setSeeds(gamemode);
 	}
@@ -253,7 +253,7 @@ public class Spiel implements Serializable, Cloneable {
 	 */
 	public final void refreshPlayerData() {
 		for (int n = 0; n < PLAYER_MAX; n++) {
-			player[n].refresh_data(this);
+			player[n].refreshData(this);
 		}
 	}
 
@@ -342,7 +342,7 @@ public class Spiel implements Serializable, Cloneable {
 	 * Execute a Turn and place the stone on the field
 	 */
 	public final void setStone(Turn turn) throws GameStateException{
-		final Stone stone = player[turn.getPlayer()].get_stone(turn.getShape().getNumber());
+		final Stone stone = player[turn.getPlayer()].getStone(turn.getShape().getNumber());
 		setStone(stone, turn.getPlayer(), turn.getY(), turn.getX(), turn.getOrientation());
 	}
 
@@ -361,7 +361,7 @@ public class Spiel implements Serializable, Cloneable {
 
 		stone.availableDecrement();
 
-		this.player[player].m_lastStone = stone;
+		this.player[player].setLastStone(stone);
 		refreshPlayerData();
 	}
 
@@ -407,7 +407,7 @@ public class Spiel implements Serializable, Cloneable {
 		// try to set all seeds again, in case we cleared up the starting points
 		setSeeds(gamemode);
 
-		final Stone stone = player[turn.getPlayer()].get_stone(shape.getNumber());
+		final Stone stone = player[turn.getPlayer()].getStone(shape.getNumber());
 		stone.availableIncrement();
 		refreshPlayerData();
 	}
