@@ -47,17 +47,7 @@ class Player(val number: Int) : Serializable {
     var numberOfPossibleTurns = 0
         private set
 
-    constructor(copyFrom: Player) : this(copyFrom.number) {
-        lastStone = copyFrom.lastStone
-        totalPoints = copyFrom.totalPoints
-        stonesLeft = copyFrom.stonesLeft
-        numberOfPossibleTurns = copyFrom.numberOfPossibleTurns
-        stones.forEachIndexed { index, stone -> stone.available = copyFrom.stones[index].available }
-    }
-
-    fun getStone(n: Int): Stone? {
-        return if (n < 0 || n > stones.size) null else stones[n]
-    }
+    fun getStone(n: Int) = stones[n]
 
     fun refreshData(spiel: Spiel) {
         totalPoints = 0
@@ -93,7 +83,7 @@ class Player(val number: Int) : Serializable {
         }
     }
 
-    fun getTurnsInPosition(spiel: Spiel, shape: Shape, fieldY: Int, fieldX: Int) = sequence {
+    private fun getTurnsInPosition(spiel: Spiel, shape: Shape, fieldY: Int, fieldX: Int) = sequence {
         for (orientation in shape.orientations) {
             for (x in 0 until shape.size) {
                 for (y in 0 until shape.size) {

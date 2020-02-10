@@ -3,7 +3,10 @@ package de.saschahlusiak.freebloks.model
 import java.io.Serializable
 
 /**
- * An orientation of a stone, with mirroring over x-axis (vertical) and rotation
+ * An immutable orientation of a stone, with mirroring over x-axis (vertical) and rotation
+ *
+ * @param mirrored mirrored vertically, over x-axis
+ * @param rotation current rotation
  */
 data class Orientation(val mirrored: Boolean = false, val rotation: Rotation = Rotation.None): Serializable {
 

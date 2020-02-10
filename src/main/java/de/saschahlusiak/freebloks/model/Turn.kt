@@ -12,7 +12,11 @@ class Turn(val player: Int, val shape: Shape, val orientation: Orientation, val 
     constructor(player: Int, shape: Int, y: Int, x: Int, orientation: Orientation) : this(player, Shape.get(shape), orientation, y, x)
 
     val shapeNumber = shape.number
+
+    @Deprecated("Should not be needed anymore")
     val mirrorCount = if (orientation.mirrored) 1 else 0
+
+    @Deprecated("Should not be needed anymore")
     val rotationCount = orientation.rotation.value
 
     companion object {

@@ -8,9 +8,7 @@ import de.saschahlusiak.freebloks.controller.GameStateException;
 /**
  * Game state (model)
  */
-public class Spiel implements Serializable, Cloneable {
-	private static final long serialVersionUID = -3803056324652460783L;
-
+public class Spiel implements Serializable {
 	public static final int FIELD_FREE    =  240;
 	public static final int FIELD_ALLOWED =  241;
 	public static final int FIELD_DENIED  =  255;
@@ -96,16 +94,6 @@ public class Spiel implements Serializable, Cloneable {
 		for (int i = 0; i < PLAYER_MAX; i++)
 			player[i] = new Player(i);
 		field = new int[this.width * this.height];
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		Spiel c = (Spiel)super.clone();
-		c.player = player.clone();
-		for (int i = 0; i < PLAYER_MAX; i++)
-			c.player[i] = new Player(player[i]);
-		c.field = field.clone();
-		return c;
 	}
 
 	/**

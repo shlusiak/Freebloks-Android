@@ -55,8 +55,14 @@ class Shape private constructor(
         }.toList()
     }
 
+    /**
+     * The shape number defines uniqueness
+     */
     override fun hashCode() = number
 
+    /**
+     * The shape number defines uniqueness
+     */
     override fun equals(other: Any?) = other is Shape && other.number == number
 
     /**
@@ -67,7 +73,7 @@ class Shape private constructor(
      * @param mirrored whether the stone is mirrored over x (vertically)
      * @param rotation whether the stone is rotated
      */
-    fun getStoneField(x: Int, y: Int, mirrored: Boolean, rotation: Rotation): Int {
+    internal fun getStoneField(x: Int, y: Int, mirrored: Boolean, rotation: Rotation): Int {
         val ny: Int
         val nx: Int
         if (!mirrored) {
@@ -113,6 +119,11 @@ class Shape private constructor(
         return field[nx + ny * SIZE_MAX]
     }
 
+    /**
+     * Convenience function to return field value
+     *
+     * @see [getStoneField]
+     */
     fun getStoneField(x: Int, y: Int, orientation: Orientation): Int {
         return getStoneField(x, y, orientation.mirrored, orientation.rotation)
     }
@@ -121,7 +132,14 @@ class Shape private constructor(
      * Whether given coordinate is free, i.e. not part of the stone
      */
     fun isFree(x: Int, y: Int, orientation: Orientation): Boolean {
-        return getStoneField(x, y, orientation) == 0
+        return isFree(x, y, orientation.mirrored, orientation.rotation)
+    }
+
+    /**
+     * Whether given coordinate is free, i.e. not part of the stone
+     */
+    fun isFree(x: Int, y: Int, mirrored: Boolean, rotation: Rotation): Boolean {
+        return getStoneField(x, y, mirrored, rotation) == 0
     }
 
     /**
@@ -138,6 +156,7 @@ class Shape private constructor(
     /**
      * Whether the given coordinate is occupied by the stone
      */
+    @Deprecated("use Orientation instead")
     fun isStone(x: Int, y: Int, mirror: Int, rotate: Int): Boolean {
         return isStone(x, y, mirror == 1, Rotation.from(rotate))
     }
@@ -147,7 +166,15 @@ class Shape private constructor(
      * test this stone on this piece against a "seed" on the board.
      */
     fun isCorner(x: Int, y: Int, orientation: Orientation): Boolean {
-        return getStoneField(x, y, orientation) == 1
+        return isCorner(x, y, orientation.mirrored, orientation.rotation)
+    }
+
+    /**
+     * Whether the given coordinate is a corner of interest, i.e. whether it makes sense to
+     * test this stone on this piece against a "seed" on the board.
+     */
+    fun isCorner(x: Int, y: Int, mirrored: Boolean, rotation: Rotation): Boolean {
+        return getStoneField(x, y, mirrored, rotation) == 1
     }
 
     companion object {

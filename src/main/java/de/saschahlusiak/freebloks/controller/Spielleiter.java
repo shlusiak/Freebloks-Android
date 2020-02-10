@@ -8,7 +8,7 @@ import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.model.Turnpool;
 
-public class Spielleiter extends Spiel implements Cloneable, Serializable {
+public class Spielleiter extends Spiel implements Serializable {
 	private static final long serialVersionUID = -7880809258246268794L;
 
 	static final int PLAYER_COMPUTER = -2;
@@ -28,14 +28,6 @@ public class Spielleiter extends Spiel implements Cloneable, Serializable {
 		m_gamemode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 		for (int i=0;i<PLAYER_MAX;i++)spieler[i]=PLAYER_COMPUTER;
 		history=new Turnpool();
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		Spielleiter c = (Spielleiter)super.clone();
-		c.spieler = spieler.clone();
-		c.history = new Turnpool();
-		return c;
 	}
 
 	void set_noplayer() {
