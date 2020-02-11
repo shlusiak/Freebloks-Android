@@ -1,7 +1,9 @@
 package de.saschahlusiak.freebloks.network
 
-import de.saschahlusiak.freebloks.utils.toUnsigned
+import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
+
+fun ByteBuffer.put(header: Header) = header.write(this)
 
 /**
  * check1 uint8
@@ -28,11 +30,14 @@ data class Header(val type: Int, val size: Int) {
         const val HEADER_SIZE = 5
 
         @JvmStatic
+        @Throws(ProtocolException::class)
         fun from(buffer: ByteBuffer): Header {
-            val check1 = buffer.get().toUnsigned()
+            val check1 = buffer.get().toUnsignedByte()
             val size = buffer.short
             val type = buffer.get()
-            val check2 = buffer.get().toUnsigned()
+            val check2 = buffer.get().toUnsignedByte()
+
+            if (size.toInt() < HEADER_SIZE) throw ProtocolException("Invalid header size ${size}")
 
             val header = Header(type.toInt(), size.toInt())
 

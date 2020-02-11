@@ -157,7 +157,7 @@ public class SpielClient {
 			}
 
 			/* Read a complete network message into buffer */
-			pkg = network.read_package(is, true);
+			pkg = network.read_package(is);
 				
 			if (pkg != null)
 				process_message(pkg);

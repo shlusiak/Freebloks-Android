@@ -7,10 +7,7 @@ import de.saschahlusiak.freebloks.game.GameConfiguration
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 
 class NetworkTest {
     private val gameDataClassic = ubyteArrayOf(
@@ -322,12 +319,22 @@ class NetworkTest {
 
         val packets = mutableListOf<NET_HEADER>()
         do {
-            val packet = network.read_package(from, false) ?: break
-
-            packets.add(packet)
+            try {
+                val packet = network.read_package(from) ?: break
+                packets.add(packet)
+            } catch (e: EOFException) {
+                break
+            }
         } while (true)
 
         return packets
+    }
+
+    /**
+     * Parses raw data from the given stream into a list of packets
+     */
+    private fun consumeAllPackets_new(from: InputStream): List<Message> {
+        return MessageReader(from).asSequence().toList()
     }
 
     /**
@@ -484,5 +491,28 @@ class NetworkTest {
         assertEquals(10, results[0].stones_left)
         assertEquals(55, results[1].points)
         assertEquals(11, results[1].stones_left)
+    }
+
+    @Test
+    fun test_classic_new() {
+        val packets = consumeAllPackets_new(ByteArrayInputStream(gameDataClassicManual))
+        assertEquals(99, packets.size)
+
+        // TODO: we can't marshall all packets yet, so this would throw a RuntimeException: not implemented
+//        assertEquals(gameDataJunior, packets.toByteArray())
+
+//        val spiel = replayGameFrom(packets)
+
+/*        assertTrue(spiel.isFinished)
+        assertTrue(spiel.isStarted)
+        assertEquals(GameMode.GAMEMODE_JUNIOR, spiel.gameMode)
+        assertEquals(14, spiel.width)
+        assertEquals(14, spiel.height)
+        val results = spiel.resultData
+
+        assertEquals(60, results[0].points)
+        assertEquals(10, results[0].stones_left)
+        assertEquals(55, results[1].points)
+        assertEquals(11, results[1].stones_left) */
     }
 }

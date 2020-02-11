@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.utils.byteBufferOf
-import de.saschahlusiak.freebloks.utils.toUnsigned
+import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -57,10 +57,10 @@ class HeaderTest {
         header.write(buffer)
         buffer.flip()
 
-        assertEquals(0x15, buffer.get().toUnsigned())
+        assertEquals(0x15, buffer.get().toUnsignedByte())
         assertEquals(0x01, buffer.get().toInt())
         assertEquals(0x2C, buffer.get().toInt())
         assertEquals(0x11, buffer.get().toInt())
-        assertEquals(0xD4, buffer.get().toUnsigned())
+        assertEquals(0xD4, buffer.get().toUnsignedByte())
     }
 }

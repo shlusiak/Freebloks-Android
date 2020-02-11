@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,18 +43,15 @@ public class NET_HEADER implements Serializable {
 		return (b & 0xFF);
 	}
 
-	boolean read(InputStream is, boolean block) throws ProtocolException,IOException {
+	boolean read(InputStream is) throws ProtocolException, IOException, EOFException {
 		int r;
 		int check1, check2;
 
 		header = new byte[HEADER_SIZE];
 
-		if (!block && (is.available() < HEADER_SIZE))
-			return false;
-
 		r = is.read(header, 0, HEADER_SIZE);
 		if (r == -1)
-			throw new IOException("EOF when reading packet header");
+			throw new EOFException("EOF when reading packet header");
 
 		if (r < HEADER_SIZE)
 			throw new IOException(String.format("short read: %d out of %d", r, HEADER_SIZE));
@@ -81,7 +79,7 @@ public class NET_HEADER implements Serializable {
 		do {
 			r = is.read(data, offset, data_length - offset);
 			if (r == -1)
-				throw new IOException("EOF when reading packet payload");
+				throw new EOFException("EOF when reading packet payload");
 
 			offset += r;
 		} while (offset < data_length);

@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,9 +33,9 @@ public class Network {
 		trace = new ByteArrayOutputStream();
 	}
 
-	public NET_HEADER read_package(InputStream is, boolean block) throws IOException, ProtocolException {
+	public NET_HEADER read_package(InputStream is) throws IOException, EOFException, ProtocolException {
 		NET_HEADER p = new NET_HEADER();
-		if (! p.read(is, block))
+		if (! p.read(is))
 			return null;
 
 		if (trace != null) {
