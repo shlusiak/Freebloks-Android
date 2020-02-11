@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.network;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -7,6 +8,8 @@ import android.util.Log;
 
 public class Network {
 	static final String tag = Network.class.getSimpleName();
+
+	private final ByteArrayOutputStream trace;
 
 	public static final int DEFAULT_PORT = 59995;
 
@@ -25,10 +28,19 @@ public class Network {
 	public static final int MSG_REVOKE_PLAYER = 13;
 	public static final int MSG_REQUEST_GAME_MODE = 14;
 
-	public static NET_HEADER read_package(InputStream is, boolean block) throws IOException, ProtocolException {
+	public Network() {
+		trace = new ByteArrayOutputStream();
+	}
+
+	public NET_HEADER read_package(InputStream is, boolean block) throws IOException, ProtocolException {
 		NET_HEADER p = new NET_HEADER();
 		if (! p.read(is, block))
 			return null;
+
+		if (trace != null) {
+			trace.write(p.header);
+			trace.write(p.data);
+		}
 
 //		Log.d(tag, "Received network package type " + p.msg_type);
 
@@ -65,5 +77,23 @@ public class Network {
 			Log.e(tag, "Unhandled message type: " + p.msg_type);
 			return null;
 		}
+	}
+
+	public void dump() {
+		if (trace == null)
+			return;
+
+		final byte[] fullTrace = trace.toByteArray();
+		final StringBuffer buffer = new StringBuffer();
+		int count = 0;
+		for (int b: fullTrace) {
+			buffer.append(String.format("0x%02x, ", b & 0xff));
+			count++;
+			if ((count % 25) == 0) {
+				Log.d(tag, "Network dump: " + buffer.toString());
+				buffer.setLength(0);
+			}
+		}
+		Log.d(tag, "Network dump: " + buffer.toString());
 	}
 }

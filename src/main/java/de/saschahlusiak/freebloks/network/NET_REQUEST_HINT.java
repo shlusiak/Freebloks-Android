@@ -12,7 +12,7 @@ public class NET_REQUEST_HINT extends NET_HEADER {
 
 	public NET_REQUEST_HINT(NET_HEADER from) throws ProtocolException {
 		super(from);
-		player = buffer[0];
+		player = data[0];
 		
 		if (player < 0 || player > 3)
 			throw new ProtocolException("invalid player: " + player);

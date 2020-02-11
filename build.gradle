@@ -58,6 +58,7 @@ dependencies {
 
     // for unit tests
     testImplementation 'junit:junit:4.13'
+    testImplementation 'org.mockito:mockito-core:3.2.4'
 }
 
 android {
@@ -112,7 +113,9 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'

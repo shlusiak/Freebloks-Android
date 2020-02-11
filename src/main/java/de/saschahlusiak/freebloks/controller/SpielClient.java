@@ -33,6 +33,7 @@ public class SpielClient {
 	private HandlerThread sendThread;
 	private Handler sendHandler;
 	private GameConfiguration config;
+	private Network network = new Network();
 
 	public SpielClient(Spielleiter leiter, GameConfiguration config) {
 		this.config = config;
@@ -112,6 +113,7 @@ public class SpielClient {
 
 	public synchronized void disconnect() {
 		if (client_socket != null) {
+			network.dump();
 			try {
 				Crashlytics.log("Disconnecting from " + config.getServer());
 				if (client_socket instanceof Socket) {
@@ -155,7 +157,7 @@ public class SpielClient {
 			}
 
 			/* Read a complete network message into buffer */
-			pkg = Network.read_package(is, true);
+			pkg = network.read_package(is, true);
 				
 			if (pkg != null)
 				process_message(pkg);
@@ -187,7 +189,7 @@ public class SpielClient {
 		send(new NET_REQUEST_HINT(player));
 	}
 
-	synchronized void process_message(NET_HEADER data) throws ProtocolException, GameStateException {
+	synchronized public void process_message(NET_HEADER data) throws ProtocolException, GameStateException {
 		int i;
 
 		switch(data.msg_type)
@@ -216,7 +218,6 @@ public class SpielClient {
 		/* server sent new current player number */
 		case Network.MSG_CURRENT_PLAYER:
 			spiel.m_current_player=((NET_CURRENT_PLAYER)data).player;
-			Crashlytics.log("New player: " + spiel.m_current_player);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.newCurrentPlayer(spiel.m_current_player);
 			break;
@@ -229,13 +230,6 @@ public class SpielClient {
 			NET_SET_STONE s=(NET_SET_STONE)data;
 
 			Turn turn = s.toTurn();
-
-			Crashlytics.log(String.format("player %d, stone %d (x%d), x %d, y %d",
-				s.player,
-				s.stone,
-				spiel.getPlayer(s.player).getStone(s.stone).getAvailable(),
-				s.x,
-				s.y));
 
 			spiel.addHistory(turn);
 
@@ -267,7 +261,6 @@ public class SpielClient {
 
 		/* Server hat entschlossen, dass das Spiel vorbei ist */
 		case Network.MSG_GAME_FINISH: {
-			Crashlytics.log("Game finished");
 			spiel.setFinished(true);
 			for (SpielClientInterface sci : spielClientInterface)
 				sci.gameFinished();
@@ -318,8 +311,6 @@ public class SpielClient {
 		
 		/* Der Server hat eine neue Runde gestartet. Spiel zuruecksetzen */
 		case Network.MSG_START_GAME: {
-			Crashlytics.log("Start game");
-
 			spiel.startNewGame(spiel.getGameMode());
 			spiel.setFinished(false);
 			spiel.setStarted(true);
@@ -350,12 +341,6 @@ public class SpielClient {
 				throw new GameStateException("received MSG_UNDO_STONE but game not running");
 
 			Turn t = spiel.history.getLast();
-
-			Crashlytics.log(String.format("undo: player %d, stone %d, x %d, y %d",
-				t.getPlayer(),
-				t.getShapeNumber(),
-				t.getX(),
-				t.getY()));
 
 			Log.d(tag, "stone undone: " + t.getShapeNumber());
 			for (SpielClientInterface sci : spielClientInterface)

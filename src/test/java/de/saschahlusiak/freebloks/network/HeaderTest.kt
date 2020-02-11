@@ -43,7 +43,7 @@ class HeaderTest {
             0x15, 0x01, 0x2C, 0x11, 0xD4
         )
         val header = Header.from(buffer)
-        
+
         assertNotNull(header)
         assertEquals(17, header.type)
         assertEquals(300, header.size)

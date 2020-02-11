@@ -20,17 +20,17 @@ public class NET_CHAT extends NET_HEADER {
 
 	public NET_CHAT(NET_HEADER from) {
 		super(from);
-		client = buffer[0];
-		length = unsigned(buffer[1]);
+		client = data[0];
+		length = unsigned(data[1]);
 
-		while ((buffer[length + 1] == (byte)'\0') || (buffer[length +1] == (byte)'\n') || (buffer[length + 1]== (byte)'\r'))  {
+		while ((data[length + 1] == (byte)'\0') || (data[length +1] == (byte)'\n') || (data[length + 1]== (byte)'\r'))  {
 			length--;
 			data_length--;
 		}
 
 		char[] c = new char[length]; /* ignore the trailing \0 */
 		for (int i = 0; i < c.length; i++)
-			c[i] = (char)unsigned(buffer[i + 2]);
+			c[i] = (char)unsigned(data[i + 2]);
 		text = String.copyValueOf(c);
 	}
 

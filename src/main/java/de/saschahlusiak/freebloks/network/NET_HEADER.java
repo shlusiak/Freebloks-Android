@@ -1,13 +1,10 @@
 package de.saschahlusiak.freebloks.network;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.Socket;
 
 public class NET_HEADER implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -18,7 +15,8 @@ public class NET_HEADER implements Serializable {
 	/* int check2; */ /* uint8 */
 	public static final int HEADER_SIZE = 5;
 
-	byte buffer[];
+	byte header[];
+	byte data[];
 	
 	NET_HEADER() {
 		this(0, 0);
@@ -32,7 +30,7 @@ public class NET_HEADER implements Serializable {
 	public NET_HEADER(NET_HEADER from) {
 		this.data_length = from.data_length;
 		this.msg_type = from.msg_type;
-		this.buffer = from.buffer;
+		this.data = from.data;
 	}
 
 	/**
@@ -48,25 +46,25 @@ public class NET_HEADER implements Serializable {
 		int r;
 		int check1, check2;
 
-		buffer = new byte[HEADER_SIZE];
+		header = new byte[HEADER_SIZE];
 
 		if (!block && (is.available() < HEADER_SIZE))
 			return false;
 
-		r = is.read(buffer, 0, HEADER_SIZE);
+		r = is.read(header, 0, HEADER_SIZE);
 		if (r == -1)
 			throw new IOException("EOF when reading packet header");
 
 		if (r < HEADER_SIZE)
 			throw new IOException(String.format("short read: %d out of %d", r, HEADER_SIZE));
 
-		check1 = unsigned(buffer[0]);
-		data_length = unsigned(buffer[1]) << 8 | unsigned(buffer[2]);
-		msg_type = buffer[3];
-		check2 = unsigned(buffer[4]);
+		check1 = unsigned(header[0]);
+		data_length = unsigned(header[1]) << 8 | unsigned(header[2]);
+		msg_type = header[3];
+		check2 = unsigned(header[4]);
 
 		if (data_length < HEADER_SIZE)
-			throw new ProtocolException("invalid header data length: " + data_length);
+			throw new ProtocolException("invalid header header length: " + data_length);
 
 		/* Beiden Checksums erneut berechnen */
 		int c1 = (byte) (data_length & 0x0055) ^ msg_type;
@@ -77,11 +75,11 @@ public class NET_HEADER implements Serializable {
 
 		data_length -= HEADER_SIZE;
 
-		buffer = new byte[data_length];
+		data = new byte[data_length];
 		int offset = 0;
 
 		do {
-			r = is.read(buffer, offset, data_length - offset);
+			r = is.read(data, offset, data_length - offset);
 			if (r == -1)
 				throw new IOException("EOF when reading packet payload");
 

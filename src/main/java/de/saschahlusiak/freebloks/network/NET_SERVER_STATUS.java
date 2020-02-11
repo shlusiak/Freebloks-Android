@@ -33,12 +33,12 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		super(from);
 		
 		/* TODO: verify information, throw ProtocolException */
-		player = buffer[0];
-		computer = buffer[1];
-		clients = buffer[2];
-		width = buffer[3];
-		height = buffer[4];
-		gamemode = GameMode.from(buffer[10]);
+		player = data[0];
+		computer = data[1];
+		clients = data[2];
+		width = data[3];
+		height = data[4];
+		gamemode = GameMode.from(data[10]);
 		version = 1;
 		version_min = 1;
 		
@@ -46,8 +46,8 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 			version = 2;
 		
 		if (from.data_length >= 11 + 4 + 16 * 8 + 2) {
-			version = buffer[11 + 4 + 16 * 8 + 0];
-			version_min = buffer[11 + 4 + 16 * 8 + 1];
+			version = data[11 + 4 + 16 * 8 + 0];
+			version_min = data[11 + 4 + 16 * 8 + 1];
 		}
 		
 		if (version_min > VERSION_MAX) {
@@ -58,17 +58,17 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 		if (isVersion(2)) {
 			/* advanced */
 			spieler = new int[4];
-			spieler[0] = buffer[11];
-			spieler[1] = buffer[12];
-			spieler[2] = buffer[13];
-			spieler[3] = buffer[14];
+			spieler[0] = data[11];
+			spieler[1] = data[12];
+			spieler[2] = data[13];
+			spieler[3] = data[14];
 
 			client_names = new String[8];
 			char tmp[] = new char[16];
 			for (int i = 0; i < 8; i++) {
 				int j;
 				for (j = 0; j < 16; j++) {
-					tmp[j] = (char)unsigned(buffer[15 + i * 16 + j]);
+					tmp[j] = (char)unsigned(data[15 + i * 16 + j]);
 					if (tmp[j] == 0)
 						break;
 				}
@@ -79,10 +79,10 @@ public class NET_SERVER_STATUS extends NET_HEADER implements Serializable {
 			}
 		}
 		for (int i = 0; i < Shape.SIZE_MAX; i++)
-			stone_numbers_obsolete[i] = buffer[5 + i];
+			stone_numbers_obsolete[i] = data[5 + i];
 		if (isVersion(3)) {
 			for (int i = 0; i < Shape.COUNT; i++)
-				stone_numbers[i] = buffer[11 + 4 + 16 * 8 + 2 + i];
+				stone_numbers[i] = data[11 + 4 + 16 * 8 + 2 + i];
 		}
 	}
 	

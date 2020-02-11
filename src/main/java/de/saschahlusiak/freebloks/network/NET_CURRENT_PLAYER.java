@@ -11,7 +11,7 @@ public class NET_CURRENT_PLAYER extends NET_HEADER {
 
 	public NET_CURRENT_PLAYER(NET_HEADER from) throws ProtocolException {
 		super(from);
-		player = buffer[0];
+		player = data[0];
 		
 		if (player < -1 || player > 3)
 			throw new ProtocolException("invalid player: " + player);

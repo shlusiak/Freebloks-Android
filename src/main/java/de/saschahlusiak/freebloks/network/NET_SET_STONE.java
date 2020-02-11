@@ -21,12 +21,12 @@ public class NET_SET_STONE extends NET_HEADER {
 
 	public NET_SET_STONE(NET_HEADER from) throws ProtocolException {
 		super(from);
-		player = buffer[0];
-		stone = buffer[1];
-		mirror_count = buffer[2];
-		rotate_count = buffer[3];
-		x = buffer[4];
-		y = buffer[5];
+		player = data[0];
+		stone = data[1];
+		mirror_count = data[2];
+		rotate_count = data[3];
+		x = data[4];
+		y = data[5];
 		
 		/* BUG: MSG_UNDO_STONE is actually a NET_SET_STONE with random payload;
 		 * don't verify

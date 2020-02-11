@@ -7,3 +7,7 @@ package de.saschahlusiak.freebloks.utils
  * This function converts a Byte into an int ranging from 0..255.
  */
 fun Byte.toUnsigned(): Int = this.toInt() and 0xFF
+
+fun ubyteArrayOf(vararg bytes: Int): ByteArray {
+    return ByteArray(bytes.size) { index -> (bytes[index] and 0xFF).toByte() }
+}
