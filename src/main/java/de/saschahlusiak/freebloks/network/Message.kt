@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.network
 import android.util.Log
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.message.NetCurrentPlayer
+import de.saschahlusiak.freebloks.network.message.NetGrantPlayer
 import de.saschahlusiak.freebloks.network.message.NetServerStatus
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
@@ -57,7 +58,7 @@ abstract class Message(val type: Int, val size: Int) {
 
             val message = when (header.type) {
 //            Network.MSG_REQUEST_PLAYER -> NET_REQUEST_PLAYER(p)
-//            Network.MSG_GRANT_PLAYER -> NET_GRANT_PLAYER(p)
+            Network.MSG_GRANT_PLAYER -> NetGrantPlayer.from(buffer)
                 Network.MSG_CURRENT_PLAYER -> NetCurrentPlayer.from(buffer)
 //            Network.MSG_SET_STONE -> NET_SET_STONE(p)
 //            Network.MSG_START_GAME -> NET_START_GAME(p)
