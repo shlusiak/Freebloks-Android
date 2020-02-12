@@ -32,7 +32,6 @@ data class Header(val rawType: Int, val size: Int): Serializable {
         // how many bytes are used by the header
         const val HEADER_SIZE = 5
 
-        @JvmStatic
         @Throws(ProtocolException::class)
         fun from(buffer: ByteBuffer): Header {
             val check1 = buffer.get().toUnsignedByte()

@@ -11,8 +11,7 @@ import java.nio.ByteBuffer
 data class MessageSetStone(
     val player: Int,
     val shape: Int,
-    val mirrored: Boolean,
-    val rotation: Rotation,
+    val orientation: Orientation,
     val x: Int,
     val y: Int
 ): Message(MessageType.SetStone, 6) {
@@ -21,17 +20,19 @@ data class MessageSetStone(
         assert(shape in 0..Shape.COUNT) { "Invalid shape $shape" }
     }
 
+    constructor(turn: Turn): this(turn.player, turn.shapeNumber, turn.orientation, turn.x, turn.y)
+
     override fun write(buffer: ByteBuffer) {
         super.write(buffer)
         buffer.put(player.toByte())
         buffer.put(shape.toByte())
-        buffer.put((if (mirrored) 1 else 0).toByte())
-        buffer.put(rotation.value.toByte())
+        buffer.put((if (orientation.mirrored) 1 else 0).toByte())
+        buffer.put(orientation.rotation.value.toByte())
         buffer.put(x.toByte())
         buffer.put(y.toByte())
     }
 
-    fun toTurn() = Turn(player, shape, y, x, Orientation(mirrored, rotation))
+    fun toTurn() = Turn(player, shape, y, x, orientation)
 
     companion object {
         fun from(data: ByteBuffer): MessageSetStone {
@@ -42,7 +43,7 @@ data class MessageSetStone(
             val x = data.get().toInt()
             val y = data.get().toInt()
 
-            return MessageSetStone(player, shape, mirrored, rotation, x, y)
+            return MessageSetStone(player, shape, Orientation(mirrored, rotation), x, y)
         }
     }
 }

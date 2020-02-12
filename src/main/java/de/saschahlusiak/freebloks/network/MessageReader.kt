@@ -21,10 +21,10 @@ class MessageReader() {
         var read: Int
 
         buffer.clear()
-        read = stream.read(buffer, NET_HEADER.HEADER_SIZE)
+        read = stream.read(buffer, Header.HEADER_SIZE)
         if (read == -1) throw EOFException("EOF when reading packet header")
 
-        if (read < NET_HEADER.HEADER_SIZE)
+        if (read < Header.HEADER_SIZE)
             throw IOException(String.format("short read: %d out of %d", read, Header.HEADER_SIZE))
 
         buffer.position(0)
@@ -36,7 +36,7 @@ class MessageReader() {
             buffer.put(header)
         }
 
-        var remaining = header.size - NET_HEADER.HEADER_SIZE
+        var remaining = header.size - Header.HEADER_SIZE
         while (remaining > 0) {
             read = stream.read(buffer, remaining)
             if (read == -1)

@@ -20,6 +20,12 @@ import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
+import de.saschahlusiak.freebloks.network.message.MessageChat;
+import de.saschahlusiak.freebloks.network.message.MessageRequestHint;
+import de.saschahlusiak.freebloks.network.message.MessageRequestUndo;
+import de.saschahlusiak.freebloks.network.message.MessageRevokePlayer;
+import de.saschahlusiak.freebloks.network.message.MessageSetStone;
+import de.saschahlusiak.freebloks.network.message.MessageStartGame;
 
 public class SpielClient {
 	static final String tag = SpielClient.class.getSimpleName();
@@ -173,7 +179,7 @@ public class SpielClient {
 	}
 
 	public void revoke_player(int player) {
-		send(new NET_REVOKE_PLAYER(player));
+		send(new MessageRevokePlayer(player));
 	}
 	
 	public void request_game_mode(int width, int height, GameMode g, int stones[]) {
@@ -187,7 +193,13 @@ public class SpielClient {
 			return;
 		if (!spiel.is_local_player())
 			return;
-		send(new NET_REQUEST_HINT(player));
+		send(new MessageRequestHint(player));
+	}
+
+	public void sendChat(String message) {
+		// the client does not matter, it will be filled in by the server then broadcasted
+		MessageChat chat = new MessageChat(0, message);
+		send(chat);
 	}
 
 	/**
@@ -197,7 +209,6 @@ public class SpielClient {
 	 **/
 	public int set_stone(Turn turn)
 	{
-		NET_SET_STONE data;
 		if (spiel.m_current_player==-1)
 			return Spiel.FIELD_DENIED;
 		
@@ -205,17 +216,7 @@ public class SpielClient {
 	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
 		spiel.set_noplayer();
 
-		data = new NET_SET_STONE();
-		/* Datenstruktur mit Daten der Aktion fuellen */
-		data.player=turn.getPlayer();
-		data.stone=turn.getShape().getNumber();
-		data.mirror_count=turn.getMirrorCount();
-		data.rotate_count=turn.getRotationCount();
-		data.x=turn.getX();
-		data.y=turn.getY();
-
-		/* Nachricht ueber den Stein an den Server schicken */
-		send(data);
+		send(new MessageSetStone(turn));
 
 		return Spiel.FIELD_ALLOWED;
 	}
@@ -224,7 +225,7 @@ public class SpielClient {
 	 * Erbittet den Spielstart beim Server
 	 **/
 	public void request_start() {
-		send(new NET_START_GAME());
+		send(new MessageStartGame());
 	}
 
 	/**
@@ -237,11 +238,19 @@ public class SpielClient {
 			return;
 		if (!spiel.is_local_player())
 			return;
-		send(new NET_REQUEST_UNDO());
+		send(new MessageRequestUndo());
 	}
 
+	@Deprecated
+	synchronized private void send(NET_HEADER msg) {
+		if (sendHandler == null)
+			return;
 
-	synchronized public void send(NET_HEADER msg) {
+		Message m = sendHandler.obtainMessage(1, msg);
+		m.sendToTarget();
+	}
+
+	synchronized private void send(de.saschahlusiak.freebloks.network.Message msg) {
 		if (sendHandler == null)
 			return;
 

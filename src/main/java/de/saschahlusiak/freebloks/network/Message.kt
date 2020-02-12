@@ -73,9 +73,9 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
                 MessageType.GameFinish -> MessageGameFinish()
                 MessageType.ServerStatus -> MessageServerStatus.from(buffer)
                 MessageType.Chat -> MessageChat.from(buffer)
-//                MessageType.RequestUndo -> NET_REQUEST_UNDO(p)
+                MessageType.RequestUndo -> MessageRequestUndo()
                 MessageType.UndoStone -> MessageUndoStone.from(buffer)
-//                MessageType.RequestHint -> NET_REQUEST_HINT(p)
+                MessageType.RequestHint -> MessageRequestHint.from(buffer)
                 MessageType.StoneHint -> MessageStoneHint.from(buffer)
                 MessageType.RevokePlayer -> MessageRevokePlayer.from(buffer)
 

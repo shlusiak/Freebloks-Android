@@ -22,7 +22,6 @@ import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.network.NET_CHAT;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import android.app.Dialog;
@@ -268,8 +267,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		if (text.length() < 1)
 			return;
 
-		NET_CHAT chat = new NET_CHAT(text + "\n");
-		LobbyDialog.this.client.send(chat);
+		client.sendChat(text + "\n");
 		chatText.setText("");
 	}
 

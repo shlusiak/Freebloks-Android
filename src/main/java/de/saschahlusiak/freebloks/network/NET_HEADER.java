@@ -1,9 +1,7 @@
 package de.saschahlusiak.freebloks.network;
 
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
@@ -11,36 +9,14 @@ public class NET_HEADER implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/* int check1;	*/ /* uint8 */
-	public int data_length; /* uint16 */
-	public int msg_type; /* uint8 */
+	private int data_length; /* uint16 */
+	private int msg_type; /* uint8 */
 	/* int check2; */ /* uint8 */
-	public static final int HEADER_SIZE = 5;
-
-	byte header[];
-	byte data[];
-	
-	NET_HEADER() {
-		this(MessageType.Unknown, 0);
-	}
+	private static final int HEADER_SIZE = 5;
 
 	public NET_HEADER(MessageType msg_type, int data_length) {
 		this.msg_type = msg_type.getRawValue();
 		this.data_length = data_length;
-	}
-
-	public NET_HEADER(NET_HEADER from) {
-		this.data_length = from.data_length;
-		this.msg_type = from.msg_type;
-		this.data = from.data;
-	}
-
-	/**
-	 * a java byte is always signed, being -128..127
-	 * casting (byte)-1 to int will result in (int)-1
-	 *
-	 */
-	public static int unsigned(byte b) {
-		return (b & 0xFF);
 	}
 
 	void prepare(ByteArrayOutputStream bos) {
@@ -56,7 +32,7 @@ public class NET_HEADER implements Serializable {
 		bos.write(check2);
 	}
 
-	public boolean send(OutputStream os) {
+	boolean send(OutputStream os) {
 		if (os == null)
 			return false;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
