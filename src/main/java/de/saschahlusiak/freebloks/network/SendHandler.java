@@ -17,8 +17,12 @@ public class SendHandler extends Handler {
 
 	@Override
 	public void handleMessage(Message msg) {
-		final NET_HEADER m = (NET_HEADER)msg.obj;
+		if (msg.obj instanceof NET_HEADER) {
+			final NET_HEADER m = (NET_HEADER) msg.obj;
 
-		m.send(os);
+			m.send(os);
+		} else {
+			throw new IllegalStateException("Not implemented");
+		}
 	}
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.message.*
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
+import java.io.Serializable
 import java.nio.ByteBuffer
 
 /**
@@ -12,7 +13,7 @@ import java.nio.ByteBuffer
  * @param type the message type. See [Network]
  * @param size size of the payload in bytes (excluding header)
  */
-abstract class Message(val type: MessageType, val size: Int = 0) {
+abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
     // header only depends on type and size, so it can be pre-created
     val header = Header(type, size + Header.HEADER_SIZE)
 

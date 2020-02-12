@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
+import java.io.Serializable
 import java.nio.ByteBuffer
 
 fun ByteBuffer.put(header: Header) = header.write(this)
@@ -11,7 +12,7 @@ fun ByteBuffer.put(header: Header) = header.write(this)
  * msg_type uint8
  * check2 uint8
  */
-data class Header(val rawType: Int, val size: Int) {
+data class Header(val rawType: Int, val size: Int): Serializable {
     constructor(type: MessageType, size: Int): this(type.rawValue, size)
 
     val check1 = ((size and 0x0055) xor rawType)
