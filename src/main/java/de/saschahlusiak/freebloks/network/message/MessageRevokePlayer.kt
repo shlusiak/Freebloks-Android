@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.network.message
 import de.saschahlusiak.freebloks.network.*
 import java.nio.ByteBuffer
 
-data class NetGrantPlayer(val player: Int): Message(MessageType.GrantPlayer, 1) {
+data class MessageRevokePlayer(val player: Int): Message(MessageType.RevokePlayer, 1) {
     init {
         assert(player in 0..3) { "Invalid player $player" }
     }
@@ -14,9 +14,9 @@ data class NetGrantPlayer(val player: Int): Message(MessageType.GrantPlayer, 1) 
     }
 
     companion object {
-        fun from(data: ByteBuffer): NetGrantPlayer {
+        fun from(data: ByteBuffer): MessageRevokePlayer {
             val player = data.get().toInt()
-            return NetGrantPlayer(player)
+            return MessageRevokePlayer(player)
         }
     }
 }

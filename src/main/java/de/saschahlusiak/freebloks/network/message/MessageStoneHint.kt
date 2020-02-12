@@ -7,9 +7,9 @@ import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
 
 /**
- * Basically identical to [NetSetStone] other than the type
+ * Basically identical to [MessageSetStone] other than the type
  */
-data class NetStoneHint(
+data class MessageStoneHint(
     val player: Int,
     val shape: Int,
     val mirrored: Boolean,
@@ -33,7 +33,7 @@ data class NetStoneHint(
     }
 
     companion object {
-        fun from(data: ByteBuffer): NetStoneHint {
+        fun from(data: ByteBuffer): MessageStoneHint {
             val player = data.get().toInt()
             val shape = data.get().toUnsignedByte()
             val mirrored = data.get().toInt() == 1
@@ -41,7 +41,7 @@ data class NetStoneHint(
             val x = data.get().toInt()
             val y = data.get().toInt()
 
-            return NetStoneHint(player, shape, mirrored, rotation, x, y)
+            return MessageStoneHint(player, shape, mirrored, rotation, x, y)
         }
     }
 }

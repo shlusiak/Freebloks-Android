@@ -8,7 +8,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.nio.ByteBuffer
 
-class NetServerStatusTest {
+class MessageServerStatusTest {
     @Test
     fun test_unmarshall() {
         val bytes = ubyteArrayOf(
@@ -21,7 +21,7 @@ class NetServerStatusTest {
             0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
         )
 
-        val msg = Message.from(ByteBuffer.wrap(bytes)) as NetServerStatus
+        val msg = Message.from(ByteBuffer.wrap(bytes)) as MessageServerStatus
         assertNotNull(msg)
 
         assertEquals(0, msg.player)
@@ -50,7 +50,7 @@ class NetServerStatusTest {
 
     @Test
     fun test_marshal() {
-        val msg = NetServerStatus(
+        val msg = MessageServerStatus(
             1, 3, 4,
             15, 15, GameMode.GAMEMODE_DUO,
             intArrayOf(1, 2, 3, 4),
@@ -61,7 +61,7 @@ class NetServerStatusTest {
         )
 
         val bytes = msg.toByteArray()
-        val copy = Message.from(bytes) as NetServerStatus
+        val copy = Message.from(bytes) as MessageServerStatus
 
         assertEquals(msg, copy)
 

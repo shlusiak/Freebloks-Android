@@ -340,13 +340,14 @@ class NetworkTest {
     /**
      * Marshals each package and writes the byte representation to the given stream
      */
-    private fun writePacketsToStream(packets: List<NET_HEADER>, out: OutputStream) {
+    private fun writePacketsToStream(packets: List<Message>, out: OutputStream) {
+        val writer = MessageWriter(out)
         packets.forEach { packet ->
-            assertTrue(packet.send(out))
+            assertTrue(writer.send(packet))
         }
     }
 
-    private fun List<NET_HEADER>.toByteArray(): ByteArray {
+    private fun List<Message>.toByteArray(): ByteArray {
         val os = ByteArrayOutputStream()
         writePacketsToStream(this, os)
         return os.toByteArray()
@@ -374,8 +375,6 @@ class NetworkTest {
     fun test_classic() {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataClassic))
         assertEquals(137, packets.size)
-        // TODO: we can't marshall all packets yet, so this would throw a RuntimeException: not implemented
-//        assertEquals(gameDataClassic, packets.toByteArray())
 
         val spiel = replayGameFrom(packets)
 
@@ -405,8 +404,6 @@ class NetworkTest {
     fun test_classic_manual() {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataClassicManual))
         assertEquals(99, packets.size)
-        // TODO: we can't marshall all packets yet, so this would throw a RuntimeException: not implemented
-//        assertEquals(gameDataClassic, packets.toByteArray())
 
         val spiel = replayGameFrom(packets)
 
@@ -447,8 +444,6 @@ class NetworkTest {
     fun test_duo() {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataDuo))
         assertEquals(66, packets.size)
-        // TODO: we can't marshall all packets yet, so this would throw a RuntimeException: not implemented
-//        assertEquals(gameDataDuo, packets.toByteArray())
 
         val spiel = replayGameFrom(packets)
 
@@ -475,9 +470,6 @@ class NetworkTest {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataJunior))
         assertEquals(60, packets.size)
 
-        // TODO: we can't marshall all packets yet, so this would throw a RuntimeException: not implemented
-//        assertEquals(gameDataJunior, packets.toByteArray())
-
         val spiel = replayGameFrom(packets)
 
         assertTrue(spiel.isFinished)
@@ -498,8 +490,15 @@ class NetworkTest {
         val packets = consumeAllPackets_new(ByteArrayInputStream(gameDataClassicManual))
         assertEquals(99, packets.size)
 
-        // TODO: we can't marshall all packets yet, so this would throw a RuntimeException: not implemented
-//        assertEquals(gameDataJunior, packets.toByteArray())
+        val bytes = packets.toByteArray()
+        val packets2 = consumeAllPackets_new(ByteArrayInputStream(bytes))
+        assertEquals(99, packets2.size)
+
+        packets.zip(packets2).forEach { (m1, m2) ->
+            assertEquals(m1, m2)
+        }
+
+        assertEquals(packets, packets2)
 
 //        val spiel = replayGameFrom(packets)
 

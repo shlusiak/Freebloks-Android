@@ -6,7 +6,7 @@ import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
 
-data class NetSetStone(
+data class MessageSetStone(
     val player: Int,
     val shape: Int,
     val mirrored: Boolean,
@@ -30,7 +30,7 @@ data class NetSetStone(
     }
 
     companion object {
-        fun from(data: ByteBuffer): NetSetStone {
+        fun from(data: ByteBuffer): MessageSetStone {
             val player = data.get().toInt()
             val shape = data.get().toUnsignedByte()
             val mirrored = data.get().toInt() == 1
@@ -38,7 +38,7 @@ data class NetSetStone(
             val x = data.get().toInt()
             val y = data.get().toInt()
 
-            return NetSetStone(player, shape, mirrored, rotation, x, y)
+            return MessageSetStone(player, shape, mirrored, rotation, x, y)
         }
     }
 }

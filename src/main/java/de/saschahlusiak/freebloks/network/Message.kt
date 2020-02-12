@@ -63,18 +63,18 @@ abstract class Message(val type: MessageType, val size: Int = 0) {
 
             val message = when (header.messageType) {
 //                MessageType.RequestPlayer -> NET_REQUEST_PLAYER(p)
-                MessageType.GrantPlayer -> NetGrantPlayer.from(buffer)
-                MessageType.CurrentPlayer -> NetCurrentPlayer.from(buffer)
-                MessageType.SetStone -> NetSetStone.from(buffer)
-                MessageType.StartGame -> NetStartGame()
-                MessageType.GameFinish -> NetGameFinish()
-                MessageType.ServerStatus -> NetServerStatus.from(buffer)
-                MessageType.Chat -> NetChat.from(buffer)
+                MessageType.GrantPlayer -> MessageGrantPlayer.from(buffer)
+                MessageType.CurrentPlayer -> MessageCurrentPlayer.from(buffer)
+                MessageType.SetStone -> MessageSetStone.from(buffer)
+                MessageType.StartGame -> MessageStartGame()
+                MessageType.GameFinish -> MessageGameFinish()
+                MessageType.ServerStatus -> MessageServerStatus.from(buffer)
+                MessageType.Chat -> MessageChat.from(buffer)
 //                MessageType.RequestUndo -> NET_REQUEST_UNDO(p)
-                MessageType.UndoStone -> NetUndoStone.from(buffer)
+                MessageType.UndoStone -> MessageUndoStone.from(buffer)
 //                MessageType.RequestHint -> NET_REQUEST_HINT(p)
-                MessageType.StoneHint -> NetStoneHint.from(buffer)
-                MessageType.RevokePlayer -> NetRevokePlayer.from(buffer)
+                MessageType.StoneHint -> MessageStoneHint.from(buffer)
+                MessageType.RevokePlayer -> MessageRevokePlayer.from(buffer)
 
                 else -> {
                     Log.e(Network.tag, "Unhandled message type: ${header.messageType}")

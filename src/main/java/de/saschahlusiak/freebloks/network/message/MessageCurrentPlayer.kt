@@ -3,9 +3,9 @@ package de.saschahlusiak.freebloks.network.message
 import de.saschahlusiak.freebloks.network.*
 import java.nio.ByteBuffer
 
-data class NetRevokePlayer(val player: Int): Message(MessageType.RevokePlayer, 1) {
+data class MessageCurrentPlayer(val player: Int): Message(MessageType.CurrentPlayer, 1) {
     init {
-        assert(player in 0..3) { "Invalid player $player" }
+        assert(player >= -1 && player <= 3) { "Invalid player $player" }
     }
 
     override fun write(buffer: ByteBuffer) {
@@ -14,9 +14,9 @@ data class NetRevokePlayer(val player: Int): Message(MessageType.RevokePlayer, 1
     }
 
     companion object {
-        fun from(data: ByteBuffer): NetRevokePlayer {
+        fun from(data: ByteBuffer): MessageCurrentPlayer {
             val player = data.get().toInt()
-            return NetRevokePlayer(player)
+            return MessageCurrentPlayer(player)
         }
     }
 }

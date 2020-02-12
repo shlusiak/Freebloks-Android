@@ -6,14 +6,13 @@ import de.saschahlusiak.freebloks.controller.GameMode
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageType
-import de.saschahlusiak.freebloks.network.put
 import de.saschahlusiak.freebloks.utils.put
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.io.Serializable
 import java.nio.ByteBuffer
 import java.security.InvalidParameterException
 
-data class NetServerStatus(
+data class MessageServerStatus(
     val player: Int,                // int8
     val computer: Int,              // int8
     val clients: Int,               // int8
@@ -83,7 +82,7 @@ data class NetServerStatus(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as NetServerStatus
+        other as MessageServerStatus
 
         if (player != other.player) return false
         if (computer != other.computer) return false
@@ -122,7 +121,7 @@ data class NetServerStatus(
         // the size of version 1.5 header in bytes
         const val HEADER_SIZE_1_5 = 166
 
-        fun from(buffer: ByteBuffer): NetServerStatus {
+        fun from(buffer: ByteBuffer): MessageServerStatus {
             assert(buffer.remaining() >= HEADER_SIZE_1_5) { "Unsupported header data size ${buffer.remaining()}" }
 
             val player = buffer.get().toInt()
@@ -147,7 +146,7 @@ data class NetServerStatus(
 
             assert(minVersion <= VERSION_MAX) { "Unsupported version $minVersion" }
 
-            return NetServerStatus(
+            return MessageServerStatus(
                 player = player,
                 computer = computer,
                 clients = clients,

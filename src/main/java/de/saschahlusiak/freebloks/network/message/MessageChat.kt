@@ -6,7 +6,7 @@ import de.saschahlusiak.freebloks.utils.forRemaining
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
 
-data class NetChat(val client: Int, val message: String): Message(MessageType.Chat, message.length + 3) {
+data class MessageChat(val client: Int, val message: String): Message(MessageType.Chat, message.length + 3) {
     init {
         assert(message.length < 255) { "message exceeds limit of 255 characters" }
     }
@@ -20,7 +20,7 @@ data class NetChat(val client: Int, val message: String): Message(MessageType.Ch
     }
 
     companion object {
-        fun from(data: ByteBuffer): NetChat {
+        fun from(data: ByteBuffer): MessageChat {
             val client = data.get().toInt()
             val length = data.get().toUnsignedByte()
             val bytes = ByteArray(length) { data.get() }
@@ -32,7 +32,7 @@ data class NetChat(val client: Int, val message: String): Message(MessageType.Ch
                 }
             }
 
-            return NetChat(client, String(bytes).trimEnd())
+            return MessageChat(client, String(bytes).trimEnd())
         }
     }
 }
