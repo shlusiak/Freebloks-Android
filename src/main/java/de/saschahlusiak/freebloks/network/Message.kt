@@ -1,7 +1,9 @@
 package de.saschahlusiak.freebloks.network
 
 import android.util.Log
+import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.message.NetCurrentPlayer
+import de.saschahlusiak.freebloks.network.message.NetServerStatus
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
 
@@ -43,18 +45,24 @@ abstract class Message(val type: Int, val size: Int) {
     }
 
     companion object {
-        @JvmStatic
+        fun from(bytes: ByteArray) = from(ByteBuffer.wrap(bytes))
+
         fun from(buffer: ByteBuffer): Message? {
             val header = Header.from(buffer)
 
-            return when (header.type) {
+            val remaining = buffer.remaining()
+            assert(buffer.remaining() == (header.size - Header.HEADER_SIZE)) {
+                "Message to small, expected ${header.size - Header.HEADER_SIZE} but got $remaining"
+            }
+
+            val message = when (header.type) {
 //            Network.MSG_REQUEST_PLAYER -> NET_REQUEST_PLAYER(p)
 //            Network.MSG_GRANT_PLAYER -> NET_GRANT_PLAYER(p)
                 Network.MSG_CURRENT_PLAYER -> NetCurrentPlayer.from(buffer)
 //            Network.MSG_SET_STONE -> NET_SET_STONE(p)
 //            Network.MSG_START_GAME -> NET_START_GAME(p)
 //            Network.MSG_GAME_FINISH -> NET_GAME_FINISH(p)
-//            Network.MSG_SERVER_STATUS -> NET_SERVER_STATUS(p)
+            Network.MSG_SERVER_STATUS -> NetServerStatus.from(buffer)
 //            Network.MSG_CHAT -> NET_CHAT(p)
 //            Network.MSG_REQUEST_UNDO -> NET_REQUEST_UNDO(p)
 //            Network.MSG_UNDO_STONE -> NET_UNDO_STONE(p)
@@ -64,9 +72,21 @@ abstract class Message(val type: Int, val size: Int) {
 
                 else -> {
                     Log.e(Network.tag, "Unhandled message type: ${header.type}")
+                    if (BuildConfig.DEBUG) {
+                        throw UnsupportedOperationException("Message type ${header.type} not implemented")
+                    }
                     null
                 }
             }
+            assert(buffer.remaining() == 0) { "Buffer not fully consumed, remaining ${buffer.remaining() } of $header" }
+            return message
+        }
+
+        @Throws(ProtocolException::class)
+        internal fun assert(condition: Boolean, lazyMessage: (() -> (String))) {
+            if (condition) return
+            val message = lazyMessage.invoke()
+            throw ProtocolException(message)
         }
     }
 }

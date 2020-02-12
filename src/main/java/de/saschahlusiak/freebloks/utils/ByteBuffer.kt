@@ -8,3 +8,7 @@ fun byteBufferOf(vararg bytes: Int): ByteBuffer {
     buffer.flip()
     return buffer
 }
+
+fun ByteBuffer.put(vararg bytes: Byte) {
+    bytes.forEach { put(it) }
+}

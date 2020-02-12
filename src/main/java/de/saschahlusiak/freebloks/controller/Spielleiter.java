@@ -11,8 +11,8 @@ import de.saschahlusiak.freebloks.model.Turnpool;
 public class Spielleiter extends Spiel implements Serializable {
 	private static final long serialVersionUID = -7880809258246268794L;
 
-	static final int PLAYER_COMPUTER = -2;
-	static final int PLAYER_LOCAL = -1;
+	public static final int PLAYER_COMPUTER = -2;
+	public static final int PLAYER_LOCAL = -1;
 
 	int m_current_player;
 	int spieler[] = new int[Spiel.PLAYER_MAX];
