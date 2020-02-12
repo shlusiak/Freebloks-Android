@@ -12,3 +12,9 @@ fun byteBufferOf(vararg bytes: Int): ByteBuffer {
 fun ByteBuffer.put(vararg bytes: Byte) {
     bytes.forEach { put(it) }
 }
+
+fun ByteBuffer.forRemaining(block: (Byte) -> (Unit)) {
+    while (hasRemaining()) {
+        block.invoke(get())
+    }
+}

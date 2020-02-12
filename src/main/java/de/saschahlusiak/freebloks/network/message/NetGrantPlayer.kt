@@ -3,13 +3,13 @@ package de.saschahlusiak.freebloks.network.message
 import de.saschahlusiak.freebloks.network.*
 import java.nio.ByteBuffer
 
-data class NetGrantPlayer(val player: Int): Message(Network.MSG_GRANT_PLAYER, 1) {
+data class NetGrantPlayer(val player: Int): Message(MessageType.GrantPlayer, 1) {
     init {
         assert(player in 0..3) { "Invalid player $player" }
     }
 
     override fun write(buffer: ByteBuffer) {
-        buffer.put(header)
+        super.write(buffer)
         buffer.put(player.toByte())
     }
 

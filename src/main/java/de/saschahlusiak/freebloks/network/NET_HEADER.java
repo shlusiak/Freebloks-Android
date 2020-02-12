@@ -20,11 +20,11 @@ public class NET_HEADER implements Serializable {
 	byte data[];
 	
 	NET_HEADER() {
-		this(0, 0);
+		this(MessageType.Unknown, 0);
 	}
 
-	public NET_HEADER(int msg_type, int data_length) {
-		this.msg_type = msg_type;
+	public NET_HEADER(MessageType msg_type, int data_length) {
+		this.msg_type = msg_type.getRawValue();
 		this.data_length = data_length;
 	}
 

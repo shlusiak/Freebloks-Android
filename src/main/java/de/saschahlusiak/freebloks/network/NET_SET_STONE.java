@@ -12,10 +12,10 @@ public class NET_SET_STONE extends NET_HEADER {
 	public int x, y; /* int8 */
 
 	public NET_SET_STONE() {
-		this(Network.MSG_SET_STONE);
+		this(MessageType.SetStone);
 	}
 
-	public NET_SET_STONE(int msg_type) {
+	public NET_SET_STONE(MessageType msg_type) {
 		super(msg_type, 6);
 	}
 

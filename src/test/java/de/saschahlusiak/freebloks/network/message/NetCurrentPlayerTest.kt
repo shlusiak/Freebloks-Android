@@ -16,7 +16,7 @@ class NetCurrentPlayerTest {
         val newBytes = msg.toByteArray()
         assertArrayEquals(bytes, newBytes)
 
-        val msg2 = Message.from(ByteBuffer.wrap(bytes)) as NetCurrentPlayer
+        val msg2 = Message.from(bytes) as NetCurrentPlayer
         assertEquals(msg, msg2)
         assertEquals(3, msg2.player)
     }

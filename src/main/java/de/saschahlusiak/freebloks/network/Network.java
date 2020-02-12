@@ -14,19 +14,33 @@ public class Network {
 
 	public static final int DEFAULT_PORT = 59995;
 
+	@Deprecated
 	public static final int MSG_REQUEST_PLAYER = 1;
+	@Deprecated
 	public static final int MSG_GRANT_PLAYER = 2;
+	@Deprecated
 	public static final int MSG_CURRENT_PLAYER = 3;
+	@Deprecated
 	public static final int MSG_SET_STONE = 4;
+	@Deprecated
 	public static final int MSG_START_GAME = 5;
+	@Deprecated
 	public static final int MSG_GAME_FINISH = 6;
+	@Deprecated
 	public static final int MSG_SERVER_STATUS = 7;
+	@Deprecated
 	public static final int MSG_CHAT = 8;
+	@Deprecated
 	public static final int MSG_REQUEST_UNDO = 9;
+	@Deprecated
 	public static final int MSG_UNDO_STONE = 10;
+	@Deprecated
 	public static final int MSG_REQUEST_HINT = 11;
+	@Deprecated
 	public static final int MSG_STONE_HINT = 12;
+	@Deprecated
 	public static final int MSG_REVOKE_PLAYER = 13;
+	@Deprecated
 	public static final int MSG_REQUEST_GAME_MODE = 14;
 
 	public Network() {

@@ -6,7 +6,7 @@ public class NET_REVOKE_PLAYER extends NET_HEADER {
 	public int player; /* int 8 */
 
 	public NET_REVOKE_PLAYER(int player) {
-		super(Network.MSG_REVOKE_PLAYER, 1);
+		super(MessageType.RevokePlayer, 1);
 		this.player = player;
 	}
 

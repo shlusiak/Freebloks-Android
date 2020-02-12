@@ -5,7 +5,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.controller.GameMode
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.network.Message
-import de.saschahlusiak.freebloks.network.Network
+import de.saschahlusiak.freebloks.network.MessageType
 import de.saschahlusiak.freebloks.network.put
 import de.saschahlusiak.freebloks.utils.put
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
@@ -29,7 +29,7 @@ data class NetServerStatus(
     val minVersion: Int,            // int8
     val stoneNumbers: IntArray      // int8[21]
 
-) : Message(Network.MSG_SERVER_STATUS, HEADER_SIZE_1_5), Serializable {
+) : Message(MessageType.ServerStatus, HEADER_SIZE_1_5), Serializable {
 
     init {
         assert(player in 0..4) { "Invalid number of players $player"}
@@ -41,7 +41,7 @@ data class NetServerStatus(
     }
 
     override fun write(buffer: ByteBuffer) {
-        buffer.put(header)
+        super.write(buffer)
         buffer.put(player.toByte())
         buffer.put(computer.toByte())
         buffer.put(clients.toByte())

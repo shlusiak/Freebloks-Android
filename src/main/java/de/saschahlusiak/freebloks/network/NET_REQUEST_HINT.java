@@ -6,7 +6,7 @@ public class NET_REQUEST_HINT extends NET_HEADER {
 	public int player; /* int8 */
 
 	public NET_REQUEST_HINT(int player) {
-		super(Network.MSG_REQUEST_HINT, 1);
+		super(MessageType.RequestHint, 1);
 		this.player = player;
 	}
 

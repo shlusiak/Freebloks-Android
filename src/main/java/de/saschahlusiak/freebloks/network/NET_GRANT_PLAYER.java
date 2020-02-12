@@ -6,7 +6,7 @@ public class NET_GRANT_PLAYER extends NET_HEADER {
 	public int player; /* int 8 */
 
 	public NET_GRANT_PLAYER() {
-		super(Network.MSG_GRANT_PLAYER, 1);
+		super(MessageType.GrantPlayer, 1);
 	}
 
 	public NET_GRANT_PLAYER(NET_HEADER from) throws ProtocolException {

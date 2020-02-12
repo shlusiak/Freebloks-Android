@@ -7,7 +7,7 @@ public class NET_REQUEST_PLAYER extends NET_HEADER {
 	String name; /* uint8[16] */
 
 	public NET_REQUEST_PLAYER(int player, String name) {
-		super(Network.MSG_REQUEST_PLAYER, 17);
+		super(MessageType.RequestPlayer, 17);
 		this.player = player;
 		this.name = name;
 	}

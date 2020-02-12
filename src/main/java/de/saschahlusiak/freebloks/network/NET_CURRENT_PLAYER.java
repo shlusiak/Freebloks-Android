@@ -6,7 +6,7 @@ public class NET_CURRENT_PLAYER extends NET_HEADER {
 	public int player; /* int 8 */
 
 	public NET_CURRENT_PLAYER() {
-		super(Network.MSG_CURRENT_PLAYER, 1);
+		super(MessageType.CurrentPlayer, 1);
 	}
 
 	public NET_CURRENT_PLAYER(NET_HEADER from) throws ProtocolException {

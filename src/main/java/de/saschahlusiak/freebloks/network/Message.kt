@@ -2,9 +2,7 @@ package de.saschahlusiak.freebloks.network
 
 import android.util.Log
 import de.saschahlusiak.freebloks.BuildConfig
-import de.saschahlusiak.freebloks.network.message.NetCurrentPlayer
-import de.saschahlusiak.freebloks.network.message.NetGrantPlayer
-import de.saschahlusiak.freebloks.network.message.NetServerStatus
+import de.saschahlusiak.freebloks.network.message.*
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
 
@@ -14,7 +12,7 @@ import java.nio.ByteBuffer
  * @param type the message type. See [Network]
  * @param size size of the payload in bytes (excluding header)
  */
-abstract class Message(val type: Int, val size: Int) {
+abstract class Message(val type: MessageType, val size: Int = 0) {
     // header only depends on type and size, so it can be pre-created
     val header = Header(type, size + Header.HEADER_SIZE)
 
@@ -23,7 +21,9 @@ abstract class Message(val type: Int, val size: Int) {
      *
      * @param buffer the entire message into the buffer, including the header
      */
-    abstract fun write(buffer: ByteBuffer)
+    open fun write(buffer: ByteBuffer) {
+        buffer.put(header)
+    }
 
     /**
      * Returns a [ByteArray] with the complete payload
@@ -33,6 +33,11 @@ abstract class Message(val type: Int, val size: Int) {
             write(ByteBuffer.wrap(this))
         }
     }
+
+    /**
+     * Returns a [ByteBuffer] wrapping the content
+     */
+    fun toBuffer() = ByteBuffer.wrap(toByteArray())
 
     /**
      * Marshals the message and returns a hex string
@@ -56,30 +61,32 @@ abstract class Message(val type: Int, val size: Int) {
                 "Message to small, expected ${header.size - Header.HEADER_SIZE} but got $remaining"
             }
 
-            val message = when (header.type) {
-//            Network.MSG_REQUEST_PLAYER -> NET_REQUEST_PLAYER(p)
-            Network.MSG_GRANT_PLAYER -> NetGrantPlayer.from(buffer)
-                Network.MSG_CURRENT_PLAYER -> NetCurrentPlayer.from(buffer)
-//            Network.MSG_SET_STONE -> NET_SET_STONE(p)
-//            Network.MSG_START_GAME -> NET_START_GAME(p)
-//            Network.MSG_GAME_FINISH -> NET_GAME_FINISH(p)
-            Network.MSG_SERVER_STATUS -> NetServerStatus.from(buffer)
-//            Network.MSG_CHAT -> NET_CHAT(p)
-//            Network.MSG_REQUEST_UNDO -> NET_REQUEST_UNDO(p)
-//            Network.MSG_UNDO_STONE -> NET_UNDO_STONE(p)
-//            Network.MSG_REQUEST_HINT -> NET_REQUEST_HINT(p)
-//            Network.MSG_STONE_HINT -> NET_SET_STONE(p)
-//            Network.MSG_REVOKE_PLAYER -> NET_REVOKE_PLAYER(p)
+            val message = when (header.messageType) {
+//                MessageType.RequestPlayer -> NET_REQUEST_PLAYER(p)
+                MessageType.GrantPlayer -> NetGrantPlayer.from(buffer)
+                MessageType.CurrentPlayer -> NetCurrentPlayer.from(buffer)
+                MessageType.SetStone -> NetSetStone.from(buffer)
+                MessageType.StartGame -> NetStartGame()
+                MessageType.GameFinish -> NetGameFinish()
+                MessageType.ServerStatus -> NetServerStatus.from(buffer)
+                MessageType.Chat -> NetChat.from(buffer)
+//                MessageType.RequestUndo -> NET_REQUEST_UNDO(p)
+                MessageType.UndoStone -> NetUndoStone.from(buffer)
+//                MessageType.RequestHint -> NET_REQUEST_HINT(p)
+                MessageType.StoneHint -> NetStoneHint.from(buffer)
+                MessageType.RevokePlayer -> NetRevokePlayer.from(buffer)
 
                 else -> {
-                    Log.e(Network.tag, "Unhandled message type: ${header.type}")
+                    Log.e(Network.tag, "Unhandled message type: ${header.messageType}")
                     if (BuildConfig.DEBUG) {
-                        throw UnsupportedOperationException("Message type ${header.type} not implemented")
+                        throw UnsupportedOperationException("Message type ${header.messageType} not implemented")
                     }
+
                     null
                 }
             }
-            assert(buffer.remaining() == 0) { "Buffer not fully consumed, remaining ${buffer.remaining() } of $header" }
+            assert(buffer.remaining() == 0) { "Buffer not fully consumed, remaining ${buffer.remaining()} of $header" }
+
             return message
         }
 

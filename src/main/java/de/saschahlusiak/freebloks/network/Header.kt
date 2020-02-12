@@ -11,17 +11,19 @@ fun ByteBuffer.put(header: Header) = header.write(this)
  * msg_type uint8
  * check2 uint8
  */
-data class Header(val type: Int, val size: Int) {
-    val check1: Int
-        get() = ((size and 0x0055) xor type)
+data class Header(val rawType: Int, val size: Int) {
+    constructor(type: MessageType, size: Int): this(type.rawValue, size)
 
-    val check2: Int
-        get() = (check1 xor 0xD6) + type
+    val check1 = ((size and 0x0055) xor rawType)
+
+    val check2 = (check1 xor 0xD6) + rawType
+
+    val messageType = MessageType.from(rawType)
 
     fun write(buffer: ByteBuffer) {
         buffer.put(check1.toByte())
         buffer.putShort(size.toShort())
-        buffer.put(type.toByte())
+        buffer.put(rawType.toByte())
         buffer.put(check2.toByte())
     }
 

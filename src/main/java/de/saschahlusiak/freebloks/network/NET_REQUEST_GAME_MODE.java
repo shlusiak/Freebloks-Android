@@ -15,7 +15,7 @@ public class NET_REQUEST_GAME_MODE extends NET_HEADER {
 
 
 	public NET_REQUEST_GAME_MODE(int width, int height, GameMode gamemode, int stone_numbers[]) {
-		super(Network.MSG_REQUEST_GAME_MODE, 25);
+		super(MessageType.RequestGameMode, 25);
 		this.version = NET_REQUEST_GAME_MODE_VERSION;
 		this.width = width;
 		this.height = height;

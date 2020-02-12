@@ -45,7 +45,7 @@ class HeaderTest {
         val header = Header.from(buffer)
 
         assertNotNull(header)
-        assertEquals(17, header.type)
+        assertEquals(17, header.rawType)
         assertEquals(300, header.size)
     }
 
