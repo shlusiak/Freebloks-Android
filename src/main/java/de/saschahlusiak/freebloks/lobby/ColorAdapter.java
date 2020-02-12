@@ -5,7 +5,8 @@ import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -22,18 +23,18 @@ import android.widget.TextView;
 
 public class ColorAdapter extends BaseAdapter {
 	private Context context;
-	private NET_SERVER_STATUS lastStatus;
+	private MessageServerStatus lastStatus;
 	private Spielleiter spiel;
 	private LobbyDialog lobby;
 
-	public ColorAdapter(LobbyDialog lobby, Context context, Spielleiter spiel, NET_SERVER_STATUS lastStatus) {
+	public ColorAdapter(LobbyDialog lobby, Context context, Spielleiter spiel, MessageServerStatus lastStatus) {
 		this.lobby = lobby;
 		this.context = context;
 		this.lastStatus = lastStatus;
 		this.spiel = spiel;
 	}
 
-	void setCurrentStatus(Spielleiter spiel, NET_SERVER_STATUS status) {
+	void setCurrentStatus(Spielleiter spiel, MessageServerStatus status) {
 		this.spiel = spiel;
 		this.lastStatus = status;
 		notifyDataSetChanged();
@@ -41,11 +42,11 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS)
+		if (lastStatus != null && lastStatus.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS)
 			return 2;
-		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_DUO)
+		if (lastStatus != null && lastStatus.getGameMode() == GameMode.GAMEMODE_DUO)
 			return 2;
-		if (lastStatus != null && lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
+		if (lastStatus != null && lastStatus.getGameMode() == GameMode.GAMEMODE_JUNIOR)
 			return 2;
 		return 4;
 	}
@@ -59,9 +60,9 @@ public class ColorAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		if (lastStatus == null)
 			return position;
-		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-			lastStatus.gamemode == GameMode.GAMEMODE_DUO ||
-			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
+		if (lastStatus.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.getGameMode() == GameMode.GAMEMODE_DUO ||
+			lastStatus.getGameMode() == GameMode.GAMEMODE_JUNIOR)
 				if (position == 1)
 					position = 2;
 		return position;
@@ -73,9 +74,9 @@ public class ColorAdapter extends BaseAdapter {
 			return false;
 
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
-		if (lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-			lastStatus.gamemode == GameMode.GAMEMODE_DUO ||
-			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR)
+		if (lastStatus.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.getGameMode() == GameMode.GAMEMODE_DUO ||
+			lastStatus.getGameMode() == GameMode.GAMEMODE_JUNIOR)
 			if (position == 1)
 				position = 2;
 
@@ -85,7 +86,7 @@ public class ColorAdapter extends BaseAdapter {
 		if (spiel.isStarted())
 			return false;
 
-		if (lastStatus.spieler[position] >= 0) {
+		if (lastStatus.getSpieler()[position] >= 0) {
 			/* it is a human player */
 			if (spiel.is_local_player(position))
 				return true;
@@ -128,9 +129,9 @@ public class ColorAdapter extends BaseAdapter {
 
         final int player;
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
-		if ((lastStatus.gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-			lastStatus.gamemode == GameMode.GAMEMODE_JUNIOR ||
-			lastStatus.gamemode == GameMode.GAMEMODE_DUO) && position == 1)
+		if ((lastStatus.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+			lastStatus.getGameMode() == GameMode.GAMEMODE_JUNIOR ||
+			lastStatus.getGameMode() == GameMode.GAMEMODE_DUO) && position == 1)
 				player = 2;
 		else player = position;
 
@@ -143,9 +144,9 @@ public class ColorAdapter extends BaseAdapter {
 
 		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, spiel.getGameMode())]));
 		if (lastStatus.isVersion(2)) {
-			if (lastStatus.spieler[player] >= 0) {
+			if (lastStatus.getSpieler()[player] >= 0) {
 				/* it is a human player */
-				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.spieler[player]));
+				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getSpieler()[player]));
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				if (spiel.is_local_player(player)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);

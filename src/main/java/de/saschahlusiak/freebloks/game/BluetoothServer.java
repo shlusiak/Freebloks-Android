@@ -11,9 +11,7 @@ import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.network.NET_CHAT;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
-import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -126,17 +124,17 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 	}
 
 	@Override
-	public void stoneWillBeSet(@NonNull NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull Turn turn) {
 
 	}
 
 	@Override
-	public void stoneHasBeenSet(@NonNull NET_SET_STONE s) {
+	public void stoneHasBeenSet(@NonNull Turn turn) {
 
 	}
 
 	@Override
-	public void hintReceived(@NonNull NET_SET_STONE s) {
+	public void hintReceived(@NonNull Turn turn) {
 
 	}
 
@@ -146,7 +144,7 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 	}
 
 	@Override
-	public void chatReceived(@NonNull NET_CHAT c) {
+	public void chatReceived(int client, @NonNull String message) {
 
 	}
 
@@ -161,7 +159,7 @@ public class BluetoothServer extends Thread implements SpielClientInterface {
 	}
 
 	@Override
-	public void serverStatus(@NonNull NET_SERVER_STATUS status) {
+	public void serverStatus(@NonNull MessageServerStatus status) {
 
 	}
 }

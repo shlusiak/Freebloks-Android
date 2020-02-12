@@ -51,6 +51,8 @@ abstract class Message(val type: MessageType, val size: Int = 0) {
     }
 
     companion object {
+        private val tag = Message::class.java.simpleName
+
         fun from(bytes: ByteArray) = from(ByteBuffer.wrap(bytes))
 
         fun from(buffer: ByteBuffer): Message? {
@@ -77,7 +79,7 @@ abstract class Message(val type: MessageType, val size: Int = 0) {
                 MessageType.RevokePlayer -> MessageRevokePlayer.from(buffer)
 
                 else -> {
-                    Log.e(Network.tag, "Unhandled message type: ${header.messageType}")
+                    Log.e(tag, "Unhandled message type: ${header.messageType}")
                     if (BuildConfig.DEBUG) {
                         throw UnsupportedOperationException("Message type ${header.messageType} not implemented")
                     }

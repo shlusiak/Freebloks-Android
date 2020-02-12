@@ -43,50 +43,6 @@ public class NET_HEADER implements Serializable {
 		return (b & 0xFF);
 	}
 
-	boolean read(InputStream is) throws ProtocolException, IOException, EOFException {
-		int r;
-		int check1, check2;
-
-		header = new byte[HEADER_SIZE];
-
-		r = is.read(header, 0, HEADER_SIZE);
-		if (r == -1)
-			throw new EOFException("EOF when reading packet header");
-
-		if (r < HEADER_SIZE)
-			throw new IOException(String.format("short read: %d out of %d", r, HEADER_SIZE));
-
-		check1 = unsigned(header[0]);
-		data_length = unsigned(header[1]) << 8 | unsigned(header[2]);
-		msg_type = header[3];
-		check2 = unsigned(header[4]);
-
-		if (data_length < HEADER_SIZE)
-			throw new ProtocolException("invalid header header length: " + data_length);
-
-		/* Beiden Checksums erneut berechnen */
-		int c1 = (byte) (data_length & 0x0055) ^ msg_type;
-		int c2 = (c1 ^ 0xD6) + msg_type;
-		/* Bei Ungleichheit Fehler, sonst Nachricht ok */
-		if (c1 != check1 || c2 != check2)
-			throw new ProtocolException("header checksum failed");
-
-		data_length -= HEADER_SIZE;
-
-		data = new byte[data_length];
-		int offset = 0;
-
-		do {
-			r = is.read(data, offset, data_length - offset);
-			if (r == -1)
-				throw new EOFException("EOF when reading packet payload");
-
-			offset += r;
-		} while (offset < data_length);
-
-		return true;
-	}
-
 	void prepare(ByteArrayOutputStream bos) {
 		int l = data_length + HEADER_SIZE;
 		int check1, check2;

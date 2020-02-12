@@ -12,12 +12,12 @@ import java.nio.ByteBuffer
  *
  * @param stream the InputStream to read from
  */
-class MessageReader(private val stream: InputStream) {
-    private var buffer = ByteBuffer.allocate(10)
+class MessageReader() {
+    private var buffer = ByteBuffer.allocate(256)
 
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
-    private fun readNextIntoBuffer() {
+    private fun readNextIntoBuffer(stream: InputStream) {
         var read: Int
 
         buffer.clear()
@@ -51,18 +51,18 @@ class MessageReader(private val stream: InputStream) {
      */
     @Throws(IOException::class, EOFException::class, ProtocolException::class)
     @WorkerThread
-    fun readMessage(): Message? {
-        readNextIntoBuffer()
+    fun readMessage(stream: InputStream): Message? {
+        readNextIntoBuffer(stream)
         return Message.from(buffer)
     }
 
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
-    fun asSequence(): Sequence<Message> {
+    fun asSequence(stream: InputStream): Sequence<Message> {
         return sequence {
             try {
                 while (true) {
-                    readNextIntoBuffer()
+                    readNextIntoBuffer(stream)
                     val message = Message.from(buffer) ?: continue
                     yield(message)
                 }

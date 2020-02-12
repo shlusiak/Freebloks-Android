@@ -5,7 +5,7 @@ import java.io.IOException
 import java.io.OutputStream
 import java.nio.ByteBuffer
 
-class MessageWriter(val os: OutputStream) {
+class MessageWriter() {
     /**
      * Sends the given messages as raw bytes to the [OutputStream]
      *
@@ -13,7 +13,7 @@ class MessageWriter(val os: OutputStream) {
      * @return true if all messages were sent successfully, false on IOException (broken pipe)
      */
     @WorkerThread
-    fun send(vararg messages: Message): Boolean {
+    fun write(os: OutputStream, vararg messages: Message): Boolean {
         messages.forEach { message ->
             val bytes = ByteArray(message.header.size)
 

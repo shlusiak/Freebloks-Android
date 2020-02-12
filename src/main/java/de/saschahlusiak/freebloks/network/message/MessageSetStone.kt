@@ -1,7 +1,9 @@
 package de.saschahlusiak.freebloks.network.message
 
+import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Rotation
 import de.saschahlusiak.freebloks.model.Shape
+import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
@@ -28,6 +30,8 @@ data class MessageSetStone(
         buffer.put(x.toByte())
         buffer.put(y.toByte())
     }
+
+    fun toTurn() = Turn(player, shape, y, x, Orientation(mirrored, rotation))
 
     companion object {
         fun from(data: ByteBuffer): MessageSetStone {

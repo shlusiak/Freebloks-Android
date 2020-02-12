@@ -23,8 +23,8 @@ import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.NET_CHAT;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
-import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -47,7 +47,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	Handler handler = new Handler();
 	ListView chatList;
 	ChatListAdapter adapter;
-	NET_SERVER_STATUS lastStatus = null;
+	MessageServerStatus lastStatus = null;
 	GridView colorGrid;
 	ColorAdapter colorAdapter;
 	Spinner gameMode, fieldSize;
@@ -151,7 +151,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		NET_SERVER_STATUS status = (NET_SERVER_STATUS)savedInstanceState.getSerializable("lastStatus");
+		MessageServerStatus status = (MessageServerStatus)savedInstanceState.getSerializable("lastStatus");
 		if (status != null) {
 			lastStatus = status;
 			updateStatus();
@@ -167,7 +167,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 
 		final EditText edt = dialogView.findViewById(android.R.id.edit);
 
-		edt.setText(lastStatus.getClientName(getContext().getResources(), lastStatus.spieler[player]));
+		edt.setText(lastStatus.getClientName(getContext().getResources(), lastStatus.getSpieler()[player]));
 
 		dialogBuilder.setTitle(R.string.prefs_player_name);
 		dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -286,17 +286,17 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void stoneWillBeSet(@NonNull NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull Turn turn) {
 
 	}
 
 	@Override
-	public void stoneHasBeenSet(@NonNull NET_SET_STONE s) {
+	public void stoneHasBeenSet(@NonNull Turn turn) {
 
 	}
 
 	@Override
-	public void hintReceived(@NonNull NET_SET_STONE s) {
+	public void hintReceived(@NonNull Turn turn) {
 
 	}
 
@@ -306,7 +306,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void chatReceived(@NonNull final NET_CHAT c) {
+	public void chatReceived(int client, @NonNull String message) {
 		chatList.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -326,7 +326,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	}
 
 	@Override
-	public void serverStatus(@NonNull final NET_SERVER_STATUS status) {
+	public void serverStatus(@NonNull final MessageServerStatus status) {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -350,17 +350,17 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 				findViewById(R.id.clients).setVisibility(View.INVISIBLE);
 			} else {
 				findViewById(R.id.clients).setVisibility(View.VISIBLE);
-				((TextView)findViewById(R.id.clients)).setText(getContext().getResources().getQuantityString(R.plurals.connected_clients, lastStatus.clients, lastStatus.clients));
+				((TextView)findViewById(R.id.clients)).setText(getContext().getResources().getQuantityString(R.plurals.connected_clients, lastStatus.getClients(), lastStatus.getClients()));
 			}
 		}
 		
 		if (lastStatus != null) {
-			gameMode.setSelection(lastStatus.gamemode.ordinal());
+			gameMode.setSelection(lastStatus.getGameMode().ordinal());
 			gameMode.setEnabled(!client.spiel.isStarted() && lastStatus.isVersion(3));
 			
 			int slider = 3;
 			for (int i = 0; i < CustomGameDialog.FIELD_SIZES.length; i++)
-				if (CustomGameDialog.FIELD_SIZES[i] == lastStatus.width)
+				if (CustomGameDialog.FIELD_SIZES[i] == lastStatus.getWidth())
 					slider = i;
 			fieldSize.setSelection(slider);
 			fieldSize.setEnabled(!client.spiel.isStarted() && lastStatus.isVersion(3));

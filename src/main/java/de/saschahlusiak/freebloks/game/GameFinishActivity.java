@@ -9,7 +9,7 @@ import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,7 +38,7 @@ public class GameFinishActivity extends BaseGameActivity {
 	private static final int REQUEST_ACHIEVEMENTS = 2;
 
 	TextView place;
-	NET_SERVER_STATUS lastStatus;
+	MessageServerStatus lastStatus;
 	String clientName;
 	Spielleiter spiel;
 	boolean firstRun = false;
@@ -58,7 +58,7 @@ public class GameFinishActivity extends BaseGameActivity {
 		place = findViewById(R.id.place);
 
 		spiel = (Spielleiter)getIntent().getSerializableExtra("game");
-		lastStatus = (NET_SERVER_STATUS)getIntent().getSerializableExtra("lastStatus");
+		lastStatus = (MessageServerStatus) getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
 
 		if (spiel == null)
@@ -264,7 +264,7 @@ public class GameFinishActivity extends BaseGameActivity {
 						&& data[i].place == 4)
 					increment(getString(R.string.achievement_loser), 1);
 
-				if (lastStatus != null && lastStatus.clients >= 4 && data[i].place == 1)
+				if (lastStatus != null && lastStatus.getClients() >= 4 && data[i].place == 1)
 					unlock(getString(R.string.achievement_multiplayer));
 			}
 

@@ -18,22 +18,6 @@ public class NET_CHAT extends NET_HEADER {
 		this.client = client;
 	}
 
-	public NET_CHAT(NET_HEADER from) {
-		super(from);
-		client = data[0];
-		length = unsigned(data[1]);
-
-		while ((data[length + 1] == (byte)'\0') || (data[length +1] == (byte)'\n') || (data[length + 1]== (byte)'\r'))  {
-			length--;
-			data_length--;
-		}
-
-		char[] c = new char[length]; /* ignore the trailing \0 */
-		for (int i = 0; i < c.length; i++)
-			c[i] = (char)unsigned(data[i + 2]);
-		text = String.copyValueOf(c);
-	}
-
 	@Override
 	void prepare(ByteArrayOutputStream bos) {
 		super.prepare(bos);

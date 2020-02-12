@@ -1,5 +1,14 @@
 package de.saschahlusiak.freebloks.view;
 
+import android.content.Context;
+import android.graphics.PointF;
+import android.opengl.GLSurfaceView;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+
+import androidx.annotation.NonNull;
+
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.SpielClientInterface;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
@@ -7,9 +16,7 @@ import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.network.NET_CHAT;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
-import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
@@ -17,13 +24,6 @@ import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneUndoEffect;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
-import android.content.Context;
-import android.graphics.PointF;
-import android.opengl.GLSurfaceView;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 public class Freebloks3DView extends GLSurfaceView implements SpielClientInterface {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
@@ -177,15 +177,14 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void stoneWillBeSet(@NonNull final NET_SET_STONE s) {
+	public void stoneWillBeSet(@NonNull final Turn turn) {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
 				if (model == null || model.spiel == null)
 					return;
 
-				if (model.hasAnimations() && !model.spiel.is_local_player(s.player)) {
-					Turn turn = s.toTurn();
+				if (model.hasAnimations() && !model.spiel.is_local_player(turn.getPlayer())) {
 					StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
 
 					EffectSet set = new EffectSet();
@@ -197,42 +196,43 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 		});
 	}
 
-	public void stoneHasBeenSet(@NonNull NET_SET_STONE s) {
+	@Override
+	public void stoneHasBeenSet(@NonNull Turn turn) {
 		if (model == null)
 			return;
 		if (model.spiel == null)
 			return;
 
-		if (model.spiel.is_local_player(s.player) || s.player == model.wheel.getCurrentPlayer())
+		if (model.spiel.is_local_player(turn.getPlayer()) || turn.getPlayer() == model.wheel.getCurrentPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 
 		requestRender();
 	}
 
 	@Override
-	public void hintReceived(@NonNull final NET_SET_STONE s) {
+	public void hintReceived(@NonNull final Turn turn) {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
 				if (model == null || model.spiel == null)
 					return;
-				if (s.player != model.spiel.current_player())
+				if (turn.getPlayer() != model.spiel.current_player())
 					return;
 				if (!model.spiel.is_local_player())
 					return;
 
 				model.board.resetRotation();
-				model.wheel.update(s.player);
-				model.wheel.showStone(s.stone);
+				model.wheel.update(turn.getPlayer());
+				model.wheel.showStone(turn.getShapeNumber());
 
 				model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 
-				Stone st = model.spiel.get_current_player().getStone(s.stone);
+				Stone st = model.spiel.get_current_player().getStone(turn.getShapeNumber());
 
 				PointF p = new PointF();
-				p.x = s.x - 0.5f + st.getShape().getSize() / 2;
-				p.y = s.y - 0.5f + st.getShape().getSize() / 2;
-				model.currentStone.startDragging(p, st, s.mirror_count, s.rotate_count, model.getPlayerColor(s.player));
+				p.x = turn.getX() - 0.5f + st.getShape().getSize() / 2;
+				p.y = turn.getY() - 0.5f + st.getShape().getSize() / 2;
+				model.currentStone.startDragging(p, st, turn.getMirrorCount(), turn.getRotationCount(), model.getPlayerColor(turn.getPlayer()));
 
 				requestRender();
 			}
@@ -246,7 +246,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void chatReceived(@NonNull NET_CHAT c) {
+	public void chatReceived(int client, @NonNull String message) {
 
 	}
 
@@ -274,9 +274,9 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 	}
 
 	@Override
-	public void serverStatus(@NonNull NET_SERVER_STATUS status) {
-		if (status.width != model.board.last_size) {
-			model.board.last_size = status.width;
+	public void serverStatus(@NonNull MessageServerStatus status) {
+		if (status.getWidth() != model.board.last_size) {
+			model.board.last_size = status.getWidth();
 			queueEvent(new Runnable() {
 				@Override
 				public void run() {

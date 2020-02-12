@@ -4,21 +4,19 @@ import androidx.annotation.NonNull;
 
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.network.NET_CHAT;
-import de.saschahlusiak.freebloks.network.NET_SERVER_STATUS;
-import de.saschahlusiak.freebloks.network.NET_SET_STONE;
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 public interface SpielClientInterface {
 	void onConnected(@NonNull Spiel spiel);
 	void onDisconnected(@NonNull Spiel spiel);
 
 	void newCurrentPlayer(int player);
-	void stoneWillBeSet(@NonNull NET_SET_STONE s);
-	void stoneHasBeenSet(@NonNull NET_SET_STONE s);
-	void hintReceived(@NonNull NET_SET_STONE s);
+	void stoneWillBeSet(@NonNull Turn turn);
+	void stoneHasBeenSet(@NonNull Turn turn);
+	void hintReceived(@NonNull Turn turn);
 	void gameFinished();
-	void chatReceived(@NonNull NET_CHAT c);
+	void chatReceived(int client, @NonNull String message);
 	void gameStarted();
 	void stoneUndone(@NonNull Turn t);
-	void serverStatus(@NonNull NET_SERVER_STATUS status);
+	void serverStatus(@NonNull MessageServerStatus status);
 }

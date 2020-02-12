@@ -1,9 +1,8 @@
 package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.controller.GameMode
-import de.saschahlusiak.freebloks.controller.SpielClient
+import de.saschahlusiak.freebloks.controller.NetworkMessageProcessor
 import de.saschahlusiak.freebloks.controller.Spielleiter
-import de.saschahlusiak.freebloks.game.GameConfiguration
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
@@ -314,36 +313,17 @@ class NetworkTest {
     /**
      * Parses raw data from the given stream into a list of packets
      */
-    private fun consumeAllPackets(from: InputStream): List<NET_HEADER> {
-        val network = Network()
-
-        val packets = mutableListOf<NET_HEADER>()
-        do {
-            try {
-                val packet = network.read_package(from) ?: break
-                packets.add(packet)
-            } catch (e: EOFException) {
-                break
-            }
-        } while (true)
-
-        return packets
-    }
-
-    /**
-     * Parses raw data from the given stream into a list of packets
-     */
-    private fun consumeAllPackets_new(from: InputStream): List<Message> {
-        return MessageReader(from).asSequence().toList()
+    private fun consumeAllPackets(from: InputStream): List<Message> {
+        return MessageReader().asSequence(from).toList()
     }
 
     /**
      * Marshals each package and writes the byte representation to the given stream
      */
     private fun writePacketsToStream(packets: List<Message>, out: OutputStream) {
-        val writer = MessageWriter(out)
+        val writer = MessageWriter()
         packets.forEach { packet ->
-            assertTrue(writer.send(packet))
+            assertTrue(writer.write(out, packet))
         }
     }
 
@@ -353,12 +333,13 @@ class NetworkTest {
         return os.toByteArray()
     }
 
-    private fun replayGameFrom(packets: List<NET_HEADER>): Spielleiter {
+    private fun replayGameFrom(packets: List<Message>): Spielleiter {
         val spiel = Spielleiter(20)
-        val client = SpielClient(spiel, GameConfiguration.Builder().build())
+        val processor = NetworkMessageProcessor(spiel, emptyList())
 
         for (pkg in packets) {
-            client.process_message(pkg)
+            println("Processing $pkg")
+            processor.processMessage(pkg)
         }
 
         return spiel
@@ -405,6 +386,15 @@ class NetworkTest {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataClassicManual))
         assertEquals(99, packets.size)
 
+        // marshal and unmarshal and compare the model objects for equality
+        val bytes = packets.toByteArray()
+        val packets2 = consumeAllPackets(ByteArrayInputStream(bytes))
+        assertEquals(99, packets2.size)
+        packets.zip(packets2).forEach { (m1, m2) ->
+            assertEquals(m1, m2)
+        }
+        assertEquals(packets, packets2)
+
         val spiel = replayGameFrom(packets)
 
         assertFalse(spiel.isFinished)
@@ -445,6 +435,15 @@ class NetworkTest {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataDuo))
         assertEquals(66, packets.size)
 
+        // marshal and unmarshal and compare the model objects for equality
+        val bytes = packets.toByteArray()
+        val packets2 = consumeAllPackets(ByteArrayInputStream(bytes))
+        assertEquals(66, packets2.size)
+        packets.zip(packets2).forEach { (m1, m2) ->
+            assertEquals(m1, m2)
+        }
+        assertEquals(packets, packets2)
+
         val spiel = replayGameFrom(packets)
 
         assertTrue(spiel.isFinished)
@@ -470,6 +469,15 @@ class NetworkTest {
         val packets = consumeAllPackets(ByteArrayInputStream(gameDataJunior))
         assertEquals(60, packets.size)
 
+        // marshal and unmarshal and compare the model objects for equality
+        val bytes = packets.toByteArray()
+        val packets2 = consumeAllPackets(ByteArrayInputStream(bytes))
+        assertEquals(60, packets2.size)
+        packets.zip(packets2).forEach { (m1, m2) ->
+            assertEquals(m1, m2)
+        }
+        assertEquals(packets, packets2)
+
         val spiel = replayGameFrom(packets)
 
         assertTrue(spiel.isFinished)
@@ -483,35 +491,5 @@ class NetworkTest {
         assertEquals(10, results[0].stones_left)
         assertEquals(55, results[1].points)
         assertEquals(11, results[1].stones_left)
-    }
-
-    @Test
-    fun test_classic_new() {
-        val packets = consumeAllPackets_new(ByteArrayInputStream(gameDataClassicManual))
-        assertEquals(99, packets.size)
-
-        val bytes = packets.toByteArray()
-        val packets2 = consumeAllPackets_new(ByteArrayInputStream(bytes))
-        assertEquals(99, packets2.size)
-
-        packets.zip(packets2).forEach { (m1, m2) ->
-            assertEquals(m1, m2)
-        }
-
-        assertEquals(packets, packets2)
-
-//        val spiel = replayGameFrom(packets)
-
-/*        assertTrue(spiel.isFinished)
-        assertTrue(spiel.isStarted)
-        assertEquals(GameMode.GAMEMODE_JUNIOR, spiel.gameMode)
-        assertEquals(14, spiel.width)
-        assertEquals(14, spiel.height)
-        val results = spiel.resultData
-
-        assertEquals(60, results[0].points)
-        assertEquals(10, results[0].stones_left)
-        assertEquals(55, results[1].points)
-        assertEquals(11, results[1].stones_left) */
     }
 }
