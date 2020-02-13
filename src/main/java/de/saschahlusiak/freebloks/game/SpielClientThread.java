@@ -7,7 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 
 
-class SpielClientThread extends Thread {
+public class SpielClientThread extends Thread {
 	private static final String tag = SpielClientThread.class.getSimpleName();
 
 	private final SpielClient client;

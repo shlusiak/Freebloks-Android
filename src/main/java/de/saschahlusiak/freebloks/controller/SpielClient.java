@@ -7,12 +7,15 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.ArrayList;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
@@ -28,11 +31,11 @@ import de.saschahlusiak.freebloks.network.message.MessageSetStone;
 import de.saschahlusiak.freebloks.network.message.MessageStartGame;
 
 public class SpielClient {
-	static final String tag = SpielClient.class.getSimpleName();
-	static final int DEFAULT_TIMEOUT = 10000;
+	private static final String tag = SpielClient.class.getSimpleName();
+
+	private static final int DEFAULT_TIMEOUT = 10000;
 	public static final int DEFAULT_PORT = 59995;
 
-	private final ArrayList<SpielClientInterface> spielClientInterface = new ArrayList<>();
 	private Object client_socket;
 	private OutputStream outputStream;
 	public final Spielleiter spiel;
@@ -40,9 +43,10 @@ public class SpielClient {
 	private HandlerThread sendThread;
 	private Handler sendHandler;
 	private GameConfiguration config;
-	private NetworkMessageProcessor processor;
+	private NetworkEventHandler networkEventHandler;
 	private MessageReader reader;
 
+	@UiThread
 	public SpielClient(Spielleiter leiter, GameConfiguration config) {
 		this.config = config;
 		if (leiter == null) {
@@ -53,7 +57,7 @@ public class SpielClient {
 			this.spiel = leiter;
 		client_socket = null;
 
-		processor = new NetworkMessageProcessor(spiel, spielClientInterface);
+		networkEventHandler = new NetworkEventHandler(spiel);
 		reader = new MessageReader();
 	}
 
@@ -75,14 +79,15 @@ public class SpielClient {
 		return true;
 	}
 
-	public synchronized void addClientInterface(SpielClientInterface sci) {
-		this.spielClientInterface.add(sci);
+	public void addObserver(GameObserver sci) {
+		networkEventHandler.addObserver(sci);
 	}
 
-	public synchronized void removeClientInterface(SpielClientInterface sci) {
-		this.spielClientInterface.remove(sci);
+	public void removeObserver(GameObserver sci) {
+		networkEventHandler.removeObserver(sci);
 	}
 
+	@WorkerThread
 	public void connect(Context context, String host, int port) throws IOException {
 		final Socket socket = new Socket();
 		try {
@@ -103,8 +108,7 @@ public class SpielClient {
 			sendThread.start();
 			sendHandler = new Handler(sendThread.getLooper());
 
-			for (SpielClientInterface sci : spielClientInterface)
-				sci.onConnected(spiel);
+			networkEventHandler.onConnected();
 
 			this.client_socket = socket;
 		}
@@ -119,8 +123,7 @@ public class SpielClient {
 			sendThread.start();
 			sendHandler = new Handler(sendThread.getLooper());
 
-			for (SpielClientInterface sci : spielClientInterface)
-				sci.onConnected(spiel);
+			networkEventHandler.onConnected();
 		}
 	}
 
@@ -145,12 +148,12 @@ public class SpielClient {
 				e.printStackTrace();
 			}
 
-			for (SpielClientInterface sci : spielClientInterface)
-				sci.onDisconnected(spiel);
+			networkEventHandler.onDisconnected();
 		}
 		client_socket = null;
 	}
 
+	@WorkerThread
 	public void poll() throws IOException {
 		de.saschahlusiak.freebloks.network.Message msg;
 
@@ -172,7 +175,7 @@ public class SpielClient {
 			msg = reader.readMessage(is);
 				
 			if (msg != null)
-				processor.processMessage(msg);
+				networkEventHandler.handleMessage(msg);
 		}
 		catch (GameStateException | ProtocolException e) {
 			throw new RuntimeException(e);
@@ -203,8 +206,7 @@ public class SpielClient {
 
 	public void sendChat(String message) {
 		// the client does not matter, it will be filled in by the server then broadcasted
-		MessageChat chat = new MessageChat(0, message);
-		send(chat);
+		send(new MessageChat(0, message));
 	}
 
 	/**
@@ -254,6 +256,7 @@ public class SpielClient {
 		sendHandler.post(() -> msg.send(outputStream));
 	}
 
+	@AnyThread
 	private void send(de.saschahlusiak.freebloks.network.Message msg) {
 		if (sendHandler == null)
 			return;

@@ -184,7 +184,6 @@ class Shape private constructor(
         @JvmStatic
         fun get(shape: Int) = All[shape]
 
-        @JvmField
         val All = arrayOf(
 // 0
             Shape(0, 1, Mirrorable.Not, Rotatable.Not, intArrayOf(

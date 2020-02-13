@@ -13,6 +13,8 @@ import android.bluetooth.BluetoothSocket;
 import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.UiThread;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 
@@ -24,7 +26,7 @@ import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.JNIServer;
 import de.saschahlusiak.freebloks.controller.PlayerData;
 import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.controller.SpielClientInterface;
+import de.saschahlusiak.freebloks.controller.GameObserver;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
@@ -80,7 +82,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, SpielClientInterface, OnIntroCompleteListener {
+public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameObserver, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -268,7 +270,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (spielthread != null) {
 			/* we just rotated and got *hot* objects */
 			client = spielthread.getClient();
-			client.addClientInterface(this);
+			client.addObserver(this);
 			view.setSpiel(client, client.spiel);
 			newCurrentPlayer(client.spiel.current_player());
 		} else if (savedInstanceState == null) {
@@ -379,9 +381,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			e.printStackTrace();
 		}
 		if (client != null) {
-			client.removeClientInterface(this);
+			client.removeObserver(this);
 			/* TODO: make attach/detach of view symmetric */
-			client.removeClientInterface(view);
+			client.removeObserver(view);
 		}
 		if (view.model.soundPool != null)
 			view.model.soundPool.release();
@@ -549,6 +551,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 	}
 
+	@UiThread
 	public void startNewGame(final GameConfiguration config, final Runnable runAfter) {
 		newCurrentPlayer(-1);
 		if (config.getServer() == null) {
@@ -606,7 +609,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						}
 					});
 					bluetoothServer.start();
-					client.addClientInterface(bluetoothServer);
+					client.addObserver(bluetoothServer);
 				}
 
 				if (runAfter != null)
@@ -617,6 +620,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		connectTask.execute(config.getServer());
 	}
 
+	@UiThread
 	public void establishBluetoothGame(BluetoothSocket socket) throws IOException {
 		final GameConfiguration config = GameConfiguration.builder().build();
 		newCurrentPlayer(-1);
@@ -635,7 +639,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		client = new SpielClient(spiel, config);
 		view.setSpiel(client, spiel);
 
-		client.addClientInterface(this);
+		client.addObserver(this);
 		client.setSocket(socket);
 
 		spielthread = new SpielClientThread(client);
@@ -839,6 +843,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 
 				@Override
+				@UiThread
 				public void onJoinGame(BluetoothSocket socket) {
 					// got a connected bluetooth socket to a server
 					dismissDialog(DIALOG_GAME_MENU);

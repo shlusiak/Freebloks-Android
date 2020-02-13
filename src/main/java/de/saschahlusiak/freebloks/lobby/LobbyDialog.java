@@ -17,7 +17,7 @@ import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.controller.SpielClientInterface;
+import de.saschahlusiak.freebloks.controller.GameObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -41,7 +41,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemClickListener, OnItemSelectedListener {
+public class LobbyDialog extends Dialog implements GameObserver, OnItemClickListener, OnItemSelectedListener {
 	SpielClient client;
 	Handler handler = new Handler();
 	ListView chatList;
@@ -204,7 +204,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 		if (client == null)
 			return;
 
-		client.addClientInterface(this);
+		client.addObserver(this);
 		if (!client.spiel.isStarted()) {
 			/* lobby */
 			findViewById(R.id.startButton).setVisibility(View.VISIBLE);
@@ -274,7 +274,7 @@ public class LobbyDialog extends Dialog implements SpielClientInterface, OnItemC
 	@Override
 	protected void onStop() {
 		if (client != null)
-			client.removeClientInterface(this);
+			client.removeObserver(this);
 		super.onStop();
 	}
 

@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.controller.SpielClientInterface;
+import de.saschahlusiak.freebloks.controller.GameObserver;
 import de.saschahlusiak.freebloks.controller.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -25,7 +25,7 @@ import de.saschahlusiak.freebloks.view.effects.StoneUndoEffect;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
-public class Freebloks3DView extends GLSurfaceView implements SpielClientInterface {
+public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
 	public final ViewModel model = new ViewModel(this);
@@ -79,7 +79,7 @@ public class Freebloks3DView extends GLSurfaceView implements SpielClientInterfa
 			public void run() {
 				model.setSpiel(spiel);
 				if (spiel != null) {
-					client.addClientInterface(Freebloks3DView.this);
+					client.addObserver(Freebloks3DView.this);
 					model.board.last_size = spiel.width;
 					for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
 						model.board.centerPlayer = i;

@@ -1,22 +1,47 @@
 package de.saschahlusiak.freebloks.controller
 
-import android.util.Log
+import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Spiel
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.network.message.*
 
-class NetworkMessageProcessor(private val spiel: Spielleiter, private val spielClientInterface: List<SpielClientInterface>) {
-    @Throws(GameStateException::class)
-    internal fun assert(condition: Boolean, lazyMessage: () -> String) {
-        if (condition) return
-        throw GameStateException(lazyMessage.invoke())
+/**
+ * Processes network events and applies changes to the given [Spielleiter] and notifies the [GameObserver]
+ */
+class NetworkEventHandler(private val spiel: Spielleiter) {
+    private val observer = mutableListOf<GameObserver>()
+
+    fun addObserver(observer: GameObserver) {
+        synchronized(observer) {
+            this.observer.add(observer)
+        }
     }
 
-    @Synchronized
+    fun removeObserver(observer: GameObserver) {
+        synchronized(observer) {
+            this.observer.remove(observer)
+        }
+    }
+
+    private fun notifyObservers(block: (GameObserver) -> Unit) {
+        synchronized(observer) {
+            observer.forEach { block.invoke(it) }
+        }
+    }
+
+    fun onConnected() {
+        notifyObservers { it.onConnected(spiel) }
+    }
+
+    fun onDisconnected() {
+        notifyObservers { it.onDisconnected(spiel) }
+    }
+
+    @WorkerThread
     @Throws(ProtocolException::class, GameStateException::class)
-    fun processMessage(message: Message) {
+    fun handleMessage(message: Message) {
         when(message) {
             is MessageGrantPlayer -> {
                 assert(!spiel.isStarted) { "received MSG_REVOKE_PLAYER but game is running" }
@@ -33,7 +58,7 @@ class NetworkMessageProcessor(private val spiel: Spielleiter, private val spielC
 
             is MessageCurrentPlayer ->  {
                 spiel.m_current_player = message.player
-                spielClientInterface.forEach { it.newCurrentPlayer(message.player) }
+                notifyObservers { it.newCurrentPlayer(message.player) }
             }
 
             is MessageSetStone -> {
@@ -46,23 +71,24 @@ class NetworkMessageProcessor(private val spiel: Spielleiter, private val spielC
 
                 assert(spiel.isValidTurn(turn) != Spiel.FIELD_DENIED) { "game not in sync" }
 
-			    for (sci in spielClientInterface) sci.stoneWillBeSet(turn)
+                notifyObservers { it.stoneWillBeSet(turn) }
                 spiel.setStone(turn)
-                for (sci in spielClientInterface) sci.stoneHasBeenSet(turn)
+                notifyObservers { it.stoneHasBeenSet(turn) }
             }
 
             is MessageStoneHint -> {
-                for (sci in spielClientInterface) sci.hintReceived(message.toTurn())
+                val turn = message.toTurn()
+                notifyObservers { it.hintReceived(turn) }
             }
 
             is MessageGameFinish -> {
-                spiel.setFinished(true)
-                for (sci in spielClientInterface) sci.gameFinished()
+                spiel.isFinished = true
+                notifyObservers { it.gameFinished() }
             }
 
             is MessageServerStatus -> {
                 // if game field size differs, start a new game with the new size
-                if (!spiel.isStarted()) {
+                if (!spiel.isStarted) {
                     spiel.startNewGame(message.gameMode, message.width, message.height)
                     if (message.isVersion(3)) spiel.setAvailableStones(message.stoneNumbers)
                 }
@@ -87,18 +113,20 @@ class NetworkMessageProcessor(private val spiel: Spielleiter, private val spielC
 
                     else -> {}
                 }
-                for (sci in spielClientInterface) sci.serverStatus(message)
+
+                notifyObservers { it.serverStatus(message) }
             }
 
             is MessageChat -> {
-                for (sci in spielClientInterface) sci.chatReceived(message.client, message.message)
+                notifyObservers { it.chatReceived(message.client, message.message) }
             }
 
             is MessageStartGame -> {
                 spiel.startNewGame(spiel.getGameMode())
                 spiel.setFinished(false)
                 spiel.setStarted(true)
-                /* Unbedingt history leeren. */if (spiel.history != null) spiel.history.clear()
+                /* Unbedingt history leeren. */
+                if (spiel.history != null) spiel.history.clear()
                 //			setAvailableStones(status.stone_numbers[0],status.stone_numbers[1],status.stone_numbers[2],status.stone_numbers[3],status.stone_numbers[4]);
                 if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS || spiel.getGameMode() == GameMode.GAMEMODE_DUO || spiel.getGameMode() == GameMode.GAMEMODE_JUNIOR) {
                     var n = 0
@@ -110,18 +138,24 @@ class NetworkMessageProcessor(private val spiel: Spielleiter, private val spielC
                 }
                 spiel.m_current_player = -1
                 spiel.refreshPlayerData()
-                for (sci in spielClientInterface) sci.gameStarted()
+
+                notifyObservers { it.gameStarted() }
             }
 
             is MessageUndoStone -> {
-                if (!spiel.isStarted() && !spiel.isFinished()) throw GameStateException("received MSG_UNDO_STONE but game not running")
-                val t: Turn = spiel.history.getLast()
-                Log.d(SpielClient.tag, "stone undone: " + t.shapeNumber)
-                for (sci in spielClientInterface) sci.stoneUndone(t)
+                if (!spiel.isStarted && !spiel.isFinished) throw GameStateException("received MSG_UNDO_STONE but game not running")
+                val turn: Turn = spiel.history.last
+                notifyObservers { it.stoneUndone(turn) }
                 spiel.undo(spiel.history, spiel.getGameMode())
             }
 
             else -> throw ProtocolException("don't know how to handle message $message")
         }
+    }
+
+    @Throws(GameStateException::class)
+    internal fun assert(condition: Boolean, lazyMessage: () -> String) {
+        if (condition) return
+        throw GameStateException(lazyMessage.invoke())
     }
 }

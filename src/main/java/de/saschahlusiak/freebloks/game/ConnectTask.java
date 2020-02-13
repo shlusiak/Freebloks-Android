@@ -114,7 +114,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			if (show_lobby)
 				activity.showDialog(FreebloksActivity.DIALOG_LOBBY);
 
-			myclient.addClientInterface(activity);
+			myclient.addObserver(activity);
 
 			if (connectedRunnable != null)
 				connectedRunnable.run();

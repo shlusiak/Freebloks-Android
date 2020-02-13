@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.controller.GameMode
-import de.saschahlusiak.freebloks.controller.NetworkMessageProcessor
+import de.saschahlusiak.freebloks.controller.NetworkEventHandler
 import de.saschahlusiak.freebloks.controller.Spielleiter
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
@@ -335,11 +335,11 @@ class NetworkTest {
 
     private fun replayGameFrom(packets: List<Message>): Spielleiter {
         val spiel = Spielleiter(20)
-        val processor = NetworkMessageProcessor(spiel, emptyList())
+        val processor = NetworkEventHandler(spiel)
 
         for (pkg in packets) {
             println("Processing $pkg")
-            processor.processMessage(pkg)
+            processor.handleMessage(pkg)
         }
 
         return spiel
