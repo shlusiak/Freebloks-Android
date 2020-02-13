@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.controller
+package de.saschahlusiak.freebloks.client
 
 import de.saschahlusiak.freebloks.model.Spiel
 import de.saschahlusiak.freebloks.model.Turn
@@ -8,6 +8,8 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
  * All callbacks happen on a background thread!
  *
  * This is usually the [SpielClientThread].
+ *
+ * Register with [NetworkEventHandler] to get updates.
  */
 interface GameObserver {
     fun onConnected(spiel: Spiel)

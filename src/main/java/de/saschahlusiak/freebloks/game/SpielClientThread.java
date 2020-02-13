@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
-import de.saschahlusiak.freebloks.controller.SpielClient;
+import de.saschahlusiak.freebloks.client.SpielClient;
 
 
 public class SpielClientThread extends Thread {

@@ -23,11 +23,11 @@ import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.controller.JNIServer;
+import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.model.PlayerScore;
-import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.controller.GameObserver;
-import de.saschahlusiak.freebloks.model.Spielleiter;
+import de.saschahlusiak.freebloks.client.SpielClient;
+import de.saschahlusiak.freebloks.client.GameObserver;
+import de.saschahlusiak.freebloks.client.GameState;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
@@ -271,8 +271,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			/* we just rotated and got *hot* objects */
 			client = spielthread.getClient();
 			client.addObserver(this);
-			view.setSpiel(client, client.spiel);
-			newCurrentPlayer(client.spiel.getCurrentPlayer());
+			view.setSpiel(client, client.game);
+			newCurrentPlayer(client.game.getCurrentPlayer());
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && ! prefs.getBoolean("skip_intro", false)) {
 				view.model.intro = new Intro(getApplicationContext(), view.model, this);
@@ -309,8 +309,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				View t = findViewById(R.id.currentPlayer);
 				t.postDelayed(this, 5000);
 
-				if (client != null && client.spiel != null)
-					local = client.spiel.isLocalPlayer();
+				if (client != null && client.game != null)
+					local = client.game.isLocalPlayer();
 				if (!local)
 					return;
 
@@ -395,7 +395,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	protected void onPause() {
 		Log.d(tag, "onPause");
-		if (client != null && client.spiel.isStarted() && !client.spiel.isFinished())
+		if (client != null && client.game.isStarted() && !client.game.isFinished())
 			saveGameState(GAME_STATE_FILE);
 		super.onPause();
 	}
@@ -410,7 +410,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	protected void onStop() {
 		if (!isFinishing() && client != null && client.isConnected()) {
 			if ((lastStatus != null && lastStatus.getClients() > 1) ||
-				(!client.spiel.isStarted()))
+				(!client.game.isStarted()))
 				updateMultiplayerNotification(true, null);
 		}
 		view.onPause();
@@ -478,10 +478,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	private void writeStateToBundle(Bundle outState) {
 		if (client == null)
 			return;
-		if (client.spiel == null)
+		if (client.game == null)
 			return;
 		synchronized (client) {
-			Spielleiter l = client.spiel;
+			GameState l = client.game;
 			if (!l.isFinished())
 				outState.putSerializable("game", l);
 		}
@@ -489,7 +489,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	private boolean readStateFromBundle(Bundle in) {
 		try {
-			Spielleiter spiel1 = (Spielleiter)in.getSerializable("game");
+			GameState spiel1 = (GameState)in.getSerializable("game");
 			if (spiel1 == null)
 				return false;
 			// don't restore games that have finished; the server would not detach the listener
@@ -509,7 +509,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				.build();
 
 			final SpielClient client = new SpielClient(spiel1, config);
-			client.spiel.setStarted(true);
+			client.game.setStarted(true);
 
 			connectTask = new ConnectTask(client, false, new Runnable() {
 				@Override
@@ -574,7 +574,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		client = null;
 
 		view.model.clearEffects();
-		Spielleiter spiel = new Spielleiter(fieldsize);
+		GameState spiel = new GameState(fieldsize);
 		final SpielClient client = new SpielClient(spiel, config);
 		spiel.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 		spiel.setAvailableStones(0, 0, 0, 0, 0);
@@ -632,7 +632,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.clearEffects();
 		Log.d(tag, "Establishing game with existing bluetooth connection");
 
-		Spielleiter spiel = new Spielleiter(fieldsize);
+		GameState spiel = new GameState(fieldsize);
 		spiel.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 		spiel.setAvailableStones(0, 0, 0, 0, 0);
 
@@ -726,8 +726,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean local = false;
-		if (client != null && client.spiel != null)
-			local = client.spiel.isLocalPlayer();
+		if (client != null && client.game != null)
+			local = client.game.isLocalPlayer();
 
 		menu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.getClients() <= 1);
 		menu.findItem(R.id.hint).setEnabled(local);
@@ -925,7 +925,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				dialog.setOnCancelListener(new OnCancelListener() {
 					@Override
 					public void onCancel(DialogInterface arg0) {
-						if (!client.spiel.isStarted() && !client.spiel.isFinished()) {
+						if (!client.game.isStarted() && !client.game.isFinished()) {
 							FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
 							canresume = false;
 							if (spielthread != null)
@@ -936,7 +936,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						}
 					}
 				});
-				if (client.spiel.isStarted()) {
+				if (client.game.isStarted()) {
 					dialog.setCanceledOnTouchOutside(true);
 				} else {
 					dialog.setCanceledOnTouchOutside(false);
@@ -998,7 +998,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			if (view.model.intro != null)
 				view.model.intro.cancel();
 			else {
-				if (client == null || (client.spiel != null && client.spiel.isFinished()))
+				if (client == null || (client.game != null && client.game.isFinished()))
 					startNewGame();
 				else
 					showDialog(DIALOG_NEW_GAME_CONFIRMATION);
@@ -1025,7 +1025,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 			findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
 			view.model.currentStone.stopDragging();
-			client.request_hint(client.spiel.getCurrentPlayer());
+			client.request_hint(client.game.getCurrentPlayer());
 			return true;
 
 		case R.id.undo:
@@ -1037,7 +1037,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return true;
 
 		case R.id.show_main_menu:
-			if (client != null && client.spiel.isStarted() && lastStatus != null && lastStatus.getClients() > 1)
+			if (client != null && client.game.isStarted() && lastStatus != null && lastStatus.getClients() > 1)
 				showDialog(DIALOG_QUIT);
 			else {
 				if (client != null && client.isConnected())
@@ -1083,8 +1083,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					updateMultiplayerNotification(false, null);
 				boolean local = false;
 				int showPlayer = view.model.board.getShowDetailsPlayer();
-				if (client != null && client.spiel != null)
-					local = client.spiel.isLocalPlayer(player);
+				if (client != null && client.game != null)
+					local = client.game.isLocalPlayer(player);
 				else
 					showPlayer = player;
 
@@ -1111,11 +1111,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					status.setText(R.string.touch_to_skip);
 				else if (client == null || !client.isConnected())
 					status.setText(R.string.not_connected);
-				else if (client.spiel.isFinished()) {
+				else if (client.game.isFinished()) {
 					int pl = view.model.board.getShowWheelPlayer();
 					if (pl >= 0) {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(pl)];
-						Player p = client.spiel.getPlayer(pl);
+						Player p = client.game.getPlayer(pl);
 						status.setText("[" + getPlayerName(pl) + "]");
 						statusView.setBackgroundColor(getResources().getColor(res));
 						points.setVisibility(View.VISIBLE);
@@ -1127,7 +1127,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					if (showPlayer < 0) {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(player)];
 						statusView.setBackgroundColor(getResources().getColor(res));
-						Player p = client.spiel.getPlayer(player);
+						Player p = client.game.getPlayer(player);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
 						if (!local)
@@ -1141,7 +1141,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					} else {
 						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(showPlayer)];
 						statusView.setBackgroundColor(getResources().getColor(res));
-						Player p = client.spiel.getPlayer(showPlayer);
+						Player p = client.game.getPlayer(showPlayer);
 						points.setVisibility(View.VISIBLE);
 						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
 
@@ -1168,7 +1168,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void stoneWillBeSet(@NonNull Turn turn) {
 		for (int i = 0; i < 4; i++)
-			number_of_possible_turns[i] = client.spiel.getPlayer(i).getNumberOfPossibleTurns();
+			number_of_possible_turns[i] = client.game.getPlayer(i).getNumberOfPossibleTurns();
 	}
 
 	@Override
@@ -1177,7 +1177,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return;
 		if (view == null)
 			return;
-		final Spielleiter spiel = client.spiel;
+		final GameState spiel = client.game;
 		if (spiel == null)
 			return;
 		runOnUiThread(new Runnable() {
@@ -1259,9 +1259,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		Bundle b = new Bundle();
 		b.putString("server", client.getConfig().getServer());
-		b.putString("game_mode", client.spiel.getGameMode().toString());
-		b.putInt("w", client.spiel.width);
-		b.putInt("h", client.spiel.height);
+		b.putString("game_mode", client.game.getGameMode().toString());
+		b.putInt("w", client.game.width);
+		b.putInt("h", client.game.height);
 		b.putInt("clients", lastStatus.getClients());
 		b.putInt("players", lastStatus.getPlayer());
 		FirebaseAnalytics.getInstance(this).logEvent("game_finished", b);
@@ -1270,19 +1270,19 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (client == null || client.spiel == null)
+				if (client == null || client.game == null)
 					return;
 				updateMultiplayerNotification(false, null);
-				PlayerScore[] data = client.spiel.getPlayerScores();
-				new AddScoreTask(getApplicationContext(), client.spiel.getGameMode()).execute(data);
+				PlayerScore[] data = client.game.getPlayerScores();
+				new AddScoreTask(getApplicationContext(), client.game.getGameMode()).execute(data);
 
-				if (client.spiel == null) {
+				if (client.game == null) {
 					Crashlytics.logException(new IllegalStateException("gameFinished, but no game running"));
 					return;
 				}
 
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
-				intent.putExtra("game", (Serializable)client.spiel);
+				intent.putExtra("game", (Serializable)client.game);
 				intent.putExtra("lastStatus", (Serializable)lastStatus);
 				intent.putExtra("clientName", clientName);
 				startActivityForResult(intent, REQUEST_FINISH_GAME);
@@ -1313,8 +1313,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		final ChatEntry e = new ChatEntry(client, message, name);
 		e.setPlayer(player);
 
-		if (!this.client.spiel.isLocalPlayer(player) &&
-			(this.client.spiel.isStarted() || multiplayerNotification != null))
+		if (!this.client.game.isLocalPlayer(player) &&
+			(this.client.game.isStarted() || multiplayerNotification != null))
 			updateMultiplayerNotification(true, e.toString());
 
 		runOnUiThread(new Runnable() {
@@ -1344,9 +1344,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		Bundle b = new Bundle();
 		b.putString("server", client.getConfig().getServer());
-		b.putString("game_mode", client.spiel.getGameMode().toString());
-		b.putInt("w", client.spiel.width);
-		b.putInt("h", client.spiel.height);
+		b.putString("game_mode", client.game.getGameMode().toString());
+		b.putInt("w", client.game.width);
+		b.putInt("h", client.game.height);
 		b.putInt("clients", lastStatus.getClients());
 		b.putInt("players", lastStatus.getPlayer());
 
@@ -1358,7 +1358,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		Log.d(tag, "Game started");
 		for (int i = 0; i < Spiel.PLAYER_MAX; i++)
-			if (client.spiel.isLocalPlayer(i))
+			if (client.game.isLocalPlayer(i))
 				Log.d(tag, "Local player: " + i);
 	}
 
@@ -1397,7 +1397,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				e.setPlayer(i);
 
 				if (!view.model.spiel.isLocalPlayer(i))
-					updateMultiplayerNotification(tid == R.string.player_left_color && client.spiel.isStarted(), text);
+					updateMultiplayerNotification(tid == R.string.player_left_color && client.game.isStarted(), text);
 
 				runOnUiThread(new Runnable() {
 					@Override
@@ -1464,9 +1464,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (client == null)
 			return false;
 		
-		if (!client.spiel.isLocalPlayer())
+		if (!client.game.isLocalPlayer())
 			return false;
-		if (client.spiel.isValidTurn(turn) != Spiel.FIELD_ALLOWED)
+		if (client.game.isValidTurn(turn) != Spiel.FIELD_ALLOWED)
 			return false;
 
 		if (view.model.hasAnimations()) {
@@ -1501,7 +1501,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
-		if (client != null && client.spiel.isStarted() && !client.spiel.isFinished() && lastStatus != null && lastStatus.getClients() > 1)
+		if (client != null && client.game.isStarted() && !client.game.isFinished() && lastStatus != null && lastStatus.getClients() > 1)
 			showDialog(DIALOG_QUIT);
 		else {
 			if (view.model.intro != null) {
@@ -1521,9 +1521,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void showPlayer(int player) {
 		if (client == null)
 			return;
-		if (client.spiel == null)
+		if (client.game == null)
 			return;
-		newCurrentPlayer(client.spiel.getCurrentPlayer());
+		newCurrentPlayer(client.game.getCurrentPlayer());
 	}
 
 	String getPlayerName(int player) {
@@ -1533,7 +1533,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		 *
 		 * When resuming a game, the name is lost and never set again. This is a non issue now.
 		 */
-		if (clientName != null && clientName.length() > 0 && client != null && client.spiel != null && client.spiel.isLocalPlayer(player))
+		if (clientName != null && clientName.length() > 0 && client != null && client.game != null && client.game.isLocalPlayer(player))
 			return clientName;
 		if (lastStatus == null)
 			return color_name;
@@ -1551,7 +1551,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	void updateMultiplayerNotification(boolean forceShow, String chat) {
-		if (client == null || client.spiel == null)
+		if (client == null || client.game == null)
 			return;
 		if (!client.isConnected())
 			return;
@@ -1604,22 +1604,22 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if ((forceShow && chat == null) || multiplayerNotification != null)
 			notificationBuilder.setOngoing(true);
 
-		if (!client.spiel.isStarted()) {
+		if (!client.game.isStarted()) {
 			notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
 			notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.appicon_small));
 			notificationBuilder.setContentText(getString(R.string.lobby_waiting_for_players));
 			notificationBuilder.setTicker(getString(R.string.lobby_waiting_for_players));
-		} else if (client.spiel.isFinished()) {
+		} else if (client.game.isFinished()) {
 			notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
 			notificationBuilder.setContentText(getString(R.string.game_finished));
 			notificationBuilder.setOngoing(false);
 		} else {
-			if (client.spiel.getCurrentPlayer() < 0)
+			if (client.game.getCurrentPlayer() < 0)
 				return;
-			if (client.spiel.isLocalPlayer()) {
+			if (client.game.isLocalPlayer()) {
 				notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
-				notificationBuilder.setContentText(getString(R.string.your_turn, getPlayerName(client.spiel.getCurrentPlayer())));
-				notificationBuilder.setTicker(getString(R.string.your_turn, getPlayerName(client.spiel.getCurrentPlayer())));
+				notificationBuilder.setContentText(getString(R.string.your_turn, getPlayerName(client.game.getCurrentPlayer())));
+				notificationBuilder.setTicker(getString(R.string.your_turn, getPlayerName(client.game.getCurrentPlayer())));
 				
 				if (!forceShow) {
 					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
@@ -1629,8 +1629,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 			} else {
 				notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
-				notificationBuilder.setContentText(getString(R.string.waiting_for_color, getPlayerName(client.spiel.getCurrentPlayer())));
-				notificationBuilder.setTicker(getString(R.string.waiting_for_color, getPlayerName(client.spiel.getCurrentPlayer())));
+				notificationBuilder.setContentText(getString(R.string.waiting_for_color, getPlayerName(client.game.getCurrentPlayer())));
+				notificationBuilder.setTicker(getString(R.string.waiting_for_color, getPlayerName(client.game.getCurrentPlayer())));
 			}
 		}
 		
@@ -1669,7 +1669,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			finish();
 			return;
 		} else {
-			if (intent.hasExtra("showChat") && client != null && client.spiel.isStarted())
+			if (intent.hasExtra("showChat") && client != null && client.game.isStarted())
 				showDialog(DIALOG_LOBBY);
 		}
 		super.onNewIntent(intent);

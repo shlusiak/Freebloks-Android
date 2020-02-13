@@ -1,5 +1,8 @@
 package de.saschahlusiak.freebloks.model
 
+/**
+ * This MUST match the order in "jni/constants.h
+ */
 enum class GameMode {
     GAMEMODE_2_COLORS_2_PLAYERS,
     GAMEMODE_4_COLORS_2_PLAYERS,

@@ -4,7 +4,7 @@ import android.widget.CheckBox;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.Spielleiter;
+import de.saschahlusiak.freebloks.client.GameState;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import android.content.Context;
@@ -24,17 +24,17 @@ import android.widget.TextView;
 public class ColorAdapter extends BaseAdapter {
 	private Context context;
 	private MessageServerStatus lastStatus;
-	private Spielleiter spiel;
+	private GameState spiel;
 	private LobbyDialog lobby;
 
-	public ColorAdapter(LobbyDialog lobby, Context context, Spielleiter spiel, MessageServerStatus lastStatus) {
+	public ColorAdapter(LobbyDialog lobby, Context context, GameState spiel, MessageServerStatus lastStatus) {
 		this.lobby = lobby;
 		this.context = context;
 		this.lastStatus = lastStatus;
 		this.spiel = spiel;
 	}
 
-	void setCurrentStatus(Spielleiter spiel, MessageServerStatus status) {
+	void setCurrentStatus(GameState spiel, MessageServerStatus status) {
 		this.spiel = spiel;
 		this.lastStatus = status;
 		notifyDataSetChanged();

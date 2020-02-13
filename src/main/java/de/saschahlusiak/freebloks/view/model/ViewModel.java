@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.graphics.PointF;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.Spielleiter;
+import de.saschahlusiak.freebloks.client.GameState;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
@@ -15,7 +15,7 @@ import de.saschahlusiak.freebloks.view.effects.Effect;
 public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public final Wheel wheel;
 	public final CurrentStone currentStone;
-	public Spielleiter spiel;
+	public GameState spiel;
 	public final Board board;
 	public ActivityInterface activity;
 	public final Freebloks3DView view;
@@ -36,7 +36,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public ViewModel(Freebloks3DView view) {
 		this.view = view;
 
-		this.spiel = new Spielleiter(Spiel.DEFAULT_BOARD_SIZE);
+		this.spiel = new GameState(Spiel.DEFAULT_BOARD_SIZE);
 
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
@@ -58,7 +58,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		board.resetRotation();
 	}
 
-	public void setSpiel(Spielleiter spiel) {
+	public void setSpiel(GameState spiel) {
 		this.spiel = spiel;
 	}
 

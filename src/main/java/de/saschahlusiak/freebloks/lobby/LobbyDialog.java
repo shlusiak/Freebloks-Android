@@ -16,8 +16,8 @@ import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.controller.GameObserver;
+import de.saschahlusiak.freebloks.client.SpielClient;
+import de.saschahlusiak.freebloks.client.GameObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
@@ -205,7 +205,7 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 			return;
 
 		client.addObserver(this);
-		if (!client.spiel.isStarted()) {
+		if (!client.game.isStarted()) {
 			/* lobby */
 			findViewById(R.id.startButton).setVisibility(View.VISIBLE);
 			setTitle(R.string.lobby_waiting_for_players);
@@ -257,7 +257,7 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 		//	server.setTypeface(Typeface.DEFAULT);
 		//	server.setText(client.getLastHost());
 		}
-		adapter.setGameMode(client.spiel.getGameMode());
+		adapter.setGameMode(client.game.getGameMode());
 
 		updateStatus();
 		adapter.notifyDataSetChanged();
@@ -329,7 +329,7 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 			@Override
 			public void run() {
 				lastStatus = status;
-				adapter.setGameMode(client.spiel.getGameMode());
+				adapter.setGameMode(client.game.getGameMode());
 				updateStatus();
 				adapter.notifyDataSetChanged();
 			}
@@ -340,7 +340,7 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 		/* better: dismiss */
 		if (client == null)
 			return;
-		colorAdapter.setCurrentStatus(client.spiel, lastStatus);
+		colorAdapter.setCurrentStatus(client.game, lastStatus);
 
 		TextView clients = (TextView)findViewById(R.id.clients);
 		if (clients != null) {
@@ -354,14 +354,14 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 		
 		if (lastStatus != null) {
 			gameMode.setSelection(lastStatus.getGameMode().ordinal());
-			gameMode.setEnabled(!client.spiel.isStarted() && lastStatus.isVersion(3));
+			gameMode.setEnabled(!client.game.isStarted() && lastStatus.isVersion(3));
 			
 			int slider = 3;
 			for (int i = 0; i < CustomGameDialog.FIELD_SIZES.length; i++)
 				if (CustomGameDialog.FIELD_SIZES[i] == lastStatus.getWidth())
 					slider = i;
 			fieldSize.setSelection(slider);
-			fieldSize.setEnabled(!client.spiel.isStarted() && lastStatus.isVersion(3));
+			fieldSize.setEnabled(!client.game.isStarted() && lastStatus.isVersion(3));
 
 		} else {
 			gameMode.setEnabled(false);
@@ -390,9 +390,9 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		if (client.spiel.isStarted())
+		if (client.game.isStarted())
 			return;
-		if (client.spiel.isLocalPlayer((int)id)) {
+		if (client.game.isLocalPlayer((int)id)) {
 			client.revoke_player((int)id);
 		} else {
 			client.request_player((int)id, null);

@@ -1,23 +1,26 @@
-package de.saschahlusiak.freebloks.model
+package de.saschahlusiak.freebloks.client
 
+import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.PlayerScore
+import de.saschahlusiak.freebloks.model.Spiel
+import de.saschahlusiak.freebloks.model.Turnpool
 import java.io.Serializable
 import java.util.*
 
 /**
- * Enriches the current board state with meta information about the game:
+ * Enriches the current [Spiel] state with game state information:
  *
- * - game state
  * - history for undo
  * - current player
  * - whether players are controlled locally or by the computer
  * - current game mode
+ *
+ * These information are usually updated via the [NetworkEventHandler].
  */
-class Spielleiter(size: Int) : Spiel(size), Serializable {
+class GameState(initialSize: Int) : Spiel(initialSize), Serializable {
     // -1 is "no current player", used in between states
     var currentPlayer = -1
-
-    @JvmField
-    val spieler = IntArray(PLAYER_MAX) { PLAYER_COMPUTER }
+    val playerTypes = IntArray(PLAYER_MAX) { PLAYER_COMPUTER }
     var gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
     var isFinished = false
     var isStarted = false
@@ -29,9 +32,21 @@ class Spielleiter(size: Int) : Spiel(size), Serializable {
      */
     @JvmOverloads
     fun isLocalPlayer(player: Int = currentPlayer): Boolean {
-        return if (player == -1) false else spieler[player] != PLAYER_COMPUTER
+        return if (player == -1) false else playerTypes[player] != PLAYER_COMPUTER
     }
 
+    /**
+     * Set the given player number to either [PLAYER_COMPUTER] or [PLAYER_LOCAL].
+     *
+     * All remotely played users are from our point of view computer players.
+     */
+    fun setPlayerType(player: Int, playerType: Int) {
+        playerTypes[player] = playerType
+    }
+
+    /**
+     * Build and return the end-of-game scores.
+     */
     fun getPlayerScores(): Array<PlayerScore> {
         val data: Array<PlayerScore>
 

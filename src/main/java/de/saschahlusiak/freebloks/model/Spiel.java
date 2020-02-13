@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 
-import de.saschahlusiak.freebloks.controller.GameStateException;
+import de.saschahlusiak.freebloks.client.GameStateException;
 
 /**
  * Game state (model).

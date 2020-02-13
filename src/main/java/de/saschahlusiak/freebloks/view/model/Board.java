@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.view.model;
 
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.Spielleiter;
+import de.saschahlusiak.freebloks.client.GameState;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
@@ -86,7 +86,7 @@ public class Board implements ViewElement {
 		else
 			lastDetailsPlayer = (centerPlayer + p + 4) % 4;
 
-		final Spielleiter spiel = model.spiel;
+		final GameState spiel = model.spiel;
 		if (spiel != null) {
 			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
 				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||

@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import com.crashlytics.android.Crashlytics;
-import de.saschahlusiak.freebloks.controller.SpielClient;
+import de.saschahlusiak.freebloks.client.SpielClient;
 
 class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelListener {
 	private static final String tag = ConnectTask.class.getSimpleName();
@@ -80,7 +80,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 
 		activity.client = this.myclient;
 		activity.connectTask = null;
-		activity.view.setSpiel(myclient, myclient.spiel);
+		activity.view.setSpiel(myclient, myclient.game);
 		activity.dismissDialog(FreebloksActivity.DIALOG_PROGRESS);
 		if (result != null) {
 			Crashlytics.logException(result);
@@ -119,7 +119,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			if (connectedRunnable != null)
 				connectedRunnable.run();
 
-			activity.newCurrentPlayer(myclient.spiel.getCurrentPlayer());
+			activity.newCurrentPlayer(myclient.game.getCurrentPlayer());
 		}
 		super.onPostExecute(result);
 	}

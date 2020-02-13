@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.controller.GameStateException
+import de.saschahlusiak.freebloks.client.GameStateException
 import java.io.Serializable
 
 /**

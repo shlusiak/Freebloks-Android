@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
-import de.saschahlusiak.freebloks.controller.GameObserver;
+import de.saschahlusiak.freebloks.client.GameObserver;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;

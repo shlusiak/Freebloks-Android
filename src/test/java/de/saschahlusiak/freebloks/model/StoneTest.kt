@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.controller.GameStateException
+import de.saschahlusiak.freebloks.client.GameStateException
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

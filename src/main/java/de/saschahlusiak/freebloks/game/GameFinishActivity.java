@@ -7,7 +7,7 @@ import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.PlayerScore;
-import de.saschahlusiak.freebloks.model.Spielleiter;
+import de.saschahlusiak.freebloks.client.GameState;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
@@ -39,7 +39,7 @@ public class GameFinishActivity extends BaseGameActivity {
 	TextView place;
 	MessageServerStatus lastStatus;
 	String clientName;
-	Spielleiter spiel;
+	GameState spiel;
 	boolean firstRun = false;
 	PlayerScore[] data;
 
@@ -56,7 +56,7 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		place = findViewById(R.id.place);
 
-		spiel = (Spielleiter)getIntent().getSerializableExtra("game");
+		spiel = (GameState)getIntent().getSerializableExtra("game");
 		lastStatus = (MessageServerStatus) getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
 

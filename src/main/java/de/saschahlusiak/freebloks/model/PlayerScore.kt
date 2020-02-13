@@ -1,11 +1,13 @@
 package de.saschahlusiak.freebloks.model
 
+import de.saschahlusiak.freebloks.client.GameState
+
 /**
  * The end-of-game score of a player, which, in case of GAMEMODE_4_COLORS_2_PLAYERS may be
  * composed of two game players (e.g. red & blue).
  */
-class PlayerScore @JvmOverloads constructor(spiel: Spielleiter, val player1: Int, val player2: Int = -1) : Comparable<PlayerScore> {
-    val isLocal: Boolean = spiel.isLocalPlayer(player1)
+class PlayerScore @JvmOverloads constructor(game: GameState, val player1: Int, val player2: Int = -1) : Comparable<PlayerScore> {
+    val isLocal: Boolean = game.isLocalPlayer(player1)
 
     // the place will be set afterwards, when all points of all players are known
 	var place = -1
@@ -28,10 +30,10 @@ class PlayerScore @JvmOverloads constructor(spiel: Spielleiter, val player1: Int
         points = 0
         stonesLeft = 0
 
-        addPoints(spiel.getPlayer(player1))
+        addPoints(game.getPlayer(player1))
         // todo: make nullable instead
         if (player2 >= 0)
-            addPoints(spiel.getPlayer(player2))
+            addPoints(game.getPlayer(player2))
     }
 
     private fun addPoints(p: Player) {

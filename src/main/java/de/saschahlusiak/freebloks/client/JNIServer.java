@@ -1,10 +1,9 @@
-package de.saschahlusiak.freebloks.controller;
+package de.saschahlusiak.freebloks.client;
 
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Shape;
-import de.saschahlusiak.freebloks.model.Spielleiter;
 
 public class JNIServer {
 	final static String tag = JNIServer.class.getSimpleName();
@@ -26,7 +25,7 @@ public class JNIServer {
 			int ki_threads);
 
 
-	public static int runServer(Spielleiter spiel, GameMode gameMode, int field_size, int stones[], int ki_mode) {
+	public static int runServer(GameState spiel, GameMode gameMode, int field_size, int stones[], int ki_mode) {
 		int ki_threads = get_number_of_processors();
 
 		Log.d(tag, "spawning server with " + ki_threads + " threads");
@@ -45,7 +44,7 @@ public class JNIServer {
 					spiel.width,
 					spiel.height,
 					spiel.getCurrentPlayer(),
-					spiel.spieler,
+					spiel.getPlayerTypes(),
 					spiel.getFields(),
 					player_stones_available,
 					gameMode.ordinal(),

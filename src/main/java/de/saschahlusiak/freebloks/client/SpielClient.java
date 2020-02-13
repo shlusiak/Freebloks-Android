@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.controller;
+package de.saschahlusiak.freebloks.client;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +23,6 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;
@@ -43,7 +42,7 @@ public class SpielClient {
 
 	private Object client_socket;
 	private OutputStream outputStream;
-	public final Spielleiter spiel;
+	public final GameState game;
 	private final MessageWriter messageWriter = new MessageWriter();
 	private HandlerThread sendThread;
 	private Handler sendHandler;
@@ -52,17 +51,17 @@ public class SpielClient {
 	private MessageReader reader;
 
 	@UiThread
-	public SpielClient(Spielleiter leiter, GameConfiguration config) {
+	public SpielClient(GameState leiter, GameConfiguration config) {
 		this.config = config;
 		if (leiter == null) {
-			spiel = new Spielleiter(config.getFieldSize());
-			spiel.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-			spiel.setAvailableStones(0, 0, 0, 0, 0);
+			game = new GameState(config.getFieldSize());
+			game.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
+			game.setAvailableStones(0, 0, 0, 0, 0);
 		} else
-			this.spiel = leiter;
+			this.game = leiter;
 		client_socket = null;
 
-		networkEventHandler = new NetworkEventHandler(spiel);
+		networkEventHandler = new NetworkEventHandler(game);
 		reader = new MessageReader();
 	}
 
@@ -200,11 +199,11 @@ public class SpielClient {
 	}
 
 	public void request_hint(int player) {
-		if (spiel == null)
+		if (game == null)
 			return;
 		if (!isConnected())
 			return;
-		if (!spiel.isLocalPlayer())
+		if (!game.isLocalPlayer())
 			return;
 		send(new MessageRequestHint(player));
 	}
@@ -221,12 +220,12 @@ public class SpielClient {
 	 **/
 	public int set_stone(Turn turn)
 	{
-		if (spiel.getCurrentPlayer() ==-1)
+		if (game.getCurrentPlayer() ==-1)
 			return Spiel.FIELD_DENIED;
 		
 		/* Lokal keinen Spieler als aktiv setzen.
 	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
-		spiel.setCurrentPlayer(-1);
+		game.setCurrentPlayer(-1);
 
 		send(new MessageSetStone(turn));
 
@@ -244,11 +243,11 @@ public class SpielClient {
 	 * Erbittet eine Zugzuruecknahme beim Server
 	 **/
 	public void request_undo() {
-		if (spiel == null)
+		if (game == null)
 			return;
 		if (!isConnected())
 			return;
-		if (!spiel.isLocalPlayer())
+		if (!game.isLocalPlayer())
 			return;
 		send(new MessageRequestUndo());
 	}
