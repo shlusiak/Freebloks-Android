@@ -25,7 +25,6 @@ class GameClientThread(private val inputStream: InputStream, val client: GameCli
     @Synchronized
     fun goDown() {
         goDown = true
-        client.disconnect()
     }
 
     override fun run() {

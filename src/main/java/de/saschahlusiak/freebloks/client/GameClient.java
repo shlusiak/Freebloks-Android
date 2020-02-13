@@ -156,6 +156,7 @@ public class GameClient {
 
 	public synchronized void disconnect() {
 		if (client_socket != null) {
+			final Exception lastError = readThread.getError();
 			try {
 				Crashlytics.log("Disconnecting from " + config.getServer());
 				readThread.goDown();
@@ -177,7 +178,7 @@ public class GameClient {
 				e.printStackTrace();
 			}
 
-			networkEventHandler.onDisconnected(readThread.getError());
+			networkEventHandler.onDisconnected(lastError);
 		}
 		client_socket = null;
 	}

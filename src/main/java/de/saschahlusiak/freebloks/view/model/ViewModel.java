@@ -62,7 +62,10 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 
 	public void setGame(Game game) {
 		this.game = game;
-		this.board = game.getBoard();
+		if (game != null)
+			this.board = game.getBoard();
+		else
+			this.board = null;
 	}
 
 	public boolean handlePointerDown(PointF m) {

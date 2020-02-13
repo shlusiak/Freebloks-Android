@@ -447,6 +447,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		this.connectTask = null;
 		view.model.soundPool = null;
 		// ensure that this isn't disconnect on rotate
+		client.removeObserver(this);
+		client.removeObserver(view);
 		client = null;
 		return config;
 	}
@@ -1080,8 +1082,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				if (player < 0)
 					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
 
-				final Game game = client.game;
-				final Board board = game.getBoard();
+				final Game game = client == null ? null : client.game;
+				final Board board = game == null ? null : game.getBoard();
 
 				if (view.model.intro != null)
 					status.setText(R.string.touch_to_skip);
