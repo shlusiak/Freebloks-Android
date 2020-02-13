@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Freebloks</string>
-    <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2019.</string>
+    <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2020.</string>
 
     <string name="new_local_game">New Game</string>
     <string name="resume">Resume</string>
