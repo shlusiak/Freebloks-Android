@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
-import de.saschahlusiak.freebloks.client.SpielClient;
+import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Game;
@@ -73,7 +73,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		renderer.backgroundRenderer.setTheme(theme);
 	}
 
-	public void setSpiel(final SpielClient client, final Game game) {
+	public void setGameClient(final GameClient client, final Game game) {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {

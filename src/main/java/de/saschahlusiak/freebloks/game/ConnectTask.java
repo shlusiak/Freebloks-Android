@@ -9,17 +9,18 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import com.crashlytics.android.Crashlytics;
-import de.saschahlusiak.freebloks.client.SpielClient;
+
+import de.saschahlusiak.freebloks.client.GameClient;
 
 class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelListener {
 	private static final String tag = ConnectTask.class.getSimpleName();
 
 	private FreebloksActivity activity;
-	private SpielClient myclient;
+	private GameClient myclient;
 	private boolean show_lobby;
 	private Runnable connectedRunnable;
 
-	ConnectTask(SpielClient client, boolean show_lobby, Runnable connectedRunnable) {
+	ConnectTask(GameClient client, boolean show_lobby, Runnable connectedRunnable) {
 		this.myclient = client;
 		this.show_lobby = show_lobby;
 		this.connectedRunnable = connectedRunnable;
@@ -32,7 +33,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	@Override
 	protected void onPreExecute() {
 		activity.lastStatus = null;
-		activity.view.setSpiel(null, null);
+		activity.view.setGameClient(null, null);
 		activity.chatButton.setVisibility(View.INVISIBLE);
 		activity.chatEntries.clear();
 		activity.showDialog(FreebloksActivity.DIALOG_PROGRESS, null);
@@ -46,7 +47,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			Crashlytics.log(Log.INFO, tag, "Connecting to: " + name);
 			Crashlytics.setString("server", name);
 
-			myclient.connect(activity, params[0], SpielClient.DEFAULT_PORT);
+			myclient.connect(activity, params[0], GameClient.DEFAULT_PORT);
 		} catch (IOException e) {
 			if (isCancelled())
 				return null;
@@ -69,8 +70,8 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	protected void onPostExecute(Exception result) {
 		activity.connectTask = null;
 		if (activity.client != null) {
-			if (activity.spielthread != null)
-				activity.spielthread.goDown();
+			if (activity.clientThread != null)
+				activity.clientThread.goDown();
 
 			activity.client.disconnect();
 			activity.client = null;
@@ -80,7 +81,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 
 		activity.client = this.myclient;
 		activity.connectTask = null;
-		activity.view.setSpiel(myclient, myclient.game);
+		activity.view.setGameClient(myclient, myclient.game);
 		activity.dismissDialog(FreebloksActivity.DIALOG_PROGRESS);
 		if (result != null) {
 			Crashlytics.logException(result);
@@ -90,9 +91,9 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			builder.setMessage(result.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
 			activity.canresume = false;
-			if (activity.spielthread != null)
-				activity.spielthread.goDown();
-			activity.spielthread = null;
+			if (activity.clientThread != null)
+				activity.clientThread.goDown();
+			activity.clientThread = null;
 			activity.client.disconnect();
 			activity.client = null;
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

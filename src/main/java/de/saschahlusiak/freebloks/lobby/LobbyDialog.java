@@ -15,9 +15,9 @@ import android.text.TextWatcher;
 import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.client.SpielClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
@@ -42,7 +42,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClickListener, OnItemSelectedListener {
-	SpielClient client;
+	GameClient client;
 	Handler handler = new Handler();
 	ListView chatList;
 	ChatListAdapter adapter;
@@ -166,7 +166,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 
 		final EditText edt = dialogView.findViewById(android.R.id.edit);
 
-		edt.setText(lastStatus.getClientName(getContext().getResources(), lastStatus.getSpieler()[player]));
+		edt.setText(lastStatus.getClientName(getContext().getResources(), lastStatus.getClient(player)));
 
 		dialogBuilder.setTitle(R.string.prefs_player_name);
 		dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -197,7 +197,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 		b.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 	}
 
-	public void setSpiel(SpielClient client) {
+	public void setGameClient(GameClient client) {
 		this.client = client;
 		lastStatus = null;
 		/* what do we do if supplied client is null? */

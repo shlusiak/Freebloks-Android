@@ -7,7 +7,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 /**
  * All callbacks happen on a background thread!
  *
- * This is usually the [SpielClientThread].
+ * This is usually the [GameClientThread].
  *
  * Register with [NetworkEventHandler] to get updates.
  */

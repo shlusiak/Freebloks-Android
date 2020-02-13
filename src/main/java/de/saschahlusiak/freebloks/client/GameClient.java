@@ -35,9 +35,7 @@ import de.saschahlusiak.freebloks.network.message.MessageRevokePlayer;
 import de.saschahlusiak.freebloks.network.message.MessageSetStone;
 import de.saschahlusiak.freebloks.network.message.MessageStartGame;
 
-public class SpielClient {
-	private static final String tag = SpielClient.class.getSimpleName();
-
+public class GameClient {
 	private static final int DEFAULT_TIMEOUT = 10000;
 	public static final int DEFAULT_PORT = 59995;
 
@@ -53,7 +51,7 @@ public class SpielClient {
 	private MessageReader reader;
 
 	@UiThread
-	public SpielClient(Game game, GameConfiguration config) {
+	public GameClient(Game game, GameConfiguration config) {
 		this.config = config;
 		if (game == null) {
 			Board board = new Board(config.getFieldSize());

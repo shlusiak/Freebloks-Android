@@ -18,11 +18,11 @@ data class MessageServerStatus(
     val clients: Int,               // int8
     val width: Int,                 // int8
     val height: Int,                // int8
-//    val _stoneNumbers: IntArray,  //int8[5]
     val gameMode: GameMode,         // int8
 
 // since 1.5, optional
-    val spieler: IntArray,          // int8[4]
+    // a map of player number to client number, or -1 if played by computer
+    val clientForPlayer: IntArray,          // int8[4]
     val clientNames: Array<String?>, // uint8[8][16]
     val version: Int,               // int8
     val minVersion: Int,            // int8
@@ -34,7 +34,7 @@ data class MessageServerStatus(
         assert(player in 0..4) { "Invalid number of players $player"}
         assert(computer in 0..4) { "Invalid number of computers $computer"}
         assert(clients in 0..8) { "Invalid number of clients $clients"}
-        assert(spieler.size == 4) { "Invalid spieler size ${spieler.size}"}
+        assert(clientForPlayer.size == 4) { "Invalid spieler size ${clientForPlayer.size}"}
         assert(clientNames.size == 8) { "Invalid clientNames size ${clientNames.size}"}
         assert(stoneNumbers.size == Shape.COUNT) { "Invalid stoneNumbers size ${stoneNumbers.size}"}
     }
@@ -46,9 +46,10 @@ data class MessageServerStatus(
         buffer.put(clients.toByte())
         buffer.put(width.toByte())
         buffer.put(height.toByte())
+        // legacy stone numbers
         buffer.put(1, 1, 1, 1, 1)
         buffer.put(gameMode.ordinal.toByte())
-        spieler.forEach { buffer.put(it.toByte()) }
+        clientForPlayer.forEach { buffer.put(it.toByte()) }
         clientNames.forEach { it ->
             val name = it ?: ""
             val padding = 16 - name.length
@@ -71,11 +72,17 @@ data class MessageServerStatus(
         return clientNames[client] ?: default
     }
 
+    fun getClient(player: Int) = clientForPlayer[player]
+
+    fun isClient(player: Int) = getClient(player) >= 0
+
+    fun isComputer(player: Int) = !isClient(player)
+
     fun getPlayerName(resources: Resources, player: Int, color: Int): String {
         if (player < 0) throw InvalidParameterException()
         val colorName = resources.getStringArray(R.array.color_names)[color]
-        if (spieler[player] < 0) return colorName
-        return clientNames[spieler[player]] ?: colorName
+        if (clientForPlayer[player] < 0) return colorName
+        return clientNames[clientForPlayer[player]] ?: colorName
     }
 
     override fun equals(other: Any?): Boolean {
@@ -90,7 +97,7 @@ data class MessageServerStatus(
         if (width != other.width) return false
         if (height != other.height) return false
         if (gameMode != other.gameMode) return false
-        if (!spieler.contentEquals(other.spieler)) return false
+        if (!clientForPlayer.contentEquals(other.clientForPlayer)) return false
         if (!clientNames.contentEquals(other.clientNames)) return false
         if (version != other.version) return false
         if (minVersion != other.minVersion) return false
@@ -106,7 +113,7 @@ data class MessageServerStatus(
         result = 31 * result + width
         result = 31 * result + height
         result = 31 * result + gameMode.hashCode()
-        result = 31 * result + spieler.contentHashCode()
+        result = 31 * result + clientForPlayer.contentHashCode()
         result = 31 * result + clientNames.contentHashCode()
         result = 31 * result + version
         result = 31 * result + minVersion
@@ -153,7 +160,7 @@ data class MessageServerStatus(
                 width = width,
                 height = height,
                 gameMode = gamemode,
-                spieler = spieler,
+                clientForPlayer = spieler,
                 clientNames = clientNames,
                 version = version,
                 minVersion = minVersion,

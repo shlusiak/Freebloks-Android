@@ -34,8 +34,8 @@ public class ColorAdapter extends BaseAdapter {
 		this.game = game;
 	}
 
-	void setCurrentStatus(Game spiel, MessageServerStatus status) {
-		this.game = spiel;
+	void setCurrentStatus(Game game, MessageServerStatus status) {
+		this.game = game;
 		this.lastStatus = status;
 		notifyDataSetChanged();
 	}
@@ -86,7 +86,7 @@ public class ColorAdapter extends BaseAdapter {
 		if (game.isStarted())
 			return false;
 
-		if (lastStatus.getSpieler()[position] >= 0) {
+		if (lastStatus.isClient(position)) {
 			/* it is a human player */
 			if (game.isLocalPlayer(position))
 				return true;
@@ -144,9 +144,9 @@ public class ColorAdapter extends BaseAdapter {
 
 		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, game.getGameMode())]));
 		if (lastStatus.isVersion(2)) {
-			if (lastStatus.getSpieler()[player] >= 0) {
+			if (lastStatus.isClient(player)) {
 				/* it is a human player */
-				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getSpieler()[player]));
+				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getClient(player)));
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				if (game.isLocalPlayer(player)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
