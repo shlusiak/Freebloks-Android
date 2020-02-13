@@ -14,6 +14,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 
@@ -25,6 +27,7 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;
 import de.saschahlusiak.freebloks.network.message.MessageRequestHint;
+import de.saschahlusiak.freebloks.network.message.MessageRequestPlayer;
 import de.saschahlusiak.freebloks.network.message.MessageRequestUndo;
 import de.saschahlusiak.freebloks.network.message.MessageRevokePlayer;
 import de.saschahlusiak.freebloks.network.message.MessageSetStone;
@@ -182,8 +185,8 @@ public class SpielClient {
 		}
 	}
 
-	public void request_player(int player, String name) {
-		send(new NET_REQUEST_PLAYER(player, name));
+	public void request_player(int player, @Nullable String name) {
+		send(new MessageRequestPlayer(player, name));
 	}
 
 	public void revoke_player(int player) {

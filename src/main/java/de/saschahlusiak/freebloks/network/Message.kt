@@ -65,7 +65,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
             }
 
             val message = when (header.messageType) {
-//                MessageType.RequestPlayer -> NET_REQUEST_PLAYER(p)
+                MessageType.RequestPlayer -> MessageRequestPlayer.from(buffer)
                 MessageType.GrantPlayer -> MessageGrantPlayer.from(buffer)
                 MessageType.CurrentPlayer -> MessageCurrentPlayer.from(buffer)
                 MessageType.SetStone -> MessageSetStone.from(buffer)
@@ -78,6 +78,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
                 MessageType.RequestHint -> MessageRequestHint.from(buffer)
                 MessageType.StoneHint -> MessageStoneHint.from(buffer)
                 MessageType.RevokePlayer -> MessageRevokePlayer.from(buffer)
+//                MessageType.RequestGameMode ->
 
                 else -> {
                     Log.e(tag, "Unhandled message type: ${header.messageType}")
