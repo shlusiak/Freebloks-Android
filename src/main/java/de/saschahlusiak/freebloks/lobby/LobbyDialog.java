@@ -10,6 +10,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
@@ -375,7 +377,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board) {
+	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
 		// dismiss may stop the dialog and remove this instance from the client listeners, modifying the underlying
 		// list, so we have do run the dismiss() outside of this method.
 		handler.post(new Runnable()

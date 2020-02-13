@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
@@ -235,7 +236,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 				PointF p = new PointF();
 				p.x = turn.getX() - 0.5f + st.getShape().getSize() / 2;
 				p.y = turn.getY() - 0.5f + st.getShape().getSize() / 2;
-				model.currentStone.startDragging(p, st, turn.getMirrorCount(), turn.getRotationCount(), model.getPlayerColor(turn.getPlayer()));
+				model.currentStone.startDragging(p, st, turn.getOrientation(), model.getPlayerColor(turn.getPlayer()));
 
 				requestRender();
 			}
@@ -296,7 +297,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board) {
+	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
 
 	}
 

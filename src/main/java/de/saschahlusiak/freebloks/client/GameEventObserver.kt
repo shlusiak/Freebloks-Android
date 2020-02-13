@@ -13,7 +13,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
  */
 interface GameEventObserver {
     fun onConnected(board: Board)
-    fun onDisconnected(board: Board)
+    fun onDisconnected(board: Board, error: Exception?)
     fun newCurrentPlayer(player: Int)
     fun stoneWillBeSet(turn: Turn)
     fun stoneHasBeenSet(turn: Turn)

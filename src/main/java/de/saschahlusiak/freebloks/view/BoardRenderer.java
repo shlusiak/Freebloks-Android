@@ -10,6 +10,7 @@ import android.opengl.GLUtils;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Board;
+import de.saschahlusiak.freebloks.model.Orientation;
 import de.saschahlusiak.freebloks.model.Shape;
 
 
@@ -301,7 +302,7 @@ public class BoardRenderer {
 
 	final float tmp[] = new float[4];
 
-	public void renderStoneShadow(GL11 gl, int color, Shape stone, int mirror, int rotate, float alpha) {
+	public void renderStoneShadow(GL11 gl, int color, Shape stone, Orientation orientation, float alpha) {
 		final float c[] = Global.stone_shadow_color_a[color];
 		tmp[0] = c[0] * alpha;
 		tmp[1] = c[1] * alpha;
@@ -323,7 +324,7 @@ public class BoardRenderer {
 		for (int i = 0; i < stone.getSize(); i++) {
 			int j;
 			for (j = 0; j < stone.getSize(); j++) {
-				if (stone.isStone(j, i, mirror, rotate))
+				if (stone.isStone(j, i, orientation))
 					shadow.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
@@ -335,7 +336,7 @@ public class BoardRenderer {
 	}
 
 	public void renderShadow(GL11 gl,
-							 Shape stone, int color, int mirror, int rotate,
+							 Shape stone, int color, Orientation orientation,
 							 float height,
 							 float ang, float ax, float ay, float az,
 							 float light_angle,
@@ -366,10 +367,10 @@ public class BoardRenderer {
 	    		0,
 	    		-BoardRenderer.stone_size * offset);
 
-		renderStoneShadow(gl, color, stone, mirror, rotate, m_alpha * alpha);
+		renderStoneShadow(gl, color, stone, orientation, m_alpha * alpha);
 	}
 
-	public void renderPlayerStone(GL11 gl, int color, Shape stone, int mirror, int rotate, float alpha) {
+	public void renderPlayerStone(GL11 gl, int color, Shape stone, Orientation orientation, float alpha) {
 		int i;
 		final float c[] = Global.stone_color_a[color];
 		tmp[0] = c[0] * alpha;
@@ -389,7 +390,7 @@ public class BoardRenderer {
 		for (i = 0; i < stone.getSize(); i++) {
 			int j;
 			for (j = 0; j < stone.getSize(); j++) {
-				if (stone.isStone(j, i, mirror, rotate))
+				if (stone.isStone(j, i, orientation))
 					this.stone.drawElements(gl);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}

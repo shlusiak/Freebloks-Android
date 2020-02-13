@@ -35,8 +35,8 @@ class NetworkEventHandler(private val game: Game) {
         notifyObservers { it.onConnected(board) }
     }
 
-    fun onDisconnected() {
-        notifyObservers { it.onDisconnected(board) }
+    fun onDisconnected(error: Exception?) {
+        notifyObservers { it.onDisconnected(board, error) }
     }
 
     @WorkerThread
@@ -137,6 +137,9 @@ class NetworkEventHandler(private val game: Game) {
                             n++
                         }
                     }
+
+                    GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
+                    GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {}
                 }
                 board.refreshPlayerData()
                 game.currentPlayer = -1

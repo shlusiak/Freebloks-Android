@@ -154,14 +154,6 @@ class Shape private constructor(
     }
 
     /**
-     * Whether the given coordinate is occupied by the stone
-     */
-    @Deprecated("use Orientation instead")
-    fun isStone(x: Int, y: Int, mirror: Int, rotate: Int): Boolean {
-        return isStone(x, y, mirror == 1, Rotation.from(rotate))
-    }
-
-    /**
      * Whether the given coordinate is a corner of interest, i.e. whether it makes sense to
      * test this stone on this piece against a "seed" on the board.
      */

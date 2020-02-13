@@ -70,9 +70,6 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	protected void onPostExecute(Exception result) {
 		activity.connectTask = null;
 		if (activity.client != null) {
-			if (activity.clientThread != null)
-				activity.clientThread.goDown();
-
 			activity.client.disconnect();
 			activity.client = null;
 		}
@@ -91,9 +88,6 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			builder.setMessage(result.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
 			activity.canresume = false;
-			if (activity.clientThread != null)
-				activity.clientThread.goDown();
-			activity.clientThread = null;
 			activity.client.disconnect();
 			activity.client = null;
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

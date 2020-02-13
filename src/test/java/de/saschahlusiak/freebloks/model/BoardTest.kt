@@ -44,11 +44,11 @@ class BoardTest {
         // but there is no player on that field yet
         assertEquals(FIELD_FREE, s.getFieldPlayer(19, 0))
 
-        assertFalse(s.isValidTurn(stone.shape, 0, 0, 0, 0, 0))
+        assertFalse(s.isValidTurn(stone.shape, 0, 0, 0, Orientation.Default))
 
         //  X
         // XX
-        val turn = Turn(0, stone.shape.number, 18, 0, 0, 3)
+        val turn = Turn(0, stone.shape.number, 18, 0, Orientation(false, Rotation.Left))
         assertTrue(s.isValidTurn(turn))
         s.setStone(turn)
         assertEquals(0, stone.available)

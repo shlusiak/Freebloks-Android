@@ -37,7 +37,7 @@ public class StoneFadeEffect extends AbsStoneEffect {
 	    		0,
 	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 
-		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, alpha * BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, orientation, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 }

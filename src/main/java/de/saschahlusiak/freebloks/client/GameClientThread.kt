@@ -2,13 +2,18 @@ package de.saschahlusiak.freebloks.client
 
 import android.util.Log
 import com.crashlytics.android.Crashlytics
+import de.saschahlusiak.freebloks.network.MessageReader
+import de.saschahlusiak.freebloks.network.ProtocolException
 import java.io.IOException
+import java.io.InputStream
 
 /**
- * This Thread will continuously call [GameClient.poll] to process individual messages.
+ * This Thread will continuously poll the client's InputStream to process individual messages.
  */
-class GameClientThread(val client: GameClient) : Thread("GameClientThread") {
+class GameClientThread(private val inputStream: InputStream, val client: GameClient) : Thread("GameClientThread") {
     private val tag = GameClientThread::class.java.simpleName
+
+    private val reader = MessageReader()
 
     @get:Synchronized
     private var goDown = false
@@ -25,11 +30,14 @@ class GameClientThread(val client: GameClient) : Thread("GameClientThread") {
 
     override fun run() {
         try {
-            do {
-                // block to fetch and process a single message
-                client.poll()
+            for (message in reader.asSequence(inputStream)) {
                 if (goDown) return
-            } while (client.isConnected)
+                client.handleMessage(message)
+            }
+        } catch (e: GameStateException) {
+            throw RuntimeException(e)
+        } catch (e: ProtocolException) {
+            throw RuntimeException(e)
         } catch (e: IOException) {
             if (goDown) return
             Crashlytics.logException(e)

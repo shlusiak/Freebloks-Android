@@ -43,7 +43,7 @@ public class StoneUndoEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * y);
 
 		renderer.renderShadow(gl,
-				stone, color, mirror, rotate,
+				stone, color, orientation,
 				z,
 				rot, 0, 1, 0,
 				90 * model.boardObject.centerPlayer,
@@ -63,7 +63,7 @@ public class StoneUndoEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 
 	    gl.glRotatef(rot, 0, 1, 0);
-		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, alpha * BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, orientation, alpha * BoardRenderer.DEFAULT_ALPHA);
 		gl.glPopMatrix();
 	}
 }

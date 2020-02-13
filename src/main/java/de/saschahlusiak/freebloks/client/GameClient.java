@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
@@ -41,14 +42,15 @@ public class GameClient {
 
 	private Object client_socket;
 	private OutputStream outputStream;
+	private InputStream inputStream;
 	public final Game game;
 	public final Board board;
 	private final MessageWriter messageWriter = new MessageWriter();
 	private HandlerThread sendThread;
+	private GameClientThread readThread;
 	private Handler sendHandler;
 	private GameConfiguration config;
 	private NetworkEventHandler networkEventHandler;
-	private MessageReader reader;
 
 	@UiThread
 	public GameClient(Game game, GameConfiguration config) {
@@ -67,7 +69,6 @@ public class GameClient {
 		client_socket = null;
 
 		networkEventHandler = new NetworkEventHandler(this.game);
-		reader = new MessageReader();
 	}
 
 	@Override
@@ -113,6 +114,11 @@ public class GameClient {
 		}
 		synchronized(this) {
 			this.outputStream = socket.getOutputStream();
+			this.inputStream = socket.getInputStream();
+
+			readThread = new GameClientThread(inputStream, this);
+			readThread.start();
+
 			sendThread = new HandlerThread("SendThread");
 			sendThread.start();
 			sendHandler = new Handler(sendThread.getLooper());
@@ -127,6 +133,10 @@ public class GameClient {
 		synchronized(this) {
 			this.client_socket = socket;
 			this.outputStream = socket.getOutputStream();
+			this.inputStream = socket.getInputStream();
+
+			readThread = new GameClientThread(inputStream, this);
+			readThread.start();
 
 			sendThread = new HandlerThread("SendThread");
 			sendThread.start();
@@ -136,10 +146,19 @@ public class GameClient {
 		}
 	}
 
+	public @NonNull InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public void handleMessage(Message message) throws GameStateException, ProtocolException {
+		networkEventHandler.handleMessage(message);
+	}
+
 	public synchronized void disconnect() {
 		if (client_socket != null) {
 			try {
 				Crashlytics.log("Disconnecting from " + config.getServer());
+				readThread.goDown();
 				if (client_socket instanceof Socket) {
 					Socket socket = (Socket) client_socket;
 					if (socket.isConnected())
@@ -152,43 +171,15 @@ public class GameClient {
 				}
 				if (sendThread != null)
 					sendThread.quit();
+				readThread = null;
 				sendThread = null;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			networkEventHandler.onDisconnected();
+			networkEventHandler.onDisconnected(readThread.getError());
 		}
 		client_socket = null;
-	}
-
-	@WorkerThread
-	public void poll() throws IOException {
-		de.saschahlusiak.freebloks.network.Message msg;
-
-		try {
-			final InputStream is;
-
-			synchronized (this) {
-				if (client_socket == null)
-					return;
-				if (client_socket instanceof Socket && !((Socket)client_socket).isInputShutdown())
-					is = ((Socket)client_socket).getInputStream();
-				else if (client_socket instanceof BluetoothSocket)
-					is = ((BluetoothSocket)client_socket).getInputStream();
-				else
-					return;
-			}
-
-			/* Read a complete network message into buffer */
-			msg = reader.readMessage(is);
-				
-			if (msg != null)
-				networkEventHandler.handleMessage(msg);
-		}
-		catch (GameStateException | ProtocolException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	public void request_player(int player, @Nullable String name) {

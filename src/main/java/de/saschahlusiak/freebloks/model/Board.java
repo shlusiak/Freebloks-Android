@@ -193,7 +193,7 @@ public class Board implements Serializable {
 	 */
 	@Deprecated
 	public void setAvailableStones(int one, int two, int three, int four, int five){
-		int counts[] = {one, two, three, four, five};
+		final int[] counts = {one, two, three, four, five};
 
 		for (int n = 0; n < Shape.COUNT; n++) {
 			for (int p = 0; p < PLAYER_MAX; p++) {
@@ -208,7 +208,7 @@ public class Board implements Serializable {
 	/**
 	 * Sets the number of available stones for each stone.
 	 */
-	public void setAvailableStones(int stone_numbers[]) {
+	public void setAvailableStones(int[] stone_numbers) {
 		for (int n = 0; n < Shape.COUNT; n++){
 			for (int p = 0; p < PLAYER_MAX; p++){
 				final Stone stone = player[p].getStone(n);
@@ -252,15 +252,15 @@ public class Board implements Serializable {
 	/**
 	 * Check whether the given stone/player/position is a valid move.
 	 *
-	 * @return FIELD_ALLOWED if allowed, FIELD_DENIED otherwise
+	 * @return true if allowed, false otherwise
 	 */
-	public final boolean isValidTurn(Shape stone, int player, int startY, int startX, int mirror, int rotate) {
+	public final boolean isValidTurn(Shape stone, int player, int startY, int startX, Orientation orientation) {
 		boolean valid = false;
 		int field_value;
 
 		for (int y = 0; y < stone.getSize(); y++){
 			for (int x = 0; x < stone.getSize(); x++){
-				if (stone.isStone(x, y, mirror, rotate)) {
+				if (stone.isStone(x, y, orientation)) {
 					if (y + startY < 0 || y + startY >= height || x + startX < 0 || x + startX >= width)
 						return false;
 
@@ -271,10 +271,6 @@ public class Board implements Serializable {
 			}
 		}
 		return valid;
-	}
-
-	public final boolean isValidTurn(Shape stone, int player, int startY, int startX, Orientation orientation) {
-		return isValidTurn(stone, player, startY, startX, orientation.getMirrored() ? 1 : 0, orientation.getRotation().getValue());
 	}
 
 	/**
@@ -362,6 +358,9 @@ public class Board implements Serializable {
 	 */
 	public void undo(Turnpool turnpool, GameMode gamemode) throws GameStateException{
 		final Turn turn = turnpool.pollLast();
+		if (turn == null) {
+			throw new GameStateException("Undo requested, but no last turn stored");
+		}
 		final Shape shape = turn.getShape();
 		int x, y;
 

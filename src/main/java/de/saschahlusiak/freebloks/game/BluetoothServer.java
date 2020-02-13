@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
@@ -114,7 +116,7 @@ public class BluetoothServer extends Thread implements GameEventObserver {
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board) {
+	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
 		shutdown();
 	}
 

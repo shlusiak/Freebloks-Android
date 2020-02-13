@@ -79,7 +79,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * y);
 
 		renderer.renderShadow(gl,
-				stone, color, mirror, rotate,
+				stone, color, orientation,
 				z,
 				r, ax, ay, az,
 				90 * model.boardObject.centerPlayer,
@@ -107,7 +107,7 @@ public class StoneRollEffect extends AbsStoneEffect {
 	    		-BoardRenderer.stone_size * offset,
 	    		0,
 	    		-BoardRenderer.stone_size * offset);
-		renderer.renderPlayerStone(gl, color, stone, mirror, rotate, BoardRenderer.DEFAULT_ALPHA);
+		renderer.renderPlayerStone(gl, color, stone, orientation, BoardRenderer.DEFAULT_ALPHA);
 
 		gl.glPopMatrix();
 	}

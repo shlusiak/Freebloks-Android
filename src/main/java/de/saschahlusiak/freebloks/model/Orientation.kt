@@ -25,4 +25,9 @@ data class Orientation(val mirrored: Boolean = false, val rotation: Rotation = R
         Rotation.Half -> Orientation(!mirrored, Rotation.None)
         else -> Orientation(!mirrored, rotation)
     }
+
+    companion object {
+        @JvmField
+        val Default = Orientation()
+    }
 }

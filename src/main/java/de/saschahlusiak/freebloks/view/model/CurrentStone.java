@@ -12,6 +12,7 @@ import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Mirrorable;
+import de.saschahlusiak.freebloks.model.Orientation;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -37,8 +38,8 @@ public class CurrentStone implements ViewElement {
 	SimpleModel overlay;
 	Status status;
 	ViewModel model;
-	
-	int m_mirror_counter, m_rotate_counter;
+
+	Orientation orientation;
 
 	public final float hover_height_low = 0.55f;
 	public final float hover_height_high = 0.55f;
@@ -60,9 +61,8 @@ public class CurrentStone implements ViewElement {
 		overlay.addIndex(0, 2, 3);
 
 		overlay.commit();
-		
-		m_mirror_counter = 0;
-		m_rotate_counter = 0;
+
+		orientation = new Orientation();
 	}
 
 	public void updateTexture(Context context, GL10 gl) {
@@ -152,7 +152,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 
-		renderer.board.renderStoneShadow(gl, model.game.getCurrentPlayer(), stone.getShape(), m_mirror_counter, m_rotate_counter, 0.80f);
+		renderer.board.renderStoneShadow(gl, model.game.getCurrentPlayer(), stone.getShape(), orientation, 0.80f);
 		gl.glPopMatrix();
 
 
@@ -218,7 +218,7 @@ public class CurrentStone implements ViewElement {
 				-BoardRenderer.stone_size * offset);
 
 	    gl.glEnable(GL10.GL_DEPTH_TEST);
-		renderer.board.renderPlayerStone(gl, current_color, stone.getShape(), m_mirror_counter, m_rotate_counter,
+		renderer.board.renderPlayerStone(gl, current_color, stone.getShape(), orientation,
 				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
 
 		gl.glPopMatrix();
@@ -390,33 +390,28 @@ public class CurrentStone implements ViewElement {
 		return true;
 	}
 
-	public final void rotate_left(){
-		m_rotate_counter--;
-		if (m_rotate_counter < 0) m_rotate_counter += stone.getShape().getRotatable().getValue();
+	private final void rotate_left(){
+		orientation = orientation.rotatedLeft(stone.getShape().getRotatable());
 	}
 
-	public final void rotate_right(){
-		m_rotate_counter=(m_rotate_counter+1) % stone.getShape().getRotatable().getValue();
+	private final void rotate_right(){
+		orientation = orientation.rotatedRight(stone.getShape().getRotatable());
 	}
 
-	public final void mirror_over_x(){
+	private final void mirror_over_x(){
 		if (stone.getShape().getMirrorable() == Mirrorable.Not) return;
-		m_mirror_counter = (m_mirror_counter + 1) % 2;
-		if (m_rotate_counter%2 == 1)
-			m_rotate_counter = (m_rotate_counter + 2) % (stone.getShape().getRotatable().getValue());
+		orientation = orientation.mirroredVertically();
 	}
 
-	public final void mirror_over_y(){
+	private final void mirror_over_y(){
 		if (stone.getShape().getMirrorable() == Mirrorable.Not) return;
-		m_mirror_counter = (m_mirror_counter + 1) % 2;
-		if (m_rotate_counter%2 == 0)
-			m_rotate_counter = (m_rotate_counter + 2) % (stone.getShape().getRotatable().getValue());
+		orientation = orientation.mirroredHorizontally();
 	}
 
 	public boolean is_valid_turn(float x, float y) {
 		if (!model.game.isLocalPlayer())
 			return false;
-		if (model.board.isValidTurn(stone.getShape(), model.game.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter))
+		if (model.board.isValidTurn(stone.getShape(), model.game.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), orientation))
 			return true;
 		return false;
 	}
@@ -479,7 +474,7 @@ public class CurrentStone implements ViewElement {
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				Turn turn = new Turn(model.game.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
+				Turn turn = new Turn(model.game.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), orientation);
 				if (model.activity.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;
@@ -525,7 +520,7 @@ public class CurrentStone implements ViewElement {
 		status = Status.IDLE;
 	}
 
-	synchronized public void startDragging(PointF fieldPoint, Stone stone, int mirror, int rotate, int color) {
+	synchronized public void startDragging(PointF fieldPoint, Stone stone, Orientation orientation, int color) {
 		this.stone = stone;
 		this.current_color = color;
 		
@@ -537,10 +532,8 @@ public class CurrentStone implements ViewElement {
 		 * when started dragging */
 		stone_rel_x = 0;
 		stone_rel_y = 0;
-		
-		m_mirror_counter = mirror;
-		m_rotate_counter = rotate;
 
+		this.orientation = orientation;
 
 		if (fieldPoint != null) {
 			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.getShape().getSize() / 2);

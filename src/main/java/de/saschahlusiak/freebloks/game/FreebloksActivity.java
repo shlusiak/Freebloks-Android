@@ -12,6 +12,7 @@ import android.app.*;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
 
@@ -23,7 +24,6 @@ import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.client.GameClient;
-import de.saschahlusiak.freebloks.client.GameClientThread;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.client.JNIServer;
@@ -105,7 +105,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	Freebloks3DView view;
 	GameClient client = null;
-	GameClientThread clientThread = null;
 	Vibrator vibrator;
 	boolean vibrate_on_move;
 	boolean show_notifications;
@@ -233,7 +232,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		RetainedConfig config = (RetainedConfig)getLastNonConfigurationInstance();
 		if (config != null) {
-			clientThread = config.clientThread;
+			client = config.client;
 			lastStatus = config.lastStatus;
 			view.model.soundPool = config.soundPool;
 			view.model.intro = config.intro;
@@ -268,9 +267,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		fieldsize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE);
 
-		if (clientThread != null) {
+		if (client != null) {
 			/* we just rotated and got *hot* objects */
-			client = clientThread.getClient();
 			client.addObserver(this);
 			view.setGameClient(client, client.game);
 			newCurrentPlayer(client.game.getCurrentPlayer());
@@ -282,20 +280,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				OnIntroCompleted();
 		}
 
-		statusView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (view.model.intro != null)
-					view.model.intro.cancel();
-			}
+		statusView.setOnClickListener(v -> {
+			if (view.model.intro != null)
+				view.model.intro.cancel();
 		});
 
-		findViewById(R.id.myLocation).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				view.model.boardObject.resetRotation();
-			}
-		});
+		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
 
 
 		final Animation a = new TranslateAnimation(0, 8, 0, 0);
@@ -327,7 +317,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		Log.d(tag, "onRestoreInstanceState (bundle=" + savedInstanceState + ")");
 
-		if (clientThread == null) {
+		if (client == null) {
 			if (!readStateFromBundle(savedInstanceState)) {
 				canresume = false;
 				newCurrentPlayer(-1);
@@ -374,14 +364,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		} catch (Exception e) {
 		//	e.printStackTrace();
 		}
-		if (clientThread != null) try {
-			clientThread.goDown();
-			clientThread.join();
-			clientThread = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if (client != null) {
+			client.disconnect();
 			client.removeObserver(this);
 			/* TODO: make attach/detach of view symmetric */
 			client.removeObserver(view);
@@ -455,14 +439,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public Object onRetainNonConfigurationInstance() {
 		Log.d(tag, "onRetainNonConfigurationInstance");
 		RetainedConfig config = new RetainedConfig();
-		config.clientThread = clientThread;
+		config.client = client;
 		config.lastStatus = lastStatus;
 		config.soundPool = view.model.soundPool;
 		config.intro = view.model.intro;
 		config.connectTask = connectTask;
 		this.connectTask = null;
 		view.model.soundPool = null;
-		clientThread = null;
+		// ensure that this isn't disconnect on rotate
+		client = null;
 		return config;
 	}
 
@@ -513,13 +498,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			final GameClient client = new GameClient(game, config);
 			client.game.setStarted(true);
 
-			connectTask = new ConnectTask(client, false, new Runnable() {
-				@Override
-				public void run() {
-					clientThread = new GameClientThread(client);
-					clientThread.start();
-				}
-			});
+			connectTask = new ConnectTask(client, false, () -> { });
 			connectTask.setActivity(this);
 
 			// this call would execute the onPreTask method, which calls through to show the progress
@@ -570,9 +549,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 		}
 
-		if (clientThread != null)
-			clientThread.goDown();
-		clientThread = null;
+		if (client != null)
+			client.disconnect();
 		client = null;
 
 		view.model.clearEffects();
@@ -585,9 +563,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
 			@Override
 			public void run() {
-				clientThread = new GameClientThread(client);
-				clientThread.start();
-
 				if (config.getRequestPlayers() == null)
 					client.request_player(-1, clientName);
 				else {
@@ -628,9 +603,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		final GameConfiguration config = GameConfiguration.builder().build();
 		newCurrentPlayer(-1);
 
-		if (clientThread != null)
-			clientThread.goDown();
-		clientThread = null;
+		if (client != null)
+			client.disconnect();
 		client = null;
 		view.model.clearEffects();
 		Log.d(tag, "Establishing game with existing bluetooth connection");
@@ -645,9 +619,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		client.addObserver(this);
 		client.setSocket(socket);
-
-		clientThread = new GameClientThread(client);
-		clientThread.start();
 
 		if (config.getRequestPlayers() == null)
 			client.request_player(-1, clientName);
@@ -932,9 +903,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						if (!client.game.isStarted() && !client.game.isFinished()) {
 							FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
 							canresume = false;
-							if (clientThread != null)
-								clientThread.goDown();
-							clientThread = null;
+							client.disconnect();
 							client = null;
 							showDialog(DIALOG_GAME_MENU);
 						}
@@ -1434,10 +1403,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board) {
+	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
 		Log.w(tag, "onDisconnected()");
-		final Exception error = (clientThread == null) ? null : clientThread.getError();
-		
+
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1569,7 +1537,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			return;
 		if (!show_notifications)
 			return;
-		if (clientThread == null)
+		if (client == null)
 			return;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
