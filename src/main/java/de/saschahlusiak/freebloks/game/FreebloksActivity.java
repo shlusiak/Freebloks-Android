@@ -32,7 +32,6 @@ import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.network.Network;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
@@ -603,7 +602,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					BluetoothServer bluetoothServer = new BluetoothServer(new BluetoothServer.OnBluetoothConnectedListener() {
 						@Override
 						public void onBluetoothClientConnected(BluetoothSocket socket) {
-							new BluetoothClientBridge(socket, "localhost", Network.DEFAULT_PORT).start();
+							new BluetoothClientBridge(socket, "localhost", SpielClient.DEFAULT_PORT).start();
 						}
 					});
 					bluetoothServer.start();
@@ -834,7 +833,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					startNewGame(GameConfiguration.builder().showLobby(true).build(), new Runnable() {
 						@Override
 						public void run() {
-							new BluetoothClientBridge(clientSocket, "localhost", Network.DEFAULT_PORT).start();
+							new BluetoothClientBridge(clientSocket, "localhost", SpielClient.DEFAULT_PORT).start();
 						}
 					});
 				}

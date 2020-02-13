@@ -18,8 +18,8 @@ enum class MessageType(val rawValue: Int) {
     RequestGameMode(14);
 
     companion object {
-        fun from(type: Int): MessageType? {
-            return values().firstOrNull { it.rawValue == type }
+        fun from(type: Int): MessageType {
+            return values().firstOrNull { it.rawValue == type } ?: Unknown
         }
     }
 }

@@ -10,12 +10,12 @@ import java.nio.ByteBuffer
 /**
  * A network message base class
  *
- * @param type the message type. See [Network]
+ * @param type the [MessageType]]
  * @param size size of the payload in bytes (excluding header)
  */
 abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
     // header only depends on type and size, so it can be pre-created
-    val header = Header(type, size + Header.HEADER_SIZE)
+    val header = Header(type.rawValue, size + Header.HEADER_SIZE)
 
     /**
      * All classes must provide a way to marshal the payload into a buffer
@@ -46,7 +46,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
     fun dumpAsHex(): String {
         val sb = StringBuffer()
         toByteArray().forEach {
-            sb.append(String.format("0x%02x ", it.toUnsignedByte()))
+            sb.append(String.format("0x%02x, ", it.toUnsignedByte()))
         }
         return sb.toString()
     }

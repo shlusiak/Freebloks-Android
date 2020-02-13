@@ -32,7 +32,7 @@ public class NET_HEADER implements Serializable {
 		bos.write(check2);
 	}
 
-	boolean send(OutputStream os) {
+	public boolean send(OutputStream os) {
 		if (os == null)
 			return false;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

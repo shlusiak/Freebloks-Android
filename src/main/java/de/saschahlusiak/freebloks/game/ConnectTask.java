@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.controller.SpielClient;
-import de.saschahlusiak.freebloks.network.Network;
 
 class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelListener {
 	private static final String tag = ConnectTask.class.getSimpleName();
@@ -47,7 +46,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			Crashlytics.log(Log.INFO, tag, "Connecting to: " + name);
 			Crashlytics.setString("server", name);
 
-			myclient.connect(activity, params[0], Network.DEFAULT_PORT);
+			myclient.connect(activity, params[0], SpielClient.DEFAULT_PORT);
 		} catch (IOException e) {
 			if (isCancelled())
 				return null;

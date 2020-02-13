@@ -13,10 +13,7 @@ fun ByteBuffer.put(header: Header) = header.write(this)
  * check2 uint8
  */
 data class Header(val rawType: Int, val size: Int): Serializable {
-    constructor(type: MessageType, size: Int): this(type.rawValue, size)
-
     val check1 = ((size and 0x0055) xor rawType)
-
     val check2 = (check1 xor 0xD6) + rawType
 
     val messageType = MessageType.from(rawType)
@@ -43,8 +40,7 @@ data class Header(val rawType: Int, val size: Int): Serializable {
 
             val header = Header(type.toInt(), size.toInt())
 
-            if (header.check1 != check1 || header.check2 != check2)
-                throw ProtocolException("header checksum failed")
+            if (header.check1 != check1 || header.check2 != check2) throw ProtocolException("header checksum failed")
 
             return header
         }
