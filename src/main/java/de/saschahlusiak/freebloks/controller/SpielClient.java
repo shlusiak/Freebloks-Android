@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
@@ -26,6 +25,7 @@ import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;
+import de.saschahlusiak.freebloks.network.message.MessageRequestGameMode;
 import de.saschahlusiak.freebloks.network.message.MessageRequestHint;
 import de.saschahlusiak.freebloks.network.message.MessageRequestPlayer;
 import de.saschahlusiak.freebloks.network.message.MessageRequestUndo;
@@ -194,7 +194,7 @@ public class SpielClient {
 	}
 	
 	public void request_game_mode(int width, int height, GameMode g, int stones[]) {
-		send(new NET_REQUEST_GAME_MODE(width, height, g, stones));
+		send(new MessageRequestGameMode(width, height, g, stones));
 	}
 
 	public void request_hint(int player) {
@@ -249,14 +249,6 @@ public class SpielClient {
 		if (!spiel.is_local_player())
 			return;
 		send(new MessageRequestUndo());
-	}
-
-	@Deprecated
-	private void send(NET_HEADER msg) {
-		if (sendHandler == null)
-			return;
-
-		sendHandler.post(() -> msg.send(outputStream));
 	}
 
 	@AnyThread
