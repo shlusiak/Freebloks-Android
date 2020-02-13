@@ -1,25 +1,45 @@
 package de.saschahlusiak.freebloks.model
 
+import de.saschahlusiak.freebloks.model.Board.PLAYER_MAX
 import java.io.Serializable
 import java.util.*
 
 /**
- * Enriches the current [Spiel] state with game state information:
- *
- * - history for undo
- * - current player
- * - whether players are controlled locally or by the computer
- * - current game mode
+ * A "game" contains everything about the state of a game.
  *
  * These information are usually updated via the [NetworkEventHandler].
+ *
+ * @param board the board state
  */
-class GameState(initialSize: Int) : Spiel(initialSize), Serializable {
-    // -1 is "no current player", used in between states
+class Game(val board: Board): Serializable {
+    /**
+     * The current player, or -1 if none.
+     */
     var currentPlayer = -1
+
+    /**
+     * For each player, whether it is controlled locally or remotely (aka computer)
+     */
     val playerTypes = IntArray(PLAYER_MAX) { PLAYER_COMPUTER }
+
+    /**
+     * The current game mode
+     */
     var gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+
+    /**
+     * Whether the game is officially over
+     */
     var isFinished = false
+
+    /**
+     * false if still in lobby, true if started
+     */
     var isStarted = false
+
+    /**
+     * The history of [Turn]
+     */
     val history = Turnpool()
 
     /**

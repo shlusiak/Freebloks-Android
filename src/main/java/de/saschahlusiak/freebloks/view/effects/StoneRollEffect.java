@@ -74,15 +74,15 @@ public class StoneRollEffect extends AbsStoneEffect {
 		gl.glPushMatrix();
 
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.width - 1) + BoardRenderer.stone_size * 2.0f * x,
+	    		-BoardRenderer.stone_size * (float)(model.board.width - 1) + BoardRenderer.stone_size * 2.0f * x,
 	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.height - 1) + BoardRenderer.stone_size * 2.0f * y);
+	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * y);
 
 		renderer.renderShadow(gl,
 				stone, color, mirror, rotate,
 				z,
 				r, ax, ay, az,
-				90 * model.board.centerPlayer,
+				90 * model.boardObject.centerPlayer,
 				1.0f, 1.0f);
 
 		gl.glPopMatrix();
@@ -95,9 +95,9 @@ public class StoneRollEffect extends AbsStoneEffect {
 		float offset = (float)(stone.getSize()) - 1.0f;
 
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.width - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		-BoardRenderer.stone_size * (float)(model.board.width - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		z,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.height - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 	    gl.glTranslatef(
 	    		BoardRenderer.stone_size * offset,
 	    		0,

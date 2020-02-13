@@ -2,8 +2,9 @@ package de.saschahlusiak.freebloks.client;
 
 import android.util.Log;
 
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.GameState;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.Shape;
 
 public class JNIServer {
@@ -26,27 +27,28 @@ public class JNIServer {
 			int ki_threads);
 
 
-	public static int runServer(GameState spiel, GameMode gameMode, int field_size, int stones[], int ki_mode) {
+	public static int runServer(Game game, GameMode gameMode, int field_size, int stones[], int ki_mode) {
 		int ki_threads = get_number_of_processors();
 
 		Log.d(tag, "spawning server with " + ki_threads + " threads");
 
-		if (spiel == null)
+		if (game == null)
 			return native_run_server(gameMode.ordinal(), field_size, field_size, stones, ki_mode, ki_threads);
 		else {
+			final Board board = game.getBoard();
 			int player_stones_available[] = new int[Shape.COUNT * 4];
 			int i, j;
 
 			for (i = 0; i < 4; i++)
 				for (j = 0; j < Shape.COUNT; j++)
-					player_stones_available[i * Shape.COUNT + j] = spiel.getPlayer(i).getStone(j).getAvailable();
+					player_stones_available[i * Shape.COUNT + j] = board.getPlayer(i).getStone(j).getAvailable();
 
 			return native_resume_server(
-					spiel.width,
-					spiel.height,
-					spiel.getCurrentPlayer(),
-					spiel.getPlayerTypes(),
-					spiel.getFields(),
+					board.width,
+					board.height,
+					game.getCurrentPlayer(),
+					game.getPlayerTypes(),
+					board.getFields(),
 					player_stones_available,
 					gameMode.ordinal(),
 					ki_mode,

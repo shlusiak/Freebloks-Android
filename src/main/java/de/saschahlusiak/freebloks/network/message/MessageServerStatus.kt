@@ -49,8 +49,8 @@ data class MessageServerStatus(
         buffer.put(1, 1, 1, 1, 1)
         buffer.put(gameMode.ordinal.toByte())
         spieler.forEach { buffer.put(it.toByte()) }
-        clientNames.forEach { name ->
-            val name = name ?: ""
+        clientNames.forEach { it ->
+            val name = it ?: ""
             val padding = 16 - name.length
 
             name.forEach { buffer.put(it.toByte()) }

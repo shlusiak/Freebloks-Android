@@ -7,7 +7,7 @@ import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.PlayerScore;
-import de.saschahlusiak.freebloks.model.GameState;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;
@@ -39,7 +39,7 @@ public class GameFinishActivity extends BaseGameActivity {
 	TextView place;
 	MessageServerStatus lastStatus;
 	String clientName;
-	GameState spiel;
+	Game game;
 	boolean firstRun = false;
 	PlayerScore[] data;
 
@@ -56,15 +56,15 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		place = findViewById(R.id.place);
 
-		spiel = (GameState)getIntent().getSerializableExtra("game");
+		game = (Game)getIntent().getSerializableExtra("game");
 		lastStatus = (MessageServerStatus) getIntent().getSerializableExtra("lastStatus");
 		clientName = getIntent().getStringExtra("clientName");
 
-		if (spiel == null)
+		if (game == null)
 			throw new IllegalArgumentException("Game cannot be null");
 
-		data = spiel.getPlayerScores();
-		updateViews(data, spiel.getGameMode());
+		data = game.getPlayerScores();
+		updateViews(data, game.getGameMode());
 
 		findViewById(R.id.new_game).setOnClickListener(v -> {
 			setResult(RESULT_NEW_GAME);
@@ -191,7 +191,7 @@ public class GameFinishActivity extends BaseGameActivity {
 	}
 
 	Drawable getScoreDrawable(PlayerScore data) {
-		int color = Global.getPlayerColor(data.getPlayer1(), spiel.getGameMode());
+		int color = Global.getPlayerColor(data.getPlayer1(), game.getGameMode());
 		LayerDrawable l;
 
 		if (data.getPlayer2() >= 0)
@@ -201,7 +201,7 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		if (data.getPlayer2() >= 0) {
-			color = Global.getPlayerColor(data.getPlayer2(), spiel.getGameMode());
+			color = Global.getPlayerColor(data.getPlayer2(), game.getGameMode());
 			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		}
 
@@ -223,15 +223,15 @@ public class GameFinishActivity extends BaseGameActivity {
 			return;
 
 		for (int i = 0; i < data.length; i++) if (data[i].isLocal()) {
-				if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+				if (game.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 						&& data[i].getPlace() == 1)
 					unlock(getString(R.string.achievement_blokus_classic));
 
-				if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+				if (game.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 						&& data[i].isPerfect())
 					unlock(getString(R.string.achievement_perfect));
 
-				if (spiel.getGameMode() == GameMode.GAMEMODE_DUO
+				if (game.getGameMode() == GameMode.GAMEMODE_DUO
 						&& data[i].getPlace() == 1)
 					unlock(getString(R.string.achievement_blokus_duo));
 
@@ -240,7 +240,7 @@ public class GameFinishActivity extends BaseGameActivity {
 				if (data[i].getPlace() == 1)
 					increment(getString(R.string.achievement_winner), 1);
 
-				if (spiel.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+				if (game.getGameMode() == GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 						&& data[i].getPlace()== 4)
 					increment(getString(R.string.achievement_loser), 1);
 

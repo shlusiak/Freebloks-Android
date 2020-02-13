@@ -15,12 +15,12 @@ import android.text.TextWatcher;
 import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.client.SpielClient;
-import de.saschahlusiak.freebloks.client.GameObserver;
+import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
@@ -41,7 +41,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class LobbyDialog extends Dialog implements GameObserver, OnItemClickListener, OnItemSelectedListener {
+public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClickListener, OnItemSelectedListener {
 	SpielClient client;
 	Handler handler = new Handler();
 	ListView chatList;
@@ -370,12 +370,12 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 	}
 
 	@Override
-	public void onConnected(@NonNull Spiel spiel) {
+	public void onConnected(@NonNull Board board) {
 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Spiel spiel) {
+	public void onDisconnected(@NonNull Board board) {
 		// dismiss may stop the dialog and remove this instance from the client listeners, modifying the underlying
 		// list, so we have do run the dismiss() outside of this method.
 		handler.post(new Runnable()

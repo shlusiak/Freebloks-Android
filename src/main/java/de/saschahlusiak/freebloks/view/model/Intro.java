@@ -7,10 +7,10 @@ import javax.microedition.khronos.opengles.GL11;
 
 import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.OrientedShape;
 import de.saschahlusiak.freebloks.model.Rotation;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -282,8 +282,8 @@ public class Intro implements ViewElement {
 		PhysicalStoneEffect s = new PhysicalStoneEffect(model, shape, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.getOrientation());
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
-		x=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
-		z=(float)(-(Spiel.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		x=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		z=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
 		/* Zufaellige Hoehe geben. */
 		y=22.0f+(float)(Math.random() * 18.0f);
 

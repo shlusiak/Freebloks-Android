@@ -10,8 +10,8 @@ import android.graphics.PointF;
 import android.opengl.GLUtils;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Mirrorable;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -126,18 +126,18 @@ public class CurrentStone implements ViewElement {
 		gl.glDisable(GL10.GL_CULL_FACE);
 		gl.glPushMatrix();
 		gl.glTranslatef(
-				BoardRenderer.stone_size * (-(float)(model.spiel.width - 1) + 2.0f * pos.x + offset),
+				BoardRenderer.stone_size * (-(float)(model.board.width - 1) + 2.0f * pos.x + offset),
 				0,
-				BoardRenderer.stone_size * (-(float)(model.spiel.width - 1) + 2.0f * pos.y + offset));
+				BoardRenderer.stone_size * (-(float)(model.board.width - 1) + 2.0f * pos.y + offset));
 
 		/* STONE SHADOW */
 	    gl.glPushMatrix();
 		/* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */
 		/* TODO: merge with BoardRenderer.renderShadow() */
-		gl.glRotatef(-model.board.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(-model.boardObject.centerPlayer * 90, 0, 1, 0);
 	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
-		gl.glRotatef(model.board.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(model.boardObject.centerPlayer * 90, 0, 1, 0);
 
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
@@ -152,7 +152,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 
-		renderer.board.renderStoneShadow(gl, model.spiel.getCurrentPlayer(), stone.getShape(), m_mirror_counter, m_rotate_counter, 0.80f);
+		renderer.board.renderStoneShadow(gl, model.game.getCurrentPlayer(), stone.getShape(), m_mirror_counter, m_rotate_counter, 0.80f);
 		gl.glPopMatrix();
 
 
@@ -167,9 +167,9 @@ public class CurrentStone implements ViewElement {
 	    /* OVERLAY SHADOW */
 	    gl.glPushMatrix();
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[2]);
-		gl.glRotatef(-model.board.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(-model.boardObject.centerPlayer * 90, 0, 1, 0);
 	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
-		gl.glRotatef(model.board.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(model.boardObject.centerPlayer * 90, 0, 1, 0);
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
 		if (status == Status.FLIPPING_HORIZONTAL)
@@ -302,7 +302,7 @@ public class CurrentStone implements ViewElement {
 		if (stone != null) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
-			model.board.modelToBoard(fieldPoint);
+			model.boardObject.modelToBoard(fieldPoint);
 			screenPoint.x = fieldPoint.x;
 			screenPoint.y = fieldPoint.y;
 
@@ -333,7 +333,7 @@ public class CurrentStone implements ViewElement {
 
 		fieldPoint.x = m.x;
 		fieldPoint.y = m.y;
-		model.board.modelToBoard(fieldPoint);
+		model.boardObject.modelToBoard(fieldPoint);
 
 		if (status == Status.DRAGGING) {
 			final float THRESHOLD = 1.0f;
@@ -414,9 +414,9 @@ public class CurrentStone implements ViewElement {
 	}
 
 	public boolean is_valid_turn(float x, float y) {
-		if (!model.spiel.isLocalPlayer())
+		if (!model.game.isLocalPlayer())
 			return false;
-		if (model.spiel.isValidTurn(stone.getShape(), model.spiel.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Spiel.FIELD_ALLOWED)
+		if (model.board.isValidTurn(stone.getShape(), model.game.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Board.FIELD_ALLOWED)
 			return true;
 		return false;
 	}
@@ -464,22 +464,22 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.DRAGGING) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
-			model.board.modelToBoard(fieldPoint);
+			model.boardObject.modelToBoard(fieldPoint);
 
 			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.getShape().getSize() / 2);
 			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.getShape().getSize() / 2);
 			fieldPoint.x = x;
 			fieldPoint.y = y;
-			model.board.boardToUnified(fieldPoint);
+			model.boardObject.boardToUnified(fieldPoint);
 			if (!model.vertical_layout)
-				fieldPoint.y = model.spiel.width - fieldPoint.x - 1;
+				fieldPoint.y = model.board.width - fieldPoint.x - 1;
 
 			if (fieldPoint.y < -2.0f && (hasMoved)) {
 				model.wheel.setCurrentStone(stone);
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				Turn turn = new Turn(model.spiel.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
+				Turn turn = new Turn(model.game.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
 				if (model.activity.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;

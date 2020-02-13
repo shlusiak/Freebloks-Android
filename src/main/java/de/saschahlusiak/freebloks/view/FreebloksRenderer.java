@@ -8,6 +8,8 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import android.util.Log;
+
+import de.saschahlusiak.freebloks.model.Board;
 import nl.weeaboo.jktx.KTXFile;
 import nl.weeaboo.jktx.KTXFormatException;
 import nl.weeaboo.jktx.KTXHeader;
@@ -18,7 +20,7 @@ import android.content.res.Resources;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import de.saschahlusiak.freebloks.model.Spiel;
+
 import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
@@ -49,7 +51,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
-		board = new BoardRenderer(Spiel.DEFAULT_BOARD_SIZE);
+		board = new BoardRenderer(Board.DEFAULT_BOARD_SIZE);
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 
 		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
@@ -91,8 +93,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		GL11 gl11 = (GL11)gl;
 		final float camera_distance = zoom;
 //		long t = System.currentTimeMillis();
-		float cameraAngle = model.board.getCameraAngle();
-		float boardAngle = model.board.mAngleY;
+		float cameraAngle = model.boardObject.getCameraAngle();
+		float boardAngle = model.boardObject.mAngleY;
 
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
@@ -135,14 +137,14 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		gl.glRotatef(boardAngle, 0, 1, 0);
 		backgroundRenderer.render(gl11);
-		board.renderBoard(gl11, model.spiel, model.board.getShowSeedsPlayer());
+		board.renderBoard(gl11, model.board, model.boardObject.getShowSeedsPlayer());
 
-		if (model.spiel == null)
+		if (model.game == null)
 			return;
 
 		/* render player stones on board, unless they are "effected" */
 	    gl.glPushMatrix();
-	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.spiel.width - 1), 0, -BoardRenderer.stone_size * (float)(model.spiel.width - 1) );
+	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.board.width - 1), 0, -BoardRenderer.stone_size * (float)(model.board.width - 1) );
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board.stone_specular, 0);
@@ -151,11 +153,11 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board.stone.bindBuffers(gl11);
 
 		synchronized (model.effects) {
-		    for (int y = 0; y < model.spiel.height; y++) {
+		    for (int y = 0; y < model.board.height; y++) {
 		    	int x;
-		    	for (x = 0; x < model.spiel.width; x++) {
-		    		int field = model.spiel.getFieldPlayer(y, x);
-		    		if (field != Spiel.FIELD_FREE) {
+		    	for (x = 0; x < model.board.width; x++) {
+		    		int field = model.board.getFieldPlayer(y, x);
+		    		if (field != Board.FIELD_FREE) {
 		    			boolean effected = false;
 						for (int i = 0; i < model.effects.size(); i++)
 							if (model.effects.get(i).isEffected(x, y)) {
@@ -200,7 +202,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glPopMatrix();
 
 		/* render current player stone on the field */
-		if (model.spiel.isLocalPlayer())
+		if (model.game.isLocalPlayer())
 			model.currentStone.render(this, gl11);
 
 //		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");

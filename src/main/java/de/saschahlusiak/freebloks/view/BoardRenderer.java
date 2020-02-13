@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.model.Spiel;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Shape;
 
 
@@ -207,7 +207,7 @@ public class BoardRenderer {
 		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 	}
 
-	public void renderBoard(GL11 gl, Spiel spiel, int currentPlayer) {
+	public void renderBoard(GL11 gl, Board board, int currentPlayer) {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board_specular, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board_shininess, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
@@ -225,9 +225,9 @@ public class BoardRenderer {
 	    gl.glMatrixMode(GL10.GL_MODELVIEW);
 
 	    int w = 20, h = 20;
-	    if (spiel != null) {
-	    	w = spiel.width;
-	    	h = spiel.height;
+	    if (board != null) {
+	    	w = board.width;
+	    	h = board.height;
 	    }
 
 	    gl.glPushMatrix();
@@ -236,7 +236,7 @@ public class BoardRenderer {
 	    	int x;
 	    	for (x = 0; x < w; x++) {
 	    		if (currentPlayer >= 0) {
-	    			if (spiel.getFieldStatus(currentPlayer, y, x) == Spiel.FIELD_ALLOWED)
+	    			if (board.getFieldStatus(currentPlayer, y, x) == Board.FIELD_ALLOWED)
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_available, 0);
 	    			else
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);

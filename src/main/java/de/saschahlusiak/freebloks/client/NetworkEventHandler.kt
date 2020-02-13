@@ -6,35 +6,37 @@ import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.network.message.*
 
 /**
- * Processes network events and applies changes to the given [GameState] and notifies the [GameObserver]
+ * Processes network events and applies changes to the given [Game] and notifies the [GameEventObserver]
  */
-class NetworkEventHandler(private val game: GameState) {
-    private val observer = mutableListOf<GameObserver>()
+class NetworkEventHandler(private val game: Game) {
+    private val observer = mutableListOf<GameEventObserver>()
 
-    fun addObserver(observer: GameObserver) {
+    private val board = game.board
+
+    fun addObserver(observer: GameEventObserver) {
         synchronized(observer) {
             this.observer.add(observer)
         }
     }
 
-    fun removeObserver(observer: GameObserver) {
+    fun removeObserver(observer: GameEventObserver) {
         synchronized(observer) {
             this.observer.remove(observer)
         }
     }
 
-    private fun notifyObservers(block: (GameObserver) -> Unit) {
+    private fun notifyObservers(block: (GameEventObserver) -> Unit) {
         synchronized(observer) {
             observer.forEach { block.invoke(it) }
         }
     }
 
     fun onConnected() {
-        notifyObservers { it.onConnected(game) }
+        notifyObservers { it.onConnected(board) }
     }
 
     fun onDisconnected() {
-        notifyObservers { it.onDisconnected(game) }
+        notifyObservers { it.onDisconnected(board) }
     }
 
     @WorkerThread
@@ -43,13 +45,13 @@ class NetworkEventHandler(private val game: GameState) {
         when(message) {
             is MessageGrantPlayer -> {
                 assert(!game.isStarted) { "received MSG_REVOKE_PLAYER but game is running" }
-                game.setPlayerType(message.player, GameState.PLAYER_LOCAL)
+                game.setPlayerType(message.player, Game.PLAYER_LOCAL)
             }
 
             is MessageRevokePlayer -> {
                 assert(!game.isStarted) { "received MSG_REVOKE_PLAYER but game is running" }
                 assert(game.isLocalPlayer(message.player)) { "revoked player ${message.player} is not local" }
-                game.setPlayerType(message.player, GameState.PLAYER_COMPUTER)
+                game.setPlayerType(message.player, Game.PLAYER_COMPUTER)
             }
 
             is MessageCurrentPlayer ->  {
@@ -65,10 +67,10 @@ class NetworkEventHandler(private val game: GameState) {
                 // is committed. fixes drawing glitches, where stone is set, but
                 // effect hasn't been added yet.
 
-                assert(game.isValidTurn(turn) != Spiel.FIELD_DENIED) { "game not in sync" }
+                assert(board.isValidTurn(turn) != Board.FIELD_DENIED) { "game not in sync" }
 
                 notifyObservers { it.stoneWillBeSet(turn) }
-                game.setStone(turn)
+                board.setStone(turn)
                 notifyObservers { it.stoneHasBeenSet(turn) }
             }
 
@@ -85,8 +87,8 @@ class NetworkEventHandler(private val game: GameState) {
             is MessageServerStatus -> {
                 // if game field size differs, start a new game with the new size
                 if (!game.isStarted) {
-                    game.startNewGame(message.gameMode, message.width, message.height)
-                    if (message.isVersion(3)) game.setAvailableStones(message.stoneNumbers)
+                    board.startNewGame(message.gameMode, message.width, message.height)
+                    if (message.isVersion(3)) board.setAvailableStones(message.stoneNumbers)
                 }
 
                 if (!message.isVersion(3)) {
@@ -101,8 +103,8 @@ class NetworkEventHandler(private val game: GameState) {
                     GameMode.GAMEMODE_JUNIOR -> {
                         var n = 0
                         while (n < Shape.COUNT) {
-                            game.getPlayer(1).getStone(n).available = 0
-                            game.getPlayer(3).getStone(n).available = 0
+                            board.getPlayer(1).getStone(n).available = 0
+                            board.getPlayer(3).getStone(n).available = 0
                             n++
                         }
                     }
@@ -118,7 +120,7 @@ class NetworkEventHandler(private val game: GameState) {
             }
 
             is MessageStartGame -> {
-                game.startNewGame(game.gameMode)
+                board.startNewGame(game.gameMode)
                 game.isFinished = false
                 game.isStarted = true
                 /* Unbedingt history leeren. */
@@ -130,14 +132,14 @@ class NetworkEventHandler(private val game: GameState) {
                     GameMode.GAMEMODE_JUNIOR -> {
                         var n = 0
                         while (n < Shape.COUNT) {
-                            game.getPlayer(1).getStone(n).available = 0
-                            game.getPlayer(3).getStone(n).available = 0
+                            board.getPlayer(1).getStone(n).available = 0
+                            board.getPlayer(3).getStone(n).available = 0
                             n++
                         }
                     }
                 }
+                board.refreshPlayerData()
                 game.currentPlayer = -1
-                game.refreshPlayerData()
 
                 notifyObservers { it.gameStarted() }
             }
@@ -146,7 +148,7 @@ class NetworkEventHandler(private val game: GameState) {
                 if (!game.isStarted && !game.isFinished) throw GameStateException("received MSG_UNDO_STONE but game not running")
                 val turn: Turn = game.history.last
                 notifyObservers { it.stoneUndone(turn) }
-                game.undo(game.history, game.gameMode)
+                board.undo(game.history, game.gameMode)
             }
 
             else -> throw ProtocolException("don't know how to handle message $message")

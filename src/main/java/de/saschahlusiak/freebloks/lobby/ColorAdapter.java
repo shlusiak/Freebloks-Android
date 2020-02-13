@@ -4,7 +4,7 @@ import android.widget.CheckBox;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.GameState;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import android.content.Context;
@@ -24,18 +24,18 @@ import android.widget.TextView;
 public class ColorAdapter extends BaseAdapter {
 	private Context context;
 	private MessageServerStatus lastStatus;
-	private GameState spiel;
+	private Game game;
 	private LobbyDialog lobby;
 
-	public ColorAdapter(LobbyDialog lobby, Context context, GameState spiel, MessageServerStatus lastStatus) {
+	public ColorAdapter(LobbyDialog lobby, Context context, Game game, MessageServerStatus lastStatus) {
 		this.lobby = lobby;
 		this.context = context;
 		this.lastStatus = lastStatus;
-		this.spiel = spiel;
+		this.game = game;
 	}
 
-	void setCurrentStatus(GameState spiel, MessageServerStatus status) {
-		this.spiel = spiel;
+	void setCurrentStatus(Game spiel, MessageServerStatus status) {
+		this.game = spiel;
 		this.lastStatus = status;
 		notifyDataSetChanged();
 	}
@@ -70,7 +70,7 @@ public class ColorAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (lastStatus == null || spiel == null)
+		if (lastStatus == null || game == null)
 			return false;
 
 		/* if in two player mode, we have only 2 positions, make player 1 (yellow) the player 2 (red) */
@@ -83,12 +83,12 @@ public class ColorAdapter extends BaseAdapter {
 		if (!lastStatus.isVersion(2))
 			return false;
 
-		if (spiel.isStarted())
+		if (game.isStarted())
 			return false;
 
 		if (lastStatus.getSpieler()[position] >= 0) {
 			/* it is a human player */
-			if (spiel.isLocalPlayer(position))
+			if (game.isLocalPlayer(position))
 				return true;
 		} else
 			return true;
@@ -114,7 +114,7 @@ public class ColorAdapter extends BaseAdapter {
 		t = v.findViewById(R.id.text);
 		t.setTextColor(Color.WHITE);
 		t.setVisibility(View.VISIBLE);
-        if (lastStatus == null || spiel == null) {
+        if (lastStatus == null || game == null) {
         	/* unknown game state */
 			background.setColor(Color.BLACK);
 			background.setAlpha(96);
@@ -142,13 +142,13 @@ public class ColorAdapter extends BaseAdapter {
 		   }
 	   });
 
-		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, spiel.getGameMode())]));
+		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, game.getGameMode())]));
 		if (lastStatus.isVersion(2)) {
 			if (lastStatus.getSpieler()[player] >= 0) {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getSpieler()[player]));
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				if (spiel.isLocalPlayer(player)) {
+				if (game.isLocalPlayer(player)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
 					v.findViewById(R.id.editButton).setVisibility(View.VISIBLE);
 
@@ -183,7 +183,7 @@ public class ColorAdapter extends BaseAdapter {
 				background.setAlpha(96);
 				t.setText("---");
 				t.clearAnimation();
-				if (spiel.isStarted()) {
+				if (game.isStarted()) {
 					t.setVisibility(View.VISIBLE);
 					v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				} else {
@@ -196,7 +196,7 @@ public class ColorAdapter extends BaseAdapter {
 				c.setVisibility(View.VISIBLE);
 			}
 		} else {
-			if (spiel.isLocalPlayer(player)) {
+			if (game.isLocalPlayer(player)) {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[player + 1]);

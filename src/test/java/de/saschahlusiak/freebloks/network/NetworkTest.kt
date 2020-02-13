@@ -2,7 +2,8 @@ package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.client.NetworkEventHandler
-import de.saschahlusiak.freebloks.model.GameState
+import de.saschahlusiak.freebloks.model.Board
+import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
@@ -333,8 +334,8 @@ class NetworkTest {
         return os.toByteArray()
     }
 
-    private fun replayGameFrom(packets: List<Message>): GameState {
-        val game = GameState(20)
+    private fun replayGameFrom(packets: List<Message>): Game {
+        val game = Game(Board(20))
         val processor = NetworkEventHandler(game)
 
         for (pkg in packets) {
@@ -362,8 +363,8 @@ class NetworkTest {
         assertTrue(game.isFinished)
         assertTrue(game.isStarted)
         assertEquals(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, game.gameMode)
-        assertEquals(20, game.width)
-        assertEquals(20, game.height)
+        assertEquals(20, game.board.width)
+        assertEquals(20, game.board.height)
 
         val results = game.getPlayerScores()
         assertEquals(81, results[0].points)
@@ -396,29 +397,30 @@ class NetworkTest {
         assertEquals(packets, packets2)
 
         val game = replayGameFrom(packets)
+        val board = game.board
 
         assertFalse(game.isFinished)
         assertTrue(game.isStarted)
         assertEquals(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, game.gameMode)
-        assertEquals(20, game.width)
-        assertEquals(20, game.height)
+        assertEquals(20, board.width)
+        assertEquals(20, board.height)
 
-        game.getPlayer(0).apply {
+        board.getPlayer(0).apply {
             assertEquals(151, numberOfPossibleTurns)
             assertEquals(40, totalPoints)
             assertEquals(13, stonesLeft)
         }
-        game.getPlayer(1).apply {
+        board.getPlayer(1).apply {
             assertEquals(467, numberOfPossibleTurns)
             assertEquals(40, totalPoints)
             assertEquals(13, stonesLeft)
         }
-        game.getPlayer(2).apply {
+        board.getPlayer(2).apply {
             assertEquals(220, numberOfPossibleTurns)
             assertEquals(34, totalPoints)
             assertEquals(14, stonesLeft)
         }
-        game.getPlayer(3).apply {
+        board.getPlayer(3).apply {
             assertEquals(256, numberOfPossibleTurns)
             assertEquals(35, totalPoints)
             assertEquals(14, stonesLeft)
@@ -445,12 +447,13 @@ class NetworkTest {
         assertEquals(packets, packets2)
 
         val game = replayGameFrom(packets)
+        val board = game.board
 
         assertTrue(game.isFinished)
         assertTrue(game.isStarted)
         assertEquals(GameMode.GAMEMODE_DUO, game.gameMode)
-        assertEquals(14, game.width)
-        assertEquals(14, game.height)
+        assertEquals(14, board.width)
+        assertEquals(14, board.height)
 
         val results = game.getPlayerScores()
         assertEquals(66, results[0].points)
@@ -483,8 +486,8 @@ class NetworkTest {
         assertTrue(game.isFinished)
         assertTrue(game.isStarted)
         assertEquals(GameMode.GAMEMODE_JUNIOR, game.gameMode)
-        assertEquals(14, game.width)
-        assertEquals(14, game.height)
+        assertEquals(14, game.board.width)
+        assertEquals(14, game.board.height)
         val results = game.getPlayerScores()
 
         assertEquals(60, results[0].points)

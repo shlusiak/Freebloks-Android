@@ -53,19 +53,19 @@ public class Wheel implements ViewElement {
 				return;
 			if (Math.abs(currentOffset - lastOffset) > 3.0f)
 				return;
-			if (!model.spiel.isLocalPlayer())
+			if (!model.game.isLocalPlayer())
 				return;
 
 			tmp.x = lastPointerLocation.x;
 			tmp.y = lastPointerLocation.y;
-			model.board.modelToBoard(tmp);
+			model.boardObject.modelToBoard(tmp);
 
 			if (model.soundPool != null && !model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1))
 				model.activity.vibrate(Global.VIBRATE_START_DRAGGING);
 			showStone(highlightStone.getShape().getNumber());
 			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
 			model.currentStone.hasMoved = true;
-			model.board.resetRotation();
+			model.boardObject.resetRotation();
 			status = Status.IDLE;
 			model.view.requestRender();
 		}
@@ -81,9 +81,9 @@ public class Wheel implements ViewElement {
 		stones.clear();
 		if (player < 0)
 			return;
-		if (model.spiel == null)
+		if (model.game == null)
 			return;
-		Player p = model.spiel.getPlayer(player);
+		Player p = model.board.getPlayer(player);
 		moves_left = p.getNumberOfPossibleTurns() > 0;
 		for (int i = 0; i < Shape.COUNT; i++) {
 			Stone s = p.getStone(i);
@@ -138,7 +138,7 @@ public class Wheel implements ViewElement {
 	@Override
 	synchronized public boolean handlePointerDown(final PointF m) {
 		status = Status.IDLE;
-		if (model.spiel == null)
+		if (model.game == null)
 			return false;
 
 		lastOffset = currentOffset;
@@ -150,12 +150,12 @@ public class Wheel implements ViewElement {
 
 		tmp.x = m.x;
 		tmp.y = m.y;
-		model.board.modelToBoard(tmp);
-		model.board.boardToUnified(tmp);
+		model.boardObject.modelToBoard(tmp);
+		model.boardObject.boardToUnified(tmp);
 		if (!model.vertical_layout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
-			tmp.y = model.spiel.width - t - 1;
+			tmp.y = model.board.width - t - 1;
 		}
 
 		originalX = tmp.x;
@@ -165,9 +165,9 @@ public class Wheel implements ViewElement {
 			return false;
 
 		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
-		int col = (int) ((tmp.x - (float) model.spiel.width / 2.0f + lastOffset) / stone_spacing + 0.5f);
+		int col = (int) ((tmp.x - (float) model.board.width / 2.0f + lastOffset) / stone_spacing + 0.5f);
 
-		if (!model.spiel.isLocalPlayer() || model.spiel.getCurrentPlayer() != currentPlayer) {
+		if (!model.game.isLocalPlayer() || model.game.getCurrentPlayer() != currentPlayer) {
 			status = Status.SPINNING;
 			return true;
 		}
@@ -199,18 +199,18 @@ public class Wheel implements ViewElement {
 	synchronized public boolean handlePointerMove(PointF m) {
 		if (status != Status.SPINNING)
 			return false;
-		if (model.spiel == null)
+		if (model.game == null)
 			return false;
 
 		tmp.x = m.x;
 		tmp.y = m.y;
-		model.board.modelToBoard(tmp);
-		model.board.boardToUnified(tmp);
+		model.boardObject.modelToBoard(tmp);
+		model.boardObject.boardToUnified(tmp);
 
 		if (!model.vertical_layout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
-			tmp.y = model.spiel.width - t - 1;
+			tmp.y = model.board.width - t - 1;
 		}
 
 		/* everything underneath row 0 spins the wheel */
@@ -225,7 +225,7 @@ public class Wheel implements ViewElement {
 		originalX = tmp.x;
 
 		model.redraw = true;
-		if (!model.spiel.isLocalPlayer() || model.spiel.getCurrentPlayer() != currentPlayer) {
+		if (!model.game.isLocalPlayer() || model.game.getCurrentPlayer() != currentPlayer) {
 			return true;
 		}
 
@@ -237,13 +237,13 @@ public class Wheel implements ViewElement {
 		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
 			tmp.x = m.x;
 			tmp.y = m.y;
-			model.board.modelToBoard(tmp);
+			model.boardObject.modelToBoard(tmp);
 			showStone(highlightStone.getShape().getNumber());
 			if (model.currentStone.stone != highlightStone)
 				model.soundPool.play(model.soundPool.SOUND_CLICK2, 1.0f, 1);
 			model.currentStone.startDragging(tmp, highlightStone, 0, 0, model.getPlayerColor(currentPlayer));
 			status = Status.IDLE;
-			model.board.resetRotation();
+			model.boardObject.resetRotation();
 		}
 		return true;
 	}
@@ -271,10 +271,10 @@ public class Wheel implements ViewElement {
 	}
 
 	public synchronized void render(FreebloksRenderer renderer, GL11 gl) {
-		if (model.spiel == null)
+		if (model.game == null)
 			return;
 
-		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.spiel.width + 10));
+		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (model.board.width + 10));
 		for (int i = stones.size() - 1; i >= 0; i--) {
 			Stone s = stones.get(i);
 
@@ -288,7 +288,7 @@ public class Wheel implements ViewElement {
 				float y = 0.35f + effect * 0.75f;
 				final float z = row * stone_spacing;
 				final float scale = 0.9f + effect * 0.3f;
-				float rotate = 90.0f * model.board.centerPlayer;
+				float rotate = 90.0f * model.boardObject.centerPlayer;
 				if (!model.vertical_layout)
 					rotate -= 90.0f;
 
@@ -297,7 +297,7 @@ public class Wheel implements ViewElement {
 				if (highlightStone == s && s != model.currentStone.stone)
 					y += 1.2f;
 
-				if (!moves_left && !model.spiel.isFinished())
+				if (!moves_left && !model.game.isFinished())
 					alpha *= 0.65f;
 				alpha *= 0.75f + effect * 0.25f;
 
@@ -325,7 +325,7 @@ public class Wheel implements ViewElement {
 				gl.glTranslatef(offset, 0, offset);
 
 				gl.glPushMatrix();
-				renderer.board.renderShadow(gl, s.getShape(), model.getPlayerColor(currentPlayer), mirror_count, rotate_count, y, 0, 0, 0, 0, 90 * model.board.centerPlayer, alpha, 1.0f);
+				renderer.board.renderShadow(gl, s.getShape(), model.getPlayerColor(currentPlayer), mirror_count, rotate_count, y, 0, 0, 0, 0, 90 * model.boardObject.centerPlayer, alpha, 1.0f);
 				gl.glPopMatrix();
 
 				gl.glTranslatef(0, y, 0);

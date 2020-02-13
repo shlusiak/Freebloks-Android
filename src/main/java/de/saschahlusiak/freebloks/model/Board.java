@@ -5,16 +5,15 @@ import java.io.Serializable;
 import de.saschahlusiak.freebloks.client.GameStateException;
 
 /**
- * Game state (model).
+ * Current state of the board.Contains:
  *
- * Contains:
  * - field state
  * - players and their remaining stones
  *
- * Does not contain meta information like current player.
+ * Does not contain meta information about the game, like current player.
  * See [GameState] for that.
  */
-public class Spiel implements Serializable {
+public class Board implements Serializable {
 	public static final int FIELD_FREE    =  240;
 	public static final int FIELD_ALLOWED =  241;
 	public static final int FIELD_DENIED  =  255;
@@ -93,7 +92,7 @@ public class Spiel implements Serializable {
 	/**
 	 * New (initial) game state
 	 */
-	public Spiel(int size) {
+	public Board(int size) {
 		field = null;
 		this.height = size;
 		this.width = size;

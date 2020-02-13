@@ -1,17 +1,17 @@
 package de.saschahlusiak.freebloks.view.model;
 
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.GameState;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
-public class Board implements ViewElement {
+public class BoardObject implements ViewElement {
 	private ViewModel model;
 	public int last_size;
 	public float mAngleY;
 	public int centerPlayer; /* the "center" position of the board, usually the first local */
 
-	public Board(ViewModel model, int size) {
+	public BoardObject(ViewModel model, int size) {
 		this.model = model;
 		this.last_size = size;
 		this.centerPlayer = 0;
@@ -29,8 +29,8 @@ public class Board implements ViewElement {
 		point.x = point.x / (BoardRenderer.stone_size * 2.0f);
 		point.y = point.y / (BoardRenderer.stone_size * 2.0f);
 
-		point.x = point.x + 0.5f * (float)(model.spiel.width - 1);
-		point.y = point.y + 0.5f * (float)(model.spiel.height - 1);
+		point.x = point.x + 0.5f * (float)(model.board.width - 1);
+		point.y = point.y + 0.5f * (float)(model.board.height - 1);
 
 		return point;
 	}
@@ -47,7 +47,7 @@ public class Board implements ViewElement {
 		switch (centerPlayer) {
 		default:
 		case 0: /* nothing */
-			p.y = model.spiel.height - p.y - 1;
+			p.y = model.board.height - p.y - 1;
 			break;
 		case 1:
 			tmp = p.x;
@@ -55,12 +55,12 @@ public class Board implements ViewElement {
 			p.y = tmp;
 			break;
 		case 2: /* 180 degree */
-			p.x = model.spiel.width - p.x - 1;
+			p.x = model.board.width - p.x - 1;
 			break;
 		case 3:
 			tmp = p.y;
-			p.y = model.spiel.width - p.x - 1;
-			p.x = model.spiel.height - tmp - 1;
+			p.y = model.board.width - p.x - 1;
+			p.x = model.board.height - tmp - 1;
 			break;
 		}
 	}
@@ -86,11 +86,11 @@ public class Board implements ViewElement {
 		else
 			lastDetailsPlayer = (centerPlayer + p + 4) % 4;
 
-		final GameState spiel = model.spiel;
-		if (spiel != null) {
-			if (spiel.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
-				spiel.getGameMode() == GameMode.GAMEMODE_DUO ||
-				spiel.getGameMode() == GameMode.GAMEMODE_JUNIOR) {
+		final Game game = model.game;
+		if (game != null) {
+			if (game.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
+				game.getGameMode() == GameMode.GAMEMODE_DUO ||
+				game.getGameMode() == GameMode.GAMEMODE_JUNIOR) {
 				if (lastDetailsPlayer == 1)
 					lastDetailsPlayer = 0;
 				if (lastDetailsPlayer == 3)
@@ -105,7 +105,7 @@ public class Board implements ViewElement {
 	 * @return -1, if board is not rotated
 	 */
 	public int getShowDetailsPlayer() {
-		if (model.spiel == null)
+		if (model.game == null)
 			return -1;
 		return lastDetailsPlayer;
 	}
@@ -121,14 +121,14 @@ public class Board implements ViewElement {
 	public int getShowSeedsPlayer() {
 		if (!model.showSeeds)
 			return -1;
-		if (model.spiel == null)
+		if (model.game == null)
 			return -1;
 		if (getShowDetailsPlayer() >= 0)
 			return getShowDetailsPlayer();
-		if (model.spiel.isFinished())
+		if (model.game.isFinished())
 			return centerPlayer;
-		if (model.spiel.isLocalPlayer())
-			return model.spiel.getCurrentPlayer();
+		if (model.game.isLocalPlayer())
+			return model.game.getCurrentPlayer();
 		return -1;
 	}
 
@@ -140,13 +140,13 @@ public class Board implements ViewElement {
 	public int getShowWheelPlayer() {
 		if (getShowDetailsPlayer() >= 0)
 			return getShowDetailsPlayer();
-		if (model.spiel == null)
+		if (model.game == null)
 			return centerPlayer;
-		if (model.spiel.isFinished()) {
+		if (model.game.isFinished()) {
 			return centerPlayer;
 		}
-		if (model.spiel.isLocalPlayer() || model.showOpponents)
-			return model.spiel.getCurrentPlayer();
+		if (model.game.isLocalPlayer() || model.showOpponents)
+			return model.game.getCurrentPlayer();
 		/* TODO: would be nice to show the last current local player instead of the center one
 		 * needs caching of previous local player */
 		return centerPlayer;
@@ -221,7 +221,7 @@ public class Board implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		if (!rotating && model.spiel != null && model.spiel.isFinished() && auto_rotate) {
+		if (!rotating && model.game != null && model.game.isFinished() && auto_rotate) {
 			final float ROTSPEED = 25.0f;
 
 			mAngleY += elapsed * ROTSPEED;

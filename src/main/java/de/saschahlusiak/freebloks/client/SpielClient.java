@@ -21,9 +21,9 @@ import androidx.annotation.WorkerThread;
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.GameState;
-import de.saschahlusiak.freebloks.model.Spiel;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;
@@ -43,7 +43,8 @@ public class SpielClient {
 
 	private Object client_socket;
 	private OutputStream outputStream;
-	public final GameState game;
+	public final Game game;
+	public final Board board;
 	private final MessageWriter messageWriter = new MessageWriter();
 	private HandlerThread sendThread;
 	private Handler sendHandler;
@@ -52,17 +53,22 @@ public class SpielClient {
 	private MessageReader reader;
 
 	@UiThread
-	public SpielClient(GameState leiter, GameConfiguration config) {
+	public SpielClient(Game game, GameConfiguration config) {
 		this.config = config;
-		if (leiter == null) {
-			game = new GameState(config.getFieldSize());
-			game.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-			game.setAvailableStones(0, 0, 0, 0, 0);
+		if (game == null) {
+			Board board = new Board(config.getFieldSize());
+			board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
+			board.setAvailableStones(0, 0, 0, 0, 0);
+
+			this.game = new Game(board);
 		} else
-			this.game = leiter;
+			this.game = game;
+
+		this.board = game.getBoard();
+
 		client_socket = null;
 
-		networkEventHandler = new NetworkEventHandler(game);
+		networkEventHandler = new NetworkEventHandler(this.game);
 		reader = new MessageReader();
 	}
 
@@ -84,11 +90,11 @@ public class SpielClient {
 		return true;
 	}
 
-	public void addObserver(GameObserver sci) {
+	public void addObserver(GameEventObserver sci) {
 		networkEventHandler.addObserver(sci);
 	}
 
-	public void removeObserver(GameObserver sci) {
+	public void removeObserver(GameEventObserver sci) {
 		networkEventHandler.removeObserver(sci);
 	}
 
@@ -222,7 +228,7 @@ public class SpielClient {
 	public int set_stone(Turn turn)
 	{
 		if (game.getCurrentPlayer() ==-1)
-			return Spiel.FIELD_DENIED;
+			return Board.FIELD_DENIED;
 		
 		/* Lokal keinen Spieler als aktiv setzen.
 	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
@@ -230,7 +236,7 @@ public class SpielClient {
 
 		send(new MessageSetStone(turn));
 
-		return Spiel.FIELD_ALLOWED;
+		return Board.FIELD_ALLOWED;
 	}
 
 	/**

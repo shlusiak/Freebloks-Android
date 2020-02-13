@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 import de.saschahlusiak.freebloks.Global;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.GameState;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 
@@ -15,8 +15,9 @@ import de.saschahlusiak.freebloks.view.effects.Effect;
 public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public final Wheel wheel;
 	public final CurrentStone currentStone;
-	public GameState spiel;
-	public final Board board;
+	public Game game;
+	public Board board;
+	public final BoardObject boardObject;
 	public ActivityInterface activity;
 	public final Freebloks3DView view;
 	public final ArrayList<Effect> effects;
@@ -36,17 +37,18 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public ViewModel(Freebloks3DView view) {
 		this.view = view;
 
-		this.spiel = new GameState(Spiel.DEFAULT_BOARD_SIZE);
+		this.board = new Board(Board.DEFAULT_BOARD_SIZE);
+		this.game = new Game(board);
 
 		currentStone = new CurrentStone(this);
 		wheel = new Wheel(this);
-		board = new Board(this, Spiel.DEFAULT_BOARD_SIZE);
+		boardObject = new BoardObject(this, Board.DEFAULT_BOARD_SIZE);
 
 		effects = new ArrayList<>();
 
 		add(currentStone);
 		add(wheel);
-		add(board);
+		add(boardObject);
 	}
 	
 	public boolean hasAnimations() {
@@ -55,11 +57,12 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 
 	public void reset() {
 		currentStone.stopDragging();
-		board.resetRotation();
+		boardObject.resetRotation();
 	}
 
-	public void setSpiel(GameState spiel) {
-		this.spiel = spiel;
+	public void setGame(Game game) {
+		this.game = game;
+		this.board = game.getBoard();
 	}
 
 	public boolean handlePointerDown(PointF m) {
@@ -129,8 +132,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	}
 
 	public int getPlayerColor(int player) {
-		if (spiel == null)
+		if (game == null)
 			return Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-		return Global.getPlayerColor(player, spiel.getGameMode());
+		return Global.getPlayerColor(player, game.getGameMode());
 	}
 }

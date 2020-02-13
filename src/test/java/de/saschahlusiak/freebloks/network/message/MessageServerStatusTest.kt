@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.network.message
 
-import de.saschahlusiak.freebloks.model.GameState.Companion.PLAYER_COMPUTER
+import de.saschahlusiak.freebloks.model.Game.Companion.PLAYER_COMPUTER
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf

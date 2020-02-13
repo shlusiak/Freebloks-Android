@@ -1,11 +1,11 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.model.Spiel.*
+import de.saschahlusiak.freebloks.model.Board.*
 import org.junit.Assert.*
 import org.junit.Test
 import java.lang.IllegalStateException
 
-class SpielTest {
+class BoardTest {
     /**
      * Sets the stone no 2 into the bottom left corner of a new game:
      *
@@ -14,7 +14,7 @@ class SpielTest {
      */
     @Test
     fun test_basic_stone() {
-        val s = Spiel(20)
+        val s = Board(20)
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
@@ -72,7 +72,7 @@ class SpielTest {
         assertEquals(141, s.getPlayer(0).numberOfPossibleTurns)
     }
 
-    fun Spiel.playGame(picker: (List<Turn>) -> Turn): Turnpool {
+    fun Board.playGame(picker: (List<Turn>) -> Turn): Turnpool {
         val turnpool = Turnpool()
 
         do {
@@ -96,7 +96,7 @@ class SpielTest {
 
     @Test
     fun test_full_game_4_4() {
-        val s = Spiel(20)
+        val s = Board(20)
         val mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
@@ -147,7 +147,7 @@ class SpielTest {
 
     @Test
     fun test_full_game_duo() {
-        val s = Spiel(15)
+        val s = Board(15)
         val mode = GameMode.GAMEMODE_DUO
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
@@ -199,7 +199,7 @@ class SpielTest {
 
     @Test
     fun test_full_game_reversed() {
-        val s = Spiel(20)
+        val s = Board(20)
         val mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set

@@ -49,7 +49,7 @@ class Player(val number: Int) : Serializable {
 
     fun getStone(n: Int) = stones[n]
 
-    fun refreshData(spiel: Spiel) {
+    fun refreshData(board: Board) {
         totalPoints = 0
         numberOfPossibleTurns = 0
         stonesLeft = 0
@@ -57,22 +57,22 @@ class Player(val number: Int) : Serializable {
             val stone = stones[n]
             stonesLeft += stone.available
         }
-        for (x in 0 until spiel.width) {
-            for (y in 0 until spiel.height) {
-                if (spiel.getFieldStatus(number, y, x) == Spiel.FIELD_ALLOWED) {
+        for (x in 0 until board.width) {
+            for (y in 0 until board.height) {
+                if (board.getFieldStatus(number, y, x) == Board.FIELD_ALLOWED) {
                     var turnsInPosition = 0
                     stones
                         .filter { it.isAvailable() }
                         .forEach {
-                            val turns = getTurnsInPosition(spiel, it.shape, y, x)
+                            val turns = getTurnsInPosition(board, it.shape, y, x)
                             turnsInPosition += turns.count()
                         }
 
                     numberOfPossibleTurns += turnsInPosition
                     if (turnsInPosition == 0) { /* there is no available turn in this position. mark as not allowed */
-                        spiel.clearAllowedBit(number, y, x)
+                        board.clearAllowedBit(number, y, x)
                     }
-                } else if (spiel.getFieldPlayer(y, x) == number) totalPoints++
+                } else if (board.getFieldPlayer(y, x) == number) totalPoints++
             }
         }
 
@@ -83,12 +83,12 @@ class Player(val number: Int) : Serializable {
         }
     }
 
-    private fun getTurnsInPosition(spiel: Spiel, shape: Shape, fieldY: Int, fieldX: Int) = sequence {
+    private fun getTurnsInPosition(board: Board, shape: Shape, fieldY: Int, fieldX: Int) = sequence {
         for (orientation in shape.orientations) {
             for (x in 0 until shape.size) {
                 for (y in 0 until shape.size) {
                     if (shape.isCorner(x, y, orientation)) {
-                        if (spiel.isValidTurn(shape, number, fieldY - y, fieldX - x, orientation) == Spiel.FIELD_ALLOWED) {
+                        if (board.isValidTurn(shape, number, fieldY - y, fieldX - x, orientation) == Board.FIELD_ALLOWED) {
                             yield(Turn(number, shape, orientation, fieldY - y, fieldX - x))
                         }
                     }
@@ -97,13 +97,13 @@ class Player(val number: Int) : Serializable {
         }
     }
 
-    fun getAllTurns(spiel: Spiel) = sequence {
-        for (x in 0 until spiel.width) for (y in 0 until spiel.height) {
-            if (spiel.getFieldStatus(number, y, x) == Spiel.FIELD_ALLOWED) {
+    fun getAllTurns(board: Board) = sequence {
+        for (x in 0 until board.width) for (y in 0 until board.height) {
+            if (board.getFieldStatus(number, y, x) == Board.FIELD_ALLOWED) {
                 stones
                     .forEach {
                         if (it.isAvailable()) {
-                            for (turn in getTurnsInPosition(spiel, it.shape, y, x)) yield(turn)
+                            for (turn in getTurnsInPosition(board, it.shape, y, x)) yield(turn)
                         }
                     }
             }

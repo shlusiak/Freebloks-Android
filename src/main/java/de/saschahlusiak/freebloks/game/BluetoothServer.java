@@ -8,15 +8,15 @@ import androidx.annotation.NonNull;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
-import de.saschahlusiak.freebloks.client.GameObserver;
-import de.saschahlusiak.freebloks.model.Spiel;
+import de.saschahlusiak.freebloks.client.GameEventObserver;
+import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import java.io.IOException;
 import java.util.UUID;
 
-public class BluetoothServer extends Thread implements GameObserver {
+public class BluetoothServer extends Thread implements GameEventObserver {
 	private final static String tag = BluetoothServer.class.getSimpleName();
 
 	public final static UUID SERVICE_UUID = UUID.fromString("B4C72729-2E7F-48B2-B15C-BDD73CED0D13");
@@ -109,12 +109,12 @@ public class BluetoothServer extends Thread implements GameObserver {
 	}
 
 	@Override
-	public void onConnected(@NonNull Spiel spiel) {
+	public void onConnected(@NonNull Board board) {
 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Spiel spiel) {
+	public void onDisconnected(@NonNull Board board) {
 		shutdown();
 	}
 

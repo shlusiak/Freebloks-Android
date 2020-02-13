@@ -10,10 +10,10 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 
 import de.saschahlusiak.freebloks.client.SpielClient;
-import de.saschahlusiak.freebloks.client.GameObserver;
-import de.saschahlusiak.freebloks.model.GameState;
+import de.saschahlusiak.freebloks.client.GameEventObserver;
+import de.saschahlusiak.freebloks.model.Board;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
-import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
@@ -25,7 +25,7 @@ import de.saschahlusiak.freebloks.view.effects.StoneUndoEffect;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
-public class Freebloks3DView extends GLSurfaceView implements GameObserver {
+public class Freebloks3DView extends GLSurfaceView implements GameEventObserver {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
 	public final ViewModel model = new ViewModel(this);
@@ -73,23 +73,23 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 		renderer.backgroundRenderer.setTheme(theme);
 	}
 
-	public void setSpiel(final SpielClient client, final GameState spiel) {
+	public void setSpiel(final SpielClient client, final Game game) {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
-				model.setSpiel(spiel);
-				if (spiel != null) {
+				model.setGame(game);
+				if (game != null) {
 					client.addObserver(Freebloks3DView.this);
-					model.board.last_size = spiel.width;
-					for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.isLocalPlayer(i)) {
-						model.board.centerPlayer = i;
+					model.boardObject.last_size = game.getBoard().width;
+					for (int i = 0; i < Board.PLAYER_MAX; i++) if (game.isLocalPlayer(i)) {
+						model.boardObject.centerPlayer = i;
 						break;
 					}
 					renderer.updateModelViewMatrix = true;
-					model.wheel.update(model.board.getShowWheelPlayer());
+					model.wheel.update(model.boardObject.getShowWheelPlayer());
 				}
 
-				renderer.init(model.board.last_size);
+				renderer.init(model.boardObject.last_size);
 				requestRender();
 			}
 		});
@@ -168,11 +168,11 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		if (model == null || model.spiel == null)
+		if (model == null || model.game == null)
 			return;
 
-		if (model.spiel.isLocalPlayer() || model.wheel.getCurrentPlayer() != model.board.getShowWheelPlayer())
-			model.wheel.update(model.board.getShowWheelPlayer());
+		if (model.game.isLocalPlayer() || model.wheel.getCurrentPlayer() != model.boardObject.getShowWheelPlayer())
+			model.wheel.update(model.boardObject.getShowWheelPlayer());
 		requestRender();
 	}
 
@@ -181,10 +181,10 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
-				if (model == null || model.spiel == null)
+				if (model == null || model.game == null)
 					return;
 
-				if (model.hasAnimations() && !model.spiel.isLocalPlayer(turn.getPlayer())) {
+				if (model.hasAnimations() && !model.game.isLocalPlayer(turn.getPlayer())) {
 					StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
 
 					EffectSet set = new EffectSet();
@@ -200,11 +200,11 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 	public void stoneHasBeenSet(@NonNull Turn turn) {
 		if (model == null)
 			return;
-		if (model.spiel == null)
+		if (model.game == null)
 			return;
 
-		if (model.spiel.isLocalPlayer(turn.getPlayer()) || turn.getPlayer() == model.wheel.getCurrentPlayer())
-			model.wheel.update(model.board.getShowWheelPlayer());
+		if (model.game.isLocalPlayer(turn.getPlayer()) || turn.getPlayer() == model.wheel.getCurrentPlayer())
+			model.wheel.update(model.boardObject.getShowWheelPlayer());
 
 		requestRender();
 	}
@@ -214,23 +214,23 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
-				if (model == null || model.spiel == null)
+				if (model == null || model.game == null)
 					return;
-				if (turn.getPlayer() != model.spiel.getCurrentPlayer())
+				if (turn.getPlayer() != model.game.getCurrentPlayer())
 					return;
-				if (!model.spiel.isLocalPlayer())
+				if (!model.game.isLocalPlayer())
 					return;
 
-				model.board.resetRotation();
+				model.boardObject.resetRotation();
 				model.wheel.update(turn.getPlayer());
 				model.wheel.showStone(turn.getShapeNumber());
 
 				model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 
-				int currentPlayer = model.spiel.getCurrentPlayer();
+				int currentPlayer = model.game.getCurrentPlayer();
 				Stone st = null;
 				if (currentPlayer >= 0)
-					st = model.spiel.getPlayer(currentPlayer).getStone(turn.getShapeNumber());
+					st = model.board.getPlayer(currentPlayer).getStone(turn.getShapeNumber());
 
 				PointF p = new PointF();
 				p.x = turn.getX() - 0.5f + st.getShape().getSize() / 2;
@@ -244,7 +244,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 
 	@Override
 	public void gameFinished() {
-		model.board.resetRotation();
+		model.boardObject.resetRotation();
 		requestRender();
 	}
 
@@ -255,12 +255,12 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 
 	@Override
 	public void gameStarted() {
-		model.board.centerPlayer = 0;
-		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (model.spiel.isLocalPlayer(i)) {
-			model.board.centerPlayer = i;
+		model.boardObject.centerPlayer = 0;
+		for (int i = 0; i < Board.PLAYER_MAX; i++) if (model.game.isLocalPlayer(i)) {
+			model.boardObject.centerPlayer = i;
 			break;
 		}
-		model.wheel.update(model.board.getShowWheelPlayer());
+		model.wheel.update(model.boardObject.getShowWheelPlayer());
 		renderer.updateModelViewMatrix = true;
 		model.reset();
 		requestRender();
@@ -278,12 +278,12 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 
 	@Override
 	public void serverStatus(@NonNull MessageServerStatus status) {
-		if (status.getWidth() != model.board.last_size) {
-			model.board.last_size = status.getWidth();
+		if (status.getWidth() != model.boardObject.last_size) {
+			model.boardObject.last_size = status.getWidth();
 			queueEvent(new Runnable() {
 				@Override
 				public void run() {
-					renderer.board.initBorder(model.spiel.width);
+					renderer.board.initBorder(model.board.width);
 					requestRender();
 				}
 			});
@@ -291,12 +291,12 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 	}
 
 	@Override
-	public void onConnected(@NonNull Spiel spiel) {
+	public void onConnected(@NonNull Board board) {
 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Spiel spiel) {
+	public void onDisconnected(@NonNull Board board) {
 
 	}
 

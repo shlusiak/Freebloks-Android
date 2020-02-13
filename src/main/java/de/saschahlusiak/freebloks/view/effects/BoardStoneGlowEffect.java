@@ -64,9 +64,9 @@ public class BoardStoneGlowEffect extends AbsEffect implements Effect {
 		gl.glPushMatrix();
 
 	    gl.glTranslatef(
-	    		-BoardRenderer.stone_size * (float)(model.spiel.width - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
+	    		-BoardRenderer.stone_size * (float)(model.board.width - 1) + BoardRenderer.stone_size * 2.0f * (float)x,
 	    		0,
-	    		-BoardRenderer.stone_size * (float)(model.spiel.height - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
+	    		-BoardRenderer.stone_size * (float)(model.board.height - 1) + BoardRenderer.stone_size * 2.0f * (float)y);
 
 		renderer.renderStone(gl, color);
 		gl.glPopMatrix();

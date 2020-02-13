@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.model.Spiel;
+import de.saschahlusiak.freebloks.model.Board;
 
 import java.io.Serializable;
 
@@ -67,7 +67,7 @@ public class GameConfiguration implements Serializable {
 		public Builder() {
 			configuration = new GameConfiguration();
 
-			configuration.fieldSize = Spiel.DEFAULT_BOARD_SIZE;
+			configuration.fieldSize = Board.DEFAULT_BOARD_SIZE;
 			configuration.difficulty = DEFAULT_DIFFICULTY;
 			configuration.gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 		}
