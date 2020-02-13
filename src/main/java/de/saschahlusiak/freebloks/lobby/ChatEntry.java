@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import android.graphics.Color;
 
 public class ChatEntry implements Serializable {

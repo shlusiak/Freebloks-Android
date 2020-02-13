@@ -7,7 +7,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 import android.content.Context;
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.OrientedShape;
 import de.saschahlusiak.freebloks.model.Rotation;
 import de.saschahlusiak.freebloks.model.Spiel;

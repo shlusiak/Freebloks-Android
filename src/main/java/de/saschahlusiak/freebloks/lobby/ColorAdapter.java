@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.lobby;
 import android.widget.CheckBox;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
@@ -88,7 +88,7 @@ public class ColorAdapter extends BaseAdapter {
 
 		if (lastStatus.getSpieler()[position] >= 0) {
 			/* it is a human player */
-			if (spiel.is_local_player(position))
+			if (spiel.isLocalPlayer(position))
 				return true;
 		} else
 			return true;
@@ -148,7 +148,7 @@ public class ColorAdapter extends BaseAdapter {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getSpieler()[player]));
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				if (spiel.is_local_player(player)) {
+				if (spiel.isLocalPlayer(player)) {
 					t.setTypeface(Typeface.DEFAULT_BOLD);
 					v.findViewById(R.id.editButton).setVisibility(View.VISIBLE);
 
@@ -196,7 +196,7 @@ public class ColorAdapter extends BaseAdapter {
 				c.setVisibility(View.VISIBLE);
 			}
 		} else {
-			if (spiel.is_local_player(player)) {
+			if (spiel.isLocalPlayer(player)) {
 	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
 				t.setText(colorNames[player + 1]);

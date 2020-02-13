@@ -21,6 +21,7 @@ import androidx.annotation.WorkerThread;
 import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -203,7 +204,7 @@ public class SpielClient {
 			return;
 		if (!isConnected())
 			return;
-		if (!spiel.is_local_player())
+		if (!spiel.isLocalPlayer())
 			return;
 		send(new MessageRequestHint(player));
 	}
@@ -220,12 +221,12 @@ public class SpielClient {
 	 **/
 	public int set_stone(Turn turn)
 	{
-		if (spiel.m_current_player==-1)
+		if (spiel.getCurrentPlayer() ==-1)
 			return Spiel.FIELD_DENIED;
 		
 		/* Lokal keinen Spieler als aktiv setzen.
 	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
-		spiel.set_noplayer();
+		spiel.setCurrentPlayer(-1);
 
 		send(new MessageSetStone(turn));
 
@@ -247,7 +248,7 @@ public class SpielClient {
 			return;
 		if (!isConnected())
 			return;
-		if (!spiel.is_local_player())
+		if (!spiel.isLocalPlayer())
 			return;
 		send(new MessageRequestUndo());
 	}

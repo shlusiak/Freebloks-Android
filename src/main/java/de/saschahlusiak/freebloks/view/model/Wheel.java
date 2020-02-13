@@ -53,7 +53,7 @@ public class Wheel implements ViewElement {
 				return;
 			if (Math.abs(currentOffset - lastOffset) > 3.0f)
 				return;
-			if (!model.spiel.is_local_player())
+			if (!model.spiel.isLocalPlayer())
 				return;
 
 			tmp.x = lastPointerLocation.x;
@@ -167,7 +167,7 @@ public class Wheel implements ViewElement {
 		int row = (int) (-(tmp.y + 2.0f) / 6.7f);
 		int col = (int) ((tmp.x - (float) model.spiel.width / 2.0f + lastOffset) / stone_spacing + 0.5f);
 
-		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
+		if (!model.spiel.isLocalPlayer() || model.spiel.getCurrentPlayer() != currentPlayer) {
 			status = Status.SPINNING;
 			return true;
 		}
@@ -225,7 +225,7 @@ public class Wheel implements ViewElement {
 		originalX = tmp.x;
 
 		model.redraw = true;
-		if (!model.spiel.is_local_player() || model.spiel.current_player() != currentPlayer) {
+		if (!model.spiel.isLocalPlayer() || model.spiel.getCurrentPlayer() != currentPlayer) {
 			return true;
 		}
 

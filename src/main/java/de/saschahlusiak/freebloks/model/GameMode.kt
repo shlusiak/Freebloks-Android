@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.controller
+package de.saschahlusiak.freebloks.model
 
 enum class GameMode {
     GAMEMODE_2_COLORS_2_PLAYERS,

@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.network
 
-import de.saschahlusiak.freebloks.controller.GameMode
+import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.controller.NetworkEventHandler
 import de.saschahlusiak.freebloks.model.Spielleiter
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
@@ -361,11 +361,11 @@ class NetworkTest {
 
         assertTrue(spiel.isFinished)
         assertTrue(spiel.isStarted)
-        assertEquals(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, spiel.gameMode)
+        assertEquals(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, spiel.getGameMode())
         assertEquals(20, spiel.width)
         assertEquals(20, spiel.height)
 
-        val results = spiel.resultData
+        val results = spiel.getPlayerScores()
         assertEquals(81, results[0].points)
         assertEquals(2, results[0].stonesLeft)
         assertEquals(69, results[1].points)
@@ -399,7 +399,7 @@ class NetworkTest {
 
         assertFalse(spiel.isFinished)
         assertTrue(spiel.isStarted)
-        assertEquals(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, spiel.gameMode)
+        assertEquals(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, spiel.getGameMode())
         assertEquals(20, spiel.width)
         assertEquals(20, spiel.height)
 
@@ -448,11 +448,11 @@ class NetworkTest {
 
         assertTrue(spiel.isFinished)
         assertTrue(spiel.isStarted)
-        assertEquals(GameMode.GAMEMODE_DUO, spiel.gameMode)
+        assertEquals(GameMode.GAMEMODE_DUO, spiel.getGameMode())
         assertEquals(14, spiel.width)
         assertEquals(14, spiel.height)
 
-        val results = spiel.resultData
+        val results = spiel.getPlayerScores()
         assertEquals(66, results[0].points)
         assertEquals(5, results[0].stonesLeft)
         assertEquals(59, results[1].points)
@@ -482,10 +482,10 @@ class NetworkTest {
 
         assertTrue(spiel.isFinished)
         assertTrue(spiel.isStarted)
-        assertEquals(GameMode.GAMEMODE_JUNIOR, spiel.gameMode)
+        assertEquals(GameMode.GAMEMODE_JUNIOR, spiel.getGameMode())
         assertEquals(14, spiel.width)
         assertEquals(14, spiel.height)
-        val results = spiel.resultData
+        val results = spiel.getPlayerScores()
 
         assertEquals(60, results[0].points)
         assertEquals(10, results[0].stonesLeft)

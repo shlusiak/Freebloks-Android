@@ -81,7 +81,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 				if (spiel != null) {
 					client.addObserver(Freebloks3DView.this);
 					model.board.last_size = spiel.width;
-					for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.is_local_player(i)) {
+					for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (spiel.isLocalPlayer(i)) {
 						model.board.centerPlayer = i;
 						break;
 					}
@@ -171,7 +171,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 		if (model == null || model.spiel == null)
 			return;
 
-		if (model.spiel.is_local_player() || model.wheel.getCurrentPlayer() != model.board.getShowWheelPlayer())
+		if (model.spiel.isLocalPlayer() || model.wheel.getCurrentPlayer() != model.board.getShowWheelPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 		requestRender();
 	}
@@ -184,7 +184,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 				if (model == null || model.spiel == null)
 					return;
 
-				if (model.hasAnimations() && !model.spiel.is_local_player(turn.getPlayer())) {
+				if (model.hasAnimations() && !model.spiel.isLocalPlayer(turn.getPlayer())) {
 					StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
 
 					EffectSet set = new EffectSet();
@@ -203,7 +203,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 		if (model.spiel == null)
 			return;
 
-		if (model.spiel.is_local_player(turn.getPlayer()) || turn.getPlayer() == model.wheel.getCurrentPlayer())
+		if (model.spiel.isLocalPlayer(turn.getPlayer()) || turn.getPlayer() == model.wheel.getCurrentPlayer())
 			model.wheel.update(model.board.getShowWheelPlayer());
 
 		requestRender();
@@ -216,9 +216,9 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 			public void run() {
 				if (model == null || model.spiel == null)
 					return;
-				if (turn.getPlayer() != model.spiel.current_player())
+				if (turn.getPlayer() != model.spiel.getCurrentPlayer())
 					return;
-				if (!model.spiel.is_local_player())
+				if (!model.spiel.isLocalPlayer())
 					return;
 
 				model.board.resetRotation();
@@ -227,7 +227,10 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 
 				model.soundPool.play(model.soundPool.SOUND_HINT, 0.9f, 1.0f);
 
-				Stone st = model.spiel.get_current_player().getStone(turn.getShapeNumber());
+				int currentPlayer = model.spiel.getCurrentPlayer();
+				Stone st = null;
+				if (currentPlayer >= 0)
+					st = model.spiel.getPlayer(currentPlayer).getStone(turn.getShapeNumber());
 
 				PointF p = new PointF();
 				p.x = turn.getX() - 0.5f + st.getShape().getSize() / 2;
@@ -253,7 +256,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameObserver {
 	@Override
 	public void gameStarted() {
 		model.board.centerPlayer = 0;
-		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (model.spiel.is_local_player(i)) {
+		for (int i = 0; i < Spiel.PLAYER_MAX; i++) if (model.spiel.isLocalPlayer(i)) {
 			model.board.centerPlayer = i;
 			break;
 		}

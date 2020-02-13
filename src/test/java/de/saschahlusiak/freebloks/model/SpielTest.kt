@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.controller.GameMode
 import de.saschahlusiak.freebloks.model.Spiel.*
 import org.junit.Assert.*
 import org.junit.Test

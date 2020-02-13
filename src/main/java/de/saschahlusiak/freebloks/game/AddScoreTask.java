@@ -4,11 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import com.crashlytics.android.Crashlytics;
-import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.model.PlayerData;
+import de.saschahlusiak.freebloks.model.GameMode;
+import de.saschahlusiak.freebloks.model.PlayerScore;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 
-public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
+public class AddScoreTask extends AsyncTask<PlayerScore,Void,Void> {
 	private GameMode game_mode;
 	private Context context;
 
@@ -18,7 +18,7 @@ public class AddScoreTask extends AsyncTask<PlayerData,Void,Void> {
 	}
 
 	@Override
-	protected Void doInBackground(PlayerData... data) {
+	protected Void doInBackground(PlayerScore... data) {
 		HighscoreDB db = new HighscoreDB(context);
 		if (data == null)
 			return null;

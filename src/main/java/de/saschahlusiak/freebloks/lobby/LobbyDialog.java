@@ -15,7 +15,7 @@ import android.text.TextWatcher;
 import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.GameObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
@@ -392,7 +392,7 @@ public class LobbyDialog extends Dialog implements GameObserver, OnItemClickList
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		if (client.spiel.isStarted())
 			return;
-		if (client.spiel.is_local_player((int)id)) {
+		if (client.spiel.isLocalPlayer((int)id)) {
 			client.revoke_player((int)id);
 		} else {
 			client.request_player((int)id, null);

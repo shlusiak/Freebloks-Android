@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.PointF;
 import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;

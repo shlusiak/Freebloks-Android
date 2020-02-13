@@ -19,7 +19,6 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
@@ -201,7 +200,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glPopMatrix();
 
 		/* render current player stone on the field */
-		if (model.spiel.is_local_player())
+		if (model.spiel.isLocalPlayer())
 			model.currentStone.render(this, gl11);
 
 //		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");

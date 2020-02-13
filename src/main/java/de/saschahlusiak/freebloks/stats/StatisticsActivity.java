@@ -22,7 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import de.saschahlusiak.freebloks.game.BaseGameActivity;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Shape;
 

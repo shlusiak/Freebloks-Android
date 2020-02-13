@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.database;
 
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

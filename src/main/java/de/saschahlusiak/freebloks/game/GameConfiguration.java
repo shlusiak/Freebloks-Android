@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.game;
 
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Spiel;
 
 import java.io.Serializable;

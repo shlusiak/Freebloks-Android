@@ -119,7 +119,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			if (connectedRunnable != null)
 				connectedRunnable.run();
 
-			activity.newCurrentPlayer(myclient.spiel.current_player());
+			activity.newCurrentPlayer(myclient.spiel.getCurrentPlayer());
 		}
 		super.onPostExecute(result);
 	}

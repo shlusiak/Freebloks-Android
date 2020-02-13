@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks;
 
-import de.saschahlusiak.freebloks.controller.GameMode;
-import android.graphics.Color;
+import de.saschahlusiak.freebloks.model.GameMode;
 
 public class Global {
 	public final static int VIBRATE_START_DRAGGING = 85;

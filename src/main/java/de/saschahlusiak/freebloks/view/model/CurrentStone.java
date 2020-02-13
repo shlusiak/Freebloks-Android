@@ -152,7 +152,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 
-		renderer.board.renderStoneShadow(gl, model.spiel.current_player(), stone.getShape(), m_mirror_counter, m_rotate_counter, 0.80f);
+		renderer.board.renderStoneShadow(gl, model.spiel.getCurrentPlayer(), stone.getShape(), m_mirror_counter, m_rotate_counter, 0.80f);
 		gl.glPopMatrix();
 
 
@@ -414,9 +414,9 @@ public class CurrentStone implements ViewElement {
 	}
 
 	public boolean is_valid_turn(float x, float y) {
-		if (!model.spiel.is_local_player())
+		if (!model.spiel.isLocalPlayer())
 			return false;
-		if (model.spiel.isValidTurn(stone.getShape(), model.spiel.current_player(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Spiel.FIELD_ALLOWED)
+		if (model.spiel.isValidTurn(stone.getShape(), model.spiel.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), m_mirror_counter, m_rotate_counter) == Spiel.FIELD_ALLOWED)
 			return true;
 		return false;
 	}
@@ -479,7 +479,7 @@ public class CurrentStone implements ViewElement {
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				Turn turn = new Turn(model.spiel.current_player(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
+				Turn turn = new Turn(model.spiel.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), m_mirror_counter, m_rotate_counter);
 				if (model.activity.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;

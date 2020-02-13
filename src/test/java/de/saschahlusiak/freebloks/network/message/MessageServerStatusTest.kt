@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.network.message
 
-import de.saschahlusiak.freebloks.controller.GameMode
+import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Spielleiter.PLAYER_COMPUTER
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf

@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.controller;
 
 import android.util.Log;
 
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.model.Spielleiter;
 
@@ -25,13 +26,13 @@ public class JNIServer {
 			int ki_threads);
 
 
-	public static int runServer(Spielleiter spiel, int game_mode, int field_size, int stones[], int ki_mode) {
+	public static int runServer(Spielleiter spiel, GameMode gameMode, int field_size, int stones[], int ki_mode) {
 		int ki_threads = get_number_of_processors();
 
 		Log.d(tag, "spawning server with " + ki_threads + " threads");
 
 		if (spiel == null)
-			return native_run_server(game_mode, field_size, field_size, stones, ki_mode, ki_threads);
+			return native_run_server(gameMode.ordinal(), field_size, field_size, stones, ki_mode, ki_threads);
 		else {
 			int player_stones_available[] = new int[Shape.COUNT * 4];
 			int i, j;
@@ -43,11 +44,11 @@ public class JNIServer {
 			return native_resume_server(
 					spiel.width,
 					spiel.height,
-					spiel.current_player(),
+					spiel.getCurrentPlayer(),
 					spiel.spieler,
 					spiel.getFields(),
 					player_stones_available,
-					game_mode,
+					gameMode.ordinal(),
 					ki_mode,
 					ki_threads);
 		}

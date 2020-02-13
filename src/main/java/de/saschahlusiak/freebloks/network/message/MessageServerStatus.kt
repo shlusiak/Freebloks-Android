@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.network.message
 
 import android.content.res.Resources
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.controller.GameMode
+import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageType

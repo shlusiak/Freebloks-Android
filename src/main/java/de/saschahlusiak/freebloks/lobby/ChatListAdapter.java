@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.lobby;
 import java.util.List;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;

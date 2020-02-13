@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.view.model;
 
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
@@ -127,8 +127,8 @@ public class Board implements ViewElement {
 			return getShowDetailsPlayer();
 		if (model.spiel.isFinished())
 			return centerPlayer;
-		if (model.spiel.is_local_player())
-			return model.spiel.current_player();
+		if (model.spiel.isLocalPlayer())
+			return model.spiel.getCurrentPlayer();
 		return -1;
 	}
 
@@ -145,8 +145,8 @@ public class Board implements ViewElement {
 		if (model.spiel.isFinished()) {
 			return centerPlayer;
 		}
-		if (model.spiel.is_local_player() || model.showOpponents)
-			return model.spiel.current_player();
+		if (model.spiel.isLocalPlayer() || model.showOpponents)
+			return model.spiel.getCurrentPlayer();
 		/* TODO: would be nice to show the last current local player instead of the center one
 		 * needs caching of previous local player */
 		return centerPlayer;

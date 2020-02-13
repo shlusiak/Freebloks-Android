@@ -5,8 +5,8 @@ import com.crashlytics.android.Crashlytics;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.model.PlayerData;
+import de.saschahlusiak.freebloks.model.GameMode;
+import de.saschahlusiak.freebloks.model.PlayerScore;
 import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
@@ -20,7 +20,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -42,7 +41,7 @@ public class GameFinishActivity extends BaseGameActivity {
 	String clientName;
 	Spielleiter spiel;
 	boolean firstRun = false;
-	PlayerData[] data;
+	PlayerScore[] data;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,7 @@ public class GameFinishActivity extends BaseGameActivity {
 		if (spiel == null)
 			throw new IllegalArgumentException("Game cannot be null");
 
-		data = spiel.getResultData();
+		data = spiel.getPlayerScores();
 		updateViews(data, spiel.getGameMode());
 
 		findViewById(R.id.new_game).setOnClickListener(v -> {
@@ -83,7 +82,7 @@ public class GameFinishActivity extends BaseGameActivity {
 		findViewById(R.id.leaderboard).setOnClickListener(v -> startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD));
 	}
 
-	void updateViews(PlayerData[] data, GameMode game_mode) {
+	void updateViews(PlayerScore[] data, GameMode game_mode) {
 		ViewGroup[] t = new ViewGroup[4];
 
 		int i;
@@ -191,7 +190,7 @@ public class GameFinishActivity extends BaseGameActivity {
 		}
 	}
 
-	Drawable getScoreDrawable(PlayerData data) {
+	Drawable getScoreDrawable(PlayerScore data) {
 		int color = Global.getPlayerColor(data.getPlayer1(), spiel.getGameMode());
 		LayerDrawable l;
 

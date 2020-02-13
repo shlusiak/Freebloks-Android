@@ -1,7 +1,11 @@
 package de.saschahlusiak.freebloks.model
 
-class PlayerData @JvmOverloads constructor(spiel: Spielleiter, val player1: Int, val player2: Int = -1) : Comparable<PlayerData> {
-    val isLocal: Boolean = spiel.is_local_player(player1)
+/**
+ * The end-of-game score of a player, which, in case of GAMEMODE_4_COLORS_2_PLAYERS may be
+ * composed of two game players (e.g. red & blue).
+ */
+class PlayerScore @JvmOverloads constructor(spiel: Spielleiter, val player1: Int, val player2: Int = -1) : Comparable<PlayerScore> {
+    val isLocal: Boolean = spiel.isLocalPlayer(player1)
 
     // the place will be set afterwards, when all points of all players are known
 	var place = -1
@@ -46,7 +50,7 @@ class PlayerData @JvmOverloads constructor(spiel: Spielleiter, val player1: Int,
         }
     }
 
-    override fun compareTo(other: PlayerData): Int {
+    override fun compareTo(other: PlayerScore): Int {
         if (points > other.points) return -1
         if (points < other.points) return 1
         if (stonesLeft < other.stonesLeft) return -1

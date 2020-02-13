@@ -4,7 +4,7 @@ import android.view.WindowManager;
 import com.shawnlin.numberpicker.NumberPicker;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.controller.GameMode;
+import de.saschahlusiak.freebloks.model.GameMode;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
