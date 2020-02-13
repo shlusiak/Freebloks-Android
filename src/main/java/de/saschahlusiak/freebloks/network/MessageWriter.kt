@@ -15,11 +15,7 @@ class MessageWriter {
     @WorkerThread
     fun write(os: OutputStream, vararg messages: Message): Boolean {
         messages.forEach { message ->
-            val bytes = ByteArray(message.header.size)
-
-            // message gets marshaled into the buffer
-            message.write(ByteBuffer.wrap(bytes))
-
+            val bytes = message.toByteArray()
             try {
                 os.write(bytes)
             } catch (e: IOException) {

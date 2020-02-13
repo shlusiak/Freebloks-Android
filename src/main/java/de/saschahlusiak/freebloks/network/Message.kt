@@ -36,11 +36,6 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
     }
 
     /**
-     * Returns a [ByteBuffer] wrapping the content
-     */
-    fun toBuffer() = ByteBuffer.wrap(toByteArray())
-
-    /**
      * Marshals the message and returns a hex string
      */
     fun dumpAsHex(): String {
