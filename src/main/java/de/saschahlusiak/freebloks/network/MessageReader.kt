@@ -9,12 +9,13 @@ import java.nio.ByteBuffer
 
 /**
  * Use [asSequence] or [readMessage] to read [Message] objects from a given InputStream.
- *
- * @param stream the InputStream to read from
  */
 class MessageReader() {
     private var buffer = ByteBuffer.allocate(256)
 
+    /**
+     * Block and read a message into [buffer]
+     */
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
     private fun readNextIntoBuffer(stream: InputStream) {
@@ -47,7 +48,10 @@ class MessageReader() {
     }
 
     /**
-     * @param block if false, return null if not enough data is available on the stream
+     * Blocks and reads a single message into [buffer], then returns the unmarshalled message.
+     *
+     * @param stream InputStream to suck on
+     * @return message or null if unknown type
      */
     @Throws(IOException::class, EOFException::class, ProtocolException::class)
     @WorkerThread
@@ -56,6 +60,12 @@ class MessageReader() {
         return Message.from(buffer)
     }
 
+    /**
+     * Read messages as a sequence. The sequence will finish when [EOFException] is thrown on the stream.
+     * Unknown message types will be silently skipped.
+     *
+     * @param stream InputStream to suck on
+     */
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
     fun asSequence(stream: InputStream): Sequence<Message> {

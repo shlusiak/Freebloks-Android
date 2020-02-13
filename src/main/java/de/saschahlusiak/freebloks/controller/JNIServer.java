@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.controller;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.Shape;
+import de.saschahlusiak.freebloks.model.Spielleiter;
 
 public class JNIServer {
 	final static String tag = JNIServer.class.getSimpleName();

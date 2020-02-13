@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.view.model;
 
 import de.saschahlusiak.freebloks.controller.GameMode;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 

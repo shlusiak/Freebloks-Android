@@ -16,9 +16,9 @@ class Player(val number: Int) : Serializable {
     }
 
     /**
-     * The last played stone or null if none or unknown
+     * The last played shape or null if none or unknown
      */
-    var lastStone: Stone? = null
+    var lastShape: Shape? = null
 
     /**
      * The positive number of points for this player so far.
@@ -76,10 +76,10 @@ class Player(val number: Int) : Serializable {
             }
         }
 
-        val lastStone = lastStone
+        val lastStone = lastShape
         if (stonesLeft == 0 && lastStone != null) {
             totalPoints += 15
-            if (lastStone.shape.number == 0) totalPoints += 5
+            if (lastStone.number == 0) totalPoints += 5
         }
     }
 

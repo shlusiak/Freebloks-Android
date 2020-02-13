@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import de.saschahlusiak.freebloks.controller.SpielClient;
 import de.saschahlusiak.freebloks.controller.GameObserver;
-import de.saschahlusiak.freebloks.controller.Spielleiter;
+import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Stone;

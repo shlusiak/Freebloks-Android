@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.controller.GameMode
 import de.saschahlusiak.freebloks.controller.NetworkEventHandler
-import de.saschahlusiak.freebloks.controller.Spielleiter
+import de.saschahlusiak.freebloks.model.Spielleiter
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
@@ -367,13 +367,13 @@ class NetworkTest {
 
         val results = spiel.resultData
         assertEquals(81, results[0].points)
-        assertEquals(2, results[0].stones_left)
+        assertEquals(2, results[0].stonesLeft)
         assertEquals(69, results[1].points)
-        assertEquals(5, results[1].stones_left)
+        assertEquals(5, results[1].stonesLeft)
         assertEquals(66, results[2].points)
-        assertEquals(5, results[2].stones_left)
+        assertEquals(5, results[2].stonesLeft)
         assertEquals(58, results[3].points)
-        assertEquals(7, results[3].stones_left)
+        assertEquals(7, results[3].stonesLeft)
     }
 
     /**
@@ -454,9 +454,9 @@ class NetworkTest {
 
         val results = spiel.resultData
         assertEquals(66, results[0].points)
-        assertEquals(5, results[0].stones_left)
+        assertEquals(5, results[0].stonesLeft)
         assertEquals(59, results[1].points)
-        assertEquals(7, results[1].stones_left)
+        assertEquals(7, results[1].stonesLeft)
     }
 
     /**
@@ -488,8 +488,8 @@ class NetworkTest {
         val results = spiel.resultData
 
         assertEquals(60, results[0].points)
-        assertEquals(10, results[0].stones_left)
+        assertEquals(10, results[0].stonesLeft)
         assertEquals(55, results[1].points)
-        assertEquals(11, results[1].stones_left)
+        assertEquals(11, results[1].stonesLeft)
     }
 }

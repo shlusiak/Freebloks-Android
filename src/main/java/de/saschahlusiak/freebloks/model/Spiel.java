@@ -6,7 +6,14 @@ import de.saschahlusiak.freebloks.controller.GameMode;
 import de.saschahlusiak.freebloks.controller.GameStateException;
 
 /**
- * Game state (model)
+ * Game state (model).
+ *
+ * Contains:
+ * - field state
+ * - players and their remaining stones
+ *
+ * Does not contain meta information like current player.
+ * See [Spielleiter] for that.
  */
 public class Spiel implements Serializable {
 	public static final int FIELD_FREE    =  240;
@@ -338,10 +345,10 @@ public class Spiel implements Serializable {
 	 * Places given stone onto field
 	 */
 	private void setStone(Stone stone, int player, int startY, int startX, Orientation orientation) throws GameStateException {
-		final Shape type = stone.getShape();
-		for (int y = 0; y < type.getSize(); y++){
-			for (int x = 0; x < type.getSize(); x++){
-				if (type.isStone(x, y, orientation)) {
+		final Shape shape = stone.getShape();
+		for (int y = 0; y < shape.getSize(); y++){
+			for (int x = 0; x < shape.getSize(); x++){
+				if (shape.isStone(x, y, orientation)) {
 					setSingleStone(player, startY+y, startX+x);
 				}
 			}
@@ -349,7 +356,7 @@ public class Spiel implements Serializable {
 
 		stone.availableDecrement();
 
-		this.player[player].setLastStone(stone);
+		this.player[player].setLastShape(shape);
 		refreshPlayerData();
 	}
 

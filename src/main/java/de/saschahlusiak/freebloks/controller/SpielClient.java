@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Spiel;
+import de.saschahlusiak.freebloks.model.Spielleiter;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;

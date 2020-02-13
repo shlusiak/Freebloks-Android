@@ -1,36 +1,44 @@
-package de.saschahlusiak.freebloks.controller;
+package de.saschahlusiak.freebloks.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
-import de.saschahlusiak.freebloks.model.Player;
-import de.saschahlusiak.freebloks.model.Spiel;
-import de.saschahlusiak.freebloks.model.Turn;
-import de.saschahlusiak.freebloks.model.Turnpool;
+import de.saschahlusiak.freebloks.controller.GameMode;
 
+import static de.saschahlusiak.freebloks.controller.GameMode.*;
+
+/**
+ * Enriches the current board state with meta information about the game:
+ *
+ * - game state
+ * - history for undo
+ * - current player
+ * - whether players are controlled locally or by the computer
+ * - current game mode
+ */
 public class Spielleiter extends Spiel implements Serializable {
 	private static final long serialVersionUID = -7880809258246268794L;
 
 	public static final int PLAYER_COMPUTER = -2;
 	public static final int PLAYER_LOCAL = -1;
 
-	int m_current_player;
-	int spieler[] = new int[Spiel.PLAYER_MAX];
+	public int m_current_player;
+	public int spieler[] = new int[Spiel.PLAYER_MAX];
 	private GameMode m_gamemode;
 	private boolean finished = false;
 	private boolean started = false;
 
-	Turnpool history;
+	public Turnpool history;
 
 	public Spielleiter(int size) {
 		super(size);
 		m_current_player=-1;
-		m_gamemode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
+		m_gamemode = GAMEMODE_4_COLORS_4_PLAYERS;
 		for (int i=0;i<PLAYER_MAX;i++)spieler[i]=PLAYER_COMPUTER;
 		history=new Turnpool();
 	}
 
-	void set_noplayer() {
+	public void set_noplayer() {
 		m_current_player=-1;
 	}
 
@@ -54,7 +62,7 @@ public class Spielleiter extends Spiel implements Serializable {
 		this.m_gamemode = gameMode;
 	}
 
-	void addHistory(Turn turn) {
+	public void addHistory(Turn turn) {
 		history.add(new Turn(turn));
 	}
 
@@ -132,10 +140,10 @@ public class Spielleiter extends Spiel implements Serializable {
 			place = i + 1;
 			if (i > 0) {
 				if (data[i].compareTo(data[i-1]) == 0)
-					place = data[i-1].place;
+					place = data[i-1].getPlace();
 			}
 
-			data[i].place = place;
+			data[i].setPlace(place);
 		}
 		return data;
 	}
