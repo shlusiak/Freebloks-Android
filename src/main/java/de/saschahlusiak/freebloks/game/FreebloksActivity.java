@@ -1476,7 +1476,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		
 		if (!client.game.isLocalPlayer())
 			return false;
-		if (client.game.getBoard().isValidTurn(turn) != Board.FIELD_ALLOWED)
+		if (!client.game.getBoard().isValidTurn(turn))
 			return false;
 
 		if (view.model.hasAnimations()) {

@@ -88,7 +88,7 @@ class Player(val number: Int) : Serializable {
             for (x in 0 until shape.size) {
                 for (y in 0 until shape.size) {
                     if (shape.isCorner(x, y, orientation)) {
-                        if (board.isValidTurn(shape, number, fieldY - y, fieldX - x, orientation) == Board.FIELD_ALLOWED) {
+                        if (board.isValidTurn(shape, number, fieldY - y, fieldX - x, orientation)) {
                             yield(Turn(number, shape, orientation, fieldY - y, fieldX - x))
                         }
                     }

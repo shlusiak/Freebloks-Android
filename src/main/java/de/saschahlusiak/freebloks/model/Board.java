@@ -30,14 +30,14 @@ public class Board implements Serializable {
 
 	/**
 	 * A field is encoded in 8 bits, or 2 bits per player.
-	 *
+	 * <p>
 	 * No bit set: FIELD_FREE
 	 * first bit set: FIELD_ALLOWED (shares a corner)
 	 * second bit set: FIELD_DENIED (shares an edge)
-	 *
+	 * <p>
 	 * if first 6 bits are set, the lower most two bits encode the player number occupying the field
 	 */
-	private static final int PLAYER_BIT_ADDR[] = {
+	private static final int[] PLAYER_BIT_ADDR = {
 		0x01 | 0x02, // 00000011b
 		0x04 | 0x08, // 00001100b
 		0x10 | 0x20, // 00110000b
@@ -47,7 +47,7 @@ public class Board implements Serializable {
 	/**
 	 * Bit mask to filter for allowed fields
 	 */
-	private static final int PLAYER_BIT_ALLOWED[] = {
+	private static final int[] PLAYER_BIT_ALLOWED = {
 		0x01, // 00000001b
 		0x04, // 00000100b
 		0x10, // 00010000b
@@ -57,7 +57,7 @@ public class Board implements Serializable {
 	/**
 	 * Bit mask to filter for denied fields
 	 */
-	private static final int PLAYER_BIT_DENIED[] = {
+	private static final int[] PLAYER_BIT_DENIED = {
 		0x02, // 00000010b
 		0x08, // 00001000b
 		0x20, // 00100000b
@@ -82,12 +82,12 @@ public class Board implements Serializable {
 	/**
 	 * Encapsulated player information
 	 */
-	protected Player player[] = new Player[PLAYER_MAX];
+	protected Player[] player = new Player[PLAYER_MAX];
 
 	/**
 	 * One dimensional field [y * width + x]
 	 */
-	private int field[];
+	private int[] field;
 
 	/**
 	 * New (initial) game state
@@ -190,9 +190,8 @@ public class Board implements Serializable {
 
 	/**
 	 * Sets number of available stones for each stone with specific size.
-	 *
-	 * @deprecated
 	 */
+	@Deprecated
 	public void setAvailableStones(int one, int two, int three, int four, int five){
 		int counts[] = {one, two, three, four, five};
 
@@ -255,36 +254,34 @@ public class Board implements Serializable {
 	 *
 	 * @return FIELD_ALLOWED if allowed, FIELD_DENIED otherwise
 	 */
-	public final int isValidTurn(Shape stone, int player, int startY, int startX, int mirror, int rotate) {
-		int valid = FIELD_DENIED;
+	public final boolean isValidTurn(Shape stone, int player, int startY, int startX, int mirror, int rotate) {
+		boolean valid = false;
 		int field_value;
 
 		for (int y = 0; y < stone.getSize(); y++){
 			for (int x = 0; x < stone.getSize(); x++){
 				if (stone.isStone(x, y, mirror, rotate)) {
 					if (y + startY < 0 || y + startY >= height || x + startX < 0 || x + startX >= width)
-						return FIELD_DENIED;
+						return false;
 
 					field_value = getFieldStatus(player, y + startY , x + startX);
-					if (field_value == FIELD_DENIED) return FIELD_DENIED;
-					if (field_value == FIELD_ALLOWED) valid = FIELD_ALLOWED;
+					if (field_value == FIELD_DENIED) return false;
+					if (field_value == FIELD_ALLOWED) valid = true;
 				}
 			}
 		}
 		return valid;
 	}
 
-	public final int isValidTurn(Shape stone, int player, int startY, int startX, Orientation orientation) {
+	public final boolean isValidTurn(Shape stone, int player, int startY, int startX, Orientation orientation) {
 		return isValidTurn(stone, player, startY, startX, orientation.getMirrored() ? 1 : 0, orientation.getRotation().getValue());
 	}
 
 	/**
 	 * Check whether the given stone/player/position is a valid move.
 	 */
-	public final int isValidTurn(Turn turn) {
-		final int player = turn.getPlayer();
-
-		return isValidTurn(turn.getShape(), player, turn.getY(), turn.getX(), turn.getOrientation());
+	public final boolean isValidTurn(Turn turn) {
+		return isValidTurn(turn.getShape(), turn.getPlayer(), turn.getY(), turn.getX(), turn.getOrientation());
 	}
 
 	/**
@@ -335,12 +332,14 @@ public class Board implements Serializable {
 	 * Execute a Turn and place the stone on the field
 	 */
 	public final void setStone(Turn turn) throws GameStateException{
-		final Stone stone = player[turn.getPlayer()].getStone(turn.getShape().getNumber());
+		final Stone stone = player[turn.getPlayer()].getStone(turn.getShapeNumber());
 		setStone(stone, turn.getPlayer(), turn.getY(), turn.getX(), turn.getOrientation());
 	}
 
 	/**
-	 * Places given stone onto field
+	 * Places given stone onto field.
+	 *
+	 * Does not perform verification, see {@link #isValidTurn(Turn)} instead
 	 */
 	private void setStone(Stone stone, int player, int startY, int startX, Orientation orientation) throws GameStateException {
 		final Shape shape = stone.getShape();

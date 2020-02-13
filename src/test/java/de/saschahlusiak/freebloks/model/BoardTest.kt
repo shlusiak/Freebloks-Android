@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.model
 
+import de.saschahlusiak.freebloks.client.GameStateException
 import de.saschahlusiak.freebloks.model.Board.*
 import org.junit.Assert.*
 import org.junit.Test
@@ -43,12 +44,12 @@ class BoardTest {
         // but there is no player on that field yet
         assertEquals(FIELD_FREE, s.getFieldPlayer(19, 0))
 
-        assertEquals(FIELD_DENIED, s.isValidTurn(stone.shape, 0, 0, 0, 0, 0))
+        assertFalse(s.isValidTurn(stone.shape, 0, 0, 0, 0, 0))
 
         //  X
         // XX
         val turn = Turn(0, stone.shape.number, 18, 0, 0, 3)
-        assertEquals(FIELD_ALLOWED, s.isValidTurn(turn))
+        assertTrue(s.isValidTurn(turn))
         s.setStone(turn)
         assertEquals(0, stone.available)
         assertEquals(0, s.getFieldPlayer(19, 0))
@@ -66,10 +67,51 @@ class BoardTest {
         assertEquals(FIELD_ALLOWED, s.getFieldStatus(0, 17, 2))
         assertEquals(FIELD_FREE, s.getFieldStatus(0, 17, 3))
 
-        assertEquals(FIELD_DENIED, s.isValidTurn(turn))
+        assertFalse(s.isValidTurn(turn))
 
         s.refreshPlayerData()
         assertEquals(141, s.getPlayer(0).numberOfPossibleTurns)
+    }
+
+    @Test(expected = GameStateException::class)
+    fun test_single_stone_not_available() {
+        val board = Board(DEFAULT_BOARD_SIZE)
+        val turn = Turn(0, 0, 0, 0, Orientation())
+        board.setStone(turn)
+    }
+
+    @Test
+    fun test_single_stone_next_to_each_other() {
+        val board = Board(DEFAULT_BOARD_SIZE)
+        board.player[0].getStone(0).available = 2
+        board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        board.refreshPlayerData()
+        val turn1 = Turn(0, 0, 19, 0, Orientation())
+        val turn2 = Turn(0, 0, 18, 0, Orientation())
+        assertTrue(board.isValidTurn(turn1))
+        board.setStone(turn1)
+        assertFalse(board.isValidTurn(turn2))
+        // well, setStone does not actually verify whether the turn is legal, so this
+        // would succeed. Nothing to see here.
+        board.setStone(turn2)
+    }
+
+    @Test(expected = GameStateException::class)
+    fun test_single_stone_twice() {
+        val board = Board(DEFAULT_BOARD_SIZE)
+        board.player[0].getStone(0).available = 2
+        board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        board.refreshPlayerData()
+        val turn = Turn(0, 0, 19, 0, Orientation())
+        assertTrue(board.isValidTurn(turn))
+        try {
+            board.setStone(turn)
+        } catch (e: GameStateException) {
+            fail("Not expected here")
+        }
+        assertFalse(board.isValidTurn(turn))
+        // setting the same stone twice throws an Exception
+        board.setStone(turn)
     }
 
     fun Board.playGame(picker: (List<Turn>) -> Turn): Turnpool {

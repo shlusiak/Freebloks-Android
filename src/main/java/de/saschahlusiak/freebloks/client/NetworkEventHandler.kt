@@ -67,7 +67,7 @@ class NetworkEventHandler(private val game: Game) {
                 // is committed. fixes drawing glitches, where stone is set, but
                 // effect hasn't been added yet.
 
-                assert(board.isValidTurn(turn) != Board.FIELD_DENIED) { "game not in sync" }
+                assert(board.isValidTurn(turn)) { "game not in sync" }
 
                 notifyObservers { it.stoneWillBeSet(turn) }
                 board.setStone(turn)
