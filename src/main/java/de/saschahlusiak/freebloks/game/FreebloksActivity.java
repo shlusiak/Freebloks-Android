@@ -366,9 +366,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 		if (client != null) {
 			client.disconnect();
-			client.removeObserver(this);
-			/* TODO: make attach/detach of view symmetric */
-			client.removeObserver(view);
+			client = null;
 		}
 		if (view.model.soundPool != null)
 			view.model.soundPool.release();
