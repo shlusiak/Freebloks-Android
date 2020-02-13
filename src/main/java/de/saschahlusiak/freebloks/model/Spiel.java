@@ -12,7 +12,7 @@ import de.saschahlusiak.freebloks.client.GameStateException;
  * - players and their remaining stones
  *
  * Does not contain meta information like current player.
- * See [Spielleiter] for that.
+ * See [GameState] for that.
  */
 public class Spiel implements Serializable {
 	public static final int FIELD_FREE    =  240;

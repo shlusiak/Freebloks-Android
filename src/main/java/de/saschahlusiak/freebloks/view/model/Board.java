@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.view.model;
 
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.client.GameState;
+import de.saschahlusiak.freebloks.model.GameState;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 

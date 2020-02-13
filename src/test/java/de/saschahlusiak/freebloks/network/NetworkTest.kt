@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.network
 
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.client.NetworkEventHandler
-import de.saschahlusiak.freebloks.client.GameState
+import de.saschahlusiak.freebloks.model.GameState
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test

@@ -1,7 +1,5 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.client.GameState
-
 /**
  * The end-of-game score of a player, which, in case of GAMEMODE_4_COLORS_2_PLAYERS may be
  * composed of two game players (e.g. red & blue).

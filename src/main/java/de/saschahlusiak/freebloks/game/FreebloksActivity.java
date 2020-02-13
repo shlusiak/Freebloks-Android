@@ -27,7 +27,7 @@ import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.model.PlayerScore;
 import de.saschahlusiak.freebloks.client.SpielClient;
 import de.saschahlusiak.freebloks.client.GameObserver;
-import de.saschahlusiak.freebloks.client.GameState;
+import de.saschahlusiak.freebloks.model.GameState;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;

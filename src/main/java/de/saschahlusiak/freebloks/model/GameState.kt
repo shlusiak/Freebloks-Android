@@ -1,9 +1,5 @@
-package de.saschahlusiak.freebloks.client
+package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.PlayerScore
-import de.saschahlusiak.freebloks.model.Spiel
-import de.saschahlusiak.freebloks.model.Turnpool
 import java.io.Serializable
 import java.util.*
 

@@ -7,7 +7,7 @@ import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.PlayerScore;
-import de.saschahlusiak.freebloks.client.GameState;
+import de.saschahlusiak.freebloks.model.GameState;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.stats.StatisticsActivity;

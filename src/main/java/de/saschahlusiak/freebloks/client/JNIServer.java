@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.client;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.GameMode;
+import de.saschahlusiak.freebloks.model.GameState;
 import de.saschahlusiak.freebloks.model.Shape;
 
 public class JNIServer {

@@ -4,7 +4,7 @@ import android.widget.CheckBox;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.client.GameState;
+import de.saschahlusiak.freebloks.model.GameState;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import android.content.Context;

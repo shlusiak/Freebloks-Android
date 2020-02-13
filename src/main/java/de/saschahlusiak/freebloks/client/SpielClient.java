@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.GameMode;
+import de.saschahlusiak.freebloks.model.GameState;
 import de.saschahlusiak.freebloks.model.Spiel;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
