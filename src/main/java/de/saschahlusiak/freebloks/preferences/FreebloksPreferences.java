@@ -58,7 +58,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		addPreferencesFromResource(R.xml.preferences);
 		
 		ViewConfiguration viewConfig = ViewConfiguration.get(this);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || viewConfig.hasPermanentMenuKey()) {
+		if (viewConfig.hasPermanentMenuKey()) {
 			Preference p = findPreference("immersive_mode");
 			((PreferenceGroup)findPreference("interface_category")).removePreference(p);
 		}

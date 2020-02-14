@@ -14,7 +14,7 @@ public class InterfaceFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.preferences_interface);
         
 		ViewConfiguration viewConfig = ViewConfiguration.get(getActivity());
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT || viewConfig.hasPermanentMenuKey()) {
+		if (viewConfig.hasPermanentMenuKey()) {
 			getPreferenceScreen().removePreference(findPreference("immersive_mode"));
 		}
     }
