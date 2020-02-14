@@ -22,7 +22,6 @@ class BoardTest {
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
         s.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
-        s.refreshPlayerData()
 
         assertEquals(20, s.width)
         assertEquals(20, s.height)
@@ -116,7 +115,19 @@ class BoardTest {
         board.setStone(turn)
     }
 
-    fun Board.playGame(picker: (List<Turn>) -> Turn): Turnpool {
+    fun Player.getAllTurns(board: Board) = sequence {
+        for (x in 0 until board.width) for (y in 0 until board.height) {
+            if (board.getFieldStatus(number, y, x) == Board.FIELD_ALLOWED) {
+                stones.forEach {
+                        if (it.isAvailable()) {
+                            for (turn in board.getTurnsInPosition(number, it.shape, y, x)) yield(turn)
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun Board.playGame(picker: (List<Turn>) -> Turn): Turnpool {
         val turnpool = Turnpool()
 
         do {
@@ -205,17 +216,17 @@ class BoardTest {
         assertEquals(309, s.getPlayer(2).numberOfPossibleTurns)
         assertEquals(0, s.getPlayer(3).numberOfPossibleTurns)
         assertEquals(21, s.getPlayer(0).stonesLeft)
-        assertEquals(21, s.getPlayer(1).stonesLeft)
+        assertEquals(0, s.getPlayer(1).stonesLeft)
         assertEquals(21, s.getPlayer(2).stonesLeft)
-        assertEquals(21, s.getPlayer(3).stonesLeft)
+        assertEquals(0, s.getPlayer(3).stonesLeft)
 
         val turnpool = s.playGame { turns -> turns.last() }
 
         assertEquals(34, turnpool.size)
         assertEquals(4, s.getPlayer(0).stonesLeft)
-        assertEquals(21, s.getPlayer(1).stonesLeft)
+        assertEquals(0, s.getPlayer(1).stonesLeft)
         assertEquals(4, s.getPlayer(2).stonesLeft)
-        assertEquals(21, s.getPlayer(3).stonesLeft)
+        assertEquals(0, s.getPlayer(3).stonesLeft)
 
         assertEquals(77, s.getPlayer(0).totalPoints)
         assertEquals(0, s.getPlayer(1).totalPoints)
@@ -237,9 +248,9 @@ class BoardTest {
         assertEquals(309, s.getPlayer(2).numberOfPossibleTurns)
         assertEquals(0, s.getPlayer(3).numberOfPossibleTurns)
         assertEquals(21, s.getPlayer(0).stonesLeft)
-        assertEquals(21, s.getPlayer(1).stonesLeft)
+        assertEquals(0, s.getPlayer(1).stonesLeft)
         assertEquals(21, s.getPlayer(2).stonesLeft)
-        assertEquals(21, s.getPlayer(3).stonesLeft)
+        assertEquals(0, s.getPlayer(3).stonesLeft)
     }
 
     @Test

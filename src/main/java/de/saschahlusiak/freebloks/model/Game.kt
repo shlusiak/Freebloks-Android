@@ -62,38 +62,45 @@ class Game(val board: Board): Serializable {
 
     /**
      * Build and return the end-of-game scores.
+     *
+     * Note that calling this function will populate the place of the players,
+     * something which [Board.calculatePlayerScore] does not.
      */
     fun getPlayerScores(): Array<PlayerScore> {
         val data: Array<PlayerScore>
+        val scores = Array(4) { board.getPlayer(it).scores }
 
         when (gameMode) {
             GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
             GameMode.GAMEMODE_DUO,
             GameMode.GAMEMODE_JUNIOR -> {
                 data = arrayOf(
-                    PlayerScore(this, 0),
-                    PlayerScore(this, 2)
+                    scores[0],
+                    scores[2]
                 )
             }
             GameMode.GAMEMODE_4_COLORS_2_PLAYERS -> {
                 data = arrayOf(
-                    PlayerScore(this, 0, 2),
-                    PlayerScore(this, 1, 3)
+                    PlayerScore(scores[0], scores[2]),
+                    PlayerScore(scores[1], scores[3])
                 )
             }
             GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {
                 data = arrayOf(
-                    PlayerScore(this, 0),
-                    PlayerScore(this, 1),
-                    PlayerScore(this, 2),
-                    PlayerScore(this, 3)
+                    scores[0],
+                    scores[1],
+                    scores[2],
+                    scores[3]
                 )
             }
         }
 
         Arrays.sort(data)
         // first everybody gets the natural place number
-        data.forEachIndexed { index, p -> p.place = index + 1 }
+        data.forEachIndexed { index, p ->
+            p.place = index + 1
+            p.isLocal = isLocalPlayer(p.color1)
+        }
 
         // then give everybody with equal points the same place
         for (i in 1 until data.size) {

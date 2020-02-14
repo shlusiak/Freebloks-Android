@@ -107,13 +107,13 @@ public class GameFinishActivity extends BaseGameActivity {
 
 		for (i = data.length - 1; i >= 0; i--) {
 			String name;
-			int color = Global.getPlayerColor(data[i].getPlayer1(), game_mode);
+			int color = Global.getPlayerColor(data[i].getColor1(), game_mode);
 			if (clientName != null && data[i].isLocal())
 				name = clientName;
 			else if (lastStatus == null)
 				name = getResources().getStringArray(R.array.color_names)[color];
 			else
-				name = lastStatus.getPlayerName(getResources(), data[i].getPlayer1(), color);
+				name = lastStatus.getPlayerName(getResources(), data[i].getColor1(), color);
 
 			String s;
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
@@ -121,7 +121,7 @@ public class GameFinishActivity extends BaseGameActivity {
 
 			((TextView)t[i].findViewById(R.id.place)).setText(String.format("%d.", data[i].getPlace()));
 
-			s = getResources().getQuantityString(R.plurals.number_of_points, data[i].getPoints(), data[i].getPoints());
+			s = getResources().getQuantityString(R.plurals.number_of_points, data[i].getTotalPoints(), data[i].getTotalPoints());
 			((TextView)t[i].findViewById(R.id.points)).setText(s);
 			s = "";
 			if (data[i].getBonus() > 0)
@@ -191,17 +191,17 @@ public class GameFinishActivity extends BaseGameActivity {
 	}
 
 	Drawable getScoreDrawable(PlayerScore data) {
-		int color = Global.getPlayerColor(data.getPlayer1(), game.getGameMode());
+		int color = Global.getPlayerColor(data.getColor1(), game.getGameMode());
 		LayerDrawable l;
 
-		if (data.getPlayer2() >= 0)
+		if (data.getColor2() >= 0)
 			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_2).mutate();
 		else
 			l = (LayerDrawable)getResources().getDrawable(R.drawable.bg_card_1).mutate();
 
 		((GradientDrawable)l.findDrawableByLayerId(R.id.color1)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
-		if (data.getPlayer2() >= 0) {
-			color = Global.getPlayerColor(data.getPlayer2(), game.getGameMode());
+		if (data.getColor2() >= 0) {
+			color = Global.getPlayerColor(data.getColor2(), game.getGameMode());
 			((GradientDrawable)l.findDrawableByLayerId(R.id.color2)).setColor(getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]));
 		}
 
@@ -235,7 +235,7 @@ public class GameFinishActivity extends BaseGameActivity {
 						&& data[i].getPlace() == 1)
 					unlock(getString(R.string.achievement_blokus_duo));
 
-				increment(getString(R.string.achievement_1000_points), data[i].getPoints());
+				increment(getString(R.string.achievement_1000_points), data[i].getTotalPoints());
 
 				if (data[i].getPlace() == 1)
 					increment(getString(R.string.achievement_winner), 1);

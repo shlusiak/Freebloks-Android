@@ -12,7 +12,7 @@ import java.io.Serializable
  * See [Game] for that.
  */
 class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable {
-    constructor(size: Int): this(size, size)
+    constructor(size: Int) : this(size, size)
 
     /**
      * Encapsulated player information
@@ -135,17 +135,82 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
         this.width = width
         this.height = height
         fields = IntArray(this.width * this.height)
-        for (n in 0 until PLAYER_MAX) {
-            player[n].refreshData(this)
+        when (gameMode) {
+            GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
+            GameMode.GAMEMODE_DUO,
+            GameMode.GAMEMODE_JUNIOR -> {
+                var n = 0
+                while (n < Shape.COUNT) {
+                    getPlayer(1).getStone(n).available = 0
+                    getPlayer(3).getStone(n).available = 0
+                    n++
+                }
+            }
+            GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
+            GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {
+            }
         }
+
         setSeeds(gameMode)
+        refreshPlayerData()
     }
 
     /**
      * Refresh player metadata for current board state, like number of possible turns, etc.
      */
-    fun refreshPlayerData() {
-        player.forEach { it.refreshData(this) }
+    internal fun refreshPlayerData() {
+        player.forEach { it.scores = calculatePlayerScore(it.number) }
+    }
+
+    fun calculatePlayerScore(playerNumber: Int): PlayerScore {
+        val player = getPlayer(playerNumber)
+        var totalPoints = 0
+        var numberOfPossibleTurns = 0
+        var bonus = 0
+        var isPerfect = false
+        val stonesLeft = player.stones.sumBy { it.available }
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                if (getFieldStatus(player.number, y, x) == FIELD_ALLOWED) {
+                    var turnsInPosition = 0
+                    player.stones
+                        .filter { it.isAvailable() }
+                        .forEach {
+                            val turns = getTurnsInPosition(player.number, it.shape, y, x)
+                            turnsInPosition += turns.count()
+                        }
+
+                    numberOfPossibleTurns += turnsInPosition
+
+                    if (turnsInPosition == 0) {
+                        // FIXME: this doesn't belong in here
+                        /* there is no available turn in this position. mark as not allowed */
+                        clearAllowedBit(player.number, y, x)
+                    }
+                } else if (getFieldPlayer(y, x) == player.number) totalPoints++
+            }
+        }
+
+        val lastStone = player.lastShape
+        if (stonesLeft == 0 && lastStone != null) {
+            bonus = 15
+            if (lastStone.size == 1) {
+                bonus += 5
+                isPerfect = true
+            }
+        }
+
+        totalPoints += bonus
+
+        return PlayerScore(
+            color1 = player.number,
+            totalPoints = totalPoints,
+            stonesLeft = stonesLeft,
+            turnsLeft = numberOfPossibleTurns,
+            bonus = bonus,
+            isPerfect = isPerfect
+        )
     }
 
     /**
@@ -248,12 +313,27 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
         refreshPlayerData()
     }
 
+    fun getTurnsInPosition(player: Int, shape: Shape, fieldY: Int, fieldX: Int) = sequence {
+        for (orientation in shape.orientations) {
+            for (x in 0 until shape.size) {
+                for (y in 0 until shape.size) {
+                    if (shape.isCorner(x, y, orientation)) {
+                        if (isValidTurn(shape, player, fieldY - y, fieldX - x, orientation)) {
+                            yield(Turn(player, shape, orientation, fieldY - y, fieldX - x))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Undo the last turn in the given turnPool.
      */
     @Throws(GameStateException::class)
     fun undo(turnPool: Turnpool, gameMode: GameMode) {
-        val turn = turnPool.pollLast() ?: throw GameStateException("Undo requested, but no last turn stored")
+        val turn = turnPool.pollLast()
+            ?: throw GameStateException("Undo requested, but no last turn stored")
         val shape = turn.shape
 
         var y: Int

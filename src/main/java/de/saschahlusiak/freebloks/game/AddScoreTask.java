@@ -33,9 +33,9 @@ public class AddScoreTask extends AsyncTask<PlayerScore,Void,Void> {
 
 				db.addHighscore(
 					game_mode,
-					data[i].getPoints(),
+					data[i].getTotalPoints(),
 					data[i].getStonesLeft(),
-					data[i].getPlayer1(),
+					data[i].getColor1(),
 					data[i].getPlace(),
 					flags);
 			}

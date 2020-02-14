@@ -367,13 +367,13 @@ class NetworkTest {
         assertEquals(20, game.board.height)
 
         val results = game.getPlayerScores()
-        assertEquals(81, results[0].points)
+        assertEquals(81, results[0].totalPoints)
         assertEquals(2, results[0].stonesLeft)
-        assertEquals(69, results[1].points)
+        assertEquals(69, results[1].totalPoints)
         assertEquals(5, results[1].stonesLeft)
-        assertEquals(66, results[2].points)
+        assertEquals(66, results[2].totalPoints)
         assertEquals(5, results[2].stonesLeft)
-        assertEquals(58, results[3].points)
+        assertEquals(58, results[3].totalPoints)
         assertEquals(7, results[3].stonesLeft)
     }
 
@@ -405,25 +405,31 @@ class NetworkTest {
         assertEquals(20, board.width)
         assertEquals(20, board.height)
 
-        board.getPlayer(0).apply {
-            assertEquals(151, numberOfPossibleTurns)
+        val scores = game.getPlayerScores()
+        // the scores are sorted by place
+        scores[0].apply {
+            assertEquals(151, turnsLeft)
             assertEquals(40, totalPoints)
             assertEquals(13, stonesLeft)
+            assertEquals(1, place)
         }
-        board.getPlayer(1).apply {
-            assertEquals(467, numberOfPossibleTurns)
+        scores[1].apply {
+            assertEquals(467, turnsLeft)
             assertEquals(40, totalPoints)
             assertEquals(13, stonesLeft)
+            assertEquals(1, place)
         }
-        board.getPlayer(2).apply {
-            assertEquals(220, numberOfPossibleTurns)
-            assertEquals(34, totalPoints)
-            assertEquals(14, stonesLeft)
-        }
-        board.getPlayer(3).apply {
-            assertEquals(256, numberOfPossibleTurns)
+        scores[2].apply {
+            assertEquals(256, turnsLeft)
             assertEquals(35, totalPoints)
             assertEquals(14, stonesLeft)
+            assertEquals(3, place)
+        }
+        scores[3].apply {
+            assertEquals(220, turnsLeft)
+            assertEquals(34, totalPoints)
+            assertEquals(14, stonesLeft)
+            assertEquals(4, place)
         }
     }
 
@@ -456,10 +462,14 @@ class NetworkTest {
         assertEquals(14, board.height)
 
         val results = game.getPlayerScores()
-        assertEquals(66, results[0].points)
+        assertEquals(66, results[0].totalPoints)
         assertEquals(5, results[0].stonesLeft)
-        assertEquals(59, results[1].points)
+        assertEquals(1, results[0].place)
+        assertEquals(0, results[0].turnsLeft)
+        assertEquals(59, results[1].totalPoints)
         assertEquals(7, results[1].stonesLeft)
+        assertEquals(2, results[1].place)
+        assertEquals(0, results[1].turnsLeft)
     }
 
     /**
@@ -490,9 +500,9 @@ class NetworkTest {
         assertEquals(14, game.board.height)
         val results = game.getPlayerScores()
 
-        assertEquals(60, results[0].points)
+        assertEquals(60, results[0].totalPoints)
         assertEquals(10, results[0].stonesLeft)
-        assertEquals(55, results[1].points)
+        assertEquals(55, results[1].totalPoints)
         assertEquals(11, results[1].stonesLeft)
     }
 }

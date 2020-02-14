@@ -126,22 +126,6 @@ class NetworkEventHandler(private val game: Game) {
                 /* Unbedingt history leeren. */
                 game.history.clear()
 
-                when (game.gameMode) {
-                    GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
-                    GameMode.GAMEMODE_DUO,
-                    GameMode.GAMEMODE_JUNIOR -> {
-                        var n = 0
-                        while (n < Shape.COUNT) {
-                            board.getPlayer(1).getStone(n).available = 0
-                            board.getPlayer(3).getStone(n).available = 0
-                            n++
-                        }
-                    }
-
-                    GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
-                    GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {}
-                }
-                board.refreshPlayerData()
                 game.currentPlayer = -1
 
                 notifyObservers { it.gameStarted() }

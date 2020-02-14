@@ -14,7 +14,7 @@ object JNIServer {
         game_mode: Int,
         field_size_x: Int,
         field_size_y: Int,
-        stones: IntArray,
+        stones: IntArray?,
         ki_mode: Int,
         ki_threads: Int
     ): Int
@@ -32,7 +32,7 @@ object JNIServer {
     ): Int
 
     @JvmStatic
-    fun runServerForNewGame(gameMode: GameMode, size: Int, stones: IntArray, kiMode: Int): Int {
+    fun runServerForNewGame(gameMode: GameMode, size: Int, stones: IntArray?, kiMode: Int): Int {
         val threads = get_number_of_processors()
         Log.d(tag, "spawning server with $threads threads")
         return native_run_server(gameMode.ordinal, size, size, stones, kiMode, threads)
