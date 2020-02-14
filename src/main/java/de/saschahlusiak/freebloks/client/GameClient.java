@@ -25,6 +25,7 @@ import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Game;
+import de.saschahlusiak.freebloks.model.GameStateException;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;

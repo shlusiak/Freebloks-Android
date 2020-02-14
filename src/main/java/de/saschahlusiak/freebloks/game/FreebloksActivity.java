@@ -484,7 +484,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			final Board board = game.getBoard();
 			Crashlytics.log("restore from bundle");
-			int ret = JNIServer.runServer(game, game.getGameMode(), board.width, null, difficulty);
+			int ret = JNIServer.runServerForExistingGame(game, difficulty);
 			if (ret != 0) {
 				Crashlytics.log("Error starting server: " + ret);
 			}
@@ -505,11 +505,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			// dialog. But because performRestoreInstanceState calls restoreManagedDialogs, those
 			// dialogs would be overwritten. To mitigate this, we need to defer starting the connectTask
 			// until all restore is definitely complete.
-			view.post(new Runnable() {
-				@Override
-				public void run() {
-					if (connectTask != null) connectTask.execute((String)null);
-				}
+			view.post(() -> {
+				if (connectTask != null) connectTask.execute((String)null);
 			});
 
 			return true;
@@ -536,8 +533,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void startNewGame(final GameConfiguration config, final Runnable runAfter) {
 		newCurrentPlayer(-1);
 		if (config.getServer() == null) {
-			int ret = JNIServer.runServer(
-				null,
+			int ret = JNIServer.runServerForNewGame(
 				config.getGameMode(),
 				config.getFieldSize(),
 				config.getStones(),

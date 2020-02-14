@@ -1,3 +1,3 @@
-package de.saschahlusiak.freebloks.client
+package de.saschahlusiak.freebloks.model
 
 class GameStateException(message: String) : Exception(message)

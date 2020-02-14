@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.client.GameStateException
 import de.saschahlusiak.freebloks.model.Board.Companion.DEFAULT_BOARD_SIZE
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_ALLOWED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_DENIED

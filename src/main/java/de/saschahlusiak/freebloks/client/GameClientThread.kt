@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.client
 
 import android.util.Log
 import com.crashlytics.android.Crashlytics
+import de.saschahlusiak.freebloks.model.GameStateException
 import de.saschahlusiak.freebloks.network.MessageReader
 import de.saschahlusiak.freebloks.network.ProtocolException
 import java.io.IOException
@@ -12,8 +13,6 @@ import java.io.InputStream
  */
 class GameClientThread(private val inputStream: InputStream, val client: GameClient) : Thread("GameClientThread") {
     private val tag = GameClientThread::class.java.simpleName
-
-    private val reader = MessageReader()
 
     @get:Synchronized
     private var goDown = false
@@ -28,6 +27,7 @@ class GameClientThread(private val inputStream: InputStream, val client: GameCli
     }
 
     override fun run() {
+        val reader = MessageReader()
         try {
             for (message in reader.asSequence(inputStream)) {
                 if (goDown) return

@@ -10,7 +10,7 @@ import java.nio.ByteBuffer
 /**
  * Use [asSequence] or [readMessage] to read [Message] objects from a given InputStream.
  */
-class MessageReader() {
+class MessageReader {
     private var buffer = ByteBuffer.allocate(256)
 
     /**
