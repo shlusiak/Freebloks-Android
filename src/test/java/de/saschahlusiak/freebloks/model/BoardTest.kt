@@ -1,7 +1,10 @@
 package de.saschahlusiak.freebloks.model
 
 import de.saschahlusiak.freebloks.client.GameStateException
-import de.saschahlusiak.freebloks.model.Board.*
+import de.saschahlusiak.freebloks.model.Board.Companion.DEFAULT_BOARD_SIZE
+import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_ALLOWED
+import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_DENIED
+import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_FREE
 import org.junit.Assert.*
 import org.junit.Test
 import java.lang.IllegalStateException
@@ -83,7 +86,7 @@ class BoardTest {
     @Test
     fun test_single_stone_next_to_each_other() {
         val board = Board(DEFAULT_BOARD_SIZE)
-        board.player[0].getStone(0).available = 2
+        board.getPlayer(0).getStone(0).available = 2
         board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         board.refreshPlayerData()
         val turn1 = Turn(0, 0, 19, 0, Orientation())
@@ -99,7 +102,7 @@ class BoardTest {
     @Test(expected = GameStateException::class)
     fun test_single_stone_twice() {
         val board = Board(DEFAULT_BOARD_SIZE)
-        board.player[0].getStone(0).available = 2
+        board.getPlayer(0).getStone(0).available = 2
         board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         board.refreshPlayerData()
         val turn = Turn(0, 0, 19, 0, Orientation())
@@ -119,7 +122,8 @@ class BoardTest {
 
         do {
             var moved = false
-            for (p in player) {
+            for (p in 0..3) {
+                val p = getPlayer(p)
                 val turns = p.getAllTurns(this).toList()
 
                 assertEquals(p.numberOfPossibleTurns, turns.size)

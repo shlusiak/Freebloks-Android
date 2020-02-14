@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.model.Board.PLAYER_MAX
+import de.saschahlusiak.freebloks.model.Board.Companion.PLAYER_MAX
 import java.io.Serializable
 import java.util.*
 
