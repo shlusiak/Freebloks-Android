@@ -25,11 +25,9 @@ data class MessageChat(val client: Int, val message: String): Message(MessageTyp
             val length = data.get().toUnsignedByte()
             val bytes = ByteArray(length) { data.get() }
 
-            if (BuildConfig.DEBUG) {
-                // consume all the rest
-                data.forRemaining {
-                    if (it.toInt() != 0) println("Ignore excess byte ${it.toUnsignedByte()}")
-                }
+//          consume all the rest, because we don't always only have a trailing 0
+            data.forRemaining {
+                if (it.toInt() != 0) println("Ignore excess byte ${it.toUnsignedByte()}")
             }
 
             return MessageChat(client, String(bytes).trimEnd())
