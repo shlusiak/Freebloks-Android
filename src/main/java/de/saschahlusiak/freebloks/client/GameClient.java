@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
@@ -25,7 +24,6 @@ import de.saschahlusiak.freebloks.game.GameConfiguration;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Game;
-import de.saschahlusiak.freebloks.model.GameStateException;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.*;
 import de.saschahlusiak.freebloks.network.message.MessageChat;
@@ -117,7 +115,10 @@ public class GameClient {
 			this.outputStream = socket.getOutputStream();
 			this.inputStream = socket.getInputStream();
 
-			readThread = new GameClientThread(inputStream, this);
+			readThread = new GameClientThread(inputStream, networkEventHandler, () -> {
+				disconnect();
+				return null;
+			});
 			readThread.start();
 
 			sendThread = new HandlerThread("SendThread");
@@ -136,7 +137,10 @@ public class GameClient {
 			this.outputStream = socket.getOutputStream();
 			this.inputStream = socket.getInputStream();
 
-			readThread = new GameClientThread(inputStream, this);
+			readThread = new GameClientThread(inputStream, networkEventHandler, () -> {
+				disconnect();
+				return null;
+			});
 			readThread.start();
 
 			sendThread = new HandlerThread("SendThread");
@@ -145,14 +149,6 @@ public class GameClient {
 
 			networkEventHandler.onConnected();
 		}
-	}
-
-	public @NonNull InputStream getInputStream() {
-		return inputStream;
-	}
-
-	public void handleMessage(Message message) throws GameStateException, ProtocolException {
-		networkEventHandler.handleMessage(message);
 	}
 
 	public synchronized void disconnect() {

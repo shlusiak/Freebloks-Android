@@ -5,13 +5,22 @@ import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.model.GameStateException
 import de.saschahlusiak.freebloks.network.MessageReader
 import de.saschahlusiak.freebloks.network.ProtocolException
+import io.fabric.sdk.android.Fabric
 import java.io.IOException
 import java.io.InputStream
 
 /**
  * This Thread will continuously poll the client's InputStream to process individual messages.
+ *
+ * @param inputStream the input stream to consume
+ * @param handler where the received messages are passed to
+ * @param onGoDown callback when the thread is going down, e.g. because of disconnect
  */
-class GameClientThread(private val inputStream: InputStream, val client: GameClient) : Thread("GameClientThread") {
+class GameClientThread(
+    private val inputStream: InputStream,
+    private val handler: NetworkEventHandler,
+    private val onGoDown: () -> Unit
+) : Thread("GameClientThread") {
     private val tag = GameClientThread::class.java.simpleName
 
     @get:Synchronized
@@ -31,7 +40,7 @@ class GameClientThread(private val inputStream: InputStream, val client: GameCli
         try {
             for (message in reader) {
                 if (goDown) return
-                client.handleMessage(message)
+                handler.handleMessage(message)
             }
         } catch (e: GameStateException) {
             throw RuntimeException(e)
@@ -39,13 +48,15 @@ class GameClientThread(private val inputStream: InputStream, val client: GameCli
             throw RuntimeException(e)
         } catch (e: IOException) {
             if (goDown) return
-            Crashlytics.logException(e)
+
+            if (Fabric.isInitialized()) Crashlytics.logException(e)
             e.printStackTrace()
             synchronized(this) {
                 error = e
             }
         } finally {
-            client.disconnect()
+            // connection is lost or whatever, shut down the client
+            onGoDown.invoke()
             Log.i(tag, "disconnected, thread going down")
         }
     }

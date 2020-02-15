@@ -324,6 +324,20 @@ class NetworkTest {
         return list
     }
 
+    private fun runGameClient(from: InputStream, game: Game = Game(Board(20))): Game {
+        val handler = NetworkEventHandler(game)
+        var wentDown = false
+
+        val thread = GameClientThread(from, handler) { wentDown = true }
+        thread.start()
+        thread.join(5000)
+
+        assertTrue(wentDown)
+        assertTrue(thread.error is EOFException)
+
+        return game
+    }
+
     /**
      * Marshals each package and writes the byte representation to the given stream
      */
@@ -345,7 +359,6 @@ class NetworkTest {
         val processor = NetworkEventHandler(game)
 
         for (pkg in packets) {
-            println("Processing $pkg")
             processor.handleMessage(pkg)
         }
 

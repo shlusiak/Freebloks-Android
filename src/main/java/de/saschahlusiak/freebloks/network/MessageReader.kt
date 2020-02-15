@@ -13,6 +13,9 @@ import java.nio.ByteBuffer
  * When the stream finishes, the iterator will throw an [EOFException].
  */
 class MessageReader(private val stream: InputStream): Iterable<Message> {
+    /**
+     * the buffer will grow as required when reading messages.
+     */
     private var buffer = ByteBuffer.allocate(256)
 
     /**
