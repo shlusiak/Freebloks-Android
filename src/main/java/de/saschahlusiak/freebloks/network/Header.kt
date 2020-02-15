@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
  */
 data class Header(val rawType: Int, val size: Int): Serializable {
     val check1 = ((size and 0x0055) xor rawType)
-    val check2 = (check1 xor 0xD6) + rawType
+    val check2 = ((check1 xor 0xD6) + rawType) and 0xFF
 
     val messageType = MessageType.from(rawType)
 
@@ -34,7 +34,7 @@ data class Header(val rawType: Int, val size: Int): Serializable {
             val type = buffer.get()
             val check2 = buffer.get().toUnsignedByte()
 
-            if (size.toInt() < HEADER_SIZE) throw ProtocolException("Invalid header size ${size}")
+            if (size.toInt() < HEADER_SIZE) throw ProtocolException("Invalid header size $size")
 
             val header = Header(type.toInt(), size.toInt())
 

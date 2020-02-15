@@ -53,7 +53,7 @@ class MessageReader(private val stream: InputStream): Iterable<Message> {
     }
 
     /**
-     * Produce a sequence of message. At some point [EOFException] is thrown and the sequence will finish.
+     * Produce a sequence of message. The sequence will not stop naturally and will throw an [EOFException] at the end.
      *
      * Unknown message types will be silently skipped.
      */

@@ -13,9 +13,12 @@ import java.nio.ByteBuffer
  * @param type the [MessageType]]
  * @param size size of the payload in bytes (excluding header)
  */
-abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
+abstract class Message(rawType: Int, val size: Int = 0): Serializable {
+
+    constructor(type: MessageType, size: Int = 0): this(type.rawValue, size)
+
     // header only depends on type and size, so it can be pre-created
-    val header = Header(type.rawValue, size + Header.HEADER_SIZE)
+    val header = Header(rawType, size + Header.HEADER_SIZE)
 
     /**
      * All classes must provide a way to marshal the payload into a buffer
@@ -71,10 +74,6 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
 
                 else -> {
                     Log.e(tag, "Unhandled message type: ${header.messageType}")
-                    if (BuildConfig.DEBUG) {
-                        throw UnsupportedOperationException("Message type ${header.messageType} not implemented")
-                    }
-
                     null
                 }
             }
