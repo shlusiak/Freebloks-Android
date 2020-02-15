@@ -4,8 +4,6 @@ import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.io.Serializable
 import java.nio.ByteBuffer
 
-fun ByteBuffer.put(header: Header) = header.write(this)
-
 /**
  * check1 uint8
  * data_length uint16

@@ -22,11 +22,13 @@ data class MessageServerStatus(
 
 // since 1.5, optional
     // a map of player number to client number, or -1 if played by computer
-    val clientForPlayer: IntArray,          // int8[4]
+    val clientForPlayer: Array<Int?>,          // int8[4]
     val clientNames: Array<String?>, // uint8[8][16]
-    val version: Int,               // int8
-    val minVersion: Int,            // int8
-    val stoneNumbers: IntArray      // int8[21]
+    // the version of this header
+    val version: Int = VERSION_MAX,               // int8
+    // the client should reject any version that is below this
+    val minVersion: Int = VERSION_MAX,            // int8
+    val stoneNumbers: IntArray = IntArray(21) { 1 } // int8[21]
 
 ) : Message(MessageType.ServerStatus, HEADER_SIZE_1_5), Serializable {
 
@@ -49,7 +51,7 @@ data class MessageServerStatus(
         // legacy stone numbers
         buffer.put(1, 1, 1, 1, 1)
         buffer.put(gameMode.ordinal.toByte())
-        clientForPlayer.forEach { buffer.put(it.toByte()) }
+        clientForPlayer.forEach { buffer.put(it?.toByte() ?: -1) }
         clientNames.forEach { it ->
             val name = it ?: ""
             val padding = 16 - name.length
@@ -62,7 +64,7 @@ data class MessageServerStatus(
         stoneNumbers.forEach { buffer.put(it.toByte()) }
     }
 
-    fun isVersion(version: Int): Boolean {
+    fun isAtLeastVersion(version: Int): Boolean {
         return this.version >= version
     }
 
@@ -74,15 +76,15 @@ data class MessageServerStatus(
 
     fun getClient(player: Int) = clientForPlayer[player]
 
-    fun isClient(player: Int) = getClient(player) >= 0
+    fun isClient(player: Int) = getClient(player) != null
 
     fun isComputer(player: Int) = !isClient(player)
 
     fun getPlayerName(resources: Resources, player: Int, color: Int): String {
         if (player < 0) throw InvalidParameterException()
         val colorName = resources.getStringArray(R.array.color_names)[color]
-        if (clientForPlayer[player] < 0) return colorName
-        return clientNames[clientForPlayer[player]] ?: colorName
+        val client = clientForPlayer[player] ?: return colorName
+        return clientNames[client] ?: colorName
     }
 
     override fun equals(other: Any?): Boolean {
@@ -138,9 +140,11 @@ data class MessageServerStatus(
             val height = buffer.get().toInt()
             // consume deprecated stoneNumbers
             Array(5) { buffer.get() }
-            val gamemode = GameMode.from(buffer.get().toInt())
-            val spieler = IntArray(4) { buffer.get().toInt() }
-            val clientNames = Array<String?>(8) {
+            val gameMode = GameMode.from(buffer.get().toInt())
+            val clientForPlayer = Array(4) {
+                buffer.get().toInt().takeIf { it >= 0 }
+            }
+            val clientNames = Array(8) {
                 val chars = CharArray(16) { buffer.get().toUnsignedByte().toChar() }
                 val length = chars.indexOfFirst { it == 0.toChar() }
 
@@ -159,8 +163,8 @@ data class MessageServerStatus(
                 clients = clients,
                 width = width,
                 height = height,
-                gameMode = gamemode,
-                clientForPlayer = spieler,
+                gameMode = gameMode,
+                clientForPlayer = clientForPlayer,
                 clientNames = clientNames,
                 version = version,
                 minVersion = minVersion,

@@ -80,7 +80,7 @@ public class ColorAdapter extends BaseAdapter {
 			if (position == 1)
 				position = 2;
 
-		if (!lastStatus.isVersion(2))
+		if (!lastStatus.isAtLeastVersion(2))
 			return false;
 
 		if (game.isStarted())
@@ -143,7 +143,7 @@ public class ColorAdapter extends BaseAdapter {
 	   });
 
 		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, game.getGameMode())]));
-		if (lastStatus.isVersion(2)) {
+		if (lastStatus.isAtLeastVersion(2)) {
 			if (lastStatus.isClient(player)) {
 				/* it is a human player */
 				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getClient(player)));

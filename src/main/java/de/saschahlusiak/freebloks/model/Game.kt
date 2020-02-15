@@ -11,7 +11,7 @@ import java.util.*
  *
  * @param board the board state
  */
-class Game(val board: Board): Serializable {
+class Game(val board: Board = Board()): Serializable {
     /**
      * The current player, or -1 if none.
      */
@@ -33,7 +33,7 @@ class Game(val board: Board): Serializable {
     var isFinished = false
 
     /**
-     * false if still in lobby, true if started
+     * false if still in lobby, true if started, also true if finished
      */
     var isStarted = false
 

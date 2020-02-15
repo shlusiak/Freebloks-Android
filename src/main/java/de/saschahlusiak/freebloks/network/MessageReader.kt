@@ -16,7 +16,7 @@ class MessageReader(private val stream: InputStream): Iterable<Message> {
     /**
      * the buffer will grow as required when reading messages.
      */
-    private var buffer = ByteBuffer.allocate(256)
+    private var buffer = ByteBuffer.allocate(8)
 
     /**
      * Block and read a message into [buffer]
@@ -39,7 +39,7 @@ class MessageReader(private val stream: InputStream): Iterable<Message> {
         if (header.size > buffer.capacity()) {
             buffer = ByteBuffer.allocate(header.size)
             // put the header back into the buffer after reallocating new space
-            buffer.put(header)
+            header.write(buffer)
         }
 
         var remaining = header.size - Header.HEADER_SIZE
@@ -50,18 +50,6 @@ class MessageReader(private val stream: InputStream): Iterable<Message> {
             remaining -= read
         }
         buffer.flip()
-    }
-
-    /**
-     * Read one message into [buffer] and return the unmarshalled [Message].
-     *
-     * @return message or null if unknown type
-     */
-    @Throws(IOException::class, EOFException::class, ProtocolException::class)
-    @WorkerThread
-    private fun readMessage(): Message? {
-        readNextIntoBuffer()
-        return Message.from(buffer)
     }
 
     /**

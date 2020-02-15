@@ -1,8 +1,6 @@
 package de.saschahlusiak.freebloks.client;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -40,16 +38,14 @@ public class GameClient {
 	public static final int DEFAULT_PORT = 59995;
 
 	private Object client_socket;
-	private OutputStream outputStream;
-	private InputStream inputStream;
 	public final Game game;
 	public final Board board;
-	private final MessageWriter messageWriter = new MessageWriter();
+	private MessageWriter messageWriter;
 	private HandlerThread sendThread;
-	private GameClientThread readThread;
+	private MessageReadThread readThread;
 	private Handler sendHandler;
 	private GameConfiguration config;
-	private NetworkEventHandler networkEventHandler;
+	private GameClientMessageHandler gameClientMessageHandler;
 
 	@UiThread
 	public GameClient(Game game, GameConfiguration config) {
@@ -67,7 +63,7 @@ public class GameClient {
 
 		client_socket = null;
 
-		networkEventHandler = new NetworkEventHandler(this.game);
+		gameClientMessageHandler = new GameClientMessageHandler(this.game);
 	}
 
 	@Override
@@ -89,11 +85,11 @@ public class GameClient {
 	}
 
 	public void addObserver(GameEventObserver sci) {
-		networkEventHandler.addObserver(sci);
+		gameClientMessageHandler.addObserver(sci);
 	}
 
 	public void removeObserver(GameEventObserver sci) {
-		networkEventHandler.removeObserver(sci);
+		gameClientMessageHandler.removeObserver(sci);
 	}
 
 	@WorkerThread
@@ -112,10 +108,8 @@ public class GameClient {
 			throw new IOException(context.getString(R.string.connection_refused));
 		}
 		synchronized(this) {
-			this.outputStream = socket.getOutputStream();
-			this.inputStream = socket.getInputStream();
-
-			readThread = new GameClientThread(inputStream, networkEventHandler, () -> {
+			messageWriter = new MessageWriter(socket.getOutputStream());
+			readThread = new MessageReadThread(socket.getInputStream(), gameClientMessageHandler, () -> {
 				disconnect();
 				return null;
 			});
@@ -125,7 +119,7 @@ public class GameClient {
 			sendThread.start();
 			sendHandler = new Handler(sendThread.getLooper());
 
-			networkEventHandler.onConnected();
+			gameClientMessageHandler.onConnected();
 
 			this.client_socket = socket;
 		}
@@ -134,10 +128,9 @@ public class GameClient {
 	public void setSocket(BluetoothSocket socket) throws IOException {
 		synchronized(this) {
 			this.client_socket = socket;
-			this.outputStream = socket.getOutputStream();
-			this.inputStream = socket.getInputStream();
 
-			readThread = new GameClientThread(inputStream, networkEventHandler, () -> {
+			messageWriter = new MessageWriter(socket.getOutputStream());
+			readThread = new MessageReadThread(socket.getInputStream(), gameClientMessageHandler, () -> {
 				disconnect();
 				return null;
 			});
@@ -147,7 +140,7 @@ public class GameClient {
 			sendThread.start();
 			sendHandler = new Handler(sendThread.getLooper());
 
-			networkEventHandler.onConnected();
+			gameClientMessageHandler.onConnected();
 		}
 	}
 
@@ -175,7 +168,7 @@ public class GameClient {
 				e.printStackTrace();
 			}
 
-			networkEventHandler.onDisconnected(lastError);
+			gameClientMessageHandler.onDisconnected(lastError);
 		}
 		client_socket = null;
 	}
@@ -251,6 +244,7 @@ public class GameClient {
 		if (sendHandler == null)
 			return;
 
-		sendHandler.post(() -> messageWriter.write(outputStream, msg));
+		// ignore sending to closed stream
+		sendHandler.post(() -> messageWriter.write(msg));
 	}
 }

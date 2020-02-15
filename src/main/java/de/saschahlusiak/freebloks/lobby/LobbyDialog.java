@@ -356,14 +356,14 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 		
 		if (lastStatus != null) {
 			gameMode.setSelection(lastStatus.getGameMode().ordinal());
-			gameMode.setEnabled(!client.game.isStarted() && lastStatus.isVersion(3));
+			gameMode.setEnabled(!client.game.isStarted() && lastStatus.isAtLeastVersion(3));
 			
 			int slider = 3;
 			for (int i = 0; i < CustomGameDialog.FIELD_SIZES.length; i++)
 				if (CustomGameDialog.FIELD_SIZES[i] == lastStatus.getWidth())
 					slider = i;
 			fieldSize.setSelection(slider);
-			fieldSize.setEnabled(!client.game.isStarted() && lastStatus.isVersion(3));
+			fieldSize.setEnabled(!client.game.isStarted() && lastStatus.isAtLeastVersion(3));
 
 		} else {
 			gameMode.setEnabled(false);

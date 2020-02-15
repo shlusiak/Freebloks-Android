@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.model
 
 import java.io.Serializable
 
-class Turn(val player: Int, val shape: Shape, val orientation: Orientation, val y: Int, val x: Int) : Serializable {
+data class Turn(val player: Int, val shape: Shape, val orientation: Orientation, val y: Int, val x: Int) : Serializable {
 
     constructor(from: Turn): this(from.player, from.shape, from.orientation, from.y, from.x)
 

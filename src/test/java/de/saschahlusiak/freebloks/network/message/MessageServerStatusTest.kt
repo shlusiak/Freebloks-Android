@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.network.message
 
-import de.saschahlusiak.freebloks.model.Game.Companion.PLAYER_COMPUTER
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
@@ -57,7 +56,7 @@ class MessageServerStatusTest {
         val msg = MessageServerStatus(
             1, 3, 4,
             15, 15, GameMode.GAMEMODE_DUO,
-            intArrayOf(1, 2, 3, 4),
+            arrayOf(1, 2, 3, 4),
             arrayOf("Paul", "Peter", null, "Nobody", null, null, null, "x"),
             3,
             1,

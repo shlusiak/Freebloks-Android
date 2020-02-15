@@ -1177,8 +1177,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.hasAnimations()) {
 								int sx, sy;
-								sx = board.getPlayerStartX(p.getNumber());
-								sy = board.getPlayerStartY(p.getNumber());
+								sx = board.getPlayerSeedX(p.getNumber(), gamemode);
+								sy = board.getPlayerSeedY(p.getNumber(), gamemode);
 								for (int x = 0; x < board.width; x++)
 									for (int y = 0; y < board.height; y++)
 										if (board.getFieldPlayer(y, x) == p.getNumber()) {
@@ -1264,7 +1264,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		String name;
 		int player = -1;
 		if (lastStatus != null && client >= 0) {
-			if (lastStatus.isVersion(2))
+			if (lastStatus.isAtLeastVersion(2))
 				for (int i = 0; i < lastStatus.getClientForPlayer().length; i++)
 					if (lastStatus.getClient(i) == client) {
 						player = i;
@@ -1274,7 +1274,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		} else {
 			/* if we have advanced status, ignore all server messages (c == -1) */
 			/* server messages are generated in serverStatus */
-			if (lastStatus != null && lastStatus.isVersion(2))
+			if (lastStatus != null && lastStatus.isAtLeastVersion(2))
 				return;
 			name = getString(R.string.client_d, client + 1);
 		}
@@ -1338,7 +1338,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void serverStatus(@NonNull MessageServerStatus status) {
-		if (lastStatus != null && lastStatus.isVersion(2)) {
+		if (lastStatus != null && lastStatus.isAtLeastVersion(2)) {
 			/* generate server chat messages, aka "joined" and "left" */
 
 			for (int i = 0; i < lastStatus.getClientForPlayer().length; i++) {

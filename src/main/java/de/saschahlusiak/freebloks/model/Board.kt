@@ -1,6 +1,8 @@
 package de.saschahlusiak.freebloks.model
 
+import de.saschahlusiak.freebloks.utils.Point
 import java.io.Serializable
+import java.lang.IllegalArgumentException
 
 /**
  * Current state of the board.Contains:
@@ -12,7 +14,7 @@ import java.io.Serializable
  * See [Game] for that.
  */
 class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable {
-    constructor(size: Int) : this(size, size)
+    constructor(size: Int = DEFAULT_BOARD_SIZE) : this(size, size)
 
     /**
      * Encapsulated player information
@@ -28,22 +30,55 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
     /**
      * Mark field as FIELD_ALLOWED for given player, if field is free
      */
-    private fun setSeed(x: Int, y: Int, player: Int) {
-        if (getFieldStatus(player, y, x) == FIELD_FREE)
-            fields[y * width + x] = PLAYER_BIT_ALLOWED[player]
+    private fun setSeed(point: Point, player: Int) {
+        if (getFieldStatus(player, point.y, point.x) == FIELD_FREE)
+            fields[point.y * width + point.x] = PLAYER_BIT_ALLOWED[player]
+    }
+
+    /**
+     * @return The x-coordinate of the player's start corner
+     */
+    @Deprecated("Use getPlayerSeed instead")
+    fun getPlayerSeedX(player: Int, gameMode: GameMode): Int {
+        return getPlayerSeed(player, gameMode)?.x ?: throw IllegalArgumentException("Player $player has no seed")
+    }
+
+    /**
+     * @return The y-coordinate of the player's start corner
+     */
+    @Deprecated("Use getPlayerSeed instead")
+    fun getPlayerSeedY(player: Int, gameMode: GameMode): Int {
+        return getPlayerSeed(player, gameMode)?.y ?: throw IllegalArgumentException("Player $player has no seed")
+    }
+
+    /**
+     * @return the seed position for the given player
+     */
+    fun getPlayerSeed(player: Int, gameMode: GameMode): Point? {
+        return if (gameMode == GameMode.GAMEMODE_DUO || gameMode == GameMode.GAMEMODE_JUNIOR) {
+            when (player) {
+                0 -> Point(4, height - 5)
+                2 -> Point(width - 5, 4)
+                else -> null
+            }
+        } else {
+            when (player) {
+                0 -> Point(0, height - 1)
+                1 -> Point(0, 0)
+                2 -> Point(width - 1, -0)
+                3 -> Point(width - 1, height - 1)
+                else -> null
+            }
+        }
     }
 
     /**
      * Set all seeds for given game mode. Called upon undo, so fields may still be occupied.
      */
     private fun setSeeds(gameMode: GameMode) {
-        if (gameMode == GameMode.GAMEMODE_DUO || gameMode == GameMode.GAMEMODE_JUNIOR) {
-            setSeed(4, height - 5, 0)
-            setSeed(width - 5, 4, 2)
-        } else {
-            for (p in 0 until PLAYER_MAX) {
-                setSeed(getPlayerStartX(p), getPlayerStartY(p), p)
-            }
+        for (p in 0 until PLAYER_MAX) {
+            val seed = getPlayerSeed(p, gameMode) ?: continue
+            setSeed(seed, p)
         }
     }
 
@@ -71,31 +106,13 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
         return if (value < PLAYER_BIT_HAVE_MIN) FIELD_FREE else value and 3
     }
 
+    fun getFieldPlayer(point: Point) = getFieldPlayer(point.y, point.x)
+
     /**
      * @return Player instance for given player
      */
     fun getPlayer(number: Int): Player {
         return player[number]
-    }
-
-    /**
-     * @return The x-coordinate of the player's start corner
-     */
-    fun getPlayerStartX(player: Int): Int {
-        return when (player) {
-            0, 1 -> 0
-            else -> width - 1
-        }
-    }
-
-    /**
-     * @return The y-coordinate of the player's start corner
-     */
-    fun getPlayerStartY(player: Int): Int {
-        return when (player) {
-            1, 2 -> 0
-            else -> height - 1
-        }
     }
 
     /**

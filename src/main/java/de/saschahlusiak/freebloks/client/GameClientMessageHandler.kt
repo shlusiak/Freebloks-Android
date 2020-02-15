@@ -3,14 +3,16 @@ package de.saschahlusiak.freebloks.client
 import android.util.Log
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.*
-import de.saschahlusiak.freebloks.network.*
+import de.saschahlusiak.freebloks.network.Message
+import de.saschahlusiak.freebloks.network.MessageHandler
+import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.*
 
 /**
- * Processes network events and applies changes to the given [Game] and notifies the [GameEventObserver]
+ * Processes incoming network events and applies changes to the given [Game] and notifies [GameEventObserver].
  */
-class NetworkEventHandler(private val game: Game) {
-    private val tag = NetworkEventHandler::class.java.simpleName
+class GameClientMessageHandler(private val game: Game): MessageHandler {
+    private val tag = GameClientMessageHandler::class.java.simpleName
 
     private val observer = mutableListOf<GameEventObserver>()
 
@@ -44,7 +46,7 @@ class NetworkEventHandler(private val game: Game) {
 
     @WorkerThread
     @Throws(ProtocolException::class, GameStateException::class)
-    fun handleMessage(message: Message) {
+    override fun handleMessage(message: Message) {
         Log.d(tag, message.toString())
 
         when(message) {
@@ -67,12 +69,12 @@ class NetworkEventHandler(private val game: Game) {
             is MessageSetStone -> {
                 assert(game.isStarted || game.isFinished) { "received MSG_SET_STONE but game not yet running" }
                 val turn = message.toTurn()
+                assert(board.isValidTurn(turn)) { "invalid turn $turn" }
+
                 game.history.add(turn)
                 // inform listeners first, so that effects can be added before the stone
                 // is committed. fixes drawing glitches, where stone is set, but
                 // effect hasn't been added yet.
-
-                assert(board.isValidTurn(turn)) { "game not in sync" }
 
                 notifyObservers { it.stoneWillBeSet(turn) }
                 board.setStone(turn)
@@ -85,21 +87,20 @@ class NetworkEventHandler(private val game: Game) {
             }
 
             is MessageGameFinish -> {
+                assert(game.isStarted && !game.isFinished) { "Game in invalid state" }
                 game.isFinished = true
                 notifyObservers { it.gameFinished() }
             }
 
             is MessageServerStatus -> {
                 // if game field size differs, start a new game with the new size
+                assert(message.isAtLeastVersion(3)) { "Only version 3 or above supported" }
+
                 if (!game.isStarted) {
                     board.startNewGame(message.gameMode, message.width, message.height)
-                    if (message.isVersion(3)) board.setAvailableStones(message.stoneNumbers)
+                    board.setAvailableStones(message.stoneNumbers)
                 }
 
-                if (!message.isVersion(3)) {
-                    throw GameStateException("Only version 3 supported")
-
-                }
                 game.gameMode = message.gameMode
 
                 when (game.gameMode) {
@@ -125,6 +126,8 @@ class NetworkEventHandler(private val game: Game) {
             }
 
             is MessageStartGame -> {
+                assert(!game.isStarted) { "Game already started" }
+
                 board.startNewGame(game.gameMode)
                 game.isFinished = false
                 game.isStarted = true
@@ -137,7 +140,7 @@ class NetworkEventHandler(private val game: Game) {
             }
 
             is MessageUndoStone -> {
-                if (!game.isStarted && !game.isFinished) throw GameStateException("received MSG_UNDO_STONE but game not running")
+                assert(game.isStarted || game.isFinished) { "received MSG_UNDO_STONE but game not running" }
                 val turn: Turn = game.history.last
                 notifyObservers { it.stoneUndone(turn) }
                 board.undo(game.history, game.gameMode)
@@ -145,6 +148,12 @@ class NetworkEventHandler(private val game: Game) {
 
             else -> throw ProtocolException("don't know how to handle message $message")
         }
+    }
+
+    @WorkerThread
+    @Throws(ProtocolException::class, GameStateException::class)
+    fun handleMessages(vararg message: Message) {
+        message.forEach { handleMessage(it) }
     }
 
     @Throws(GameStateException::class)

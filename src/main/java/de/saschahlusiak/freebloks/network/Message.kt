@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.network
 import android.util.Log
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.message.*
-import de.saschahlusiak.freebloks.utils.toUnsignedByte
+import de.saschahlusiak.freebloks.utils.toHexString
 import java.io.Serializable
 import java.nio.ByteBuffer
 
@@ -23,7 +23,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
      * @param buffer the entire message into the buffer, including the header
      */
     open fun write(buffer: ByteBuffer) {
-        buffer.put(header)
+        header.write(buffer)
     }
 
     /**
@@ -38,13 +38,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
     /**
      * Marshals the message and returns a hex string
      */
-    fun dumpAsHex(): String {
-        val sb = StringBuffer()
-        toByteArray().forEach {
-            sb.append(String.format("0x%02x, ", it.toUnsignedByte()))
-        }
-        return sb.toString()
-    }
+    fun asHexString(separator: String = ", ") = toByteArray().toHexString(separator)
 
     companion object {
         private val tag = Message::class.java.simpleName

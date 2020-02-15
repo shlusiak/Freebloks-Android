@@ -55,6 +55,10 @@ class Shape private constructor(
         }.toList()
     }
 
+    override fun toString(): String {
+        return "$number"
+    }
+
     /**
      * The shape number defines uniqueness
      */

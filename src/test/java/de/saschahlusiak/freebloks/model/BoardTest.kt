@@ -1,14 +1,51 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.model.Board.Companion.DEFAULT_BOARD_SIZE
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_ALLOWED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_DENIED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_FREE
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_DUO
+import de.saschahlusiak.freebloks.utils.Point
 import org.junit.Assert.*
 import org.junit.Test
 import java.lang.IllegalStateException
 
 class BoardTest {
+    private fun Player.getAllTurns(board: Board) = sequence {
+        for (x in 0 until board.width) for (y in 0 until board.height) {
+            if (board.getFieldStatus(number, y, x) == FIELD_ALLOWED) {
+                stones.forEach {
+                    if (it.isAvailable()) {
+                        for (turn in board.getTurnsInPosition(number, it.shape, y, x)) yield(turn)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun Board.playGame(picker: (List<Turn>) -> Turn): Turnpool {
+        val turnPool = Turnpool()
+
+        do {
+            var moved = false
+            for (number in 0..3) {
+                val p = getPlayer(number)
+                val turns = p.getAllTurns(this).toList()
+
+                assertEquals(p.numberOfPossibleTurns, turns.size)
+
+                if (turns.isNotEmpty()) {
+                    val turn = picker.invoke(turns)
+                    moved = true
+                    turnPool.add(turn)
+                    setStone(turn)
+                }
+            }
+        } while (moved)
+
+        return turnPool
+    }
+
     /**
      * Sets the stone no 2 into the bottom left corner of a new game:
      *
@@ -21,7 +58,7 @@ class BoardTest {
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
-        s.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
 
         assertEquals(20, s.width)
         assertEquals(20, s.height)
@@ -35,8 +72,7 @@ class BoardTest {
         assertEquals(1, stone.available)
 
         // start for blue is bottom left
-        assertEquals(0, s.getPlayerStartX(0))
-        assertEquals(19, s.getPlayerStartY(0))
+        assertEquals(Point(0, 19), s.getPlayerSeed(0, GAMEMODE_4_COLORS_4_PLAYERS))
 
         // that field is allowed (green)
         assertEquals(FIELD_ALLOWED, s.getFieldStatus(0, 19, 0))
@@ -76,16 +112,16 @@ class BoardTest {
 
     @Test(expected = GameStateException::class)
     fun test_single_stone_not_available() {
-        val board = Board(DEFAULT_BOARD_SIZE)
+        val board = Board()
         val turn = Turn(0, 0, 0, 0, Orientation())
         board.setStone(turn)
     }
 
     @Test
     fun test_single_stone_next_to_each_other() {
-        val board = Board(DEFAULT_BOARD_SIZE)
+        val board = Board()
         board.getPlayer(0).getStone(0).available = 2
-        board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        board.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         board.refreshPlayerData()
         val turn1 = Turn(0, 0, 19, 0, Orientation())
         val turn2 = Turn(0, 0, 18, 0, Orientation())
@@ -99,9 +135,9 @@ class BoardTest {
 
     @Test(expected = GameStateException::class)
     fun test_single_stone_twice() {
-        val board = Board(DEFAULT_BOARD_SIZE)
+        val board = Board()
         board.getPlayer(0).getStone(0).available = 2
-        board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        board.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         board.refreshPlayerData()
         val turn = Turn(0, 0, 19, 0, Orientation())
         assertTrue(board.isValidTurn(turn))
@@ -115,45 +151,33 @@ class BoardTest {
         board.setStone(turn)
     }
 
-    fun Player.getAllTurns(board: Board) = sequence {
-        for (x in 0 until board.width) for (y in 0 until board.height) {
-            if (board.getFieldStatus(number, y, x) == Board.FIELD_ALLOWED) {
-                stones.forEach {
-                        if (it.isAvailable()) {
-                            for (turn in board.getTurnsInPosition(number, it.shape, y, x)) yield(turn)
-                        }
-                    }
-            }
-        }
+    @Test
+    fun test_seed_duo() {
+        val board = Board(15, 15)
+        assertEquals(Point(4, 10), board.getPlayerSeed(0, GAMEMODE_DUO))
+        assertEquals(Point(10, 4), board.getPlayerSeed(2, GAMEMODE_DUO))
     }
 
-    private fun Board.playGame(picker: (List<Turn>) -> Turn): Turnpool {
-        val turnpool = Turnpool()
+    @Test
+    fun test_seed_junior() {
+        val board = Board(15, 15)
+        assertEquals(Point(4, 10), board.getPlayerSeed(0, GAMEMODE_DUO))
+        assertEquals(Point(10, 4), board.getPlayerSeed(2, GAMEMODE_DUO))
+    }
 
-        do {
-            var moved = false
-            for (p in 0..3) {
-                val p = getPlayer(p)
-                val turns = p.getAllTurns(this).toList()
-
-                assertEquals(p.numberOfPossibleTurns, turns.size)
-
-                if (turns.isNotEmpty()) {
-                    val turn = picker.invoke(turns)
-                    moved = true
-                    turnpool.add(turn)
-                    setStone(turn)
-                }
-            }
-        } while (moved)
-
-        return turnpool
+    @Test
+    fun test_seed_classic() {
+        val board = Board()
+        assertEquals(Point(0, 19), board.getPlayerSeed(0, GAMEMODE_4_COLORS_4_PLAYERS))
+        assertEquals(Point(0, 0), board.getPlayerSeed(1, GAMEMODE_4_COLORS_4_PLAYERS))
+        assertEquals(Point(19, 0), board.getPlayerSeed(2, GAMEMODE_4_COLORS_4_PLAYERS))
+        assertEquals(Point(19, 19), board.getPlayerSeed(3, GAMEMODE_4_COLORS_4_PLAYERS))
     }
 
     @Test
     fun test_full_game_4_4() {
         val s = Board(20)
-        val mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+        val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
@@ -256,11 +280,11 @@ class BoardTest {
     @Test
     fun test_full_game_reversed() {
         val s = Board(20)
-        val mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+        val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
         s.setAvailableStones(1, 1, 1, 1, 1)
-        s.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         s.refreshPlayerData()
 
         assertEquals(58, s.getPlayer(0).numberOfPossibleTurns)

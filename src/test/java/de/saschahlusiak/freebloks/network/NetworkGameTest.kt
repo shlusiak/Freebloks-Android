@@ -1,15 +1,14 @@
 package de.saschahlusiak.freebloks.network
 
+import de.saschahlusiak.freebloks.client.GameClientMessageHandler
 import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.client.NetworkEventHandler
-import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.*
 
-class NetworkTest {
+class NetworkGameTest {
     private val gameDataClassic = ubyteArrayOf(
         //region data
         0x06, 0x00, 0xab, 0x07, 0xd7, 0x00, 0x04, 0x01, 0x14, 0x14, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0xfe, 0xfe, 0xfe, 0xfe, 0x00, 0xae, 0x62, 0xc4, 0x01,
@@ -324,27 +323,15 @@ class NetworkTest {
         return list
     }
 
-    private fun runGameClient(from: InputStream, game: Game = Game(Board(20))): Game {
-        val handler = NetworkEventHandler(game)
-        var wentDown = false
-
-        val thread = GameClientThread(from, handler) { wentDown = true }
-        thread.start()
-        thread.join(5000)
-
-        assertTrue(wentDown)
-        assertTrue(thread.error is EOFException)
-
-        return game
-    }
+    private fun consumeAllPackets(from: ByteArray) = consumeAllPackets(ByteArrayInputStream(from))
 
     /**
      * Marshals each package and writes the byte representation to the given stream
      */
     private fun writePacketsToStream(packets: List<Message>, out: OutputStream) {
-        val writer = MessageWriter()
+        val writer = MessageWriter(out)
         packets.forEach { packet ->
-            assertTrue(writer.write(out, packet))
+            assertTrue(writer.write(packet))
         }
     }
 
@@ -355,9 +342,10 @@ class NetworkTest {
     }
 
     private fun replayGameFrom(packets: List<Message>): Game {
-        val game = Game(Board(20))
-        val processor = NetworkEventHandler(game)
+        val game = Game()
+        val processor = GameClientMessageHandler(game)
 
+        processor.onConnected()
         for (pkg in packets) {
             processor.handleMessage(pkg)
         }
@@ -374,7 +362,7 @@ class NetworkTest {
      */
     @Test
     fun test_classic() {
-        val packets = consumeAllPackets(ByteArrayInputStream(gameDataClassic))
+        val packets = consumeAllPackets(gameDataClassic)
         assertEquals(137, packets.size)
 
         val game = replayGameFrom(packets)
@@ -403,12 +391,12 @@ class NetworkTest {
      */
     @Test
     fun test_classic_manual() {
-        val packets = consumeAllPackets(ByteArrayInputStream(gameDataClassicManual))
+        val packets = consumeAllPackets(gameDataClassicManual)
         assertEquals(99, packets.size)
 
         // marshal and unmarshal and compare the model objects for equality
         val bytes = packets.toByteArray()
-        val packets2 = consumeAllPackets(ByteArrayInputStream(bytes))
+        val packets2 = consumeAllPackets(bytes)
         assertEquals(99, packets2.size)
         packets.zip(packets2).forEach { (m1, m2) ->
             assertEquals(m1, m2)
@@ -459,12 +447,12 @@ class NetworkTest {
      */
     @Test
     fun test_duo() {
-        val packets = consumeAllPackets(ByteArrayInputStream(gameDataDuo))
+        val packets = consumeAllPackets(gameDataDuo)
         assertEquals(66, packets.size)
 
         // marshal and unmarshal and compare the model objects for equality
         val bytes = packets.toByteArray()
-        val packets2 = consumeAllPackets(ByteArrayInputStream(bytes))
+        val packets2 = consumeAllPackets(bytes)
         assertEquals(66, packets2.size)
         packets.zip(packets2).forEach { (m1, m2) ->
             assertEquals(m1, m2)
@@ -498,12 +486,12 @@ class NetworkTest {
      */
     @Test
     fun test_junior() {
-        val packets = consumeAllPackets(ByteArrayInputStream(gameDataJunior))
+        val packets = consumeAllPackets(gameDataJunior)
         assertEquals(60, packets.size)
 
         // marshal and unmarshal and compare the model objects for equality
         val bytes = packets.toByteArray()
-        val packets2 = consumeAllPackets(ByteArrayInputStream(bytes))
+        val packets2 = consumeAllPackets(bytes)
         assertEquals(60, packets2.size)
         packets.zip(packets2).forEach { (m1, m2) ->
             assertEquals(m1, m2)
