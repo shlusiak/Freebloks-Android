@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.client
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.*
@@ -9,6 +10,8 @@ import de.saschahlusiak.freebloks.network.message.*
  * Processes network events and applies changes to the given [Game] and notifies the [GameEventObserver]
  */
 class NetworkEventHandler(private val game: Game) {
+    private val tag = NetworkEventHandler::class.java.simpleName
+
     private val observer = mutableListOf<GameEventObserver>()
 
     private val board = game.board
@@ -42,6 +45,8 @@ class NetworkEventHandler(private val game: Game) {
     @WorkerThread
     @Throws(ProtocolException::class, GameStateException::class)
     fun handleMessage(message: Message) {
+        Log.d(tag, message.toString())
+
         when(message) {
             is MessageGrantPlayer -> {
                 assert(!game.isStarted) { "received MSG_REVOKE_PLAYER but game is running" }

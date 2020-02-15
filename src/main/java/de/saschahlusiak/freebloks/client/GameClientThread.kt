@@ -27,9 +27,9 @@ class GameClientThread(private val inputStream: InputStream, val client: GameCli
     }
 
     override fun run() {
-        val reader = MessageReader()
+        val reader = MessageReader(inputStream)
         try {
-            for (message in reader.asSequence(inputStream)) {
+            for (message in reader) {
                 if (goDown) return
                 client.handleMessage(message)
             }

@@ -8,9 +8,11 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 
 /**
- * Use [asSequence] or [readMessage] to read [Message] objects from a given InputStream.
+ * Use this iterable to read [Message] objects from the given [stream].
+ *
+ * When the stream finishes, the iterator will throw an [EOFException].
  */
-class MessageReader {
+class MessageReader(private val stream: InputStream): Iterable<Message> {
     private var buffer = ByteBuffer.allocate(256)
 
     /**
@@ -18,7 +20,7 @@ class MessageReader {
      */
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
-    private fun readNextIntoBuffer(stream: InputStream) {
+    private fun readNextIntoBuffer() {
         var read: Int
 
         buffer.clear()
@@ -48,37 +50,35 @@ class MessageReader {
     }
 
     /**
-     * Blocks and reads a single message into [buffer], then returns the unmarshalled message.
+     * Read one message into [buffer] and return the unmarshalled [Message].
      *
-     * @param stream InputStream to suck on
      * @return message or null if unknown type
      */
     @Throws(IOException::class, EOFException::class, ProtocolException::class)
     @WorkerThread
-    fun readMessage(stream: InputStream): Message? {
-        readNextIntoBuffer(stream)
+    private fun readMessage(): Message? {
+        readNextIntoBuffer()
         return Message.from(buffer)
     }
 
     /**
-     * Read messages as a sequence. The sequence will finish when [EOFException] is thrown on the stream.
-     * Unknown message types will be silently skipped.
+     * Produce a sequence of message. At some point [EOFException] is thrown and the sequence will finish.
      *
-     * @param stream InputStream to suck on
+     * Unknown message types will be silently skipped.
      */
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
-    fun asSequence(stream: InputStream): Sequence<Message> {
+    private fun asSequence(): Sequence<Message> {
         return sequence {
-            try {
-                while (true) {
-                    readNextIntoBuffer(stream)
-                    val message = Message.from(buffer) ?: continue
-                    yield(message)
-                }
-            } catch (e: EOFException) {
-                // EOF
+            while (true) {
+                readNextIntoBuffer()
+                val message = Message.from(buffer) ?: continue
+                yield(message)
             }
         }
+    }
+
+    override fun iterator(): Iterator<Message> {
+        return asSequence().iterator()
     }
 }

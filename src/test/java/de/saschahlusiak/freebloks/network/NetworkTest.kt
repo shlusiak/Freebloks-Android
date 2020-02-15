@@ -315,7 +315,13 @@ class NetworkTest {
      * Parses raw data from the given stream into a list of packets
      */
     private fun consumeAllPackets(from: InputStream): List<Message> {
-        return MessageReader().asSequence(from).toList()
+        val list = mutableListOf<Message>()
+        try {
+            MessageReader(from).forEach { list.add(it) }
+        } catch (e: EOFException) {
+            // ignore
+        }
+        return list
     }
 
     /**
