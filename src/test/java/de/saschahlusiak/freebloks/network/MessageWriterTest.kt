@@ -3,12 +3,11 @@ package de.saschahlusiak.freebloks.network
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.network.message.MessageCurrentPlayer
 import de.saschahlusiak.freebloks.network.message.MessageSetStone
-import de.saschahlusiak.freebloks.utils.toHexString
+import de.saschahlusiak.freebloks.utils.hexString
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.ByteArrayOutputStream
-import java.io.FileOutputStream
 import java.io.PipedOutputStream
 
 class MessageWriterTest {
@@ -26,7 +25,7 @@ class MessageWriterTest {
         val bytes = os.toByteArray()
         assertNotNull(bytes)
 
-        println(bytes.toHexString())
+        println(bytes.hexString())
         val expected = ubyteArrayOf(
             0x07, 0x00, 0x06, 0x03, 0xd4,
             0x01, 0x05, 0x00, 0x0b, 0x04, 0xd7, 0x01, 0x03, 0x00, 0x00, 0x05, 0x07

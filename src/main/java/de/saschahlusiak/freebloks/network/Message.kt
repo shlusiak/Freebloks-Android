@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.network
 import android.util.Log
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.message.*
-import de.saschahlusiak.freebloks.utils.toHexString
+import de.saschahlusiak.freebloks.utils.hexString
 import java.io.Serializable
 import java.nio.ByteBuffer
 
@@ -38,7 +38,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
     /**
      * Marshals the message and returns a hex string
      */
-    fun asHexString(separator: String = ", ") = toByteArray().toHexString(separator)
+    fun asHexString(separator: String = ", ") = toByteArray().hexString(separator)
 
     companion object {
         private val tag = Message::class.java.simpleName
@@ -67,7 +67,7 @@ abstract class Message(val type: MessageType, val size: Int = 0): Serializable {
                 MessageType.RequestHint -> MessageRequestHint.from(buffer)
                 MessageType.StoneHint -> MessageStoneHint.from(buffer)
                 MessageType.RevokePlayer -> MessageRevokePlayer.from(buffer)
-//                MessageType.RequestGameMode ->
+                MessageType.RequestGameMode -> MessageRequestGameMode.from(buffer)
 
                 else -> {
                     Log.e(tag, "Unhandled message type: ${header.messageType}")

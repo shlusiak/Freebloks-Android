@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.network.message
 
 import de.saschahlusiak.freebloks.network.Message
+import de.saschahlusiak.freebloks.utils.hexString
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -13,6 +14,7 @@ class MessageCurrentPlayerTest {
         val msg = MessageCurrentPlayer(3)
 
         val newBytes = msg.toByteArray()
+        println(newBytes.hexString())
         assertArrayEquals(bytes, newBytes)
 
         val msg2 = Message.from(bytes) as MessageCurrentPlayer
