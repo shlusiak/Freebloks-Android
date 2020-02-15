@@ -15,16 +15,20 @@ import java.io.InputStream
  *
  * A [ProtocolException] or [GameStateException] will cause the Thread to throw a RuntimeException.
  *
- * @param inputStream the input stream to consume
+ * @param reader the reader to read from
  * @param handler where the received messages are passed to
  * @param onGoDown callback when the thread is going down, e.g. because of disconnect
  */
 class MessageReadThread(
-    private val inputStream: InputStream,
+    private val reader: MessageReader,
     private val handler: MessageHandler,
     private val onGoDown: () -> Unit
 ) : Thread("GameClientThread") {
     private val tag = MessageReadThread::class.java.simpleName
+
+    constructor(inputStream: InputStream,
+                handler: MessageHandler,
+                onGoDown: () -> Unit): this(MessageReader(inputStream), handler, onGoDown)
 
     @get:Synchronized
     private var goDown = false
@@ -40,7 +44,6 @@ class MessageReadThread(
     }
 
     override fun run() {
-        val reader = MessageReader(inputStream)
         try {
             for (message in reader) {
                 if (goDown) return
@@ -64,14 +67,13 @@ class MessageReadThread(
             if (goDown) return
 
             if (Fabric.isInitialized()) Crashlytics.logException(e)
-            e.printStackTrace()
             synchronized(this) {
                 error = e
             }
         } finally {
             // connection is lost or whatever, shut down the client
             onGoDown.invoke()
-            Log.i(tag, "disconnected, thread going down")
+            Log.i(tag, "Disconnected, thread going down. Error: ${error?.message}")
         }
     }
 }

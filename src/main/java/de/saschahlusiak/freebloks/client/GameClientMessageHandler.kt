@@ -142,8 +142,9 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
             is MessageUndoStone -> {
                 assert(game.isStarted || game.isFinished) { "received MSG_UNDO_STONE but game not running" }
                 val turn: Turn = game.history.last
-                notifyObservers { it.stoneUndone(turn) }
                 board.undo(game.history, game.gameMode)
+
+                notifyObservers { it.stoneUndone(turn) }
             }
 
             else -> throw ProtocolException("don't know how to handle message $message")
