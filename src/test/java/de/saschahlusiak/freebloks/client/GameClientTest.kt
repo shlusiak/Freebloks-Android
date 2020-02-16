@@ -65,7 +65,7 @@ class GameClientTest {
             }
         }
 
-        override fun onDisconnected(board: Board, error: Exception?) {
+        override fun onDisconnected(client: GameClient, error: Exception?) {
             clientDisconnectError = error
             lock.withLock { condition.signalAll() }
         }
@@ -174,7 +174,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_requestPlayer() {
-        client.request_player(3, "hello")
+        client.requestPlayer(3, "hello")
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
@@ -190,7 +190,7 @@ class GameClientTest {
         client.game.currentPlayer = 2
         client.game.setPlayerType(2, PLAYER_LOCAL)
 
-        client.request_hint(2)
+        client.requestHint()
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
@@ -202,7 +202,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_requestStart() {
-        client.request_start()
+        client.requestGameStart()
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
@@ -214,7 +214,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_revokePlayer() {
-        client.revoke_player(1)
+        client.revokePlayer(1)
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
@@ -238,7 +238,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_setStone() {
-        client.set_stone(Turn(1, 2, 3, 4, Orientation.Default))
+        client.setStone(Turn(1, 2, 3, 4, Orientation.Default))
         assertEquals(-1, client.game.currentPlayer)
         client.disconnect()
         serverThread.join(2000)
@@ -251,7 +251,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_undo() {
-        client.request_undo()
+        client.requestUndo()
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
@@ -263,7 +263,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_requestGameMode() {
-        client.request_game_mode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 })
+        client.requestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 })
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)

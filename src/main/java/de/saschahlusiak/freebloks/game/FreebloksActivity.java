@@ -564,14 +564,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			@Override
 			public void run() {
 				if (config.getRequestPlayers() == null)
-					client.request_player(-1, clientName);
+					client.requestPlayer(-1, clientName);
 				else {
 					for (int i = 0; i < 4; i++)
 						if (config.getRequestPlayers()[i])
-							client.request_player(i, clientName);
+							client.requestPlayer(i, clientName);
 				}
 				if (!config.getShowLobby())
-					client.request_start();
+					client.requestGameStart();
 				else {
 					Bundle b = new Bundle();
 					b.putString("server", config.getServer() == null ? "localhost" : config.getServer());
@@ -617,10 +617,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		client.addObserver(this);
 		client.addObserver(view);
-		client.setSocket(socket);
+		client.connected(socket, socket.getInputStream(), socket.getOutputStream());
 
 		if (config.getRequestPlayers() == null)
-			client.request_player(-1, clientName);
+			client.requestPlayer(-1, clientName);
 
 		showDialog(FreebloksActivity.DIALOG_LOBBY);
 
@@ -997,14 +997,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 				findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
 				view.model.currentStone.stopDragging();
-				client.request_hint(client.game.getCurrentPlayer());
+				client.requestHint();
 				return true;
 
 			case R.id.undo:
 				if (client == null)
 					return true;
 				view.model.clearEffects();
-				client.request_undo();
+				client.requestUndo();
 				view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 				return true;
 
@@ -1458,7 +1458,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
 		vibrate(Global.VIBRATE_SET_STONE);
 
-		client.set_stone(turn);
+		client.setStone(turn);
 		return true;
 	}
 
@@ -1473,7 +1473,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (undo_with_back && client != null && client.isConnected()) {
 			view.model.clearEffects();
 
-			client.request_undo();
+			client.requestUndo();
 
 			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;

@@ -42,10 +42,10 @@ import de.saschahlusiak.freebloks.network.message.MessageStartGame;
 import io.fabric.sdk.android.Fabric;
 
 public class GameClient {
-	private static final int DEFAULT_TIMEOUT = 10000;
+	private static final int CONNECT_TIMEOUT = 10000;
 	public static final int DEFAULT_PORT = 59995;
 
-	private Closeable client_socket;
+	private Closeable clientSocket;
 	public final Game game;
 	public final Board board;
 	private MessageWriter messageWriter;
@@ -68,7 +68,7 @@ public class GameClient {
 
 		this.board = this.game.getBoard();
 
-		client_socket = null;
+		clientSocket = null;
 
 		gameClientMessageHandler = new GameClientMessageHandler(this.game);
 	}
@@ -84,9 +84,9 @@ public class GameClient {
 	}
 
 	public boolean isConnected() {
-		if (client_socket == null) return false;
-		if (client_socket instanceof Socket && ((Socket)client_socket).isClosed()) return false;
-		if (client_socket instanceof BluetoothSocket && !((BluetoothSocket)client_socket).isConnected()) return false;
+		if (clientSocket == null) return false;
+		if (clientSocket instanceof Socket && ((Socket) clientSocket).isClosed()) return false;
+		if (clientSocket instanceof BluetoothSocket && !((BluetoothSocket) clientSocket).isConnected()) return false;
 
 		return true;
 	}
@@ -99,6 +99,16 @@ public class GameClient {
 		gameClientMessageHandler.removeObserver(sci);
 	}
 
+	/**
+	 * Try to establish a TCP connection to the given host and port.
+	 * On success will call {@link #connected(Closeable, InputStream, OutputStream)}
+	 *
+	 * @param context for getStrin()
+	 * @param host target hostname
+	 * @param port port
+	 *
+	 * @throws IOException on connection refused
+	 */
 	@WorkerThread
 	public void connect(Context context, String host, int port) throws IOException {
 		final Socket socket = new Socket();
@@ -109,24 +119,27 @@ public class GameClient {
 			else
 				address = new InetSocketAddress(host, port);
 
-			socket.connect(address, DEFAULT_TIMEOUT);
+			socket.connect(address, CONNECT_TIMEOUT);
 		} catch (IOException e) {
+			// translate any IOException to "Connection refused"
 			e.printStackTrace();
+
 			throw new IOException(context.getString(R.string.connection_refused));
 		}
-		synchronized(this) {
-			connected(socket, socket.getInputStream(), socket.getOutputStream());
-		}
+
+		connected(socket, socket.getInputStream(), socket.getOutputStream());
 	}
 
-	public void setSocket(BluetoothSocket socket) throws IOException {
-		synchronized(this) {
-			connected(socket, socket.getInputStream(), socket.getOutputStream());
-		}
-	}
-
-	public void connected(@NonNull Closeable socket, @NonNull InputStream is, @NonNull OutputStream os) {
-		this.client_socket = socket;
+	/**
+	 * Connection is successful, set up message readers and writers.
+	 * Make sure you have observers registered before calling this method.
+	 *
+	 * @param socket a closeable socket, for disconnecting
+	 * @param is the InputStream from the socket
+	 * @param os the OutputStream to the socket
+	 */
+	public synchronized void connected(@NonNull Closeable socket, @NonNull InputStream is, @NonNull OutputStream os) {
+		this.clientSocket = socket;
 
 		// first we set up writing to the server
 		messageWriter = new MessageWriter(os);
@@ -146,7 +159,7 @@ public class GameClient {
 	}
 
 	public synchronized void disconnect() {
-		if (client_socket != null) {
+		if (clientSocket != null) {
 			final Exception lastError = readThread.getError();
 			try {
 				if (Fabric.isInitialized()) {
@@ -154,8 +167,8 @@ public class GameClient {
 				}
 				readThread.goDown();
 
-				if (client_socket instanceof Socket) {
-					final Socket socket = (Socket) client_socket;
+				if (clientSocket instanceof Socket) {
+					final Socket socket = (Socket) clientSocket;
 					if (socket.isConnected())
 						socket.shutdownInput();
 				}
@@ -168,7 +181,7 @@ public class GameClient {
 						e.printStackTrace();
 					}
 				}
-				client_socket.close();
+				clientSocket.close();
 				readThread = null;
 				sendExecutor = null;
 			} catch (IOException e) {
@@ -177,65 +190,84 @@ public class GameClient {
 
 			gameClientMessageHandler.onDisconnected(this, lastError);
 		}
-		client_socket = null;
+		clientSocket = null;
 	}
 
-	public void request_player(int player, @Nullable String name) {
+	/**
+	 * Request a new player from the server
+	 * @param player player to request
+	 * @param name name for the player
+	 */
+	public void requestPlayer(int player, @Nullable String name) {
 		send(new MessageRequestPlayer(player, name));
 	}
 
-	public void revoke_player(int player) {
+	/**
+	 * Request to revoke the given player
+	 * @param player the local player to revoke
+	 */
+	public void revokePlayer(int player) {
+		if (!game.isLocalPlayer(player)) return;
 		send(new MessageRevokePlayer(player));
 	}
-	
-	public void request_game_mode(int width, int height, GameMode g, int stones[]) {
-		send(new MessageRequestGameMode(width, height, g, stones));
+
+	/**
+	 * Request a new game mode with new board sizes from the server.
+	 *
+	 * @param width new width to request
+	 * @param height new height to request
+	 * @param gameMode new game mode to request
+	 * @param stones availability of the 21 stones
+	 */
+	public void requestGameMode(int width, int height, @NonNull GameMode gameMode, @NonNull int[] stones) {
+		send(new MessageRequestGameMode(width, height, gameMode, stones));
 	}
 
-	public void request_hint(int player) {
+	/**
+	 * Request a hint for the current local player.
+	 */
+	public void requestHint() {
 		if (game == null)
 			return;
 		if (!isConnected())
 			return;
 		if (!game.isLocalPlayer())
 			return;
-		send(new MessageRequestHint(player));
+		send(new MessageRequestHint(game.getCurrentPlayer()));
 	}
 
-	public void sendChat(String message) {
-		// the client does not matter, it will be filled in by the server then broadcasted
+	/**
+	 * Send a chat message to the server, which will relay it back
+	 * @param message the message
+	 */
+	public void sendChat(@NonNull String message) {
+		// the client does not matter, it will be filled in by the server then broadcasted to all clients
 		send(new MessageChat(0, message));
 	}
 
 	/**
-	 * Wird von der GUI aufgerufen, wenn ein Spieler einen Stein setzen will Die
-	 * Aktion wird nur an den Server geschickt, der Stein wird NICHT lokal
-	 * gesetzt
-	 **/
-	public int set_stone(Turn turn) {
-		if (game.getCurrentPlayer() == -1)
-			return Board.FIELD_DENIED;
-		
-		/* Lokal keinen Spieler als aktiv setzen.
-	   	Der Server schickt uns nachher den neuen aktiven Spieler zu */
+	 * Called by the UI for the local player to place the stone.
+	 * The request is sent to the server, the stone will not be placed locally.
+	 */
+	public void setStone(@NonNull Turn turn) {
+		// locally set no player as the current player
+		// on success the server will send us the new current player
 		game.setCurrentPlayer(-1);
 
 		send(new MessageSetStone(turn));
-
-		return Board.FIELD_ALLOWED;
 	}
 
 	/**
-	 * Erbittet den Spielstart beim Server
+	 * Request server to start the game
 	 */
-	public void request_start() {
+	public void requestGameStart() {
 		send(new MessageStartGame());
 	}
 
 	/**
-	 * Erbittet eine Zugzuruecknahme beim Server
-	 **/
-	public void request_undo() {
+	 * Request server to undo the last move
+	 */
+	public void requestUndo() {
 		if (game == null)
 			return;
 		if (!isConnected())
@@ -245,8 +277,14 @@ public class GameClient {
 		send(new MessageRequestUndo());
 	}
 
+	/**
+	 * Relay the given message to the sendExecutor to be sent to the server asynchronously.
+	 * Write errors will be silently ignored.
+	 *
+	 * @param msg the message to send
+	 */
 	@AnyThread
-	private void send(de.saschahlusiak.freebloks.network.Message msg) {
+	private void send(@NonNull de.saschahlusiak.freebloks.network.Message msg) {
 		if (sendExecutor == null)
 			return;
 

@@ -18,7 +18,6 @@ import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.client.GameClient;
-import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
@@ -94,7 +93,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 		findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LobbyDialog.this.client.request_start();
+				LobbyDialog.this.client.requestGameStart();
 			}
 		});
 		chatButton = (FloatingActionButton) findViewById(R.id.chatButton);
@@ -180,8 +179,8 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 					.putString("player_name", name)
 					.apply();
 
-				client.revoke_player(player);
-				client.request_player(player, name);
+				client.revokePlayer(player);
+				client.requestPlayer(player, name);
 			}
 		});
 		dialogBuilder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -388,9 +387,9 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 		if (client.game.isStarted())
 			return;
 		if (client.game.isLocalPlayer((int)id)) {
-			client.revoke_player((int)id);
+			client.revokePlayer((int)id);
 		} else {
-			client.request_player((int)id, null);
+			client.requestPlayer((int)id, null);
 		}
 	}
 
@@ -401,7 +400,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 			return;
 		int size = CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 		
-		client.request_game_mode(size, size, g, g == GameMode.GAMEMODE_JUNIOR ? GameConfiguration.JUNIOR_STONE_SET : GameConfiguration.DEFAULT_STONE_SET);
+		client.requestGameMode(size, size, g, g == GameMode.GAMEMODE_JUNIOR ? GameConfiguration.JUNIOR_STONE_SET : GameConfiguration.DEFAULT_STONE_SET);
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package de.saschahlusiak.freebloks.network
 
+import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameClientMessageHandler
+import de.saschahlusiak.freebloks.game.GameConfiguration
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
@@ -345,7 +347,8 @@ class NetworkGameTest {
         val game = Game()
         val processor = GameClientMessageHandler(game)
 
-        processor.onConnected()
+        val client = GameClient(Game(), GameConfiguration.Builder().build())
+        processor.onConnected(client)
         for (pkg in packets) {
             processor.handleMessage(pkg)
         }
