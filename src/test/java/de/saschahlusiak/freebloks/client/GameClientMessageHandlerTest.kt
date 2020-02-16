@@ -161,12 +161,14 @@ class GameClientMessageHandlerTest {
     fun test_hint() {
         var receivedHint: Turn? = null
 
-        handler.addObserver(object : GameEventObserver {
+        val observer = object : GameEventObserver {
             override fun hintReceived(turn: Turn) {
                 assertNull(receivedHint)
                 receivedHint = turn
             }
-        })
+        }
+
+        handler.addObserver(observer)
 
         val msg = MessageStoneHint(1, 2, false, Rotation.Right, 5, 6)
         handler.handleMessage(msg)
@@ -203,12 +205,13 @@ class GameClientMessageHandlerTest {
     @Test
     fun test_onConnected() {
         var connected = false
-
-        handler.addObserver(object : GameEventObserver {
+        val observer = object : GameEventObserver {
             override fun onConnected(client: GameClient) {
                 connected = true
             }
-        })
+        }
+
+        handler.addObserver(observer)
 
         val client = GameClient(Game(), GameConfiguration.Builder().build())
         handler.onConnected(client)
@@ -220,12 +223,14 @@ class GameClientMessageHandlerTest {
         var disconnected = false
         var receivedError: Exception? = null
 
-        handler.addObserver(object : GameEventObserver {
+        val observer = object : GameEventObserver {
             override fun onDisconnected(client: GameClient, error: Exception?) {
                 disconnected = true
                 receivedError = error
             }
-        })
+        }
+
+        handler.addObserver(observer)
 
         val client = GameClient(Game(), GameConfiguration.Builder().build())
 

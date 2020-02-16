@@ -25,8 +25,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.bluetooth.BluetoothClientBridge;
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServer;
+import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread;
+import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread;
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
@@ -580,9 +580,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 				if (config.getServer() == null) {
 					// hosting a local game. start bluetooth bridge.
-					final BluetoothServer bluetoothServer = new BluetoothServer(
+					final BluetoothServerThread bluetoothServer = new BluetoothServerThread(
 						// start a new client bridge for every connected bluetooth client
-						socket -> new BluetoothClientBridge(socket, "localhost", GameClient.DEFAULT_PORT).start()
+						socket -> new BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
 					);
 					client.addObserver(bluetoothServer);
 					bluetoothServer.start();
@@ -811,7 +811,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						startNewGame(GameConfiguration.builder().showLobby(true).build(), new Runnable() {
 							@Override
 							public void run() {
-								new BluetoothClientBridge(clientSocket, "localhost", GameClient.DEFAULT_PORT).start();
+								new BluetoothClientToSocketThread(clientSocket, "localhost", GameClient.DEFAULT_PORT).start();
 							}
 						});
 					}

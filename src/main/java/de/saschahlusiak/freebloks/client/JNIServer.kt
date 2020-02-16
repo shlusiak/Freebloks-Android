@@ -45,7 +45,7 @@ object JNIServer {
 
         val board = game.board
         val playerStonesAvailable = IntArray(Shape.COUNT * 4)
-        var j: Int
+
         for (player in 0..3) {
             for (shape in 0 until Shape.COUNT) {
                 playerStonesAvailable[player * Shape.COUNT + shape] = board.getPlayer(player).getStone(shape).available

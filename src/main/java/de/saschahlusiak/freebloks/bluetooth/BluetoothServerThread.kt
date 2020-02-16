@@ -18,7 +18,7 @@ import java.util.*
  *
  * Register this to a [GameClient] to automatically shut it down once the game is started.
  */
-class BluetoothServer(private val listener: OnBluetoothConnectedListener) : Thread("BluetoothServerBridge"), GameEventObserver {
+class BluetoothServerThread(private val listener: OnBluetoothConnectedListener) : Thread("BluetoothServerBridge"), GameEventObserver {
     private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private var serverSocket: BluetoothServerSocket? = null
     private val handler = Handler()
@@ -103,7 +103,7 @@ class BluetoothServer(private val listener: OnBluetoothConnectedListener) : Thre
     }
 
     companion object {
-        private val tag = BluetoothServer::class.java.simpleName
+        private val tag = BluetoothServerThread::class.java.simpleName
 
         @JvmField
 		val SERVICE_UUID: UUID = UUID.fromString("B4C72729-2E7F-48B2-B15C-BDD73CED0D13")

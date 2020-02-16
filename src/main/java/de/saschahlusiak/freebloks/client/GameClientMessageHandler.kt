@@ -7,6 +7,7 @@ import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageHandler
 import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.*
+import java.lang.ref.WeakReference
 
 /**
  * Processes incoming network events and applies changes to the given [Game] and notifies [GameEventObserver].
@@ -14,25 +15,39 @@ import de.saschahlusiak.freebloks.network.message.*
 class GameClientMessageHandler(private val game: Game): MessageHandler {
     private val tag = GameClientMessageHandler::class.java.simpleName
 
-    private val observer = mutableListOf<GameEventObserver>()
+    private val observer = mutableListOf<WeakReference<GameEventObserver>>()
 
     private val board = game.board
 
+    /**
+     * Adds the given [GameEventObserver]. Note that it will be stored as a WeakReference.
+     *
+     * Observers are best added before the call to [GameClient.connected], so no events are missed.
+     *
+     * @param observer a new observer.
+     */
     fun addObserver(observer: GameEventObserver) {
         synchronized(observer) {
-            this.observer.add(observer)
+            this.observer.add(WeakReference(observer))
         }
     }
 
     fun removeObserver(observer: GameEventObserver) {
+        // we just clear the matching referents, but won't modify the list here
+        // to avoid the concurrent modification exception
         synchronized(observer) {
-            this.observer.remove(observer)
+            this.observer.filter { it.get() == observer }.forEach { it.clear() }
         }
     }
 
     private fun notifyObservers(block: (GameEventObserver) -> Unit) {
         synchronized(observer) {
-            observer.forEach { block.invoke(it) }
+            observer.forEach {
+                val o = it.get()
+                if (o != null) block.invoke(o)
+            }
+            // clean up all cleared referents
+            observer.removeAll { it.get() == null }
         }
     }
 

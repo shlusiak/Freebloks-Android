@@ -24,9 +24,9 @@ import java.util.Set;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServer;
+import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread;
 
-public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, BluetoothServer.OnBluetoothConnectedListener {
+public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, BluetoothServerThread.OnBluetoothConnectedListener {
 	private static final String tag = JoinDialog.class.getSimpleName();
 
 	private EditText name, server;
@@ -36,7 +36,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 	private ViewGroup bluetoothList;
 	private BluetoothAdapter bluetoothAdapter;
-	private BluetoothServer bluetoothServer;
+	private BluetoothServerThread bluetoothServer;
 
 	private SharedPreferences prefs;
 
@@ -115,7 +115,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 	private void startBluetoothServer() {
 		if (bluetoothServer == null && bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-			bluetoothServer = new BluetoothServer(this);
+			bluetoothServer = new BluetoothServerThread(this);
 			bluetoothServer.start();
 		}
 	}
@@ -230,7 +230,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 			BluetoothSocket socket;
 			try {
 				Log.i(tag, "Connecting to " + device.getName() + "/" + device.getAddress());
-				socket = device.createInsecureRfcommSocketToServiceRecord(BluetoothServer.SERVICE_UUID);
+				socket = device.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID);
 
 				socket.connect();
 				Log.i(tag, "Connection successful");

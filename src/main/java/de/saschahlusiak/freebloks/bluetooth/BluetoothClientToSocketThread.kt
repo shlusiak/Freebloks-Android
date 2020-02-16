@@ -18,7 +18,7 @@ import java.net.SocketAddress
  * @param hostname host to connect to (localhost)
  * @param port port to connect to
  */
-class BluetoothClientBridge(
+class BluetoothClientToSocketThread(
     private var remote: BluetoothSocket?,
     private val hostname: String,
     private val port: Int = GameClient.DEFAULT_PORT
