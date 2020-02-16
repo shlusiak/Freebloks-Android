@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -67,7 +68,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.StrictMode;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -108,11 +108,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
-
 	Freebloks3DView view;
 	GameClient client = null;
-	Vibrator vibrator;
-	boolean vibrate_on_move;
 	boolean show_notifications;
 	boolean undo_with_back;
 	boolean hasActionBar;
@@ -121,6 +118,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	ViewGroup statusView;
 	NotificationManager notificationManager;
 	Notification multiplayerNotification;
+
+	private FreebloksActivityViewModel viewModel;
 
 	ConnectTask connectTask;
 
@@ -202,6 +201,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+		viewModel = ViewModelProviders.of(this).get(FreebloksActivityViewModel.class);
+
 		view = findViewById(R.id.board);
 		view.setActivity(this);
 
@@ -210,7 +211,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 
 		statusView = findViewById(R.id.currentPlayerLayout);
-		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		chatButton = findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
@@ -228,7 +228,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		newCurrentPlayer(-1);
 
-		RetainedConfig config = (RetainedConfig) getLastNonConfigurationInstance();
+		RetainedConfig config = (RetainedConfig) getLastCustomNonConfigurationInstance();
 		if (config != null) {
 			client = config.client;
 			lastStatus = config.lastStatus;
@@ -412,7 +412,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		notificationManager.cancel(NOTIFICATION_GAME_ID);
 		multiplayerNotification = null;
 
-		vibrate_on_move = prefs.getBoolean("vibrate", true);
+		viewModel.reloadPreferences();
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
 		show_notifications = prefs.getBoolean("notifications", true);
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
@@ -432,8 +432,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.wheel.update(view.model.boardObject.getShowWheelPlayer());
 	}
 
+	@Nullable
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		Log.d(tag, "onRetainNonConfigurationInstance");
 		RetainedConfig config = new RetainedConfig();
 		config.client = client;
@@ -1472,10 +1473,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		return true;
 	}
 
+	@Deprecated
 	@Override
 	public void vibrate(int ms) {
-		if (vibrate_on_move)
-			vibrator.vibrate(ms);
+		viewModel.vibrate(ms);
 	}
 
 	@Override

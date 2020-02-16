@@ -1,10 +1,11 @@
 package de.saschahlusiak.freebloks.game;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public abstract class BaseGameActivity extends Activity implements GameHelper.GameHelperListener {
+import androidx.fragment.app.FragmentActivity;
+
+public abstract class BaseGameActivity extends FragmentActivity implements GameHelper.GameHelperListener {
 
     // The game helper object. This class is mainly a wrapper around this object.
     protected GameHelper mHelper;

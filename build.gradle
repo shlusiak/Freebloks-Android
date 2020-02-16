@@ -45,6 +45,15 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation 'com.google.android.material:material:1.2.0-alpha04'
 
+    // https://developer.android.com/jetpack/androidx/releases/lifecycle
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+
+    // https://mvnrepository.com/artifact/androidx.preference/preference
+    implementation 'androidx.preference:preference:1.1.0'
+
     // for Google+ integration. See "foss" branch without this dependency
     // https://developers.google.com/android/guides/releases
     implementation 'com.google.android.gms:play-services-games:19.0.0'
