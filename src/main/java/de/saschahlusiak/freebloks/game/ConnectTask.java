@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -35,10 +34,6 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 
 	@Override
 	protected void onPreExecute() {
-		activity.lastStatus = null;
-		activity.view.setGame(null);
-		activity.chatButton.setVisibility(View.INVISIBLE);
-		activity.chatEntries.clear();
 		activity.showDialog(FreebloksActivity.DIALOG_PROGRESS, null);
 		super.onPreExecute();
 	}

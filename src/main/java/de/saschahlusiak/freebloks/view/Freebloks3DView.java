@@ -30,7 +30,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 
 	public final ViewModel model = new ViewModel(this);
 
-	FreebloksRenderer renderer;
+	private FreebloksRenderer renderer;
 	private float scale = 1.0f;
 
 

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.crashlytics.android.Crashlytics;
@@ -109,29 +110,29 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
 	Freebloks3DView view;
-	GameClient client = null;
-	boolean show_notifications;
-	boolean undo_with_back;
-	boolean hasActionBar;
-	MessageServerStatus lastStatus;
-	Menu optionsMenu;
-	ViewGroup statusView;
-	NotificationManager notificationManager;
-	Notification multiplayerNotification;
+	private GameClient client = null;
+	private boolean show_notifications;
+	private boolean undo_with_back;
+	private boolean hasActionBar;
+	private MessageServerStatus lastStatus;
+	private Menu optionsMenu;
+	private ViewGroup statusView;
+	private NotificationManager notificationManager;
+	private Notification multiplayerNotification;
 
 	private FreebloksActivityViewModel viewModel;
 
 	ConnectTask connectTask;
 
-	String clientName;
-	int difficulty;
-	GameMode gamemode;
-	int fieldsize;
+	private String clientName;
+	private int difficulty;
+	private GameMode gamemode;
+	private int fieldsize;
 
-	ImageButton chatButton;
-	ArrayList<ChatEntry> chatEntries;
+	private ImageButton chatButton;
+	private ArrayList<ChatEntry> chatEntries;
 
-	SharedPreferences prefs;
+	private SharedPreferences prefs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -1297,8 +1298,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			name = getString(R.string.client_d, client + 1);
 		}
 
-		final ChatEntry e = new ChatEntry(client, message, name);
-		e.setPlayer(player);
+		final ChatEntry e = ChatEntry.clientMessage(client, player, message, name);
 
 		if (!this.client.game.isLocalPlayer(player) &&
 			(this.client.game.isStarted() || multiplayerNotification != null))
@@ -1373,6 +1373,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					s = lastStatus;
 					tid = R.string.player_left_color;
 				} else continue;
+
 				String name;
 				name = s.getClientName(getResources(), s.getClientForPlayer()[i]);
 
@@ -1382,8 +1383,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					return;
 
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]);
-				final ChatEntry e = new ChatEntry(-1, text, name);
-				e.setPlayer(i);
+				final ChatEntry e = ChatEntry.serverMessage(i, text, name = name);
 
 				if (!view.model.game.isLocalPlayer(i))
 					updateMultiplayerNotification(tid == R.string.player_left_color && client.game.isStarted(), text);
@@ -1407,11 +1407,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 	}
 
+	@WorkerThread
 	@Override
 	public void onConnected(@NonNull GameClient client) {
 		newCurrentPlayer(client.game.getCurrentPlayer());
 	}
 
+	@WorkerThread
 	@Override
 	public void onDisconnected(@NonNull GameClient client, @Nullable Exception error) {
 		Log.w(tag, "onDisconnected()");
@@ -1419,6 +1421,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				lastStatus = null;
+				view.setGame(null);
+				chatButton.setVisibility(View.INVISIBLE);
+				chatEntries.clear();
+
 				newCurrentPlayer(-1);
 
 				if (error != null) {

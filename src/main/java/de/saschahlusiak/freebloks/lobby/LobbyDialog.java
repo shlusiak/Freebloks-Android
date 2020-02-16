@@ -239,7 +239,8 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 							String a = addr.getHostAddress();
 							if (a.contains("%"))
 								a = a.substring(0, a.indexOf("%"));
-							adapter.add(new ChatEntry(-1, "[" + a + "]", null));
+
+							adapter.add(ChatEntry.genericMessage("[" + a + "]"));
 							n++;
 						}
 					}

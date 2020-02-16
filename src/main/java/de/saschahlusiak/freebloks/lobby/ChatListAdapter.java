@@ -31,8 +31,8 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
 
 		View view = super.getView(position, convertView, parent);
 
-		t = (TextView)view.findViewById(R.id.textView);
-		if (c.client < 0) {
+		t = view.findViewById(R.id.textView);
+		if (c.isServerMessage()) {
 			t.setTextColor(Color.LTGRAY);
 			t.setGravity(Gravity.RIGHT);
 		} else {
