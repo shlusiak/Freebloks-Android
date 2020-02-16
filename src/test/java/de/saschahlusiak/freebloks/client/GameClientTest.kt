@@ -115,12 +115,12 @@ class GameClientTest {
 
     @Before
     fun setup() {
-        client.addObserver(gameObserver)
 
         fromServerStream.connect(toClientStream)
         fromClientStream.connect(toServerStream)
 
         client.connected(serverMessageHandler, fromServerStream, toServerStream)
+        client.addObserver(gameObserver)
 
         serverThread = MessageReadThread(fromClient, serverMessageHandler) { readerClosed = true }
         serverThread.start()

@@ -372,22 +372,15 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 	}
 
 	@Override
-	public void onConnected(@NonNull Board board) {
+	public void onConnected(@NonNull GameClient client) {
 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
+	public void onDisconnected(@NonNull GameClient client, @Nullable Exception error) {
 		// dismiss may stop the dialog and remove this instance from the client listeners, modifying the underlying
 		// list, so we have do run the dismiss() outside of this method.
-		handler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				dismiss();
-			}
-		});
+		handler.post(() -> dismiss());
 	}
 
 	@Override

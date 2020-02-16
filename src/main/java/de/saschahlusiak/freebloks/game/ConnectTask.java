@@ -8,6 +8,9 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+
 import com.crashlytics.android.Crashlytics;
 
 import de.saschahlusiak.freebloks.client.GameClient;
@@ -20,7 +23,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	private boolean show_lobby;
 	private Runnable connectedRunnable;
 
-	ConnectTask(GameClient client, boolean show_lobby, Runnable connectedRunnable) {
+	ConnectTask(@NonNull GameClient client, boolean show_lobby, Runnable connectedRunnable) {
 		this.myclient = client;
 		this.show_lobby = show_lobby;
 		this.connectedRunnable = connectedRunnable;
@@ -108,8 +111,6 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 		} else {
 			if (show_lobby)
 				activity.showDialog(FreebloksActivity.DIALOG_LOBBY);
-
-			myclient.addObserver(activity);
 
 			if (connectedRunnable != null)
 				connectedRunnable.run();

@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.client
 
 import de.saschahlusiak.freebloks.model.Board
+import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 
@@ -12,8 +13,8 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
  * Register with [GameClientMessageHandler] to get updates.
  */
 interface GameEventObserver {
-    fun onConnected(board: Board) {}
-    fun onDisconnected(board: Board, error: Exception?) {}
+    fun onConnected(client: GameClient) {}
+    fun onDisconnected(client: GameClient, error: Exception?) {}
     fun newCurrentPlayer(player: Int) {}
     fun stoneWillBeSet(turn: Turn) {}
     fun stoneHasBeenSet(turn: Turn) {}

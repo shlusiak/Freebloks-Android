@@ -74,9 +74,10 @@ data class MessageServerStatus(
         return clientNames[client] ?: default
     }
 
-    fun getClient(player: Int) = clientForPlayer[player]
+    // TODO: make this nullable
+    fun getClient(player: Int) = clientForPlayer[player] ?: -1
 
-    fun isClient(player: Int) = getClient(player) != null
+    fun isClient(player: Int) = getClient(player) != -1
 
     fun isComputer(player: Int) = !isClient(player)
 

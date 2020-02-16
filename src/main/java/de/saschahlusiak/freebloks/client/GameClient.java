@@ -108,7 +108,7 @@ public class GameClient {
 				address = new InetSocketAddress((InetAddress)null, port);
 			else
 				address = new InetSocketAddress(host, port);
-			
+
 			socket.connect(address, DEFAULT_TIMEOUT);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -127,16 +127,22 @@ public class GameClient {
 
 	public void connected(@NonNull Closeable socket, @NonNull InputStream is, @NonNull OutputStream os) {
 		this.client_socket = socket;
+
+		// first we set up writing to the server
 		messageWriter = new MessageWriter(os);
+		sendExecutor = Executors.newSingleThreadExecutor();
+
+		// we start reading from the server, we will likely begin receiving and processing
+		// messages and sending events to the observers.
+		// To allow for other observers to be registered before we consume messages, we inform the
+		// observers so far about it.
+		gameClientMessageHandler.onConnected(this);
+
 		readThread = new MessageReadThread(is, gameClientMessageHandler, () -> {
 			disconnect();
 			return null;
 		});
 		readThread.start();
-
-		sendExecutor = Executors.newSingleThreadExecutor();
-
-		gameClientMessageHandler.onConnected();
 	}
 
 	public synchronized void disconnect() {
@@ -169,7 +175,7 @@ public class GameClient {
 				e.printStackTrace();
 			}
 
-			gameClientMessageHandler.onDisconnected(lastError);
+			gameClientMessageHandler.onDisconnected(this, lastError);
 		}
 		client_socket = null;
 	}

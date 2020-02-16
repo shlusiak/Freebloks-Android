@@ -78,7 +78,6 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			public void run() {
 				model.setGame(game);
 				if (game != null) {
-					client.addObserver(Freebloks3DView.this);
 					model.boardObject.last_size = game.getBoard().width;
 					for (int i = 0; i < Board.PLAYER_MAX; i++) if (game.isLocalPlayer(i)) {
 						model.boardObject.centerPlayer = i;
@@ -290,15 +289,14 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	}
 
 	@Override
-	public void onConnected(@NonNull Board board) {
+	public void onConnected(@NonNull GameClient client) {
 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
+	public void onDisconnected(@NonNull GameClient client, @Nullable Exception error) {
 
 	}
-
 
 	private class AnimateThread extends Thread {
 		boolean goDown = false;

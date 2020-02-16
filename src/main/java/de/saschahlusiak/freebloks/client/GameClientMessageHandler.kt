@@ -36,12 +36,12 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
         }
     }
 
-    fun onConnected() {
-        notifyObservers { it.onConnected(board) }
+    fun onConnected(client: GameClient) {
+        notifyObservers { it.onConnected(client) }
     }
 
-    fun onDisconnected(error: Exception?) {
-        notifyObservers { it.onDisconnected(board, error) }
+    fun onDisconnected(client: GameClient, error: Exception?) {
+        notifyObservers { it.onDisconnected(client, error) }
     }
 
     @WorkerThread

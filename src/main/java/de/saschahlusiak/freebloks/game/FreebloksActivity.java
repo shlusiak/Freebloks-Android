@@ -25,6 +25,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.bluetooth.BluetoothClientBridge;
+import de.saschahlusiak.freebloks.bluetooth.BluetoothServer;
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
@@ -266,6 +268,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (client != null) {
 			/* we just rotated and got *hot* objects */
 			client.addObserver(this);
+			client.addObserver(view);
 			view.setGameClient(client, client.game);
 			newCurrentPlayer(client.game.getCurrentPlayer());
 		} else if (savedInstanceState == null) {
@@ -441,8 +444,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		this.connectTask = null;
 		view.model.soundPool = null;
 		// ensure that this isn't disconnect on rotate
-		client.removeObserver(this);
-		client.removeObserver(view);
+		if (client != null) {
+			client.removeObserver(this);
+			client.removeObserver(view);
+		}
 		client = null;
 		return config;
 	}
@@ -552,6 +557,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 		board.setAvailableStones(0, 0, 0, 0, 0);
 
+		client.addObserver(this);
+		client.addObserver(view);
+
 		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
 			@Override
 			public void run() {
@@ -572,14 +580,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 				if (config.getServer() == null) {
 					// hosting a local game. start bluetooth bridge.
-					BluetoothServer bluetoothServer = new BluetoothServer(new BluetoothServer.OnBluetoothConnectedListener() {
-						@Override
-						public void onBluetoothClientConnected(BluetoothSocket socket) {
-							new BluetoothClientBridge(socket, "localhost", GameClient.DEFAULT_PORT).start();
-						}
-					});
-					bluetoothServer.start();
+					final BluetoothServer bluetoothServer = new BluetoothServer(
+						// start a new client bridge for every connected bluetooth client
+						socket -> new BluetoothClientBridge(socket, "localhost", GameClient.DEFAULT_PORT).start()
+					);
 					client.addObserver(bluetoothServer);
+					bluetoothServer.start();
 				}
 
 				if (runAfter != null)
@@ -610,6 +616,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.setGameClient(client, game);
 
 		client.addObserver(this);
+		client.addObserver(view);
 		client.setSocket(socket);
 
 		if (config.getRequestPlayers() == null)
@@ -1390,12 +1397,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void onConnected(@NonNull Board board) {
+	public void onConnected(@NonNull GameClient client) {
 
 	}
 
 	@Override
-	public void onDisconnected(@NonNull Board board, @Nullable Exception error) {
+	public void onDisconnected(@NonNull GameClient client, @Nullable Exception error) {
 		Log.w(tag, "onDisconnected()");
 
 		runOnUiThread(new Runnable() {

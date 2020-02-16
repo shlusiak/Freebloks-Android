@@ -24,6 +24,7 @@ import java.util.Set;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.bluetooth.BluetoothServer;
 
 public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, BluetoothServer.OnBluetoothConnectedListener {
 	private static final String tag = JoinDialog.class.getSimpleName();

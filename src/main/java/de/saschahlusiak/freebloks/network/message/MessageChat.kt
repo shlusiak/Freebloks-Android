@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.network.message
 
-import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.utils.forRemaining
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
