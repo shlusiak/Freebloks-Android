@@ -47,6 +47,7 @@ class MessageReadThread(
         try {
             for (message in reader) {
                 if (goDown) return
+
                 handler.handleMessage(message)
             }
         } catch (e: GameStateException) {

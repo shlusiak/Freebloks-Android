@@ -11,7 +11,9 @@ import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 
-@SuppressWarnings("serial")
+/**
+ * This model is owned by the {@link Freebloks3DView} and encapsulates 3D objects and renderable effects and sounds.
+ */
 public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public final Wheel wheel;
 	public final CurrentStone currentStone;

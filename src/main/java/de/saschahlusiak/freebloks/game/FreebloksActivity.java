@@ -269,7 +269,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			/* we just rotated and got *hot* objects */
 			client.addObserver(this);
 			client.addObserver(view);
-			view.setGameClient(client, client.game);
+			view.setGame(client.game);
 			newCurrentPlayer(client.game.getCurrentPlayer());
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
@@ -496,10 +496,17 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				.fieldSize(board.width)
 				.build();
 
-			final GameClient client = new GameClient(game, config);
+			client = new GameClient(game, config);
+
+			client.addObserver(this);
+			client.addObserver(view);
+
 			client.game.setStarted(true);
 
+			view.setGame(client.game);
 			connectTask = new ConnectTask(client, false, () -> {
+				// when resuming, the server does not send a current player message
+				newCurrentPlayer(game.getCurrentPlayer());
 			});
 			connectTask.setActivity(this);
 
@@ -551,14 +558,17 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		client = null;
 
 		view.model.clearEffects();
+
 		final Board board = new Board(fieldsize);
 		final Game game = new Game(board);
-		final GameClient client = new GameClient(game, config);
+		client = new GameClient(game, config);
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 		board.setAvailableStones(0, 0, 0, 0, 0);
 
 		client.addObserver(this);
 		client.addObserver(view);
+
+		view.setGame(client.game);
 
 		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
 			@Override
@@ -613,7 +623,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		board.setAvailableStones(0, 0, 0, 0, 0);
 
 		client = new GameClient(game, config);
-		view.setGameClient(client, game);
+		view.setGame(game);
 
 		client.addObserver(this);
 		client.addObserver(view);
@@ -1398,7 +1408,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void onConnected(@NonNull GameClient client) {
-
+		newCurrentPlayer(client.game.getCurrentPlayer());
 	}
 
 	@Override

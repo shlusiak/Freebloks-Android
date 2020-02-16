@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.view;
 import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -72,11 +71,14 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		renderer.backgroundRenderer.setTheme(theme);
 	}
 
-	public void setGameClient(final GameClient client, final Game game) {
+	public void setGame(final Game game) {
+		if (game != null) {
+			model.setGame(game);
+		}
+
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
-				model.setGame(game);
 				if (game != null) {
 					model.boardObject.last_size = game.getBoard().width;
 					for (int i = 0; i < Board.PLAYER_MAX; i++) if (game.isLocalPlayer(i)) {
@@ -85,6 +87,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 					}
 					renderer.updateModelViewMatrix = true;
 					model.wheel.update(model.boardObject.getShowWheelPlayer());
+					newCurrentPlayer(game.getCurrentPlayer());
 				}
 
 				renderer.init(model.boardObject.last_size);
@@ -166,7 +169,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 
 	@Override
 	public void newCurrentPlayer(int player) {
-		if (model == null || model.game == null)
+		if (model.game == null)
 			return;
 
 		if (model.game.isLocalPlayer() || model.wheel.getCurrentPlayer() != model.boardObject.getShowWheelPlayer())
@@ -290,7 +293,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 
 	@Override
 	public void onConnected(@NonNull GameClient client) {
-
+		newCurrentPlayer(client.game.getCurrentPlayer());
 	}
 
 	@Override

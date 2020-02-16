@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.network
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import java.io.IOException
 import java.io.OutputStream
@@ -18,6 +19,7 @@ class MessageWriter(val os: OutputStream) {
     @WorkerThread
     fun write(vararg messages: Message): Boolean {
         messages.forEach { message ->
+            Log.d("Network", ">> $message")
             val bytes = message.toByteArray()
             try {
                 os.write(bytes)

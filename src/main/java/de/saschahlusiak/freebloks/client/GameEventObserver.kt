@@ -13,8 +13,16 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
  * Register with [GameClientMessageHandler] to get updates.
  */
 interface GameEventObserver {
+    /**
+     * The first message ever received; we are connected to a client.
+     */
     fun onConnected(client: GameClient) {}
+
+    /**
+     * The last message ever received; we are disconnected.
+     */
     fun onDisconnected(client: GameClient, error: Exception?) {}
+
     fun newCurrentPlayer(player: Int) {}
     fun stoneWillBeSet(turn: Turn) {}
     fun stoneHasBeenSet(turn: Turn) {}

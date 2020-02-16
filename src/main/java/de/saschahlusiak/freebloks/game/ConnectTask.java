@@ -36,7 +36,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	@Override
 	protected void onPreExecute() {
 		activity.lastStatus = null;
-		activity.view.setGameClient(null, null);
+		activity.view.setGame(null);
 		activity.chatButton.setVisibility(View.INVISIBLE);
 		activity.chatEntries.clear();
 		activity.showDialog(FreebloksActivity.DIALOG_PROGRESS, null);
@@ -72,17 +72,12 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	@Override
 	protected void onPostExecute(Exception result) {
 		activity.connectTask = null;
-		if (activity.client != null) {
-			activity.client.disconnect();
-			activity.client = null;
-		}
 		if (activity.view == null)
 			return;
 
-		activity.client = this.myclient;
 		activity.connectTask = null;
-		activity.view.setGameClient(myclient, myclient.game);
 		activity.dismissDialog(FreebloksActivity.DIALOG_PROGRESS);
+
 		if (result != null) {
 			Crashlytics.logException(result);
 
@@ -91,8 +86,6 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 			builder.setMessage(result.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
 			activity.canresume = false;
-			activity.client.disconnect();
-			activity.client = null;
 			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -114,10 +107,7 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 
 			if (connectedRunnable != null)
 				connectedRunnable.run();
-
-			activity.newCurrentPlayer(myclient.game.getCurrentPlayer());
 		}
-		super.onPostExecute(result);
 	}
 
 	@Override

@@ -51,18 +51,30 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
         }
     }
 
+    /**
+     * Notify all observers about a successful connection to a server.
+     */
     fun onConnected(client: GameClient) {
+        Log.d("Network", "onConnected")
         notifyObservers { it.onConnected(client) }
     }
 
+    /**
+     * Notify all observers about the disconnect, then clear all observers, to never ever relay another message.
+     */
     fun onDisconnected(client: GameClient, error: Exception?) {
+        Log.d("Network", "onDisconnected")
         notifyObservers { it.onDisconnected(client, error) }
+
+        synchronized(observer) {
+            observer.clear()
+        }
     }
 
     @WorkerThread
     @Throws(ProtocolException::class, GameStateException::class)
     override fun handleMessage(message: Message) {
-        Log.d(tag, message.toString())
+        Log.d("Network", "<< $message")
 
         when(message) {
             is MessageGrantPlayer -> {
