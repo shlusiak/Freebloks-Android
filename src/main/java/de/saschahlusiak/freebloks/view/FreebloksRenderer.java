@@ -153,6 +153,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board.stone.bindBuffers(gl11);
 
 		synchronized (model.effects) {
+			// FIXME: board size may change randomly when starting a new game
 		    for (int y = 0; y < model.board.height; y++) {
 		    	int x;
 		    	for (x = 0; x < model.board.width; x++) {
