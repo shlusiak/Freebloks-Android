@@ -2,17 +2,25 @@ package de.saschahlusiak.freebloks.game
 
 import android.app.Application
 import android.content.Context
+import android.os.Handler
 import android.os.Vibrator
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.lobby.ChatEntry
+import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.serverMessage
+import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 
 class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver {
     private val context = app
+
+    // UI Thread handler
+    private val handler = Handler()
 
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
 
@@ -22,6 +30,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var client: GameClient?
         private set
 
+    // todo: is required?
     var lastStatus: MessageServerStatus? = null
         private set
 
@@ -31,9 +40,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     val chatHistory = mutableListOf<ChatEntry>()
 
+    // LiveData
+    val chatHistoryAsLiveData = MutableLiveData(chatHistory)
+
     init {
         client = null
         reloadPreferences()
+    }
+
+    override fun onCleared() {
+        disconnectClient()
     }
 
     fun reloadPreferences() {
@@ -47,6 +63,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             vibrator?.vibrate(milliseconds)
     }
 
+    // TODO: call me
     fun setClient(client: GameClient) {
         this.client = client
         client.addObserver(this)
@@ -67,25 +84,44 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         this.lastStatus = status
     }
 
-    override fun chatReceived(client: Int, message: String) {
-        val name: String
-        var player = -1
-        val status = lastStatus
-        if (status != null && client >= 0) {
-            player = status.clientForPlayer.indexOfFirst { it == client }
-
-            name = status.getClientName(context.resources, client)
-        } else {
-            // if we have advanced status, ignore all server messages (c == -1)
-            // server messages are synthetically generated in FreebloksActivity.serverStatus()
-            if (status != null) return
-            // without a status, the name is the client name, not the player name
-            name = context.getString(R.string.client_d, client + 1)
-        }
-
+    override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
+        val name = status.getClientName(context.resources, client)
         val e = ChatEntry.clientMessage(client, player, message, name)
 
         chatHistory.add(e)
+        chatHistoryAsLiveData.postValue(chatHistory)
+    }
+
+    override fun playerJoined(player: Int, client: Int, serverStatus: MessageServerStatus) {
+        val name = serverStatus.getClientName(context.resources, client)
+        // the names of colors
+        val colorNames = context.resources.getStringArray(R.array.color_names)
+        // the index into colorNames
+        val playerColor = Global.getPlayerColor(player, game?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
+        // the name of the player's color
+        val colorName = colorNames[playerColor]
+
+        val text = context.getString(R.string.player_joined_color, name, colorName)
+        val e = serverMessage(player, text, name)
+
+        chatHistory.add(e)
+        chatHistoryAsLiveData.postValue(chatHistory)
+    }
+
+    override fun playerLeft(player: Int, client: Int, serverStatus: MessageServerStatus) {
+        val name = serverStatus.getClientName(context.resources, client)
+        // the names of colors
+        val colorNames = context.resources.getStringArray(R.array.color_names)
+        // the index into colorNames
+        val playerColor = Global.getPlayerColor(player, game?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
+        // the name of the player's color
+        val colorName = colorNames[playerColor]
+
+        val text = context.getString(R.string.player_left_color, name, colorName)
+        val e = serverMessage(player, text, name)
+
+        chatHistory.add(e)
+        chatHistoryAsLiveData.postValue(chatHistory)
     }
 
     override fun onDisconnected(client: GameClient, error: Exception?) {

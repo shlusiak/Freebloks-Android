@@ -181,7 +181,7 @@ class GameClientMessageHandlerTest {
     fun test_chat() {
         var receivedMessage: Pair<Int, String>? = null
         val observer = object : GameEventObserver {
-            override fun chatReceived(client: Int, message: String) {
+            override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
                 assertNull(receivedMessage)
                 receivedMessage = Pair(client, message)
             }
@@ -189,7 +189,14 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val msg = MessageChat(-1, "hello")
+        // chat messages are ignored until we have received a server status
+        handler.handleMessage(serverStatus())
+
+        // server messages are ignored
+        handler.handleMessage(MessageChat(-1, "hello"))
+
+        // but this one comes through
+        val msg = MessageChat(3, "hello")
         handler.handleMessage(msg)
 
         // test removeObserver by removing us and sending another message
@@ -198,7 +205,7 @@ class GameClientMessageHandlerTest {
 
         assertNotNull(receivedMessage)
         val (client, message) = receivedMessage ?: throw java.lang.IllegalStateException("message not received")
-        assertEquals(-1, client)
+        assertEquals(3, client)
         assertEquals("hello", message)
     }
 

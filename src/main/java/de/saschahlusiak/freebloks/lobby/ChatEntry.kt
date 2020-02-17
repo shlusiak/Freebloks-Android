@@ -19,15 +19,13 @@ class ChatEntry(
     fun isServerMessage() = (client == null)
 
     fun getColor(context: Context, gameMode: GameMode): Int {
-        return when(player) {
-            null ->
-                if (client == null) Color.WHITE else extraColors[client % extraColors.size]
-            else -> {
-                val playerColor = Global.getPlayerColor(player, gameMode)
-                val resource = Global.PLAYER_FOREGROUND_COLOR_RESOURCE[playerColor]
+        return if (player == null) {
+            if (client == null) Color.WHITE else extraColors[client % extraColors.size]
+        } else {
+            val playerColor = Global.getPlayerColor(player, gameMode)
+            val resource = Global.PLAYER_FOREGROUND_COLOR_RESOURCE[playerColor]
 
-                context.resources.getColor(resource)
-            }
+            context.resources.getColor(resource)
         }
     }
 

@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.client
 
 import android.util.Log
 import androidx.annotation.WorkerThread
+import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.lobby.ChatEntry
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageHandler
@@ -18,6 +20,11 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     private val observer = mutableListOf<WeakReference<GameEventObserver>>()
 
     private val board = game.board
+
+    /**
+     * This is to be able to compare when players join or leave the game
+     */
+    private var lastStatus: MessageServerStatus? = null
 
     /**
      * Adds the given [GameEventObserver]. Note that it will be stored as a WeakReference.
@@ -146,10 +153,33 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 }
 
                 notifyObservers { it.serverStatus(message) }
+
+                // compare old and new status to find out who joined and who left
+                lastStatus?.also { lastStatus ->
+                    for (i in 0 until 4) {
+                        val wasClient = lastStatus.clientForPlayer[i]
+                        val isClient = message.clientForPlayer[i]
+                        if (wasClient == null && isClient != null) { /* joined */
+                            notifyObservers { it.playerJoined(i, isClient, message) }
+                        } else if (wasClient != null && isClient == null) { /* left */
+                            notifyObservers { it.playerLeft(i, wasClient, lastStatus) }
+                        } else continue
+                    }
+                }
+
+                lastStatus = message
             }
 
             is MessageChat -> {
-                notifyObservers { it.chatReceived(message.client, message.message) }
+                val status = lastStatus
+                // we silently drop all chat messages if we don't have a last status, because we can't determine the player name
+                if (message.client >= 0 && status != null) {
+                    // ignore all server messages, because we create synthetic ones in server status
+
+                    val player = status.clientForPlayer.indexOfFirst { it == message.client }
+
+                    notifyObservers { it.chatReceived(status, message.client, player, message.message) }
+                }
             }
 
             is MessageStartGame -> {

@@ -88,6 +88,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.fabric.sdk.android.Fabric;
 
 public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, OnIntroCompleteListener {
@@ -1178,7 +1180,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					if (view.model.soundPool == null)
 						return;
 					view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
-					vibrate(Global.VIBRATE_SET_STONE);
+					viewModel.vibrate(Global.VIBRATE_SET_STONE);
 				}
 			}
 		});
@@ -1279,24 +1281,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void chatReceived(int client, @NonNull final String message) {
-		String name;
-		int player = -1;
-		if (lastStatus != null && client >= 0) {
-			if (lastStatus.isAtLeastVersion(2))
-				for (int i = 0; i < lastStatus.getClientForPlayer().length; i++)
-					if (lastStatus.getClient(i) == client) {
-						player = i;
-						break;
-					}
-			name = lastStatus.getClientName(getResources(), client);
-		} else {
-			/* if we have advanced status, ignore all server messages (c == -1) */
-			/* server messages are generated in serverStatus */
-			if (lastStatus != null && lastStatus.isAtLeastVersion(2))
-				return;
-			name = getString(R.string.client_d, client + 1);
-		}
+	public void chatReceived(MessageServerStatus status, int client, int player, @NonNull final String message) {
+		String name = lastStatus.getClientName(getResources(), client);
+
+		// TODO: use ViewModel once available
 
 		final ChatEntry e = ChatEntry.clientMessage(client, player, message, name);
 
@@ -1323,6 +1311,16 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 			}
 		});
+	}
+
+	@Override
+	public void playerJoined(int player, int client, @NotNull MessageServerStatus serverStatus) {
+
+	}
+
+	@Override
+	public void playerLeft(int player, int client, @NotNull MessageServerStatus serverStatus) {
+
 	}
 
 	@Override
@@ -1356,6 +1354,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void serverStatus(@NonNull MessageServerStatus status) {
+		// TODO: use ViewModel once available
 		if (lastStatus != null && lastStatus.isAtLeastVersion(2)) {
 			/* generate server chat messages, aka "joined" and "left" */
 
@@ -1383,7 +1382,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					return;
 
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]);
-				final ChatEntry e = ChatEntry.serverMessage(i, text, name = name);
+				final ChatEntry e = ChatEntry.serverMessage(i, text, name);
 
 				if (!view.model.game.isLocalPlayer(i))
 					updateMultiplayerNotification(tid == R.string.player_left_color && client.game.isStarted(), text);
@@ -1474,7 +1473,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 
 		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
-		vibrate(Global.VIBRATE_SET_STONE);
+		viewModel.vibrate(Global.VIBRATE_SET_STONE);
 
 		client.setStone(turn);
 		return true;

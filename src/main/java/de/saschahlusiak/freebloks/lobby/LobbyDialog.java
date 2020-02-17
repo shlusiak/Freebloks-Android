@@ -42,6 +42,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import org.jetbrains.annotations.NotNull;
+
 public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClickListener, OnItemSelectedListener {
 	GameClient client;
 	Handler handler = new Handler();
@@ -306,13 +308,24 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 	}
 
 	@Override
-	public void chatReceived(int client, @NonNull String message) {
+	public void chatReceived(@NonNull MessageServerStatus status, int client, int player, @NonNull String message) {
+		// FIXME: what is this?? Watch the viewModel.chatHistory
 		chatList.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				adapter.notifyDataSetChanged();
 			}
 		}, 100);
+	}
+
+	@Override
+	public void playerJoined(int player, int client, @NotNull MessageServerStatus serverStatus) {
+
+	}
+
+	@Override
+	public void playerLeft(int player, int client, @NotNull MessageServerStatus serverStatus) {
+
 	}
 
 	@Override

@@ -28,8 +28,11 @@ interface GameEventObserver {
     fun stoneHasBeenSet(turn: Turn) {}
     fun hintReceived(turn: Turn) {}
     fun gameFinished() {}
-    fun chatReceived(client: Int, message: String) {}
+    fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {}
     fun gameStarted() {}
     fun stoneUndone(t: Turn) {}
     fun serverStatus(status: MessageServerStatus) {}
+
+    fun playerJoined(player: Int, client: Int, serverStatus: MessageServerStatus) {}
+    fun playerLeft(player: Int, client: Int, serverStatus: MessageServerStatus) {}
 }

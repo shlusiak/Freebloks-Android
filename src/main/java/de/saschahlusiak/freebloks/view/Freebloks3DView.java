@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.model.Board;
@@ -250,7 +252,17 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	}
 
 	@Override
-	public void chatReceived(int client, @NonNull String message) {
+	public void chatReceived(MessageServerStatus status, int client, int player, @NonNull String message) {
+
+	}
+
+	@Override
+	public void playerJoined(int player, int client, @NotNull MessageServerStatus serverStatus) {
+
+	}
+
+	@Override
+	public void playerLeft(int player, int client, @NotNull MessageServerStatus serverStatus) {
 
 	}
 
