@@ -3,11 +3,13 @@ package de.saschahlusiak.freebloks.model
 import de.saschahlusiak.freebloks.model.Board.Companion.PLAYER_MAX
 import java.io.Serializable
 import java.util.*
+import de.saschahlusiak.freebloks.client.GameClientMessageHandler
 
 /**
- * A "game" contains everything about the state of a game.
+ * A "game" contains everything about the state of a game, i.e. board, current player, type of players,
+ * game mode, game status.
  *
- * These information are usually updated via the [NetworkEventHandler].
+ * These information are usually updated via the [GameClientMessageHandler].
  *
  * @param board the board state
  */
