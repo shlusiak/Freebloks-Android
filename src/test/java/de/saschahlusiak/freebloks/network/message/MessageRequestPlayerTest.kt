@@ -27,4 +27,24 @@ class MessageRequestPlayerTest {
         assertEquals(-1, msg2.player)
         assertNull(msg2.name)
     }
+
+    @Test
+    fun test_marshal_longName() {
+        // we only have space for 16 chars, so leave one for the null byte and we expect it to be cut at 15 chars
+        var org = MessageRequestPlayer(2, "12345678901234567")
+        var msg = Message.from(org.toByteArray()) as MessageRequestPlayer
+        assertEquals("123456789012345", msg.name)
+
+        org = MessageRequestPlayer(2, "1234567890123456")
+        msg = Message.from(org.toByteArray()) as MessageRequestPlayer
+        assertEquals("123456789012345", msg.name)
+
+        org = MessageRequestPlayer(2, "123456789012345")
+        msg = Message.from(org.toByteArray()) as MessageRequestPlayer
+        assertEquals("123456789012345", msg.name)
+
+        org = MessageRequestPlayer(2, "12345678901234")
+        msg = Message.from(org.toByteArray()) as MessageRequestPlayer
+        assertEquals("12345678901234", msg.name)
+    }
 }

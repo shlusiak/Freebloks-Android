@@ -199,6 +199,7 @@ public class GameClient {
 	 * @param name name for the player
 	 */
 	public void requestPlayer(int player, @Nullable String name) {
+		// be aware that the name may be capped at length 16
 		send(new MessageRequestPlayer(player, name));
 	}
 

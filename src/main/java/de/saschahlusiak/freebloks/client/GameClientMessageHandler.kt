@@ -2,8 +2,6 @@ package de.saschahlusiak.freebloks.client
 
 import android.util.Log
 import androidx.annotation.WorkerThread
-import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.lobby.ChatEntry
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageHandler
