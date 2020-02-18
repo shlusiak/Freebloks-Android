@@ -47,9 +47,11 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
 
     private fun notifyObservers(block: (GameEventObserver) -> Unit) {
         synchronized(observer) {
-            observer.forEach {
-                val o = it.get()
+            var i = 0
+            while (i < observer.size) {
+                val o = observer[i].get()
                 if (o != null) block.invoke(o)
+                i++
             }
             // clean up all cleared referents
             observer.removeAll { it.get() == null }
@@ -72,7 +74,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
         notifyObservers { it.onDisconnected(client, error) }
 
         synchronized(observer) {
-            observer.clear()
+            observer.forEach { it.clear() }
         }
     }
 

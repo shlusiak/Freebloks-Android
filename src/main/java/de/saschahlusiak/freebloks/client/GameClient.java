@@ -188,9 +188,9 @@ public class GameClient {
 				e.printStackTrace();
 			}
 
+			clientSocket = null;
 			gameClientMessageHandler.onDisconnected(this, lastError);
 		}
-		clientSocket = null;
 	}
 
 	/**
