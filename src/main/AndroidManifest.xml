@@ -28,7 +28,7 @@
         android:label="@string/app_name"
         android:isGame="true"
         android:allowBackup="true"
-        android:extractNativeLibs="false"
+        android:extractNativeLibs="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data android:name="android.max_aspect" android:value="3.0" />
