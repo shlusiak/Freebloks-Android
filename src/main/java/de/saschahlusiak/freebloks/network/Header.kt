@@ -11,8 +11,8 @@ import java.nio.ByteBuffer
  * check2 uint8
  */
 data class Header(val rawType: Int, val size: Int): Serializable {
-    val check1 = ((size and 0x0055) xor rawType)
-    val check2 = ((check1 xor 0xD6) + rawType) and 0xFF
+    val check1 = check1(size, rawType)
+    val check2 = check2(size, rawType)
 
     val messageType = MessageType.from(rawType)
 
@@ -26,6 +26,9 @@ data class Header(val rawType: Int, val size: Int): Serializable {
     companion object {
         // how many bytes are used by the header
         const val HEADER_SIZE = 5
+
+        fun check1(size: Int, type: Int) = ((size and 0x0055) xor type)
+        fun check2(size: Int, type: Int) = ((check1(size, type) xor 0xD6) + type) and 0xFF
 
         @Throws(ProtocolException::class)
         fun from(buffer: ByteBuffer): Header {

@@ -21,6 +21,14 @@ class HeaderTest {
         header = Header(8, 14)
         assertEquals(12, header.check1)
         assertEquals(226, header.check2)
+
+        header = Header(0, 130)
+        assertEquals(0, header.check1)
+        assertEquals(214, header.check2)
+
+        header = Header(140, 160)
+        assertEquals(140, header.check1)
+        assertEquals(230, header.check2)
     }
 
     @Test
