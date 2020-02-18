@@ -145,12 +145,12 @@ class GameClientTest {
     @Test
     fun test_gameClient_notConnected() {
         val client = GameClient(Game(), GameConfiguration.builder().build())
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
     }
 
     @Test
     fun test_gameClient_connected() {
-        assertTrue(client.isConnected)
+        assertTrue(client.isConnected())
         assertNull(clientDisconnectError)
     }
 
@@ -158,17 +158,17 @@ class GameClientTest {
     fun test_gameClient_client_disconnect() {
         client.disconnect()
         serverThread.join()
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
         assertTrue(readerClosed)
         assertNull(clientDisconnectError)
     }
 
     @Test
     fun test_gameClient_server_disconnect() {
-        assertTrue(client.isConnected)
+        assertTrue(client.isConnected())
         toClientStream.close()
         awaitGameEvent()
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
         assertTrue(clientDisconnectError is EOFException)
     }
 
@@ -178,7 +178,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageRequestPlayer(3, "hello"), messages[0])
@@ -194,7 +194,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageRequestHint(2), messages[0])
@@ -206,7 +206,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageStartGame(), messages[0])
@@ -218,7 +218,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageRevokePlayer(1), messages[0])
@@ -230,7 +230,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageChat(0, "Hey hey"), messages[0])
@@ -243,7 +243,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageSetStone(1, 2, Orientation.Default, 4, 3), messages[0])
@@ -255,7 +255,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageRequestUndo(), messages[0])
@@ -267,7 +267,7 @@ class GameClientTest {
         client.disconnect()
         serverThread.join(2000)
         assertTrue(serverThread.error is EOFException)
-        assertFalse(client.isConnected)
+        assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
         assertEquals(MessageRequestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 }), messages[0])

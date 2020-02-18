@@ -41,11 +41,13 @@ class ConnectTask extends AsyncTask<String,Void,Exception> implements OnCancelLi
 	@Override
 	protected Exception doInBackground(String... params) {
 		try {
-			final String name = params[0] == null ? "(null)" : params[0];
+			// hostname may be null for "localhost"
+			final String hostname = params[0];
+			final String name = hostname == null ? "(null)" : hostname;
 			Crashlytics.log(Log.INFO, tag, "Connecting to: " + name);
 			Crashlytics.setString("server", name);
 
-			myclient.connect(activity, params[0], GameClient.DEFAULT_PORT);
+			myclient.connect(activity, hostname, GameClient.DEFAULT_PORT);
 		} catch (IOException e) {
 			if (isCancelled())
 				return null;

@@ -48,6 +48,8 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     private fun notifyObservers(block: (GameEventObserver) -> Unit) {
         synchronized(observer) {
             var i = 0
+            // the only concurrent operation on the list we support is add, because removeObserver
+            // does not remove items, so this loop is safe
             while (i < observer.size) {
                 val o = observer[i].get()
                 if (o != null) block.invoke(o)
