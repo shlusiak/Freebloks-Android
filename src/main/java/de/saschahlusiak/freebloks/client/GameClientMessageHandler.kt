@@ -157,7 +157,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 notifyObservers { it.serverStatus(message) }
 
                 // compare old and new status to find out who joined and who left
-                lastStatus?.also { lastStatus ->
+                lastStatus?.let { lastStatus ->
                     for (i in 0 until 4) {
                         val wasClient = lastStatus.clientForPlayer[i]
                         val isClient = message.clientForPlayer[i]
