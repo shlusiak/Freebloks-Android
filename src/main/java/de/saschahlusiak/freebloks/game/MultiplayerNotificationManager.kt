@@ -55,8 +55,6 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannels()
         }
-
-        client.addObserver(this)
     }
 
     /**

@@ -82,7 +82,6 @@ import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.model.Intro;
 import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
-import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import io.fabric.sdk.android.Fabric;
@@ -222,9 +221,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		RetainedConfig config = (RetainedConfig) getLastCustomNonConfigurationInstance();
 		if (config != null) {
-			client = config.client;
-			lastStatus = config.lastStatus;
-			view.model.soundPool = config.soundPool;
+			client = viewModel.getClient();
+			lastStatus = viewModel.getLastStatus();
 			view.model.intro = config.intro;
 			connectTask = config.connectTask;
 			if (connectTask != null)
@@ -250,7 +248,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 
 		if (view.model.soundPool == null)
-			view.model.soundPool = new Sounds(getApplicationContext());
+			view.model.soundPool = viewModel.getSounds();
 
 		clientName = prefs.getString("player_name", null);
 		difficulty = prefs.getInt("difficulty", GameConfiguration.DEFAULT_DIFFICULTY);
@@ -261,7 +259,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			/* we just rotated and got *hot* objects */
 			client.addObserver(this);
 			client.addObserver(view);
-			view.setGame(client.game);
+			view.setGameClient(client);
 			newCurrentPlayer(client.game.getCurrentPlayer());
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
@@ -396,7 +394,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.onResume();
 
 		viewModel.reloadPreferences();
-		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", ViewModel.ANIMATIONS_FULL)));
@@ -421,9 +418,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public Object onRetainCustomNonConfigurationInstance() {
 		Log.d(tag, "onRetainNonConfigurationInstance");
 		RetainedConfig config = new RetainedConfig();
-		config.client = client;
-		config.lastStatus = lastStatus;
-		config.soundPool = view.model.soundPool;
 		config.intro = view.model.intro;
 		config.connectTask = connectTask;
 		this.connectTask = null;
@@ -438,7 +432,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		Log.d(tag, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 		outState.putFloat("view_scale", view.getScale());
@@ -449,8 +443,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	private void writeStateToBundle(Bundle outState) {
 		if (client == null)
-			return;
-		if (client.game == null)
 			return;
 		synchronized (client) {
 			Game l = client.game;
@@ -490,7 +482,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			client.game.setStarted(true);
 
-			view.setGame(client.game);
+			view.setGameClient(client);
 			connectTask = new ConnectTask(client, false, () -> {
 				// when resuming, the server does not send a current player message
 				newCurrentPlayer(game.getCurrentPlayer());
@@ -557,7 +549,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		viewModel.setClient(client);
 
-		view.setGame(client.game);
+		view.setGameClient(client);
 
 		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
 			@Override
@@ -612,7 +604,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		board.setAvailableStones(0, 0, 0, 0, 0);
 
 		client = new GameClient(game, config);
-		view.setGame(game);
+		view.setGameClient(client);
 
 		viewModel.setClient(client);
 
@@ -701,7 +693,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean local = false;
-		if (client != null && client.game != null)
+		if (client != null)
 			local = client.game.isLocalPlayer();
 
 		menu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.getClients() <= 1);
@@ -716,7 +708,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		boolean on = true;
 		if (optionsMenu == null)
 			return;
-		if (view != null && view.model != null && view.model.soundPool != null)
+		if (view != null && view.model.soundPool != null)
 			on = view.model.soundPool.isEnabled();
 		optionsMenu.findItem(R.id.sound_toggle_button).setTitle(on ? R.string.sound_on : R.string.sound_off);
 		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
@@ -971,7 +963,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				if (view.model.intro != null)
 					view.model.intro.cancel();
 				else {
-					if (client == null || (client.game != null && client.game.isFinished()))
+					if (client == null || client.game.isFinished())
 						startNewGame();
 					else
 						showDialog(DIALOG_NEW_GAME_CONFIRMATION);
@@ -984,12 +976,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				return true;
 
 			case R.id.sound_toggle_button:
-				Editor editor = prefs.edit();
-				view.model.soundPool.toggle();
-				editor.putBoolean("sounds", view.model.soundPool.isEnabled());
-				editor.apply();
+				boolean enabled = !viewModel.getSoundsEnabled();
+				viewModel.setSoundsEnabled(enabled);
 				updateSoundMenuEntry();
-				Toast.makeText(this, getString(view.model.soundPool.isEnabled() ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(enabled ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 				return true;
 
 			case R.id.hint:
@@ -1045,6 +1035,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	/**
+	 * FIXME: this is called via the game observer, but also via the UI to set the new current player to display
+	 *
+	 * @param player
+	 */
 	@Override
 	public void newCurrentPlayer(final int player) {
 		runOnUiThread(new Runnable() {
@@ -1054,7 +1049,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					return;
 				boolean local = false;
 				int showPlayer = view.model.boardObject.getShowDetailsPlayer();
-				if (client != null && client.game != null)
+				if (client != null)
 					local = client.game.isLocalPlayer(player);
 				else
 					showPlayer = player;
@@ -1137,7 +1132,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	/* we have to store the number of possible turns before and after a stone has been set
 	 * to detect blocking of other players */
-	private int number_of_possible_turns[] = new int[4];
+	private int[] number_of_possible_turns = new int[4];
 
 	@Override
 	public void stoneWillBeSet(@NonNull Turn turn) {
@@ -1393,7 +1388,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			@Override
 			public void run() {
 				lastStatus = null;
-				view.setGame(null);
+				view.setGameClient(null);
 				chatButton.setVisibility(View.INVISIBLE);
 				chatEntries.clear();
 
@@ -1423,32 +1418,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				}
 			}
 		});
-	}
-
-	@Override
-	public boolean commitCurrentStone(@NonNull final Turn turn) {
-		if (client == null)
-			return false;
-
-		if (!client.game.isLocalPlayer())
-			return false;
-		if (!client.game.getBoard().isValidTurn(turn))
-			return false;
-
-		if (view.model.hasAnimations()) {
-			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
-
-			EffectSet set = new EffectSet();
-			set.add(e);
-			set.add(new StoneFadeEffect(view.model, turn, 1.0f));
-			view.model.addEffect(set);
-		}
-
-		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
-		viewModel.vibrate(Global.VIBRATE_SET_STONE);
-
-		client.setStone(turn);
-		return true;
 	}
 
 	@Deprecated

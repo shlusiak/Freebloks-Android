@@ -475,7 +475,7 @@ public class CurrentStone implements ViewElement {
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
 				Turn turn = new Turn(model.game.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), orientation);
-				if (model.activity.commitCurrentStone(turn)) {
+				if (model.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;
 					model.wheel.setCurrentStone(null);

@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.model.Board;
-import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
+import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
@@ -73,15 +73,16 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		renderer.backgroundRenderer.setTheme(theme);
 	}
 
-	public void setGame(final Game game) {
-		if (game != null) {
-			model.setGame(game);
+	public void setGameClient(final GameClient client) {
+		if (client != null) {
+			model.setGameClient(client);
 		}
 
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {
-				if (game != null) {
+				if (client != null) {
+					final Game game = client.game;
 					model.boardObject.last_size = game.getBoard().width;
 					for (int i = 0; i < Board.PLAYER_MAX; i++) if (game.isLocalPlayer(i)) {
 						model.boardObject.centerPlayer = i;

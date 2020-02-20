@@ -15,18 +15,35 @@ import de.saschahlusiak.freebloks.lobby.ChatEntry
 import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.serverMessage
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.view.model.Sounds
 
 class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver {
     private val context = app
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
 
     // UI Thread handler
     private val handler = Handler()
 
+    // services
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+    private var notificationManager: MultiplayerNotificationManager? = null
 
+    // settings
     private var vibrateOnMove: Boolean = false
     private var showNotifications: Boolean = true
 
+    var soundsEnabled
+        get() = sounds.isEnabled
+        set(value) {
+            prefs
+                .edit()
+                .putBoolean("sounds", value)
+                .apply()
+            sounds.isEnabled = value
+            soundsEnabledLiveData.value = value
+        }
+
+    // client data
     var client: GameClient?
         private set
 
@@ -40,10 +57,11 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     val chatHistory = mutableListOf<ChatEntry>()
 
-    private var notificationManager: MultiplayerNotificationManager? = null
+    val sounds = Sounds(app)
 
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
+    val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
 
     init {
         client = null
@@ -55,17 +73,17 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     fun reloadPreferences() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
-
         vibrateOnMove = prefs.getBoolean("vibrate", true)
-
+        sounds.isEnabled = prefs.getBoolean("sounds", true)
         showNotifications = prefs.getBoolean("notifications", true)
 
+        soundsEnabledLiveData.value = sounds.isEnabled
 
         if (showNotifications) {
             client?.let {
                 if (notificationManager == null) {
                     notificationManager = MultiplayerNotificationManager(context, it)
+                    it.addObserver(this)
                 }
             }
         } else {
@@ -80,14 +98,18 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     fun setClient(client: GameClient) {
+        notificationManager?.shutdown()
+        notificationManager = null
+
         this.client = client
         client.addObserver(this)
 
-        notificationManager?.shutdown()
-        notificationManager = if (showNotifications) {
+        if (showNotifications) {
             // registers itself to the game and listens for events
-            MultiplayerNotificationManager(context, client)
-        } else null
+            notificationManager = MultiplayerNotificationManager(context, client).apply {
+                client.addObserver(this)
+            }
+        }
     }
 
     fun onStart() {

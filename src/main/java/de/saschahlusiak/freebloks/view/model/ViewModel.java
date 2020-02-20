@@ -3,20 +3,32 @@ package de.saschahlusiak.freebloks.view.model;
 import java.util.ArrayList;
 
 import android.graphics.PointF;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import de.saschahlusiak.freebloks.Global;
+import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
+import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
+import de.saschahlusiak.freebloks.view.effects.EffectSet;
+import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
+import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 
 /**
  * This model is owned by the {@link Freebloks3DView} and encapsulates 3D objects and renderable effects and sounds.
+ *
+ * TODO: maybe rename to "Scene"?
  */
 public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public final Wheel wheel;
 	public final CurrentStone currentStone;
+	public GameClient client;
 	public Game game;
 	public Board board;
 	public final BoardObject boardObject;
@@ -62,12 +74,15 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		boardObject.resetRotation();
 	}
 
-	public void setGame(Game game) {
-		this.game = game;
-		if (game != null)
+	public void setGameClient(@Nullable GameClient client) {
+		this.client = client;
+		if (client != null) {
+			this.game = client.game;
 			this.board = game.getBoard();
-		else
+		} else {
 			this.board = null;
+			this.game = null;
+		}
 	}
 
 	public boolean handlePointerDown(PointF m) {
@@ -135,6 +150,32 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 			effects.clear();
 		}
 	}
+
+	public boolean commitCurrentStone(@NonNull final Turn turn) {
+		if (client == null)
+			return false;
+
+		if (!client.game.isLocalPlayer())
+			return false;
+		if (!client.game.getBoard().isValidTurn(turn))
+			return false;
+
+		if (view.model.hasAnimations()) {
+			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
+
+			EffectSet set = new EffectSet();
+			set.add(e);
+			set.add(new StoneFadeEffect(view.model, turn, 1.0f));
+			view.model.addEffect(set);
+		}
+
+		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
+		activity.vibrate(Global.VIBRATE_SET_STONE);
+
+		client.setStone(turn);
+		return true;
+	}
+
 
 	public int getPlayerColor(int player) {
 		if (game == null)
