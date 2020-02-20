@@ -47,7 +47,7 @@ class ChatEntry(
 
         @JvmStatic
         fun clientMessage(client: Int, player: Int, text: String, name: String): ChatEntry {
-            return ChatEntry(client, player, text, name)
+            return ChatEntry(client, if (player < 0) null else player, text, name)
         }
 
         @JvmStatic

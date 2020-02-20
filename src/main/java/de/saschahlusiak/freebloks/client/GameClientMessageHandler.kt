@@ -162,9 +162,9 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                         val wasClient = lastStatus.clientForPlayer[i]
                         val isClient = message.clientForPlayer[i]
                         if (wasClient == null && isClient != null) { /* joined */
-                            notifyObservers { it.playerJoined(i, isClient, message) }
+                            notifyObservers { it.playerJoined(message, isClient, i) }
                         } else if (wasClient != null && isClient == null) { /* left */
-                            notifyObservers { it.playerLeft(i, wasClient, lastStatus) }
+                            notifyObservers { it.playerLeft(lastStatus, wasClient, i) }
                         } else continue
                     }
                 }

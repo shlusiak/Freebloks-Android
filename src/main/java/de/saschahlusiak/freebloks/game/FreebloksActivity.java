@@ -1,5 +1,52 @@
 package de.saschahlusiak.freebloks.game;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,38 +55,22 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import android.app.*;
-import android.bluetooth.BluetoothSocket;
-import android.graphics.BitmapFactory;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.UiThread;
-import androidx.annotation.WorkerThread;
-import androidx.lifecycle.ViewModelProviders;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread;
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread;
 import de.saschahlusiak.freebloks.client.GameClient;
-import de.saschahlusiak.freebloks.model.Board;
-import de.saschahlusiak.freebloks.model.GameMode;
-import de.saschahlusiak.freebloks.client.JNIServer;
-import de.saschahlusiak.freebloks.model.PlayerScore;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
-import de.saschahlusiak.freebloks.model.Game;
+import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
+import de.saschahlusiak.freebloks.model.Board;
+import de.saschahlusiak.freebloks.model.Game;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Player;
+import de.saschahlusiak.freebloks.model.PlayerScore;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
@@ -50,46 +81,10 @@ import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
 import de.saschahlusiak.freebloks.view.model.Intro;
+import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import de.saschahlusiak.freebloks.view.model.Sounds;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
-import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.AudioManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.jetbrains.annotations.NotNull;
-
 import io.fabric.sdk.android.Fabric;
 
 public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, OnIntroCompleteListener {
@@ -107,20 +102,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	static final int REQUEST_FINISH_GAME = 1;
 
-	static final int NOTIFICATION_GAME_ID = 1;
-
 	public static final String GAME_STATE_FILE = "gamestate.bin";
 
 	Freebloks3DView view;
 	private GameClient client = null;
-	private boolean show_notifications;
 	private boolean undo_with_back;
 	private boolean hasActionBar;
 	private MessageServerStatus lastStatus;
 	private Menu optionsMenu;
 	private ViewGroup statusView;
-	private NotificationManager notificationManager;
-	private Notification multiplayerNotification;
 
 	private FreebloksActivityViewModel viewModel;
 
@@ -202,7 +192,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		setContentView(R.layout.main_3d);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
-		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		viewModel = ViewModelProviders.of(this).get(FreebloksActivityViewModel.class);
 
@@ -356,8 +345,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	protected void onDestroy() {
 		Log.d(tag, "onDestroy");
-		notificationManager.cancelAll();
-		notificationManager.cancel(NOTIFICATION_GAME_ID);
 
 		if (connectTask != null) try {
 			connectTask.cancel(true);
@@ -393,11 +380,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	protected void onStop() {
-		if (!isFinishing() && client != null && client.isConnected()) {
-			if ((lastStatus != null && lastStatus.getClients() > 1) ||
-				(!client.game.isStarted()))
-				updateMultiplayerNotification(true, null);
-		}
+		viewModel.onStop();
 		view.onPause();
 		Editor editor = prefs.edit();
 		editor.putFloat("view_scale", view.getScale());
@@ -412,12 +395,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		super.onStart();
 		view.onResume();
 
-		notificationManager.cancel(NOTIFICATION_GAME_ID);
-		multiplayerNotification = null;
-
 		viewModel.reloadPreferences();
 		view.model.soundPool.setEnabled(prefs.getBoolean("sounds", true));
-		show_notifications = prefs.getBoolean("notifications", true);
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", ViewModel.ANIMATIONS_FULL)));
@@ -429,6 +408,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			clientName = null;
 		Theme t = Theme.get(this, prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
+
+		viewModel.onStart();
 
 		updateSoundMenuEntry();
 		/* update wheel in case showOpponents has changed */
@@ -505,6 +486,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			client.addObserver(this);
 			client.addObserver(view);
 
+			viewModel.setClient(client);
+
 			client.game.setStarted(true);
 
 			view.setGame(client.game);
@@ -572,6 +555,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		client.addObserver(this);
 		client.addObserver(view);
 
+		viewModel.setClient(client);
+
 		view.setGame(client.game);
 
 		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
@@ -628,6 +613,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		client = new GameClient(game, config);
 		view.setGame(game);
+
+		viewModel.setClient(client);
 
 		client.addObserver(this);
 		client.addObserver(view);
@@ -1065,8 +1052,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			public void run() {
 				if (view == null)
 					return;
-				if (multiplayerNotification != null)
-					updateMultiplayerNotification(false, null);
 				boolean local = false;
 				int showPlayer = view.model.boardObject.getShowDetailsPlayer();
 				if (client != null && client.game != null)
@@ -1260,16 +1245,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (client == null || client.game == null)
+				if (client == null)
 					return;
-				updateMultiplayerNotification(false, null);
 				PlayerScore[] data = client.game.getPlayerScores();
 				new AddScoreTask(getApplicationContext(), client.game.getGameMode()).execute(data);
-
-				if (client.game == null) {
-					Crashlytics.logException(new IllegalStateException("gameFinished, but no game running"));
-					return;
-				}
 
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable) client.game);
@@ -1281,16 +1260,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void chatReceived(MessageServerStatus status, int client, int player, @NonNull final String message) {
+	public void chatReceived(@NonNull MessageServerStatus status, int client, int player, @NonNull final String message) {
 		String name = lastStatus.getClientName(getResources(), client);
 
 		// TODO: use ViewModel once available
 
 		final ChatEntry e = ChatEntry.clientMessage(client, player, message, name);
-
-		if (!this.client.game.isLocalPlayer(player) &&
-			(this.client.game.isStarted() || multiplayerNotification != null))
-			updateMultiplayerNotification(true, e.toString());
 
 		runOnUiThread(new Runnable() {
 			@Override
@@ -1314,12 +1289,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void playerJoined(int player, int client, @NotNull MessageServerStatus serverStatus) {
+	public void playerJoined(@NotNull MessageServerStatus status, int client, int player) {
 
 	}
 
 	@Override
-	public void playerLeft(int player, int client, @NotNull MessageServerStatus serverStatus) {
+	public void playerLeft(@NotNull MessageServerStatus status, int client, int player) {
 
 	}
 
@@ -1383,9 +1358,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]);
 				final ChatEntry e = ChatEntry.serverMessage(i, text, name);
-
-				if (!view.model.game.isLocalPlayer(i))
-					updateMultiplayerNotification(tid == R.string.player_left_color && client.game.isStarted(), text);
 
 				runOnUiThread(new Runnable() {
 					@Override
@@ -1514,137 +1486,21 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	public void showPlayer(int player) {
 		if (client == null)
 			return;
-		if (client.game == null)
-			return;
 		newCurrentPlayer(client.game.getCurrentPlayer());
 	}
 
-	String getPlayerName(int player) {
+	private String getPlayerName(int player) {
 		String color_name = getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(player)];
 		/* this will ensure that always the local name is used, even though the server
 		 * might still have stored an old or no name at all
 		 *
 		 * When resuming a game, the name is lost and never set again. This is a non issue now.
 		 */
-		if (clientName != null && clientName.length() > 0 && client != null && client.game != null && client.game.isLocalPlayer(player))
+		if (clientName != null && clientName.length() > 0 && client != null && client.game.isLocalPlayer(player))
 			return clientName;
 		if (lastStatus == null)
 			return color_name;
-		return lastStatus.getPlayerName(getResources(), player, view.model.getPlayerColor(player));
-	}
-
-	Notification.Builder notificationBuilder;
-
-	@RequiresApi(api = Build.VERSION_CODES.O)
-	private void createNotificationChannels() {
-		NotificationChannel channel = new NotificationChannel("default", getString(R.string.notification_channel_default), NotificationManager.IMPORTANCE_DEFAULT);
-		channel.enableVibration(true);
-		channel.enableLights(true);
-		notificationManager.createNotificationChannel(channel);
-	}
-
-	void updateMultiplayerNotification(boolean forceShow, String chat) {
-		if (client == null || client.game == null)
-			return;
-		if (!client.isConnected())
-			return;
-		if (multiplayerNotification == null && !forceShow)
-			return;
-		if (!show_notifications)
-			return;
-		if (client == null)
-			return;
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			createNotificationChannels();
-		}
-
-		Intent intent = new Intent(this, FreebloksActivity.class);
-		intent.setAction(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		if (chat != null)
-			intent.putExtra("showChat", true);
-		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		if (notificationBuilder == null) {
-			notificationBuilder = new Notification.Builder(this);
-
-			notificationBuilder.setContentIntent(pendingIntent);
-
-			notificationBuilder.addAction(android.R.drawable.ic_media_play, getString(R.string.notification_continue), pendingIntent);
-
-			intent = new Intent(this, FreebloksActivity.class);
-			intent.setAction(Intent.ACTION_DELETE);
-			intent.addCategory(Intent.CATEGORY_DEFAULT);
-			intent.putExtra("disconnect", true);
-			PendingIntent disconnectIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-			notificationBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.notification_disconnect), disconnectIntent);
-		}
-
-		notificationBuilder.setContentTitle(getString(R.string.app_name))
-			.setOngoing(false)
-			.setDefaults(0)
-			.setTicker(null)
-			.setAutoCancel(true)
-			.setSound(null);
-
-		notificationBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-
-		if ((forceShow && chat == null) || multiplayerNotification != null)
-			notificationBuilder.setOngoing(true);
-
-		if (!client.game.isStarted()) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
-			notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.appicon_small));
-			notificationBuilder.setContentText(getString(R.string.lobby_waiting_for_players));
-			notificationBuilder.setTicker(getString(R.string.lobby_waiting_for_players));
-		} else if (client.game.isFinished()) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
-			notificationBuilder.setContentText(getString(R.string.game_finished));
-			notificationBuilder.setOngoing(false);
-		} else {
-			if (client.game.getCurrentPlayer() < 0)
-				return;
-			if (client.game.isLocalPlayer()) {
-				notificationBuilder.setSmallIcon(R.drawable.notification_your_turn);
-				notificationBuilder.setContentText(getString(R.string.your_turn, getPlayerName(client.game.getCurrentPlayer())));
-				notificationBuilder.setTicker(getString(R.string.your_turn, getPlayerName(client.game.getCurrentPlayer())));
-
-				if (!forceShow) {
-					notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
-
-					notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
-				}
-			} else {
-				notificationBuilder.setSmallIcon(R.drawable.notification_waiting_small);
-				notificationBuilder.setContentText(getString(R.string.waiting_for_color, getPlayerName(client.game.getCurrentPlayer())));
-				notificationBuilder.setTicker(getString(R.string.waiting_for_color, getPlayerName(client.game.getCurrentPlayer())));
-			}
-		}
-
-		if (chat != null) {
-			notificationBuilder.setSmallIcon(R.drawable.notification_chat);
-			notificationBuilder.setContentText(chat);
-			notificationBuilder.setTicker(chat);
-			notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
-
-			notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
-			notificationBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chat));
-		}
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			notificationBuilder.setChannelId("default");
-		}
-
-		Notification n;
-
-		n = notificationBuilder.build();
-
-		if (chat == null)
-			multiplayerNotification = n;
-
-		notificationManager.notify(NOTIFICATION_GAME_ID, n);
+		return lastStatus.getPlayerName(getResources(), player);
 	}
 
 	@Override

@@ -257,12 +257,12 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	}
 
 	@Override
-	public void playerJoined(int player, int client, @NotNull MessageServerStatus serverStatus) {
+	public void playerJoined(@NotNull MessageServerStatus status, int client, int player) {
 
 	}
 
 	@Override
-	public void playerLeft(int player, int client, @NotNull MessageServerStatus serverStatus) {
+	public void playerLeft(@NotNull MessageServerStatus status, int client, int player) {
 
 	}
 

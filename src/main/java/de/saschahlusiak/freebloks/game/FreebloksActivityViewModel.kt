@@ -24,8 +24,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
 
-    var vibrateOnMove: Boolean = false
-        private set
+    private var vibrateOnMove: Boolean = false
+    private var showNotifications: Boolean = true
 
     var client: GameClient?
         private set
@@ -39,6 +39,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val board get() = client?.game?.board
 
     val chatHistory = mutableListOf<ChatEntry>()
+
+    private var notificationManager: MultiplayerNotificationManager? = null
 
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
@@ -56,6 +58,20 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
 
         vibrateOnMove = prefs.getBoolean("vibrate", true)
+
+        showNotifications = prefs.getBoolean("notifications", true)
+
+
+        if (showNotifications) {
+            client?.let {
+                if (notificationManager == null) {
+                    notificationManager = MultiplayerNotificationManager(context, it)
+                }
+            }
+        } else {
+            notificationManager?.shutdown()
+            notificationManager = null
+        }
     }
 
     fun vibrate(milliseconds: Long) {
@@ -63,10 +79,23 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             vibrator?.vibrate(milliseconds)
     }
 
-    // TODO: call me
     fun setClient(client: GameClient) {
         this.client = client
         client.addObserver(this)
+
+        notificationManager?.shutdown()
+        notificationManager = if (showNotifications) {
+            // registers itself to the game and listens for events
+            MultiplayerNotificationManager(context, client)
+        } else null
+    }
+
+    fun onStart() {
+        notificationManager?.stopBackgroundNotification()
+    }
+
+    fun onStop() {
+        notificationManager?.startBackgroundNotification()
     }
 
     fun disconnectClient() {
@@ -92,12 +121,13 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         chatHistoryAsLiveData.postValue(chatHistory)
     }
 
-    override fun playerJoined(player: Int, client: Int, serverStatus: MessageServerStatus) {
-        val name = serverStatus.getClientName(context.resources, client)
+    override fun playerJoined(status: MessageServerStatus, client: Int, player: Int) {
+        val name = status.getClientName(context.resources, client)
         // the names of colors
         val colorNames = context.resources.getStringArray(R.array.color_names)
         // the index into colorNames
-        val playerColor = Global.getPlayerColor(player, game?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
+        val playerColor = Global.getPlayerColor(player, game?.gameMode
+            ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
         // the name of the player's color
         val colorName = colorNames[playerColor]
 
@@ -108,12 +138,13 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         chatHistoryAsLiveData.postValue(chatHistory)
     }
 
-    override fun playerLeft(player: Int, client: Int, serverStatus: MessageServerStatus) {
-        val name = serverStatus.getClientName(context.resources, client)
+    override fun playerLeft(status: MessageServerStatus, client: Int, player: Int) {
+        val name = status.getClientName(context.resources, client)
         // the names of colors
         val colorNames = context.resources.getStringArray(R.array.color_names)
         // the index into colorNames
-        val playerColor = Global.getPlayerColor(player, game?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
+        val playerColor = Global.getPlayerColor(player, game?.gameMode
+            ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
         // the name of the player's color
         val colorName = colorNames[playerColor]
 
@@ -128,6 +159,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         lastStatus = null
         chatHistory.clear()
     }
-    //endregion
 
+    //endregion
 }

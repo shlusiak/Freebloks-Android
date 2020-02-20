@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.network.message
 
 import android.content.res.Resources
+import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
@@ -68,12 +69,6 @@ data class MessageServerStatus(
         return this.version >= version
     }
 
-    fun getClientName(resources: Resources?, client: Int): String {
-        val default = resources?.getString(R.string.client_d, client + 1) ?: "Client $client"
-        if (client < 0) return default
-        return clientNames[client] ?: default
-    }
-
     // TODO: make this nullable
     fun getClient(player: Int) = clientForPlayer[player] ?: -1
 
@@ -81,9 +76,28 @@ data class MessageServerStatus(
 
     fun isComputer(player: Int) = !isClient(player)
 
-    fun getPlayerName(resources: Resources, player: Int, color: Int): String {
-        if (player < 0) throw InvalidParameterException()
-        val colorName = resources.getStringArray(R.array.color_names)[color]
+    /**
+     * @return The name of the client or something like "Client 1" if unset
+     */
+    fun getClientName(resources: Resources?, client: Int): String {
+        val default = resources?.getString(R.string.client_d, client + 1) ?: "Client $client"
+        if (client < 0) return default
+        return clientNames[client] ?: default
+    }
+
+    /**
+     * @return the name of the color this player is playing, e.g. "Blue" or "Orange", depending on the game mode
+     */
+    fun getColorName(resources: Resources, player: Int): String {
+        val color = Global.getPlayerColor(player, gameMode)
+        return resources.getStringArray(R.array.color_names)[color]
+    }
+
+    /**
+     * @return the name of the player or the name of the color if unset
+     */
+    fun getPlayerName(resources: Resources, player: Int): String {
+        val colorName = getColorName(resources, player)
         val client = clientForPlayer[player] ?: return colorName
         return clientNames[client] ?: colorName
     }

@@ -113,7 +113,7 @@ public class GameFinishActivity extends BaseGameActivity {
 			else if (lastStatus == null)
 				name = getResources().getStringArray(R.array.color_names)[color];
 			else
-				name = lastStatus.getPlayerName(getResources(), data[i].getColor1(), color);
+				name = lastStatus.getPlayerName(getResources(), data[i].getColor1());
 
 			String s;
 			((TextView)t[i].findViewById(R.id.name)).setText(name);
