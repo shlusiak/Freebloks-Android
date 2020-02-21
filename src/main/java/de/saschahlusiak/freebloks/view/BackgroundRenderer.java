@@ -103,7 +103,7 @@ public class BackgroundRenderer extends SimpleModel {
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
 			bindBuffers(gl);
 
-			drawElements(gl);
+			drawElements(gl, GL10.GL_TRIANGLES);
 
 			gl.glDisable(GL10.GL_TEXTURE_2D);
 		}

@@ -183,10 +183,10 @@ public class BoardRenderer {
 	}
 
 	void updateTexture(Context context, GL11 gl) {
-		stone.invalidate(gl);
-		field.invalidate(gl);
-		border.invalidate(gl);
-		shadow.invalidate(gl);
+		stone.invalidateBuffers(gl);
+		field.invalidateBuffers(gl);
+		border.invalidateBuffers(gl);
+		shadow.invalidateBuffers(gl);
 
 		texture = new int[2];
 
@@ -243,7 +243,7 @@ public class BoardRenderer {
 	    				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, board_diffuse_normal, 0);
 	    		}
 
-	    		field.drawElements(gl);
+	    		field.drawElements(gl, GL10.GL_TRIANGLES);
 
 	    	    gl.glMatrixMode(GL10.GL_TEXTURE);
 	    		gl.glTranslatef(stone_size * 2.0f, 0, 0);
@@ -268,7 +268,7 @@ public class BoardRenderer {
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 
 	    for (int i = 0; i < 4; i++) {
-	    	border.drawElements(gl);
+	    	border.drawElements(gl, GL10.GL_TRIANGLES);
 	    	gl.glRotatef(90, 0, 1, 0);
 	    }
 
@@ -288,7 +288,7 @@ public class BoardRenderer {
 
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, tmp, 0);
 
-	    stone.drawElements(gl);
+	    stone.drawElements(gl, GL10.GL_TRIANGLES);
 	}
 
 	public final void renderStone(GL11 gl, float[] color) {
@@ -297,7 +297,7 @@ public class BoardRenderer {
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, stone_shininess, 0);
 
 		stone.bindBuffers(gl);
-	    stone.drawElements(gl);
+	    stone.drawElements(gl, GL10.GL_TRIANGLES);
 	}
 
 	final float tmp[] = new float[4];
@@ -325,7 +325,7 @@ public class BoardRenderer {
 			int j;
 			for (j = 0; j < stone.getSize(); j++) {
 				if (stone.isStone(j, i, orientation))
-					shadow.drawElements(gl);
+					shadow.drawElements(gl, GL10.GL_TRIANGLES);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);
@@ -391,7 +391,7 @@ public class BoardRenderer {
 			int j;
 			for (j = 0; j < stone.getSize(); j++) {
 				if (stone.isStone(j, i, orientation))
-					this.stone.drawElements(gl);
+					this.stone.drawElements(gl, GL10.GL_TRIANGLES);
 				gl.glTranslatef(stone_size * 2.0f, 0, 0);
 			}
 			gl.glTranslatef(-j*stone_size * 2.0f, 0, stone_size * 2.0f);

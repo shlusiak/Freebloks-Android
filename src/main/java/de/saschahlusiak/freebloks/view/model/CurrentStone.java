@@ -177,7 +177,7 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.FLIPPING_VERTICAL)
 			gl.glRotatef(rotate_angle, 1, 0, 0);
 	    gl.glScalef(1.0f, 0.01f, 1.0f);
-	    overlay.drawElements(gl);
+	    overlay.drawElements(gl, GL10.GL_TRIANGLES);
 	    gl.glPopMatrix();
 
 		/* OVERLAY */
@@ -191,7 +191,7 @@ public class CurrentStone implements ViewElement {
 			gl.glRotatef(rotate_angle, 1, 0, 0);
 
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, isValid ? texture[0] : texture[1]);
-	    overlay.drawElements(gl);
+	    overlay.drawElements(gl, GL10.GL_TRIANGLES);
 
 
 	    gl.glEnable(GL10.GL_CULL_FACE);
