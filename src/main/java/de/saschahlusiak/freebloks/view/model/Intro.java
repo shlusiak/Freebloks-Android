@@ -15,7 +15,7 @@ import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
-import de.saschahlusiak.freebloks.view.effects.PhysicalStoneEffect;
+import de.saschahlusiak.freebloks.view.effects.PhysicalShapeEffect;
 import android.graphics.PointF;
 import android.opengl.GLU;
 
@@ -38,7 +38,7 @@ public class Intro implements ViewElement {
 	OnIntroCompleteListener listener;
 
 	float anim = 0.0f;
-	final ArrayList<PhysicalStoneEffect> effects = new ArrayList<>();
+	final ArrayList<PhysicalShapeEffect> effects = new ArrayList<>();
 	int phase = 0;
 	boolean field_up = false;
 	float field_anim = 0.0f;
@@ -279,7 +279,7 @@ public class Intro implements ViewElement {
 		/* CPhysicalStone erstellen, aus stones[stone] */
 		OrientedShape st = stones[stone];
 		Shape shape = st.getShape();
-		PhysicalStoneEffect s = new PhysicalStoneEffect(model, shape, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.getOrientation());
+		PhysicalShapeEffect s = new PhysicalShapeEffect(model, shape, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.getOrientation());
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
 		x=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
@@ -288,7 +288,7 @@ public class Intro implements ViewElement {
 		y=22.0f+(float)(Math.random() * 18.0f);
 
 		/* Der Stein wird in <time> sek den Boden erreichen. */
-		float time=(float)Math.sqrt(2.0f*y/PhysicalStoneEffect.GRAVITY);
+		float time=(float)Math.sqrt(2.0f*y/ PhysicalShapeEffect.gravity);
 		/* x/z Koordinaten zufaellig verschieben */
 		float xoffs=(float)Math.random()*60.0f - 30.0f;
 		float zoffs=(float)Math.random()*60.0f - 30.0f;
@@ -297,7 +297,7 @@ public class Intro implements ViewElement {
 		/* x/z Geschwindigkeit setzen, y Geschw. ist 0 */
 		s.setSpeed(-xoffs/time,0,-zoffs/time);
 		/* Gewuenschtes Ziel in Stein speichern */
-		s.setDestination(x,0,z);
+		s.setTarget(x,0,z);
 		/* Stein dreht sich exakt um 360 Grad in <time> sek. */
 		s.setRotationSpeed(360.0f/time, axe_x, axe_y, axe_z);
 		/* Effekt der verketteten Liste hinzufuegen. */
@@ -404,13 +404,13 @@ public class Intro implements ViewElement {
 		field_up = true;
 		field_anim = 0.0f;
 		/* Komplette verkettete Liste durchgehen und fuer jeden enthaltenen CPhysicalStone...*/
-		for (PhysicalStoneEffect e: effects) {
+		for (PhysicalShapeEffect e: effects) {
 			/* ...Geschwindigkeit setzen, dass die Steine tangential zur Drehung des
 			   Felds wegfliegen */
 			/* Winkel, in dem die Steine beschleunigt werden */
 			final float ANG = WIPE_ANGLE / 180.0f * (float)Math.PI;
 			/* Radialgeschwindigkeit errechnen. */
-			final float v = (ANG*WIPE_SPEED)*(e.getZ()-20*BoardRenderer.stone_size)-(float)(Math.random() * 10.0 - 8.0);
+			final float v = (ANG*WIPE_SPEED)*(e.getCurrentZ()-20*BoardRenderer.stone_size)-(float)(Math.random() * 10.0 - 8.0);
 			/* Stein nur leicht rotieren lassen, und nicht ganz zufaellig */
 			final float a1=0.95f;
 			final float a2=(float)((Math.random() < 0.5 ? 1 : -1)*Math.sqrt((1.0-a1*a1)/2.0));

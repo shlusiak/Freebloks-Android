@@ -17,8 +17,8 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
-import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
-import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
+import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect;
+import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
 
 /**
  * This model is owned by the {@link Freebloks3DView} and encapsulates 3D objects and renderable effects and sounds.
@@ -26,6 +26,7 @@ import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
  * TODO: maybe rename to "Scene"?
  */
 public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
+	public final Freebloks3DView view;
 	public final Wheel wheel;
 	public final CurrentStone currentStone;
 	public GameClient client;
@@ -33,7 +34,6 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public Board board;
 	public final BoardObject boardObject;
 	public ActivityInterface activity;
-	public final Freebloks3DView view;
 	public final ArrayList<Effect> effects;
 	public Intro intro;
 	public Sounds soundPool;
@@ -43,7 +43,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public boolean immersiveMode = true;
 	public boolean vertical_layout = true;
 	boolean redraw;
-	
+
 	public final static int ANIMATIONS_FULL = 0;
 	public final static int ANIMATIONS_HALF = 1;
 	public final static int ANIMATIONS_OFF = 2;
@@ -64,7 +64,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		add(wheel);
 		add(boardObject);
 	}
-	
+
 	public boolean hasAnimations() {
 		return showAnimations != ANIMATIONS_OFF;
 	}
@@ -85,7 +85,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		}
 	}
 
-	public boolean handlePointerDown(PointF m) {
+	@Override
+	public boolean handlePointerDown(@NonNull PointF m) {
 		redraw = false;
 		if (intro != null) {
 			redraw = intro.handlePointerDown(m);
@@ -97,7 +98,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		return redraw;
 	}
 
-	public boolean handlePointerMove(PointF m) {
+	@Override
+	public boolean handlePointerMove(@NonNull PointF m) {
 		redraw = false;
 		for (int i = 0; i < size(); i++)
 			if (get(i).handlePointerMove(m))
@@ -105,7 +107,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		return redraw;
 	}
 
-	public boolean handlePointerUp(PointF m) {
+	@Override
+	public boolean handlePointerUp(@NonNull PointF m) {
 		redraw = false;
 		for (int i = 0; i < size(); i++)
 			if (get(i).handlePointerUp(m))
@@ -160,16 +163,14 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		if (!client.game.getBoard().isValidTurn(turn))
 			return false;
 
-		if (view.model.hasAnimations()) {
-			StoneRollEffect e = new StoneRollEffect(view.model, turn, view.model.currentStone.hover_height_high, -15.0f);
-
+		if (hasAnimations()) {
 			EffectSet set = new EffectSet();
-			set.add(e);
-			set.add(new StoneFadeEffect(view.model, turn, 1.0f));
-			view.model.addEffect(set);
+			set.add(new ShapeRollEffect(this, turn, currentStone.hover_height_high, -15.0f));
+			set.add(new ShapeFadeEffect(this, turn, 1.0f));
+			addEffect(set);
 		}
 
-		view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
+		soundPool.play(soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
 		activity.vibrate(Global.VIBRATE_SET_STONE);
 
 		client.setStone(turn);

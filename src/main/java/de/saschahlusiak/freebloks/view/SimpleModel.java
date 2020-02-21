@@ -9,13 +9,13 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class SimpleModel {
-	int num_triangles;
+	private int num_triangles;
 
     private ShortBuffer _indexBuffer;
     private FloatBuffer _vertexBuffer;
 
-	boolean useVBO;
-	int vbo[];
+	private boolean useVBO;
+	private int vbo[];
 
     public SimpleModel(int num_vertices, int num_triangles, boolean useVBO) {
     	this.num_triangles = num_triangles;

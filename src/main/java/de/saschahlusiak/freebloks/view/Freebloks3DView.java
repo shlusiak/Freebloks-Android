@@ -21,9 +21,9 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
-import de.saschahlusiak.freebloks.view.effects.StoneFadeEffect;
-import de.saschahlusiak.freebloks.view.effects.StoneRollEffect;
-import de.saschahlusiak.freebloks.view.effects.StoneUndoEffect;
+import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect;
+import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
+import de.saschahlusiak.freebloks.view.effects.ShapeUndoEffect;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 
@@ -189,11 +189,11 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 					return;
 
 				if (model.hasAnimations() && !model.game.isLocalPlayer(turn.getPlayer())) {
-					StoneRollEffect e = new StoneRollEffect(model, turn, 4.0f, -7.0f);
+					ShapeRollEffect e = new ShapeRollEffect(model, turn, 4.0f, -7.0f);
 
 					EffectSet set = new EffectSet();
 					set.add(e);
-					set.add(new StoneFadeEffect(model, turn, 2.0f));
+					set.add(new ShapeFadeEffect(model, turn, 2.0f));
 					model.addEffect(set);
 				}
 			}
@@ -283,7 +283,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	@Override
 	public void stoneUndone(@NonNull Turn t) {
 		if (model.hasAnimations()) {
-			Effect e = new StoneUndoEffect(model, t);
+			Effect e = new ShapeUndoEffect(model, t);
 			model.addEffect(e);
 		}
 		model.currentStone.stopDragging();
