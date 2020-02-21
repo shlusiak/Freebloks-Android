@@ -6,15 +6,15 @@ import android.content.Context;
 import android.database.Cursor;
 
 public class HighscoreDB extends FreebloksDB {
-	public static final String TABLE = "highscores";
+	private static final String TABLE = "highscores";
 
-	public static final String HIGHSCORE_ID = "_id";				/* 0 */
-	public static final String GAME_MODE_ID = "gamemode";			/* 1 */
-	public static final String POINTS_ID = "points";				/* 2 */
-	public static final String STONES_LEFT_ID = "stonesleft";		/* 3 */
-	public static final String PLAYER_COLOR_ID = "playercolor";		/* 4 */
-	public static final String PLACE_ID = "place";					/* 5 */
-	public static final String FLAGS_ID = "flags";					/* 6 */
+	private static final String HIGHSCORE_ID = "_id";				/* 0 */
+	private static final String GAME_MODE_ID = "gamemode";			/* 1 */
+	private static final String POINTS_ID = "points";				/* 2 */
+	private static final String STONES_LEFT_ID = "stonesleft";		/* 3 */
+	private static final String PLAYER_COLOR_ID = "playercolor";		/* 4 */
+	private static final String PLACE_ID = "place";					/* 5 */
+	private static final String FLAGS_ID = "flags";					/* 6 */
 
 	public static final int FLAG_IS_PERFECT = 0x01;
 

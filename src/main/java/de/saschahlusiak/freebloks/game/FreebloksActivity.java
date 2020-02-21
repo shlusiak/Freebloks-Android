@@ -1239,8 +1239,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			public void run() {
 				if (client == null)
 					return;
-				PlayerScore[] data = client.game.getPlayerScores();
-				new AddScoreTask(getApplicationContext(), client.game.getGameMode()).execute(data);
+				final PlayerScore[] data = client.game.getPlayerScores();
+
+				new AddScoreTask(getApplicationContext(), client.game.getGameMode(), data).start();
 
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable) client.game);
