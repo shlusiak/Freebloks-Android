@@ -12,10 +12,13 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.lobby.ChatEntry
+import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.genericMessage
 import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.serverMessage
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.view.model.Sounds
+import java.net.NetworkInterface
+import java.net.SocketException
 
 class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver {
     private val context = app
@@ -124,6 +127,28 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     fun disconnectClient() {
         client?.disconnect()
         client = null
+    }
+
+    fun appendServerInterfacesToChat() {
+        try {
+            for (i in NetworkInterface.getNetworkInterfaces()) {
+                for (address in i.inetAddresses) {
+                    if (address.isAnyLocalAddress) continue
+                    if (address.isLinkLocalAddress) continue
+                    if (address.isLoopbackAddress) continue
+                    if (address.isMulticastAddress) continue
+                    var a = address.hostAddress
+                    if (a.contains("%")) a = a.substring(0, a.indexOf("%"))
+
+                    val e = genericMessage(String.format("[%s]", a))
+                    chatHistory.add(e)
+                }
+            }
+        } catch (e: SocketException) {
+            e.printStackTrace()
+        }
+
+        chatHistoryAsLiveData.postValue(chatHistory)
     }
 
     //region GameEventObserver callbacks

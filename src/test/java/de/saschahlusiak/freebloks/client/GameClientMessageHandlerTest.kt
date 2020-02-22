@@ -15,13 +15,18 @@ class GameClientMessageHandlerTest {
     private lateinit var game: Game
     private lateinit var handler: GameClientMessageHandler
 
-    private fun serverStatus(size: Int = Board.DEFAULT_BOARD_SIZE, gameMode: GameMode = GAMEMODE_4_COLORS_4_PLAYERS): MessageServerStatus {
+    private fun serverStatus(
+        size: Int = Board.DEFAULT_BOARD_SIZE,
+        gameMode: GameMode = GAMEMODE_4_COLORS_4_PLAYERS,
+        clientForPlayer: Array<Int?> = arrayOfNulls(4),
+        clientNames: Array<String?> = arrayOfNulls(8)
+    ): MessageServerStatus {
         return MessageServerStatus(
             0, 4, 0,
             size, size,
             gameMode,
-            arrayOfNulls(4),
-            arrayOfNulls(8),
+            clientForPlayer,
+            clientNames,
             stoneNumbers = IntArray(21) { 1 }
         )
     }
@@ -207,6 +212,57 @@ class GameClientMessageHandlerTest {
         val (client, message) = receivedMessage ?: throw java.lang.IllegalStateException("message not received")
         assertEquals(3, client)
         assertEquals("hello", message)
+    }
+
+
+    @Test
+    fun test_onPlayer_joined_left() {
+        data class Joined(val client: Int, val player: Int, val name: String?)
+        data class Left(val client: Int, val player: Int, val name: String?)
+        val events = mutableListOf<Any>()
+
+        val observer = object : GameEventObserver {
+            override fun playerJoined(client: Int, player: Int, name: String?) {
+                events.add(Joined(client, player, name))
+            }
+
+            override fun playerLeft(client: Int, player: Int, name: String?) {
+                events.add(Left(client, player, name))
+            }
+        }
+
+        handler.addObserver(observer)
+
+        handler.handleMessage(serverStatus(
+            clientForPlayer = arrayOf(null, 2, null, null),
+            clientNames = arrayOf(null, null, null, null, null, null, null, null)
+        ))
+
+        handler.handleMessage(serverStatus(
+            clientForPlayer = arrayOf(null, 2, 3, null),
+            clientNames = arrayOf(null, null, "Paul", "Peter", null, null, null, null)
+        ))
+
+        handler.handleMessage(serverStatus(
+            clientForPlayer = arrayOf(null, 2, 3, 1),
+            clientNames = arrayOf(null, null, "Paul", "Peter", null, null, null, null)
+        ))
+
+        handler.handleMessage(serverStatus(
+            clientForPlayer = arrayOf(null, null, 3, 1),
+            clientNames = arrayOf(null, null, null, "Peter", null, null, null, null)
+        ))
+
+        handler.handleMessages(serverStatus())
+
+        assertEquals(listOf(
+            Joined(2, 1, null),
+            Joined(3, 2, "Peter"),
+            Joined(1, 3, null),
+            Left(2, 1, "Paul"),
+            Left(3, 2, "Peter"),
+            Left(1, 3, null)
+        ), events)
     }
 
     @Test

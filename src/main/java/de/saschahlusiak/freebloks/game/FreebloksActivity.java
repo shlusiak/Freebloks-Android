@@ -87,8 +87,6 @@ import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import io.fabric.sdk.android.Fabric;
 
-import static de.saschahlusiak.freebloks.lobby.ChatEntry.genericMessage;
-
 public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
@@ -562,33 +560,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			@Override
 			public void run() {
 				if (config.getServer() == null && config.getShowLobby()) {
-					// TODO: move this somewhere else; adding of IP addresses to the chat history on lobby create
-					try {
-						final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-						int n = 0;
-						if (interfaces != null) while (interfaces.hasMoreElements()) {
-							NetworkInterface i = interfaces.nextElement();
-							Enumeration<InetAddress> addresses = i.getInetAddresses();
-							while (addresses.hasMoreElements()) {
-								InetAddress addr = addresses.nextElement();
-
-								if (addr.isAnyLocalAddress()) continue;
-								if (addr.isLinkLocalAddress()) continue;
-								if (addr.isLoopbackAddress()) continue;
-								if (addr.isMulticastAddress()) continue;
-
-								String a = addr.getHostAddress();
-								if (a.contains("%")) a = a.substring(0, a.indexOf("%"));
-								ChatEntry.genericMessage(String.format("[%s]", a));
-
-								n++;
-							}
-						}
-
-						if (n == 0) throw new SocketException("no address found");
-					} catch (SocketException e) {
-						e.printStackTrace();
-					}
+					viewModel.appendServerInterfacesToChat();
 				}
 
 				if (config.getRequestPlayers() == null)
