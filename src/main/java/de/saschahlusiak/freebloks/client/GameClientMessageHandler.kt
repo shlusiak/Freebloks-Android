@@ -22,7 +22,8 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     /**
      * This is to be able to compare when players join or leave the game
      */
-    private var lastStatus: MessageServerStatus? = null
+    var lastStatus: MessageServerStatus? = null
+        private set
 
     /**
      * Adds the given [GameEventObserver]. Note that it will be stored as a WeakReference.
@@ -154,22 +155,28 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                     else -> {}
                 }
 
+                val prevStatus = lastStatus
+                lastStatus = message
+
                 notifyObservers { it.serverStatus(message) }
 
                 // compare old and new status to find out who joined and who left
-                lastStatus?.let { lastStatus ->
-                    for (i in 0 until 4) {
-                        val wasClient = lastStatus.clientForPlayer[i]
-                        val isClient = message.clientForPlayer[i]
-                        if (wasClient == null && isClient != null) { /* joined */
-                            notifyObservers { it.playerJoined(message, isClient, i) }
-                        } else if (wasClient != null && isClient == null) { /* left */
-                            notifyObservers { it.playerLeft(lastStatus, wasClient, i) }
+                prevStatus?.let { prevStatus ->
+                    for (player in 0 until 4) {
+                        val wasClient = prevStatus.clientForPlayer[player]
+                        val isClient = message.clientForPlayer[player]
+
+                        if (wasClient == null && isClient != null) {
+                            /* joined */
+                            val name = message.getClientName(isClient)
+                            notifyObservers { it.playerJoined(isClient, player, name) }
+                        } else if (wasClient != null && isClient == null) {
+                            /* left */
+                            val name = prevStatus.getClientName(wasClient)
+                            notifyObservers { it.playerLeft(wasClient, player, name) }
                         } else continue
                     }
                 }
-
-                lastStatus = message
             }
 
             is MessageChat -> {

@@ -1,5 +1,9 @@
 package de.saschahlusiak.freebloks;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
 import de.saschahlusiak.freebloks.model.GameMode;
 
 public class Global {
@@ -79,6 +83,20 @@ public class Global {
 				return 6;
 		}
 		return player + 1;
+	}
+
+	/**
+	 * Returns the name of the color of the given player for the given game mode, e.g. "Blue" or "Orange".
+	 *
+	 * @param context context
+	 * @param player player number
+	 * @param gameMode game mode
+	 *
+	 * @return the name of the color, e.g. "Blue"
+	 */
+	public static @NonNull String getColorName(@NonNull Context context, int player, GameMode gameMode) {
+		int color = getPlayerColor(player, gameMode);
+		return context.getResources().getStringArray(R.array.color_names)[color];
 	}
 
 	static {

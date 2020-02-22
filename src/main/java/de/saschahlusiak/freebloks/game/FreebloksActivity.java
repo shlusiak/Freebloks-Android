@@ -53,7 +53,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
@@ -82,6 +86,8 @@ import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
 import de.saschahlusiak.freebloks.view.model.Theme;
 import de.saschahlusiak.freebloks.view.model.ViewModel;
 import io.fabric.sdk.android.Fabric;
+
+import static de.saschahlusiak.freebloks.lobby.ChatEntry.genericMessage;
 
 public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
@@ -555,6 +561,36 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
 			@Override
 			public void run() {
+				if (config.getServer() == null && config.getShowLobby()) {
+					// TODO: move this somewhere else; adding of IP addresses to the chat history on lobby create
+					try {
+						final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+						int n = 0;
+						if (interfaces != null) while (interfaces.hasMoreElements()) {
+							NetworkInterface i = interfaces.nextElement();
+							Enumeration<InetAddress> addresses = i.getInetAddresses();
+							while (addresses.hasMoreElements()) {
+								InetAddress addr = addresses.nextElement();
+
+								if (addr.isAnyLocalAddress()) continue;
+								if (addr.isLinkLocalAddress()) continue;
+								if (addr.isLoopbackAddress()) continue;
+								if (addr.isMulticastAddress()) continue;
+
+								String a = addr.getHostAddress();
+								if (a.contains("%")) a = a.substring(0, a.indexOf("%"));
+								ChatEntry.genericMessage(String.format("[%s]", a));
+
+								n++;
+							}
+						}
+
+						if (n == 0) throw new SocketException("no address found");
+					} catch (SocketException e) {
+						e.printStackTrace();
+					}
+				}
+
 				if (config.getRequestPlayers() == null)
 					client.requestPlayer(-1, clientName);
 				else {
@@ -887,9 +923,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		switch (id) {
 			case DIALOG_LOBBY:
 				if (client != null) {
-					((LobbyDialog) dialog).setGameClient(client);
-					if (lastStatus != null)
-						((LobbyDialog) dialog).serverStatus(lastStatus);
+
 					dialog.setOnCancelListener(new OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface arg0) {
@@ -902,11 +936,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 							}
 						}
 					});
-					if (client.game.isStarted()) {
-						dialog.setCanceledOnTouchOutside(true);
-					} else {
-						dialog.setCanceledOnTouchOutside(false);
-					}
 				} else {
 					/* this can happen when the app is saved but purged from memory
 					 * upon resume, the open dialog is reopened but the client connection
@@ -1286,12 +1315,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@Override
-	public void playerJoined(@NotNull MessageServerStatus status, int client, int player) {
+	public void playerJoined(int client, int player, String name) {
 
 	}
 
 	@Override
-	public void playerLeft(@NotNull MessageServerStatus status, int client, int player) {
+	public void playerLeft(int client, int player, String name) {
 
 	}
 
@@ -1461,7 +1490,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	private String getPlayerName(int player) {
-		String color_name = getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(player)];
+		final GameMode gameMode = (client == null) ? GameMode.GAMEMODE_4_COLORS_4_PLAYERS : client.game.getGameMode();
+
+		final String colorName = Global.getColorName(this, player, gameMode);
+
 		/* this will ensure that always the local name is used, even though the server
 		 * might still have stored an old or no name at all
 		 *
@@ -1469,9 +1501,16 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		 */
 		if (clientName != null && clientName.length() > 0 && client != null && client.game.isLocalPlayer(player))
 			return clientName;
+
 		if (lastStatus == null)
-			return color_name;
-		return lastStatus.getPlayerName(getResources(), player);
+			return colorName;
+
+		final String playerName = lastStatus.getPlayerName(player);
+		if (playerName == null) {
+			return colorName;
+		} else {
+			return playerName;
+		}
 	}
 
 	@Override

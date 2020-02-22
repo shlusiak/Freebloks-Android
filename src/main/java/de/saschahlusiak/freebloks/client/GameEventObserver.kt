@@ -37,6 +37,21 @@ interface GameEventObserver {
      */
     fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {}
 
-    fun playerJoined(status: MessageServerStatus, client: Int, player: Int) {}
-    fun playerLeft(status: MessageServerStatus, client: Int, player: Int) {}
+    /**
+     * Player has joined.
+     *
+     * @param client the new client number
+     * @param player the color the player is playing
+     * @param name the name of the client playing this player
+     */
+    fun playerJoined(client: Int, player: Int, name: String?) {}
+
+    /**
+     * Player has left
+     *
+     * @param client the client number that was playing that color
+     * @param player the player the client was playing
+     * @param name the name that client had
+     */
+    fun playerLeft(client: Int, player: Int, name: String?) {}
 }

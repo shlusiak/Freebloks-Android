@@ -108,12 +108,17 @@ public class GameFinishActivity extends BaseGameActivity {
 		for (i = data.length - 1; i >= 0; i--) {
 			String name;
 			int color = Global.getPlayerColor(data[i].getColor1(), game_mode);
+
 			if (clientName != null && data[i].isLocal())
 				name = clientName;
 			else if (lastStatus == null)
 				name = getResources().getStringArray(R.array.color_names)[color];
-			else
-				name = lastStatus.getPlayerName(getResources(), data[i].getColor1());
+			else {
+				name = lastStatus.getPlayerName(data[i].getColor1());
+				if (name == null) {
+					name = Global.getColorName(this, data[i].getColor1(), game_mode);
+				}
+			}
 
 			String s;
 			((TextView)t[i].findViewById(R.id.name)).setText(name);

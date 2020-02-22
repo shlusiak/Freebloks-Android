@@ -177,7 +177,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		return true;
 	}
 
-
+	@Deprecated
 	public int getPlayerColor(int player) {
 		if (game == null)
 			return Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);

@@ -11,7 +11,6 @@ import de.saschahlusiak.freebloks.utils.put
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.io.Serializable
 import java.nio.ByteBuffer
-import java.security.InvalidParameterException
 
 data class MessageServerStatus(
     val player: Int,                // int8
@@ -24,6 +23,7 @@ data class MessageServerStatus(
 // since 1.5, optional
     // a map of player number to client number, or -1 if played by computer
     val clientForPlayer: Array<Int?>,          // int8[4]
+    // names for each client. we don't have names for players, unfortunately.
     val clientNames: Array<String?>, // uint8[8][16]
     // the version of this header
     val version: Int = VERSION_MAX,               // int8
@@ -65,7 +65,11 @@ data class MessageServerStatus(
         stoneNumbers.forEach { buffer.put(it.toByte()) }
     }
 
+    /**
+     * Note, we only support minimum version 3 as of 1.1.6
+     */
     fun isAtLeastVersion(version: Int): Boolean {
+        if (version <= 3) return true
         return this.version >= version
     }
 
@@ -79,6 +83,7 @@ data class MessageServerStatus(
     /**
      * @return The name of the client or something like "Client 1" if unset
      */
+    @Deprecated("")
     fun getClientName(resources: Resources?, client: Int): String {
         val default = resources?.getString(R.string.client_d, client + 1) ?: "Client $client"
         if (client < 0) return default
@@ -86,20 +91,19 @@ data class MessageServerStatus(
     }
 
     /**
-     * @return the name of the color this player is playing, e.g. "Blue" or "Orange", depending on the game mode
+     * @return the name of the client of null if unset
      */
-    fun getColorName(resources: Resources, player: Int): String {
-        val color = Global.getPlayerColor(player, gameMode)
-        return resources.getStringArray(R.array.color_names)[color]
+    fun getClientName(client: Int): String? {
+        if (client < 0) return null
+        return clientNames[client]
     }
 
     /**
-     * @return the name of the player or the name of the color if unset
+     * @return the name of the client playing the given player, or null if unset
      */
-    fun getPlayerName(resources: Resources, player: Int): String {
-        val colorName = getColorName(resources, player)
-        val client = clientForPlayer[player] ?: return colorName
-        return clientNames[client] ?: colorName
+    fun getPlayerName(player: Int): String? {
+        val client = clientForPlayer[player] ?: return null
+        return clientNames[client]
     }
 
     override fun equals(other: Any?): Boolean {

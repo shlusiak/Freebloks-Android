@@ -35,6 +35,11 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfiguratio
     private var sendExecutor: ExecutorService? = null
     private val gameClientMessageHandler: GameClientMessageHandler
 
+    /**
+     * The last status message received by our handler
+     */
+    val lastStatus get() = gameClientMessageHandler.lastStatus
+
     @JvmField
 	val game: Game
 

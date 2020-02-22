@@ -21,6 +21,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 public class ColorAdapter extends BaseAdapter {
 	private Context context;
 	private MessageServerStatus lastStatus;
@@ -34,7 +36,7 @@ public class ColorAdapter extends BaseAdapter {
 		this.game = game;
 	}
 
-	void setCurrentStatus(Game game, MessageServerStatus status) {
+	void setCurrentStatus(Game game, @Nullable MessageServerStatus status) {
 		this.game = game;
 		this.lastStatus = status;
 		notifyDataSetChanged();
@@ -79,9 +81,6 @@ public class ColorAdapter extends BaseAdapter {
 			lastStatus.getGameMode() == GameMode.GAMEMODE_JUNIOR)
 			if (position == 1)
 				position = 2;
-
-		if (!lastStatus.isAtLeastVersion(2))
-			return false;
 
 		if (game.isStarted())
 			return false;
@@ -143,65 +142,14 @@ public class ColorAdapter extends BaseAdapter {
 	   });
 
 		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, game.getGameMode())]));
-		if (lastStatus.isAtLeastVersion(2)) {
-			if (lastStatus.isClient(player)) {
-				/* it is a human player */
-				t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getClient(player)));
-	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				if (game.isLocalPlayer(player)) {
-					t.setTypeface(Typeface.DEFAULT_BOLD);
-					v.findViewById(R.id.editButton).setVisibility(View.VISIBLE);
 
-					Animation a = new TranslateAnimation(
-							TranslateAnimation.RELATIVE_TO_SELF,
-							0,
-							TranslateAnimation.RELATIVE_TO_SELF,
-							0,
-							TranslateAnimation.RELATIVE_TO_SELF,
-							0.15f,
-							TranslateAnimation.RELATIVE_TO_SELF,
-							-0.15f);
-					a.setDuration(400);
-					a.setInterpolator(new DecelerateInterpolator());
-					a.setRepeatMode(Animation.REVERSE);
-					a.setRepeatCount(Animation.INFINITE);
-
-					t.startAnimation(a);
-
-					c.setChecked(true);
-					c.setEnabled(true);
-					c.setVisibility(View.VISIBLE);
-				} else {
-		        	t.clearAnimation();
-					v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
-					c.setChecked(false);
-					c.setEnabled(false);
-					c.setVisibility(View.INVISIBLE);
-				}
-			} else {
-				/* computer player */
-				background.setAlpha(96);
-				t.setText("---");
-				t.clearAnimation();
-				if (game.isStarted()) {
-					t.setVisibility(View.VISIBLE);
-					v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				} else {
-					v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-					t.setVisibility(View.INVISIBLE);
-				}
-				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
-				c.setChecked(false);
-				c.setEnabled(false);
-				c.setVisibility(View.VISIBLE);
-			}
-		} else {
+		if (lastStatus.isClient(player)) {
+			/* it is a human player */
+			t.setText(lastStatus.getClientName(context.getResources(), lastStatus.getClient(player)));
+			v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 			if (game.isLocalPlayer(player)) {
-	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				final String colorNames[] = context.getResources().getStringArray(R.array.color_names);
-				t.setText(colorNames[player + 1]);
-
 				t.setTypeface(Typeface.DEFAULT_BOLD);
+				v.findViewById(R.id.editButton).setVisibility(View.VISIBLE);
 
 				Animation a = new TranslateAnimation(
 						TranslateAnimation.RELATIVE_TO_SELF,
@@ -218,17 +166,33 @@ public class ColorAdapter extends BaseAdapter {
 				a.setRepeatCount(Animation.INFINITE);
 
 				t.startAnimation(a);
-				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
-				c.setVisibility(View.VISIBLE);
+
 				c.setChecked(true);
+				c.setEnabled(true);
+				c.setVisibility(View.VISIBLE);
 			} else {
-	        	v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-				background.setAlpha(96);
-				t.setText("---");
 				t.clearAnimation();
 				v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+				c.setChecked(false);
+				c.setEnabled(false);
 				c.setVisibility(View.INVISIBLE);
 			}
+		} else {
+			/* computer player */
+			background.setAlpha(96);
+			t.setText("---");
+			t.clearAnimation();
+			if (game.isStarted()) {
+				t.setVisibility(View.VISIBLE);
+				v.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+			} else {
+				v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+				t.setVisibility(View.INVISIBLE);
+			}
+			v.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
+			c.setChecked(false);
+			c.setEnabled(false);
+			c.setVisibility(View.VISIBLE);
 		}
 
 		return v;

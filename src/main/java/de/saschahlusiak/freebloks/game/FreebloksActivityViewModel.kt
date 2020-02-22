@@ -93,6 +93,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     fun vibrate(milliseconds: Long) {
+        @Suppress("DEPRECATION")
         if (vibrateOnMove)
             vibrator?.vibrate(milliseconds)
     }
@@ -136,15 +137,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
-        val name = status.getClientName(context.resources, client)
+        val name = status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
         val e = ChatEntry.clientMessage(client, player, message, name)
 
         chatHistory.add(e)
         chatHistoryAsLiveData.postValue(chatHistory)
     }
 
-    override fun playerJoined(status: MessageServerStatus, client: Int, player: Int) {
-        val name = status.getClientName(context.resources, client)
+    override fun playerJoined(client: Int, player: Int, name: String?) {
+        val clientName = name ?: context.getString(R.string.client_d, client + 1)
+
         // the names of colors
         val colorNames = context.resources.getStringArray(R.array.color_names)
         // the index into colorNames
@@ -153,15 +155,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         // the name of the player's color
         val colorName = colorNames[playerColor]
 
-        val text = context.getString(R.string.player_joined_color, name, colorName)
-        val e = serverMessage(player, text, name)
+        val text = context.getString(R.string.player_joined_color, clientName, colorName)
+        val e = serverMessage(player, text, clientName)
 
         chatHistory.add(e)
         chatHistoryAsLiveData.postValue(chatHistory)
     }
 
-    override fun playerLeft(status: MessageServerStatus, client: Int, player: Int) {
-        val name = status.getClientName(context.resources, client)
+    override fun playerLeft(client: Int, player: Int, name: String?) {
+        val clientName = name ?: context.getString(R.string.client_d, client + 1)
+
         // the names of colors
         val colorNames = context.resources.getStringArray(R.array.color_names)
         // the index into colorNames
@@ -170,8 +173,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         // the name of the player's color
         val colorName = colorNames[playerColor]
 
-        val text = context.getString(R.string.player_left_color, name, colorName)
-        val e = serverMessage(player, text, name)
+        val text = context.getString(R.string.player_left_color, clientName, colorName)
+        val e = serverMessage(player, text, clientName)
 
         chatHistory.add(e)
         chatHistoryAsLiveData.postValue(chatHistory)
