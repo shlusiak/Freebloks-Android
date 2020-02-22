@@ -122,6 +122,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	private SharedPreferences prefs;
 
+	boolean canresume = false;
+	private boolean showRateDialog = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(tag, "onCreate");
@@ -313,8 +316,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		}
 	}
 
-	boolean canresume = false;
-	boolean showRateDialog = false;
+	public FreebloksActivityViewModel getViewModel() {
+		return viewModel;
+	}
 
 	@Override
 	public void OnIntroCompleted() {
@@ -717,7 +721,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			case DIALOG_LOBBY:
 				if (client == null)
 					return null;
-				return new LobbyDialog(this, chatEntries);
+				return new LobbyDialog(this);
 
 			case DIALOG_QUIT:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);

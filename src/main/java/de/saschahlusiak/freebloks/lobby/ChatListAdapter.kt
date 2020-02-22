@@ -10,7 +10,13 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.GameMode
 import kotlinx.android.synthetic.main.chat_list_item.view.*
 
-class ChatListAdapter(context: Context, values: List<ChatEntry>, var gameMode: GameMode) : ArrayAdapter<ChatEntry>(context, R.layout.chat_list_item, R.id.textView, values) {
+class ChatListAdapter(context: Context, var gameMode: GameMode) : ArrayAdapter<ChatEntry>(context, R.layout.chat_list_item, R.id.textView) {
+
+    fun setData(entries: List<ChatEntry>) {
+        clear()
+        addAll(entries)
+    }
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
         val c = getItem(position) ?: return view

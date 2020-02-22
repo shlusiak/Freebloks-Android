@@ -3,14 +3,15 @@ package de.saschahlusiak.freebloks.lobby;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +19,8 @@ import android.view.*;
 import com.github.clans.fab.FloatingActionButton;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.client.GameClient;
+import de.saschahlusiak.freebloks.game.FreebloksActivity;
+import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.game.CustomGameDialog;
@@ -26,7 +29,6 @@ import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,19 +47,31 @@ import android.widget.TextView.OnEditorActionListener;
 import org.jetbrains.annotations.NotNull;
 
 public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClickListener, OnItemSelectedListener {
-	GameClient client;
-	Handler handler = new Handler();
-	ListView chatList;
-	ChatListAdapter adapter;
-	MessageServerStatus lastStatus = null;
-	GridView colorGrid;
-	ColorAdapter colorAdapter;
-	Spinner gameMode, fieldSize;
-	FloatingActionButton chatButton;
-	EditText chatText;
+	private FreebloksActivity activity;
+	private GameClient client;
+	private Handler handler = new Handler();
+	private ListView chatList;
+	private ChatListAdapter adapter;
+	private MessageServerStatus lastStatus = null;
+	private GridView colorGrid;
+	private ColorAdapter colorAdapter;
+	private Spinner gameMode, fieldSize;
+	private FloatingActionButton chatButton;
+	private EditText chatText;
+	private FreebloksActivityViewModel viewModel;
 
-	public LobbyDialog(Context context, ArrayList<ChatEntry> chatEntries) {
-		super(context);
+	private final Observer<List<ChatEntry>> chatObserver = new Observer<List<ChatEntry>>() {
+		@Override
+		public void onChanged(List<ChatEntry> chatEntries) {
+			adapter.setData(chatEntries);
+		}
+	};
+
+	public LobbyDialog(FreebloksActivity activity) {
+		super(activity);
+
+		this.activity = activity;
+		this.viewModel = activity.getViewModel();
 		
 		setCancelable(true);
 
@@ -70,7 +84,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 		setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting_large);
 
 		/* to make sure we have enough real estate. not neccessary on xlarge displays */
-		if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) !=
+		if ((activity.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) !=
 		        Configuration.SCREENLAYOUT_SIZE_XLARGE) {
 			getWindow().setLayout(LayoutParams.FILL_PARENT,	LayoutParams.WRAP_CONTENT);
 		}
@@ -134,8 +148,8 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 			}
 		});
 
-		adapter = new ChatListAdapter(getContext(), chatEntries, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-		chatList = (ListView)findViewById(R.id.chatList);
+		adapter = new ChatListAdapter(getContext(), GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
+		chatList = findViewById(R.id.chatList);
 		chatList.setAdapter(adapter);
 
 		if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
@@ -276,9 +290,19 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		viewModel.getChatHistoryAsLiveData().observe(activity, chatObserver);
+	}
+
+
+	@Override
 	protected void onStop() {
 		if (client != null)
 			client.removeObserver(this);
+
+		viewModel.getChatHistoryAsLiveData().removeObserver(chatObserver);
+
 		super.onStop();
 	}
 
@@ -309,13 +333,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 
 	@Override
 	public void chatReceived(@NonNull MessageServerStatus status, int client, int player, @NonNull String message) {
-		// FIXME: what is this?? Watch the viewModel.chatHistory
-		chatList.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				adapter.notifyDataSetChanged();
-			}
-		}, 100);
+
 	}
 
 	@Override
@@ -340,7 +358,7 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 
 	@Override
 	public void serverStatus(@NonNull final MessageServerStatus status) {
-		handler.postDelayed(new Runnable() {
+		handler.post(new Runnable() {
 			@Override
 			public void run() {
 				lastStatus = status;
@@ -348,10 +366,10 @@ public class LobbyDialog extends Dialog implements GameEventObserver, OnItemClic
 				updateStatus();
 				adapter.notifyDataSetChanged();
 			}
-		}, 100);
+		});
 	}
 
-	void updateStatus() {
+	private void updateStatus() {
 		/* better: dismiss */
 		if (client == null)
 			return;
