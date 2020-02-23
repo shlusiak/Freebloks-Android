@@ -541,7 +541,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		final Game game = new Game(board);
 		client = new GameClient(game, config);
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
-		board.setAvailableStones(0, 0, 0, 0, 0);
 
 		client.addObserver(this);
 		client.addObserver(view);
@@ -604,7 +603,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		final Board board = new Board(fieldsize);
 		final Game game = new Game(board);
 		board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-		board.setAvailableStones(0, 0, 0, 0, 0);
 
 		client = new GameClient(game, config);
 		view.setGameClient(client);

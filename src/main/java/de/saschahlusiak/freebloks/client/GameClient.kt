@@ -47,7 +47,6 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfiguratio
         if (game == null) {
             val board = Board(config.fieldSize)
             board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
-            board.setAvailableStones(0, 0, 0, 0, 0)
             this.game = Game(board)
         } else this.game = game
 

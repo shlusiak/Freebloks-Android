@@ -6,11 +6,13 @@ import org.junit.Test
 class PlayerTest {
     @Test
     fun test_constructor() {
-        val p = Player(0)
+        val p = Player(2)
 
-        val stone = p.getStone(2)
-        assertEquals(0, stone?.available)
+        assertEquals(2, p.number)
+        assertEquals(Shape.COUNT, p.stones.size)
+        p.stones.forEach {
+            assertEquals(0, it.available)
+
+        }
     }
-
-    // TODO
 }
