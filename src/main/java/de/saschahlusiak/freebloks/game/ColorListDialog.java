@@ -131,12 +131,15 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		
 	}
 
-	public GameMode getGameMode() {
-		return GameMode.from(gameMode.getSelectedItemPosition());
-	}
-	
-	int getBoardSize() {
-		return CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
+	public GameConfiguration.Builder configurationBuilder() {
+		final GameMode mode = GameMode.from(gameMode.getSelectedItemPosition());
+		final int size = CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
+
+		return GameConfiguration.builder()
+			.fieldSize(size)
+			.gameMode(mode)
+			.stones(GameConfiguration.defaultStonesForMode(mode))
+			.showLobby(false);
 	}
 
 	@Override

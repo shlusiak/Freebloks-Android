@@ -45,19 +45,13 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
@@ -863,14 +857,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 						@Override
 						public void onColorsSelected(ColorListDialog dialog, boolean[] players) {
-							gamemode = dialog.getGameMode();
-							fieldsize = dialog.getBoardSize();
-							final GameConfiguration config = GameConfiguration.builder()
+							final GameConfiguration config = dialog
+								.configurationBuilder()
 								.requestPlayers(players)
-								.fieldSize(fieldsize)
-								.gameMode(gamemode)
-								.showLobby(false)
 								.build();
+
+							gamemode = config.getGameMode();
+							fieldsize = config.getFieldSize();
+
 							startNewGame(config, null);
 
 							dialog.dismiss();

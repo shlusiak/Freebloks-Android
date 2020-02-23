@@ -18,15 +18,16 @@ import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.game.CustomGameDialog
-import de.saschahlusiak.freebloks.game.FreebloksActivity
-import de.saschahlusiak.freebloks.game.GameConfiguration
+import de.saschahlusiak.freebloks.game.*
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
+/**
+ * TODO: convert this to a DialogFragment
+ */
 class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), GameEventObserver, OnItemClickListener {
     private val viewModel = activity.viewModel
 
@@ -46,20 +47,8 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             val client = client ?: return
 
             val gameMode = from(game_mode.selectedItemPosition)
-
-            val size = when (gameMode) {
-                GameMode.GAMEMODE_DUO,
-                GameMode.GAMEMODE_JUNIOR -> 14
-
-                GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> 15
-
-                else -> 20
-            }
-
-            val stones = when (gameMode) {
-                GameMode.GAMEMODE_JUNIOR -> GameConfiguration.JUNIOR_STONE_SET
-                else -> GameConfiguration.DEFAULT_STONE_SET
-            }
+            val size = gameMode.defaultBoardSize()
+            val stones = gameMode.defaultStoneSet()
 
             client.requestGameMode(size, size, gameMode, stones)
         }
