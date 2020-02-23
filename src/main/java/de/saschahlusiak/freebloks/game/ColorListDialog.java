@@ -99,6 +99,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			selection[1] = selection[3] = false;
 			break;
 		case GAMEMODE_4_COLORS_2_PLAYERS:
+			fieldSize.setSelection(4);
 			selection[2] = selection[3] = false;
 			break;
 		default:
@@ -118,7 +119,6 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			listener.onColorSelected(this, (int) id);
 		}
 	}
-	
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

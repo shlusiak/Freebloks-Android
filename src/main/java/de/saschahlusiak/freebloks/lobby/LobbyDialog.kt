@@ -27,16 +27,60 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
-class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), GameEventObserver, OnItemClickListener, OnItemSelectedListener {
+class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), GameEventObserver, OnItemClickListener {
     private val viewModel = activity.viewModel
 
-    private val adapter = ChatListAdapter(activity, GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
+    private val chatAdapter = ChatListAdapter(activity, GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
     private val colorAdapter = ColorAdapter(this, context, null, null)
 
     private var client: GameClient? = null
 
-    private val chatObserver = Observer<List<ChatEntry>> {
-        chatEntries -> adapter.setData(chatEntries)
+    private val chatObserver = Observer<List<ChatEntry>> { chatEntries ->
+        chatAdapter.setData(chatEntries)
+    }
+
+    private val gameModeSelectedListener = object : OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val client = client ?: return
+
+            val gameMode = from(game_mode.selectedItemPosition)
+
+            val size = when (gameMode) {
+                GameMode.GAMEMODE_DUO,
+                GameMode.GAMEMODE_JUNIOR -> 14
+
+                GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> 15
+
+                else -> 20
+            }
+
+            val stones = when (gameMode) {
+                GameMode.GAMEMODE_JUNIOR -> GameConfiguration.JUNIOR_STONE_SET
+                else -> GameConfiguration.DEFAULT_STONE_SET
+            }
+
+            client.requestGameMode(size, size, gameMode, stones)
+        }
+    }
+
+    private val sizeSelectedListener = object : OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val client = client ?: return
+            val gameMode = client.game.gameMode
+
+            val size = CustomGameDialog.FIELD_SIZES[field_size.selectedItemPosition]
+
+            val stones = when (gameMode) {
+                GameMode.GAMEMODE_JUNIOR -> GameConfiguration.JUNIOR_STONE_SET
+                else -> GameConfiguration.DEFAULT_STONE_SET
+            }
+
+            client.requestGameMode(size, size, gameMode, stones)
+        }
     }
 
     init {
@@ -66,13 +110,13 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
         game_mode.apply {
             setSelection(GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal)
             isEnabled = false
-            onItemSelectedListener = this@LobbyDialog
+            onItemSelectedListener = gameModeSelectedListener
         }
 
         field_size.apply {
             setSelection(4)
             isEnabled = false
-            onItemSelectedListener = this@LobbyDialog
+            onItemSelectedListener = sizeSelectedListener
         }
 
         startButton.setOnClickListener { client?.requestGameStart() }
@@ -99,7 +143,7 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             setOnClickListener { sendChat() }
         }
 
-        chatList.adapter = adapter
+        chatList.adapter = chatAdapter
     }
 
     override fun onStart() {
@@ -126,9 +170,9 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             setCanceledOnTouchOutside(false)
         }
 
-        adapter.gameMode = client.game.gameMode
+        chatAdapter.gameMode = client.game.gameMode
         updateViewsFromStatus()
-        adapter.notifyDataSetChanged()
+        chatAdapter.notifyDataSetChanged()
 
         viewModel.chatHistoryAsLiveData.observe(activity, chatObserver)
     }
@@ -212,7 +256,7 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             game_mode.isEnabled = false
             field_size.isEnabled = false
         } else {
-            adapter.gameMode = status.gameMode
+            chatAdapter.gameMode = status.gameMode
 
             clients?.visibility = View.VISIBLE
             clients?.text = context.resources.getQuantityString(R.plurals.connected_clients, status.clients, status.clients)
@@ -240,18 +284,4 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             client.requestPlayer(id.toInt(), null)
         }
     }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val client = client ?: return
-
-        val g = from(game_mode.selectedItemPosition)
-        val size = CustomGameDialog.FIELD_SIZES[field_size.selectedItemPosition]
-        val stones = when(g) {
-            GameMode.GAMEMODE_JUNIOR -> GameConfiguration.JUNIOR_STONE_SET
-            else -> GameConfiguration.DEFAULT_STONE_SET
-        }
-        client.requestGameMode(size, size, g, stones)
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {}
 }
