@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.game.GameConfiguration
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_ALLOWED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_DENIED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_FREE
@@ -56,7 +55,7 @@ class BoardTest {
         val s = Board(20)
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
+        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
         s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
 
         assertEquals(20, s.width)
@@ -175,7 +174,7 @@ class BoardTest {
 
     @Test
     fun test_seed_2_color_2_players() {
-        val board = Board(GameConfiguration.defaultSizeForMode(GAMEMODE_2_COLORS_2_PLAYERS))
+        val board = Board(GameConfig.defaultSizeForMode(GAMEMODE_2_COLORS_2_PLAYERS))
         assertEquals(Point(0, 14), board.getPlayerSeed(0, GAMEMODE_2_COLORS_2_PLAYERS))
         assertEquals(Point(0, 0), board.getPlayerSeed(1, GAMEMODE_2_COLORS_2_PLAYERS))
         assertEquals(Point(14, 0), board.getPlayerSeed(2, GAMEMODE_2_COLORS_2_PLAYERS))
@@ -188,7 +187,7 @@ class BoardTest {
         val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
+        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
         s.startNewGame(mode, 20, 20)
         s.refreshPlayerData()
 
@@ -239,7 +238,7 @@ class BoardTest {
         val mode = GAMEMODE_DUO
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
+        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
         s.startNewGame(mode, 15, 15)
         s.refreshPlayerData()
 
@@ -291,7 +290,7 @@ class BoardTest {
         val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
+        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
         s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         s.refreshPlayerData()
 

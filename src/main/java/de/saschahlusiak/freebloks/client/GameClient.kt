@@ -7,7 +7,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.game.GameConfiguration
+import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class GameClient @UiThread constructor(game: Game?, val config: GameConfiguration): Object() {
+class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Object() {
     private var clientSocket: Closeable?
     private var messageWriter: MessageWriter? = null
     private var readThread: MessageReadThread? = null

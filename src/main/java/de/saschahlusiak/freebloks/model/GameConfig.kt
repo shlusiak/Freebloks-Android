@@ -1,14 +1,11 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.model
 
-import de.saschahlusiak.freebloks.model.Board
-import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.Shape
 import java.io.Serializable
 
-fun GameMode.defaultBoardSize() = GameConfiguration.defaultSizeForMode(this)
-fun GameMode.defaultStoneSet() = GameConfiguration.defaultStonesForMode(this)
+fun GameMode.defaultBoardSize() = GameConfig.defaultSizeForMode(this)
+fun GameMode.defaultStoneSet() = GameConfig.defaultStonesForMode(this)
 
-data class GameConfiguration(
+data class GameConfig(
     val server: String?,
     val showLobby: Boolean,
     val requestPlayers: BooleanArray?, // 4
@@ -18,26 +15,24 @@ data class GameConfiguration(
     val fieldSize: Int
 ) : Serializable {
 
-    class Builder {
+    class Builder internal constructor() {
         private var server: String? = null
         private var showLobby: Boolean = false
-        private var fieldSize: Int = Board.DEFAULT_BOARD_SIZE
+        private var fieldSize: Int? = null
         private var gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
         private var requestPlayers: BooleanArray? = null
         private var stones: IntArray? = null
         private var difficulty = DEFAULT_DIFFICULTY
 
-        fun build(): GameConfiguration {
-            val stones = stones ?: defaultStonesForMode(gameMode)
-
-            return GameConfiguration(
+        fun build(): GameConfig {
+            return GameConfig(
                 server,
                 showLobby,
                 requestPlayers,
-                stones,
+                stones ?: gameMode.defaultStoneSet(),
                 difficulty,
                 gameMode,
-                fieldSize
+                fieldSize ?: gameMode.defaultBoardSize()
             )
         }
 

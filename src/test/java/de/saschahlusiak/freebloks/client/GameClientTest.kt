@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.client
 
-import de.saschahlusiak.freebloks.game.GameConfiguration
+import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.Game.Companion.PLAYER_LOCAL
 import de.saschahlusiak.freebloks.network.*
@@ -19,7 +19,7 @@ import kotlin.concurrent.withLock
 
 class GameClientTest {
     private val game = Game()
-    private val client = GameClient(game, GameConfiguration.builder().build())
+    private val client = GameClient(game, GameConfig.builder().build())
 
     private val toServerStream = PipedOutputStream()
     private val fromServerStream = PipedInputStream()
@@ -144,7 +144,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_notConnected() {
-        val client = GameClient(Game(), GameConfiguration.builder().build())
+        val client = GameClient(Game(), GameConfig.builder().build())
         assertFalse(client.isConnected())
     }
 

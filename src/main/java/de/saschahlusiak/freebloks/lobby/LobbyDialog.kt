@@ -19,8 +19,11 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.*
+import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
+import de.saschahlusiak.freebloks.model.defaultBoardSize
+import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
@@ -64,8 +67,8 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             val size = CustomGameDialog.FIELD_SIZES[field_size.selectedItemPosition]
 
             val stones = when (gameMode) {
-                GameMode.GAMEMODE_JUNIOR -> GameConfiguration.JUNIOR_STONE_SET
-                else -> GameConfiguration.DEFAULT_STONE_SET
+                GameMode.GAMEMODE_JUNIOR -> GameConfig.JUNIOR_STONE_SET
+                else -> GameConfig.DEFAULT_STONE_SET
             }
 
             client.requestGameMode(size, size, gameMode, stones)

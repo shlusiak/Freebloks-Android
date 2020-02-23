@@ -66,6 +66,7 @@ import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Game;
+import de.saschahlusiak.freebloks.model.GameConfig;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.PlayerScore;
@@ -249,7 +250,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			view.model.soundPool = viewModel.getSounds();
 
 		clientName = prefs.getString("player_name", null);
-		difficulty = prefs.getInt("difficulty", GameConfiguration.DEFAULT_DIFFICULTY);
+		difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY);
 		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
 		fieldsize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE);
 
@@ -467,7 +468,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 
 			/* this will start a new GameClient, which needs to be restored from saved gamestate first */
-			final GameConfiguration config = GameConfiguration.builder()
+			final GameConfig config = GameConfig.builder()
 				.difficulty(difficulty)
 				.fieldSize(board.width)
 				.build();
@@ -511,12 +512,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			startNewGame(client.getConfig(), null);
 		} else {
 			// else start default game
-			startNewGame(GameConfiguration.builder().build(), null);
+			startNewGame(GameConfig.builder().build(), null);
 		}
 	}
 
 	@UiThread
-	public void startNewGame(final GameConfiguration config, final Runnable runAfter) {
+	public void startNewGame(final GameConfig config, final Runnable runAfter) {
 		newCurrentPlayer(-1);
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServerForNewGame(
@@ -591,7 +592,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@UiThread
 	public void establishBluetoothGame(BluetoothSocket socket) throws IOException {
-		final GameConfiguration config = GameConfiguration.builder().build();
+		final GameConfig config = GameConfig.builder().build();
 		newCurrentPlayer(-1);
 
 		if (client != null)
@@ -784,7 +785,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 					@Override
 					public void onJoinGame(String server) {
-						startNewGame(GameConfiguration.builder()
+						startNewGame(GameConfig.builder()
 								.server(server)
 								.showLobby(true)
 								.build(),
@@ -795,14 +796,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 					@Override
 					public void onHostGame() {
-						startNewGame(GameConfiguration.builder().showLobby(true).build(), null);
+						startNewGame(GameConfig.builder().showLobby(true).build(), null);
 						dismissDialog(DIALOG_GAME_MENU);
 					}
 
 					@Override
 					public void onHostBluetoothGameWithClient(final BluetoothSocket clientSocket) {
 						dismissDialog(DIALOG_GAME_MENU);
-						startNewGame(GameConfiguration.builder().showLobby(true).build(), new Runnable() {
+						startNewGame(GameConfig.builder().showLobby(true).build(), new Runnable() {
 							@Override
 							public void run() {
 								new BluetoothClientToSocketThread(clientSocket, "localhost", GameClient.DEFAULT_PORT).start();
@@ -840,40 +841,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			case DIALOG_SINGLE_PLAYER:
 				ColorListDialog d = new ColorListDialog(this,
-					new ColorListDialog.OnColorSelectedListener() {
-						@Override
-						public void onColorSelected(ColorListDialog dialog, int color) {
-							boolean[] players = new boolean[4];
-							players[color] = true;
-							onColorsSelected(dialog, players);
-						}
+					(dialog, config) -> {
+						gamemode = config.getGameMode();
+						fieldsize = config.getFieldSize();
 
-						@Override
-						public void onRandomColorSelected(ColorListDialog dialog) {
-							onColorsSelected(dialog, null);
-						}
+						startNewGame(config, null);
 
-						@Override
-						public void onColorsSelected(ColorListDialog dialog, boolean[] players) {
-							final GameConfiguration config = dialog
-								.configurationBuilder()
-								.requestPlayers(players)
-								.build();
-
-							gamemode = config.getGameMode();
-							fieldsize = config.getFieldSize();
-
-							startNewGame(config, null);
-
-							dialog.dismiss();
-						}
+						dialog.dismiss();
 					});
-				d.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						showDialog(DIALOG_GAME_MENU);
-					}
-				});
+				d.setOnCancelListener(dialog -> showDialog(DIALOG_GAME_MENU));
 
 				return d;
 

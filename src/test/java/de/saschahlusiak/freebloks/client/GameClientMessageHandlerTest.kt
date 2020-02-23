@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.client
 
-import de.saschahlusiak.freebloks.game.GameConfiguration
+import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_FREE
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
@@ -276,7 +276,7 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfiguration.Builder().build())
+        val client = GameClient(Game(), GameConfig.Builder().build())
         handler.onConnected(client)
         assertTrue(connected)
     }
@@ -295,7 +295,7 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfiguration.Builder().build())
+        val client = GameClient(Game(), GameConfig.Builder().build())
 
         handler.onDisconnected(client, IOException("stuff"))
         assertTrue(disconnected)

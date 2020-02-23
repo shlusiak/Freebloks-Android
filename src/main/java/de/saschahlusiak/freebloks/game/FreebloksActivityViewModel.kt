@@ -50,7 +50,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var client: GameClient?
         private set
 
-    // todo: is required?
     var lastStatus: MessageServerStatus? = null
         private set
 

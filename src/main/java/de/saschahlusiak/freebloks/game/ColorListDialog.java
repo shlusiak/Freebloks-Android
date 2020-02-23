@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.model.GameConfig;
 import de.saschahlusiak.freebloks.model.GameMode;
 import android.app.Dialog;
 import android.content.Context;
@@ -30,13 +31,11 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 	private Spinner gameMode, fieldSize;
 	private CompoundButton passAndPlay;
 	private Button button;
-	private boolean selection[] = new boolean[4];
+	private boolean[] selection = new boolean[4];
 	// TODO: names per color in passAndPlay mode
 
 	public interface OnColorSelectedListener {
-		void onColorSelected(ColorListDialog dialog, int color);
-		void onRandomColorSelected(ColorListDialog dialog);
-		void onColorsSelected(ColorListDialog dialog, boolean[] colors);
+		void onStartGame(ColorListDialog dialog, GameConfig config);
 	}
 	
 	public ColorListDialog(Context context, final OnColorSelectedListener listener) {
@@ -116,7 +115,10 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			selection[(int)id] = !selection[(int)id];
 			this.adapter.notifyDataSetChanged();
 		} else {
-			listener.onColorSelected(this, (int) id);
+			final boolean[] players = new boolean[4];
+			players[(int)id] = true;
+
+			listener.onStartGame(this, buildConfiguration(players));
 		}
 	}
 
@@ -131,15 +133,17 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		
 	}
 
-	public GameConfiguration.Builder configurationBuilder() {
+	private GameConfig buildConfiguration(boolean[] players) {
 		final GameMode mode = GameMode.from(gameMode.getSelectedItemPosition());
 		final int size = CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 
-		return GameConfiguration.builder()
+		return GameConfig.builder()
 			.fieldSize(size)
 			.gameMode(mode)
-			.stones(GameConfiguration.defaultStonesForMode(mode))
-			.showLobby(false);
+			.stones(GameConfig.defaultStonesForMode(mode))
+			.requestPlayers(players)
+			.showLobby(false)
+			.build();
 	}
 
 	@Override
@@ -155,9 +159,9 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 	@Override
 	public void onClick(View v) {
 		if (passAndPlay.isChecked()) {
-			listener.onColorsSelected(this, selection);
+			listener.onStartGame(this, buildConfiguration(selection));
 		} else {
-			listener.onRandomColorSelected(this);
+			listener.onStartGame(this, buildConfiguration(null));
 		}
 	}
 

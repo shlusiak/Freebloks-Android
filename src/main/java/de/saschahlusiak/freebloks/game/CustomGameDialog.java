@@ -4,6 +4,7 @@ import android.view.WindowManager;
 import com.shawnlin.numberpicker.NumberPicker;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.model.GameConfig;
 import de.saschahlusiak.freebloks.model.GameMode;
 import android.app.Dialog;
 import android.content.Context;
@@ -296,8 +297,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		return result;
 	}
 
-	public GameConfiguration getConfiguration() {
-		return GameConfiguration.builder()
+	public GameConfig getConfiguration() {
+		return GameConfig.builder()
 			.stones(getStones())
 			.requestPlayers(getPlayers())
 			.gameMode(getGameMode())

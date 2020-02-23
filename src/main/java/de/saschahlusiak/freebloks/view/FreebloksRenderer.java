@@ -28,20 +28,20 @@ import de.saschahlusiak.freebloks.view.model.ViewModel;
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private static final String tag = FreebloksRenderer.class.getSimpleName();
 
-	public final float light0_ambient[] = {0.35f, 0.35f, 0.35f, 1.0f};
-	public final float light0_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
-	public final float light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	public final float light0_pos[]    = {2.5f, 5f, -2.0f, 0.0f};
+	private final float[] light0_ambient = {0.35f, 0.35f, 0.35f, 1.0f};
+	private final float[] light0_diffuse = {0.8f, 0.8f, 0.8f, 1.0f};
+	private final float[] light0_specular = {1.0f, 1.0f, 1.0f, 1.0f};
+	public final float[] light0_pos = {2.5f, 5f, -2.0f, 0.0f};
 	public float width = 1, height = 1;
-	ViewModel model;
-	Context context;
+	private ViewModel model;
+	private Context context;
 	public float fixed_zoom;
-	float mAngleX;
+	private float mAngleX;
 	float zoom;
 
-	int viewport[] = new int[4];
-	float projectionMatrix[] = new float[16];
-	float modelViewMatrix[] = new float[16];
+	private int[] viewport = new int[4];
+	private float[] projectionMatrix = new float[16];
+	private float[] modelViewMatrix = new float[16];
 	public static boolean isSoftwareRenderer, isEmulator;
 
 	public BoardRenderer board;
@@ -61,8 +61,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board.initBorder(field_size);
 	}
 
-	private float outputfar[] = new float[4];
-	private float outputnear[] = new float[4];
+	private final float[] outputfar = new float[4];
+	private float[] outputnear = new float[4];
 
 	public PointF windowToModel(PointF point) {
 		float x1, y1, z1, x2, y2, z2, u;
@@ -299,11 +299,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	        			data.getFace(level, 0));
 	    	}
 	    }
-	    catch (IOException e) {
+	    catch (IOException | KTXFormatException e) {
 	    	throw new RuntimeException(e);
-	    }
-	    catch (KTXFormatException e2) {
-	    	throw new RuntimeException(e2);
 	    }
 	}
 }

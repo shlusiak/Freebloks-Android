@@ -14,6 +14,8 @@ class Player(val number: Int) : Serializable {
      * Stones with availability for this player.
      *
      * Every player always has 21 stones with different availability.
+     *
+     * Defaults to 0
      */
     val stones = Array(Shape.COUNT) { index ->
         Stone(index, 0)
