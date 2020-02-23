@@ -1,0 +1,3 @@
+[submodule "src/main/jni/github"]
+	path = src/main/jni/github
+	url = git@github.com:shlusiak/Freebloks-3D.git

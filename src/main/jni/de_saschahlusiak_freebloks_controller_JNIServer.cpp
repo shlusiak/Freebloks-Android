@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "de_saschahlusiak_freebloks_controller_JNIServer.h"
 #include <pthread.h>
-#include "spielserver.h"
+#include "github/src/spielserver.h"
 
 
 class CAndroidLogWriter: public CLogWriter {
