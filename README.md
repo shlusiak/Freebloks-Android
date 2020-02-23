@@ -9,6 +9,14 @@ Source
 
 Licence: GPL v2
 
+Uses Freebloks 3D as a submodule.
+
+Initialise submodules using
+
+```
+git submodule init
+git submodule update
+```
 
 Binaries
 --------
@@ -24,10 +32,12 @@ Binaries
 About
 -----
 
-Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2018.
+Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2020.
 
 Email: apps@saschahlusiak.de
 Project homepage: http://www.saschahlusiak.de/freebloks-3d-android/
+GitHub: https://github.com/shlusiak/Freebloks-Android
 
+This project uses the Linux port as a git submodule: https://github.com/shlusiak/Freebloks-3D
 
 
