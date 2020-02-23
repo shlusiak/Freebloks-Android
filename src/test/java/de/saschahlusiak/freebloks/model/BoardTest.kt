@@ -1,14 +1,13 @@
 package de.saschahlusiak.freebloks.model
 
+import de.saschahlusiak.freebloks.game.GameConfiguration
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_ALLOWED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_DENIED
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_FREE
-import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_DUO
+import de.saschahlusiak.freebloks.model.GameMode.*
 import de.saschahlusiak.freebloks.utils.Point
 import org.junit.Assert.*
 import org.junit.Test
-import java.lang.IllegalStateException
 
 class BoardTest {
     private fun Player.getAllTurns(board: Board) = sequence {
@@ -57,7 +56,7 @@ class BoardTest {
         val s = Board(20)
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(1, 1, 1, 1, 1)
+        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
         s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
 
         assertEquals(20, s.width)
@@ -68,7 +67,7 @@ class BoardTest {
 
         assertEquals(58, p.numberOfPossibleTurns)
 
-        val stone = p.getStone(2) ?: throw IllegalStateException("stone is null")
+        val stone = p.getStone(2)
         assertEquals(1, stone.available)
 
         // start for blue is bottom left
@@ -153,16 +152,16 @@ class BoardTest {
 
     @Test
     fun test_seed_duo() {
-        val board = Board(15, 15)
-        assertEquals(Point(4, 10), board.getPlayerSeed(0, GAMEMODE_DUO))
-        assertEquals(Point(10, 4), board.getPlayerSeed(2, GAMEMODE_DUO))
+        val board = Board(14, 14)
+        assertEquals(Point(4, 9), board.getPlayerSeed(0, GAMEMODE_DUO))
+        assertEquals(Point(9, 4), board.getPlayerSeed(2, GAMEMODE_DUO))
     }
 
     @Test
     fun test_seed_junior() {
-        val board = Board(15, 15)
-        assertEquals(Point(4, 10), board.getPlayerSeed(0, GAMEMODE_DUO))
-        assertEquals(Point(10, 4), board.getPlayerSeed(2, GAMEMODE_DUO))
+        val board = Board(14, 14)
+        assertEquals(Point(4, 9), board.getPlayerSeed(0, GAMEMODE_JUNIOR))
+        assertEquals(Point(9, 4), board.getPlayerSeed(2, GAMEMODE_JUNIOR))
     }
 
     @Test
@@ -175,12 +174,21 @@ class BoardTest {
     }
 
     @Test
+    fun test_seed_2_color_2_players() {
+        val board = Board(GameConfiguration.defaultSizeForMode(GAMEMODE_2_COLORS_2_PLAYERS))
+        assertEquals(Point(0, 14), board.getPlayerSeed(0, GAMEMODE_2_COLORS_2_PLAYERS))
+        assertEquals(Point(0, 0), board.getPlayerSeed(1, GAMEMODE_2_COLORS_2_PLAYERS))
+        assertEquals(Point(14, 0), board.getPlayerSeed(2, GAMEMODE_2_COLORS_2_PLAYERS))
+        assertEquals(Point(14, 14), board.getPlayerSeed(3, GAMEMODE_2_COLORS_2_PLAYERS))
+    }
+
+    @Test
     fun test_full_game_4_4() {
         val s = Board(20)
         val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(1, 1, 1, 1, 1)
+        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
         s.startNewGame(mode, 20, 20)
         s.refreshPlayerData()
 
@@ -228,10 +236,10 @@ class BoardTest {
     @Test
     fun test_full_game_duo() {
         val s = Board(15)
-        val mode = GameMode.GAMEMODE_DUO
+        val mode = GAMEMODE_DUO
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(1, 1, 1, 1, 1)
+        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
         s.startNewGame(mode, 15, 15)
         s.refreshPlayerData()
 
@@ -283,7 +291,7 @@ class BoardTest {
         val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(1, 1, 1, 1, 1)
+        s.setAvailableStones(GameConfiguration.DEFAULT_STONE_SET)
         s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
         s.refreshPlayerData()
 
