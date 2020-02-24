@@ -3,10 +3,10 @@ package de.saschahlusiak.freebloks.view.effects
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.model.ViewModel
+import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
 
-class PhysicalShapeEffect(model: ViewModel, stone: Shape, color: Int, orientation: Orientation) : AbsShapeEffect(model, stone, color, 0, 0, orientation) {
+class PhysicalShapeEffect(model: Scene, stone: Shape, color: Int, orientation: Orientation) : AbsShapeEffect(model, stone, color, 0, 0, orientation) {
 
     companion object {
         const val gravity = 17.0f

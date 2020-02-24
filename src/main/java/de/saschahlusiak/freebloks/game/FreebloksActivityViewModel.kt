@@ -16,7 +16,8 @@ import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.genericMessage
 import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.serverMessage
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.view.model.Sounds
+import de.saschahlusiak.freebloks.view.scene.Intro
+import de.saschahlusiak.freebloks.view.scene.Sounds
 import java.net.NetworkInterface
 import java.net.SocketException
 
@@ -34,6 +35,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // settings
     private var vibrateOnMove: Boolean = false
     private var showNotifications: Boolean = true
+
+    // other stuff
+    var intro: Intro? = null
+
 
     var soundsEnabled
         get() = sounds.isEnabled

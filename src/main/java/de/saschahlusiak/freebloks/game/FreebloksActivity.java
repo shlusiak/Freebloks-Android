@@ -76,13 +76,12 @@ import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
 import de.saschahlusiak.freebloks.view.effects.Effect;
-import de.saschahlusiak.freebloks.view.model.Intro;
-import de.saschahlusiak.freebloks.view.model.Intro.OnIntroCompleteListener;
-import de.saschahlusiak.freebloks.view.model.Theme;
-import de.saschahlusiak.freebloks.view.model.ViewModel;
+import de.saschahlusiak.freebloks.view.scene.Intro;
+import de.saschahlusiak.freebloks.view.scene.Scene;
+import de.saschahlusiak.freebloks.view.scene.Theme;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, OnIntroCompleteListener {
+public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, Intro.OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -194,7 +193,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		viewModel = ViewModelProviders.of(this).get(FreebloksActivityViewModel.class);
 
 		view = findViewById(R.id.board);
-		view.setActivity(this);
+		view.setActivity(this, viewModel);
 
 		if (prefs.getBoolean("immersive_mode", true))
 			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -222,12 +221,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (config != null) {
 			client = viewModel.getClient();
 			lastStatus = viewModel.getLastStatus();
-			view.model.intro = config.intro;
 			connectTask = config.connectTask;
 			if (connectTask != null)
 				connectTask.setActivity(this);
-			if (view.model.intro != null)
-				view.model.intro.setModel(view.model, this);
+			if (viewModel.getIntro() != null)
+				viewModel.getIntro().setModel(view.model, this);
 			canresume = true;
 			chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
 		}
@@ -262,15 +260,15 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			newCurrentPlayer(client.game.getCurrentPlayer());
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
-				view.model.intro = new Intro(getApplicationContext(), view.model, this);
+				viewModel.setIntro(new Intro(getApplicationContext(), view.model, this));
 				newCurrentPlayer(-1);
 			} else
 				OnIntroCompleted();
 		}
 
 		statusView.setOnClickListener(v -> {
-			if (view.model.intro != null)
-				view.model.intro.cancel();
+			if (viewModel.getIntro() != null)
+				viewModel.getIntro().cancel();
 		});
 
 		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
@@ -321,6 +319,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void OnIntroCompleted() {
+		viewModel.setIntro(null);
 		newCurrentPlayer(-1);
 		try {
 			if (restoreOldGame()) {
@@ -396,7 +395,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		viewModel.reloadPreferences();
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
-		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", ViewModel.ANIMATIONS_FULL)));
+		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", Scene.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		view.model.immersiveMode = prefs.getBoolean("immersive_mode", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
@@ -417,9 +416,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public Object onRetainCustomNonConfigurationInstance() {
 		Log.d(tag, "onRetainNonConfigurationInstance");
-		RetainedConfig config = new RetainedConfig();
-		config.intro = view.model.intro;
+
+		final RetainedConfig config = new RetainedConfig();
 		config.connectTask = connectTask;
+
 		this.connectTask = null;
 		view.model.soundPool = null;
 		// ensure that this isn't disconnect on rotate
@@ -925,13 +925,13 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					canresume = false;
 
 				showDialog(DIALOG_GAME_MENU);
-				if (view.model.intro != null)
-					view.model.intro.cancel();
+				if (viewModel.getIntro() != null)
+					viewModel.getIntro().cancel();
 				return true;
 
 			case R.id.new_game:
-				if (view.model.intro != null)
-					view.model.intro.cancel();
+				if (viewModel.getIntro() != null)
+					viewModel.getIntro().cancel();
 				else {
 					if (client == null || client.game.isFinished())
 						startNewGame();
@@ -979,8 +979,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 						canresume = false;
 
 					showDialog(DIALOG_GAME_MENU);
-					if (view.model.intro != null)
-						view.model.intro.cancel();
+					if (viewModel.getIntro() != null)
+						viewModel.getIntro().cancel();
 				}
 				return true;
 
@@ -1046,7 +1046,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				final Game game = client == null ? null : client.game;
 				final Board board = game == null ? null : game.getBoard();
 
-				if (view.model.intro != null)
+				if (viewModel.getIntro() != null)
 					status.setText(R.string.touch_to_skip);
 				else if (client == null || !client.isConnected())
 					status.setText(R.string.not_connected);
@@ -1410,8 +1410,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (client != null && client.game.isStarted() && !client.game.isFinished() && lastStatus != null && lastStatus.getClients() > 1)
 			showDialog(DIALOG_QUIT);
 		else {
-			if (view.model.intro != null) {
-				view.model.intro.cancel();
+			if (viewModel.getIntro() != null) {
+				viewModel.getIntro().cancel();
 			} else {
 				if (client != null && client.isConnected())
 					canresume = true;

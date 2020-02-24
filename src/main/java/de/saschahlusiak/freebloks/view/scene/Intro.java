@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.model;
+package de.saschahlusiak.freebloks.view.scene;
 
 import java.util.ArrayList;
 
@@ -20,45 +20,45 @@ import android.graphics.PointF;
 import android.opengl.GLU;
 
 
-public class Intro implements ViewElement {
+public class Intro {
 	public interface OnIntroCompleteListener {
 		void OnIntroCompleted();
 	}
 
-	final static float INTRO_SPEED = 1.0f;
+	private final static float INTRO_SPEED = 1.0f;
 
-	final static float WIPE_SPEED = 14.0f;
-	final static float WIPE_ANGLE = 28.0f;
-	final static float MATRIX_START = 1.56f;
-	final static float MATRIX_STOP = 6.0f;
-	final static float MATRIX_DURATION_START = 0.25f;
-	final static float MATRIX_DURATION_STOP = 0.25f;
+	private final static float WIPE_SPEED = 14.0f;
+	private final static float WIPE_ANGLE = 28.0f;
+	private final static float MATRIX_START = 1.56f;
+	private final static float MATRIX_STOP = 6.0f;
+	private final static float MATRIX_DURATION_START = 0.25f;
+	private final static float MATRIX_DURATION_STOP = 0.25f;
 
-	ViewModel model;
-	OnIntroCompleteListener listener;
+	private Scene model;
+	private OnIntroCompleteListener listener;
 
-	float anim = 0.0f;
-	final ArrayList<PhysicalShapeEffect> effects = new ArrayList<>();
-	int phase = 0;
-	boolean field_up = false;
-	float field_anim = 0.0f;
-	OrientedShape stones[] = new OrientedShape[14];
-	BackgroundRenderer backgroundRenderer;
+	private float anim = 0.0f;
+	private final ArrayList<PhysicalShapeEffect> effects = new ArrayList<>();
+	private int phase = 0;
+	private boolean field_up = false;
+	private float field_anim = 0.0f;
+	private OrientedShape[] stones = new OrientedShape[14];
+	private BackgroundRenderer backgroundRenderer;
 
 
-	public Intro(Context context, ViewModel model, OnIntroCompleteListener listener) {
+	public Intro(Context context, Scene model, OnIntroCompleteListener listener) {
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
 		setModel(model, listener);
 		init();
 	}
 
-	public void setModel(ViewModel model, OnIntroCompleteListener listener) {
+	public void setModel(Scene model, OnIntroCompleteListener listener) {
 		this.model = model;
 		this.listener = listener;
 	}
 
-	void init() {
+	private void init() {
 		stones[0] = new OrientedShape(5, false, Rotation.Left);
 		// XXX
 		//   X
@@ -142,24 +142,20 @@ public class Intro implements ViewElement {
 		addChar('s',2,14,13);
 	}
 
-	@Override
 	public boolean handlePointerDown(PointF m) {
 		cancel();
 		return true;
 	}
 
-	@Override
 	public boolean handlePointerMove(PointF m) {
 		return false;
 	}
 
-	@Override
 	public boolean handlePointerUp(PointF m) {
 		return false;
 	}
 
 	public void cancel() {
-		model.intro = null;
 		model.view.post(new Runnable() {
 			@Override
 			public void run() {
@@ -169,7 +165,6 @@ public class Intro implements ViewElement {
 		});
 	}
 
-	@Override
 	public boolean execute(float elapsed) {
 		elapsed *= 1.2f * INTRO_SPEED;
 		anim += elapsed;
@@ -399,7 +394,7 @@ public class Intro implements ViewElement {
 		}
 	}
 
-	void wipe() {
+	private void wipe() {
 		/* Zu Beginn das Feld hoch klappen */
 		field_up = true;
 		field_anim = 0.0f;
@@ -424,7 +419,7 @@ public class Intro implements ViewElement {
 		}
 	}
 
-	void executeEffects(float elapsed) {
+	private void executeEffects(float elapsed) {
 		for (int i = 0; i < effects.size(); i++)
 			effects.get(i).execute(elapsed);
 	}

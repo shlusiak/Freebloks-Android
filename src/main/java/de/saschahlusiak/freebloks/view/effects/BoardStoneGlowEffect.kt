@@ -2,13 +2,13 @@ package de.saschahlusiak.freebloks.view.effects
 
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.model.ViewModel
+import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.sin
 
 class BoardStoneGlowEffect(
-    private var model: ViewModel,
+    private var model: Scene,
     color: Int,
     private val x: Int,
     private val y: Int,

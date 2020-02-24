@@ -2,11 +2,11 @@ package de.saschahlusiak.freebloks.view.effects
 
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.model.ViewModel
+import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.pow
 
-class ShapeUndoEffect(model: ViewModel, turn: Turn) : AbsShapeEffect(model, turn) {
+class ShapeUndoEffect(model: Scene, turn: Turn) : AbsShapeEffect(model, turn) {
     private val timeMax = 1.1f
 
     private var phase = 0f

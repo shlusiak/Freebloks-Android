@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.preferences;
 
-import de.saschahlusiak.freebloks.view.model.Theme;
+import de.saschahlusiak.freebloks.view.scene.Theme;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;

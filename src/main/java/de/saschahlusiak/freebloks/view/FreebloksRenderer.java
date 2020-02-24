@@ -10,6 +10,7 @@ import javax.microedition.khronos.opengles.GL11;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.Board;
+import de.saschahlusiak.freebloks.view.scene.Scene;
 import nl.weeaboo.jktx.KTXFile;
 import nl.weeaboo.jktx.KTXFormatException;
 import nl.weeaboo.jktx.KTXHeader;
@@ -21,9 +22,8 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
-import de.saschahlusiak.freebloks.view.model.Intro;
-import de.saschahlusiak.freebloks.view.model.Theme;
-import de.saschahlusiak.freebloks.view.model.ViewModel;
+import de.saschahlusiak.freebloks.view.scene.Intro;
+import de.saschahlusiak.freebloks.view.scene.Theme;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private static final String tag = FreebloksRenderer.class.getSimpleName();
@@ -33,7 +33,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private final float[] light0_specular = {1.0f, 1.0f, 1.0f, 1.0f};
 	public final float[] light0_pos = {2.5f, 5f, -2.0f, 0.0f};
 	public float width = 1, height = 1;
-	private ViewModel model;
+	private Scene model;
 	private Context context;
 	public float fixed_zoom;
 	private float mAngleX;
@@ -47,7 +47,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public BoardRenderer board;
 	BackgroundRenderer backgroundRenderer;
 
-	public FreebloksRenderer(Context context, ViewModel model) {
+	public FreebloksRenderer(Context context, Scene model) {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
@@ -101,7 +101,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		Intro intro = model.intro;
+		final Intro intro = model.getIntro();
 		if (intro != null) {
 			intro.render(gl11, this);
 			return;

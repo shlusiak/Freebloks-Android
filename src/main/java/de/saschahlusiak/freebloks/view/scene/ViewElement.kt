@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.model
+package de.saschahlusiak.freebloks.view.scene
 
 import android.graphics.PointF
 

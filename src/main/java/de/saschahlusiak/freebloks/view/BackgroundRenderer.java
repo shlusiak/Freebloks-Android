@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.view;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import de.saschahlusiak.freebloks.view.model.Theme;
+import de.saschahlusiak.freebloks.view.scene.Theme;
 
 
 import android.content.res.Resources;

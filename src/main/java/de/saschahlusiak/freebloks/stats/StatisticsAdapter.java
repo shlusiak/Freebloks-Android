@@ -9,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class StatisticsAdapter extends BaseAdapter {
-	String labels[];
-	String values1[];
-	Context context;
+	private String[] labels;
+	private String[] values1;
+	private Context context;
 
 	StatisticsAdapter(Context context, String[] labels, String[] values1) {
 		this.context = context;

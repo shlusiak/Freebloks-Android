@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
+import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Game;
@@ -22,13 +23,13 @@ import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeUndoEffect;
-import de.saschahlusiak.freebloks.view.model.Theme;
-import de.saschahlusiak.freebloks.view.model.ViewModel;
+import de.saschahlusiak.freebloks.view.scene.Scene;
+import de.saschahlusiak.freebloks.view.scene.Theme;
 
 public class Freebloks3DView extends GLSurfaceView implements GameEventObserver {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
 
-	public final ViewModel model = new ViewModel(this);
+	public Scene model;
 
 	private FreebloksRenderer renderer;
 	private float scale = 1.0f;
@@ -47,7 +48,6 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
 	
-	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 	    super.onWindowFocusChanged(hasFocus);
@@ -63,8 +63,8 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		}
 	}
 
-	public void setActivity(ActivityInterface activity) {
-		model.activity = activity;
+	public void setActivity(ActivityInterface activity, FreebloksActivityViewModel viewModel) {
+		model = new Scene(activity, this, viewModel);
 	}
 
 	public void setTheme(Theme theme) {
@@ -335,20 +335,22 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			lastExecTime = 0;
 			while (!goDown) {
 				switch (model.showAnimations) {
-				case ViewModel.ANIMATIONS_FULL:
+				case Scene.ANIMATIONS_FULL:
 					if (lastRender < 0.2f)
 						delay = 1000 / 60;
 					else
 						delay = 1000 / 15;
 					break;
-				case ViewModel.ANIMATIONS_HALF:
+				case Scene.ANIMATIONS_HALF:
 					if (lastRender < 0.2f)
 						delay = 1000 / 30;
 					else
 						delay = 1000 / 15;
 					break;
+
+				case Scene.ANIMATIONS_OFF:
 				default:
-					if (model.intro != null)
+					if (model.getIntro() != null)
 						delay = 1000 / 30;
 					else
 						delay = 1000 / 3;
@@ -379,7 +381,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		if (elapsed < 0.001f)
 			elapsed = 0.001f;
 		if (model.execute(elapsed)) {
-			if (model.showAnimations == ViewModel.ANIMATIONS_OFF)
+			if (model.showAnimations == Scene.ANIMATIONS_OFF)
 				requestRender();
 			else {
 				if (lastRender > 0.0f)

@@ -4,11 +4,11 @@ import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.model.ViewModel
+import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
 
 abstract class AbsShapeEffect internal constructor(
-    protected val model: ViewModel,
+    protected val model: Scene,
     protected val shape: Shape,
     protected val color: Int,
     protected val x: Int,
@@ -16,7 +16,7 @@ abstract class AbsShapeEffect internal constructor(
     protected val orientation: Orientation
 ) : AbsEffect(), Effect {
 
-    internal constructor(model: ViewModel, turn: Turn) : this(model, turn.shape, model.getPlayerColor(turn.player), turn.x, turn.y, turn.orientation)
+    internal constructor(model: Scene, turn: Turn) : this(model, turn.shape, model.getPlayerColor(turn.player), turn.x, turn.y, turn.orientation)
 
     override fun isEffected(x: Int, y: Int): Boolean {
         val sx = x - this.x

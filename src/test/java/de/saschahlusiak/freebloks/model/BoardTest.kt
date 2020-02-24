@@ -234,7 +234,7 @@ class BoardTest {
 
     @Test
     fun test_full_game_duo() {
-        val s = Board(15)
+        val s = Board()
         val mode = GAMEMODE_DUO
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
@@ -281,6 +281,58 @@ class BoardTest {
         assertEquals(21, s.getPlayer(0).stonesLeft)
         assertEquals(0, s.getPlayer(1).stonesLeft)
         assertEquals(21, s.getPlayer(2).stonesLeft)
+        assertEquals(0, s.getPlayer(3).stonesLeft)
+    }
+
+    @Test
+    fun test_full_game_junior() {
+        val s = Board()
+        val mode = GAMEMODE_JUNIOR
+
+        // we have to make stones available before starting a new game, otherwise we won't get seeds set
+        s.setAvailableStones(GameConfig.JUNIOR_STONE_SET)
+        s.startNewGame(mode, 14, 14)
+        s.refreshPlayerData()
+
+        assertEquals(169, s.getPlayer(0).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(1).numberOfPossibleTurns)
+        assertEquals(169, s.getPlayer(2).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(3).numberOfPossibleTurns)
+        assertEquals(24, s.getPlayer(0).stonesLeft)
+        assertEquals(0, s.getPlayer(1).stonesLeft)
+        assertEquals(24, s.getPlayer(2).stonesLeft)
+        assertEquals(0, s.getPlayer(3).stonesLeft)
+
+        val turnpool = s.playGame { turns -> turns.last() }
+
+        assertEquals(33, turnpool.size)
+        assertEquals(8, s.getPlayer(0).stonesLeft)
+        assertEquals(0, s.getPlayer(1).stonesLeft)
+        assertEquals(7, s.getPlayer(2).stonesLeft)
+        assertEquals(0, s.getPlayer(3).stonesLeft)
+
+        assertEquals(61, s.getPlayer(0).totalPoints)
+        assertEquals(0, s.getPlayer(1).totalPoints)
+        assertEquals(64, s.getPlayer(2).totalPoints)
+        assertEquals(0, s.getPlayer(3).totalPoints)
+
+        assertEquals(0, s.getPlayer(0).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(1).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(2).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(3).numberOfPossibleTurns)
+
+        // and backwards
+        while (!turnpool.isEmpty()) {
+            s.undo(turnpool, mode)
+        }
+
+        assertEquals(169, s.getPlayer(0).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(1).numberOfPossibleTurns)
+        assertEquals(169, s.getPlayer(2).numberOfPossibleTurns)
+        assertEquals(0, s.getPlayer(3).numberOfPossibleTurns)
+        assertEquals(24, s.getPlayer(0).stonesLeft)
+        assertEquals(0, s.getPlayer(1).stonesLeft)
+        assertEquals(24, s.getPlayer(2).stonesLeft)
         assertEquals(0, s.getPlayer(3).stonesLeft)
     }
 

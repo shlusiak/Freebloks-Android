@@ -2,13 +2,13 @@ package de.saschahlusiak.freebloks.view.effects
 
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.model.ViewModel
+import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.*
 import kotlin.random.Random
 
 class ShapeRollEffect(
-    model: ViewModel,
+    model: Scene,
     turn: Turn,
     private var z: Float,
     private var vz: Float

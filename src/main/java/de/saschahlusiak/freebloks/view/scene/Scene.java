@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.model;
+package de.saschahlusiak.freebloks.view.scene;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.client.GameClient;
+import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Game;
@@ -21,21 +22,23 @@ import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
 
 /**
- * This model is owned by the {@link Freebloks3DView} and encapsulates 3D objects and renderable effects and sounds.
+ * This scene model is owned by the {@link Freebloks3DView} and
+ * encapsulates 3D objects and renderable effects and sounds.
  *
- * TODO: maybe rename to "Scene"?
+ * This is a View class and is allowed to have references to the current View and Activity.
  */
-public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
+public class Scene extends ArrayList<ViewElement> implements ViewElement {
+	private final FreebloksActivityViewModel viewModel;
 	public final Freebloks3DView view;
+	public final ActivityInterface activity;
+
 	public final Wheel wheel;
 	public final CurrentStone currentStone;
 	public GameClient client;
 	public Game game;
 	public Board board;
 	public final BoardObject boardObject;
-	public ActivityInterface activity;
 	public final ArrayList<Effect> effects;
-	public Intro intro;
 	public Sounds soundPool;
 
 	public boolean showSeeds, showOpponents, snapAid;
@@ -48,8 +51,10 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	public final static int ANIMATIONS_HALF = 1;
 	public final static int ANIMATIONS_OFF = 2;
 
-	public ViewModel(Freebloks3DView view) {
+	public Scene(ActivityInterface activity, Freebloks3DView view, FreebloksActivityViewModel viewModel) {
 		this.view = view;
+		this.activity = activity;
+		this.viewModel = viewModel;
 
 		this.board = new Board(Board.DEFAULT_BOARD_SIZE);
 		this.game = new Game(board);
@@ -74,6 +79,15 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 		boardObject.resetRotation();
 	}
 
+	/**
+	 * The intro is part of the  scene but owned by the viewModel
+	 *
+	 * @return current intro
+	 */
+	public @Nullable Intro getIntro() {
+		return viewModel.getIntro();
+	}
+
 	public void setGameClient(@Nullable GameClient client) {
 		this.client = client;
 		if (client != null) {
@@ -88,6 +102,7 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	@Override
 	public boolean handlePointerDown(@NonNull PointF m) {
 		redraw = false;
+		final Intro intro = getIntro();
 		if (intro != null) {
 			redraw = intro.handlePointerDown(m);
 			return redraw;
@@ -119,8 +134,8 @@ public class ViewModel extends ArrayList<ViewElement> implements ViewElement {
 	@Override
 	public boolean execute(float elapsed) {
 		boolean redraw = false;
-		if (intro != null) {
-			redraw = intro.execute(elapsed);
+		if (getIntro() != null) {
+			redraw = getIntro().execute(elapsed);
 			return redraw;
 		}
 

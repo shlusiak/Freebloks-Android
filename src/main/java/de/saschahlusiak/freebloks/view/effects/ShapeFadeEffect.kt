@@ -2,11 +2,11 @@ package de.saschahlusiak.freebloks.view.effects
 
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.model.ViewModel
+import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.cos
 
-class ShapeFadeEffect(model: ViewModel, turn: Turn, private val numberOfIterations: Float) : AbsShapeEffect(model, turn) {
+class ShapeFadeEffect(model: Scene, turn: Turn, private val numberOfIterations: Float) : AbsShapeEffect(model, turn) {
     private val timePerIteration = 1.1f
     private val fromAlpha = 0.15f
     private val toAlpha = 1.0f

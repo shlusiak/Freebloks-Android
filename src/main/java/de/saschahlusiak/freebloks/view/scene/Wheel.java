@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.model;
+package de.saschahlusiak.freebloks.view.scene;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class Wheel implements ViewElement {
 	private Status status = Status.IDLE;
 	private ArrayList<Stone> stones;
 	private int currentPlayer; /* the currently shown player */
-	private ViewModel model;
+	private Scene model;
 	private boolean moves_left;
 
 	private PointF lastPointerLocation = new PointF();
@@ -72,7 +72,7 @@ public class Wheel implements ViewElement {
 		}
 	};
 
-	public Wheel(ViewModel model) {
+	public Wheel(Scene model) {
 		this.model = model;
 		stones = new ArrayList<>();
 		currentPlayer = -1;

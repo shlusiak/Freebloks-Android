@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.model;
+package de.saschahlusiak.freebloks.view.scene;
 
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Game;
@@ -6,12 +6,12 @@ import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
 public class BoardObject implements ViewElement {
-	private ViewModel model;
+	private Scene model;
 	public int last_size;
 	public float mAngleY;
 	public int centerPlayer; /* the "center" position of the board, usually the first local */
 
-	public BoardObject(ViewModel model, int size) {
+	public BoardObject(Scene model, int size) {
 		this.model = model;
 		this.last_size = size;
 		this.centerPlayer = 0;

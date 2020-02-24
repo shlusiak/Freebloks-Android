@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.model;
+package de.saschahlusiak.freebloks.view.scene;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -10,7 +10,6 @@ import android.graphics.PointF;
 import android.opengl.GLUtils;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Mirrorable;
 import de.saschahlusiak.freebloks.model.Orientation;
 import de.saschahlusiak.freebloks.model.Stone;
@@ -37,7 +36,7 @@ public class CurrentStone implements ViewElement {
 	int texture[];
 	SimpleModel overlay;
 	Status status;
-	ViewModel model;
+	Scene model;
 
 	Orientation orientation;
 
@@ -45,7 +44,7 @@ public class CurrentStone implements ViewElement {
 	public final float hover_height_high = 0.55f;
 	private static final float overlay_radius = 6.0f;
 
-	CurrentStone(ViewModel model) {
+	CurrentStone(Scene model) {
 		this.model = model;
 
 		status = Status.IDLE;
