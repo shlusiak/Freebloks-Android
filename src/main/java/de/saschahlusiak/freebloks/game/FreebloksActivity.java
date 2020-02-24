@@ -468,12 +468,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 
 			/* this will start a new GameClient, which needs to be restored from saved gamestate first */
-			final GameConfig config = GameConfig.builder()
-				.difficulty(difficulty)
-				.fieldSize(board.width)
-				.build();
-
-			client = new GameClient(game, config);
+			client = new GameClient(game, new GameConfig());
 
 			client.addObserver(this);
 			client.addObserver(view);
@@ -512,7 +507,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			startNewGame(client.getConfig(), null);
 		} else {
 			// else start default game
-			startNewGame(GameConfig.builder().build(), null);
+			startNewGame(new GameConfig(), null);
 		}
 	}
 
@@ -592,7 +587,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@UiThread
 	public void establishBluetoothGame(BluetoothSocket socket) throws IOException {
-		final GameConfig config = GameConfig.builder().build();
+		final GameConfig config = new GameConfig();
 		newCurrentPlayer(-1);
 
 		if (client != null)
@@ -785,25 +780,26 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 					@Override
 					public void onJoinGame(String server) {
-						startNewGame(GameConfig.builder()
-								.server(server)
-								.showLobby(true)
-								.build(),
-							null
-						);
+						final GameConfig config = new GameConfig(server, true);
+						startNewGame(config, null);
+
 						dismissDialog(DIALOG_GAME_MENU);
 					}
 
 					@Override
 					public void onHostGame() {
-						startNewGame(GameConfig.builder().showLobby(true).build(), null);
+						final GameConfig config = new GameConfig(null, true);
+						startNewGame(config, null);
+
 						dismissDialog(DIALOG_GAME_MENU);
 					}
 
 					@Override
 					public void onHostBluetoothGameWithClient(final BluetoothSocket clientSocket) {
 						dismissDialog(DIALOG_GAME_MENU);
-						startNewGame(GameConfig.builder().showLobby(true).build(), new Runnable() {
+						final GameConfig config = new GameConfig(null, true);
+
+						startNewGame(config, new Runnable() {
 							@Override
 							public void run() {
 								new BluetoothClientToSocketThread(clientSocket, "localhost", GameClient.DEFAULT_PORT).start();

@@ -23,12 +23,12 @@ import android.widget.TextView;
 import de.saschahlusiak.freebloks.model.Shape;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
-	final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
-	final static int DIFFICULTY_DEFAULT = 8;
-	final static int DIFFICULTY_VALUES[] = {
+	private final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
+	private final static int DIFFICULTY_DEFAULT = 8;
+	private final static int[] DIFFICULTY_VALUES = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
-	public final static int FIELD_SIZES[] = {
+	public final static int[] FIELD_SIZES = {
 		13, 14, 15, 17, 20, 23
 	};
 
@@ -40,7 +40,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	private SeekBar difficulty;
 	private TextView difficulty_label;
 	private Spinner game_mode, field_size;
-	private NumberPicker picker[];
+	private NumberPicker[] picker;
 
 	private OnStartCustomGameListener listener;
 
@@ -278,7 +278,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	}
 
 	private boolean[] getPlayers() {
-		boolean p[] = new boolean[4];
+		boolean[] p = new boolean[4];
 		p[0] = player1.isChecked();
 		p[1] = player2.isChecked();
 		p[2] = player3.isChecked();
@@ -298,15 +298,15 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	}
 
 	public GameConfig getConfiguration() {
-		return GameConfig.builder()
-			.stones(getStones())
-			.requestPlayers(getPlayers())
-			.gameMode(getGameMode())
-			.fieldSize(getFieldSize())
-			.difficulty(getDifficulty())
-			.showLobby(false)
-			.server(null)
-			.build();
+		return new GameConfig(
+			null,
+			getGameMode(),
+			false,
+			getPlayers(),
+			getDifficulty(),
+			getStones(),
+			getFieldSize()
+		);
 	}
 
 	@Override

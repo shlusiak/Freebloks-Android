@@ -6,92 +6,17 @@ fun GameMode.defaultBoardSize() = GameConfig.defaultSizeForMode(this)
 fun GameMode.defaultStoneSet() = GameConfig.defaultStonesForMode(this)
 
 data class GameConfig(
-    val server: String?,
-    val showLobby: Boolean,
-    val requestPlayers: BooleanArray?, // 4
-    val stones: IntArray, // 21
-    val difficulty: Int,
-    val gameMode: GameMode,
-    val fieldSize: Int
+    val server: String? = null,
+    val gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
+    val showLobby: Boolean = false,
+    val requestPlayers: BooleanArray? = null, // 4
+    val difficulty: Int = DEFAULT_DIFFICULTY,
+    val stones: IntArray = gameMode.defaultStoneSet(), // 21
+    val fieldSize: Int = gameMode.defaultBoardSize()
 ) : Serializable {
 
-    class Builder internal constructor() {
-        private var server: String? = null
-        private var showLobby: Boolean = false
-        private var fieldSize: Int? = null
-        private var gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-        private var requestPlayers: BooleanArray? = null
-        private var stones: IntArray? = null
-        private var difficulty = DEFAULT_DIFFICULTY
-
-        fun build(): GameConfig {
-            return GameConfig(
-                server,
-                showLobby,
-                requestPlayers,
-                stones ?: gameMode.defaultStoneSet(),
-                difficulty,
-                gameMode,
-                fieldSize ?: gameMode.defaultBoardSize()
-            )
-        }
-
-        /**
-         * @param server server to connect to or null for localhost (default)
-         */
-        fun server(server: String?): Builder {
-            this.server = server
-            return this
-        }
-
-        /**
-         * @param showLobby show lobby (default false)
-         */
-        fun showLobby(showLobby: Boolean): Builder {
-            this.showLobby = showLobby
-            return this
-        }
-
-        /**
-         * @param requestPlayers players to request; null for random (default)
-         */
-        fun requestPlayers(requestPlayers: BooleanArray?): Builder {
-            this.requestPlayers = requestPlayers
-            return this
-        }
-
-        /**
-         * @param stones the availability of shapes, defaults to [defaultStonesForMode] if unset
-         */
-        fun stones(stones: IntArray): Builder {
-            this.stones = stones
-            return this
-        }
-
-        /**
-         * @param fieldSize the size of the field, default 20
-         */
-        fun fieldSize(fieldSize: Int): Builder {
-            this.fieldSize = fieldSize
-            return this
-        }
-
-        /**
-         * @param difficulty the difficulty, defaults to [DEFAULT_DIFFICULTY]
-         */
-        fun difficulty(difficulty: Int): Builder {
-            this.difficulty = difficulty
-            return this
-        }
-
-        /**
-         * @param gameMode the new game mode
-         */
-        fun gameMode(gameMode: GameMode): Builder {
-            this.gameMode = gameMode
-            return this
-        }
-    }
+    @Deprecated("use normal constructor")
+    constructor(server: String?, showLobby: Boolean): this(server = server, showLobby = showLobby, gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
 
     companion object {
         /**
@@ -134,11 +59,6 @@ data class GameConfig(
             GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> 15
             GameMode.GAMEMODE_DUO -> 14
             GameMode.GAMEMODE_JUNIOR -> 14
-        }
-
-        @JvmStatic
-		fun builder(): Builder {
-            return Builder()
         }
     }
 }
