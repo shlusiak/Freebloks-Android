@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
+
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel;
@@ -39,13 +41,6 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		super(context, attrs);
 
 		setEGLConfigChooser(new GLConfigChooser(2));
-
-		renderer = new FreebloksRenderer(context, model);
-//		renderer.density = getResources().getDisplayMetrics().density;
-		setRenderer(renderer);
-		renderer.zoom = scale;
-		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
 	
 	@Override
@@ -65,6 +60,12 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 
 	public void setActivity(ActivityInterface activity, FreebloksActivityViewModel viewModel) {
 		model = new Scene(activity, this, viewModel);
+
+		renderer = new FreebloksRenderer(getContext(), model);
+		renderer.zoom = scale;
+		setRenderer(renderer);
+		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
 
 	public void setTheme(Theme theme) {
@@ -305,6 +306,11 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	@Override
 	public void onConnected(@NonNull GameClient client) {
 		newCurrentPlayer(client.game.getCurrentPlayer());
+	}
+
+	@Override
+	public void onConnectionFailed(@NotNull GameClient client, @NotNull Exception error) {
+
 	}
 
 	@Override

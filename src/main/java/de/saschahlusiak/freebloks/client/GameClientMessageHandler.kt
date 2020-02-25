@@ -64,15 +64,26 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     /**
      * Notify all observers about a successful connection to a server.
      */
-    fun onConnected(client: GameClient) {
+    fun notifyConnected(client: GameClient) {
         Log.d("Network", "onConnected")
         notifyObservers { it.onConnected(client) }
     }
 
     /**
+     * Notify all observers that the connection attempt has failed
+     *
+     * @param client the gameClient
+     * @param error the Exception that was caught during [GameClient.connect]
+     */
+    fun notifyConnectionFailed(client: GameClient, error: Exception) {
+        Log.d("Network", "onConnectionFailed")
+        notifyObservers { it.onConnectionFailed(client, error) }
+    }
+
+    /**
      * Notify all observers about the disconnect, then clear all observers, to never ever relay another message.
      */
-    fun onDisconnected(client: GameClient, error: Exception?) {
+    fun notifyDisconnected(client: GameClient, error: Exception?) {
         Log.d("Network", "onDisconnected")
         notifyObservers { it.onDisconnected(client, error) }
 

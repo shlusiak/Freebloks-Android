@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import androidx.annotation.UiThread
 import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
@@ -18,10 +20,10 @@ import java.util.*
  *
  * Register this to a [GameClient] to automatically shut it down once the game is started.
  */
-class BluetoothServerThread(private val listener: OnBluetoothConnectedListener) : Thread("BluetoothServerBridge"), GameEventObserver {
+class BluetoothServerThread constructor(private val listener: OnBluetoothConnectedListener) : Thread("BluetoothServerBridge"), GameEventObserver {
     private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private var serverSocket: BluetoothServerSocket? = null
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     interface OnBluetoothConnectedListener {
         fun onBluetoothClientConnected(socket: BluetoothSocket)

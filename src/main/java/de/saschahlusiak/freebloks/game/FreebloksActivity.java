@@ -39,11 +39,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -57,7 +60,6 @@ import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread;
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread;
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.client.JNIServer;
@@ -89,7 +91,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
-	static final int DIALOG_PROGRESS = 6;
 	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	static final int DIALOG_SINGLE_PLAYER = 10;
@@ -108,8 +109,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	private FreebloksActivityViewModel viewModel;
 
-	ConnectTask connectTask;
-
 	private String clientName;
 	private int difficulty;
 	private GameMode gamemode;
@@ -120,6 +119,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	private SharedPreferences prefs;
 
+	@Deprecated
 	boolean canresume = false;
 	private boolean showRateDialog = false;
 
@@ -217,18 +217,14 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		newCurrentPlayer(-1);
 
-		RetainedConfig config = (RetainedConfig) getLastCustomNonConfigurationInstance();
-		if (config != null) {
-			client = viewModel.getClient();
-			lastStatus = viewModel.getLastStatus();
-			connectTask = config.connectTask;
-			if (connectTask != null)
-				connectTask.setActivity(this);
-			if (viewModel.getIntro() != null)
-				viewModel.getIntro().setModel(view.model, this);
-			canresume = true;
-			chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
-		}
+		client = viewModel.getClient();
+		lastStatus = viewModel.getLastStatus();
+		if (viewModel.getIntro() != null)
+			viewModel.getIntro().setModel(view.model, this);
+		canresume = client != null && client.isConnected() && !client.game.isFinished();
+
+		chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
+
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
 			showRateDialog = savedInstanceState.getBoolean("showRateDialog", false);
@@ -295,6 +291,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 		};
 		findViewById(R.id.currentPlayer).postDelayed(r, 1000);
+
+		viewModel.getConnectionStatusLiveData().observe(this, this::onConnectionStatusChanged);
 	}
 
 	@Override
@@ -315,6 +313,32 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	public FreebloksActivityViewModel getViewModel() {
 		return viewModel;
+	}
+
+	final void onConnectionStatusChanged(@NonNull ConnectionStatus status) {
+		Log.d(tag, "Connection status: " + status);
+		final String tag = "connecting_progress_dialog";
+		DialogFragment f = (DialogFragment) getSupportFragmentManager().findFragmentByTag(tag);
+
+		switch (status) {
+			case Connecting:
+				if (f == null) {
+					new ConnectingDialogFragment().show(getSupportFragmentManager(), tag);
+				}
+				break;
+
+			case Connected:
+			case Failed:
+			case Disconnected:
+				if (f != null) {
+					f.dismiss();
+				}
+				canresume = false;
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	@Override
@@ -343,21 +367,12 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	protected void onDestroy() {
 		Log.d(tag, "onDestroy");
 
-		if (connectTask != null) try {
-			connectTask.cancel(true);
-			connectTask.get();
-			connectTask = null;
-		} catch (Exception e) {
-			//	e.printStackTrace();
-		}
 		if (client != null) {
-			client.disconnect();
-			client = null;
+			client.removeObserver(this);
+			client.removeObserver(view);
 		}
-		if (view.model.soundPool != null)
-			view.model.soundPool.release();
-		view.model.soundPool = null;
 		view = null;
+
 		super.onDestroy();
 	}
 
@@ -412,25 +427,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		view.model.wheel.update(view.model.boardObject.getShowWheelPlayer());
 	}
 
-	@Nullable
-	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
-		Log.d(tag, "onRetainNonConfigurationInstance");
-
-		final RetainedConfig config = new RetainedConfig();
-		config.connectTask = connectTask;
-
-		this.connectTask = null;
-		view.model.soundPool = null;
-		// ensure that this isn't disconnect on rotate
-		if (client != null) {
-			client.removeObserver(this);
-			client.removeObserver(view);
-		}
-		client = null;
-		return config;
-	}
-
 	@Override
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		Log.d(tag, "onSaveInstanceState");
@@ -453,44 +449,17 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	private boolean readStateFromBundle(Bundle in) {
 		try {
-			Game game = (Game) in.getSerializable("game");
+			final Game game = (Game) in.getSerializable("game");
 			if (game == null)
 				return false;
+
 			// don't restore games that have finished; the server would not detach the listener
 			if (game.isFinished())
 				return false;
 
-			final Board board = game.getBoard();
-			Crashlytics.log("restore from bundle");
-			int ret = JNIServer.runServerForExistingGame(game, difficulty);
-			if (ret != 0) {
-				Crashlytics.log("Error starting server: " + ret);
-			}
-
-			/* this will start a new GameClient, which needs to be restored from saved gamestate first */
-			client = new GameClient(game, new GameConfig());
-
-			client.addObserver(this);
-			client.addObserver(view);
-
-			viewModel.setClient(client);
-
-			client.game.setStarted(true);
-
-			view.setGameClient(client);
-			connectTask = new ConnectTask(client, false, () -> {
-				// when resuming, the server does not send a current player message
-				newCurrentPlayer(game.getCurrentPlayer());
-			});
-			connectTask.setActivity(this);
-
-			// this call would execute the onPreTask method, which calls through to show the progress
-			// dialog. But because performRestoreInstanceState calls restoreManagedDialogs, those
-			// dialogs would be overwritten. To mitigate this, we need to defer starting the connectTask
-			// until all restore is definitely complete.
-			view.post(() -> {
-				if (connectTask != null) connectTask.execute((String) null);
-			});
+			Crashlytics.log("Resuming game from bundle");
+			Log.d(tag, "Resuming game from bundle");
+			resumeGame(game);
 
 			return true;
 		} catch (Exception e) {
@@ -512,8 +481,47 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	@UiThread
-	public void startNewGame(final GameConfig config, final Runnable runAfter) {
+	private void resumeGame(final Game game) {
+		final Board board = game.getBoard();
+		final GameMode gameMode = game.getGameMode();
+
+		int ret = JNIServer.runServerForExistingGame(game, difficulty);
+		if (ret != 0) {
+			Crashlytics.log("Error starting server: " + ret);
+		}
+
+		final GameConfig config = new GameConfig(
+			null,
+			gameMode,
+			false,
+			new boolean[] {false, false, false, false},
+			GameConfig.DEFAULT_DIFFICULTY,
+			GameConfig.defaultStonesForMode(gameMode),
+			board.width
+		);
+
+		/* this will start a new GameClient, which needs to be restored from saved gamestate first */
+		client = new GameClient(game, config);
+
+		client.addObserver(this);
+		client.addObserver(view);
+
+		viewModel.setClient(client);
+
+		client.game.setStarted(true);
+
+		view.setGameClient(client);
+
+		viewModel.startConnectingClient(config, clientName, false, () -> {
+			// when resuming, the server does not send a current player message
+			newCurrentPlayer(game.getCurrentPlayer());
+		});
+	}
+
+	@UiThread
+	private void startNewGame(final GameConfig config, final Runnable runAfter) {
 		newCurrentPlayer(-1);
+
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServerForNewGame(
 				config.getGameMode(),
@@ -527,8 +535,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			}
 		}
 
-		if (client != null)
-			client.disconnect();
+		viewModel.disconnectClient();
 		client = null;
 
 		view.model.clearEffects();
@@ -545,44 +552,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		view.setGameClient(client);
 
-		connectTask = new ConnectTask(client, config.getShowLobby(), new Runnable() {
-			@Override
-			public void run() {
-				if (config.getServer() == null && config.getShowLobby()) {
-					viewModel.appendServerInterfacesToChat();
-				}
-
-				if (config.getRequestPlayers() == null)
-					client.requestPlayer(-1, clientName);
-				else {
-					for (int i = 0; i < 4; i++)
-						if (config.getRequestPlayers()[i])
-							client.requestPlayer(i, clientName);
-				}
-				if (!config.getShowLobby())
-					client.requestGameStart();
-				else {
-					Bundle b = new Bundle();
-					b.putString("server", config.getServer() == null ? "localhost" : config.getServer());
-					FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("show_lobby", b);
-				}
-
-				if (config.getServer() == null) {
-					// hosting a local game. start bluetooth bridge.
-					final BluetoothServerThread bluetoothServer = new BluetoothServerThread(
-						// start a new client bridge for every connected bluetooth client
-						socket -> new BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
-					);
-					client.addObserver(bluetoothServer);
-					bluetoothServer.start();
-				}
-
-				if (runAfter != null)
-					runAfter.run();
-			}
-		});
-		connectTask.setActivity(this);
-		connectTask.execute(config.getServer());
+		viewModel.startConnectingClient(config, clientName, !config.getShowLobby(), runAfter);
 	}
 
 	@UiThread
@@ -821,20 +791,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 					}
 				});
 
-			case DIALOG_PROGRESS:
-				ProgressDialog p = new ProgressDialog(FreebloksActivity.this);
-				p.setMessage(getString(R.string.connecting));
-				p.setIndeterminate(true);
-				p.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				p.setCancelable(true);
-				p.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-				return p;
-
 			case DIALOG_SINGLE_PLAYER:
 				ColorListDialog d = new ColorListDialog(this,
 					(dialog, config) -> {
@@ -895,11 +851,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 			case DIALOG_CUSTOM_GAME:
 				((CustomGameDialog) dialog).prepareCustomGameDialog(difficulty, gamemode, fieldsize);
-				break;
-
-			case DIALOG_PROGRESS:
-				if (connectTask != null)
-					dialog.setOnCancelListener(connectTask);
 				break;
 
 			case DIALOG_SINGLE_PLAYER:
@@ -1344,6 +1295,34 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void onConnected(@NonNull GameClient client) {
 		newCurrentPlayer(client.game.getCurrentPlayer());
+
+		if (client.getConfig().getShowLobby()) {
+			runOnUiThread(() -> {
+				final Bundle bundle = new Bundle();
+				final String server = client.getConfig().getServer() == null ? "localhost" : client.getConfig().getServer();
+				bundle.putString("server", server);
+				FirebaseAnalytics.getInstance(this).logEvent("show_lobby", bundle);
+
+				showDialog(FreebloksActivity.DIALOG_LOBBY);
+			});
+		}
+	}
+
+	@WorkerThread
+	@Override
+	public void onConnectionFailed(@NotNull GameClient client, @NotNull Exception error) {
+		runOnUiThread(() -> {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(android.R.string.dialog_alert_title);
+			builder.setMessage(error.getMessage());
+			builder.setIcon(android.R.drawable.ic_dialog_alert);
+			canresume = false;
+
+			builder.setOnDismissListener(dialog -> showDialog(DIALOG_GAME_MENU));
+			builder.setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss());
+
+			builder.create().show();
+		});
 	}
 
 	@WorkerThread

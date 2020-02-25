@@ -266,7 +266,7 @@ class GameClientMessageHandlerTest {
     }
 
     @Test
-    fun test_onConnected() {
+    fun test_notifyConnected() {
         var connected = false
         val observer = object : GameEventObserver {
             override fun onConnected(client: GameClient) {
@@ -276,13 +276,30 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfig.Builder().build())
-        handler.onConnected(client)
+        val client = GameClient(Game(), GameConfig())
+        handler.notifyConnected(client)
         assertTrue(connected)
     }
 
     @Test
-    fun test_onDisconnected() {
+    fun test_notifyConnectionFailed() {
+        var receivedError: Exception? = null
+        val observer = object : GameEventObserver {
+            override fun onConnectionFailed(client: GameClient, error: Exception) {
+                receivedError = error
+            }
+        }
+
+        handler.addObserver(observer)
+
+        val client = GameClient(Game(), GameConfig())
+        handler.notifyConnectionFailed(client, IOException("Stuff"))
+        assertNotNull(receivedError)
+        assertTrue(receivedError is IOException)
+    }
+
+    @Test
+    fun test_notifyDisconnected() {
         var disconnected = false
         var receivedError: Exception? = null
 
@@ -295,9 +312,9 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfig.Builder().build())
+        val client = GameClient(Game(), GameConfig())
 
-        handler.onDisconnected(client, IOException("stuff"))
+        handler.notifyDisconnected(client, IOException("stuff"))
         assertTrue(disconnected)
         assertTrue(receivedError is IOException)
     }

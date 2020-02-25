@@ -212,7 +212,8 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
     private fun sendChat() {
         val text = chatText.text.toString()
         if (text.isEmpty()) return
-        client?.sendChat(text)
+        // FIXME: The server cuts off the last character, so we have to append a new-line
+        client?.sendChat(text + "\n")
         chatText.setText("")
     }
 

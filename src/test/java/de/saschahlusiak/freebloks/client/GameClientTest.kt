@@ -19,7 +19,7 @@ import kotlin.concurrent.withLock
 
 class GameClientTest {
     private val game = Game()
-    private val client = GameClient(game, GameConfig.builder().build())
+    private val client = GameClient(game, GameConfig())
 
     private val toServerStream = PipedOutputStream()
     private val fromServerStream = PipedInputStream()
@@ -144,7 +144,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_notConnected() {
-        val client = GameClient(Game(), GameConfig.builder().build())
+        val client = GameClient(Game(), GameConfig())
         assertFalse(client.isConnected())
     }
 

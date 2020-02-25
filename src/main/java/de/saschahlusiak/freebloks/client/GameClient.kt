@@ -85,18 +85,23 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      * @throws IOException on connection refused
      */
     @WorkerThread
-    @Throws(IOException::class)
-    fun connect(context: Context, host: String?, port: Int) {
+    fun connect(context: Context, host: String?, port: Int): Boolean {
         val socket = Socket()
+        val address = host?.let { InetSocketAddress(it, port) } ?: InetSocketAddress(null as InetAddress?, port)
+
         try {
-            val address = host?.let { InetSocketAddress(it, port) }
-                ?: InetSocketAddress(null as InetAddress?, port)
             socket.connect(address, CONNECT_TIMEOUT)
-        } catch (e: IOException) { // translate any IOException to "Connection refused"
+        } catch (e: IOException) {
             e.printStackTrace()
-            throw IOException(context.getString(R.string.connection_refused))
+
+            // translate any IOException to "Connection refused"
+            val e2 = IOException(context.getString(R.string.connection_refused), e)
+            gameClientMessageHandler.notifyConnectionFailed(this, e2)
+
+            return false
         }
         connected(socket, socket.getInputStream(), socket.getOutputStream())
+        return true
     }
 
     /**
@@ -119,7 +124,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
         // messages and sending events to the observers.
         // To allow for other observers to be registered before we consume messages, we inform the
         // observers so far about it.
-        gameClientMessageHandler.onConnected(this)
+        gameClientMessageHandler.notifyConnected(this)
 
         readThread = MessageReadThread(input, gameClientMessageHandler) { 
             disconnect()
@@ -155,12 +160,12 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
         sendExecutor = null
         clientSocket = null
 
-        gameClientMessageHandler.onDisconnected(this, lastError)
+        gameClientMessageHandler.notifyDisconnected(this, lastError)
     }
 
     /**
      * Request a new player from the server
-     * @param player player to request
+     * @param player player to request or -1 for random
      * @param name name for the player
      */
     fun requestPlayer(player: Int, name: String?) {
@@ -246,7 +251,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
     }
 
     companion object {
-        private const val CONNECT_TIMEOUT = 10000
+        private const val CONNECT_TIMEOUT = 5000
         const val DEFAULT_PORT = 59995
     }
 }

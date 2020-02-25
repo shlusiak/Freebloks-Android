@@ -18,7 +18,18 @@ interface GameEventObserver {
     fun onConnected(client: GameClient) {}
 
     /**
+     * The connection attempt has failed with the given error.
+     *
+     * @param client the [GameClient]
+     * @param error the final error of the connection attempt
+     */
+    fun onConnectionFailed(client: GameClient, error: Exception) {}
+
+    /**
      * The last message ever received; we are disconnected.
+     *
+     * @param client the GameClient
+     * @param error optional error received while we were connected
      */
     fun onDisconnected(client: GameClient, error: Exception?) {}
 

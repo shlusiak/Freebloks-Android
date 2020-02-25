@@ -347,8 +347,8 @@ class NetworkGameTest {
         val game = Game()
         val processor = GameClientMessageHandler(game)
 
-        val client = GameClient(Game(), GameConfig.Builder().build())
-        processor.onConnected(client)
+        val client = GameClient(Game(), GameConfig())
+        processor.notifyConnected(client)
         for (pkg in packets) {
             processor.handleMessage(pkg)
         }
