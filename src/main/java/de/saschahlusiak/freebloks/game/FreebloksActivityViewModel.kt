@@ -246,9 +246,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     /**
-     * Set the override of the player to show, via rotating of the board
+     * Set the override of the player to show, when rotating the board
      *
-     * @param player the new player to show, or null for default
+     * @param player the new player to show, or null for current player
      */
     fun setShowPlayerOverride(player: Int?) {
         if (player == this.overrideShowPlayer) return

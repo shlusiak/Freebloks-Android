@@ -63,7 +63,8 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
      */
     fun startBackgroundNotification() {
         if (!client.isConnected()) return
-        if (game.isStarted && lastStatus?.clients == 1) return
+        val lastStatus = lastStatus ?: return
+        if (game.isStarted && lastStatus.clients == 1) return
 
         isInBackground = true
         notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
@@ -192,7 +193,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
     }
 
     override fun playerJoined(client: Int, player: Int, name: String?) {
-        if (!isInBackground && !game.isStarted) return
+        if (!isInBackground) return
 
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
         val colorName = Global.getColorName(context, player, game.gameMode)

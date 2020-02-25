@@ -99,7 +99,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	Freebloks3DView view;
 	private GameClient client = null;
 	private boolean undo_with_back;
-	private boolean hasActionBar;
 	private MessageServerStatus lastStatus;
 	private Menu optionsMenu;
 	private ViewGroup statusView;
@@ -147,40 +146,18 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
 
-
-		/* tablets/phone with ICS may or may not have physical buttons. Show action bar if mising */
-		ViewConfiguration viewConfig = ViewConfiguration.get(this);
-		/* we need the action bar if we don't have a menu key */
-		hasActionBar = !viewConfig.hasPermanentMenuKey();
-
-		if (!hasActionBar)
-			requestWindowFeature(Window.FEATURE_NO_TITLE);
-		else
-			requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
 		super.onCreate(savedInstanceState);
 
-		Window w = getWindow();
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//	        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-
-		if (hasActionBar) {
-			// failsafe, there might be Android versions >= 3.0 without an actual ActionBar
-			if (getActionBar() == null)
-				hasActionBar = false;
-		}
-
-		if (hasActionBar) {
-			getActionBar().setHomeButtonEnabled(true);
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-
-//			getActionBar().setDisplayShowHomeEnabled(true);
-//			getActionBar().setDisplayUseLogoEnabled(false);
-//			getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
-			getActionBar().setBackgroundDrawable(new ColorDrawable(0));
-			getActionBar().setDisplayShowTitleEnabled(false);
-		}
+//		getActionBar().setDisplayShowHomeEnabled(true);
+//		getActionBar().setDisplayUseLogoEnabled(false);
+//		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(0));
+		getActionBar().setDisplayShowTitleEnabled(false);
 
 		setContentView(R.layout.main_3d);
 
@@ -191,9 +168,9 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		view = findViewById(R.id.board);
 		view.setActivity(viewModel);
 
-		if (prefs.getBoolean("immersive_mode", true))
+		if (prefs.getBoolean("immersive_mode", true)) {
 			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-
+		}
 
 		statusView = findViewById(R.id.currentPlayerLayout);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -214,6 +191,11 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		canresume = client != null && client.isConnected() && !client.game.isFinished();
 
 		chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
+
+		statusView.setOnApplyWindowInsetsListener((v, insets) -> {
+			v.setPadding(insets.getSystemWindowInsetLeft(), 0, insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
+			return insets;
+		});
 
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
@@ -646,7 +628,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 		menu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.getClients() <= 1);
 		menu.findItem(R.id.hint).setEnabled(local);
-		menu.findItem(R.id.sound_toggle_button).setVisible(hasActionBar);
+		menu.findItem(R.id.sound_toggle_button).setVisible(true);
 		updateSoundMenuEntry();
 
 		return super.onPrepareOptionsMenu(menu);
