@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.game;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,7 +53,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
@@ -64,7 +62,6 @@ import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
-import de.saschahlusiak.freebloks.lobby.ChatEntry;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Game;
@@ -97,7 +94,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	static final int REQUEST_FINISH_GAME = 1;
 
-	public static final String GAME_STATE_FILE = "gamestate.bin";
+	private static final String GAME_STATE_FILE = "gamestate.bin";
 
 	Freebloks3DView view;
 	private GameClient client = null;
@@ -115,12 +112,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	private int fieldsize;
 
 	private ImageButton chatButton;
-	private ArrayList<ChatEntry> chatEntries;
 
 	private SharedPreferences prefs;
 
 	@Deprecated
-	boolean canresume = false;
+	private boolean canresume = false;
 	private boolean showRateDialog = false;
 
 	@Override
@@ -210,10 +206,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				showDialog(DIALOG_LOBBY);
 			}
 		});
-		if (savedInstanceState != null)
-			chatEntries = (ArrayList<ChatEntry>) savedInstanceState.getSerializable("chatEntries");
-		else
-			chatEntries = new ArrayList<>();
 
 		newCurrentPlayer(-1);
 
@@ -433,7 +425,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		super.onSaveInstanceState(outState);
 		outState.putFloat("view_scale", view.getScale());
 		outState.putBoolean("showRateDialog", showRateDialog);
-		outState.putSerializable("chatEntries", chatEntries);
 		writeStateToBundle(outState);
 	}
 
@@ -1174,20 +1165,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void chatReceived(@NonNull MessageServerStatus status, int client, int player, @NonNull final String message) {
-		String name = lastStatus.getClientName(getResources(), client);
-
-		// TODO: use ViewModel once available
-
-		final ChatEntry e = ChatEntry.clientMessage(client, player, message, name);
-
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				chatEntries.add(e);
-				if (client == -1)
-					Toast.makeText(FreebloksActivity.this, "* " + message,
-						Toast.LENGTH_LONG).show();
-				else if (hasWindowFocus()) {
+				if (hasWindowFocus()) {
 					/* only animate chatButton, if no dialog has focus */
 					/* TODO: animate if activity is stopped or paused? */
 
@@ -1242,44 +1223,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 	@Override
 	public void serverStatus(@NonNull MessageServerStatus status) {
-		// TODO: use ViewModel once available
-		if (lastStatus != null && lastStatus.isAtLeastVersion(2)) {
-			/* generate server chat messages, aka "joined" and "left" */
-
-			for (int i = 0; i < lastStatus.getClientForPlayer().length; i++) {
-				MessageServerStatus s;
-				final boolean wasClient = lastStatus.isClient(i);
-				final boolean isClient = status.isClient(i);
-				final int tid;
-				if (!wasClient && isClient) {
-					/* joined */
-					s = status;
-					tid = R.string.player_joined_color;
-				} else if (wasClient && !isClient) {
-					/* left */
-					s = lastStatus;
-					tid = R.string.player_left_color;
-				} else continue;
-
-				String name;
-				name = s.getClientName(getResources(), s.getClientForPlayer()[i]);
-
-				if (view == null)
-					return;
-				if (view.model.game == null)
-					return;
-
-				final String text = getString(tid, name, getResources().getStringArray(R.array.color_names)[view.model.getPlayerColor(i)]);
-				final ChatEntry e = ChatEntry.serverMessage(i, text, name);
-
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						chatEntries.add(e);
-					}
-				});
-			}
-		}
 		lastStatus = status;
 		if (lastStatus.getClients() > 1) {
 			chatButton.post(new Runnable() {
@@ -1336,7 +1279,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				lastStatus = null;
 				view.setGameClient(null);
 				chatButton.setVisibility(View.INVISIBLE);
-				chatEntries.clear();
 
 				newCurrentPlayer(-1);
 
