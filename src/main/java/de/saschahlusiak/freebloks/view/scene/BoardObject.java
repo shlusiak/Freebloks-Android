@@ -5,14 +5,22 @@ import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import android.graphics.PointF;
 
+import androidx.annotation.NonNull;
+
 public class BoardObject implements ViewElement {
-	private Scene model;
+	private Scene scene;
 	public int last_size;
 	public float mAngleY;
 	public int centerPlayer; /* the "center" position of the board, usually the first local */
+	private float oa;
+	private PointF om = new PointF();
+	private boolean rotating = false;
+	private boolean auto_rotate = true;
+	private int lastDetailsPlayer = -1;
 
-	public BoardObject(Scene model, int size) {
-		this.model = model;
+
+	public BoardObject(Scene scene, int size) {
+		this.scene = scene;
 		this.last_size = size;
 		this.centerPlayer = 0;
 		mAngleY = 0.0f;
@@ -29,8 +37,8 @@ public class BoardObject implements ViewElement {
 		point.x = point.x / (BoardRenderer.stone_size * 2.0f);
 		point.y = point.y / (BoardRenderer.stone_size * 2.0f);
 
-		point.x = point.x + 0.5f * (float)(model.board.width - 1);
-		point.y = point.y + 0.5f * (float)(model.board.height - 1);
+		point.x = point.x + 0.5f * (float)(scene.board.width - 1);
+		point.y = point.y + 0.5f * (float)(scene.board.height - 1);
 
 		return point;
 	}
@@ -47,7 +55,7 @@ public class BoardObject implements ViewElement {
 		switch (centerPlayer) {
 		default:
 		case 0: /* nothing */
-			p.y = model.board.height - p.y - 1;
+			p.y = scene.board.height - p.y - 1;
 			break;
 		case 1:
 			tmp = p.x;
@@ -55,12 +63,12 @@ public class BoardObject implements ViewElement {
 			p.y = tmp;
 			break;
 		case 2: /* 180 degree */
-			p.x = model.board.width - p.x - 1;
+			p.x = scene.board.width - p.x - 1;
 			break;
 		case 3:
 			tmp = p.y;
-			p.y = model.board.width - p.x - 1;
-			p.x = model.board.height - tmp - 1;
+			p.y = scene.board.width - p.x - 1;
+			p.x = scene.board.height - tmp - 1;
 			break;
 		}
 	}
@@ -74,7 +82,6 @@ public class BoardObject implements ViewElement {
 		return -90.0f * (float)centerPlayer;
 	}
 
-	int lastDetailsPlayer = -1;
 	private void updateDetailsPlayer() {
 		int p;
 		if (mAngleY > 0)
@@ -86,7 +93,7 @@ public class BoardObject implements ViewElement {
 		else
 			lastDetailsPlayer = (centerPlayer + p + 4) % 4;
 
-		final Game game = model.game;
+		final Game game = scene.game;
 		if (game != null) {
 			if (game.getGameMode() == GameMode.GAMEMODE_2_COLORS_2_PLAYERS ||
 				game.getGameMode() == GameMode.GAMEMODE_DUO ||
@@ -105,7 +112,7 @@ public class BoardObject implements ViewElement {
 	 * @return -1, if board is not rotated
 	 */
 	public int getShowDetailsPlayer() {
-		if (model.game == null)
+		if (scene.game == null)
 			return -1;
 		return lastDetailsPlayer;
 	}
@@ -119,16 +126,16 @@ public class BoardObject implements ViewElement {
 	 * @return -1 otherwise
 	 */
 	public int getShowSeedsPlayer() {
-		if (!model.showSeeds)
+		if (!scene.showSeeds)
 			return -1;
-		if (model.game == null)
+		if (scene.game == null)
 			return -1;
 		if (getShowDetailsPlayer() >= 0)
 			return getShowDetailsPlayer();
-		if (model.game.isFinished())
+		if (scene.game.isFinished())
 			return centerPlayer;
-		if (model.game.isLocalPlayer())
-			return model.game.getCurrentPlayer();
+		if (scene.game.isLocalPlayer())
+			return scene.game.getCurrentPlayer();
 		return -1;
 	}
 
@@ -140,22 +147,17 @@ public class BoardObject implements ViewElement {
 	public int getShowWheelPlayer() {
 		if (getShowDetailsPlayer() >= 0)
 			return getShowDetailsPlayer();
-		if (model.game == null)
+		if (scene.game == null)
 			return centerPlayer;
-		if (model.game.isFinished()) {
+		if (scene.game.isFinished()) {
 			return centerPlayer;
 		}
-		if (model.game.isLocalPlayer() || model.showOpponents)
-			return model.game.getCurrentPlayer();
+		if (scene.game.isLocalPlayer() || scene.showOpponents)
+			return scene.game.getCurrentPlayer();
 		/* TODO: would be nice to show the last current local player instead of the center one
 		 * needs caching of previous local player */
 		return centerPlayer;
 	}
-
-	float oa;
-	PointF om = new PointF();
-	boolean rotating = false;
-	boolean auto_rotate = true;
 
 	@Override
 	public boolean handlePointerDown(PointF m) {
@@ -168,11 +170,11 @@ public class BoardObject implements ViewElement {
 	}
 
 	@Override
-	public boolean handlePointerMove(PointF m) {
+	public boolean handlePointerMove(@NonNull PointF m) {
 		if (!rotating)
 			return false;
 
-		model.currentStone.stopDragging();
+		scene.currentStone.stopDragging();
 
 		float an = (float)Math.atan2(m.y, m.x);
 		mAngleY += (oa - an) / (float)Math.PI * 180.0f;
@@ -187,12 +189,14 @@ public class BoardObject implements ViewElement {
 		int s = getShowDetailsPlayer();
 		if (s < 0)
 			s = getShowWheelPlayer();
-		if (model.wheel.getCurrentPlayer() != s) {
-			model.wheel.update(s);
-			model.activity.showPlayer(s);
+
+		if (scene.wheel.getCurrentPlayer() != s) {
+			scene.wheel.update(s);
 		}
 
-		model.redraw = true;
+		scene.setShowPlayerOverride(getShowDetailsPlayer());
+
+		scene.redraw = true;
 		return true;
 	}
 
@@ -221,7 +225,7 @@ public class BoardObject implements ViewElement {
 
 	@Override
 	public boolean execute(float elapsed) {
-		if (!rotating && model.game != null && model.game.isFinished() && auto_rotate) {
+		if (!rotating && scene.game != null && scene.game.isFinished() && auto_rotate) {
 			final float ROTSPEED = 25.0f;
 
 			mAngleY += elapsed * ROTSPEED;
@@ -233,15 +237,16 @@ public class BoardObject implements ViewElement {
 
 			updateDetailsPlayer();
 			int s = getShowWheelPlayer();
-			if (model.wheel.getCurrentPlayer() != s) {
-				model.wheel.update(s);
-				model.activity.showPlayer(s);
+			if (scene.wheel.getCurrentPlayer() != s) {
+				scene.wheel.update(s);
 			}
+			scene.setShowPlayerOverride(getShowDetailsPlayer());
+
 			return true;
 		} else if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
 			final float SNAPSPEED = 10.0f + (float)Math.pow(Math.abs(mAngleY - ta), 0.65f) * 30.0f;
 
-			int lp = model.wheel.getCurrentPlayer();
+			int lp = scene.wheel.getCurrentPlayer();
 			if (mAngleY - ta > 0.1f) {
 				mAngleY -= elapsed * SNAPSPEED;
 				if (mAngleY - ta <= 0.1f) {
@@ -259,9 +264,9 @@ public class BoardObject implements ViewElement {
 			updateDetailsPlayer();
 			int s = getShowWheelPlayer();
 			if (lp != s) {
-				model.wheel.update(s);
-				model.activity.showPlayer(s);
+				scene.wheel.update(s);
 			}
+			scene.setShowPlayerOverride(getShowDetailsPlayer());
 			return true;
 		}
 		return false;

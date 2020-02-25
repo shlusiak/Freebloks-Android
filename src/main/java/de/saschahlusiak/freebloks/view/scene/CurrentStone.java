@@ -26,26 +26,26 @@ public class CurrentStone implements ViewElement {
 	}
 
 	Stone stone;
-	int current_color;
-	PointF pos = new PointF();
+	private int current_color;
+	private PointF pos = new PointF();
 	boolean hasMoved; /* has the stone been moved since it was touched? */
-	boolean canCommit; /* is the stone commitable if it has not been moved? */
-	boolean isValid;
-	float stone_rel_x, stone_rel_y;
-	float rotate_angle;
-	int texture[];
-	SimpleModel overlay;
+	private boolean canCommit; /* is the stone commitable if it has not been moved? */
+	private boolean isValid;
+	private float stone_rel_x, stone_rel_y;
+	private float rotate_angle;
+	private int texture[];
+	private SimpleModel overlay;
 	Status status;
-	Scene model;
+	private Scene scene;
 
-	Orientation orientation;
+	private Orientation orientation;
 
 	public final float hover_height_low = 0.55f;
 	public final float hover_height_high = 0.55f;
 	private static final float overlay_radius = 6.0f;
 
-	CurrentStone(Scene model) {
-		this.model = model;
+	CurrentStone(Scene scene) {
+		this.scene = scene;
 
 		status = Status.IDLE;
 
@@ -125,18 +125,18 @@ public class CurrentStone implements ViewElement {
 		gl.glDisable(GL10.GL_CULL_FACE);
 		gl.glPushMatrix();
 		gl.glTranslatef(
-				BoardRenderer.stone_size * (-(float)(model.board.width - 1) + 2.0f * pos.x + offset),
+				BoardRenderer.stone_size * (-(float)(scene.board.width - 1) + 2.0f * pos.x + offset),
 				0,
-				BoardRenderer.stone_size * (-(float)(model.board.width - 1) + 2.0f * pos.y + offset));
+				BoardRenderer.stone_size * (-(float)(scene.board.width - 1) + 2.0f * pos.y + offset));
 
 		/* STONE SHADOW */
 	    gl.glPushMatrix();
 		/* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */
 		/* TODO: merge with BoardRenderer.renderShadow() */
-		gl.glRotatef(-model.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(-scene.boardObject.centerPlayer * 90, 0, 1, 0);
 	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
-		gl.glRotatef(model.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(scene.boardObject.centerPlayer * 90, 0, 1, 0);
 
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
@@ -151,7 +151,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stone_size * offset);
 
-		renderer.board.renderStoneShadow(gl, model.game.getCurrentPlayer(), stone.getShape(), orientation, 0.80f);
+		renderer.board.renderStoneShadow(gl, scene.game.getCurrentPlayer(), stone.getShape(), orientation, 0.80f);
 		gl.glPopMatrix();
 
 
@@ -166,9 +166,9 @@ public class CurrentStone implements ViewElement {
 	    /* OVERLAY SHADOW */
 	    gl.glPushMatrix();
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[2]);
-		gl.glRotatef(-model.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(-scene.boardObject.centerPlayer * 90, 0, 1, 0);
 	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
-		gl.glRotatef(model.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(scene.boardObject.centerPlayer * 90, 0, 1, 0);
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
 		if (status == Status.FLIPPING_HORIZONTAL)
@@ -228,7 +228,7 @@ public class CurrentStone implements ViewElement {
 			return false;
 
 		/* provide a weird but nice pseudo snapping feeling */
-		if (model.hasAnimations()) {
+		if (scene.hasAnimations()) {
 			float r = x - (float)Math.floor(x);
 			if (r < 0.5f) {
 				r *= 2.0f;
@@ -301,7 +301,7 @@ public class CurrentStone implements ViewElement {
 		if (stone != null) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
-			model.boardObject.modelToBoard(fieldPoint);
+			scene.boardObject.modelToBoard(fieldPoint);
 			screenPoint.x = fieldPoint.x;
 			screenPoint.y = fieldPoint.y;
 
@@ -332,7 +332,7 @@ public class CurrentStone implements ViewElement {
 
 		fieldPoint.x = m.x;
 		fieldPoint.y = m.y;
-		model.boardObject.modelToBoard(fieldPoint);
+		scene.boardObject.modelToBoard(fieldPoint);
 
 		if (status == Status.DRAGGING) {
 			final float THRESHOLD = 1.0f;
@@ -343,8 +343,8 @@ public class CurrentStone implements ViewElement {
 
 			boolean mv = snap(x, y, false);
 			hasMoved |= mv;
-			model.redraw |= mv;
-			model.redraw |= model.hasAnimations();
+			scene.redraw |= mv;
+			scene.redraw |= scene.hasAnimations();
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.getShape().getSize() / 2;
@@ -356,7 +356,7 @@ public class CurrentStone implements ViewElement {
 				rotate_angle = 0.0f;
 				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
 			}
-			model.redraw = true;
+			scene.redraw = true;
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			float rx = (pos.x - fieldPoint.x) + stone.getShape().getSize() / 2;
@@ -370,7 +370,7 @@ public class CurrentStone implements ViewElement {
 				p = -p;
 
 			rotate_angle = p * 180;
-			model.redraw = true;
+			scene.redraw = true;
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			float ry = (pos.y - fieldPoint.y) + stone.getShape().getSize() / 2;
@@ -384,7 +384,7 @@ public class CurrentStone implements ViewElement {
 				p = -p;
 
 			rotate_angle = p * 180;
-			model.redraw = true;
+			scene.redraw = true;
 		}
 		return true;
 	}
@@ -408,21 +408,21 @@ public class CurrentStone implements ViewElement {
 	}
 
 	public boolean is_valid_turn(float x, float y) {
-		if (!model.game.isLocalPlayer())
+		if (!scene.game.isLocalPlayer())
 			return false;
-		if (model.board.isValidTurn(stone.getShape(), model.game.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), orientation))
+		if (scene.board.isValidTurn(stone.getShape(), scene.game.getCurrentPlayer(), (int)Math.floor(y + 0.5f), (int)Math.floor(x + 0.5f), orientation))
 			return true;
 		return false;
 	}
 
 	boolean snap(float x, float y, boolean forceSound) {
 		boolean hasMoved;
-		if (!model.snapAid) {
+		if (!scene.snapAid) {
 			hasMoved = moveTo(x, y);
 			isValid = is_valid_turn(x, y);
 			if (isValid && (hasMoved || forceSound)) {
-				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 1.0f, 1.0f))
-					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
+				if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK3, 1.0f, 1.0f))
+					scene.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
 			return hasMoved;
 		}
@@ -430,8 +430,8 @@ public class CurrentStone implements ViewElement {
 			isValid = true;
 			hasMoved = moveTo((float)Math.floor(x + 0.5f), (float)Math.floor(y + 0.5f));
 			if (hasMoved || forceSound) {
-				if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
-					model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
+				if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
+					scene.vibrate(Global.VIBRATE_STONE_SNAP);
 			}
 			return hasMoved;
 		}
@@ -443,8 +443,8 @@ public class CurrentStone implements ViewElement {
 				isValid = true;
 				hasMoved = moveTo((float)Math.floor(0.5f + x + i), (float)Math.floor(0.5f + y + j));
 				if (hasMoved) {
-					if (!model.soundPool.play(model.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
-						model.activity.vibrate(Global.VIBRATE_STONE_SNAP);
+					if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK3, 0.2f, 1.0f))
+						scene.vibrate(Global.VIBRATE_STONE_SNAP);
 				}
 				return hasMoved;
 			}
@@ -458,26 +458,26 @@ public class CurrentStone implements ViewElement {
 		if (status == Status.DRAGGING) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
-			model.boardObject.modelToBoard(fieldPoint);
+			scene.boardObject.modelToBoard(fieldPoint);
 
 			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.getShape().getSize() / 2);
 			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.getShape().getSize() / 2);
 			fieldPoint.x = x;
 			fieldPoint.y = y;
-			model.boardObject.boardToUnified(fieldPoint);
-			if (!model.vertical_layout)
-				fieldPoint.y = model.board.width - fieldPoint.x - 1;
+			scene.boardObject.boardToUnified(fieldPoint);
+			if (!scene.vertical_layout)
+				fieldPoint.y = scene.board.width - fieldPoint.x - 1;
 
 			if (fieldPoint.y < -2.0f && (hasMoved)) {
-				model.wheel.setCurrentStone(stone);
+				scene.wheel.setCurrentStone(stone);
 				status = Status.IDLE;
 				stone = null;
 			} else	if (canCommit && !hasMoved) {
-				Turn turn = new Turn(model.game.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), orientation);
-				if (model.commitCurrentStone(turn)) {
+				Turn turn = new Turn(scene.game.getCurrentPlayer(), stone.getShape().getNumber(), (int)Math.floor(pos.y + 0.5f), (int)Math.floor(pos.x + 0.5f), orientation);
+				if (scene.commitCurrentStone(turn)) {
 					status = Status.IDLE;
 					stone = null;
-					model.wheel.setCurrentStone(null);
+					scene.wheel.setCurrentStone(null);
 				}
 			} else if (hasMoved) {
 				snap(x, y, false);

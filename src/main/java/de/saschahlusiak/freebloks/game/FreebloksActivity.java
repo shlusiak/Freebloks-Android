@@ -39,7 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -80,7 +80,7 @@ import de.saschahlusiak.freebloks.view.scene.Scene;
 import de.saschahlusiak.freebloks.view.scene.Theme;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends BaseGameActivity implements ActivityInterface, GameEventObserver, Intro.OnIntroCompleteListener {
+public class FreebloksActivity extends BaseGameActivity implements GameEventObserver, Intro.OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -186,10 +186,10 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(FreebloksActivity.this);
 
-		viewModel = ViewModelProviders.of(this).get(FreebloksActivityViewModel.class);
+		viewModel = new ViewModelProvider(this).get(FreebloksActivityViewModel.class);
 
 		view = findViewById(R.id.board);
-		view.setActivity(this, viewModel);
+		view.setActivity(viewModel);
 
 		if (prefs.getBoolean("immersive_mode", true))
 			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -206,8 +206,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				showDialog(DIALOG_LOBBY);
 			}
 		});
-
-		newCurrentPlayer(-1);
 
 		client = viewModel.getClient();
 		lastStatus = viewModel.getLastStatus();
@@ -245,11 +243,9 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 			client.addObserver(this);
 			client.addObserver(view);
 			view.setGameClient(client);
-			newCurrentPlayer(client.game.getCurrentPlayer());
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
 				viewModel.setIntro(new Intro(getApplicationContext(), view.model, this));
-				newCurrentPlayer(-1);
 			} else
 				OnIntroCompleted();
 		}
@@ -285,6 +281,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		findViewById(R.id.currentPlayer).postDelayed(r, 1000);
 
 		viewModel.getConnectionStatusLiveData().observe(this, this::onConnectionStatusChanged);
+		viewModel.getPlayerToShowInSheet().observe(this, this::updatePlayerSheet);
 	}
 
 	@Override
@@ -296,7 +293,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		if (client == null) {
 			if (!readStateFromBundle(savedInstanceState)) {
 				canresume = false;
-				newCurrentPlayer(-1);
 			} else {
 				canresume = true;
 			}
@@ -336,7 +332,7 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@Override
 	public void OnIntroCompleted() {
 		viewModel.setIntro(null);
-		newCurrentPlayer(-1);
+		viewModel.setShowPlayerOverride(null);
 		try {
 			if (restoreOldGame()) {
 				canresume = true;
@@ -503,16 +499,11 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 
 		view.setGameClient(client);
 
-		viewModel.startConnectingClient(config, clientName, false, () -> {
-			// when resuming, the server does not send a current player message
-			newCurrentPlayer(game.getCurrentPlayer());
-		});
+		viewModel.startConnectingClient(config, clientName, false, () -> { });
 	}
 
 	@UiThread
 	private void startNewGame(final GameConfig config, final Runnable runAfter) {
-		newCurrentPlayer(-1);
-
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServerForNewGame(
 				config.getGameMode(),
@@ -549,7 +540,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@UiThread
 	public void establishBluetoothGame(BluetoothSocket socket) throws IOException {
 		final GameConfig config = new GameConfig();
-		newCurrentPlayer(-1);
 
 		if (client != null)
 			client.disconnect();
@@ -944,98 +934,119 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	}
 
 	/**
-	 * FIXME: this is called via the game observer, but also via the UI to set the new current player to display
+	 * Update the bottom sheet with information about the given player.
 	 *
-	 * @param player
+	 * 1) If the intro is running, "Touch to skip" is shown
+	 * 2) If client not connected, "Not connected" is shown
+	 * 3) If showPlayer is equal to currentPlayer, we are displaying "home", so
+	 *    a) either "It is your turn"
+	 *    b) or "Waiting for..."
+	 * 4) Otherwise we are showing another player
+	 *
+	 * @param showPlayer the player to show, according to the rotation of the board
 	 */
+	@UiThread
+	private void updatePlayerSheet(final int showPlayer) {
+		if (view == null)
+			return;
+
+		final TextView status = findViewById(R.id.currentPlayer);
+		final TextView movesLeft = findViewById(R.id.movesLeft);
+		final TextView points = findViewById(R.id.points);
+		final View progressBar = findViewById(R.id.progressBar);
+		final View myLocation = findViewById(R.id.myLocation);
+
+		progressBar.setVisibility(View.GONE);
+		points.setVisibility(View.GONE);
+		movesLeft.setVisibility(View.GONE);
+		myLocation.setVisibility(View.INVISIBLE);
+
+		status.clearAnimation();
+
+		// the intro trumps everything
+		if (viewModel.getIntro() != null) {
+			statusView.setBackgroundColor(Color.rgb(64, 64, 80));
+			status.setText(R.string.touch_to_skip);
+			return;
+		}
+
+		// if not connected, show that
+		if (client == null || !client.isConnected()) {
+			statusView.setBackgroundColor(Color.rgb(64, 64, 80));
+			status.setText(R.string.not_connected);
+			return;
+		}
+
+		final int currentPlayer = client.game.getCurrentPlayer();
+
+		// no current player
+		if (showPlayer < 0) {
+			statusView.setBackgroundColor(Color.rgb(64, 64, 80));
+			status.setText(R.string.no_player);
+			return;
+		}
+
+		final Game game = client.game;
+		final Board board = game.getBoard();
+
+		// is it "your turn"?
+		final boolean isYourTurn = client.game.isLocalPlayer();
+		// is the player the current player of the game? controls the myLocation view.
+		final boolean isCurrentPlayer = (showPlayer == currentPlayer);
+
+		if (optionsMenu != null) {
+			optionsMenu.findItem(R.id.hint).setEnabled(isYourTurn);
+			// undo only if we are the only client
+			optionsMenu.findItem(R.id.undo).setEnabled(isYourTurn && lastStatus != null && lastStatus.getClients() <= 1);
+		}
+
+		final int playerColor = Global.getPlayerColor(showPlayer, game.getGameMode());
+		final int backgroundColorResource = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor];
+		final String playerName = getPlayerName(showPlayer);
+		final Player p = board.getPlayer(showPlayer);
+
+		statusView.setBackgroundColor(getResources().getColor(backgroundColorResource));
+
+		points.setVisibility(View.VISIBLE);
+		points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
+
+		if (client.game.isFinished()) {
+			status.setText("[" + playerName + "]");
+			movesLeft.setVisibility(View.VISIBLE);
+			movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.getStonesLeft(), p.getStonesLeft()));
+			return;
+		}
+
+		if (!isCurrentPlayer) {
+			myLocation.setVisibility(View.VISIBLE);
+		}
+
+		if (isYourTurn) {
+			movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.getNumberOfPossibleTurns(), p.getNumberOfPossibleTurns()));
+			movesLeft.setVisibility(View.VISIBLE);
+		} else {
+			progressBar.setVisibility(View.VISIBLE);
+		}
+
+		// we are showing "home"
+		if (showPlayer == currentPlayer) {
+			if (isYourTurn) {
+				status.setText(getString(R.string.your_turn, playerName));
+			} else {
+				status.setText(getString(R.string.waiting_for_color, playerName));
+			}
+		} else {
+			if (p.getNumberOfPossibleTurns() <= 0)
+				status.setText("[" + getString(R.string.color_is_out_of_moves, playerName) + "]");
+			else {
+				status.setText(playerName);
+			}
+		}
+	}
+
 	@Override
 	public void newCurrentPlayer(final int player) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (view == null)
-					return;
-				boolean local = false;
-				int showPlayer = view.model.boardObject.getShowDetailsPlayer();
-				if (client != null)
-					local = client.game.isLocalPlayer(player);
-				else
-					showPlayer = player;
 
-				if (optionsMenu != null) {
-					optionsMenu.findItem(R.id.hint).setEnabled(local);
-					optionsMenu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.getClients() <= 1);
-				}
-
-				findViewById(R.id.progressBar).setVisibility((local || player < 0) ? View.GONE : View.VISIBLE);
-
-				TextView movesLeft, points, status;
-				movesLeft = (TextView) findViewById(R.id.movesLeft);
-				movesLeft.setVisibility(View.INVISIBLE);
-				points = (TextView) findViewById(R.id.points);
-				points.setVisibility(View.INVISIBLE);
-
-				status = (TextView) findViewById(R.id.currentPlayer);
-				status.clearAnimation();
-				findViewById(R.id.myLocation).setVisibility((showPlayer >= 0) ? View.VISIBLE : View.INVISIBLE);
-				if (player < 0)
-					statusView.setBackgroundColor(Color.rgb(64, 64, 80));
-
-				final Game game = client == null ? null : client.game;
-				final Board board = game == null ? null : game.getBoard();
-
-				if (viewModel.getIntro() != null)
-					status.setText(R.string.touch_to_skip);
-				else if (client == null || !client.isConnected())
-					status.setText(R.string.not_connected);
-				else if (client.game.isFinished()) {
-					int pl = view.model.boardObject.getShowWheelPlayer();
-					if (pl >= 0) {
-						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(pl)];
-						Player p = board.getPlayer(pl);
-						status.setText("[" + getPlayerName(pl) + "]");
-						statusView.setBackgroundColor(getResources().getColor(res));
-						points.setVisibility(View.VISIBLE);
-						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
-						movesLeft.setVisibility(View.VISIBLE);
-						movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.getStonesLeft(), p.getStonesLeft()));
-					}
-				} else if (player >= 0 || showPlayer >= 0) {
-					if (showPlayer < 0) {
-						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(player)];
-						statusView.setBackgroundColor(getResources().getColor(res));
-						Player p = client.game.getBoard().getPlayer(player);
-						points.setVisibility(View.VISIBLE);
-						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
-						if (!local)
-							status.setText(getString(R.string.waiting_for_color, getPlayerName(player)));
-						else {
-							status.setText(getString(R.string.your_turn, getPlayerName(player)));
-
-							movesLeft.setVisibility(View.VISIBLE);
-							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.getNumberOfPossibleTurns(), p.getNumberOfPossibleTurns()));
-						}
-					} else {
-						int res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[view.model.getPlayerColor(showPlayer)];
-						statusView.setBackgroundColor(getResources().getColor(res));
-						Player p = board.getPlayer(showPlayer);
-						points.setVisibility(View.VISIBLE);
-						points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
-
-						if (p.getNumberOfPossibleTurns() <= 0)
-							status.setText("[" + getString(R.string.color_is_out_of_moves, getPlayerName(showPlayer)) + "]");
-						else {
-							status.setText(getPlayerName(showPlayer));
-
-							movesLeft.setVisibility((local || player < 0) ? View.VISIBLE : View.INVISIBLE);
-							movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.getNumberOfPossibleTurns(), p.getNumberOfPossibleTurns()));
-						}
-					}
-
-				} else
-					status.setText(R.string.no_player);
-			}
-		});
 	}
 
 	/* we have to store the number of possible turns before and after a stone has been set
@@ -1058,8 +1069,8 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		final Board board = game.getBoard();
 		if (game == null)
 			return;
-		runOnUiThread(new Runnable() {
 
+		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if (!game.isLocalPlayer(turn.getPlayer())) {
@@ -1237,8 +1248,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 	@WorkerThread
 	@Override
 	public void onConnected(@NonNull GameClient client) {
-		newCurrentPlayer(client.game.getCurrentPlayer());
-
 		if (client.getConfig().getShowLobby()) {
 			runOnUiThread(() -> {
 				final Bundle bundle = new Bundle();
@@ -1280,8 +1289,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				view.setGameClient(null);
 				chatButton.setVisibility(View.INVISIBLE);
 
-				newCurrentPlayer(-1);
-
 				if (error != null) {
 					/* TODO: add sound on disconnect on error */
 					saveGameState(GAME_STATE_FILE);
@@ -1308,12 +1315,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 		});
 	}
 
-	@Deprecated
-	@Override
-	public void vibrate(int ms) {
-		viewModel.vibrate(ms);
-	}
-
 	@Override
 	public void onBackPressed() {
 		if (undo_with_back && client != null && client.isConnected()) {
@@ -1337,13 +1338,6 @@ public class FreebloksActivity extends BaseGameActivity implements ActivityInter
 				showDialog(DIALOG_GAME_MENU);
 			}
 		}
-	}
-
-	@Override
-	public void showPlayer(int player) {
-		if (client == null)
-			return;
-		newCurrentPlayer(client.game.getCurrentPlayer());
 	}
 
 	private String getPlayerName(int player) {

@@ -71,6 +71,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var lastStatus: MessageServerStatus? = null
         private set
 
+    // if set, will display this player instead of the current player in the player sheet
+    private var overrideShowPlayer: Int? = null
+
     val chatHistory = mutableListOf<ChatEntry>()
     val sounds = Sounds(app)
 
@@ -78,6 +81,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
     val connectionStatusLiveData = MutableLiveData(ConnectionStatus.Disconnected)
+    val playerToShowInSheet = MutableLiveData(-1)
 
     init {
         client = null
@@ -143,6 +147,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     fun startConnectingClient(config: GameConfig, clientName: String?, requestStartGame: Boolean, onConnected: () -> Unit) {
         val client = client ?: return
         connectionStatusLiveData.postValue(ConnectionStatus.Connecting)
+        setShowPlayerOverride(null)
         connectThread?.interrupt()
 
         connectThread = thread(name = "ConnectionThread") {
@@ -240,15 +245,38 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         chatHistoryAsLiveData.postValue(chatHistory)
     }
 
+    /**
+     * Set the override of the player to show, via rotating of the board
+     *
+     * @param player the new player to show, or null for default
+     */
+    fun setShowPlayerOverride(player: Int?) {
+        if (player == this.overrideShowPlayer) return
+
+        this.overrideShowPlayer = player
+
+        if (player != null) {
+            playerToShowInSheet.postValue(player)
+        } else {
+            playerToShowInSheet.postValue(game?.currentPlayer ?: -1)
+        }
+    }
+
     //region GameEventObserver callbacks
 
     override fun onConnected(client: GameClient) {
         lastStatus = null
         connectionStatusLiveData.postValue(ConnectionStatus.Connected)
+        overrideShowPlayer = null
+        playerToShowInSheet.postValue(client.game.currentPlayer)
     }
 
     override fun serverStatus(status: MessageServerStatus) {
         this.lastStatus = status
+    }
+
+    override fun newCurrentPlayer(player: Int) {
+        playerToShowInSheet.postValue(overrideShowPlayer ?: player)
     }
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
@@ -298,6 +326,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     override fun onDisconnected(client: GameClient, error: Exception?) {
         lastStatus = null
         connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
+        overrideShowPlayer = null
+        playerToShowInSheet.postValue(-1)
         chatHistory.clear()
     }
 

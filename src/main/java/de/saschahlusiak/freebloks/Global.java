@@ -35,7 +35,7 @@ public class Global {
 	}
 
 
-	public static final int PLAYER_BACKGROUND_COLOR_RESOURCE[] = {
+	public static final int[] PLAYER_BACKGROUND_COLOR_RESOURCE = {
 		R.color.player_background_white,
 		R.color.player_background_blue,
 		R.color.player_background_yellow,
@@ -45,7 +45,7 @@ public class Global {
 		R.color.player_background_purple,
 	};
 
-	public static final int PLAYER_FOREGROUND_COLOR_RESOURCE[] = {
+	public static final int[] PLAYER_FOREGROUND_COLOR_RESOURCE = {
 		R.color.player_foreground_white,
 		R.color.player_foreground_blue,
 		R.color.player_foreground_yellow,
@@ -55,26 +55,33 @@ public class Global {
 		R.color.player_foreground_purple,
 	};
 
-	final static float stone_white[]={0.7f, 0.7f, 0.7f, 0};
-	final static float stone_red[]={0.75f, 0, 0, 0};
-	final static float stone_blue[]={0.0f, 0.2f, 1.0f, 0};
-	final static float stone_green[]={0.0f, 0.65f, 0, 0};
-	final static float stone_yellow[]={0.80f, 0.80f, 0, 0};
-	final static float stone_orange[]={0.90f, 0.40f, 0.0f, 0};
-	final static float stone_purple[]={0.40f, 0.0f, 0.80f, 0};
-	public final static float stone_color_a[][] = { stone_white, stone_blue, stone_yellow, stone_red, stone_green, stone_orange, stone_purple };
+	final static float[] stone_white = {0.7f, 0.7f, 0.7f, 0};
+	final static float[] stone_red = {0.75f, 0, 0, 0};
+	final static float[] stone_blue = {0.0f, 0.2f, 1.0f, 0};
+	final static float[] stone_green = {0.0f, 0.65f, 0, 0};
+	final static float[] stone_yellow = {0.80f, 0.80f, 0, 0};
+	final static float[] stone_orange = {0.90f, 0.40f, 0.0f, 0};
+	final static float[] stone_purple = {0.40f, 0.0f, 0.80f, 0};
+	public final static float[][] stone_color_a = {stone_white, stone_blue, stone_yellow, stone_red, stone_green, stone_orange, stone_purple};
 
-	final static float stone_red_dark[]={0.035f, 0, 0, 0};
-	final static float stone_blue_dark[]={0.0f, 0.004f, 0.035f, 0};
-	final static float stone_green_dark[]={0.0f, 0.035f, 0, 0};
-	final static float stone_yellow_dark[]={0.025f, 0.025f, 0, 0};
-	final static float stone_orange_dark[]={0.040f, 0.020f, 0, 0};
-	final static float stone_purple_dark[]={0.020f, 0.000f, 0.040f, 0};
-	final static float stone_white_dark[]={0.04f, 0.04f, 0.04f, 0};
-	public final static float stone_shadow_color_a[][] = { stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark, stone_orange_dark, stone_purple_dark };
+	final static float[] stone_red_dark = {0.035f, 0, 0, 0};
+	final static float[] stone_blue_dark = {0.0f, 0.004f, 0.035f, 0};
+	final static float[] stone_green_dark = {0.0f, 0.035f, 0, 0};
+	final static float[] stone_yellow_dark = {0.025f, 0.025f, 0, 0};
+	final static float[] stone_orange_dark = {0.040f, 0.020f, 0, 0};
+	final static float[] stone_purple_dark = {0.020f, 0.000f, 0.040f, 0};
+	final static float[] stone_white_dark = {0.04f, 0.04f, 0.04f, 0};
+	public final static float[][] stone_shadow_color_a = {stone_white_dark, stone_blue_dark, stone_yellow_dark, stone_red_dark, stone_green_dark, stone_orange_dark, stone_purple_dark};
 
-	public static int getPlayerColor(int player, GameMode game_mode) {
-		if (game_mode == GameMode.GAMEMODE_DUO || game_mode == GameMode.GAMEMODE_JUNIOR) {
+	/**
+	 * Returns the index of the player color in the above PLAYER_BACKGROUND_COLOR_RESOURCE array
+	 *
+	 * @param player player
+	 * @param gameMode game mode
+	 * @return the index into above arrays
+	 */
+	public static int getPlayerColor(int player, GameMode gameMode) {
+		if (gameMode == GameMode.GAMEMODE_DUO || gameMode == GameMode.GAMEMODE_JUNIOR) {
 			/* player 1 is orange */
 			if (player == 0)
 				return 5;

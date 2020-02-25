@@ -15,7 +15,6 @@ import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel;
 import de.saschahlusiak.freebloks.model.Board;
-import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
@@ -58,8 +57,8 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		}
 	}
 
-	public void setActivity(ActivityInterface activity, FreebloksActivityViewModel viewModel) {
-		model = new Scene(activity, this, viewModel);
+	public void setActivity(FreebloksActivityViewModel viewModel) {
+		model = new Scene(this, viewModel);
 
 		renderer = new FreebloksRenderer(getContext(), model);
 		renderer.zoom = scale;

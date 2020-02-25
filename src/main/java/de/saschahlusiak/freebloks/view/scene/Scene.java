@@ -13,7 +13,6 @@ import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Game;
-import de.saschahlusiak.freebloks.game.ActivityInterface;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.Effect;
@@ -30,7 +29,6 @@ import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
 public class Scene extends ArrayList<ViewElement> implements ViewElement {
 	private final FreebloksActivityViewModel viewModel;
 	public final Freebloks3DView view;
-	public final ActivityInterface activity;
 
 	public final Wheel wheel;
 	public final CurrentStone currentStone;
@@ -51,9 +49,8 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 	public final static int ANIMATIONS_HALF = 1;
 	public final static int ANIMATIONS_OFF = 2;
 
-	public Scene(ActivityInterface activity, Freebloks3DView view, FreebloksActivityViewModel viewModel) {
+	public Scene(Freebloks3DView view, FreebloksActivityViewModel viewModel) {
 		this.view = view;
-		this.activity = activity;
 		this.viewModel = viewModel;
 
 		this.board = new Board(Board.DEFAULT_BOARD_SIZE);
@@ -186,16 +183,29 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 		}
 
 		soundPool.play(soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
-		activity.vibrate(Global.VIBRATE_SET_STONE);
+		viewModel.vibrate(Global.VIBRATE_SET_STONE);
 
 		client.setStone(turn);
 		return true;
 	}
 
+	// use Global.getPlayerColor instead
 	@Deprecated
 	public int getPlayerColor(int player) {
 		if (game == null)
 			return Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
 		return Global.getPlayerColor(player, game.getGameMode());
+	}
+
+	public void vibrate(long milliseconds) {
+		viewModel.vibrate(milliseconds);
+	}
+
+	public void setShowPlayerOverride(int player) {
+		if (player < 0) {
+			viewModel.setShowPlayerOverride(null);
+		} else {
+			viewModel.setShowPlayerOverride(player);
+		}
 	}
 }

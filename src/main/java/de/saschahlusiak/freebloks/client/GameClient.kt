@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Object() {
     private var clientSocket: Closeable?
     private var messageWriter: MessageWriter? = null
