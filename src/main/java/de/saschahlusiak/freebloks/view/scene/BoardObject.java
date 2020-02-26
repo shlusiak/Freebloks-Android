@@ -25,6 +25,8 @@ public class BoardObject implements ViewElement {
 		this.centerPlayer = 0;
 		mAngleY = 0.0f;
 		updateDetailsPlayer();
+
+		scene.setShowPlayerOverride(getShowDetailsPlayer());
 	}
 
 	/**

@@ -3,9 +3,9 @@ package de.saschahlusiak.freebloks.game
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,31 +13,33 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.Game
 
+/**
+ * The current player sheet at the bottom of the screen.
+ *
+ * Observes [FreebloksActivityViewModel.playerToShowInSheet]
+ */
 class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.playerToShowInSheet.observe(this, Observer { updateViews(it) })
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val cardView = view as CardView
         view.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
-            v.setPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
+            cardView.setContentPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
             insets
         }
+
+        viewModel.playerToShowInSheet.observe(viewLifecycleOwner, Observer { updateViews(it) })
     }
 
     private fun updateViews(showPlayer: Int) {
         val client = viewModel.client
-        val statusView = view ?: return
+        val background = view as? CardView ?: return
 
-        val status: TextView = statusView.findViewById(R.id.currentPlayer)
-        val movesLeft: TextView = statusView.findViewById(R.id.movesLeft)
-        val points: TextView = statusView.findViewById(R.id.points)
-        val progressBar: View = statusView.findViewById(R.id.progressBar)
+        val status: TextView = background.findViewById(R.id.currentPlayer)
+        val movesLeft: TextView = background.findViewById(R.id.movesLeft)
+        val points: TextView = background.findViewById(R.id.points)
+        val progressBar: View = background.findViewById(R.id.progressBar)
 
         progressBar.visibility = View.GONE
         points.visibility = View.GONE
@@ -47,14 +49,14 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
         // the intro trumps everything
         if (viewModel.intro != null) {
-            statusView.setBackgroundColor(Color.rgb(64, 64, 80))
+            background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.touch_to_skip)
             return
         }
 
         // if not connected, show that
         if (client == null || !client.isConnected()) {
-            statusView.setBackgroundColor(Color.rgb(64, 64, 80))
+            background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.not_connected)
             return
         }
@@ -63,7 +65,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
         // no current player
         if (showPlayer < 0) {
-            statusView.setBackgroundColor(Color.rgb(64, 64, 80))
+            background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.no_player)
             return
         }
@@ -81,7 +83,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         val playerName: String = client.lastStatus?.getPlayerName(showPlayer) ?: Global.getColorName(requireContext(), showPlayer, game.gameMode )
         val p = board.getPlayer(showPlayer)
 
-        statusView.setBackgroundColor(resources.getColor(backgroundColorResource))
+        background.setCardBackgroundColor(resources.getColor(backgroundColorResource))
 
         points.visibility = View.VISIBLE
         points.text = resources.getQuantityString(R.plurals.number_of_points, p.totalPoints, p.totalPoints)
