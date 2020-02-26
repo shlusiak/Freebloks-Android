@@ -1,78 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <de.saschahlusiak.freebloks.view.Freebloks3DView
         android:id="@+id/board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/currentPlayerLayout" />
+        android:layout_above="@+id/bottomSheet" />
 
-    <RelativeLayout
-        android:id="@+id/currentPlayerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/bottomSheet"
         android:layout_alignParentBottom="true"
-        android:visibility="visible">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingTop="2dp"
-            android:paddingRight="4dp"
-            android:paddingBottom="2dp">
-
-            <TextView
-                android:id="@+id/points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:shadowColor="#9f000000"
-                android:shadowDy="2"
-                android:shadowRadius="4"
-                android:text="Small Text"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#b0ffffff"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/currentPlayer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:shadowColor="#9f000000"
-                android:shadowDy="2"
-                android:shadowRadius="5"
-                android:text="Small Text"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#ffffffff"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/movesLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:shadowColor="#9f000000"
-                android:shadowDy="2"
-                android:shadowRadius="4"
-                android:text="Small Text"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#b0ffffff"
-                android:textStyle="bold" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/currentPlayer"
-                android:layout_alignParentRight="true" />
-        </RelativeLayout>
-    </RelativeLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <include layout="@layout/inline_buttonbar" />
 </RelativeLayout>

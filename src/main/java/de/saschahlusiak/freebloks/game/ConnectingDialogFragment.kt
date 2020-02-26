@@ -4,16 +4,14 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import de.saschahlusiak.freebloks.R
 
 /**
  * Simple dialog fragment to show "Connecting to server..." that disconnects the client on cancel.
  */
 class ConnectingDialogFragment : DialogFragment() {
-    private val viewModel by lazy { ViewModelProvider(this).get(FreebloksActivityViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return ProgressDialog(context);

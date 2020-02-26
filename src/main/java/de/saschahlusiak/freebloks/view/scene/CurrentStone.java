@@ -465,7 +465,7 @@ public class CurrentStone implements ViewElement {
 			fieldPoint.x = x;
 			fieldPoint.y = y;
 			scene.boardObject.boardToUnified(fieldPoint);
-			if (!scene.vertical_layout)
+			if (!scene.verticalLayout)
 				fieldPoint.y = scene.board.width - fieldPoint.x - 1;
 
 			if (fieldPoint.y < -2.0f && (hasMoved)) {

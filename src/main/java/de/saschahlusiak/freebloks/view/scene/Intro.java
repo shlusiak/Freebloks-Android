@@ -430,13 +430,13 @@ public class Intro {
 		backgroundRenderer.render(gl);
 
 		/* Kamera positionieren */
-		if (model.vertical_layout) {
+		if (model.verticalLayout) {
 			gl.glTranslatef(0, 4.5f, 0);
 		} else {
 			gl.glTranslatef(0, 1.5f, 0);
 		}
 		GLU.gluLookAt(gl,
-			0, (model.vertical_layout ? 4 : 1), renderer.fixed_zoom * 0.9f,
+			0, (model.verticalLayout ? 4 : 1), renderer.fixed_zoom * 0.9f,
 			0, 0, 0,
 			0, 1, 0);
 

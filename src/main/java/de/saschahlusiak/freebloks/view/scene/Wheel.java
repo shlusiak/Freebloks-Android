@@ -153,7 +153,7 @@ public class Wheel implements ViewElement {
 		tmp.y = m.y;
 		scene.boardObject.modelToBoard(tmp);
 		scene.boardObject.boardToUnified(tmp);
-		if (!scene.vertical_layout) {
+		if (!scene.verticalLayout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
 			tmp.y = scene.board.width - t - 1;
@@ -208,7 +208,7 @@ public class Wheel implements ViewElement {
 		scene.boardObject.modelToBoard(tmp);
 		scene.boardObject.boardToUnified(tmp);
 
-		if (!scene.vertical_layout) {
+		if (!scene.verticalLayout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
 			tmp.y = scene.board.width - t - 1;
@@ -290,7 +290,7 @@ public class Wheel implements ViewElement {
 				final float z = row * stone_spacing;
 				final float scale = 0.9f + effect * 0.3f;
 				float rotate = 90.0f * scene.boardObject.centerPlayer;
-				if (!scene.vertical_layout)
+				if (!scene.verticalLayout)
 					rotate -= 90.0f;
 
 				float alpha = 1.0f;

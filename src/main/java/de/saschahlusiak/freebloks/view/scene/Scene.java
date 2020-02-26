@@ -37,12 +37,13 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 	public Board board;
 	public final BoardObject boardObject;
 	public final ArrayList<Effect> effects;
+	@Deprecated // delegate to viewModel
 	public Sounds soundPool;
 
 	public boolean showSeeds, showOpponents, snapAid;
 	public int showAnimations;
 	public boolean immersiveMode = true;
-	public boolean vertical_layout = true;
+	public boolean verticalLayout = true;
 	boolean redraw;
 
 	public final static int ANIMATIONS_FULL = 0;

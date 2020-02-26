@@ -9,7 +9,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -22,16 +21,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -101,7 +95,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	private boolean undo_with_back;
 	private MessageServerStatus lastStatus;
 	private Menu optionsMenu;
-	private ViewGroup statusView;
 
 	private FreebloksActivityViewModel viewModel;
 
@@ -153,9 +146,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-//		getActionBar().setDisplayShowHomeEnabled(true);
-//		getActionBar().setDisplayUseLogoEnabled(false);
-//		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(104, 0, 0, 0)));
 		getActionBar().setBackgroundDrawable(new ColorDrawable(0));
 		getActionBar().setDisplayShowTitleEnabled(false);
 
@@ -172,16 +162,12 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 		}
 
-		statusView = findViewById(R.id.currentPlayerLayout);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		chatButton = findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
-		chatButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				chatButton.clearAnimation();
-				showDialog(DIALOG_LOBBY);
-			}
+		chatButton.setOnClickListener(v -> {
+			chatButton.clearAnimation();
+			showDialog(DIALOG_LOBBY);
 		});
 
 		client = viewModel.getClient();
@@ -191,11 +177,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		canresume = client != null && client.isConnected() && !client.game.isFinished();
 
 		chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
-
-		statusView.setOnApplyWindowInsetsListener((v, insets) -> {
-			v.setPadding(insets.getSystemWindowInsetLeft(), 0, insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
-			return insets;
-		});
 
 		if (savedInstanceState != null) {
 			view.setScale(savedInstanceState.getFloat("view_scale", 1.0f));
@@ -210,6 +191,11 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				Intent intent = new Intent(this, DonateActivity.class);
 				startActivity(intent);
 			}
+
+			getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.bottomSheet, new PlayerDetailFragment())
+				.commit();
 		}
 
 		if (view.model.soundPool == null)
@@ -232,35 +218,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				OnIntroCompleted();
 		}
 
-		statusView.setOnClickListener(v -> {
-			if (viewModel.getIntro() != null)
-				viewModel.getIntro().cancel();
-		});
-
 		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
-
-
-		final Animation a = new TranslateAnimation(0, 8, 0, 0);
-		a.setInterpolator(new CycleInterpolator(2));
-		a.setDuration(500);
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				if (view == null)
-					return;
-				boolean local = false;
-				View t = findViewById(R.id.currentPlayer);
-				t.postDelayed(this, 5000);
-
-				if (client != null && client.game != null)
-					local = client.game.isLocalPlayer();
-				if (!local)
-					return;
-
-				t.startAnimation(a);
-			}
-		};
-		findViewById(R.id.currentPlayer).postDelayed(r, 1000);
 
 		viewModel.getConnectionStatusLiveData().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::updatePlayerSheet);
@@ -932,103 +890,34 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		if (view == null)
 			return;
 
-		final TextView status = findViewById(R.id.currentPlayer);
-		final TextView movesLeft = findViewById(R.id.movesLeft);
-		final TextView points = findViewById(R.id.points);
-		final View progressBar = findViewById(R.id.progressBar);
 		final View myLocation = findViewById(R.id.myLocation);
 
-		progressBar.setVisibility(View.GONE);
-		points.setVisibility(View.GONE);
-		movesLeft.setVisibility(View.GONE);
 		myLocation.setVisibility(View.INVISIBLE);
 
-		status.clearAnimation();
+		if (client == null || !client.isConnected()) return;
+		if (showPlayer < 0) return;
+		if (client.game.isFinished()) return;
 
-		// the intro trumps everything
-		if (viewModel.getIntro() != null) {
-			statusView.setBackgroundColor(Color.rgb(64, 64, 80));
-			status.setText(R.string.touch_to_skip);
-			return;
-		}
-
-		// if not connected, show that
-		if (client == null || !client.isConnected()) {
-			statusView.setBackgroundColor(Color.rgb(64, 64, 80));
-			status.setText(R.string.not_connected);
-			return;
-		}
-
+		// is the player we are showing different to the current player of the game?
+		// then the board has been rotated and we should show the "location" button.
 		final int currentPlayer = client.game.getCurrentPlayer();
 
-		// no current player
-		if (showPlayer < 0) {
-			statusView.setBackgroundColor(Color.rgb(64, 64, 80));
-			status.setText(R.string.no_player);
-			return;
-		}
-
-		final Game game = client.game;
-		final Board board = game.getBoard();
-
-		// is it "your turn"?
-		final boolean isYourTurn = client.game.isLocalPlayer();
-		// is the player the current player of the game? controls the myLocation view.
-		final boolean isCurrentPlayer = (showPlayer == currentPlayer);
-
-		if (optionsMenu != null) {
-			optionsMenu.findItem(R.id.hint).setEnabled(isYourTurn);
-			// undo only if we are the only client
-			optionsMenu.findItem(R.id.undo).setEnabled(isYourTurn && lastStatus != null && lastStatus.getClients() <= 1);
-		}
-
-		final int playerColor = Global.getPlayerColor(showPlayer, game.getGameMode());
-		final int backgroundColorResource = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor];
-		final String playerName = getPlayerName(showPlayer);
-		final Player p = board.getPlayer(showPlayer);
-
-		statusView.setBackgroundColor(getResources().getColor(backgroundColorResource));
-
-		points.setVisibility(View.VISIBLE);
-		points.setText(getResources().getQuantityString(R.plurals.number_of_points, p.getTotalPoints(), p.getTotalPoints()));
-
-		if (client.game.isFinished()) {
-			status.setText("[" + playerName + "]");
-			movesLeft.setVisibility(View.VISIBLE);
-			movesLeft.setText(getResources().getQuantityString(R.plurals.number_of_stones_left, p.getStonesLeft(), p.getStonesLeft()));
-			return;
-		}
-
-		if (!isCurrentPlayer) {
+		if (showPlayer != currentPlayer) {
 			myLocation.setVisibility(View.VISIBLE);
-		}
-
-		if (isYourTurn) {
-			movesLeft.setText(getResources().getQuantityString(R.plurals.player_status_moves, p.getNumberOfPossibleTurns(), p.getNumberOfPossibleTurns()));
-			movesLeft.setVisibility(View.VISIBLE);
-		} else {
-			progressBar.setVisibility(View.VISIBLE);
-		}
-
-		// we are showing "home"
-		if (showPlayer == currentPlayer) {
-			if (isYourTurn) {
-				status.setText(getString(R.string.your_turn, playerName));
-			} else {
-				status.setText(getString(R.string.waiting_for_color, playerName));
-			}
-		} else {
-			if (p.getNumberOfPossibleTurns() <= 0)
-				status.setText("[" + getString(R.string.color_is_out_of_moves, playerName) + "]");
-			else {
-				status.setText(playerName);
-			}
 		}
 	}
 
 	@Override
 	public void newCurrentPlayer(final int player) {
+		runOnUiThread(() -> {
+			boolean isLocalPlayer = (client != null) && client.game.isLocalPlayer(player);
 
+			if (optionsMenu != null) {
+				optionsMenu.findItem(R.id.hint).setEnabled(isLocalPlayer);
+				// undo only if we are the only client
+				optionsMenu.findItem(R.id.undo).setEnabled(isLocalPlayer && lastStatus != null && lastStatus.getClients() <= 1);
+			}
+		});
 	}
 
 	/* we have to store the number of possible turns before and after a stone has been set
