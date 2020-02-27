@@ -54,9 +54,9 @@ class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLong
         }
     }
 
-    fun setResumeEnabled(canresume: Boolean) {
-        findViewById<View>(R.id.resume_game).isEnabled = canresume
-        setCanceledOnTouchOutside(canresume)
+    fun setResumeEnabled(canResume: Boolean) {
+        findViewById<View>(R.id.resume_game).isEnabled = canResume
+        setCanceledOnTouchOutside(canResume)
     }
 
     override fun onStart() {

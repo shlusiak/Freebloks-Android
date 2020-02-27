@@ -236,7 +236,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		return viewModel;
 	}
 
-	final void onConnectionStatusChanged(@NonNull ConnectionStatus status) {
+	private void onConnectionStatusChanged(@NonNull ConnectionStatus status) {
 		Log.d(tag, "Connection status: " + status);
 		final String tag = "connecting_progress_dialog";
 		final DialogFragment f = (DialogFragment) getSupportFragmentManager().findFragmentByTag(tag);
@@ -245,6 +245,9 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			case Connecting:
 				if (f == null) {
 					new ConnectingDialogFragment().show(getSupportFragmentManager(), tag);
+					// there seems to be a race condition where disconnecting happens before the dialog is done showing,
+					// so it fails to be dismissed later. So we force executing the above transaction.
+					getSupportFragmentManager().executePendingTransactions();
 				}
 				break;
 
@@ -271,7 +274,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			Toast.makeText(FreebloksActivity.this, R.string.could_not_restore_game, Toast.LENGTH_LONG).show();
 		}
 
-		final boolean canResume = (client != null && client.isConnected() && !client.game.isFinished());
+		final boolean canResume = (client != null && client.game.isStarted() && !client.game.isFinished());
 
 		if (!canResume || !prefs.getBoolean("auto_resume", false))
 			showDialog(DIALOG_GAME_MENU);
