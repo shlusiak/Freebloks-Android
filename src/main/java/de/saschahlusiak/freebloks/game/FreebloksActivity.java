@@ -219,7 +219,8 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
 
 		viewModel.getConnectionStatusLiveData().observe(this, this::onConnectionStatusChanged);
-		viewModel.getPlayerToShowInSheet().observe(this, this::updatePlayerSheet);
+		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
+		viewModel.getSoundsEnabledLiveData().observe(this, this::soundEnabledChanged);
 	}
 
 	@Override
@@ -244,7 +245,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	final void onConnectionStatusChanged(@NonNull ConnectionStatus status) {
 		Log.d(tag, "Connection status: " + status);
 		final String tag = "connecting_progress_dialog";
-		DialogFragment f = (DialogFragment) getSupportFragmentManager().findFragmentByTag(tag);
+		final DialogFragment f = (DialogFragment) getSupportFragmentManager().findFragmentByTag(tag);
 
 		switch (status) {
 			case Connecting:
@@ -343,12 +344,11 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		clientName = prefs.getString("player_name", null);
 		if (clientName != null && clientName.equals(""))
 			clientName = null;
-		Theme t = Theme.get(this, prefs.getString("theme", "texture_wood"), false);
+		final Theme t = Theme.get(this, prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
 
 		viewModel.onStart();
 
-		updateSoundMenuEntry();
 		/* update wheel in case showOpponents has changed */
 		view.model.wheel.update(view.model.boardObject.getShowWheelPlayer());
 	}
@@ -585,20 +585,19 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		menu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.getClients() <= 1);
 		menu.findItem(R.id.hint).setEnabled(local);
 		menu.findItem(R.id.sound_toggle_button).setVisible(true);
-		updateSoundMenuEntry();
+		soundEnabledChanged(viewModel.getSoundsEnabled());
 
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	void updateSoundMenuEntry() {
-		boolean on = true;
+	private void soundEnabledChanged(boolean enabled) {
 		if (optionsMenu == null)
 			return;
-		if (view != null && view.model.soundPool != null)
-			on = view.model.soundPool.isEnabled();
-		optionsMenu.findItem(R.id.sound_toggle_button).setTitle(on ? R.string.sound_on : R.string.sound_off);
-		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(on ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
+
+		optionsMenu.findItem(R.id.sound_toggle_button).setTitle(enabled ? R.string.sound_on : R.string.sound_off);
+		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(enabled ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
+
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -814,8 +813,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			case R.id.sound_toggle_button:
 				boolean enabled = !viewModel.getSoundsEnabled();
 				viewModel.setSoundsEnabled(enabled);
-				updateSoundMenuEntry();
-				Toast.makeText(this, getString(enabled ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
 				return true;
 
 			case R.id.hint:
@@ -875,7 +872,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	 * @param data the data to show
 	 */
 	@UiThread
-	private void updatePlayerSheet(final SheetPlayer data) {
+	private void playerSheetChanged(final SheetPlayer data) {
 		if (view == null)
 			return;
 

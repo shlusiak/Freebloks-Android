@@ -11,11 +11,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
 
@@ -61,14 +59,7 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 				soundon = !soundon;
 				activity = (FreebloksActivity)getOwnerActivity();
 				soundButton.setImageResource(soundon ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
-				activity.view.model.soundPool.setEnabled(soundon);
-				activity.updateSoundMenuEntry();
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-				Editor editor = prefs.edit();
-				editor.putBoolean("sounds", soundon);
-				editor.apply();
-
-				Toast.makeText(getContext(), getContext().getString(soundon ? R.string.sound_on : R.string.sound_off), Toast.LENGTH_SHORT).show();
+				activity.getViewModel().setSoundsEnabled(soundon);
 			}
 		});
 	}
@@ -91,9 +82,8 @@ public class GameMenu extends Dialog implements View.OnClickListener, View.OnLon
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 		activity = (FreebloksActivity)getOwnerActivity();
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-		soundon = prefs.getBoolean("sounds", true);
+		soundon = activity.getViewModel().getSoundsEnabled();
 		soundButton.setImageResource(soundon ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
 
