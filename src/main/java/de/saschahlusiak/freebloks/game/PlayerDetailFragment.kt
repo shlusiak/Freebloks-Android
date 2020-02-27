@@ -64,6 +64,8 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         val currentPlayer: Int = client.game.currentPlayer
 
         // no current player
+        // FIXME: this still isn't right when the game is finished and the board is centered!
+
         if (showPlayer < 0) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.no_player)

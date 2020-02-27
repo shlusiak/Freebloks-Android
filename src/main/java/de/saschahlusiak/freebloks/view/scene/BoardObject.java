@@ -109,7 +109,8 @@ public class BoardObject implements ViewElement {
 	}
 
 	/**
-	 * returns the player, whose details are to be shown, if board is rotated, -1 otherwise
+	 * returns the player, whose details are to be shown, if board is rotated, -1 otherwise.
+	 * 
 	 * @return player, the board is rotated to
 	 * @return -1, if board is not rotated
 	 */

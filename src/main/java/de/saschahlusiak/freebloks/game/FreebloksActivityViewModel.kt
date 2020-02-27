@@ -74,13 +74,14 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // if set, will display this player instead of the current player in the player sheet
     private var overrideShowPlayer: Int? = null
 
-    val chatHistory = mutableListOf<ChatEntry>()
+    private val chatHistory = mutableListOf<ChatEntry>()
     val sounds = Sounds(app)
 
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
     val connectionStatusLiveData = MutableLiveData(ConnectionStatus.Disconnected)
+    // FIXME: this needs to be a data class with more stuff in it
     val playerToShowInSheet = MutableLiveData(-1)
 
     init {
