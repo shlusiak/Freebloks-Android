@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 public class BoardObject implements ViewElement {
 	private Scene scene;
-	public int last_size;
+	public int lastSize;
 	public float mAngleY;
 	public int centerPlayer; /* the "center" position of the board, usually the first local */
 	private float oa;
@@ -17,16 +17,14 @@ public class BoardObject implements ViewElement {
 	private boolean rotating = false;
 	private boolean auto_rotate = true;
 	private int lastDetailsPlayer = -1;
-
+	private float ta;
 
 	public BoardObject(Scene scene, int size) {
 		this.scene = scene;
-		this.last_size = size;
+		this.lastSize = size;
 		this.centerPlayer = 0;
 		mAngleY = 0.0f;
 		updateDetailsPlayer();
-
-		scene.setShowPlayerOverride(getShowDetailsPlayer());
 	}
 
 	/**
@@ -106,18 +104,8 @@ public class BoardObject implements ViewElement {
 					lastDetailsPlayer = 2;
 			}
 		}
-	}
 
-	/**
-	 * returns the player, whose details are to be shown, if board is rotated, -1 otherwise.
-	 * 
-	 * @return player, the board is rotated to
-	 * @return -1, if board is not rotated
-	 */
-	public int getShowDetailsPlayer() {
-		if (scene.game == null)
-			return -1;
-		return lastDetailsPlayer;
+		scene.setShowPlayerOverride(getShowDetailsPlayer(), lastDetailsPlayer >= 0);
 	}
 
 	/**
@@ -133,8 +121,8 @@ public class BoardObject implements ViewElement {
 			return -1;
 		if (scene.game == null)
 			return -1;
-		if (getShowDetailsPlayer() >= 0)
-			return getShowDetailsPlayer();
+		if (lastDetailsPlayer >= 0)
+			return lastDetailsPlayer;
 		if (scene.game.isFinished())
 			return centerPlayer;
 		if (scene.game.isLocalPlayer())
@@ -143,13 +131,32 @@ public class BoardObject implements ViewElement {
 	}
 
 	/**
-	 * the player that should be shown on the wheel.
+	 * Returns the player, whose details are to be shown.
+	 *
+	 * @return player, 0..3, never -1
+	 */
+	private int getShowDetailsPlayer() {
+		if (lastDetailsPlayer >= 0)
+			return lastDetailsPlayer;
+		if (scene.game == null)
+			return -1;
+		if (scene.game.isFinished())
+			return centerPlayer;
+
+		if (scene.game.getCurrentPlayer() >= 0)
+			return scene.game.getCurrentPlayer();
+
+		return centerPlayer;
+	}
+
+	/**
+	 * The player that should be shown on the wheel.
 	 *
 	 * @return number between 0 and 3
 	 */
 	public int getShowWheelPlayer() {
-		if (getShowDetailsPlayer() >= 0)
-			return getShowDetailsPlayer();
+		if (lastDetailsPlayer >= 0)
+			return lastDetailsPlayer;
 		if (scene.game == null)
 			return centerPlayer;
 		if (scene.game.isFinished()) {
@@ -189,24 +196,18 @@ public class BoardObject implements ViewElement {
 			mAngleY += 360.0f;
 		updateDetailsPlayer();
 
-		int s = getShowDetailsPlayer();
-		if (s < 0)
-			s = getShowWheelPlayer();
+		final int s = getShowWheelPlayer();
 
 		if (scene.wheel.getCurrentPlayer() != s) {
 			scene.wheel.update(s);
 		}
 
-		scene.setShowPlayerOverride(getShowDetailsPlayer());
-
 		scene.redraw = true;
 		return true;
 	}
 
-	float ta;
-
 	@Override
-	public boolean handlePointerUp(PointF m) {
+	public boolean handlePointerUp(@NonNull PointF m) {
 		if (!rotating)
 			return false;
 		if (Math.abs(m.x - om.x) < 1 && Math.abs(m.y - om.y) < 1)
@@ -243,7 +244,6 @@ public class BoardObject implements ViewElement {
 			if (scene.wheel.getCurrentPlayer() != s) {
 				scene.wheel.update(s);
 			}
-			scene.setShowPlayerOverride(getShowDetailsPlayer());
 
 			return true;
 		} else if (!rotating && Math.abs(mAngleY - ta) > 0.05f) {
@@ -269,7 +269,6 @@ public class BoardObject implements ViewElement {
 			if (lp != s) {
 				scene.wheel.update(s);
 			}
-			scene.setShowPlayerOverride(getShowDetailsPlayer());
 			return true;
 		}
 		return false;

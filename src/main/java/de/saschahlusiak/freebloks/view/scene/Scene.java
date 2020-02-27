@@ -202,11 +202,7 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 		viewModel.vibrate(milliseconds);
 	}
 
-	public void setShowPlayerOverride(int player) {
-		if (player < 0) {
-			viewModel.setShowPlayerOverride(null);
-		} else {
-			viewModel.setShowPlayerOverride(player);
-		}
+	public void setShowPlayerOverride(int player, boolean isRotated) {
+		viewModel.setSheetPlayer(player, isRotated);
 	}
 }

@@ -16,7 +16,23 @@ import de.saschahlusiak.freebloks.model.Game
 /**
  * The current player sheet at the bottom of the screen.
  *
- * Observes [FreebloksActivityViewModel.playerToShowInSheet]
+ * Observes [FreebloksActivityViewModel.playerToShowInSheet]. There are several cases:
+ *
+ * - Not connected
+ *   "Not connected"
+ *
+ * - Game in not started
+ *   "No player"
+ *
+ * - Game is running
+ *   If the board is not rotated, the current player.
+ *   If the board is rotated, the rotated player.
+ *   If the current player is a local player, show number of turns.
+ *   If current player is remote player, show spinner.
+ *
+ * - Game is finished
+ *   The board is rotating. At any time the status is showing the currently shown player and their left stones.
+ *
  */
 class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
@@ -32,7 +48,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         viewModel.playerToShowInSheet.observe(viewLifecycleOwner, Observer { updateViews(it) })
     }
 
-    private fun updateViews(showPlayer: Int) {
+    private fun updateViews(data: SheetPlayer) {
         val client = viewModel.client
         val background = view as? CardView ?: return
 
@@ -61,12 +77,8 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
             return
         }
 
-        val currentPlayer: Int = client.game.currentPlayer
-
         // no current player
-        // FIXME: this still isn't right when the game is finished and the board is centered!
-
-        if (showPlayer < 0) {
+        if (data.player < 0) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.no_player)
             return
@@ -75,15 +87,17 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         val game: Game = client.game
         val board = game.board
 
-        // is it "your turn"?
+        // is it "your turn", like, in general?
         val isYourTurn: Boolean = client.game.isLocalPlayer()
 
-        val playerColor = Global.getPlayerColor(showPlayer, game.gameMode)
+        val playerColor = Global.getPlayerColor(data.player, game.gameMode)
         val backgroundColorResource = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor]
         // TODO: we can change the name in the settings when a game is running, which previously trumped this value
         // FIXME: also, on resume, we are not getting a server status with the names, apparently
-        val playerName: String = client.lastStatus?.getPlayerName(showPlayer) ?: Global.getColorName(requireContext(), showPlayer, game.gameMode )
-        val p = board.getPlayer(showPlayer)
+
+
+        val playerName: String = client.lastStatus?.getPlayerName(data.player) ?: Global.getColorName(requireContext(), data.player, game.gameMode )
+        val p = board.getPlayer(data.player)
 
         background.setCardBackgroundColor(resources.getColor(backgroundColorResource))
 
@@ -105,7 +119,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         }
 
         // we are showing "home"
-        if (showPlayer == currentPlayer) {
+        if (!data.isRotated) {
             if (isYourTurn) {
                 status.text = getString(R.string.your_turn, playerName)
             } else {

@@ -20,8 +20,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -272,7 +270,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	@Override
 	public void OnIntroCompleted() {
 		viewModel.setIntro(null);
-		viewModel.setShowPlayerOverride(null);
+		viewModel.setSheetPlayer(-1, false);
 		try {
 			if (restoreOldGame()) {
 				canresume = true;
@@ -874,36 +872,19 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	}
 
 	/**
-	 * Update the bottom sheet with information about the given player.
-	 *
-	 * 1) If the intro is running, "Touch to skip" is shown
-	 * 2) If client not connected, "Not connected" is shown
-	 * 3) If showPlayer is equal to currentPlayer, we are displaying "home", so
-	 *    a) either "It is your turn"
-	 *    b) or "Waiting for..."
-	 * 4) Otherwise we are showing another player
-	 *
-	 * @param showPlayer the player to show, according to the rotation of the board
+	 * @param data the data to show
 	 */
 	@UiThread
-	private void updatePlayerSheet(final int showPlayer) {
+	private void updatePlayerSheet(final SheetPlayer data) {
 		if (view == null)
 			return;
 
 		final View myLocation = findViewById(R.id.myLocation);
 
-		myLocation.setVisibility(View.INVISIBLE);
-
-		if (client == null || !client.isConnected()) return;
-		if (showPlayer < 0) return;
-		if (client.game.isFinished()) return;
-
-		// is the player we are showing different to the current player of the game?
-		// then the board has been rotated and we should show the "location" button.
-		final int currentPlayer = client.game.getCurrentPlayer();
-
-		if (showPlayer != currentPlayer) {
+		if (data.isRotated() && client != null && !client.game.isFinished()) {
 			myLocation.setVisibility(View.VISIBLE);
+		} else {
+			myLocation.setVisibility(View.INVISIBLE);
 		}
 	}
 

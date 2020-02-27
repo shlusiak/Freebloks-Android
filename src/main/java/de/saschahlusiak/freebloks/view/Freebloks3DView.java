@@ -81,7 +81,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			public void run() {
 				if (client != null) {
 					final Game game = client.game;
-					model.boardObject.last_size = game.getBoard().width;
+					model.boardObject.lastSize = game.getBoard().width;
 					for (int i = 0; i < Board.PLAYER_MAX; i++) if (game.isLocalPlayer(i)) {
 						model.boardObject.centerPlayer = i;
 						break;
@@ -91,7 +91,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 					newCurrentPlayer(game.getCurrentPlayer());
 				}
 
-				renderer.init(model.boardObject.last_size);
+				renderer.init(model.boardObject.lastSize);
 				requestRender();
 			}
 		});
@@ -269,6 +269,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	public void gameStarted() {
 		model.boardObject.centerPlayer = 0;
 		for (int i = 0; i < Board.PLAYER_MAX; i++) if (model.game.isLocalPlayer(i)) {
+
 			model.boardObject.centerPlayer = i;
 			break;
 		}
@@ -290,8 +291,8 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 
 	@Override
 	public void serverStatus(@NonNull MessageServerStatus status) {
-		if (status.getWidth() != model.boardObject.last_size) {
-			model.boardObject.last_size = status.getWidth();
+		if (status.getWidth() != model.boardObject.lastSize) {
+			model.boardObject.lastSize = status.getWidth();
 			queueEvent(new Runnable() {
 				@Override
 				public void run() {
