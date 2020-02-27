@@ -75,6 +75,7 @@ import io.fabric.sdk.android.Fabric;
 public class FreebloksActivity extends BaseGameActivity implements GameEventObserver, Intro.OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
+	@Deprecated
 	static final int DIALOG_GAME_MENU = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
@@ -105,8 +106,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 	private SharedPreferences prefs;
 
-	@Deprecated
-	private boolean canresume = false;
 	private boolean showRateDialog = false;
 
 	@Override
@@ -172,7 +171,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		lastStatus = viewModel.getLastStatus();
 		if (viewModel.getIntro() != null)
 			viewModel.getIntro().setModel(view.model, this);
-		canresume = client != null && client.isConnected() && !client.game.isFinished();
 
 		chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
 
@@ -224,17 +222,13 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
 		Log.d(tag, "onRestoreInstanceState (bundle=" + savedInstanceState + ")");
 
 		if (client == null) {
-			if (!readStateFromBundle(savedInstanceState)) {
-				canresume = false;
-			} else {
-				canresume = true;
-			}
+			readStateFromBundle(savedInstanceState);
 		}
 	}
 
@@ -260,7 +254,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				if (f != null) {
 					f.dismiss();
 				}
-				canresume = false;
 				break;
 
 			default:
@@ -273,17 +266,14 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		viewModel.setIntro(null);
 		viewModel.setSheetPlayer(-1, false);
 		try {
-			if (restoreOldGame()) {
-				canresume = true;
-			} else {
-				canresume = false;
-			}
+			restoreOldGame();
 		} catch (Exception e) {
-			canresume = false;
 			Toast.makeText(FreebloksActivity.this, R.string.could_not_restore_game, Toast.LENGTH_LONG).show();
 		}
 
-		if (!canresume || !prefs.getBoolean("auto_resume", false))
+		final boolean canResume = (client != null && client.isConnected() && !client.game.isFinished());
+
+		if (!canResume || !prefs.getBoolean("auto_resume", false))
 			showDialog(DIALOG_GAME_MENU);
 
 		if (showRateDialog)
@@ -610,19 +600,8 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			case DIALOG_QUIT:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage(R.string.do_you_want_to_leave_current_game);
-				builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						canresume = true;
-						showDialog(DIALOG_GAME_MENU);
-					}
-				});
-				builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						arg0.dismiss();
-					}
-				});
+				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> showDialog(DIALOG_GAME_MENU));
+				builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
 				return builder.create();
 
 			case DIALOG_NEW_GAME_CONFIRMATION:
@@ -739,7 +718,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 						public void onCancel(DialogInterface arg0) {
 							if (!client.game.isStarted() && !client.game.isFinished()) {
 								FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
-								canresume = false;
 								client.disconnect();
 								client = null;
 								showDialog(DIALOG_GAME_MENU);
@@ -753,14 +731,14 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 					 * connection
 					 */
 					dialog.dismiss();
-					canresume = false;
 					showDialog(DIALOG_GAME_MENU);
 				}
 				break;
 
 			case DIALOG_GAME_MENU:
-				GameMenu g = (GameMenu) dialog;
-				g.setResumeEnabled(canresume);
+				final boolean canResume = client != null && client.isConnected() && !client.game.isFinished();
+				final GameMenu g = (GameMenu) dialog;
+				g.setResumeEnabled(canResume);
 				break;
 
 			case DIALOG_JOIN:
@@ -784,11 +762,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		Intent intent;
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				if (client != null && client.isConnected())
-					canresume = true;
-				else
-					canresume = false;
-
 				showDialog(DIALOG_GAME_MENU);
 				if (viewModel.getIntro() != null)
 					viewModel.getIntro().cancel();
@@ -836,11 +809,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				if (client != null && client.game.isStarted() && lastStatus != null && lastStatus.getClients() > 1)
 					showDialog(DIALOG_QUIT);
 				else {
-					if (client != null && client.isConnected())
-						canresume = true;
-					else
-						canresume = false;
-
 					showDialog(DIALOG_GAME_MENU);
 					if (viewModel.getIntro() != null)
 						viewModel.getIntro().cancel();
@@ -1117,7 +1085,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			builder.setTitle(android.R.string.dialog_alert_title);
 			builder.setMessage(error.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
-			canresume = false;
 
 			builder.setOnDismissListener(dialog -> showDialog(DIALOG_GAME_MENU));
 			builder.setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss());
@@ -1152,7 +1119,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 							dialog.dismiss();
 
 							try {
-								canresume = restoreOldGame();
+								restoreOldGame();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -1180,10 +1147,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			if (viewModel.getIntro() != null) {
 				viewModel.getIntro().cancel();
 			} else {
-				if (client != null && client.isConnected())
-					canresume = true;
-				else
-					canresume = false;
 				showDialog(DIALOG_GAME_MENU);
 			}
 		}
