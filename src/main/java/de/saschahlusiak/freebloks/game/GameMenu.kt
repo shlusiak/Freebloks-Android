@@ -3,11 +3,11 @@ package de.saschahlusiak.freebloks.game
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.Window
 import android.view.animation.AnimationUtils
-import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.preference.PreferenceManager
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -16,18 +16,28 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences
+import kotlinx.android.synthetic.main.game_menu_dialog.*
 
+@Deprecated("Convert to DialogFragment")
 class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLongClickListener {
-    private val soundButton: ImageButton
     private val activity get() = ownerActivity as FreebloksActivity
-    private var soundon = false
     private val appIconIsDonate: Boolean
-    private val appIcon: ImageView
+    private lateinit var appIcon: ImageView
+
+    private val viewModel by lazy { activity.viewModel }
 
     init {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val starts = prefs.getLong("rate_number_of_starts", 0)
+        appIconIsDonate = !Global.IS_VIP && starts % Global.DONATE_STARTS == 0L
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.game_menu_dialog)
+
         findViewById<View>(R.id.new_game).setOnClickListener(this)
         findViewById<View>(R.id.new_game).setOnLongClickListener(this)
         findViewById<View>(R.id.resume_game).setOnClickListener(this)
@@ -36,9 +46,6 @@ class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLong
         findViewById<View>(R.id.rules).setOnClickListener(this)
         findViewById<View>(R.id.new_game_custom).setOnClickListener(this)
 
-        val starts = prefs.getLong("rate_number_of_starts", 0)
-
-        appIconIsDonate = !Global.IS_VIP && starts % Global.DONATE_STARTS == 0L
         appIcon = findViewById(R.id.appIcon)
 
         if (appIconIsDonate) {
@@ -46,11 +53,10 @@ class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLong
             appIcon.setImageResource(R.drawable.ic_action_favorite)
         }
         appIcon.setOnClickListener(this)
-        soundButton = findViewById(R.id.sound_toggle_button)
-        soundButton.setOnClickListener {
-            soundon = !soundon
-            soundButton.setImageResource(if (soundon) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp)
-            activity.viewModel.soundsEnabled = soundon
+
+        sound_toggle_button.setOnClickListener {
+            viewModel.soundsEnabled = !viewModel.soundsEnabled
+            onSoundChanged(viewModel.soundsEnabled)
         }
     }
 
@@ -66,10 +72,13 @@ class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLong
         }
     }
 
+    private fun onSoundChanged(enabled: Boolean) {
+        sound_toggle_button.setImageResource(if (enabled) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp)
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        soundon = activity.viewModel.soundsEnabled
-        soundButton.setImageResource(if (soundon) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp)
+        onSoundChanged(viewModel.soundsEnabled)
     }
 
     override fun onBackPressed() {
@@ -102,13 +111,13 @@ class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLong
     }
 
     override fun onLongClick(v: View): Boolean {
-        return when (v.id) {
+        when (v.id) {
             R.id.new_game -> {
                 activity.startNewGame()
                 dismiss()
-                true
+                return true
             }
-            else -> false
+            else -> return false
         }
     }
 }

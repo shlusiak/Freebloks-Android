@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.lobby_dialog.*
 /**
  * TODO: convert this to a DialogFragment
  */
+@Deprecated("Convert to DialogFragment")
 class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), GameEventObserver, OnItemClickListener {
     private val viewModel = activity.viewModel
 

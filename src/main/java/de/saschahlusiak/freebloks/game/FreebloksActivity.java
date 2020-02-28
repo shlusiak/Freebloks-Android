@@ -75,7 +75,6 @@ import io.fabric.sdk.android.Fabric;
 public class FreebloksActivity extends BaseGameActivity implements GameEventObserver, Intro.OnIntroCompleteListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
-	@Deprecated
 	static final int DIALOG_GAME_MENU = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;

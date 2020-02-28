@@ -29,8 +29,5 @@ class ConnectingDialogFragment : DialogFragment() {
                 viewModel.disconnectClient()
             }
         }
-
-        // there seems to be a race condition where disconnecting happens before the dialog is done showing, so it cannot
-        // be dismissed.
     }
 }

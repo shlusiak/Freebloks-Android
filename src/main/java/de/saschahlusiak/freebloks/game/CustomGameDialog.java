@@ -24,13 +24,19 @@ import de.saschahlusiak.freebloks.model.Shape;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
 	private final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
+
 	private final static int DIFFICULTY_DEFAULT = 8;
+
 	private final static int[] DIFFICULTY_VALUES = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
 	public final static int[] FIELD_SIZES = {
 		13, 14, 15, 17, 20, 23
 	};
+
+	public interface OnStartCustomGameListener {
+		boolean OnStart(CustomGameDialog dialog);
+	}
 
 	private CheckBox player1;
 	private CheckBox player2;
@@ -39,14 +45,11 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 
 	private SeekBar difficulty;
 	private TextView difficulty_label;
-	private Spinner game_mode, field_size;
+	private Spinner gameMode, fieldSize;
 	private NumberPicker[] picker;
 
 	private OnStartCustomGameListener listener;
-
-	public interface OnStartCustomGameListener {
-		boolean OnStart(CustomGameDialog dialog);
-	}
+	
 
 	public CustomGameDialog(Context context, final OnStartCustomGameListener listener) {
 		super(context, R.style.Theme_Freebloks_Light_Dialog);
@@ -74,12 +77,12 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		picker[3] = findViewById(R.id.picker4);
 		picker[4] = findViewById(R.id.picker5);
 
-		field_size = findViewById(R.id.field_size);
+		fieldSize = findViewById(R.id.field_size);
 
 		findViewById(R.id.advanced).setOnClickListener(this);
 
-		game_mode = findViewById(R.id.game_mode);
-		game_mode.setOnItemSelectedListener(this);
+		gameMode = findViewById(R.id.game_mode);
+		gameMode.setOnItemSelectedListener(this);
 
 		player1.setOnClickListener(this);
 		player2.setOnClickListener(this);
@@ -112,13 +115,13 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 				break;
 
 			case R.id.player1:
-				if (game_mode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
+				if (gameMode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
 					player3.setChecked(player1.isChecked());
 				}
 				break;
 
 			case R.id.player2:
-				if (game_mode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
+				if (gameMode.getSelectedItemPosition() == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
 					player4.setChecked(player2.isChecked());
 				}
 				break;
@@ -141,7 +144,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 			player4.setChecked(false);
 			/* FIXME: on first create this is called after prepare, which does seem to not persiste the
 			 * last set size if != 14 */
-			field_size.setSelection(1); /* 14x14 */
+			fieldSize.setSelection(1); /* 14x14 */
 		} else if (position == GameMode.GAMEMODE_2_COLORS_2_PLAYERS.ordinal()) {
 			player1.setEnabled(true);
 			player3.setEnabled(true);
@@ -156,7 +159,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 			player4.setChecked(false);
 			/* FIXME: on first create this is called after prepare, which does seem to not persist the
 			 * last set size if != 15 */
-			field_size.setSelection(2); /* 15x15 */
+			fieldSize.setSelection(2); /* 15x15 */
 		} else if (position == GameMode.GAMEMODE_4_COLORS_2_PLAYERS.ordinal()) {
 			player1.setEnabled(true);
 			player2.setEnabled(true);
@@ -185,9 +188,9 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 
 	}
 
-	void updateNames() {
+	private void updateNames() {
 		String[] color_names = getContext().getResources().getStringArray(R.array.color_names);
-		GameMode game_mode = GameMode.from(this.game_mode.getSelectedItemPosition());
+		GameMode game_mode = GameMode.from(this.gameMode.getSelectedItemPosition());
 		player1.setText(color_names[Global.getPlayerColor(0, game_mode)]);
 		player2.setText(color_names[Global.getPlayerColor(1, game_mode)]);
 		player3.setText(color_names[Global.getPlayerColor(2, game_mode)]);
@@ -207,7 +210,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 
 	private void prepare(int difficulty, GameMode gamemode, int fieldsize) {
 		int p = (int)(Math.random() * 4.0);
-		game_mode.setSelection(gamemode.ordinal());
+		gameMode.setSelection(gamemode.ordinal());
 
 		if (gamemode == GameMode.GAMEMODE_2_COLORS_2_PLAYERS)
 			p = (int)(Math.random() * 2.0) * 2;
@@ -238,7 +241,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		for (int i = 0; i < FIELD_SIZES.length; i++)
 			if (FIELD_SIZES[i] == fieldsize)
 				slider = i;
-		field_size.setSelection(slider);
+		fieldSize.setSelection(slider);
 
 		findViewById(R.id.advanced).setVisibility(View.VISIBLE);
 		findViewById(R.id.custom_stones_layout).setVisibility(View.GONE);
@@ -249,8 +252,8 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		setTitle(R.string.custom_game_title);
 	}
 
-	void setDifficultyLabel() {
-		final String labels[] = getContext().getResources().getStringArray(R.array.difficulties);
+	private void setDifficultyLabel() {
+		final String[] labels = getContext().getResources().getStringArray(R.array.difficulties);
 		int value = getDifficulty();
 		int text = 0;
 
@@ -270,11 +273,11 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	}
 
 	private GameMode getGameMode() {
-		return GameMode.from((int)game_mode.getSelectedItemPosition());
+		return GameMode.from((int) gameMode.getSelectedItemPosition());
 	}
 
 	private int getFieldSize() {
-		return FIELD_SIZES[field_size.getSelectedItemPosition()];
+		return FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 	}
 
 	private boolean[] getPlayers() {
@@ -283,7 +286,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		p[1] = player2.isChecked();
 		p[2] = player3.isChecked();
 		p[3] = player4.isChecked();
-		if (GameMode.from(game_mode.getSelectedItemPosition()) == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
+		if (GameMode.from(gameMode.getSelectedItemPosition()) == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
 			/* this would otherwise request players two times, the server would hand out 2x2 = 4 players */
 			p[2] = p[3] = false;
 		}
