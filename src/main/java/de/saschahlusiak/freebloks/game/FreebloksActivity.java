@@ -632,8 +632,8 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			case DIALOG_CUSTOM_GAME:
 				return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
 					@Override
-					public boolean OnStart(CustomGameDialog dialog) {
-						startNewGame(dialog.getConfiguration(), null);
+					public boolean OnStart(GameConfig config) {
+						startNewGame(config, null);
 						dismissDialog(DIALOG_CUSTOM_GAME);
 						dismissDialog(DIALOG_GAME_MENU);
 						return true;

@@ -65,7 +65,7 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             val client = client ?: return
             val gameMode = client.game.gameMode
 
-            val size = CustomGameDialog.FIELD_SIZES[field_size.selectedItemPosition]
+            val size = GameConfig.FIELD_SIZES[field_size.selectedItemPosition]
 
             val stones = when (gameMode) {
                 GameMode.GAMEMODE_JUNIOR -> GameConfig.JUNIOR_STONE_SET
@@ -259,8 +259,8 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             game_mode.isEnabled = !client.game.isStarted
 
             var slider = 3
-            for (i in CustomGameDialog.FIELD_SIZES.indices)
-                if (CustomGameDialog.FIELD_SIZES[i] == status.width)
+            for (i in GameConfig.FIELD_SIZES.indices)
+                if (GameConfig.FIELD_SIZES[i] == status.width)
                     slider = i
 
             field_size.setSelection(slider)

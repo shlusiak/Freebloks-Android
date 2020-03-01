@@ -5,7 +5,7 @@ import java.io.Serializable
 fun GameMode.defaultBoardSize() = GameConfig.defaultSizeForMode(this)
 fun GameMode.defaultStoneSet() = GameConfig.defaultStonesForMode(this)
 
-data class GameConfig(
+class GameConfig(
     val server: String? = null,
     val gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
     val showLobby: Boolean = false,
@@ -39,6 +39,16 @@ data class GameConfig(
          * Default difficulty, higher is easier, lower is harder
          */
         const val DEFAULT_DIFFICULTY = 10
+
+        /**
+         * A list of possible field sizes for drop-down boxes.
+         *
+         * Matches the labels in R.array.game_field_sizes
+         */
+        @JvmField
+        val FIELD_SIZES = intArrayOf(
+            13, 14, 15, 17, 20, 23
+        )
 
         /**
          * @return the availability numbers for each stone for the given game mode

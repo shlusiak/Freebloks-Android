@@ -135,7 +135,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 
 	private GameConfig buildConfiguration(boolean[] players) {
 		final GameMode mode = GameMode.from(gameMode.getSelectedItemPosition());
-		final int size = CustomGameDialog.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
+		final int size = GameConfig.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 
 		return new GameConfig(
 			null,

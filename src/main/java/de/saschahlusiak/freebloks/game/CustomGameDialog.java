@@ -23,6 +23,10 @@ import android.widget.TextView;
 import de.saschahlusiak.freebloks.model.Shape;
 
 public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
+	public interface OnStartCustomGameListener {
+		boolean OnStart(GameConfig config);
+	}
+
 	private final static int DIFFICULTY_MAX = 10; /* 0..10 = 11 */
 
 	private final static int DIFFICULTY_DEFAULT = 8;
@@ -30,13 +34,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	private final static int[] DIFFICULTY_VALUES = {
 		200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
 	};
-	public final static int[] FIELD_SIZES = {
-		13, 14, 15, 17, 20, 23
-	};
-
-	public interface OnStartCustomGameListener {
-		boolean OnStart(CustomGameDialog dialog);
-	}
 
 	private CheckBox player1;
 	private CheckBox player2;
@@ -49,7 +46,6 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	private NumberPicker[] picker;
 
 	private OnStartCustomGameListener listener;
-	
 
 	public CustomGameDialog(Context context, final OnStartCustomGameListener listener) {
 		super(context, R.style.Theme_Freebloks_Light_Dialog);
@@ -105,7 +101,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 
 			case R.id.ok:
 				saveSettings();
-				if (listener.OnStart(CustomGameDialog.this))
+				if (listener.OnStart(getConfiguration()))
 					dismiss();
 				break;
 
@@ -238,9 +234,10 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		this.difficulty.setProgress(slider);
 
 		slider = 3;
-		for (int i = 0; i < FIELD_SIZES.length; i++)
-			if (FIELD_SIZES[i] == fieldsize)
+		for (int i = 0; i < GameConfig.FIELD_SIZES.length; i++)
+			if (GameConfig.FIELD_SIZES[i] == fieldsize)
 				slider = i;
+
 		fieldSize.setSelection(slider);
 
 		findViewById(R.id.advanced).setVisibility(View.VISIBLE);
@@ -265,6 +262,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 			text = 3;
 		if (value >= 160)
 			text = 4;
+
 		difficulty_label.setText(String.format("%s (%d)", labels[text], difficulty.getProgress()));
 	}
 
@@ -277,7 +275,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 	}
 
 	private int getFieldSize() {
-		return FIELD_SIZES[fieldSize.getSelectedItemPosition()];
+		return GameConfig.FIELD_SIZES[fieldSize.getSelectedItemPosition()];
 	}
 
 	private boolean[] getPlayers() {
@@ -300,7 +298,7 @@ public class CustomGameDialog extends Dialog implements OnSeekBarChangeListener,
 		return result;
 	}
 
-	public GameConfig getConfiguration() {
+	private GameConfig getConfiguration() {
 		return new GameConfig(
 			null,
 			getGameMode(),
