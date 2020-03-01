@@ -111,7 +111,7 @@
                 android:typeface="monospace"/>
 
             <SeekBar
-                android:id="@+id/difficulty"
+                android:id="@+id/difficulty_slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/difficulty_label"

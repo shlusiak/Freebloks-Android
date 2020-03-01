@@ -632,7 +632,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			case DIALOG_CUSTOM_GAME:
 				return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
 					@Override
-					public boolean OnStart(GameConfig config) {
+					public boolean onStartCustomGame(GameConfig config) {
 						startNewGame(config, null);
 						dismissDialog(DIALOG_CUSTOM_GAME);
 						dismissDialog(DIALOG_GAME_MENU);
@@ -748,7 +748,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				break;
 
 			case DIALOG_CUSTOM_GAME:
-				((CustomGameDialog) dialog).prepareCustomGameDialog(difficulty, gamemode, fieldsize);
+				((CustomGameDialog) dialog).setupDialog(difficulty, gamemode, fieldsize);
 				break;
 
 			case DIALOG_SINGLE_PLAYER:

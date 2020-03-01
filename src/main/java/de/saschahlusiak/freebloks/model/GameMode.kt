@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.model
 
 /**
- * This MUST match the order in "jni/constants.h
+ * This MUST match the order in "jni/constants.h, as well as R.array.game_modes
  */
 enum class GameMode {
     GAMEMODE_2_COLORS_2_PLAYERS,
