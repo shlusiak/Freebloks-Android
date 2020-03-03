@@ -49,14 +49,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:id="@+id/radioButton1"/>
+                android:id="@+id/radioButtonInternet"/>
 
             <RadioButton
                 android:text="@string/join_custom_server"
                 android:layout_width="match_parent"
                 android:layout_margin="2dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioButton2"/>
+                android:id="@+id/radioButtonWifi"/>
 
             <EditText
                 android:id="@+id/server_address"
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_margin="2dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioButton3"/>
+                android:id="@+id/radioButtonBluetooth"/>
 
             <LinearLayout
                 android:id="@+id/bluetoothList"
@@ -114,7 +114,7 @@
                 android:gravity="right|center_vertical">
 
                 <Button
-                    android:id="@android:id/closeButton"
+                    android:id="@+id/close_button"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/main_menu_button_height"
                     android:textSize="@dimen/textSizeSmall"
@@ -122,7 +122,7 @@
                     android:text="@android:string/cancel"/>
 
                 <Button
-                    android:id="@android:id/button1"
+                    android:id="@+id/ok_button"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/main_menu_button_height"
                     android:textSize="@dimen/textSizeSmall"
