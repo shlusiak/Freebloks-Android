@@ -22,10 +22,6 @@ import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import kotlinx.android.synthetic.main.custom_game_dialog.*
 
 class CustomGameDialog(context: Context, private val listener: OnStartCustomGameListener) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
-    interface OnStartCustomGameListener {
-        fun onStartCustomGame(config: GameConfig): Boolean
-    }
-
     // the values of the difficulty slider for each index
     private val DIFFICULTY_VALUES = intArrayOf(
         200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
@@ -147,9 +143,8 @@ class CustomGameDialog(context: Context, private val listener: OnStartCustomGame
             R.id.ok -> {
                 saveSettings()
 
-                if (listener.onStartCustomGame(buildGameConfig())) {
-                    dismiss()
-                }
+                listener.onStartClientGameWithConfig(buildGameConfig())
+                dismiss()
             }
             R.id.cancel -> {
                 dismiss()
@@ -175,8 +170,8 @@ class CustomGameDialog(context: Context, private val listener: OnStartCustomGame
             GAMEMODE_DUO,
             GAMEMODE_JUNIOR  -> {
                 player1.isEnabled = true
-                player3.isEnabled = true
                 player2.isEnabled = false
+                player3.isEnabled = true
                 player4.isEnabled = false
                 if (player2.isChecked) player1.isChecked = true
                 if (player4.isChecked) player3.isChecked = true

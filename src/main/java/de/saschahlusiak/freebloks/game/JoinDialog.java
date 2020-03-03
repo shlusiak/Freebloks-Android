@@ -19,12 +19,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.Set;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread;
+import de.saschahlusiak.freebloks.model.GameConfig;
 
 public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, BluetoothServerThread.OnBluetoothConnectedListener {
 	private static final String tag = JoinDialog.class.getSimpleName();
@@ -39,14 +42,6 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 	private BluetoothServerThread bluetoothServer;
 
 	private SharedPreferences prefs;
-
-	public interface OnStartCustomGameListener {
-		void setClientName(String name);
-		void onJoinGame(String server);
-		void onJoinGame(BluetoothSocket bluetooth);
-		void onHostGame();
-		void onHostBluetoothGameWithClient(BluetoothSocket clientSocket);
-	}
 
 	public JoinDialog(Context context, final OnStartCustomGameListener listener) {
 		super(context, R.style.Theme_Freebloks_Light_Dialog);
@@ -75,7 +70,8 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 				saveSettings();
 				dismiss();
 				listener.setClientName(getName());
-				listener.onHostGame();
+				final GameConfig config = new GameConfig(null, true);
+				listener.onStartClientGameWithConfig(config);
 			}
 		});
 
@@ -149,17 +145,21 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 
 	@Override
 	public void onClick(View view) {
+		GameConfig config;
+
 		listener.setClientName(getName());
 		switch (serverType.getCheckedRadioButtonId())
 		{
 			case R.id.radioButton1:
-				listener.onJoinGame(Global.DEFAULT_SERVER_ADDRESS);
+				config = new GameConfig(Global.DEFAULT_SERVER_ADDRESS, true);
+				listener.onStartClientGameWithConfig(config);
 				break;
 			case R.id.radioButton2:
 				if (getCustomServer().isEmpty())
 					return;
 
-				listener.onJoinGame(getCustomServer());
+				config = new GameConfig(getCustomServer(), true);
+				listener.onStartClientGameWithConfig(config);
 				break;
 		}
 		saveSettings();
@@ -177,11 +177,11 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 		this.name.setText(name);
 	}
 
-	private String getName() {
+	private @NonNull String getName() {
 		return name.getText().toString().trim();
 	}
 
-	private String getCustomServer() {
+	private @NonNull String getCustomServer() {
 		return server.getText().toString().trim();
 	}
 
@@ -255,7 +255,7 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 				// success
 				dismiss();
 				listener.setClientName(getName());
-				listener.onJoinGame(bluetoothSocket);
+				listener.onJoinGameWithSocket(bluetoothSocket);
 			} else {
 				// error
 				Toast.makeText(getContext(), R.string.connection_refused, Toast.LENGTH_LONG).show();
@@ -307,11 +307,11 @@ public class JoinDialog extends Dialog implements RadioGroup.OnCheckedChangeList
 	}
 
 	@Override
-	public void onBluetoothClientConnected(final BluetoothSocket socket) {
+	public void onBluetoothClientConnected(@NonNull final BluetoothSocket socket) {
 		// a client has connected to us. quickly host a game and get the two together
 
 		dismiss();
 		listener.setClientName(getName());
-		listener.onHostBluetoothGameWithClient(socket);
+		listener.onHostBluetoothGameWithClientSocket(socket);
 	}
 }

@@ -257,9 +257,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
      * @param isRotated whether the board is rotated or not
      */
     fun setSheetPlayer(player: Int, isRotated: Boolean) {
-        val old = playerToShowInSheet.value
-        if (player == old?.player && isRotated == old?.isRotated) return
-
+//        val old = playerToShowInSheet.value
+//        if (player == old?.player && isRotated == old?.isRotated) return
         playerToShowInSheet.postValue(SheetPlayer(player, isRotated))
     }
 

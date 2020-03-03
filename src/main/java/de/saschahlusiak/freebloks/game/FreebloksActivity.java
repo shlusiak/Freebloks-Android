@@ -72,7 +72,7 @@ import de.saschahlusiak.freebloks.view.scene.Scene;
 import de.saschahlusiak.freebloks.view.scene.Theme;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends BaseGameActivity implements GameEventObserver, Intro.OnIntroCompleteListener {
+public class FreebloksActivity extends BaseGameActivity implements GameEventObserver, Intro.OnIntroCompleteListener, OnStartCustomGameListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -630,68 +630,13 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				return new GameMenu(this);
 
 			case DIALOG_CUSTOM_GAME:
-				return new CustomGameDialog(this, new CustomGameDialog.OnStartCustomGameListener() {
-					@Override
-					public boolean onStartCustomGame(GameConfig config) {
-						startNewGame(config, null);
-						dismissDialog(DIALOG_CUSTOM_GAME);
-						dismissDialog(DIALOG_GAME_MENU);
-						return true;
-					}
-				});
+				return new CustomGameDialog(this, this);
 
 			case DIALOG_JOIN:
-				return new JoinDialog(this, new JoinDialog.OnStartCustomGameListener() {
-					@Override
-					public void setClientName(String name) {
-						clientName = name;
-					}
-
-					@Override
-					public void onJoinGame(String server) {
-						final GameConfig config = new GameConfig(server, true);
-						startNewGame(config, null);
-
-						dismissDialog(DIALOG_GAME_MENU);
-					}
-
-					@Override
-					public void onHostGame() {
-						final GameConfig config = new GameConfig(null, true);
-						startNewGame(config, null);
-
-						dismissDialog(DIALOG_GAME_MENU);
-					}
-
-					@Override
-					public void onHostBluetoothGameWithClient(final BluetoothSocket clientSocket) {
-						dismissDialog(DIALOG_GAME_MENU);
-						final GameConfig config = new GameConfig(null, true);
-
-						startNewGame(config, new Runnable() {
-							@Override
-							public void run() {
-								new BluetoothClientToSocketThread(clientSocket, "localhost", GameClient.DEFAULT_PORT).start();
-							}
-						});
-					}
-
-					@Override
-					@UiThread
-					public void onJoinGame(BluetoothSocket socket) {
-						// got a connected bluetooth socket to a server
-						dismissDialog(DIALOG_GAME_MENU);
-
-						try {
-							establishBluetoothGame(socket);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				});
+				return new JoinDialog(this, this);
 
 			case DIALOG_SINGLE_PLAYER:
-				ColorListDialog d = new ColorListDialog(this,
+				final ColorListDialog d = new ColorListDialog(this,
 					(dialog, config) -> {
 						gamemode = config.getGameMode();
 						fieldsize = config.getFieldSize();
@@ -706,6 +651,43 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 			default:
 				return super.onCreateDialog(id);
+		}
+	}
+
+	@Override
+	public void onStartClientGameWithConfig(@NonNull GameConfig config) {
+		startNewGame(config, null);
+		dismissDialog(DIALOG_GAME_MENU);
+	}
+
+	@Override
+	public void setClientName(@NonNull String name) {
+		clientName = name;
+	}
+
+	@Override
+	public void onHostBluetoothGameWithClientSocket(@NonNull final BluetoothSocket socket) {
+		dismissDialog(DIALOG_GAME_MENU);
+		final GameConfig config = new GameConfig(null, true);
+
+		startNewGame(config, new Runnable() {
+			@Override
+			public void run() {
+				new BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start();
+			}
+		});
+	}
+
+	@Override
+	@UiThread
+	public void onJoinGameWithSocket(@NonNull BluetoothSocket socket) {
+		// got a connected bluetooth socket to a server
+		dismissDialog(DIALOG_GAME_MENU);
+
+		try {
+			establishBluetoothGame(socket);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
