@@ -1,15 +1,18 @@
 package de.saschahlusiak.freebloks.game
 
 import android.app.Application
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.os.Handler
 import android.os.Vibrator
 import android.util.Log
+import androidx.annotation.UiThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread
@@ -44,6 +47,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
+    private val analytics by lazy { FirebaseAnalytics.getInstance(context) }
 
     // UI Thread handler
     private val handler = Handler()
@@ -124,6 +128,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             vibrator?.vibrate(milliseconds)
     }
 
+    @UiThread
     fun setClient(client: GameClient) {
         notificationManager?.shutdown()
         notificationManager = null
@@ -138,7 +143,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             }
         }
 
-        connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
+        connectionStatusLiveData.value = ConnectionStatus.Disconnected
     }
 
     fun onStart() {
@@ -151,7 +156,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     fun startConnectingClient(config: GameConfig, clientName: String?, requestStartGame: Boolean, onConnected: () -> Unit) {
         val client = client ?: return
-        connectionStatusLiveData.postValue(ConnectionStatus.Connecting)
+        connectionStatusLiveData.value = ConnectionStatus.Connecting
         setSheetPlayer(-1, false)
         connectThread?.interrupt()
 
@@ -167,7 +172,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                     connectionStatusLiveData.postValue(ConnectionStatus.Failed)
                     connectThread = null
                     return@thread
-
                 }
             } catch (e: InterruptedException) {
                 e.printStackTrace()
@@ -213,6 +217,32 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             connectionStatusLiveData.postValue(ConnectionStatus.Connected)
             handler.post { onConnected.invoke() }
 
+            connectThread = null
+        }
+    }
+
+    fun startConnectingBluetooth(remote: BluetoothDevice, clientName: String?) {
+        val client = client ?: return
+        val config = client.config
+        connectThread?.interrupt()
+        connectionStatusLiveData.value = ConnectionStatus.Connecting
+
+        connectThread = thread(name = "BluetoothConnectThread") {
+            try {
+                Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
+                if (!client.connect(context, remote)) {
+                    connectionStatusLiveData.postValue(ConnectionStatus.Failed)
+                    return@thread
+                }
+                Log.i(tag, "Connection successful")
+
+                analytics.logEvent("bluetooth_connected", null)
+                if (config.requestPlayers == null) client.requestPlayer(-1, clientName)
+
+                connectionStatusLiveData.postValue(ConnectionStatus.Connected)
+            } catch (e: InterruptedException) {
+                connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
+            }
             connectThread = null
         }
     }

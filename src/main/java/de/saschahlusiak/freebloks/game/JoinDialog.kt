@@ -1,13 +1,11 @@
 package de.saschahlusiak.freebloks.game
 
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,11 +17,12 @@ import android.widget.*
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
+import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.model.GameConfig
 import kotlinx.android.synthetic.main.join_dialog.*
-import java.io.IOException
 
 class JoinDialog(context: Context, private val listener: OnStartCustomGameListener) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
     private lateinit var name: EditText
@@ -171,70 +170,14 @@ class JoinDialog(context: Context, private val listener: OnStartCustomGameListen
         updateOkButtonEnabled()
     }
 
-    @Deprecated("Use Thread and set ViewModel status to Connecting to show dialog")
-    private inner class ConnectBluetoothTask() : AsyncTask<BluetoothDevice, Void?, BluetoothSocket?>() {
-        private var progress: ProgressDialog
-
-        init {
-            progress = ProgressDialog(context).apply {
-                isIndeterminate = true
-                setMessage(context.getString(R.string.connecting))
-                setCancelable(true)
-                setOnCancelListener {
-                    Log.w(tag, "Cancelling connect task")
-                    cancel(true)
-                }
-            }
-        }
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            progress.show()
-        }
-
-        override fun doInBackground(vararg bluetoothDevices: BluetoothDevice): BluetoothSocket? {
-            val device = bluetoothDevices[0]
-            val socket: BluetoothSocket
-
-            return try {
-                Log.i(tag, "Connecting to " + device.name + "/" + device.address)
-                socket = device.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID)
-                socket.connect()
-                Log.i(tag, "Connection successful")
-                socket
-            } catch (e: IOException) {
-                Log.e(tag, "Connection failed")
-                e.printStackTrace()
-                null
-            }
-        }
-
-        override fun onCancelled() {
-            progress.dismiss()
-            super.onCancelled()
-        }
-
-        override fun onPostExecute(bluetoothSocket: BluetoothSocket?) {
-            progress.dismiss()
-
-            if (bluetoothSocket != null) {
-                // success
-                dismiss()
-                listener.setClientName(getName())
-                listener.onJoinGameWithSocket(bluetoothSocket)
-            } else {
-                // error
-                Toast.makeText(context, R.string.connection_refused, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
     private fun updateBluetoothDeviceList() {
         val deviceSelectedListener = View.OnClickListener { v ->
+            listener.setClientName(getName())
             saveSettings()
             val device = v.tag as BluetoothDevice
+            dismiss()
             Log.i(tag, "Device selected: " + device.name)
-            ConnectBluetoothTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, device)
+            listener.onConnectToBluetoothDevice(device)
         }
 
         bluetoothList.removeAllViews()
@@ -268,8 +211,11 @@ class JoinDialog(context: Context, private val listener: OnStartCustomGameListen
     override fun onBluetoothClientConnected(socket: BluetoothSocket) {
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
         dismiss()
+        val config = GameConfig(server = null, showLobby = true)
         listener.setClientName(getName())
-        listener.onHostBluetoothGameWithClientSocket(socket)
+        listener.onStartClientGameWithConfig(config, Runnable {
+            BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
+        })
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.client
 
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import androidx.annotation.AnyThread
@@ -7,6 +8,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
@@ -102,6 +104,31 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
             return false
         }
         connected(socket, socket.getInputStream(), socket.getOutputStream())
+        return true
+    }
+
+    /**
+     * Try to connect to the given remote bluetooth device
+     *
+     * On success will call [.connected]
+     */
+    @WorkerThread
+    fun connect(context: Context, remote: BluetoothDevice): Boolean {
+        val socket: BluetoothSocket
+        try {
+            socket = remote.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID)
+            socket.connect()
+        }  catch (e: IOException) {
+            e.printStackTrace()
+
+            // translate any IOException to "Connection refused"
+            val e2 = IOException(context.getString(R.string.connection_refused), e)
+            gameClientMessageHandler.notifyConnectionFailed(this, e2)
+
+            return false
+        }
+
+        connected(socket, socket.inputStream, socket.outputStream)
         return true
     }
 

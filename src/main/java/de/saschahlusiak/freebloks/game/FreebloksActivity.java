@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,13 +44,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread;
 import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.client.JNIServer;
@@ -433,7 +432,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	}
 
 	@UiThread
-	private void startNewGame(final GameConfig config, final Runnable runAfter) {
+	private void startNewGame(final GameConfig config, final Runnable onConnected) {
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServerForNewGame(
 				config.getGameMode(),
@@ -464,38 +463,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 		view.setGameClient(client);
 
-		viewModel.startConnectingClient(config, clientName, !config.getShowLobby(), runAfter);
-	}
-
-	@UiThread
-	public void establishBluetoothGame(BluetoothSocket socket) throws IOException {
-		final GameConfig config = new GameConfig();
-
-		if (client != null)
-			client.disconnect();
-		client = null;
-		view.model.clearEffects();
-		Log.d(tag, "Establishing game with existing bluetooth connection");
-
-		final Board board = new Board(fieldsize);
-		final Game game = new Game(board);
-		board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS);
-
-		client = new GameClient(game, config);
-		view.setGameClient(client);
-
-		viewModel.setClient(client);
-
-		client.addObserver(this);
-		client.addObserver(view);
-		client.connected(socket, socket.getInputStream(), socket.getOutputStream());
-
-		if (config.getRequestPlayers() == null)
-			client.requestPlayer(-1, clientName);
-
-		showDialog(FreebloksActivity.DIALOG_LOBBY);
-
-		FirebaseAnalytics.getInstance(this).logEvent("bluetooth_connected", null);
+		viewModel.startConnectingClient(config, clientName, !config.getShowLobby(), onConnected);
 	}
 
 	boolean restoreOldGame() throws Exception {
@@ -655,9 +623,10 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	}
 
 	@Override
-	public void onStartClientGameWithConfig(@NonNull GameConfig config) {
-		startNewGame(config, null);
+	public void onStartClientGameWithConfig(@NonNull GameConfig config, @Nullable Runnable onConnected) {
 		dismissDialog(DIALOG_GAME_MENU);
+
+		startNewGame(config, onConnected);
 	}
 
 	@Override
@@ -666,29 +635,29 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	}
 
 	@Override
-	public void onHostBluetoothGameWithClientSocket(@NonNull final BluetoothSocket socket) {
+	public void onConnectToBluetoothDevice(@NotNull BluetoothDevice device) {
 		dismissDialog(DIALOG_GAME_MENU);
+
 		final GameConfig config = new GameConfig(null, true);
 
-		startNewGame(config, new Runnable() {
-			@Override
-			public void run() {
-				new BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start();
-			}
-		});
-	}
+		viewModel.disconnectClient();
+		client = null;
 
-	@Override
-	@UiThread
-	public void onJoinGameWithSocket(@NonNull BluetoothSocket socket) {
-		// got a connected bluetooth socket to a server
-		dismissDialog(DIALOG_GAME_MENU);
+		view.model.clearEffects();
 
-		try {
-			establishBluetoothGame(socket);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		final Board board = new Board(fieldsize);
+		final Game game = new Game(board);
+		client = new GameClient(game, config);
+		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
+
+		client.addObserver(this);
+		client.addObserver(view);
+
+		viewModel.setClient(client);
+
+		view.setGameClient(client);
+
+		viewModel.startConnectingBluetooth(device, clientName);
 	}
 
 	@Override
