@@ -78,7 +78,6 @@ import io.fabric.sdk.android.Fabric;
 public class FreebloksActivity extends FragmentActivity implements GameEventObserver, Intro.OnIntroCompleteListener, OnStartCustomGameListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
-	static final int DIALOG_GAME_MENU = 1;
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
@@ -270,7 +269,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		final boolean canResume = (client != null && client.game.isStarted() && !client.game.isFinished());
 
 		if (!canResume || !prefs.getBoolean("auto_resume", false))
-			showDialog(DIALOG_GAME_MENU);
+			showMainMenu();
 
 		if (showRateDialog)
 			showDialog(DIALOG_RATE_ME);
@@ -544,6 +543,16 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(enabled ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
 
+	private void showMainMenu() {
+		new MainMenuDialogFragment().show(getSupportFragmentManager(), "game_menu");
+	}
+
+	private void dismissMainMenu() {
+		final DialogFragment f = (DialogFragment) getSupportFragmentManager().findFragmentByTag("game_menu");
+		if (f != null) {
+			f.dismiss();
+		}
+	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -556,7 +565,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			case DIALOG_QUIT:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage(R.string.do_you_want_to_leave_current_game);
-				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> showDialog(DIALOG_GAME_MENU));
+				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> showMainMenu());
 				builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
 				return builder.create();
 
@@ -580,9 +589,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			case DIALOG_RATE_ME:
 				return new RateAppDialog(this);
 
-			case DIALOG_GAME_MENU:
-				return new GameMenu(this);
-
 			case DIALOG_JOIN:
 				return new JoinDialog(this, this);
 
@@ -593,7 +599,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 						dialog.dismiss();
 					});
-				d.setOnCancelListener(dialog -> showDialog(DIALOG_GAME_MENU));
+				d.setOnCancelListener(dialog -> showMainMenu());
 
 				return d;
 
@@ -604,7 +610,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 	@Override
 	public void onStartClientGameWithConfig(@NonNull GameConfig config, @Nullable Runnable onConnected) {
-		dismissDialog(DIALOG_GAME_MENU);
+		dismissMainMenu();
 
 		startNewGame(config, onConnected);
 	}
@@ -616,7 +622,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 	@Override
 	public void onConnectToBluetoothDevice(@NotNull BluetoothDevice device) {
-		dismissDialog(DIALOG_GAME_MENU);
+		dismissMainMenu();
 
 		final GameConfig config = new GameConfig(null, true);
 
@@ -644,7 +650,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 								FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
 								client.disconnect();
 								client = null;
-								showDialog(DIALOG_GAME_MENU);
+								showMainMenu();
 							}
 						}
 					});
@@ -655,14 +661,8 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 					 * connection
 					 */
 					dialog.dismiss();
-					showDialog(DIALOG_GAME_MENU);
+					showMainMenu();
 				}
-				break;
-
-			case DIALOG_GAME_MENU:
-				final boolean canResume = client != null && client.isConnected() && !client.game.isFinished();
-				final GameMenu g = (GameMenu) dialog;
-				g.setResumeEnabled(canResume);
 				break;
 
 			case DIALOG_JOIN:
@@ -677,7 +677,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		Intent intent;
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				showDialog(DIALOG_GAME_MENU);
+				showMainMenu();
 				if (viewModel.getIntro() != null)
 					viewModel.getIntro().cancel();
 				return true;
@@ -724,7 +724,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				if (client != null && client.game.isStarted() && lastStatus != null && lastStatus.getClients() > 1)
 					showDialog(DIALOG_QUIT);
 				else {
-					showDialog(DIALOG_GAME_MENU);
+					showMainMenu();
 					if (viewModel.getIntro() != null)
 						viewModel.getIntro().cancel();
 				}
@@ -743,7 +743,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 					startNewGame();
 				}
 				if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
-					showDialog(DIALOG_GAME_MENU);
+					showMainMenu();
 				}
 				break;
 
@@ -997,7 +997,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			builder.setMessage(error.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
 
-			builder.setOnDismissListener(dialog -> showDialog(DIALOG_GAME_MENU));
+			builder.setOnDismissListener(dialog -> showMainMenu());
 			builder.setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss());
 
 			builder.create().show();
@@ -1058,7 +1058,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			if (viewModel.getIntro() != null) {
 				viewModel.getIntro().cancel();
 			} else {
-				showDialog(DIALOG_GAME_MENU);
+				showMainMenu();
 			}
 		}
 	}
