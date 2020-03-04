@@ -13,6 +13,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import kotlinx.android.synthetic.main.rate_app_dialog.*
 
+@Deprecated("Convert to DialogFragment")
 class RateAppDialog(context: Context) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog) {
 
     override fun onCreate(savedInstanceState: Bundle) {

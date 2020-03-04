@@ -102,7 +102,7 @@ class GameMenu(context: Context) : Dialog(context), View.OnClickListener, OnLong
                 context.startActivity(intent)
             }
             R.id.join_game -> activity.showDialog(FreebloksActivity.DIALOG_JOIN)
-            R.id.new_game_custom -> activity.showDialog(FreebloksActivity.DIALOG_CUSTOM_GAME)
+            R.id.new_game_custom -> CustomGameDialog().show(activity.supportFragmentManager, null)
             R.id.rules -> {
                 intent = Intent(context, RulesActivity::class.java)
                 context.startActivity(intent)

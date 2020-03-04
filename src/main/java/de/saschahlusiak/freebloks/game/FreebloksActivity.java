@@ -78,7 +78,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_JOIN = 5;
-	static final int DIALOG_CUSTOM_GAME = 7;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	static final int DIALOG_SINGLE_PLAYER = 10;
 
@@ -575,9 +574,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 			case DIALOG_GAME_MENU:
 				return new GameMenu(this);
-
-			case DIALOG_CUSTOM_GAME:
-				return new CustomGameDialog(this, this);
 
 			case DIALOG_JOIN:
 				return new JoinDialog(this, this);
