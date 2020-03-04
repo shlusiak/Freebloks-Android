@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.game.dialogs
 
 import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
@@ -21,6 +21,7 @@ import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
+import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
 import kotlinx.android.synthetic.main.join_dialog.*
 

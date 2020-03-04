@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.stats;
+package de.saschahlusiak.freebloks.statistics;
 
 import de.saschahlusiak.freebloks.R;
 import android.content.Context;

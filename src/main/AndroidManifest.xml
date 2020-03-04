@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".game.GameFinishActivity"
+            android:name=".game.finish.GameFinishActivity"
             android:label="@string/app_name"
             android:exported="false"
             android:theme="@style/Theme.Freebloks.Dialog" >
@@ -67,7 +67,7 @@
             android:label="@string/preferences" >
         </activity>
         <activity
-            android:name=".stats.StatisticsActivity"
+            android:name=".statistics.StatisticsActivity"
             android:label="@string/statistics"
             android:theme="@style/Theme.Freebloks.Auto.Light"
             android:icon="@drawable/stats"
@@ -90,7 +90,7 @@
             android:theme="@style/Theme.Freebloks.Light.Dialog" >
         </activity>
         <activity
-            android:name=".game.RulesActivity"
+            android:name=".rules.RulesActivity"
             android:label="@string/rules_title"
             android:exported="false"
             android:theme="@style/Theme.Freebloks.Light">

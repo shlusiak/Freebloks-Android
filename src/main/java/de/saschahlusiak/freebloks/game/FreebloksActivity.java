@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.crashlytics.android.Crashlytics;
@@ -52,13 +53,17 @@ import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog;
+import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialogFragment;
+import de.saschahlusiak.freebloks.game.dialogs.JoinDialog;
+import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog;
+import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.GameConfig;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Player;
-import de.saschahlusiak.freebloks.model.PlayerScore;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
@@ -70,7 +75,7 @@ import de.saschahlusiak.freebloks.view.scene.Scene;
 import de.saschahlusiak.freebloks.view.scene.Theme;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends BaseGameActivity implements GameEventObserver, Intro.OnIntroCompleteListener, OnStartCustomGameListener {
+public class FreebloksActivity extends FragmentActivity implements GameEventObserver, Intro.OnIntroCompleteListener, OnStartCustomGameListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_GAME_MENU = 1;
@@ -204,6 +209,9 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		viewModel.getConnectionStatusLiveData().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
 		viewModel.getSoundsEnabledLiveData().observe(this, this::soundEnabledChanged);
+		viewModel.getGoogleAccountSignedIn().observe(this, signedIn -> {
+			viewModel.getGameHelper().setWindowForPopups(getWindow());
+		});
 	}
 
 	@Override
@@ -884,9 +892,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			public void run() {
 				if (client == null)
 					return;
-				final PlayerScore[] data = client.game.getPlayerScores();
-
-				new AddScoreTask(getApplicationContext(), client.game.getGameMode(), data).start();
 
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable) client.game);
@@ -1093,17 +1098,5 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 				showDialog(DIALOG_LOBBY);
 		}
 		super.onNewIntent(intent);
-	}
-
-	@Override
-	public void onSignInFailed() {
-
-	}
-
-	@Override
-	public void onSignInSucceeded() {
-		if (Global.IS_VIP) {
-			unlock(getString(R.string.achievement_vip));
-		}
 	}
 }

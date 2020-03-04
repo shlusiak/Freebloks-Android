@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.game.dialogs
 
 import android.app.Dialog
 import android.app.ProgressDialog
@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 
 /**
  * Simple dialog fragment to show "Connecting to server..." that disconnects the client on cancel.

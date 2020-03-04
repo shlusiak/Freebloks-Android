@@ -15,7 +15,9 @@ import de.saschahlusiak.freebloks.AboutActivity
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences
+import de.saschahlusiak.freebloks.rules.RulesActivity
 import kotlinx.android.synthetic.main.game_menu_dialog.*
 
 @Deprecated("Convert to DialogFragment")

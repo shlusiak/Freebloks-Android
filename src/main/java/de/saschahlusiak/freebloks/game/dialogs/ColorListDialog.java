@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game;
+package de.saschahlusiak.freebloks.game.dialogs;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;

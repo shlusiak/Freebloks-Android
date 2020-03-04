@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.game.dialogs
 
 import android.app.Dialog
 import android.content.Context

@@ -6,19 +6,27 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import de.saschahlusiak.freebloks.game.GameHelper;
-import de.saschahlusiak.freebloks.game.GameHelper.GameHelperListener;
+
+import org.jetbrains.annotations.NotNull;
+
+import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
+import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper.GameHelperListener;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.stats.StatisticsActivity;
+import de.saschahlusiak.freebloks.statistics.StatisticsActivity;
 
+/**
+ * Preferences fragment to host the items to launch the {@link StatisticsActivity}
+ */
 public class StatisticsFragment extends PreferenceFragment implements GameHelperListener, OnPreferenceClickListener {
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;
+	private static final int REQUEST_SIGN_IN = 3;
 
-	GameHelper mHelper;
+	private GooglePlayGamesHelper mHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,12 +39,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
 
-		mHelper = new GameHelper(getActivity());
-        mHelper.setup(this);
-
-        /* XXX: this is a hack, because the onActivityResult of the activity will be called instead of the fragment */
-        /* make sure that the activity knows about the helper, which is created in the context of the fragment. bah. */
-        ((FreebloksPreferences)getActivity()).mHelper = mHelper;
+		mHelper = new GooglePlayGamesHelper(getActivity().getApplicationContext(), this);
 
         findPreference("statistics").setOnPreferenceClickListener(this);
 
@@ -49,9 +52,9 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 				public boolean onPreferenceClick(Preference preference) {
 					if (mHelper.isSignedIn()) {
 						mHelper.startSignOut();
-						onSignInFailed();
+						onGoogleAccountSignedOut();
 					} else
-						mHelper.beginUserInitiatedSignIn();
+						mHelper.beginUserInitiatedSignIn(StatisticsFragment.this, REQUEST_SIGN_IN);
 					return true;
 				}
 			});
@@ -60,14 +63,14 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 				public boolean onPreferenceClick(Preference preference) {
 					if (!mHelper.isSignedIn())
 						return false;
-					mHelper.startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
+					mHelper.startLeaderboardIntent(StatisticsFragment.this, getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 					return true;
 				}
 			});
 			findPreference("googleplus_achievements").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					mHelper.startAchievementsIntent(REQUEST_ACHIEVEMENTS);
+					mHelper.startAchievementsIntent(StatisticsFragment.this, REQUEST_ACHIEVEMENTS);
 					return true;
 				}
 			});
@@ -75,26 +78,19 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
     }
 
     @Override
-    public void onStart() {
-    	super.onStart();
-    	mHelper.onStart(getActivity());
-    }
-
-    @Override
-    public void onStop() {
-    	super.onStop();
-    	mHelper.onStop();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	super.onActivityResult(requestCode, resultCode, data);
-//    	mHelper.onActivityResult(requestCode, resultCode, data);
-    	/* the onActivityResult of the activity will be called :-/ */
+    	switch(requestCode) {
+			case REQUEST_SIGN_IN:
+				mHelper.onActivityResult(resultCode, data);
+				break;
+
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
+		}
     }
 
 	@Override
-	public void onSignInFailed() {
+	public void onGoogleAccountSignedOut() {
 		if (!isVisible())
 			return;
 		if (findPreference("googleplus_category") == null)
@@ -107,11 +103,14 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 	}
 
 	@Override
-	public void onSignInSucceeded() {
+	public void onGoogleAccountSignedIn(@NotNull GoogleSignInAccount account) {
     	if (!isVisible())
     		return;
 		findPreference("googleplus_signin").setTitle(R.string.googleplus_signout);
-		findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, mHelper.getCurrentPlayer().getDisplayName()));
+		mHelper.getPlayer(player -> {
+			findPreference("googleplus_signin").setSummary(getString(R.string.googleplus_signout_long, player.getDisplayName()));
+			return null;
+		});
 		findPreference("googleplus_leaderboard").setEnabled(true);
 		findPreference("googleplus_achievements").setEnabled(true);
 	}

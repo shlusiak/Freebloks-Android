@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.game.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode

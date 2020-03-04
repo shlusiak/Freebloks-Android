@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.rules
 
 import android.app.Activity
 import android.content.Intent

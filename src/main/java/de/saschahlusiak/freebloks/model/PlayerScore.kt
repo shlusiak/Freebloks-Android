@@ -4,6 +4,7 @@ import java.io.Serializable
 
 /**
  * The current scores of a player.
+ *
  * This may be a combined score of two colors
  */
 data class PlayerScore(
@@ -13,7 +14,8 @@ data class PlayerScore(
     val stonesLeft: Int,
     val turnsLeft: Int,
     val bonus: Int,
-    val isPerfect: Boolean
+    val isPerfect: Boolean,
+    var clientName: String? = null
 ) : Serializable, Comparable<PlayerScore> {
 
     // the place and local player information will be set afterwards, when all points of all players are known
@@ -29,7 +31,8 @@ data class PlayerScore(
             color1.stonesLeft + color2.stonesLeft,
             color1.turnsLeft + color2.turnsLeft,
             color1.bonus + color2.bonus,
-            color2.isPerfect
+            color2.isPerfect,
+            color1.clientName
         )
 
     override fun compareTo(other: PlayerScore): Int {

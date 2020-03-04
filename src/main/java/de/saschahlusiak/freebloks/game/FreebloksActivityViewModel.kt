@@ -12,6 +12,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
@@ -43,7 +44,7 @@ data class SheetPlayer(
     val isRotated: Boolean
 )
 
-class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver {
+class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver, GooglePlayGamesHelper.GameHelperListener {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
@@ -73,6 +74,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // other stuff
     var intro: Intro? = null
     private var connectThread: Thread? = null
+    val gameHelper = GooglePlayGamesHelper(app, this)
 
     // client data
     var client: GameClient?
@@ -90,6 +92,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
     val connectionStatusLiveData = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
+    val googleAccountSignedIn = MutableLiveData(false)
 
     init {
         client = null
@@ -362,6 +365,17 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
         setSheetPlayer(-1, false)
         chatHistory.clear()
+    }
+
+    override fun onGoogleAccountSignedOut() {
+        googleAccountSignedIn.value = false
+    }
+
+    override fun onGoogleAccountSignedIn(account: GoogleSignInAccount) {
+        googleAccountSignedIn.value = true
+        if (Global.IS_VIP) {
+            gameHelper.unlock(context.getString(R.string.achievement_vip))
+        }
     }
 
     //endregion

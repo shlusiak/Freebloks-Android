@@ -1,7 +1,8 @@
-package de.saschahlusiak.freebloks.stats;
+package de.saschahlusiak.freebloks.statistics;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,30 +17,39 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import de.saschahlusiak.freebloks.game.BaseGameActivity;
+import org.jetbrains.annotations.NotNull;
 
 import de.saschahlusiak.freebloks.R;
+import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Shape;
 
-public class StatisticsActivity extends BaseGameActivity {
-	HighscoreDB db;
-	StatisticsAdapter adapter;
-	GameMode game_mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
+public class StatisticsActivity extends FragmentActivity implements GooglePlayGamesHelper.GameHelperListener {
+	private HighscoreDB db;
+	private StatisticsAdapter adapter;
+	private GameMode game_mode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS;
 
-	String[] labels;
-	String[] values;
+	private String[] labels;
+	private String[] values;
 
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;
+	private static final int REQUEST_SIGN_IN = 3;
 
+	private GooglePlayGamesHelper gameHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		gameHelper = new GooglePlayGamesHelper(this, this);
+
 		db = new HighscoreDB(this);
 		db.open();
 		
@@ -48,7 +58,6 @@ public class StatisticsActivity extends BaseGameActivity {
 
 		labels = getResources().getStringArray(R.array.statistics_labels);
 		values = new String[labels.length];
-
 
 		adapter = new StatisticsAdapter(this, labels, values);
 		((ListView) findViewById(R.id.listView)).setAdapter(adapter);
@@ -64,7 +73,7 @@ public class StatisticsActivity extends BaseGameActivity {
 
 			@Override
 			public void onClick(View v) {
-				beginUserInitiatedSignIn();
+				gameHelper.beginUserInitiatedSignIn(StatisticsActivity.this, REQUEST_SIGN_IN);
 			}
 		});
 
@@ -123,9 +132,10 @@ public class StatisticsActivity extends BaseGameActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.signout).setVisible(isSignedIn());
-		menu.findItem(R.id.achievements).setVisible(isSignedIn());
-		menu.findItem(R.id.leaderboard).setVisible(isSignedIn());
+		boolean isSignedIn = gameHelper.isSignedIn();
+		menu.findItem(R.id.signout).setVisible(isSignedIn);
+		menu.findItem(R.id.achievements).setVisible(isSignedIn);
+		menu.findItem(R.id.leaderboard).setVisible(isSignedIn);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -140,24 +150,36 @@ public class StatisticsActivity extends BaseGameActivity {
 			refreshData();
 			return true;
 		case R.id.signout:
-			signOut();
+			gameHelper.startSignOut();
 			findViewById(R.id.signin).setVisibility(View.VISIBLE);
 			findViewById(R.id.leaderboard).setVisibility(View.GONE);
 			findViewById(R.id.achievements).setVisibility(View.GONE);
 			return true;
 		case R.id.achievements:
-			if (isSignedIn())
-				startAchievementsIntent(REQUEST_ACHIEVEMENTS);
+			if (gameHelper.isSignedIn())
+				gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS);
 			return true;
 		case R.id.leaderboard:
-			if (isSignedIn())
-				startLeaderboardIntent(getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
+			if (gameHelper.isSignedIn())
+				gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	void refreshData() {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		switch (requestCode) {
+			case REQUEST_SIGN_IN:
+				gameHelper.onActivityResult(resultCode, data);
+				break;
+
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	private void refreshData() {
 		int games = db.getTotalNumberOfGames(game_mode);
 		int points = db.getTotalNumberOfPoints(game_mode);
 		int perfect = db.getNumberOfPerfectGames(game_mode);
@@ -165,7 +187,6 @@ public class StatisticsActivity extends BaseGameActivity {
 		int stones_left = db.getTotalNumberOfStonesLeft(game_mode);
 		int stones_used = games * Shape.COUNT - stones_left;
 		int i;
-
 
 		for (i = 0; i < values.length; i++)
 			values[i] = "";
@@ -196,7 +217,7 @@ public class StatisticsActivity extends BaseGameActivity {
 	}
 
 	@Override
-	public void onSignInFailed() {
+	public void onGoogleAccountSignedOut() {
 		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS)
 			return;
 
@@ -205,19 +226,19 @@ public class StatisticsActivity extends BaseGameActivity {
 	}
 
 	@Override
-	public void onSignInSucceeded() {
+	public void onGoogleAccountSignedIn(@NotNull GoogleSignInAccount account) {
 		findViewById(R.id.signin).setVisibility(View.GONE);
 		invalidateOptionsMenu();
 
 		if (db == null)
 			return;
-		
-		submitScore(
-				getString(R.string.leaderboard_games_won),
-				db.getNumberOfPlace(null, 1));
 
-		submitScore(
-				getString(R.string.leaderboard_points_total),
-				db.getTotalNumberOfPoints(null));
+		gameHelper.submitScore(
+			getString(R.string.leaderboard_games_won),
+			db.getNumberOfPlace(null, 1));
+
+		gameHelper.submitScore(
+			getString(R.string.leaderboard_points_total),
+			db.getTotalNumberOfPoints(null));
 	}
 }

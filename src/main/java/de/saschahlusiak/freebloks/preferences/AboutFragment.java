@@ -11,7 +11,7 @@ import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
-import de.saschahlusiak.freebloks.game.RulesActivity;
+import de.saschahlusiak.freebloks.rules.RulesActivity;
 
 public class AboutFragment extends PreferenceFragment implements OnPreferenceClickListener {
     @Override
