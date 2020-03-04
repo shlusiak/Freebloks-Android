@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
 
+@Deprecated
 public abstract class BaseGameActivity extends FragmentActivity implements GameHelper.GameHelperListener {
 
     // The game helper object. This class is mainly a wrapper around this object.

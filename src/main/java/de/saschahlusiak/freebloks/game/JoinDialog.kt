@@ -24,6 +24,7 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.model.GameConfig
 import kotlinx.android.synthetic.main.join_dialog.*
 
+@Deprecated("Convert to DialogFragment")
 class JoinDialog(context: Context, private val listener: OnStartCustomGameListener) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
     private lateinit var name: EditText
     private lateinit var server: EditText

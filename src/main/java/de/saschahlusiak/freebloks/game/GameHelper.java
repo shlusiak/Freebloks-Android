@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.Task;
 
 import de.saschahlusiak.freebloks.R;
 
+@Deprecated
 public class GameHelper implements OnCompleteListener<Player>, OnSuccessListener<GoogleSignInAccount> {
 
     private static final String tag = "GameHelper";

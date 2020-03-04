@@ -24,6 +24,7 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import kotlinx.android.synthetic.main.custom_game_dialog.*
 
+@Deprecated("Convert to DialogFragment")
 class CustomGameDialog(context: Context, private val listener: OnStartCustomGameListener) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
     private val DIFFICULTY_VALUES = intArrayOf(

@@ -4,6 +4,8 @@ import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.model.GameConfig;
 import de.saschahlusiak.freebloks.model.GameMode;
+import kotlin.Deprecated;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+@Deprecated(message = "Convert to Kotlin and DialogFragment")
 public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 	private final SharedPreferences prefs;
 	private OnColorSelectedListener listener;
