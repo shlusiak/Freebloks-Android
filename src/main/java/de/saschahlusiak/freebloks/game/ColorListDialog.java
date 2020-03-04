@@ -6,10 +6,13 @@ import de.saschahlusiak.freebloks.model.GameConfig;
 import de.saschahlusiak.freebloks.model.GameMode;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class ColorListDialog extends Dialog implements OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+	private final SharedPreferences prefs;
 	private OnColorSelectedListener listener;
 	private AdapterView<ColorListAdapter> list;
 	private ColorListAdapter adapter;
@@ -41,16 +45,23 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 	public ColorListDialog(Context context, final OnColorSelectedListener listener) {
 		super(context, R.style.Theme_Freebloks_Light_Dialog);
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+		this.listener = listener;
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setContentView(R.layout.color_list_dialog);
 
-		this.listener = listener;
 		gameMode = findViewById(R.id.game_mode);
 		gameMode.setOnItemSelectedListener(this);
 		fieldSize = findViewById(R.id.field_size);
 		fieldSize.setOnItemSelectedListener(this);
-		
+
 		adapter = new ColorListAdapter(getContext());
 		// Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
 		// with class cast exception
@@ -66,6 +77,13 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		passAndPlay.setOnCheckedChangeListener(this);
 
 		adapter.setPassAndPlay(passAndPlay.isChecked());
+
+		final GameMode previousGameMode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
+
+		// TODO: restore the previous field size; the setGameMode will set the default for the given game mode
+//		final int previousFieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE);
+
+		setGameMode(previousGameMode);
 	}
 
 	@NonNull
@@ -83,11 +101,10 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 		adapter.notifyDataSetChanged();
 	}
 
-	void setGameMode(GameMode gamemode) {
-	//	setTitle(getContext().getResources().getStringArray(R.array.game_modes)[gamemode.ordinal()]);
-		gameMode.setSelection(gamemode.ordinal());
+	private void setGameMode(GameMode gameMode) {
+		this.gameMode.setSelection(gameMode.ordinal());
 
-		switch (gamemode) {
+		switch (gameMode) {
 		case GAMEMODE_2_COLORS_2_PLAYERS:
 			fieldSize.setSelection(2);
 			selection[1] = selection[3] = false;
@@ -106,7 +123,7 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			break;
 		}
 
-		adapter.setGameMode(gamemode);
+		adapter.setGameMode(gameMode);
 	}
 
 	@Override
@@ -118,7 +135,14 @@ public class ColorListDialog extends Dialog implements OnItemClickListener, OnIt
 			final boolean[] players = new boolean[4];
 			players[(int)id] = true;
 
-			listener.onStartGame(this, buildConfiguration(players));
+			final GameConfig config = buildConfiguration(players);
+			listener.onStartGame(this, config);
+
+			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+			prefs.edit()
+				.putInt("gamemode", config.getGameMode().ordinal())
+				.putInt("fieldsize", config.getFieldSize())
+				.apply();
 		}
 	}
 

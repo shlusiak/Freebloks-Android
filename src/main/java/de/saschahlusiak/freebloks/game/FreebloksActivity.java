@@ -86,24 +86,18 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 	private static final String GAME_STATE_FILE = "gamestate.bin";
 
-	Freebloks3DView view;
+	private SharedPreferences prefs;
+	private Freebloks3DView view;
 	private GameClient client = null;
 	private boolean undo_with_back;
 	private MessageServerStatus lastStatus;
 	private Menu optionsMenu;
+	private ImageButton chatButton;
+	private boolean showRateDialog = false;
 
 	private FreebloksActivityViewModel viewModel;
 
-	private String clientName;
-	private int difficulty;
-	private GameMode gamemode;
-	private int fieldsize;
-
-	private ImageButton chatButton;
-
-	private SharedPreferences prefs;
-
-	private boolean showRateDialog = false;
+	@Deprecated private String clientName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -195,9 +189,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			view.model.soundPool = viewModel.getSounds();
 
 		clientName = prefs.getString("player_name", null);
-		difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY);
-		gamemode = GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal()));
-		fieldsize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE);
 
 		if (client != null) {
 			/* we just rotated and got *hot* objects */
@@ -408,7 +399,8 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 	private void resumeGame(@NonNull final Game game) {
 		final GameMode gameMode = game.getGameMode();
 
-		int ret = JNIServer.runServerForExistingGame(game, difficulty);
+		final int previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY);
+		int ret = JNIServer.runServerForExistingGame(game, previousDifficulty);
 		if (ret != 0) {
 			Crashlytics.log("Error starting server: " + ret);
 		}
@@ -418,7 +410,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			gameMode,
 			false,
 			new boolean[] {false, false, false, false},
-			GameConfig.DEFAULT_DIFFICULTY,
+			previousDifficulty,
 			GameConfig.defaultStonesForMode(gameMode),
 			game.getBoard().width
 		);
@@ -447,7 +439,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 		viewModel.disconnectClient();
 
-		final Board board = new Board(fieldsize);
+		final Board board = new Board();
 		final Game game = new Game(board);
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 
@@ -593,9 +585,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			case DIALOG_SINGLE_PLAYER:
 				final ColorListDialog d = new ColorListDialog(this,
 					(dialog, config) -> {
-						gamemode = config.getGameMode();
-						fieldsize = config.getFieldSize();
-
 						startNewGame(config, null);
 
 						dialog.dismiss();
@@ -629,8 +618,8 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 		viewModel.disconnectClient();
 
-		final Board board = new Board(fieldsize);
-		final Game game = new Game(board);
+		final Board board = new Board();
+		final Game game = new Game();
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 
 		setGameClient(new GameClient(game, config));
@@ -674,15 +663,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 			case DIALOG_JOIN:
 				((JoinDialog) dialog).setName(clientName);
-				break;
-
-			case DIALOG_CUSTOM_GAME:
-				((CustomGameDialog) dialog).setupDialog(difficulty, gamemode, fieldsize);
-				break;
-
-			case DIALOG_SINGLE_PLAYER:
-				ColorListDialog d = (ColorListDialog) dialog;
-				d.setGameMode(gamemode);
 				break;
 		}
 		super.onPrepareDialog(id, dialog, args);
@@ -815,8 +795,6 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			return;
 		final Game game = client.game;
 		final Board board = game.getBoard();
-		if (game == null)
-			return;
 
 		runOnUiThread(new Runnable() {
 			@Override
@@ -845,8 +823,9 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
 							if (view.model.hasAnimations()) {
 								int sx, sy;
-								sx = board.getPlayerSeedX(p.getNumber(), gamemode);
-								sy = board.getPlayerSeedY(p.getNumber(), gamemode);
+								final GameMode gameMode = game.getGameMode();
+								sx = board.getPlayerSeedX(p.getNumber(), gameMode);
+								sy = board.getPlayerSeedY(p.getNumber(), gameMode);
 								for (int x = 0; x < board.width; x++)
 									for (int y = 0; y < board.height; y++)
 										if (board.getFieldPlayer(y, x) == p.getNumber()) {

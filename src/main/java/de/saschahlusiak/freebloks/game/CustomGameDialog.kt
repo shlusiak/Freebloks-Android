@@ -6,13 +6,16 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.CheckBox
+import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.*
@@ -33,6 +36,8 @@ class CustomGameDialog(context: Context, private val listener: OnStartCustomGame
 
     private lateinit var players: Array<CheckBox>
     private lateinit var picker: Array<NumberPicker>
+
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     /**
      * Convenient getter/setter for GameMode
@@ -96,16 +101,14 @@ class CustomGameDialog(context: Context, private val listener: OnStartCustomGame
         cancel.setOnClickListener(this)
         ok.setOnClickListener(this)
 
-        updateColorNames()
-        updateDifficultyLabel()
+        difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
+        gameMode = from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
+        fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
+
+        setupDialog()
     }
 
-
-    fun setupDialog(difficulty: Int, gameMode: GameMode, fieldSize: Int) {
-        this.gameMode = gameMode
-        this.fieldSize = fieldSize
-        this.difficulty = difficulty
-
+    fun setupDialog() {
         players.forEach { it.isChecked = false }
         val p = when(gameMode) {
             GAMEMODE_2_COLORS_2_PLAYERS -> (Math.random() * 2.0).toInt() * 2
@@ -227,7 +230,6 @@ class CustomGameDialog(context: Context, private val listener: OnStartCustomGame
     }
 
     private fun saveSettings() {
-        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         prefs.edit()
             .putInt("difficulty", difficulty)
             .putInt("gamemode", gameMode.ordinal)

@@ -54,7 +54,7 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 		this.view = view;
 		this.viewModel = viewModel;
 
-		this.board = new Board(Board.DEFAULT_BOARD_SIZE);
+		this.board = new Board();
 		this.game = new Game(board);
 
 		currentStone = new CurrentStone(this);

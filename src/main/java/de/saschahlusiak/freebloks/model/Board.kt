@@ -14,6 +14,7 @@ import java.lang.IllegalArgumentException
  * See [Game] for that.
  */
 class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable {
+    @JvmOverloads
     constructor(size: Int = DEFAULT_BOARD_SIZE) : this(size, size)
 
     /**
