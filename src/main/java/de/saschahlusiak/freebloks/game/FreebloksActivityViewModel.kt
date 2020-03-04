@@ -89,7 +89,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
     val connectionStatusLiveData = MutableLiveData(ConnectionStatus.Disconnected)
-    // FIXME: this needs to be a data class with more stuff in it
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
 
     init {
@@ -157,11 +156,13 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         notificationManager?.startBackgroundNotification()
     }
 
-    fun startConnectingClient(config: GameConfig, clientName: String?, requestStartGame: Boolean, onConnected: () -> Unit) {
+    fun startConnectingClient(config: GameConfig, clientName: String?, requestStartGame: Boolean, onConnected: Runnable?) {
         val client = client ?: return
+        connectThread?.interrupt()
+        connectThread?.join(100)
+
         connectionStatusLiveData.value = ConnectionStatus.Connecting
         setSheetPlayer(-1, false)
-        connectThread?.interrupt()
 
         connectThread = thread(name = "ConnectionThread") {
             val name = config.server ?: "(null)"
@@ -180,7 +181,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                 e.printStackTrace()
                 // cancelled, ignore
                 client.disconnect()
-                connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
                 connectThread = null
                 return@thread
             }
@@ -214,11 +214,11 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             }
 
             if (requestStartGame) {
-                client.requestGameStart();
+                client.requestGameStart()
             }
 
             connectionStatusLiveData.postValue(ConnectionStatus.Connected)
-            handler.post { onConnected.invoke() }
+            handler.post { onConnected?.run() }
 
             connectThread = null
         }
@@ -228,6 +228,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val client = client ?: return
         val config = client.config
         connectThread?.interrupt()
+        connectThread?.join(100)
         connectionStatusLiveData.value = ConnectionStatus.Connecting
 
         connectThread = thread(name = "BluetoothConnectThread") {
@@ -244,14 +245,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
                 connectionStatusLiveData.postValue(ConnectionStatus.Connected)
             } catch (e: InterruptedException) {
-                connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
+                e.printStackTrace()
             }
             connectThread = null
         }
-    }
-
-    fun startConnectingClient(config: GameConfig, clientName: String?, requestStartGame: Boolean, onConnected: Runnable?) {
-        startConnectingClient(config, clientName, requestStartGame) { onConnected?.run() }
     }
 
     fun disconnectClient() {
