@@ -130,9 +130,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     @UiThread
     fun setClient(client: GameClient) {
+        if (client === this.client) return
+
         notificationManager?.shutdown()
         notificationManager = null
 
+        this.client?.removeObserver(this)
         this.client = client
         client.addObserver(this)
 
@@ -143,7 +146,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             }
         }
 
-        connectionStatusLiveData.value = ConnectionStatus.Disconnected
+        connectionStatusLiveData.value = if (client.isConnected()) ConnectionStatus.Connected else ConnectionStatus.Disconnected
     }
 
     fun onStart() {
@@ -258,7 +261,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         client = null
     }
 
-    fun appendServerInterfacesToChat() {
+    private fun appendServerInterfacesToChat() {
         try {
             for (i in NetworkInterface.getNetworkInterfaces()) {
                 for (address in i.inetAddresses) {

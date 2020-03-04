@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.game;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -202,9 +201,7 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 
 		if (client != null) {
 			/* we just rotated and got *hot* objects */
-			client.addObserver(this);
-			client.addObserver(view);
-			view.setGameClient(client);
+			setGameClient(client);
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
 				viewModel.setIntro(new Intro(getApplicationContext(), view.model, this));
@@ -396,9 +393,19 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		}
 	}
 
+	private void setGameClient(final @NonNull GameClient client) {
+		this.client = client;
+
+		client.addObserver(this);
+		client.addObserver(view);
+
+		viewModel.setClient(client);
+
+		view.setGameClient(client);
+	}
+
 	@UiThread
-	private void resumeGame(final Game game) {
-		final Board board = game.getBoard();
+	private void resumeGame(@NonNull final Game game) {
 		final GameMode gameMode = game.getGameMode();
 
 		int ret = JNIServer.runServerForExistingGame(game, difficulty);
@@ -413,20 +420,12 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			new boolean[] {false, false, false, false},
 			GameConfig.DEFAULT_DIFFICULTY,
 			GameConfig.defaultStonesForMode(gameMode),
-			board.width
+			game.getBoard().width
 		);
+		game.setStarted(true);
 
-		/* this will start a new GameClient, which needs to be restored from saved gamestate first */
-		client = new GameClient(game, config);
-
-		client.addObserver(this);
-		client.addObserver(view);
-
-		viewModel.setClient(client);
-
-		client.game.setStarted(true);
-
-		view.setGameClient(client);
+		// this will start a new GameClient for the saved game state
+		setGameClient(new GameClient(game, config));
 
 		viewModel.startConnectingClient(config, clientName, false, () -> { });
 	}
@@ -447,26 +446,17 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		}
 
 		viewModel.disconnectClient();
-		client = null;
-
-		view.model.clearEffects();
 
 		final Board board = new Board(fieldsize);
 		final Game game = new Game(board);
-		client = new GameClient(game, config);
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 
-		client.addObserver(this);
-		client.addObserver(view);
-
-		viewModel.setClient(client);
-
-		view.setGameClient(client);
+		setGameClient(new GameClient(game, config));
 
 		viewModel.startConnectingClient(config, clientName, !config.getShowLobby(), onConnected);
 	}
 
-	boolean restoreOldGame() throws Exception {
+	private void restoreOldGame() throws Exception {
 		try {
 			FileInputStream fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -490,13 +480,10 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 			deleteFile(GAME_STATE_FILE);
 
 			if (readStateFromBundle(bundle)) {
-				return true;
 			} else {
-				return false;
 			}
 		} catch (FileNotFoundException fe) {
 			/* signal non-failure if game state file is missing */
-			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -641,21 +628,12 @@ public class FreebloksActivity extends BaseGameActivity implements GameEventObse
 		final GameConfig config = new GameConfig(null, true);
 
 		viewModel.disconnectClient();
-		client = null;
-
-		view.model.clearEffects();
 
 		final Board board = new Board(fieldsize);
 		final Game game = new Game(board);
-		client = new GameClient(game, config);
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 
-		client.addObserver(this);
-		client.addObserver(view);
-
-		viewModel.setClient(client);
-
-		view.setGameClient(client);
+		setGameClient(new GameClient(game, config));
 
 		viewModel.startConnectingBluetooth(device, clientName);
 	}

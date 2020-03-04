@@ -76,6 +76,8 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			model.setGameClient(client);
 		}
 
+		model.clearEffects();
+
 		queueEvent(new Runnable() {
 			@Override
 			public void run() {

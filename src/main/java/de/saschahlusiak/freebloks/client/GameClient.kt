@@ -95,6 +95,8 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
         try {
             socket.connect(address, CONNECT_TIMEOUT)
         } catch (e: IOException) {
+            if (Thread.interrupted()) return false
+
             e.printStackTrace()
 
             // translate any IOException to "Connection refused"
@@ -119,6 +121,8 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
             socket = remote.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID)
             socket.connect()
         }  catch (e: IOException) {
+            if (Thread.interrupted()) return false
+
             e.printStackTrace()
 
             // translate any IOException to "Connection refused"
