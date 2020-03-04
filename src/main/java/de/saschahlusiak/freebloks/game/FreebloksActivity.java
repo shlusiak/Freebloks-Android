@@ -149,10 +149,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		view = findViewById(R.id.board);
 		view.setActivity(viewModel);
 
-		if (prefs.getBoolean("immersive_mode", true)) {
-			view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-		}
-
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		chatButton = findViewById(R.id.chatButton);
 		chatButton.setVisibility(View.INVISIBLE);
@@ -324,7 +320,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
 		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", Scene.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
-		view.model.immersiveMode = prefs.getBoolean("immersive_mode", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		clientName = prefs.getString("player_name", null);
 		if (clientName != null && clientName.equals(""))

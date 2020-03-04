@@ -42,7 +42,6 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 
 	public boolean showSeeds, showOpponents, snapAid;
 	public int showAnimations;
-	public boolean immersiveMode = true;
 	public boolean verticalLayout = true;
 	boolean redraw;
 

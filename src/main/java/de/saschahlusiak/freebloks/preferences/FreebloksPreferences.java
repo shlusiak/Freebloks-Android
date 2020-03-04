@@ -1,34 +1,32 @@
 package de.saschahlusiak.freebloks.preferences;
 
-import java.util.List;
-
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper.GameHelperListener;
-
-import de.saschahlusiak.freebloks.AboutActivity;
-import de.saschahlusiak.freebloks.BuildConfig;
-import de.saschahlusiak.freebloks.Global;
-import de.saschahlusiak.freebloks.R;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceGroup;
 import android.view.MenuItem;
-import android.view.ViewConfiguration;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+import de.saschahlusiak.freebloks.AboutActivity;
+import de.saschahlusiak.freebloks.BuildConfig;
+import de.saschahlusiak.freebloks.Global;
+import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
+import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
+import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper.GameHelperListener;
 import de.saschahlusiak.freebloks.rules.RulesActivity;
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity;
 
@@ -60,12 +58,6 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		mHelper = new GooglePlayGamesHelper(this, this);
 
 		addPreferencesFromResource(R.xml.preferences);
-		
-		ViewConfiguration viewConfig = ViewConfiguration.get(this);
-		if (viewConfig.hasPermanentMenuKey()) {
-			Preference p = findPreference("immersive_mode");
-			((PreferenceGroup)findPreference("interface_category")).removePreference(p);
-		}
 
 		findPreference("rules").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
