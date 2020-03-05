@@ -27,7 +27,7 @@ public class Global {
 	public static final String DEFAULT_SERVER_ADDRESS = "blokus.saschahlusiak.de";
 
 
-	public static String getMarketURLString(String packageName) {
+	public static String getMarketURLString(@NonNull String packageName) {
 		if (BuildConfig.IS_AMAZON)
 			return "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
 		else

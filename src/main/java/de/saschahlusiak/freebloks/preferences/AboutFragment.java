@@ -43,11 +43,7 @@ public class AboutFragment extends PreferenceFragment implements OnPreferenceCli
 				break;
 
 			case "rate_review":
-				String url;
-				if (BuildConfig.IS_AMAZON)
-					url = Global.getMarketURLString(getActivity().getPackageName());
-				else
-					url = "market://details?id=" + getActivity().getApplication().getPackageName();
+				final String url = Global.getMarketURLString(BuildConfig.APPLICATION_ID);
 				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				startActivity(intent);
 				break;

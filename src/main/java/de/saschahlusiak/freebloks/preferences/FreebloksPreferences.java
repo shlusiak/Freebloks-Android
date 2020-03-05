@@ -71,12 +71,8 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		findPreference("rate_review").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				String url;
-				if (BuildConfig.IS_AMAZON)
-					url = Global.getMarketURLString(getPackageName());
-				else
-					url = "market://details?id=" + getApplication().getPackageName();
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				final String url = Global.getMarketURLString(BuildConfig.APPLICATION_ID);
+				final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				startActivity(intent);
 				return true;
 			}
