@@ -266,12 +266,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
+    @UiThread
     fun disconnectClient() {
         Log.d(tag, "disconnectClient")
         connectThread?.interrupt()
         connectThread = null
-        client?.disconnect()
-        client = null
+        val c = this.client
+        this.client = null
+        c?.disconnect()
+
+        connectionStatus.value = ConnectionStatus.Disconnected
     }
 
     private fun appendServerInterfacesToChat() {
@@ -376,9 +380,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     override fun onDisconnected(client: GameClient, error: Exception?) {
         Log.d(tag, "onDisconneced")
-        lastStatus = null
-        connectionStatus.postValue(ConnectionStatus.Disconnected)
-        setSheetPlayer(-1, false)
+        if (client === this.client) {
+            // we may already have swapped to another client, which drives the status
+            lastStatus = null
+            connectionStatus.postValue(ConnectionStatus.Disconnected)
+            setSheetPlayer(-1, false)
+        }
         chatHistory.clear()
     }
 
