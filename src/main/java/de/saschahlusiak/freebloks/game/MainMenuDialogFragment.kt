@@ -28,7 +28,6 @@ class MainMenuDialogFragment : DialogFragment(), View.OnClickListener, OnLongCli
     private val analytics by lazy { FirebaseAnalytics.getInstance(requireContext()) }
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
-    private var canResume = false
 
     private val viewModel by lazy { activity.viewModel }
 
@@ -39,9 +38,7 @@ class MainMenuDialogFragment : DialogFragment(), View.OnClickListener, OnLongCli
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val starts = prefs.getLong("rate_number_of_starts", 0)
-        val client = viewModel.client
 
-        canResume = client != null && client.isConnected() && !client.game.isFinished
         appIconIsDonate = !Global.IS_VIP && starts % Global.DONATE_STARTS == 0L
 
         view.findViewById<View>(R.id.new_game).setOnClickListener(this)
@@ -67,8 +64,12 @@ class MainMenuDialogFragment : DialogFragment(), View.OnClickListener, OnLongCli
             view.sound_toggle_button.setImageResource(res)
         })
 
-        view.resume_game.isEnabled = canResume
-        dialog?.setCanceledOnTouchOutside(canResume)
+        viewModel.connectionStatus.observe(viewLifecycleOwner, Observer {
+            val canResume = (it == ConnectionStatus.Connected) && (viewModel.client?.game?.isFinished == false)
+
+            view.resume_game.isEnabled = canResume
+            dialog?.setCanceledOnTouchOutside(canResume)
+        })
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
