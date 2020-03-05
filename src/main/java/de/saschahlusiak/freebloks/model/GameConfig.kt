@@ -8,8 +8,8 @@ fun GameMode.defaultStoneSet() = GameConfig.defaultStonesForMode(this)
 class GameConfig(
     val server: String? = null,
     val gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
-    val showLobby: Boolean = false,
-    val requestPlayers: BooleanArray? = null, // 4
+    @JvmField val showLobby: Boolean = false,
+    @JvmField val requestPlayers: BooleanArray? = null, // 4
     val difficulty: Int = DEFAULT_DIFFICULTY,
     val stones: IntArray = gameMode.defaultStoneSet(), // 21
     val fieldSize: Int = gameMode.defaultBoardSize()

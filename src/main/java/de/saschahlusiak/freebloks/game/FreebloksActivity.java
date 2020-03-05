@@ -201,7 +201,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
 
-		viewModel.getConnectionStatusLiveData().observe(this, this::onConnectionStatusChanged);
+		viewModel.getConnectionStatus().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
 		viewModel.getSoundsEnabledLiveData().observe(this, this::soundEnabledChanged);
 		viewModel.getGoogleAccountSignedIn().observe(this, signedIn -> {
@@ -420,11 +420,13 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		// this will start a new GameClient for the saved game state
 		setGameClient(new GameClient(game, config));
 
-		viewModel.startConnectingClient(config, clientName, false, () -> { });
+		// even though we don't show the lobby, we also don't want to request game start,
+		// because it is already running
+		viewModel.startConnectingClient(config, clientName, null);
 	}
 
 	@UiThread
-	private void startNewGame(final GameConfig config, final Runnable onConnected) {
+	private void startNewGame(final GameConfig config, final @Nullable Runnable onConnected) {
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServerForNewGame(
 				config.getGameMode(),
@@ -442,11 +444,16 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 		final Board board = new Board();
 		final Game game = new Game(board);
+		final boolean requestGameStart = !config.showLobby;
 		board.startNewGame(config.getGameMode(), config.getFieldSize(), config.getFieldSize());
 
 		setGameClient(new GameClient(game, config));
 
-		viewModel.startConnectingClient(config, clientName, !config.getShowLobby(), onConnected);
+		viewModel.startConnectingClient(config, clientName, () -> {
+			if (onConnected != null) onConnected.run();
+
+			if (requestGameStart) client.requestGameStart();
+		});
 	}
 
 	private void restoreOldGame() throws Exception {
@@ -971,7 +978,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	@WorkerThread
 	@Override
 	public void onConnected(@NonNull GameClient client) {
-		if (client.getConfig().getShowLobby()) {
+		if (client.getConfig().showLobby) {
 			runOnUiThread(() -> {
 				final Bundle bundle = new Bundle();
 				final String server = client.getConfig().getServer() == null ? "localhost" : client.getConfig().getServer();

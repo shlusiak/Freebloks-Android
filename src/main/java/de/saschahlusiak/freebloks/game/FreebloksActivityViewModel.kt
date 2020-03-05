@@ -90,7 +90,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
-    val connectionStatusLiveData = MutableLiveData(ConnectionStatus.Disconnected)
+    val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
     val googleAccountSignedIn = MutableLiveData(false)
 
@@ -148,7 +148,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             }
         }
 
-        connectionStatusLiveData.value = if (client.isConnected()) ConnectionStatus.Connected else ConnectionStatus.Disconnected
+        connectionStatus.value = if (client.isConnected()) ConnectionStatus.Connected else ConnectionStatus.Disconnected
     }
 
     fun onStart() {
@@ -159,12 +159,13 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         notificationManager?.startBackgroundNotification()
     }
 
-    fun startConnectingClient(config: GameConfig, clientName: String?, requestStartGame: Boolean, onConnected: Runnable?) {
+    fun startConnectingClient(config: GameConfig, clientName: String?, onConnected: Runnable? = null) {
         val client = client ?: return
+        Log.d(tag, "startConnectingClient")
         connectThread?.interrupt()
         connectThread?.join(100)
 
-        connectionStatusLiveData.value = ConnectionStatus.Connecting
+        connectionStatus.value = ConnectionStatus.Connecting
         setSheetPlayer(-1, false)
 
         connectThread = thread(name = "ConnectionThread") {
@@ -176,21 +177,18 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                 // client will notify observers about connection failed
                 if (!client.connect(context, config.server, GameClient.DEFAULT_PORT)) {
                     // connection has failed, observers have been notified
-                    connectionStatusLiveData.postValue(ConnectionStatus.Failed)
+                    connectionStatus.postValue(ConnectionStatus.Failed)
                     connectThread = null
+                    Log.d(tag, "Connection failed")
                     return@thread
                 }
             } catch (e: InterruptedException) {
                 e.printStackTrace()
-                // cancelled, ignore
-                client.disconnect()
                 connectThread = null
                 return@thread
             }
 
-            if (config.showLobby && config.server == null) {
-                appendServerInterfacesToChat()
-            }
+            Log.d(tag, "Connection successful")
 
             if (config.requestPlayers == null) {
                 client.requestPlayer(-1, clientName)
@@ -201,6 +199,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             }
             if (config.showLobby) {
                 if (config.server == null) {
+                    appendServerInterfacesToChat()
+
                     // hosting a game locally, start bluetooth server and bridges.
                     // start a new client bridge for every connected bluetooth client
                     val connectedListener = object: OnBluetoothConnectedListener {
@@ -216,12 +216,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                 }
             }
 
-            if (requestStartGame) {
-                client.requestGameStart()
+            handler.post {
+                connectionStatus.value = ConnectionStatus.Connected
+                onConnected?.run()
             }
-
-            connectionStatusLiveData.postValue(ConnectionStatus.Connected)
-            handler.post { onConnected?.run() }
 
             connectThread = null
         }
@@ -232,29 +230,44 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val config = client.config
         connectThread?.interrupt()
         connectThread?.join(100)
-        connectionStatusLiveData.value = ConnectionStatus.Connecting
+        connectionStatus.value = ConnectionStatus.Connecting
+        Crashlytics.log(Log.INFO, tag, "Connecting to bluetooth device")
 
         connectThread = thread(name = "BluetoothConnectThread") {
             try {
                 Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
                 if (!client.connect(context, remote)) {
-                    connectionStatusLiveData.postValue(ConnectionStatus.Failed)
+                    // connection has failed, observers have been notified
+                    connectionStatus.postValue(ConnectionStatus.Failed)
+                    connectThread = null
                     return@thread
                 }
-                Log.i(tag, "Connection successful")
-
-                analytics.logEvent("bluetooth_connected", null)
-                if (config.requestPlayers == null) client.requestPlayer(-1, clientName)
-
-                connectionStatusLiveData.postValue(ConnectionStatus.Connected)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
+                connectThread = null
+                return@thread
             }
+
+            Log.i(tag, "Connection successful")
+
+            analytics.logEvent("bluetooth_connected", null)
+
+            if (config.requestPlayers == null) {
+                client.requestPlayer(-1, clientName)
+            } else {
+                for (i in 0..3)
+                    if (config.requestPlayers[i])
+                        client.requestPlayer(i, clientName)
+            }
+
+            connectionStatus.postValue(ConnectionStatus.Connected)
+
             connectThread = null
         }
     }
 
     fun disconnectClient() {
+        Log.d(tag, "disconnectClient")
         connectThread?.interrupt()
         connectThread = null
         client?.disconnect()
@@ -298,8 +311,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     //region GameEventObserver callbacks
 
     override fun onConnected(client: GameClient) {
+        Log.d(tag, "onConnected")
         lastStatus = null
-        connectionStatusLiveData.postValue(ConnectionStatus.Connected)
+        connectionStatus.postValue(ConnectionStatus.Connected)
         setSheetPlayer(client.game.currentPlayer, false)
     }
 
@@ -361,8 +375,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     override fun onDisconnected(client: GameClient, error: Exception?) {
+        Log.d(tag, "onDisconneced")
         lastStatus = null
-        connectionStatusLiveData.postValue(ConnectionStatus.Disconnected)
+        connectionStatus.postValue(ConnectionStatus.Disconnected)
         setSheetPlayer(-1, false)
         chatHistory.clear()
     }
