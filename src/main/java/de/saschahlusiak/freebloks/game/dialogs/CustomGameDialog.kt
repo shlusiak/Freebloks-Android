@@ -152,7 +152,8 @@ class CustomGameDialog : DialogFragment(), OnSeekBarChangeListener, View.OnClick
                 R.id.ok -> {
                     saveSettings()
 
-                    listener.onStartClientGameWithConfig(buildGameConfig())
+                    // we don't need to request a player name, because we overwrite it locally anyway when displaying
+                    listener.onStartClientGameWithConfig(buildGameConfig(), null)
                     dismiss()
                 }
                 R.id.cancel -> {

@@ -12,7 +12,7 @@ import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 /**
  * Simple dialog fragment to show "Connecting to server..." that disconnects the client on cancel.
  */
-class ConnectingDialogFragment : DialogFragment() {
+class ConnectingDialog : DialogFragment() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
     override fun onCancel(dialog: DialogInterface) {

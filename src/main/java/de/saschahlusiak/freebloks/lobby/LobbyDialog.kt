@@ -193,6 +193,8 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
                 .putString("player_name", name)
                 .apply()
 
+            viewModel.reloadPreferences()
+
             client?.revokePlayer(player)
             client?.requestPlayer(player, name)
         }

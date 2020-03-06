@@ -19,11 +19,12 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
+import de.saschahlusiak.freebloks.game.dialogs.JoinDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import kotlinx.android.synthetic.main.game_menu_dialog.view.*
 
-class MainMenuDialogFragment : DialogFragment(), View.OnClickListener, OnLongClickListener {
+class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private val analytics by lazy { FirebaseAnalytics.getInstance(requireContext()) }
     private var appIconIsDonate = false
@@ -105,7 +106,7 @@ class MainMenuDialogFragment : DialogFragment(), View.OnClickListener, OnLongCli
                 intent = Intent(context, if (appIconIsDonate) DonateActivity::class.java else AboutActivity::class.java)
                 requireContext().startActivity(intent)
             }
-            R.id.join_game -> activity.showDialog(FreebloksActivity.DIALOG_JOIN)
+            R.id.join_game -> JoinDialog().show(activity.supportFragmentManager, null)
             R.id.new_game_custom -> CustomGameDialog().show(activity.supportFragmentManager, null)
             R.id.rules -> {
                 intent = Intent(context, RulesActivity::class.java)
@@ -117,7 +118,7 @@ class MainMenuDialogFragment : DialogFragment(), View.OnClickListener, OnLongCli
     override fun onLongClick(v: View): Boolean {
         when (v.id) {
             R.id.new_game -> {
-                activity.startNewGame()
+                activity.startNewDefaultGame()
                 dismiss()
                 return true
             }

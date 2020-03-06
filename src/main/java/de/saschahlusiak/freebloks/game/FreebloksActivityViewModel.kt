@@ -70,6 +70,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             sounds.isEnabled = value
             soundsEnabledLiveData.value = value
         }
+    // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
+    var localClientNameOverride: String? = null
+        private set
 
     // other stuff
     var intro: Intro? = null
@@ -108,6 +111,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         vibrateOnMove = prefs.getBoolean("vibrate", true)
         sounds.isEnabled = prefs.getBoolean("sounds", true)
         showNotifications = prefs.getBoolean("notifications", true)
+        localClientNameOverride = prefs.getString("player_name", null)?.ifBlank { null }
 
         soundsEnabledLiveData.value = sounds.isEnabled
 
@@ -122,6 +126,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             notificationManager?.shutdown()
             notificationManager = null
         }
+
+        // this is so that updates to the localClientNameOverride are reflected in the bottom sheet
+
+        playerToShowInSheet.value = playerToShowInSheet.value
     }
 
     fun vibrate(milliseconds: Long) {
@@ -231,6 +239,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectThread?.interrupt()
         connectThread?.join(100)
         connectionStatus.value = ConnectionStatus.Connecting
+
         Crashlytics.log(Log.INFO, tag, "Connecting to bluetooth device")
 
         connectThread = thread(name = "BluetoothConnectThread") {
@@ -307,9 +316,27 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
      * @param isRotated whether the board is rotated or not
      */
     fun setSheetPlayer(player: Int, isRotated: Boolean) {
-//        val old = playerToShowInSheet.value
-//        if (player == old?.player && isRotated == old?.isRotated) return
         playerToShowInSheet.postValue(SheetPlayer(player, isRotated))
+    }
+
+    /**
+     * Returns the display name of the given player/color.
+     *
+     * This depends on whether this is a local player (use [localClientNameOverride]),
+     * a player with a name in the [lastStatus], or the name of the color for the current game mode
+     */
+    fun getPlayerName(player: Int): String {
+        val gameMode = client?.game?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+        val colorName = Global.getColorName(context, player, gameMode)
+        val game = client?.game ?: return colorName
+
+        // always return the current override, so that changing the name in the preferences trumps what the server believes
+        localClientNameOverride?.let {
+            if (game.isLocalPlayer(player)) return it
+        }
+
+        // then either the name of the player, or the name of the color if not
+        return lastStatus?.getPlayerName(player) ?: colorName
     }
 
     //region GameEventObserver callbacks
@@ -319,6 +346,15 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         lastStatus = null
         connectionStatus.postValue(ConnectionStatus.Connected)
         setSheetPlayer(client.game.currentPlayer, false)
+    }
+
+    override fun gameStarted() {
+        // this is so we get to update our [localClientNameOverride], because
+        // we start a new local game without any player name, and it allows the
+        // lobby to set a new name in the preferences before game start.
+        handler.post {
+            reloadPreferences()
+        }
     }
 
     override fun serverStatus(status: MessageServerStatus) {

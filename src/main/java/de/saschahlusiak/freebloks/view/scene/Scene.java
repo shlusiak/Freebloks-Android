@@ -90,10 +90,15 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 		if (client != null) {
 			this.game = client.game;
 			this.board = game.getBoard();
+
+			boardObject.resetRotation();
+			wheel.update(boardObject.getShowWheelPlayer());
+			boardObject.updateDetailsPlayer();
 		} else {
 			this.board = null;
 			this.game = null;
 		}
+
 	}
 
 	@Override

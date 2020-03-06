@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class AboutActivity : Activity() {
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.about_activity)
@@ -20,6 +19,7 @@ class AboutActivity : Activity() {
         }
 
         findViewById<View>(R.id.ok).setOnClickListener { finish() }
+        @SuppressLint("SetTextI18n")
         findViewById<TextView>(R.id.version).text = "v${BuildConfig.VERSION_NAME}"
         findViewById<TextView>(R.id.url1).text = Global.getMarketURLString(packageName)
     }

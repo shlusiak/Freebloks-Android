@@ -24,7 +24,7 @@ public class BoardObject implements ViewElement {
 		this.lastSize = size;
 		this.centerPlayer = 0;
 		mAngleY = 0.0f;
-		updateDetailsPlayer();
+		lastDetailsPlayer = -1;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class BoardObject implements ViewElement {
 		return -90.0f * (float)centerPlayer;
 	}
 
-	private void updateDetailsPlayer() {
+	public void updateDetailsPlayer() {
 		int p;
 		if (mAngleY > 0)
 			p = ((int)mAngleY + 45) / 90;
@@ -225,6 +225,7 @@ public class BoardObject implements ViewElement {
 	public void resetRotation() {
 		ta = 0.0f;
 		auto_rotate = true;
+		lastDetailsPlayer = -1;
 	}
 
 	@Override

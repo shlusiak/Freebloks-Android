@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
@@ -92,11 +93,8 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
         val playerColor = Global.getPlayerColor(data.player, game.gameMode)
         val backgroundColorResource = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor]
-        // TODO: we can change the name in the settings when a game is running, which previously trumped this value
-        // FIXME: also, on resume, we are not getting a server status with the names, apparently
 
-
-        val playerName: String = client.lastStatus?.getPlayerName(data.player) ?: Global.getColorName(requireContext(), data.player, game.gameMode )
+        val playerName = viewModel.getPlayerName(data.player)
         val p = board.getPlayer(data.player)
 
         background.setCardBackgroundColor(resources.getColor(backgroundColorResource))

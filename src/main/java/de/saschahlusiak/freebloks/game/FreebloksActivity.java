@@ -54,8 +54,7 @@ import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog;
-import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialogFragment;
-import de.saschahlusiak.freebloks.game.dialogs.JoinDialog;
+import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog;
 import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog;
 import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
 import de.saschahlusiak.freebloks.lobby.LobbyDialog;
@@ -81,7 +80,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
-	static final int DIALOG_JOIN = 5;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	static final int DIALOG_SINGLE_PLAYER = 10;
 
@@ -99,8 +97,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	private boolean showRateDialog = false;
 
 	private FreebloksActivityViewModel viewModel;
-
-	@Deprecated private String clientName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -187,8 +183,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		if (view.model.soundPool == null)
 			view.model.soundPool = viewModel.getSounds();
 
-		clientName = prefs.getString("player_name", null);
-
 		if (client != null) {
 			/* we just rotated and got *hot* objects */
 			setGameClient(client);
@@ -232,7 +226,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		switch (status) {
 			case Connecting:
 				if (f == null) {
-					new ConnectingDialogFragment().show(getSupportFragmentManager(), tag);
+					new ConnectingDialog().show(getSupportFragmentManager(), tag);
 					// there seems to be a race condition where disconnecting happens before the dialog is done showing,
 					// so it fails to be dismissed later. So we force executing the above transaction.
 					getSupportFragmentManager().executePendingTransactions();
@@ -318,12 +312,9 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		viewModel.reloadPreferences();
 		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
 		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
-		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", String.format("%d", Scene.ANIMATIONS_FULL)));
+		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", Integer.toString(Scene.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
-		clientName = prefs.getString("player_name", null);
-		if (clientName != null && clientName.equals(""))
-			clientName = null;
 		final Theme t = Theme.get(this, prefs.getString("theme", "texture_wood"), false);
 		view.setTheme(t);
 
@@ -375,13 +366,18 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 	long gameStartTime = 0;
 
-	public void startNewGame() {
+	/**
+	 * Either starts a game with exactly the last config or a new default game.
+	 *
+	 * Called e.g. during long-press, "start new game" in the finish dialog, or on initial startup.
+	 */
+	public void startNewDefaultGame() {
 		if (client != null) {
 			// when starting a new game from the options menu, keep previous config
-			startNewGame(client.getConfig(), null);
+			startNewGame(client.getConfig(), viewModel.getLocalClientNameOverride(), null);
 		} else {
 			// else start default game
-			startNewGame(new GameConfig(), null);
+			startNewGame(new GameConfig(), null, null);
 		}
 	}
 
@@ -421,12 +417,17 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		setGameClient(new GameClient(game, config));
 
 		// even though we don't show the lobby, we also don't want to request game start,
-		// because it is already running
-		viewModel.startConnectingClient(config, clientName, null);
+		// because it is already running. Also, because we do not request any players,
+		// we do not need to pass in a clientName.
+
+		// unfortunately we have lost all player names from before, but this shouldn't matter
+		// as the local client name should overwrite what the server believes anyway, and
+		// all other players are computers when resuming.
+		viewModel.startConnectingClient(config, null, null);
 	}
 
 	@UiThread
-	private void startNewGame(final GameConfig config, final @Nullable Runnable onConnected) {
+	private void startNewGame(final GameConfig config, @Nullable String localClientName, final @Nullable Runnable onConnected) {
 		if (config.getServer() == null) {
 			int ret = JNIServer.runServerForNewGame(
 				config.getGameMode(),
@@ -449,7 +450,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 		setGameClient(new GameClient(game, config));
 
-		viewModel.startConnectingClient(config, clientName, () -> {
+		viewModel.startConnectingClient(config, localClientName, () -> {
 			if (onConnected != null) onConnected.run();
 
 			if (requestGameStart) client.requestGameStart();
@@ -546,7 +547,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	}
 
 	private void showMainMenu() {
-		new MainMenuDialogFragment().show(getSupportFragmentManager(), "game_menu");
+		new MainMenu().show(getSupportFragmentManager(), "game_menu");
 	}
 
 	private void dismissMainMenu() {
@@ -577,7 +578,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						startNewGame();
+						startNewDefaultGame();
 					}
 				});
 				builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -591,13 +592,11 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			case DIALOG_RATE_ME:
 				return new RateAppDialog(this);
 
-			case DIALOG_JOIN:
-				return new JoinDialog(this, this);
-
 			case DIALOG_SINGLE_PLAYER:
 				final ColorListDialog d = new ColorListDialog(this,
 					(dialog, config) -> {
-						startNewGame(config, null);
+						// we do not need a local client name, because we overwrite it during display locally anyway
+						startNewGame(config, null, null);
 
 						dialog.dismiss();
 					});
@@ -611,22 +610,15 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	}
 
 	@Override
-	public void onStartClientGameWithConfig(@NonNull GameConfig config, @Nullable Runnable onConnected) {
+	public void onStartClientGameWithConfig(@NonNull GameConfig config, @Nullable String localClientName, @Nullable Runnable onConnected) {
 		dismissMainMenu();
 
-		startNewGame(config, onConnected);
+		startNewGame(config, localClientName, onConnected);
 	}
 
 	@Override
-	public void setClientName(@NonNull String name) {
-		clientName = name;
-	}
-
-	@Override
-	public void onConnectToBluetoothDevice(@NotNull BluetoothDevice device) {
+	public void onConnectToBluetoothDevice(@NonNull GameConfig config, @Nullable String localClientName, @NonNull BluetoothDevice device) {
 		dismissMainMenu();
-
-		final GameConfig config = new GameConfig(null, true);
 
 		viewModel.disconnectClient();
 
@@ -636,7 +628,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 		setGameClient(new GameClient(game, config));
 
-		viewModel.startConnectingBluetooth(device, clientName);
+		viewModel.startConnectingBluetooth(device, localClientName);
 	}
 
 	@Override
@@ -666,10 +658,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 					showMainMenu();
 				}
 				break;
-
-			case DIALOG_JOIN:
-				((JoinDialog) dialog).setName(clientName);
-				break;
 		}
 		super.onPrepareDialog(id, dialog, args);
 	}
@@ -689,7 +677,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 					viewModel.getIntro().cancel();
 				else {
 					if (client == null || client.game.isFinished())
-						startNewGame();
+						startNewDefaultGame();
 					else
 						showDialog(DIALOG_NEW_GAME_CONFIRMATION);
 				}
@@ -742,7 +730,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		switch (requestCode) {
 			case REQUEST_FINISH_GAME:
 				if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
-					startNewGame();
+					startNewDefaultGame();
 				}
 				if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
 					showMainMenu();
@@ -823,7 +811,8 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 					@Override
 					public void run() {
 						if (view != null) {
-							Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, getPlayerName(p.getNumber())), Toast.LENGTH_SHORT).show();
+							final String playerName = viewModel.getPlayerName(p.getNumber());
+							Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, playerName), Toast.LENGTH_SHORT).show();
 
 							if (view.model.soundPool != null)
 								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
@@ -898,7 +887,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
 				intent.putExtra("game", (Serializable) client.game);
 				intent.putExtra("lastStatus", (Serializable) lastStatus);
-				intent.putExtra("clientName", clientName);
 				startActivityForResult(intent, REQUEST_FINISH_GAME);
 			}
 		});
@@ -1062,30 +1050,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			} else {
 				showMainMenu();
 			}
-		}
-	}
-
-	private String getPlayerName(int player) {
-		final GameMode gameMode = (client == null) ? GameMode.GAMEMODE_4_COLORS_4_PLAYERS : client.game.getGameMode();
-
-		final String colorName = Global.getColorName(this, player, gameMode);
-
-		/* this will ensure that always the local name is used, even though the server
-		 * might still have stored an old or no name at all
-		 *
-		 * When resuming a game, the name is lost and never set again. This is a non issue now.
-		 */
-		if (clientName != null && clientName.length() > 0 && client != null && client.game.isLocalPlayer(player))
-			return clientName;
-
-		if (lastStatus == null)
-			return colorName;
-
-		final String playerName = lastStatus.getPlayerName(player);
-		if (playerName == null) {
-			return colorName;
-		} else {
-			return playerName;
 		}
 	}
 

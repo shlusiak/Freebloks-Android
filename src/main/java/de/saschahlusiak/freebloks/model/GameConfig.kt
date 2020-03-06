@@ -15,9 +15,6 @@ class GameConfig(
     val fieldSize: Int = gameMode.defaultBoardSize()
 ) : Serializable {
 
-    @Deprecated("use normal constructor")
-    constructor(server: String?, showLobby: Boolean): this(server = server, showLobby = showLobby, gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
-
     companion object {
         /**
          * All shapes are available once (Blokus Classic)

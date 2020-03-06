@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import de.saschahlusiak.freebloks.Global
@@ -22,6 +23,9 @@ import kotlin.concurrent.thread
 class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app), GooglePlayGamesHelper.GameHelperListener {
     val gameHelper = GooglePlayGamesHelper(app, this)
     private var unlockAchievementsCalled = false
+
+    // prefs
+    val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(getApplication()) }
 
     // game data to display
     var game: Game? = null
@@ -42,11 +46,11 @@ class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app), Goo
         val game = intent.getSerializableExtra("game") as? Game
         this.game = game ?: throw IllegalArgumentException("game must not be null")
         this.lastStatus = intent.getSerializableExtra("lastStatus") as MessageServerStatus?
-        this.localClientName = intent.getStringExtra("clientName")
+        this.localClientName = prefs.getString("player_name", null)?.ifBlank { null }
 
         this.data = game.getPlayerScores().also { data ->
             // assign names to the scores based on lastStatus and clientName
-            assignClientNames(game.gameMode, data, lastStatus, localClientName)
+            assignClientNames(game.gameMode, data, lastStatus)
 
             // the first time we set data and calculate it, we add it to the database
             thread { addScores(data, game.gameMode) }
@@ -58,7 +62,7 @@ class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app), Goo
         }
     }
 
-    private fun assignClientNames(gameMode: GameMode, scores: Array<PlayerScore>, lastStatus: MessageServerStatus?, localClientName: String?) {
+    private fun assignClientNames(gameMode: GameMode, scores: Array<PlayerScore>, lastStatus: MessageServerStatus?) {
         val context: Context = getApplication()
 
         scores.forEach { score ->
