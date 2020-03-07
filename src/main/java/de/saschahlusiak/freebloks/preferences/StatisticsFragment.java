@@ -12,8 +12,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper.GameHelperListener;
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper;
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper.GameHelperListener;
 
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity;

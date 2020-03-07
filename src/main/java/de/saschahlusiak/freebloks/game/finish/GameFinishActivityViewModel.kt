@@ -13,7 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighscoreDB
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore

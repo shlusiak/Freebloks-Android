@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game
+package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity
 import android.app.AlertDialog

@@ -25,8 +25,8 @@ import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper.GameHelperListener;
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper;
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper.GameHelperListener;
 import de.saschahlusiak.freebloks.rules.RulesActivity;
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity;
 

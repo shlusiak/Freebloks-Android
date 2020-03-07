@@ -27,7 +27,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import org.jetbrains.annotations.NotNull;
 
 import de.saschahlusiak.freebloks.R;
-import de.saschahlusiak.freebloks.game.GooglePlayGamesHelper;
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.database.HighscoreDB;
 import de.saschahlusiak.freebloks.model.Shape;
