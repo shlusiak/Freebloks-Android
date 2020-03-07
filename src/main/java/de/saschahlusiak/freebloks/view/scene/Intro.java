@@ -21,8 +21,8 @@ import android.opengl.GLU;
 
 
 public class Intro {
-	public interface OnIntroCompleteListener {
-		void OnIntroCompleted();
+	public interface IntroCompleteListener {
+		void onIntroCompleted();
 	}
 
 	private final static float INTRO_SPEED = 1.0f;
@@ -35,7 +35,7 @@ public class Intro {
 	private final static float MATRIX_DURATION_STOP = 0.25f;
 
 	private Scene model;
-	private OnIntroCompleteListener listener;
+	private IntroCompleteListener listener;
 
 	private float anim = 0.0f;
 	private final ArrayList<PhysicalShapeEffect> effects = new ArrayList<>();
@@ -46,14 +46,14 @@ public class Intro {
 	private BackgroundRenderer backgroundRenderer;
 
 
-	public Intro(Context context, Scene model, OnIntroCompleteListener listener) {
+	public Intro(Context context, Scene model, IntroCompleteListener listener) {
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
 		setModel(model, listener);
 		init();
 	}
 
-	public void setModel(Scene model, OnIntroCompleteListener listener) {
+	public void setModel(Scene model, IntroCompleteListener listener) {
 		this.model = model;
 		this.listener = listener;
 	}
@@ -159,7 +159,7 @@ public class Intro {
 		model.view.post(new Runnable() {
 			@Override
 			public void run() {
-				listener.OnIntroCompleted();
+				listener.onIntroCompleted();
 				model.view.requestRender();
 			}
 		});

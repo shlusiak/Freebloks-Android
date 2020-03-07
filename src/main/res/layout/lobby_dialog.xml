@@ -26,14 +26,6 @@
             android:entries="@array/game_field_sizes"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/clients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/color_grid"
-        android:text="x Clients"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-
     <GridView
         android:id="@+id/color_grid"
         android:layout_width="130dp"

@@ -356,7 +356,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectionStatus.postValue(ConnectionStatus.Connected)
         playerToShowInSheet.postValue(SheetPlayer(client.game.currentPlayer, false))
         canRequestHint.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
-        canRequestUndo.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished && (lastStatus?.clients == 1))
+        canRequestUndo.postValue(false)
     }
 
     override fun gameStarted() {
@@ -382,7 +382,13 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
 
         canRequestHint.postValue(client.game.isLocalPlayer() && client.game.isStarted)
-        canRequestUndo.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished && (lastStatus?.clients == 1))
+        canRequestUndo.postValue(
+            client.game.isLocalPlayer() &&
+            client.game.isStarted &&
+            !client.game.isFinished &&
+            (lastStatus?.clients == 1) &&
+            !client.game.history.isEmpty()
+        )
     }
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {

@@ -2,23 +2,28 @@ package de.saschahlusiak.freebloks.lobby
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.res.Configuration
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager.LayoutParams.*
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.game.*
+import de.saschahlusiak.freebloks.game.FreebloksActivity
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
@@ -28,21 +33,18 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
-/**
- * TODO: convert this to a DialogFragment
- */
-@Deprecated("Convert to DialogFragment")
-class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), GameEventObserver, OnItemClickListener {
-    private val viewModel = activity.viewModel
-
-    private val chatAdapter = ChatListAdapter(activity, GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
-    private val colorAdapter = ColorAdapter(this, context, null, null)
-
-    private var client: GameClient? = null
-
-    private val chatObserver = Observer<List<ChatEntry>> { chatEntries ->
-        chatAdapter.setData(chatEntries)
+class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener {
+    interface LobbyDialogListener {
+        fun onLobbyDialogClosed()
     }
+
+    private val activity get() = requireActivity() as FreebloksActivity
+    private val viewModel get() = activity.viewModel
+    private val client get() = viewModel.client
+    private val listener get() = activity as LobbyDialogListener
+
+    private var chatAdapter: ChatListAdapter? = null
+    private var colorAdapter: ColorAdapter? = null
 
     private val gameModeSelectedListener = object : OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -76,25 +78,44 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
         }
     }
 
-    init {
-        setCancelable(true)
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog
 
-        requestWindowFeature(Window.FEATURE_LEFT_ICON)
-        setContentView(R.layout.lobby_dialog)
-        setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting_large)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isCancelable = true
+    }
 
-        /* to make sure we have enough real estate. not necessary on xlarge displays */
-        if (activity.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK !=
-            Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-            window?.setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).apply {
+            requestWindowFeature(Window.FEATURE_LEFT_ICON)
+
+            if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
+            } else {
+                window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
+            }
+
+            val client = client
+            if (client != null && client.game.isStarted) {
+                /* chat */
+                setTitle(R.string.chat)
+                setCanceledOnTouchOutside(true)
+            } else {
+                /* lobby */
+                setTitle(R.string.lobby_waiting_for_players)
+                setCanceledOnTouchOutside(false)
+            }
         }
+    }
 
-        if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            window?.setSoftInputMode(SOFT_INPUT_ADJUST_RESIZE or SOFT_INPUT_STATE_HIDDEN)
-        } else {
-            window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
-        }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.lobby_dialog, container, true)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val client = client ?: return
+
+        colorAdapter = ColorAdapter(this, context, null, null)
         color_grid.apply {
             adapter = colorAdapter
             onItemClickListener = this@LobbyDialog
@@ -112,7 +133,7 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             onItemSelectedListener = sizeSelectedListener
         }
 
-        startButton.setOnClickListener { client?.requestGameStart() }
+        startButton.setOnClickListener { client.requestGameStart() }
 
         chatText.apply {
             addTextChangedListener(object : TextWatcher {
@@ -136,77 +157,125 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
             setOnClickListener { sendChat() }
         }
 
+        chatAdapter = ChatListAdapter(requireContext(), client.game.gameMode)
         chatList.adapter = chatAdapter
-    }
 
-    override fun onStart() {
-        super.onStart()
-        val client = viewModel.client
-        if (client == null) {
-            dismiss()
-            return
-        }
-
-        this.client = client
-
-        client.addObserver(this)
+        viewModel.chatHistoryAsLiveData.observe(viewLifecycleOwner, Observer { chatAdapter?.setData(it) })
 
         if (client.game.isStarted) {
             /* chat */
             startButton.visibility = View.GONE
-            setTitle(R.string.chat)
-            setCanceledOnTouchOutside(true)
         } else {
             /* lobby */
             startButton.visibility = View.VISIBLE
-            setTitle(R.string.lobby_waiting_for_players)
-            setCanceledOnTouchOutside(false)
         }
 
-        chatAdapter.gameMode = client.game.gameMode
         updateViewsFromStatus()
-        chatAdapter.notifyDataSetChanged()
+    }
 
-        viewModel.chatHistoryAsLiveData.observe(activity, chatObserver)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // needs to be called after setContentView
+        dialog?.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting_large)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val client = client
+        if (client == null) {
+            /* this can happen when the app is saved but purged from memory
+             * upon resume, the open dialog is reopened but the client connection
+             * has to be disconnected. just close the lobby since there is no
+             * connection
+             */
+
+            dismiss()
+            return
+        }
+
+        client.addObserver(this)
     }
 
     override fun onStop() {
         client?.removeObserver(this)
-        viewModel.chatHistoryAsLiveData.removeObserver(chatObserver)
         super.onStop()
     }
 
+    override fun onCancel(dialog: DialogInterface) {
+        listener.onLobbyDialogClosed()
+    }
+
     fun editPlayerName(player: Int) {
-        val lastStatus = client?.lastStatus ?: return
+        val client = client ?: return
+        val lastStatus = client.lastStatus ?: return
 
-        val dialogBuilder = AlertDialog.Builder(context)
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.edit_name_dialog, null)
-        dialogBuilder.setView(dialogView)
-        val edit = dialogView.edit
-        edit.setText(lastStatus.getClientName(lastStatus.getClient(player)))
-        dialogBuilder.setTitle(R.string.prefs_player_name)
-        dialogBuilder.setPositiveButton(android.R.string.ok) { _, _ ->
-            val name = edit.text.toString().trim()
-            PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString("player_name", name)
-                .apply()
-
-            viewModel.reloadPreferences()
-
-            client?.revokePlayer(player)
-            client?.requestPlayer(player, name)
+        val dialogView = layoutInflater.inflate(R.layout.edit_name_dialog, null)
+        val edit = dialogView.edit.apply {
+            setText(lastStatus.getClientName(lastStatus.getClient(player)))
         }
-        dialogBuilder.setNegativeButton(android.R.string.cancel) { _, _ -> }
 
-        val b = dialogBuilder.create()
-        b.show()
+        AlertDialog.Builder(context).apply {
+            setView(dialogView)
+            setTitle(R.string.prefs_player_name)
+            setPositiveButton(android.R.string.ok) { _, _ ->
+                val name = edit.text.toString().trim()
+                PreferenceManager.getDefaultSharedPreferences(context)
+                    .edit()
+                    .putString("player_name", name)
+                    .apply()
 
-        edit.selectAll()
-        edit.requestFocus()
-        b.window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
-        b.window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+                viewModel.reloadPreferences()
+
+                client.revokePlayer(player)
+                client.requestPlayer(player, name)
+            }
+            setNegativeButton(android.R.string.cancel) { _, _ -> }
+        }.show().apply {
+            edit.selectAll()
+            edit.requestFocus()
+
+            window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
+            window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        }
+    }
+
+    private fun updateViewsFromStatus() {
+        /* better: dismiss */
+        val client = client ?: return
+        val status = client.lastStatus
+
+        colorAdapter?.setCurrentStatus(client.game, status)
+
+        if (status == null) {
+            game_mode.isEnabled = false
+            field_size.isEnabled = false
+        } else {
+            chatAdapter?.gameMode = status.gameMode
+
+            game_mode.setSelection(status.gameMode.ordinal)
+            game_mode.isEnabled = !client.game.isStarted
+
+            var slider = 3
+            for (i in GameConfig.FIELD_SIZES.indices)
+                if (GameConfig.FIELD_SIZES[i] == status.width)
+                    slider = i
+
+            field_size.setSelection(slider)
+            field_size.isEnabled = !client.game.isStarted
+        }
+    }
+
+    override fun onItemClick(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val client = client ?: return
+        if (client.game.isStarted) return
+
+        if (client.game.isLocalPlayer(id.toInt())) {
+            client.revokePlayer(id.toInt())
+        } else {
+            client.requestPlayer(id.toInt(), null)
+        }
     }
 
     /**
@@ -238,46 +307,5 @@ class LobbyDialog(private val activity: FreebloksActivity) : Dialog(activity), G
 
     override fun onDisconnected(client: GameClient, error: Exception?) {
         dismiss()
-    }
-
-    private fun updateViewsFromStatus() {
-        /* better: dismiss */
-        val client = client ?: return
-        val status = client.lastStatus
-
-        colorAdapter.setCurrentStatus(client.game, status)
-
-        if (status == null) {
-            clients?.visibility = View.INVISIBLE
-            game_mode.isEnabled = false
-            field_size.isEnabled = false
-        } else {
-            chatAdapter.gameMode = status.gameMode
-
-            clients?.visibility = View.VISIBLE
-            clients?.text = context.resources.getQuantityString(R.plurals.connected_clients, status.clients, status.clients)
-
-            game_mode.setSelection(status.gameMode.ordinal)
-            game_mode.isEnabled = !client.game.isStarted
-
-            var slider = 3
-            for (i in GameConfig.FIELD_SIZES.indices)
-                if (GameConfig.FIELD_SIZES[i] == status.width)
-                    slider = i
-
-            field_size.setSelection(slider)
-            field_size.isEnabled = !client.game.isStarted
-        }
-    }
-
-    override fun onItemClick(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val client = client ?: return
-        if (client.game.isStarted) return
-
-        if (client.game.isLocalPlayer(id.toInt())) {
-            client.revokePlayer(id.toInt())
-        } else {
-            client.requestPlayer(id.toInt(), null)
-        }
     }
 }

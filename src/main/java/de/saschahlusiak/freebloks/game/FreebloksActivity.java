@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -74,10 +73,9 @@ import de.saschahlusiak.freebloks.view.scene.Scene;
 import de.saschahlusiak.freebloks.view.scene.Theme;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends FragmentActivity implements GameEventObserver, Intro.OnIntroCompleteListener, OnStartCustomGameListener {
+public class FreebloksActivity extends FragmentActivity implements GameEventObserver, Intro.IntroCompleteListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
-	static final int DIALOG_LOBBY = 2;
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
@@ -96,7 +94,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	private ImageButton chatButton;
 	private boolean showRateDialog = false;
 
-	private @NonNull FreebloksActivityViewModel viewModel;
+	private FreebloksActivityViewModel viewModel;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +148,8 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		chatButton.setVisibility(View.INVISIBLE);
 		chatButton.setOnClickListener(v -> {
 			chatButton.clearAnimation();
-			showDialog(DIALOG_LOBBY);
+
+			new LobbyDialog().show(getSupportFragmentManager(), null);
 		});
 
 		client = viewModel.getClient();
@@ -190,7 +189,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
 				viewModel.setIntro(new Intro(getApplicationContext(), view.model, this));
 			} else
-				OnIntroCompleted();
+				onIntroCompleted();
 		}
 
 		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
@@ -255,7 +254,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	}
 
 	@Override
-	public void OnIntroCompleted() {
+	public void onIntroCompleted() {
 		viewModel.setIntro(null);
 		viewModel.setSheetPlayer(-1, false);
 		try {
@@ -564,11 +563,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-			case DIALOG_LOBBY:
-				if (client == null)
-					return null;
-				return new LobbyDialog(this);
-
 			case DIALOG_QUIT:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage(R.string.do_you_want_to_leave_current_game);
@@ -633,37 +627,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		setGameClient(new GameClient(game, config));
 
 		viewModel.startConnectingBluetooth(device, localClientName);
-	}
-
-	@Override
-	protected void onPrepareDialog(int id, final Dialog dialog, Bundle args) {
-		switch (id) {
-			case DIALOG_LOBBY:
-				if (client != null) {
-
-					dialog.setOnCancelListener(new OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface arg0) {
-							if (!client.game.isStarted() && !client.game.isFinished()) {
-								FirebaseAnalytics.getInstance(FreebloksActivity.this).logEvent("lobby_close", null);
-								client.disconnect();
-								client = null;
-								showMainMenu();
-							}
-						}
-					});
-				} else {
-					/* this can happen when the app is saved but purged from memory
-					 * upon resume, the open dialog is reopened but the client connection
-					 * has to be disconnected. just close the lobby since there is no
-					 * connection
-					 */
-					dialog.dismiss();
-					showMainMenu();
-				}
-				break;
-		}
-		super.onPrepareDialog(id, dialog, args);
 	}
 
 	@Override
@@ -968,7 +931,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				bundle.putString("server", server);
 				FirebaseAnalytics.getInstance(this).logEvent("show_lobby", bundle);
 
-				showDialog(FreebloksActivity.DIALOG_LOBBY);
+				new LobbyDialog().show(getSupportFragmentManager(), null);
 			});
 		}
 	}
@@ -1055,9 +1018,19 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			finish();
 			return;
 		} else {
-			if (intent.hasExtra("showChat") && client != null && client.game.isStarted())
-				showDialog(DIALOG_LOBBY);
+			if (intent.hasExtra("showChat") && client != null && client.game.isStarted()) {
+				new LobbyDialog().show(getSupportFragmentManager(), null);
+			}
 		}
 		super.onNewIntent(intent);
+	}
+
+	@Override
+	public void onLobbyDialogClosed() {
+		if (client != null && !client.game.isStarted() && !client.game.isFinished()) {
+			FirebaseAnalytics.getInstance(this).logEvent("lobby_close", null);
+			viewModel.disconnectClient();
+			showMainMenu();
+		}
 	}
 }
