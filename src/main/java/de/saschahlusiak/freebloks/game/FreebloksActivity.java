@@ -77,7 +77,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_QUIT = 3;
-	static final int DIALOG_RATE_ME = 4;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
 	static final int DIALOG_SINGLE_PLAYER = 10;
 
@@ -269,7 +268,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			showMainMenu();
 
 		if (showRateDialog)
-			showDialog(DIALOG_RATE_ME);
+			new RateAppDialog().show(getSupportFragmentManager(), null);
 	}
 
 	@Override
@@ -561,7 +560,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	}
 
 	@Override
-	protected Dialog onCreateDialog(int id) {
+	protected Dialog onCreateDialog(int id, Bundle args) {
 		switch (id) {
 			case DIALOG_QUIT:
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -573,22 +572,9 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 			case DIALOG_NEW_GAME_CONFIRMATION:
 				builder = new AlertDialog.Builder(this);
 				builder.setMessage(R.string.do_you_want_to_leave_current_game);
-				builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						startNewDefaultGame();
-					}
-				});
-				builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						arg0.dismiss();
-					}
-				});
+				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> startNewDefaultGame());
+				builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
 				return builder.create();
-
-			case DIALOG_RATE_ME:
-				return new RateAppDialog(this);
 
 			case DIALOG_SINGLE_PLAYER:
 				final ColorListDialog d = new ColorListDialog(this,

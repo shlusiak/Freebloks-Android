@@ -1,39 +1,43 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.preference.PreferenceManager
-import com.google.firebase.analytics.FirebaseAnalytics
+import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.utils.analytics
+import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.rate_app_dialog.*
 
-@Deprecated("Convert to DialogFragment")
-class RateAppDialog(context: Context) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog) {
+class RateAppDialog : DialogFragment() {
 
-    override fun onCreate(savedInstanceState: Bundle) {
-        super.onCreate(savedInstanceState)
+    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
 
-        setContentView(R.layout.rate_app_dialog)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.rate_app_dialog, container, false)
+    }
 
-        setTitle(R.string.rate_freebloks_title)
-        FirebaseAnalytics.getInstance(context).logEvent("show_rate", null)
-
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        dialog?.setTitle(R.string.rate_freebloks_title)
+        analytics.logEvent("show_rate", null)
 
         ok.setOnClickListener {
-            val intent = Intent("android.intent.action.VIEW", Uri.parse(Global.getMarketURLString(context.packageName)))
+            val intent = Intent("android.intent.action.VIEW", Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID)))
             prefs.edit()
                 .putBoolean("rate_show_again", false)
                 .apply()
 
             dismiss()
-            context.startActivity(intent)
+            startActivity(intent)
         }
 
         later.setOnClickListener { dismiss() }
@@ -47,7 +51,7 @@ class RateAppDialog(context: Context) : Dialog(context, R.style.Theme_Freebloks_
         }
 
         link.setOnClickListener {
-            context.startActivity(Intent(context, DonateActivity::class.java))
+            startActivity(Intent(context, DonateActivity::class.java))
         }
     }
 
