@@ -22,9 +22,9 @@ import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.lobby.ChatEntry
-import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.genericMessage
-import de.saschahlusiak.freebloks.lobby.ChatEntry.Companion.serverMessage
+import de.saschahlusiak.freebloks.game.lobby.ChatEntry
+import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.genericMessage
+import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.serverMessage
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus

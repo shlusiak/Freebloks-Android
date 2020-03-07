@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.lobby;
+package de.saschahlusiak.freebloks.game.lobby;
 
 import android.widget.CheckBox;
 import de.saschahlusiak.freebloks.Global;
@@ -23,14 +23,19 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+@Deprecated
 public class ColorAdapter extends BaseAdapter {
+	interface EditPlayerNameListener {
+		void onEditPlayerName(int player);
+	}
+
 	private Context context;
 	private MessageServerStatus lastStatus;
 	private Game game;
-	private LobbyDialog lobby;
+	private EditPlayerNameListener listener;
 
-	public ColorAdapter(LobbyDialog lobby, Context context, Game game, MessageServerStatus lastStatus) {
-		this.lobby = lobby;
+	public ColorAdapter(EditPlayerNameListener listener, Context context, Game game, MessageServerStatus lastStatus) {
+		this.listener = listener;
 		this.context = context;
 		this.lastStatus = lastStatus;
 		this.game = game;
@@ -134,12 +139,7 @@ public class ColorAdapter extends BaseAdapter {
 				player = 2;
 		else player = position;
 
-		v.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
-		   @Override
-		   public void onClick(View view) {
-			   lobby.editPlayerName(player);
-		   }
-	   });
+		v.findViewById(R.id.editButton).setOnClickListener(view -> listener.onEditPlayerName(player));
 
 		background.setColor(context.getResources().getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[Global.getPlayerColor(player, game.getGameMode())]));
 

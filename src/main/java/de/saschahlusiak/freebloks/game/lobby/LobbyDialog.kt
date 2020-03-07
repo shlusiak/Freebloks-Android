@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.lobby
+package de.saschahlusiak.freebloks.game.lobby
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -33,7 +33,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
-class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener {
+class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
     interface LobbyDialogListener {
         fun onLobbyDialogClosed()
     }
@@ -207,7 +207,7 @@ class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener {
         listener.onLobbyDialogClosed()
     }
 
-    fun editPlayerName(player: Int) {
+    override fun onEditPlayerName(player: Int) {
         val client = client ?: return
         val lastStatus = client.lastStatus ?: return
 

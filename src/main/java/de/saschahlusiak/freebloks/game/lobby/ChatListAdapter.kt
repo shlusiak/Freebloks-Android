@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.lobby
+package de.saschahlusiak.freebloks.game.lobby
 
 import android.content.Context
 import android.graphics.Color

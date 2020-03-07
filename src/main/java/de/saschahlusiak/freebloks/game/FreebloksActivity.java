@@ -56,7 +56,7 @@ import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog;
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog;
 import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog;
 import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
-import de.saschahlusiak.freebloks.lobby.LobbyDialog;
+import de.saschahlusiak.freebloks.game.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.GameConfig;
@@ -898,12 +898,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	public void serverStatus(@NonNull MessageServerStatus status) {
 		lastStatus = status;
 		if (lastStatus.getClients() > 1) {
-			chatButton.post(new Runnable() {
-				@Override
-				public void run() {
-					chatButton.setVisibility(View.VISIBLE);
-				}
-			});
+			chatButton.post(() -> chatButton.setVisibility(View.VISIBLE));
 		}
 	}
 
