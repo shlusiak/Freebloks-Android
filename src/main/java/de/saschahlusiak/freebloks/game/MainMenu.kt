@@ -58,7 +58,7 @@ class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
         }
         appIcon.setOnClickListener(this)
 
-        view.sound_toggle_button.setOnClickListener { viewModel.soundsEnabled = !viewModel.soundsEnabled }
+        view.sound_toggle_button.setOnClickListener { viewModel.toggleSound() }
 
         viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner, Observer { enabled ->
             val res = if (enabled) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp

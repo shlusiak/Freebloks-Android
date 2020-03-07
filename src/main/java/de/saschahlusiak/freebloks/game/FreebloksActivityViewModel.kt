@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
@@ -60,16 +61,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // settings
     private var vibrateOnMove: Boolean = false
     private var showNotifications: Boolean = true
-    var soundsEnabled
-        get() = sounds.isEnabled
-        set(value) {
-            prefs
-                .edit()
-                .putBoolean("sounds", value)
-                .apply()
-            sounds.isEnabled = value
-            soundsEnabledLiveData.value = value
-        }
+    val soundsEnabled get() = sounds.isEnabled
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
         private set
@@ -96,6 +88,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
     val googleAccountSignedIn = MutableLiveData(false)
+    val canRequestUndo = MutableLiveData(false)
+    val canRequestHint = MutableLiveData(false)
 
     init {
         client = null
@@ -107,6 +101,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         sounds.release()
     }
 
+    @UiThread
     fun reloadPreferences() {
         vibrateOnMove = prefs.getBoolean("vibrate", true)
         sounds.isEnabled = prefs.getBoolean("sounds", true)
@@ -130,6 +125,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         // this is so that updates to the localClientNameOverride are reflected in the bottom sheet
 
         playerToShowInSheet.value = playerToShowInSheet.value
+    }
+
+    fun toggleSound() {
+        val value = !soundsEnabled
+        prefs
+            .edit()
+            .putBoolean("sounds", value)
+            .apply()
+        sounds.isEnabled = value
+        soundsEnabledLiveData.value = value
     }
 
     fun vibrate(milliseconds: Long) {
@@ -167,6 +172,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         notificationManager?.startBackgroundNotification()
     }
 
+    @UiThread
     fun startConnectingClient(config: GameConfig, clientName: String?, onConnected: Runnable? = null) {
         val client = client ?: return
         Log.d(tag, "startConnectingClient")
@@ -233,6 +239,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
+    @UiThread
     fun startConnectingBluetooth(remote: BluetoothDevice, clientName: String?) {
         val client = client ?: return
         val config = client.config
@@ -287,6 +294,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectionStatus.value = ConnectionStatus.Disconnected
     }
 
+    @WorkerThread
     private fun appendServerInterfacesToChat() {
         try {
             for (i in NetworkInterface.getNetworkInterfaces()) {
@@ -310,7 +318,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     /**
-     * Set the override of the player to show, when rotating the board
+     * Set the override of the player to show, when rotating the board.
      *
      * @param player the new player to show
      * @param isRotated whether the board is rotated or not
@@ -345,7 +353,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         Log.d(tag, "onConnected")
         lastStatus = null
         connectionStatus.postValue(ConnectionStatus.Connected)
-        setSheetPlayer(client.game.currentPlayer, false)
+        playerToShowInSheet.postValue(SheetPlayer(client.game.currentPlayer, false))
+        canRequestHint.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
+        canRequestUndo.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished && (lastStatus?.clients == 1))
     }
 
     override fun gameStarted() {
@@ -362,12 +372,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     override fun newCurrentPlayer(player: Int) {
+        val client = client ?: return
         if (playerToShowInSheet.value?.isRotated == true) {
             // just re-post the same value, because the board is rotated and we need to update the view
             playerToShowInSheet.postValue(playerToShowInSheet.value)
         } else {
             setSheetPlayer(player, false)
         }
+
+        canRequestHint.postValue(client.game.isLocalPlayer() && client.game.isStarted)
+        canRequestUndo.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished && (lastStatus?.clients == 1))
     }
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {

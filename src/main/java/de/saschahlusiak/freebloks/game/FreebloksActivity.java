@@ -96,7 +96,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 	private ImageButton chatButton;
 	private boolean showRateDialog = false;
 
-	private FreebloksActivityViewModel viewModel;
+	private @NonNull FreebloksActivityViewModel viewModel;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -198,8 +198,16 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		viewModel.getConnectionStatus().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
 		viewModel.getSoundsEnabledLiveData().observe(this, this::soundEnabledChanged);
-		viewModel.getGoogleAccountSignedIn().observe(this, signedIn -> {
-			viewModel.getGameHelper().setWindowForPopups(getWindow());
+		viewModel.getGoogleAccountSignedIn().observe(this, signedIn -> viewModel.getGameHelper().setWindowForPopups(getWindow()));
+		viewModel.getCanRequestHint().observe(this, enabled -> {
+			if (optionsMenu != null) {
+				optionsMenu.findItem(R.id.hint).setEnabled(enabled);
+			}
+		});
+		viewModel.getCanRequestUndo().observe(this, enabled -> {
+			if (optionsMenu != null) {
+				optionsMenu.findItem(R.id.undo).setEnabled(enabled);
+			}
 		});
 	}
 
@@ -526,12 +534,8 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		boolean local = false;
-		if (client != null)
-			local = client.game.isLocalPlayer();
-
-		menu.findItem(R.id.undo).setEnabled(local && lastStatus != null && lastStatus.getClients() <= 1);
-		menu.findItem(R.id.hint).setEnabled(local);
+		menu.findItem(R.id.undo).setEnabled(viewModel.getCanRequestUndo().getValue());
+		menu.findItem(R.id.hint).setEnabled(viewModel.getCanRequestHint().getValue());
 		menu.findItem(R.id.sound_toggle_button).setVisible(true);
 		soundEnabledChanged(viewModel.getSoundsEnabled());
 
@@ -689,8 +693,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				return true;
 
 			case R.id.sound_toggle_button:
-				boolean enabled = !viewModel.getSoundsEnabled();
-				viewModel.setSoundsEnabled(enabled);
+				viewModel.toggleSound();
 				return true;
 
 			case R.id.hint:
@@ -760,15 +763,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 	@Override
 	public void newCurrentPlayer(final int player) {
-		runOnUiThread(() -> {
-			boolean isLocalPlayer = (client != null) && client.game.isLocalPlayer(player);
 
-			if (optionsMenu != null) {
-				optionsMenu.findItem(R.id.hint).setEnabled(isLocalPlayer);
-				// undo only if we are the only client
-				optionsMenu.findItem(R.id.undo).setEnabled(isLocalPlayer && lastStatus != null && lastStatus.getClients() <= 1);
-			}
-		});
 	}
 
 	/* we have to store the number of possible turns before and after a stone has been set
