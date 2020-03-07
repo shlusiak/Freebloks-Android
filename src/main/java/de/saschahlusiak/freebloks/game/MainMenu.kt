@@ -13,7 +13,6 @@ import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.AboutActivity
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
@@ -22,11 +21,11 @@ import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.game.dialogs.JoinDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences
 import de.saschahlusiak.freebloks.rules.RulesActivity
+import de.saschahlusiak.freebloks.utils.analytics
 import kotlinx.android.synthetic.main.game_menu_dialog.view.*
 
 class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
-    private val analytics by lazy { FirebaseAnalytics.getInstance(requireContext()) }
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
 

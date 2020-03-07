@@ -6,14 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.animation.AnimationUtils
-import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.utils.analytics
 import kotlinx.android.synthetic.main.donate_activity.*
 
 class DonateActivity : Activity() {
-    private val analytics by lazy { FirebaseAnalytics.getInstance(this) }
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -115,7 +115,7 @@ class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener, Col
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val client = client ?: return
 
-        colorAdapter = ColorAdapter(this, context, null, null)
+        colorAdapter = ColorAdapter(this, requireContext(), client.game, null)
         color_grid.apply {
             adapter = colorAdapter
             onItemClickListener = this@LobbyDialog
@@ -246,7 +246,7 @@ class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener, Col
         val client = client ?: return
         val status = client.lastStatus
 
-        colorAdapter?.setCurrentStatus(client.game, status)
+        colorAdapter?.setCurrentStatus(status)
 
         if (status == null) {
             game_mode.isEnabled = false

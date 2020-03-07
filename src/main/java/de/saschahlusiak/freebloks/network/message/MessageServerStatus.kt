@@ -83,7 +83,7 @@ data class MessageServerStatus(
     /**
      * @return The name of the client or something like "Client 1" if unset
      */
-    @Deprecated("")
+    @Deprecated("use getClientName(Int) instead")
     fun getClientName(resources: Resources?, client: Int): String {
         val default = resources?.getString(R.string.client_d, client + 1) ?: "Client $client"
         if (client < 0) return default

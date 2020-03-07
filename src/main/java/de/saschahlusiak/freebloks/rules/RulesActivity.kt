@@ -6,12 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.utils.analytics
 
 class RulesActivity : Activity(), View.OnClickListener {
-    private val analytics by lazy { FirebaseAnalytics.getInstance(this) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.rules_activity)
