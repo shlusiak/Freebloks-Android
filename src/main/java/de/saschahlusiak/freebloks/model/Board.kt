@@ -117,21 +117,6 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
     }
 
     /**
-     * Sets number of available stones for each stone with specific size.
-     */
-    @Deprecated("")
-    fun setAvailableStones(one: Int, two: Int, three: Int, four: Int, five: Int) {
-        val counts = intArrayOf(one, two, three, four, five)
-        for (n in 0 until Shape.COUNT) {
-            for (p in 0 until PLAYER_MAX) {
-                val stone = player[p].getStone(n)
-                stone.available = counts[stone.shape.points - 1]
-            }
-        }
-        refreshPlayerData()
-    }
-
-    /**
      * Sets the number of available stones for each stone.
      *
      * @param stoneAvailability for each shape, the number of available stones
