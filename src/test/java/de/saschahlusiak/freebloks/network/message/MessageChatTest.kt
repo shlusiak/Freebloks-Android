@@ -52,4 +52,14 @@ class MessageChatTest {
         assertEquals(-1, msg2.client)
         assertEquals("hey", msg2.message)
     }
+
+    @Test
+    fun test_marshal_utf8() {
+        val msg1 = MessageChat(3, "hey Ääßéん")
+        val bytes = msg1.toByteArray()
+        val msg2 = Message.from(bytes) as MessageChat
+
+        assertEquals(3, msg2.client)
+        assertEquals("hey Ääßéん", msg2.message)
+    }
 }

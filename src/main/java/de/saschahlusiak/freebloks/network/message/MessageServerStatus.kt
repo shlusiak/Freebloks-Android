@@ -1,14 +1,11 @@
 package de.saschahlusiak.freebloks.network.message
 
-import android.content.res.Resources
-import de.saschahlusiak.freebloks.Global
-import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageType
+import de.saschahlusiak.freebloks.utils.getArray
 import de.saschahlusiak.freebloks.utils.put
-import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.io.Serializable
 import java.nio.ByteBuffer
 
@@ -53,12 +50,9 @@ data class MessageServerStatus(
         buffer.put(1, 1, 1, 1, 1)
         buffer.put(gameMode.ordinal.toByte())
         clientForPlayer.forEach { buffer.put(it?.toByte() ?: -1) }
-        clientNames.forEach { it ->
-            val name = it ?: ""
-            val padding = 16 - name.length
-
-            name.forEach { buffer.put(it.toByte()) }
-            repeat(padding) { buffer.put(0) }
+        clientNames.forEach {  name ->
+            val bytes = name?.toByteArray() ?: ByteArray(0)
+            buffer.put(bytes, 16)
         }
         buffer.put(version.toByte())
         buffer.put(minVersion.toByte())
@@ -79,16 +73,6 @@ data class MessageServerStatus(
     fun isClient(player: Int) = getClient(player) != -1
 
     fun isComputer(player: Int) = !isClient(player)
-
-    /**
-     * @return The name of the client or something like "Client 1" if unset
-     */
-    @Deprecated("use getClientName(Int) instead")
-    fun getClientName(resources: Resources?, client: Int): String {
-        val default = resources?.getString(R.string.client_d, client + 1) ?: "Client $client"
-        if (client < 0) return default
-        return clientNames[client] ?: default
-    }
 
     /**
      * @return the name of the client of null if unset
@@ -164,11 +148,11 @@ data class MessageServerStatus(
                 buffer.get().toInt().takeIf { it >= 0 }
             }
             val clientNames = Array(8) {
-                val chars = CharArray(16) { buffer.get().toUnsignedByte().toChar() }
-                val length = chars.indexOfFirst { it == 0.toChar() }
+                val bytes = buffer.getArray(16)
+                val length = bytes.indexOfFirst { it == 0.toByte() }
 
                 if (length <= 0) null
-                else String(chars, 0, length)
+                else String(bytes, 0, length, Charsets.UTF_8)
             }
             val version = buffer.get().toInt()
             val minVersion = buffer.get().toInt()

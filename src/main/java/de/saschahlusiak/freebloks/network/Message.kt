@@ -34,7 +34,9 @@ abstract class Message(rawType: Int, val size: Int = 0): Serializable {
      */
     fun toByteArray(): ByteArray {
         return ByteArray(header.size).apply {
-            write(ByteBuffer.wrap(this))
+            val buffer = ByteBuffer.wrap(this)
+            write(buffer)
+            assert(buffer.remaining() == 0) { "Message $header not fully written, remaining ${buffer.remaining()}" }
         }
     }
 

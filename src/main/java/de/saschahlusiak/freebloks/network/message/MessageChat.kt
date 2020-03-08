@@ -5,7 +5,7 @@ import de.saschahlusiak.freebloks.utils.forRemaining
 import de.saschahlusiak.freebloks.utils.toUnsignedByte
 import java.nio.ByteBuffer
 
-data class MessageChat(val client: Int, val message: String): Message(MessageType.Chat, message.length + 3) {
+data class MessageChat(val client: Int, val message: String): Message(MessageType.Chat, 3 + message.toByteArray().size) {
     init {
         assert(message.length < 255) { "message exceeds limit of 255 characters" }
     }
@@ -13,8 +13,10 @@ data class MessageChat(val client: Int, val message: String): Message(MessageTyp
     override fun write(buffer: ByteBuffer) {
         super.write(buffer)
         buffer.put(client.toByte())
-        buffer.put(message.length.toByte())
-        message.forEach { buffer.put(it.toByte()) }
+        with(message.toByteArray()) {
+            buffer.put(size.toByte())
+            buffer.put(this)
+        }
         buffer.put(0)
     }
 
@@ -29,7 +31,7 @@ data class MessageChat(val client: Int, val message: String): Message(MessageTyp
                 if (it.toInt() != 0) println("Ignore excess byte ${it.toUnsignedByte()}")
             }
 
-            return MessageChat(client, String(bytes).trimEnd())
+            return MessageChat(client, String(bytes, Charsets.UTF_8).trimEnd())
         }
     }
 }

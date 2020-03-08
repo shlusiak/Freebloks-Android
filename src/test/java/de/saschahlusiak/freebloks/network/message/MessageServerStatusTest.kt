@@ -47,35 +47,35 @@ class MessageServerStatusTest {
         // above data contains rubbish that isn't binary identical when marshaled
         // so just marshal and unmarshal it and compare that for equality
         val marshaled = msg.toByteArray()
-        val unmarshalled = Message.from(ByteBuffer.wrap(marshaled))
-        assertEquals(msg, unmarshalled)
+        val unmarshaled = Message.from(ByteBuffer.wrap(marshaled))
+        assertEquals(msg, unmarshaled)
     }
 
     @Test
-    fun test_marshal() {
+    fun test_marshal_unmarshal() {
         val msg = MessageServerStatus(
             1, 3, 4,
             15, 15, GameMode.GAMEMODE_DUO,
             arrayOf(1, 2, 3, 4),
-            arrayOf("Paul", "Peter", null, "Nobody", null, null, null, "x"),
+            arrayOf("Paul", "Peter", null, "Nobody", null, "Ääßéん", null, "x"),
             3,
             1,
             IntArray(21) { it }
         )
 
-        val bytes = msg.toByteArray()
-        val copy = Message.from(bytes) as MessageServerStatus
+        val buffer = ByteBuffer.wrap(msg.toByteArray())
+        val copy = Message.from(buffer) as MessageServerStatus
+        assertEquals(0, buffer.remaining())
 
         assertEquals(msg, copy)
 
-        assertEquals("Paul", copy.getClientName(null, 0))
-        assertEquals("Peter", copy.getClientName(null, 1))
-        assertEquals("Client 2", copy.getClientName(null, 2))
-        assertEquals("Nobody", copy.getClientName(null, 3))
-        assertEquals("Client 4", copy.getClientName(null, 4))
-        assertEquals("Client 5", copy.getClientName(null, 5))
-        assertEquals("Client 6", copy.getClientName(null, 6))
-        assertEquals("x", copy.getClientName(null, 7))
+        assertEquals("Paul", copy.getClientName(0))
+        assertEquals("Peter", copy.getClientName(1))
+        assertEquals(null, copy.getClientName(2))
+        assertEquals("Nobody", copy.getClientName(3))
+        assertEquals(null, copy.getClientName(4))
+        assertEquals("Ääßéん", copy.getClientName(5))
+        assertEquals(null, copy.getClientName(6))
+        assertEquals("x", copy.getClientName(7))
     }
-
 }

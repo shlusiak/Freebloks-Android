@@ -49,6 +49,15 @@ class MessageRequestPlayerTest {
     }
 
     @Test
+    fun test_marshal_utf8() {
+        val msg1 = MessageRequestPlayer(-1, "Ääßéん")
+        val bytes = msg1.toByteArray()
+        val msg2 = Message.from(bytes) as MessageRequestPlayer
+
+        assertEquals(msg1, msg2)
+    }
+
+    @Test
     fun test_marshal_longName() {
         // we only have space for 16 chars, so leave one for the null byte and we expect it to be cut at 15 chars
         var org = MessageRequestPlayer(2, "12345678901234567")
@@ -58,13 +67,21 @@ class MessageRequestPlayerTest {
         org = MessageRequestPlayer(2, "1234567890123456")
         msg = Message.from(org.toByteArray()) as MessageRequestPlayer
         assertEquals("123456789012345", msg.name)
+        assertEquals(15, msg.name?.length)
 
         org = MessageRequestPlayer(2, "123456789012345")
         msg = Message.from(org.toByteArray()) as MessageRequestPlayer
         assertEquals("123456789012345", msg.name)
+        assertEquals(15, msg.name?.length)
 
         org = MessageRequestPlayer(2, "12345678901234")
         msg = Message.from(org.toByteArray()) as MessageRequestPlayer
         assertEquals("12345678901234", msg.name)
+
+        // utf8 characters take more bytes, so fewer characters fit into 16 bytes
+        org = MessageRequestPlayer(2, "12345678ßéん01234")
+        msg = Message.from(org.toByteArray()) as MessageRequestPlayer
+        assertEquals("12345678ßéん", msg.name)
+        assertEquals(11, msg.name?.length)
     }
 }
