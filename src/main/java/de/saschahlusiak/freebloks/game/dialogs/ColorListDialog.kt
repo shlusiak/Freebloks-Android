@@ -155,8 +155,14 @@ class ColorListDialog : DialogFragment(), OnItemClickListener, OnItemSelectedLis
 
     override fun onClick(v: View) {
         val players = if (pass_and_play.isChecked) selection else null
-        listener.onStartClientGameWithConfig(buildConfiguration(players), null)
+        val config = buildConfiguration(players)
+        listener.onStartClientGameWithConfig(config, null)
         dismiss()
+
+        prefs.edit()
+            .putInt("gamemode", config.gameMode.ordinal)
+            .putInt("fieldsize", config.fieldSize)
+            .apply()
     }
 
     private inner class ColorListAdapter : ArrayAdapter<String>(requireContext(), R.layout.color_list_item) {
