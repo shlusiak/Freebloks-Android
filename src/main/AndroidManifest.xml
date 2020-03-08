@@ -61,7 +61,6 @@
         </activity>
    		<activity
             android:name=".preferences.FreebloksPreferencesLegacy"
-            android:icon="@drawable/gears"
             android:theme="@style/Theme.Freebloks.Preferences"
             android:exported="false"
             android:label="@string/preferences" >
@@ -70,7 +69,6 @@
             android:name=".statistics.StatisticsActivity"
             android:label="@string/statistics"
             android:theme="@style/Theme.Freebloks.Auto.Light"
-            android:icon="@drawable/stats"
             android:exported="false" >
         </activity>
         <activity

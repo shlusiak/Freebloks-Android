@@ -70,7 +70,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // other stuff
     var intro: Intro? = null
     private var connectThread: Thread? = null
-    val gameHelper = GooglePlayGamesHelper(app, this)
+    val gameHelper: GooglePlayGamesHelper
 
     // client data
     var client: GameClient?
@@ -94,6 +94,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     init {
         client = null
+        gameHelper = GooglePlayGamesHelper(app, this)
         reloadPreferences()
     }
 
