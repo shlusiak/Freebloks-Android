@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.bluetooth
+package de.saschahlusiak.freebloks.network.bluetooth
 
 import android.bluetooth.BluetoothSocket
 import de.saschahlusiak.freebloks.client.GameClient

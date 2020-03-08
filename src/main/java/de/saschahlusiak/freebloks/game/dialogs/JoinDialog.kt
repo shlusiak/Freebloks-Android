@@ -16,9 +16,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig

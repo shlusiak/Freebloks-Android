@@ -17,9 +17,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.bluetooth.BluetoothClientToSocketThread
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread
-import de.saschahlusiak.freebloks.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry
