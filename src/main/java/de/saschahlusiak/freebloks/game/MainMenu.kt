@@ -17,6 +17,7 @@ import de.saschahlusiak.freebloks.AboutActivity
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.game.dialogs.JoinDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferences
@@ -92,10 +93,7 @@ class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
     override fun onClick(v: View) {
         val intent: Intent
         when (v.id) {
-            R.id.new_game -> {
-                dismiss()
-                activity.showDialog(FreebloksActivity.DIALOG_SINGLE_PLAYER)
-            }
+            R.id.new_game -> ColorListDialog().show(parentFragmentManager, null)
             R.id.resume_game -> dismiss()
             R.id.preferences -> {
                 intent = Intent(context, FreebloksPreferences::class.java)
@@ -105,8 +103,8 @@ class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
                 intent = Intent(context, if (appIconIsDonate) DonateActivity::class.java else AboutActivity::class.java)
                 requireContext().startActivity(intent)
             }
-            R.id.join_game -> JoinDialog().show(activity.supportFragmentManager, null)
-            R.id.new_game_custom -> CustomGameDialog().show(activity.supportFragmentManager, null)
+            R.id.join_game -> JoinDialog().show(parentFragmentManager, null)
+            R.id.new_game_custom -> CustomGameDialog().show(parentFragmentManager, null)
             R.id.rules -> {
                 intent = Intent(context, RulesActivity::class.java)
                 requireContext().startActivity(intent)

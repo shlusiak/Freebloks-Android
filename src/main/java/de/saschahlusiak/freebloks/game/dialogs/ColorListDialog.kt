@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
@@ -13,40 +12,50 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
+import androidx.fragment.app.DialogFragment
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
+import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.color_grid_item.view.*
 import kotlinx.android.synthetic.main.color_list_custom_title.*
 import kotlinx.android.synthetic.main.color_list_dialog.*
 
-@Deprecated("")
-class ColorListDialog(context: Context, private val listener: OnColorSelectedListener) : Dialog(context, R.style.Theme_Freebloks_Light_Dialog), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
-    private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(getContext()) }
+class ColorListDialog : DialogFragment(), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private var list: AdapterView<ColorListAdapter>? = null
     private var adapter: ColorListAdapter? = null
     private var selection = BooleanArray(4) { false }
+    private val listener get() = (requireActivity() as OnStartCustomGameListener)
 
-    interface OnColorSelectedListener {
-        fun onStartGame(dialog: ColorListDialog, config: GameConfig)
+    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+        }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.color_list_dialog)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.color_list_dialog, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         game_mode.onItemSelectedListener = this
         field_size.onItemSelectedListener = this
 
-        adapter = ColorListAdapter(context)
+        if (savedInstanceState != null) {
+            selection = savedInstanceState.getBooleanArray("color_selection") ?: BooleanArray(4) { false }
+        }
+
+        adapter = ColorListAdapter()
 
         // Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
         // with class cast exception
-        list = findViewById(android.R.id.list) ?: findViewById(R.id.grid)
+        list = view.findViewById(android.R.id.list) ?: view.findViewById(R.id.grid)
         list?.apply {
             adapter = this@ColorListDialog.adapter
             setOnItemClickListener(this@ColorListDialog)
@@ -62,16 +71,9 @@ class ColorListDialog(context: Context, private val listener: OnColorSelectedLis
         setGameMode(previousGameMode)
     }
 
-    override fun onSaveInstanceState(): Bundle {
-        return super.onSaveInstanceState().apply {
-            putBooleanArray("color_selection", selection)
-        }
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        selection = savedInstanceState.getBooleanArray("color_selection") ?: BooleanArray(4) { false }
-        adapter?.notifyDataSetChanged()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBooleanArray("color_selection", selection)
     }
 
     private fun setGameMode(gameMode: GameMode) {
@@ -111,7 +113,8 @@ class ColorListDialog(context: Context, private val listener: OnColorSelectedLis
             val players = BooleanArray(4)
             players[id.toInt()] = true
             val config = buildConfiguration(players)
-            listener.onStartGame(this, config)
+            listener.onStartClientGameWithConfig(config, null)
+            dismiss()
 
             prefs.edit()
                 .putInt("gamemode", config.gameMode.ordinal)
@@ -152,10 +155,11 @@ class ColorListDialog(context: Context, private val listener: OnColorSelectedLis
 
     override fun onClick(v: View) {
         val players = if (pass_and_play.isChecked) selection else null
-        listener.onStartGame(this, buildConfiguration(players))
+        listener.onStartClientGameWithConfig(buildConfiguration(players), null)
+        dismiss()
     }
 
-    private inner class ColorListAdapter internal constructor(context: Context) : ArrayAdapter<String?>(context, R.layout.color_list_item) {
+    private inner class ColorListAdapter : ArrayAdapter<String>(requireContext(), R.layout.color_list_item) {
         private val colors = context.resources.getStringArray(R.array.color_names)
         private var gameMode: GameMode? = null
         private var passAndPlay = false
@@ -175,8 +179,7 @@ class ColorListDialog(context: Context, private val listener: OnColorSelectedLis
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = convertView
-                ?: LayoutInflater.from(context).inflate(R.layout.color_list_item, parent, false)
+            val view = convertView ?: layoutInflater.inflate(R.layout.color_list_item, parent, false)
 
             view.findViewById<TextView>(android.R.id.text1).apply {
                 text = getItem(position)

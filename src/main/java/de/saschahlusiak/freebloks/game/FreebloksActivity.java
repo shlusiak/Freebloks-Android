@@ -52,7 +52,6 @@ import de.saschahlusiak.freebloks.client.GameClient;
 import de.saschahlusiak.freebloks.client.GameEventObserver;
 import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
-import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog;
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog;
 import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog;
 import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
@@ -78,7 +77,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
-	static final int DIALOG_SINGLE_PLAYER = 10;
 
 	static final int REQUEST_FINISH_GAME = 1;
 
@@ -575,18 +573,6 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> startNewDefaultGame());
 				builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
 				return builder.create();
-
-			case DIALOG_SINGLE_PLAYER:
-				final ColorListDialog d = new ColorListDialog(this,
-					(dialog, config) -> {
-						// we do not need a local client name, because we overwrite it during display locally anyway
-						startNewGame(config, null, null);
-
-						dialog.dismiss();
-					});
-				d.setOnCancelListener(dialog -> showMainMenu());
-
-				return d;
 
 			default:
 				return super.onCreateDialog(id);
