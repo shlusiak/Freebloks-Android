@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
 import de.saschahlusiak.freebloks.R
 import kotlinx.android.synthetic.main.statistics_item.view.*
 
