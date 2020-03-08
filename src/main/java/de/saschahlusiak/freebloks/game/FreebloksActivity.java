@@ -63,13 +63,13 @@ import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
-import de.saschahlusiak.freebloks.preferences.FreebloksPreferences;
+import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.scene.Intro;
 import de.saschahlusiak.freebloks.view.scene.Scene;
-import de.saschahlusiak.freebloks.view.scene.Theme;
+import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 import io.fabric.sdk.android.Fabric;
 
 public class FreebloksActivity extends FragmentActivity implements GameEventObserver, Intro.IntroCompleteListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
@@ -319,7 +319,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", Integer.toString(Scene.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
-		final Theme t = Theme.get(this, prefs.getString("theme", "texture_wood"), false);
+		final LegacyTheme t = LegacyTheme.getLegacy(this, prefs.getString("theme", "texture_wood"));
 		view.setTheme(t);
 
 		viewModel.onStart();
@@ -623,7 +623,7 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 				return true;
 
 			case R.id.preferences:
-				intent = new Intent(this, FreebloksPreferences.class);
+				intent = new Intent(this, FreebloksPreferencesLegacy.class);
 				startActivity(intent);
 				return true;
 

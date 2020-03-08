@@ -25,7 +25,7 @@ import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeUndoEffect;
 import de.saschahlusiak.freebloks.view.scene.Scene;
-import de.saschahlusiak.freebloks.view.scene.Theme;
+import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 
 public class Freebloks3DView extends GLSurfaceView implements GameEventObserver {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
@@ -52,7 +52,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
 
-	public void setTheme(Theme theme) {
+	public void setTheme(LegacyTheme theme) {
 		renderer.backgroundRenderer.setTheme(theme);
 	}
 

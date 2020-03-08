@@ -20,7 +20,7 @@ import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.game.dialogs.JoinDialog
-import de.saschahlusiak.freebloks.preferences.FreebloksPreferences
+import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.analytics
 import kotlinx.android.synthetic.main.game_menu_dialog.view.*
@@ -96,7 +96,7 @@ class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
             R.id.new_game -> ColorListDialog().show(parentFragmentManager, null)
             R.id.resume_game -> dismiss()
             R.id.preferences -> {
-                intent = Intent(context, FreebloksPreferences::class.java)
+                intent = Intent(context, FreebloksPreferencesLegacy::class.java)
                 requireContext().startActivity(intent)
             }
             R.id.appIcon -> {

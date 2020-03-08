@@ -30,7 +30,8 @@ import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper.GameHelperListener
 import de.saschahlusiak.freebloks.rules.RulesActivity;
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity;
 
-public class FreebloksPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, GameHelperListener {
+@Deprecated
+public class FreebloksPreferencesLegacy extends PreferenceActivity implements OnSharedPreferenceChangeListener, GameHelperListener {
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;
 	private static final int REQUEST_SIGN_IN = 3;
@@ -62,7 +63,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		findPreference("rules").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(FreebloksPreferences.this, RulesActivity.class);
+				Intent intent = new Intent(FreebloksPreferencesLegacy.this, RulesActivity.class);
 				startActivity(intent);
 				return true;
 			}
@@ -80,7 +81,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		findPreference("about").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(FreebloksPreferences.this, AboutActivity.class);
+				Intent intent = new Intent(FreebloksPreferencesLegacy.this, AboutActivity.class);
 				startActivity(intent);
 				return true;
 			}
@@ -88,7 +89,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		findPreference("donate").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(FreebloksPreferences.this, DonateActivity.class);
+				Intent intent = new Intent(FreebloksPreferencesLegacy.this, DonateActivity.class);
 				startActivity(intent);
 				return true;
 			}
@@ -96,7 +97,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 		findPreference("statistics").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(FreebloksPreferences.this, StatisticsActivity.class);
+				Intent intent = new Intent(FreebloksPreferencesLegacy.this, StatisticsActivity.class);
 				startActivity(intent);
 				return true;
 			}
@@ -115,7 +116,7 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 						mHelper.startSignOut();
 						onGoogleAccountSignedOut();
 					} else
-						mHelper.beginUserInitiatedSignIn(FreebloksPreferences.this, REQUEST_SIGN_IN);
+						mHelper.beginUserInitiatedSignIn(FreebloksPreferencesLegacy.this, REQUEST_SIGN_IN);
 					return true;
 				}
 			});
@@ -124,14 +125,14 @@ public class FreebloksPreferences extends PreferenceActivity implements OnShared
 				public boolean onPreferenceClick(Preference preference) {
 					if (!mHelper.isSignedIn())
 						return false;
-					mHelper.startLeaderboardIntent(FreebloksPreferences.this, getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
+					mHelper.startLeaderboardIntent(FreebloksPreferencesLegacy.this, getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD);
 					return true;
 				}
 			});
 			findPreference("googleplus_achievements").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					mHelper.startAchievementsIntent(FreebloksPreferences.this, REQUEST_ACHIEVEMENTS);
+					mHelper.startAchievementsIntent(FreebloksPreferencesLegacy.this, REQUEST_ACHIEVEMENTS);
 					return true;
 				}
 			});

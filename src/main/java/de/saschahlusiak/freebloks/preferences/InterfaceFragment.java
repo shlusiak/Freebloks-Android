@@ -5,6 +5,7 @@ import android.preference.PreferenceFragment;
 
 import de.saschahlusiak.freebloks.R;
 
+@Deprecated
 public class InterfaceFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {

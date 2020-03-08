@@ -23,7 +23,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
 import de.saschahlusiak.freebloks.view.scene.Intro;
-import de.saschahlusiak.freebloks.view.scene.Theme;
+import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private static final String tag = FreebloksRenderer.class.getSimpleName();
@@ -54,7 +54,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board = new BoardRenderer(Board.DEFAULT_BOARD_SIZE);
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 
-		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
+		backgroundRenderer.setTheme(LegacyTheme.getLegacy(context, "blue"));
 	}
 
 	public void init(int field_size) {

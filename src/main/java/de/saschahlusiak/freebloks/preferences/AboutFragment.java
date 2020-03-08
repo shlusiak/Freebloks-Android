@@ -13,6 +13,7 @@ import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.rules.RulesActivity;
 
+@Deprecated
 public class AboutFragment extends PreferenceFragment implements OnPreferenceClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {

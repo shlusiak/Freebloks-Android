@@ -60,7 +60,7 @@
             android:theme="@style/Theme.Freebloks.Dialog" >
         </activity>
    		<activity
-            android:name=".preferences.FreebloksPreferences"
+            android:name=".preferences.FreebloksPreferencesLegacy"
             android:icon="@drawable/gears"
             android:theme="@style/Theme.Freebloks.Preferences"
             android:exported="false"

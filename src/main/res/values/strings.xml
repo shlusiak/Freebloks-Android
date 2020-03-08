@@ -157,6 +157,10 @@
     <string name="advanced">Advanced</string>
     <string name="configure_stones_dialog_title">Configure Tiles</string>
 
+    <string name="theme_black">Black</string>
+    <string name="theme_green">Green</string>
+    <string name="theme_blue">Blue</string>
+    <string name="theme_white">White</string>
     <string-array name="theme_labels">
         <item>Black</item>
         <item>Blue</item>

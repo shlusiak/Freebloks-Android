@@ -30,7 +30,7 @@ import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.Intro
-import de.saschahlusiak.freebloks.view.scene.Sounds
+import de.saschahlusiak.freebloks.theme.Sounds
 import java.net.NetworkInterface
 import java.net.SocketException
 import kotlin.concurrent.thread

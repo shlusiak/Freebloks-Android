@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.view;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import de.saschahlusiak.freebloks.view.scene.Theme;
+import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 
 
 import android.content.res.Resources;
@@ -18,7 +18,7 @@ public class BackgroundRenderer extends SimpleModel {
     final static float size = 80.0f;
     final static float textures = 15.0f;
 
-    Theme theme;
+    LegacyTheme theme;
     Resources resources;
 
     public BackgroundRenderer(Resources resources) {
@@ -40,7 +40,7 @@ public class BackgroundRenderer extends SimpleModel {
 
 	boolean valid = false;
 
-	public void setTheme(Theme theme) {
+	public void setTheme(LegacyTheme theme) {
 		this.theme = theme;
 		valid = false;
 	}

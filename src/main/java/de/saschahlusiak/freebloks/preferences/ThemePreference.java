@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.preferences;
 
-import de.saschahlusiak.freebloks.view.scene.Theme;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
+
+@Deprecated // use the ones in types instead
 public class ThemePreference extends ListPreference {
 
 	class ThemeAdapter extends ArrayAdapter<CharSequence> {
@@ -20,11 +22,10 @@ public class ThemePreference extends ListPreference {
 				this.add("");
 			}
 		}
-
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = super.getView(position, convertView, parent);
-			Theme t = Theme.get(getContext(), getEntryValues()[position].toString(), true);
+			LegacyTheme t = LegacyTheme.getLegacy(getContext(), getEntryValues()[position].toString());
 			if (t != null)
 				t.apply(v);
 			return v;

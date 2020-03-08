@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.scene
+package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
 import android.media.AudioManager

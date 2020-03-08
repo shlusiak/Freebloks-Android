@@ -48,7 +48,7 @@ public class Intro {
 
 	public Intro(Context context, Scene model, IntroCompleteListener listener) {
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
-		backgroundRenderer.setTheme(Theme.get(context, "blue", false));
+		backgroundRenderer.setTheme(LegacyTheme.getLegacy(context, "blue"));
 		setModel(model, listener);
 		init();
 	}

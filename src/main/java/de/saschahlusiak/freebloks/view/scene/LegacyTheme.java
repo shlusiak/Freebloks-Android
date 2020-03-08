@@ -7,28 +7,32 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
+
 import de.saschahlusiak.freebloks.R;
 
-public class Theme {
-	int drawable, texture;
-	float rgba[] = { 1, 1, 1, 1 };
-	boolean isPreview, isDrawable;
+/**
+ * Legacy theme class, bridge to [Theme]
+ */
+@Deprecated
+public class LegacyTheme {
+	private int drawable;
+	private int texture;
+	private float[] rgba = { 1, 1, 1, 1 };
+	private boolean isDrawable;
 
-	private Theme() {
+	private LegacyTheme() {
 		this.isDrawable = false;
-		this.isPreview = false;
 	}
 
-	private Theme(int drawable, int texture) {
+	private LegacyTheme(Resources resources, int drawable, int texture) {
 		this.isDrawable = true;
-		this.isPreview = false;
 		this.drawable = drawable;
+
 		this.texture = texture;
 	}
 
-	private Theme(float r, float g, float b) {
+	private LegacyTheme(float r, float g, float b) {
 		this.isDrawable = false;
-		this.isPreview = false;
 		setRGB(r, g, b);
 	}
 
@@ -45,7 +49,7 @@ public class Theme {
 	private BitmapDrawable getDrawable(Resources resources) {
 		BitmapDrawable background = (BitmapDrawable) resources.getDrawable(drawable);
 
-		background.setTileModeXY(TileMode.REPEAT, isPreview ? TileMode.MIRROR : TileMode.REPEAT);
+		background.setTileModeXY(TileMode.REPEAT, TileMode.MIRROR);
 		background.setFilterBitmap(true);
 		return background;
 	}
@@ -85,9 +89,9 @@ public class Theme {
 		return texture;
 	}
 
-	public static Theme get(Context context, String theme, boolean preview) {
-		Theme t = new Theme();
-		t.isPreview = preview;
+	@Deprecated
+	public static LegacyTheme getLegacy(Context context, String theme) {
+		LegacyTheme t = new LegacyTheme();
 
 		switch (theme) {
 			default:

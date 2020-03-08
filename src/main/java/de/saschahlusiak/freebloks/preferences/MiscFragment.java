@@ -7,6 +7,7 @@ import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import de.saschahlusiak.freebloks.R;
 
+@Deprecated
 public class MiscFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
     @Override

@@ -21,6 +21,7 @@ import de.saschahlusiak.freebloks.statistics.StatisticsActivity;
 /**
  * Preferences fragment to host the items to launch the {@link StatisticsActivity}
  */
+@Deprecated
 public class StatisticsFragment extends PreferenceFragment implements GameHelperListener, OnPreferenceClickListener {
 	private static final int REQUEST_LEADERBOARD = 1;
 	private static final int REQUEST_ACHIEVEMENTS = 2;

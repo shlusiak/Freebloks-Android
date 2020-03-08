@@ -7,6 +7,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 import de.saschahlusiak.freebloks.R;
 
+@Deprecated
 public class DisplayFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
