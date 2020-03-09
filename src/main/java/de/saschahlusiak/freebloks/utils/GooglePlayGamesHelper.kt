@@ -107,7 +107,9 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
 
         playersClient?.currentPlayer?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                this.currentPlayer = task.result
+                val player = task.result ?: return@addOnCompleteListener
+                this.currentPlayer = player
+                callback.invoke(player)
             } else {
                 // silent login failed, no message necessary
                 listener.onGoogleAccountSignedOut()
