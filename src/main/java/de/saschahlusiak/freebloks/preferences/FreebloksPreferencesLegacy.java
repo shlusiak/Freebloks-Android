@@ -105,8 +105,7 @@ public class FreebloksPreferencesLegacy extends PreferenceActivity implements On
 
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, BuildConfig.IS_AMAZON ? "Amazon App Store" : "Google Play"));
 
-		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		if (avail != ConnectionResult.SUCCESS) {
+		if (!mHelper.isAvailable()) {
 			getPreferenceScreen().removePreference(findPreference("googleplus_category"));
 		} else {
 			findPreference("googleplus_signin").setOnPreferenceClickListener(new OnPreferenceClickListener() {

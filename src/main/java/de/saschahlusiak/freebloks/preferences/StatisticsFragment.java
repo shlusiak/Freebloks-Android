@@ -44,8 +44,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
 
         findPreference("statistics").setOnPreferenceClickListener(this);
 
-		int avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-		if (avail != ConnectionResult.SUCCESS) {
+		if (!mHelper.isAvailable()) {
 			getPreferenceScreen().removePreference(findPreference("googleplus_category"));
 		} else {
 			findPreference("googleplus_signin").setOnPreferenceClickListener(new OnPreferenceClickListener() {

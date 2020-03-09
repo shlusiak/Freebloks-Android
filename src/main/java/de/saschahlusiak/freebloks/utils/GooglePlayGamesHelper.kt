@@ -14,6 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
 import de.saschahlusiak.freebloks.R
@@ -47,6 +49,9 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
 
     val isSignedIn: Boolean
         get() = googleAccount != null
+
+    val isAvailable: Boolean
+        get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS)
 
     init {
         googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)

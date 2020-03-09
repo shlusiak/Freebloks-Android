@@ -11,8 +11,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GooglePlayServicesUtil
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighscoreDB
 import de.saschahlusiak.freebloks.model.GameMode
@@ -33,7 +31,7 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
     private val values: Array<String?> = arrayOfNulls(9)
     private var menu: Menu? = null
 
-    private val gameHelper by lazy { GooglePlayGamesHelper(this, this) }
+    private lateinit var gameHelper: GooglePlayGamesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +44,7 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
         listView.adapter = adapter
         ok.setOnClickListener { finish() }
 
+        gameHelper =  GooglePlayGamesHelper(this, this)
         signin.setOnClickListener { gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN) }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -77,7 +76,8 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
             actionBar?.setDisplayShowTitleEnabled(false)
             actionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS) findViewById<View>(R.id.signin).visibility = View.GONE
+
+        if (!gameHelper.isAvailable) findViewById<View>(R.id.signin).visibility = View.GONE
     }
 
     override fun onDestroy() {
@@ -179,7 +179,7 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
     }
 
     override fun onGoogleAccountSignedOut() {
-        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS) return
+        if (!gameHelper.isAvailable) return
         findViewById<View>(R.id.signin).visibility = View.VISIBLE
         invalidateOptionsMenu()
     }
