@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.app.Fragment
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
 import android.util.Log
 import android.view.Window
 import com.google.android.gms.auth.api.Auth
@@ -54,7 +55,10 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
         if (lastAccount == null) {
             googleSignInClient.silentSignIn().addOnSuccessListener { setGoogleAccount(it) }
         } else {
-            setGoogleAccount(lastAccount)
+            // make sure we are not immediately calling the listener in the constructor
+            Handler().post {
+                setGoogleAccount(lastAccount)
+            }
         }
     }
 
