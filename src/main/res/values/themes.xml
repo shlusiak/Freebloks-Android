@@ -6,16 +6,13 @@
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:colorAccent">@color/color_accent</item>
-        <item name="android:windowActionBar">true</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
-        <item name="windowActionBar">true</item>
     </style>
     <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.Dark">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
-    <style name="Theme.Freebloks.Light" parent="android:Theme.Material.Light">
+    <style name="Theme.Freebloks.Light" parent="Theme.AppCompat.Light">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
@@ -40,7 +37,4 @@
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:colorAccent">@color/color_accent</item>
     </style>
-    <style name="Theme.Freebloks.NoTitleBar" parent="android:Theme.Material.NoActionBar"></style>
-    <style name="Theme.Freebloks.Translucent.NoTitleBar" parent="android:Theme.Translucent.NoTitleBar"></style>
-
 </resources>

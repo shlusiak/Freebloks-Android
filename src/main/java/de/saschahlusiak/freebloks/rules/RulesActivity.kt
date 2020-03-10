@@ -1,20 +1,23 @@
 package de.saschahlusiak.freebloks.rules
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.utils.analytics
+import kotlinx.android.synthetic.main.rules_activity.*
 
-class RulesActivity : Activity(), View.OnClickListener {
+class RulesActivity : AppCompatActivity() {
+    private val youtubeLink = "https://www.youtube.com/watch?v=pc8nmWpcQWs"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.rules_activity)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        findViewById<View>(R.id.youtube).setOnClickListener(this)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        youtube.setOnClickListener(this::onYoutubeButtonClick)
 
         analytics.logEvent("show_rules", null)
     }
@@ -29,13 +32,9 @@ class RulesActivity : Activity(), View.OnClickListener {
         }
     }
 
-    override fun onClick(v: View) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_LINK))
+    private fun onYoutubeButtonClick(v: View) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
         startActivity(intent)
         analytics.logEvent("show_rules_video", null)
-    }
-
-    companion object {
-        private const val YOUTUBE_LINK = "https://www.youtube.com/watch?v=pc8nmWpcQWs"
     }
 }
