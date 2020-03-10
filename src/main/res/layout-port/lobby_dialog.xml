@@ -89,15 +89,15 @@
                 <requestFocus />
             </EditText>
 
-            <com.github.clans.fab.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/chatButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:layout_margin="2dp"
                 android:src="@android:drawable/ic_menu_send"
-                app:fab_colorNormal="@color/send_button_color"
-                app:fab_colorPressed="@color/send_button_color_pressed"
-                app:fab_size="mini" />
+                app:backgroundTint="@color/send_button_color"
+                app:fabSize="mini" />
 
         </LinearLayout>
 

@@ -6,7 +6,7 @@
     android:layout_alignParentTop="true"
     android:fitsSystemWindows="true">
 
-    <com.github.clans.fab.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/chatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,11 +14,9 @@
         android:layout_alignParentTop="true"
         android:layout_margin="4dp"
         android:src="@android:drawable/sym_action_chat"
-        app:fab_colorNormal="@color/chat_button_color"
-        app:fab_colorPressed="@color/chat_button_color_pressed"
-        app:fab_size="normal" />
+        app:backgroundTint="@color/mylocation_button_color" />
 
-    <com.github.clans.fab.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/myLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,8 +24,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="4dp"
         android:src="@android:drawable/ic_menu_compass"
-        app:fab_colorNormal="@color/mylocation_button_color"
-        app:fab_colorPressed="@color/mylocation_button_color_pressed"
-        app:fab_size="normal" />
+        app:backgroundTint="@color/mylocation_button_color" />
 
 </RelativeLayout>

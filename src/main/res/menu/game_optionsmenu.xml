@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/new_game"
         android:icon="@drawable/ic_action_refresh"
@@ -8,20 +9,20 @@
     <item
         android:id="@+id/sound_toggle_button"
         android:icon="@drawable/ic_volume_up_white_48dp"
-        android:showAsAction="ifRoom"
-        android:title="@string/sound_on" >
+        android:title="@string/sound_on"
+        app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/hint"
         android:icon="@drawable/ic_info_outline_white_48dp"
-        android:showAsAction="ifRoom"
-        android:title="@string/hint">
+        android:title="@string/hint"
+        app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/undo"
         android:icon="@drawable/ic_action_undo"
-        android:showAsAction="ifRoom"
-        android:title="@string/undo">
+        android:title="@string/undo"
+        app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/preferences"

@@ -55,7 +55,7 @@ class GooglePlayGamesHelper(private val context: Context) {
         get() = googleAccount.value != null
 
     val isAvailable: Boolean
-        get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS)
+        get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
 
     @Deprecated("Use LiveData instead of Listener")
     constructor(context: Context, listener: GameHelperListener): this(context) {

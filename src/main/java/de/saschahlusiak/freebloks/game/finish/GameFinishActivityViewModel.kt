@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.game.finish
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.sqlite.SQLiteException
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
@@ -23,7 +24,7 @@ class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app) {
     private var unlockAchievementsCalled = false
 
     // prefs
-    val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(getApplication()) }
+    val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(getApplication()) }
 
     // game data to display
     var game: Game? = null

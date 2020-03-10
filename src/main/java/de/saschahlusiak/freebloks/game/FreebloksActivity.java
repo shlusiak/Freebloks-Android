@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -72,7 +73,7 @@ import de.saschahlusiak.freebloks.view.scene.Scene;
 import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends FragmentActivity implements GameEventObserver, Intro.IntroCompleteListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
+public class FreebloksActivity extends AppCompatActivity implements GameEventObserver, Intro.IntroCompleteListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_QUIT = 3;
@@ -125,11 +126,11 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 
 		super.onCreate(savedInstanceState);
 
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(0));
-		getActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0));
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		setContentView(R.layout.main_3d);
 

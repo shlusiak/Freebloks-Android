@@ -38,9 +38,6 @@ apply plugin: 'io.fabric'
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    // https://github.com/Clans/FloatingActionButton
-    implementation 'com.github.clans:fab:1.6.4'
-
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation 'com.google.android.material:material:1.2.0-alpha05'
