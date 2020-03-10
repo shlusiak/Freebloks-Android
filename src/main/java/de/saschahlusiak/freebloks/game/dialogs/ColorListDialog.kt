@@ -11,6 +11,8 @@ import android.view.Window
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AppCompatDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import de.saschahlusiak.freebloks.Global
@@ -25,7 +27,7 @@ import kotlinx.android.synthetic.main.color_grid_item.view.*
 import kotlinx.android.synthetic.main.color_list_custom_title.*
 import kotlinx.android.synthetic.main.color_list_dialog.*
 
-class ColorListDialog : DialogFragment(), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class ColorListDialog : AppCompatDialogFragment(), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private var list: AdapterView<ColorListAdapter>? = null
     private var adapter: ColorListAdapter? = null
     private var selection = BooleanArray(4) { false }
@@ -34,8 +36,8 @@ class ColorListDialog : DialogFragment(), OnItemClickListener, OnItemSelectedLis
     override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState).apply {
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
+        return AppCompatDialog(requireActivity(), theme).apply {
+            supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         }
     }
 

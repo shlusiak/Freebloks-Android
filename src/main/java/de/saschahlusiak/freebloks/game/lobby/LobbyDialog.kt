@@ -17,7 +17,8 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.R
@@ -33,7 +34,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
-class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
+class LobbyDialog: AppCompatDialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
     interface LobbyDialogListener {
         fun onLobbyDialogClosed()
     }
@@ -86,9 +87,7 @@ class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener, Col
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState).apply {
-            requestWindowFeature(Window.FEATURE_LEFT_ICON)
-
+        return AppCompatDialog(requireActivity(), theme).apply {
             if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
             } else {
@@ -171,13 +170,6 @@ class LobbyDialog: DialogFragment(), GameEventObserver, OnItemClickListener, Col
         }
 
         updateViewsFromStatus()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        // needs to be called after setContentView
-        dialog?.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.notification_waiting_large)
     }
 
     override fun onStart() {

@@ -6,6 +6,7 @@
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:colorAccent">@color/color_accent</item>
+        <item name="colorAccent">@color/color_accent</item>
     </style>
     <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.Dark">
         <item name="android:windowTranslucentStatus">true</item>
@@ -18,23 +19,26 @@
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:colorAccent">@color/color_accent</item>
+        <item name="colorAccent">@color/color_accent</item>
     </style>
     <style name="Theme.Freebloks.Auto.Light" parent="Theme.Freebloks.Light"></style>
     <style name="Theme.Freebloks.Preferences" parent="android:Theme.DeviceDefault.Light"></style>
 
-    <style name="Theme.Freebloks.Dialog" parent="android:Theme.Material.Dialog.MinWidth">
+    <style name="Theme.Freebloks.Dialog" parent="Theme.AppCompat.Dialog.MinWidth">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:colorAccent">@color/color_accent</item>
+        <item name="colorAccent">@color/color_accent</item>
     </style>
 
-    <style name="Theme.Freebloks.Light.Dialog" parent="android:Theme.Material.Light.Dialog.MinWidth">
+    <style name="Theme.Freebloks.Light.Dialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
         <item name="android:colorAccent">@color/color_accent</item>
+        <item name="colorAccent">@color/color_accent</item>
     </style>
 </resources>

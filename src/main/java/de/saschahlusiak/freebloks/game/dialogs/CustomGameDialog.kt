@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
@@ -25,7 +26,7 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import kotlinx.android.synthetic.main.custom_game_dialog.view.*
 
-class CustomGameDialog : DialogFragment(), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
+class CustomGameDialog : AppCompatDialogFragment(), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
     private val difficultyValues = intArrayOf(
         200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1

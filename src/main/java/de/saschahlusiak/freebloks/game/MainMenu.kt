@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
@@ -19,13 +21,13 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
-import de.saschahlusiak.freebloks.game.dialogs.JoinDialog
+import de.saschahlusiak.freebloks.game.dialogs.MultiplayerDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.analytics
 import kotlinx.android.synthetic.main.game_menu_dialog.view.*
 
-class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
+class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
@@ -74,12 +76,12 @@ class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object: Dialog(requireContext(), theme) {
+        return object: AppCompatDialog(requireContext(), theme) {
             override fun onBackPressed() {
                 ownerActivity?.finish()
             }
         }.apply {
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         }
     }
 
@@ -103,7 +105,7 @@ class MainMenu : DialogFragment(), View.OnClickListener, OnLongClickListener {
                 intent = Intent(context, if (appIconIsDonate) DonateActivity::class.java else AboutActivity::class.java)
                 requireContext().startActivity(intent)
             }
-            R.id.join_game -> JoinDialog().show(parentFragmentManager, null)
+            R.id.join_game -> MultiplayerDialog().show(parentFragmentManager, null)
             R.id.new_game_custom -> CustomGameDialog().show(parentFragmentManager, null)
             R.id.rules -> {
                 intent = Intent(context, RulesActivity::class.java)

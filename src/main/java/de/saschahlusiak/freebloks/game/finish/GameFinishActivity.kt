@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.animation.*
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.Global
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.game_finish_activity.*
 import kotlinx.android.synthetic.main.game_finish_player_row.view.*
 import java.lang.IllegalStateException
 
-class GameFinishActivity : FragmentActivity(), View.OnClickListener {
+class GameFinishActivity : AppCompatActivity(), View.OnClickListener {
     private val REQUEST_LEADERBOARD = 1
     private val REQUEST_ACHIEVEMENTS = 2
 

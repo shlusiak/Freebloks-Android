@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
@@ -25,8 +26,8 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import kotlinx.android.synthetic.main.join_dialog.*
 import kotlinx.android.synthetic.main.join_dialog.view.*
 
-class JoinDialog : DialogFragment(), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
-    private val TAG = JoinDialog::class.java.simpleName
+class MultiplayerDialog : AppCompatDialogFragment(), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
+    private val TAG = MultiplayerDialog::class.java.simpleName
 
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothServer: BluetoothServerThread? = null
@@ -57,7 +58,7 @@ class JoinDialog : DialogFragment(), RadioGroup.OnCheckedChangeListener, View.On
         }
         server_address.apply {
             setText(prefs.getString("custom_server", ""))
-            addTextChangedListener(this@JoinDialog)
+            addTextChangedListener(this@MultiplayerDialog)
         }
         name.setText(prefs.getString("player_name", null))
 
