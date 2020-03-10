@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import de.saschahlusiak.freebloks.R
@@ -17,10 +18,9 @@ import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper.GameHelperListener
 import kotlinx.android.synthetic.main.statistics_activity.*
 
-class StatisticsActivity : FragmentActivity(), GameHelperListener {
+class StatisticsActivity : FragmentActivity() {
     private val REQUEST_LEADERBOARD = 1
     private val REQUEST_ACHIEVEMENTS = 2
     private val REQUEST_SIGN_IN = 3
@@ -44,7 +44,7 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
         listView.adapter = adapter
         ok.setOnClickListener { finish() }
 
-        gameHelper =  GooglePlayGamesHelper(this, this)
+        gameHelper =  GooglePlayGamesHelper(this)
         signin.setOnClickListener { gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN) }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -77,7 +77,11 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
             actionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
-        if (!gameHelper.isAvailable) findViewById<View>(R.id.signin).visibility = View.GONE
+        if (gameHelper.isAvailable) {
+            signin.visibility = View.GONE
+        } else {
+            gameHelper.googleAccount.observe(this, Observer { onGoogleAccountChanged(it) })
+        }
     }
 
     override fun onDestroy() {
@@ -178,20 +182,19 @@ class StatisticsActivity : FragmentActivity(), GameHelperListener {
         adapter?.notifyDataSetChanged()
     }
 
-    override fun onGoogleAccountSignedOut() {
-        if (!gameHelper.isAvailable) return
-        findViewById<View>(R.id.signin).visibility = View.VISIBLE
-        invalidateOptionsMenu()
-    }
-
-    override fun onGoogleAccountSignedIn(account: GoogleSignInAccount) {
-        findViewById<View>(R.id.signin).visibility = View.GONE
-        invalidateOptionsMenu()
-        gameHelper.submitScore(
-            getString(R.string.leaderboard_games_won),
-            db.getNumberOfPlace(null, 1).toLong())
-        gameHelper.submitScore(
-            getString(R.string.leaderboard_points_total),
-            db.getTotalNumberOfPoints(null).toLong())
+    private fun onGoogleAccountChanged(account: GoogleSignInAccount?) {
+        if (account != null) {
+            findViewById<View>(R.id.signin).visibility = View.GONE
+            invalidateOptionsMenu()
+            gameHelper.submitScore(
+                getString(R.string.leaderboard_games_won),
+                db.getNumberOfPlace(null, 1).toLong())
+            gameHelper.submitScore(
+                getString(R.string.leaderboard_points_total),
+                db.getTotalNumberOfPoints(null).toLong())
+        } else {
+            findViewById<View>(R.id.signin).visibility = View.VISIBLE
+            invalidateOptionsMenu()
+        }
     }
 }

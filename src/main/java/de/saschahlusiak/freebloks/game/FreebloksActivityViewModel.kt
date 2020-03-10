@@ -46,7 +46,7 @@ data class SheetPlayer(
     val isRotated: Boolean
 )
 
-class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver, GooglePlayGamesHelper.GameHelperListener {
+class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
@@ -88,13 +88,14 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
-    val googleAccountSignedIn = MutableLiveData(false)
+    val currentGoogleAccount: MutableLiveData<GoogleSignInAccount?>
     val canRequestUndo = MutableLiveData(false)
     val canRequestHint = MutableLiveData(false)
 
     init {
         client = null
-        gameHelper = GooglePlayGamesHelper(app, this)
+        gameHelper = GooglePlayGamesHelper(app)
+        currentGoogleAccount = gameHelper.googleAccount
         reloadPreferences()
     }
 
@@ -445,17 +446,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             setSheetPlayer(-1, false)
         }
         chatHistory.clear()
-    }
-
-    override fun onGoogleAccountSignedOut() {
-        googleAccountSignedIn.value = false
-    }
-
-    override fun onGoogleAccountSignedIn(account: GoogleSignInAccount) {
-        googleAccountSignedIn.value = true
-        if (Global.IS_VIP) {
-            gameHelper.unlock(context.getString(R.string.achievement_vip))
-        }
     }
 
     //endregion

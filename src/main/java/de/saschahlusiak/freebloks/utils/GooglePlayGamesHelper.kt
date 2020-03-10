@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import android.view.Window
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,12 +22,13 @@ import com.google.android.gms.tasks.OnCompleteListener
 import de.saschahlusiak.freebloks.R
 import java.lang.IllegalStateException
 
-class GooglePlayGamesHelper(private val context: Context, private val listener: GameHelperListener) {
+class GooglePlayGamesHelper(private val context: Context) {
     private val tag = GooglePlayGamesHelper::class.java.simpleName
 
     /**
      *  Listener for sign-in success or failure events.
      **/
+    @Deprecated("Use LiveData instead")
     interface GameHelperListener {
         /**
          * Called when the user is signed out
@@ -44,14 +46,21 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
     private var leaderboardsClient: LeaderboardsClient? = null
     private var achievementsClient: AchievementsClient? = null
     private var playersClient: PlayersClient? = null
-    private var googleAccount: GoogleSignInAccount? = null
-    private var currentPlayer: Player? = null
+    private var listener: GameHelperListener? = null
+
+    val googleAccount = MutableLiveData<GoogleSignInAccount?>(null)
+    val currentPlayer = MutableLiveData<Player?>(null)
 
     val isSignedIn: Boolean
-        get() = googleAccount != null
+        get() = googleAccount.value != null
 
     val isAvailable: Boolean
         get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS)
+
+    @Deprecated("Use LiveData instead of Listener")
+    constructor(context: Context, listener: GameHelperListener): this(context) {
+        this.listener = listener
+    }
 
     init {
         googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
@@ -81,21 +90,31 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
 
     private fun setGoogleAccount(account: GoogleSignInAccount?) {
         if (account === googleAccount) return
-        googleAccount = account
 
         if (account != null) {
             leaderboardsClient = Games.getLeaderboardsClient(context, account)
             achievementsClient = Games.getAchievementsClient(context, account)
             gamesClient = Games.getGamesClient(context, account)
-            playersClient = Games.getPlayersClient(context, account)
+            playersClient = Games.getPlayersClient(context, account).also {
+                it.currentPlayer.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val player = task.result ?: return@addOnCompleteListener
+                        this.currentPlayer.value = player
+                    } else {
+                        startSignOut()
+                    }
+                }
+            }
 
-            listener.onGoogleAccountSignedIn(account)
+            googleAccount.value = account
+            listener?.onGoogleAccountSignedIn(account)
         } else {
             leaderboardsClient = null
             achievementsClient = null
             gamesClient = null
-            currentPlayer = null
-            listener.onGoogleAccountSignedOut()
+            googleAccount.value = null
+            currentPlayer.value = null
+            listener?.onGoogleAccountSignedOut()
         }
     }
 
@@ -103,8 +122,9 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
         gamesClient?.setViewForPopups(window.decorView)
     }
 
+    @Deprecated(message = "Use LiveData instead")
     fun getPlayer(callback: (Player) -> Unit) {
-        val currentPlayer = currentPlayer
+        val currentPlayer = currentPlayer.value
         if (currentPlayer != null) {
             callback.invoke(currentPlayer)
             return
@@ -113,11 +133,11 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
         playersClient?.currentPlayer?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val player = task.result ?: return@addOnCompleteListener
-                this.currentPlayer = player
+                this.currentPlayer.value = player
                 callback.invoke(player)
             } else {
                 // silent login failed, no message necessary
-                listener.onGoogleAccountSignedOut()
+                listener?.onGoogleAccountSignedOut()
                 startSignOut()
             }
         }
@@ -129,17 +149,14 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
     }
 
     fun unlock(achievement: String) {
-        if (!isSignedIn) return
         achievementsClient?.unlock(achievement)
     }
 
     fun increment(achievement: String, increment: Int) {
-        if (!isSignedIn) return
         achievementsClient?.increment(achievement, increment)
     }
 
     fun submitScore(leaderboard: String, score: Long) {
-        if (!isSignedIn) return
         leaderboardsClient?.submitScore(leaderboard, score)
     }
 
@@ -181,29 +198,16 @@ class GooglePlayGamesHelper(private val context: Context, private val listener: 
             Log.e(tag, "Sign in result: ${result.status}")
             var message = result.status.statusMessage
             if (message == null) message = context.getString(R.string.playgames_sign_in_failed)
-            listener.onGoogleAccountSignedOut()
+
+            listener?.onGoogleAccountSignedOut()
 
             makeSimpleDialog(message).show()
         }
     }
 
     private fun makeSimpleDialog(text: String): Dialog {
-        return makeSimpleDialog(context, text)
-    }
-
-    private fun makeSimpleDialog(title: String, text: String): Dialog {
-        return makeSimpleDialog(context, title, text)
-    }
-
-    private fun makeSimpleDialog(context: Context, text: String): Dialog {
         return AlertDialog.Builder(context).setMessage(text)
-            .setNeutralButton(android.R.string.ok, null)
-            .create()
-    }
-
-    private fun makeSimpleDialog(context: Context, title: String, text: String): Dialog {
-        return AlertDialog.Builder(context).setMessage(text)
-            .setTitle(title).setNeutralButton(android.R.string.ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .create()
     }
 }

@@ -6,22 +6,20 @@ import android.content.Intent
 import android.database.sqlite.SQLiteException
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighscoreDB
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import kotlin.concurrent.thread
 
-class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app), GooglePlayGamesHelper.GameHelperListener {
-    val gameHelper = GooglePlayGamesHelper(app, this)
+class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app) {
+    val gameHelper = GooglePlayGamesHelper(app)
     private var unlockAchievementsCalled = false
 
     // prefs
@@ -36,7 +34,7 @@ class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app), Goo
 
     // LiveData
     @JvmField
-    val googleAccount = MutableLiveData(false)
+    val googleAccount = gameHelper.googleAccount
 
     fun isInitialised() = (game != null)
 
@@ -76,18 +74,12 @@ class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app), Goo
         }
     }
 
-    override fun onGoogleAccountSignedIn(account: GoogleSignInAccount) {
-        googleAccount.value = true
-
+    fun unlockAchievements() {
         val data = data ?: return
         val game = game?: return
         if (!unlockAchievementsCalled) {
             thread { unlockAchievements(data, game.gameMode) }
         }
-    }
-
-    override fun onGoogleAccountSignedOut() {
-        googleAccount.value = false
     }
 
     @WorkerThread

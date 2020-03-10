@@ -50,8 +50,12 @@ class GameFinishActivity : FragmentActivity(), View.OnClickListener {
         achievements.setOnClickListener(this)
         leaderboard.setOnClickListener(this)
 
-        viewModel.googleAccount.observe(this, Observer { signedIn: Boolean ->
+        viewModel.googleAccount.observe(this, Observer { account ->
+            val signedIn = account != null
             viewModel.gameHelper.setWindowForPopups(window)
+            if (signedIn) {
+                viewModel.unlockAchievements()
+            }
             achievements.visibility = if (signedIn) View.VISIBLE else View.GONE
             leaderboard.visibility = if (signedIn) View.VISIBLE else View.GONE
         })

@@ -194,7 +194,12 @@ public class FreebloksActivity extends FragmentActivity implements GameEventObse
 		viewModel.getConnectionStatus().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
 		viewModel.getSoundsEnabledLiveData().observe(this, this::soundEnabledChanged);
-		viewModel.getGoogleAccountSignedIn().observe(this, signedIn -> viewModel.getGameHelper().setWindowForPopups(getWindow()));
+		viewModel.getCurrentGoogleAccount().observe(this, signedIn -> {
+			viewModel.getGameHelper().setWindowForPopups(getWindow());
+			if (Global.IS_VIP) {
+				viewModel.getGameHelper().unlock(getString(R.string.achievement_vip));
+			}
+		});
 		viewModel.getCanRequestHint().observe(this, enabled -> {
 			if (optionsMenu != null) {
 				optionsMenu.findItem(R.id.hint).setEnabled(enabled);
