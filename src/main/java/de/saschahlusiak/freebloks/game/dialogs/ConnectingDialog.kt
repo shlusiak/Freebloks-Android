@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel

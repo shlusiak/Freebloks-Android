@@ -11,7 +11,6 @@ import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.DialogFragment
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
 import de.saschahlusiak.freebloks.Global

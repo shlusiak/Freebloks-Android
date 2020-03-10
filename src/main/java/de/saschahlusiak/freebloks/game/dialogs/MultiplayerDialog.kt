@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.DialogFragment
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R

@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.AboutActivity

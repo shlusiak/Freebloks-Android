@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
@@ -18,7 +18,7 @@ import de.saschahlusiak.freebloks.utils.analytics
 import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.rate_app_dialog.*
 
-class RateAppDialog : DialogFragment() {
+class RateAppDialog : AppCompatDialogFragment() {
 
     override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
 
