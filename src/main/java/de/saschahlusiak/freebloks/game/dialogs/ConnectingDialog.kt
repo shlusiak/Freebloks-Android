@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
+import de.saschahlusiak.freebloks.utils.MaterialProgressDialog
 
 /**
  * Simple dialog fragment to show "Connecting to server..." that disconnects the client on cancel.
  */
-class ConnectingDialog : AppCompatDialogFragment() {
+class ConnectingDialog : MaterialDialogFragment() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -20,7 +22,7 @@ class ConnectingDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return ProgressDialog(context).apply {
+        return MaterialProgressDialog(requireContext()).apply {
             setMessage(getString(R.string.connecting))
             setIndeterminate(true)
             setProgressStyle(ProgressDialog.STYLE_SPINNER)

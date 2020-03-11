@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -35,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
@@ -564,16 +564,17 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
+		MaterialAlertDialogBuilder builder;
 		switch (id) {
 			case DIALOG_QUIT:
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder = new MaterialAlertDialogBuilder(this);
 				builder.setMessage(R.string.do_you_want_to_leave_current_game);
 				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> showMainMenu());
 				builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
 				return builder.create();
 
 			case DIALOG_NEW_GAME_CONFIRMATION:
-				builder = new AlertDialog.Builder(this);
+				builder = new MaterialAlertDialogBuilder(this);
 				builder.setMessage(R.string.do_you_want_to_leave_current_game);
 				builder.setPositiveButton(android.R.string.yes, (dialog, which) -> startNewDefaultGame());
 				builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
@@ -911,7 +912,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	@Override
 	public void onConnectionFailed(@NotNull GameClient client, @NotNull Exception error) {
 		runOnUiThread(() -> {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
 			builder.setTitle(android.R.string.dialog_alert_title);
 			builder.setMessage(error.getMessage());
 			builder.setIcon(android.R.drawable.ic_dialog_alert);
@@ -939,7 +940,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 					/* TODO: add sound on disconnect on error */
 					saveGameState(GAME_STATE_FILE);
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(FreebloksActivity.this);
+					final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(FreebloksActivity.this);
 					builder.setTitle(android.R.string.dialog_alert_title);
 					builder.setMessage(getString(R.string.disconnect_error, error.getMessage()));
 					builder.setIcon(android.R.drawable.ic_dialog_alert);

@@ -23,9 +23,10 @@ import de.saschahlusiak.freebloks.model.GameMode.*
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Shape.Companion.get
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.custom_game_dialog.view.*
 
-class CustomGameDialog : AppCompatDialogFragment(), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
+class CustomGameDialog : MaterialDialogFragment(), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
     private val difficultyValues = intArrayOf(
         200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1

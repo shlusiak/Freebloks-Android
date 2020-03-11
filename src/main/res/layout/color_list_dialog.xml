@@ -17,7 +17,7 @@
 
     <Button
         android:id="@+id/startButton"
-        style="@style/Widget.Button.Borderless"
+        style="?borderlessButtonStyle"
         android:layout_width="match_parent"
         android:textSize="@dimen/textSizeMedium"
         android:layout_height="@dimen/main_menu_button_height"

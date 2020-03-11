@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game.lobby
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.res.Configuration
@@ -10,7 +9,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager.LayoutParams.*
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
@@ -18,9 +16,9 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
@@ -31,10 +29,11 @@ import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
-class LobbyDialog: AppCompatDialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
+class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
     interface LobbyDialogListener {
         fun onLobbyDialogClosed()
     }
@@ -208,7 +207,7 @@ class LobbyDialog: AppCompatDialogFragment(), GameEventObserver, OnItemClickList
             setText(lastStatus.getClientName(lastStatus.getClient(player)))
         }
 
-        AlertDialog.Builder(context).apply {
+        MaterialAlertDialogBuilder(context).apply {
             setView(dialogView)
             setTitle(R.string.prefs_player_name)
             setPositiveButton(android.R.string.ok) { _, _ ->

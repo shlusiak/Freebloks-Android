@@ -261,7 +261,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?android:attr/buttonBarStyle"
             android:layout_marginTop="@dimen/dialog_button_margin">
 
             <LinearLayout
@@ -273,8 +272,7 @@
                     android:id="@+id/advanced"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/main_menu_button_height"
-                    android:textSize="@dimen/textSizeSmall"
-                    style="?android:attr/buttonBarButtonStyle"
+                    style="?borderlessButtonStyle"
                     android:text="@string/advanced"/>
             </LinearLayout>
 
@@ -282,15 +280,12 @@
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/main_menu_button_height"
-                android:textSize="@dimen/textSizeSmall"
-                style="?android:attr/buttonBarButtonStyle"
+                style="?borderlessButtonStyle"
                 android:text="@android:string/cancel"/>
             <Button
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/main_menu_button_height"
-                android:textSize="@dimen/textSizeSmall"
-                style="?android:attr/buttonBarButtonStyle"
                 android:text="@android:string/ok"/>
         </LinearLayout>
     </LinearLayout>

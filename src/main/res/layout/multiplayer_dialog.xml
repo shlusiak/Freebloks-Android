@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/main_menu_button_height"
                 android:textSize="@dimen/textSizeSmall"
-                style="?android:attr/buttonBarButtonStyle"
+                style="?borderlessButtonStyle"
                 android:text="@string/host_game"/>
 
             <LinearLayout
@@ -118,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/main_menu_button_height"
                     android:textSize="@dimen/textSizeSmall"
-                    style="?android:attr/buttonBarButtonStyle"
+                    style="?borderlessButtonStyle"
                     android:text="@android:string/cancel"/>
 
                 <Button
@@ -126,7 +126,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/main_menu_button_height"
                     android:textSize="@dimen/textSizeSmall"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@android:string/ok"/>
             </LinearLayout>
         </LinearLayout>

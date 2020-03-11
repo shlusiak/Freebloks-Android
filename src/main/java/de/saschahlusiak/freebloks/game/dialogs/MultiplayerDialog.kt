@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
@@ -22,10 +21,11 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBlue
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
-import kotlinx.android.synthetic.main.join_dialog.*
-import kotlinx.android.synthetic.main.join_dialog.view.*
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
+import kotlinx.android.synthetic.main.multiplayer_dialog.*
+import kotlinx.android.synthetic.main.multiplayer_dialog.view.*
 
-class MultiplayerDialog : AppCompatDialogFragment(), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
+class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
     private val TAG = MultiplayerDialog::class.java.simpleName
 
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -42,7 +42,7 @@ class MultiplayerDialog : AppCompatDialogFragment(), RadioGroup.OnCheckedChangeL
     override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.join_dialog, container, false)
+        return inflater.inflate(R.layout.multiplayer_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

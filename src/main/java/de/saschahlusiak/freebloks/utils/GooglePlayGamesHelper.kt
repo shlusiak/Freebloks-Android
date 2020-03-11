@@ -19,6 +19,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import java.lang.IllegalStateException
 
@@ -206,6 +207,7 @@ class GooglePlayGamesHelper(private val context: Context) {
     }
 
     private fun makeSimpleDialog(text: String): Dialog {
+        // FIXME: use MaterialAlertDialogBuilder once the preferences are migrated to use material design theme
         return AlertDialog.Builder(context).setMessage(text)
             .setPositiveButton(android.R.string.ok, null)
             .create()

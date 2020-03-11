@@ -34,7 +34,7 @@
 
         <ImageButton
             android:id="@+id/sound_toggle_button"
-            style="?android:attr/buttonStyle"
+            style="?materialButtonStyle"
             android:layout_weight="0"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
@@ -43,7 +43,7 @@
 
         <ImageButton
             android:id="@+id/rules"
-            style="?android:attr/buttonStyle"
+            style="?materialButtonStyle"
 			android:layout_marginLeft="@dimen/main_menu_button_margin"
             android:layout_weight="0"
             android:layout_width="@dimen/main_menu_button_height"
@@ -70,7 +70,7 @@
 		    android:layout_height="@dimen/main_menu_button_height"
 		    android:layout_weight="0"
 		    android:layout_marginLeft="@dimen/main_menu_button_margin"
-		    style="?android:attr/buttonStyle"
+		    style="?materialButtonStyle"
 		    android:src="@drawable/gears" />
 
 	</LinearLayout>

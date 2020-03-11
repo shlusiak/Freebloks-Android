@@ -30,7 +30,7 @@ fun Dialog.applyMaterialBackground() {
     if (decorView != null) {
         val backgroundInsets = MaterialDialog.getDialogBackgroundInsets(context, MaterialDialog.DEF_STYLE_ATTR, MaterialDialog.DEF_STYLE_RES)
 
-        val surfaceColor = MaterialDialog.getColor(context, R.attr.colorSurface, javaClass.canonicalName)
+        val surfaceColor = MaterialDialog.getColor(context, R.attr.colorSurface, "colorSurface not found")
         val materialShapeDrawable = MaterialShapeDrawable(context, null, MaterialDialog.DEF_STYLE_ATTR, MaterialDialog.DEF_STYLE_RES)
         materialShapeDrawable.initializeElevationOverlay(context)
         materialShapeDrawable.fillColor = ColorStateList.valueOf(surfaceColor)
@@ -88,7 +88,7 @@ internal class InsetDialogOnTouchListener(private val dialog: Dialog, insets: Re
     }
 }
 
-class MaterialDialog : AppCompatDialog {
+open class MaterialDialog : AppCompatDialog {
 
     constructor(context: Context, overrideThemeResId: Int) : super(createMaterialThemedContext(context), overrideThemeResId)
 
@@ -127,9 +127,8 @@ class MaterialDialog : AppCompatDialog {
          * @throws IllegalArgumentException if the attribute is not set in the current theme.
          */
         @ColorInt
-        fun getColor(
-            context: Context, @AttrRes colorAttributeResId: Int, errorMessageComponent: String?): Int {
-            return resolveOrThrow(context, colorAttributeResId, errorMessageComponent!!)
+        fun getColor(context: Context, @AttrRes colorAttributeResId: Int, errorMessageComponent: String): Int {
+            return resolveOrThrow(context, colorAttributeResId, errorMessageComponent)
         }
 
         fun insetDrawable(drawable: Drawable?, backgroundInsets: Rect): InsetDrawable {

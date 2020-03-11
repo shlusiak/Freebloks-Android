@@ -83,8 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:src="@android:drawable/ic_menu_send"
-            app:fabSize="mini"
-            app:backgroundTint="@color/send_button_color" />
+            app:fabSize="mini" />
 
     </LinearLayout>
 

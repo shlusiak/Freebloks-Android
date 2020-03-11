@@ -11,10 +11,7 @@ import android.view.Window
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
@@ -22,12 +19,14 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
+import de.saschahlusiak.freebloks.utils.MaterialDialog
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.color_grid_item.view.*
 import kotlinx.android.synthetic.main.color_list_custom_title.*
 import kotlinx.android.synthetic.main.color_list_dialog.*
 
-class ColorListDialog : AppCompatDialogFragment(), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private var list: AdapterView<ColorListAdapter>? = null
     private var adapter: ColorListAdapter? = null
     private var selection = BooleanArray(4) { false }
@@ -36,7 +35,7 @@ class ColorListDialog : AppCompatDialogFragment(), OnItemClickListener, OnItemSe
     override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AppCompatDialog(requireActivity(), theme).apply {
+        return MaterialDialog(requireContext(), theme).apply {
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         }
     }

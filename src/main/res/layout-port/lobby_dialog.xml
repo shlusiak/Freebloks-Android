@@ -96,7 +96,6 @@
                 android:layout_weight="0"
                 android:layout_margin="2dp"
                 android:src="@android:drawable/ic_menu_send"
-                app:backgroundTint="@color/send_button_color"
                 app:fabSize="mini" />
 
         </LinearLayout>

@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
@@ -23,8 +22,9 @@ import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.game.dialogs.MultiplayerDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy
 import de.saschahlusiak.freebloks.rules.RulesActivity
+import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.analytics
-import kotlinx.android.synthetic.main.game_menu_dialog.view.*
+import kotlinx.android.synthetic.main.main_menu.view.*
 
 class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
@@ -33,8 +33,10 @@ class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickLis
 
     private val viewModel by lazy { activity.viewModel }
 
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.game_menu_dialog, container, false)
+        return inflater.inflate(R.layout.main_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,7 +77,7 @@ class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickLis
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object: AppCompatDialog(requireContext(), theme) {
+        return object: MaterialDialog(requireContext(), theme) {
             override fun onBackPressed() {
                 ownerActivity?.finish()
             }
