@@ -30,7 +30,7 @@ class GameFinishActivity : AppCompatActivity(), View.OnClickListener {
     private val gameHelper by lazy { viewModel.gameHelper }
     
     override fun onCreate(savedInstanceState: Bundle?) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game_finish_activity)
         if (!viewModel.isInitialised()) {
