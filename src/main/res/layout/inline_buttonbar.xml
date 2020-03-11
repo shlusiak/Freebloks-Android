@@ -13,8 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
-        android:src="@android:drawable/sym_action_chat"
-        app:backgroundTint="@color/mylocation_button_color" />
+        android:src="@android:drawable/sym_action_chat" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/myLocation"
@@ -23,7 +22,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="8dp"
-        android:src="@android:drawable/ic_menu_compass"
-        app:backgroundTint="@color/mylocation_button_color" />
+        android:src="@android:drawable/ic_menu_compass" />
 
 </RelativeLayout>

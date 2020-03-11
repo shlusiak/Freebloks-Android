@@ -5,6 +5,12 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
     <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.Dark">
         <item name="android:windowTranslucentStatus">true</item>
@@ -16,6 +22,12 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
     <style name="Theme.Freebloks.Auto.Light" parent="Theme.Freebloks.Light"></style>
     <style name="Theme.Freebloks.Preferences" parent="android:Theme.DeviceDefault.Light"></style>
@@ -25,6 +37,12 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
 
     <style name="Theme.Freebloks.Light.Dialog" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
@@ -32,5 +50,11 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
 </resources>

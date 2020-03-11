@@ -146,9 +146,9 @@
                     app:np_max="9"
                     app:np_min="0"
                     app:np_value="1"
-                    app:np_selectedTextColor="@color/configure_stones_picker"
-                    app:np_textColor="@color/configure_stones_picker"
-                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_selectedTextColor="?colorAccent"
+                    app:np_textColor="?colorAccent"
+                    app:np_dividerColor="?colorAccent"
                     app:np_wrapSelectorWheel="false"
                     app:np_orientation="horizontal"/>
             </TableRow>
@@ -172,9 +172,9 @@
                     app:np_max="9"
                     app:np_min="0"
                     app:np_value="1"
-                    app:np_selectedTextColor="@color/configure_stones_picker"
-                    app:np_textColor="@color/configure_stones_picker"
-                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_selectedTextColor="?colorAccent"
+                    app:np_textColor="?colorAccent"
+                    app:np_dividerColor="?colorAccent"
                     app:np_wrapSelectorWheel="false"
                     app:np_orientation="horizontal"/>
             </TableRow>
@@ -198,9 +198,9 @@
                     app:np_max="9"
                     app:np_min="0"
                     app:np_value="1"
-                    app:np_selectedTextColor="@color/configure_stones_picker"
-                    app:np_textColor="@color/configure_stones_picker"
-                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_selectedTextColor="?colorAccent"
+                    app:np_textColor="?colorAccent"
+                    app:np_dividerColor="?colorAccent"
                     app:np_wrapSelectorWheel="false"
                     app:np_orientation="horizontal"/>
             </TableRow>
@@ -224,9 +224,9 @@
                     app:np_max="9"
                     app:np_min="0"
                     app:np_value="1"
-                    app:np_selectedTextColor="@color/configure_stones_picker"
-                    app:np_textColor="@color/configure_stones_picker"
-                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_selectedTextColor="?colorAccent"
+                    app:np_textColor="?colorAccent"
+                    app:np_dividerColor="?colorAccent"
                     app:np_wrapSelectorWheel="false"
                     app:np_orientation="horizontal"/>
             </TableRow>
@@ -250,9 +250,9 @@
                     app:np_max="9"
                     app:np_min="0"
                     app:np_value="1"
-                    app:np_selectedTextColor="@color/configure_stones_picker"
-                    app:np_textColor="@color/configure_stones_picker"
-                    app:np_dividerColor="@color/configure_stones_picker"
+                    app:np_selectedTextColor="?colorAccent"
+                    app:np_textColor="?colorAccent"
+                    app:np_dividerColor="?colorAccent"
                     app:np_wrapSelectorWheel="false"
                     app:np_orientation="horizontal"/>
             </TableRow>

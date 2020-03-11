@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_accent">#009688</color>
+    <color name="primaryColor">#795548</color>
+    <color name="primaryLightColor">#a98274</color>
+    <color name="primaryDarkColor">#4b2c20</color>
+    <color name="secondaryColor">#0277bd</color>
+    <color name="secondaryLightColor">#58a5f0</color>
+    <color name="secondaryDarkColor">#004c8c</color>
 
-    <color name="configure_stones_picker">@color/color_accent</color>
-
-    <color name="chat_button_color">#B0505050</color>
-    <color name="chat_button_color_pressed">#FFEF8F3F</color>
-
-    <color name="send_button_color">#49bf4e</color>
-    <color name="send_button_color_pressed">#2dfc83</color>
-
-    <color name="mylocation_button_color">#B0505050</color>
-    <color name="mylocation_button_color_pressed">#FF4090DF</color>
+    <color name="color_accent">#E600FF</color>
+    <color name="color_primary">#00FFE7</color>
+    <color name="color_secondary">#FF9B44</color>
 
     <color name="theme_background_black">#000000</color>
     <color name="theme_background_blue">#0D1A40</color>
