@@ -67,7 +67,7 @@ class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickLis
         })
 
         viewModel.connectionStatus.observe(viewLifecycleOwner, Observer {
-            val canResume = (it == ConnectionStatus.Connected) && (viewModel.client?.game?.isFinished == false)
+            val canResume = (it == ConnectionStatus.Connected) && (viewModel.client?.game?.isFinished == false) && (viewModel.client?.game?.isStarted == true)
 
             view.resume_game.isEnabled = canResume
             dialog?.setCanceledOnTouchOutside(canResume)

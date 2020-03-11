@@ -347,7 +347,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			return;
 		synchronized (client) {
 			Game l = client.game;
-			if (!l.isFinished())
+			if (!l.isFinished() && l.isStarted())
 				outState.putSerializable("game", l);
 		}
 	}

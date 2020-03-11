@@ -294,6 +294,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         this.client = null
         c?.disconnect()
 
+        setSheetPlayer(-1, false)
         connectionStatus.value = ConnectionStatus.Disconnected
     }
 

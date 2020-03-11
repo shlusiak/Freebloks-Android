@@ -138,7 +138,7 @@ public class BoardObject implements ViewElement {
 	private int getShowDetailsPlayer() {
 		if (lastDetailsPlayer >= 0)
 			return lastDetailsPlayer;
-		if (scene.game == null)
+		if (scene.game == null || !scene.game.isStarted())
 			return -1;
 		if (scene.game.isFinished())
 			return centerPlayer;
