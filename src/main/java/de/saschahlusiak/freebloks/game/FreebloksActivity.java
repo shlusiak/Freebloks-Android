@@ -670,6 +670,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 			case REQUEST_FINISH_GAME:
 				if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
@@ -679,9 +680,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 					showMainMenu();
 				}
 				break;
-
 		}
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/**
