@@ -132,6 +132,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             priority = NotificationCompat.PRIORITY_DEFAULT
             setOngoing(!client.game.isFinished && client.isConnected())
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
+            setColor(context.resources.getColor(R.color.primaryColor))
 
             if (!client.game.isStarted) {
                 // we are in lobby
@@ -183,6 +184,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             setSmallIcon(R.drawable.notification_chat)
             setContentText(text)
             setTicker(text)
+            setColor(context.resources.getColor(R.color.primaryColor))
             setPriority(NotificationCompat.PRIORITY_HIGH)
             setDefaults(NotificationCompat.DEFAULT_VIBRATE or NotificationCompat.DEFAULT_LIGHTS)
             setSound(soundUri)
@@ -218,6 +220,10 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         if (game.isStarted) {
             notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, text = text))
+
+            if (isInBackground && lastStatus?.clients == 1) {
+                notificationManager.cancel(ONGOING_NOTIFICATION_ID)
+            }
         } else {
             notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, text = text))
         }
