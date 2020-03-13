@@ -4,7 +4,7 @@
     <string name="new_local_game">Novo Jogo</string>
     <string name="resume">Continuar</string>
     <string name="join_game">Entrar</string>
-    <string name="host_game">Host&#8230;</string>
+    <string name="host_game">Host</string>
     <string name="preferences">Configurações</string>
     <string name="hint">Dica</string>
     <string name="undo">Desfazer</string>
