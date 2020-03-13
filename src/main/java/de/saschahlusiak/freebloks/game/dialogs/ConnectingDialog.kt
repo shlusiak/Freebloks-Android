@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
@@ -22,9 +21,9 @@ class ConnectingDialog : MaterialDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialProgressDialog(requireContext()).apply {
+        @Suppress("DEPRECATION")
+        return MaterialProgressDialog(requireContext(), 0).apply {
             setMessage(getString(R.string.connecting))
-            setIndeterminate(true)
             setProgressStyle(ProgressDialog.STYLE_SPINNER)
             setCancelable(true)
             setCanceledOnTouchOutside(true)

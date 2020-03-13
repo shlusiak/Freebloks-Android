@@ -913,14 +913,11 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	public void onConnectionFailed(@NotNull GameClient client, @NotNull Exception error) {
 		runOnUiThread(() -> {
 			final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-			builder.setTitle(android.R.string.dialog_alert_title);
 			builder.setMessage(error.getMessage());
-			builder.setIcon(android.R.drawable.ic_dialog_alert);
-
 			builder.setOnDismissListener(dialog -> showMainMenu());
 			builder.setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss());
 
-			builder.create().show();
+			builder.show();
 		});
 	}
 

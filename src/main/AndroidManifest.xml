@@ -57,7 +57,7 @@
             android:name=".game.finish.GameFinishActivity"
             android:label="@string/app_name"
             android:exported="false"
-            android:theme="@style/Theme.Freebloks.Dialog" >
+            android:theme="@style/Theme.Freebloks.Dialog.MinWidth" >
         </activity>
    		<activity
             android:name=".preferences.FreebloksPreferencesLegacy"
@@ -85,7 +85,7 @@
             android:name=".AboutActivity"
             android:label="@string/about_freebloks"
             android:exported="false"
-            android:theme="@style/Theme.Freebloks.Light.Dialog" >
+            android:theme="@style/Theme.Freebloks.Light.Dialog.MinWidth" >
         </activity>
         <activity
             android:name=".rules.RulesActivity"

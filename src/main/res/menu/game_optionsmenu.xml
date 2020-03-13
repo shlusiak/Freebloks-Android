@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/new_game"
-        android:icon="@drawable/ic_action_refresh"
         android:title="@string/new_local_game" >
     </item>
     <item
@@ -14,24 +13,22 @@
     </item>
     <item
         android:id="@+id/hint"
-        android:icon="@drawable/ic_info_outline_white_48dp"
+        android:icon="@drawable/ic_info"
         android:title="@string/hint"
         app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/undo"
-        android:icon="@drawable/ic_action_undo"
+        android:icon="@drawable/ic_undo"
         android:title="@string/undo"
         app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/preferences"
-        android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/preferences">
     </item>
     <item
         android:id="@+id/show_main_menu"
-        android:icon="@android:drawable/ic_menu_more"
         android:title="@string/main_menu">
     </item>
 </menu>

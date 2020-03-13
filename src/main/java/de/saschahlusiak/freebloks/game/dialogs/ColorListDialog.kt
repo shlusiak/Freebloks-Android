@@ -32,7 +32,7 @@ class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSel
     private var selection = BooleanArray(4) { false }
     private val listener get() = (requireActivity() as OnStartCustomGameListener)
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
+    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialDialog(requireContext(), theme).apply {

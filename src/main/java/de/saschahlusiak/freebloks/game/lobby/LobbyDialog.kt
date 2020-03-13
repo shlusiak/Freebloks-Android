@@ -15,7 +15,6 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
-import androidx.appcompat.app.AppCompatDialog
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -78,7 +77,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
         }
     }
 
-    override fun getTheme() = R.style.Theme_Freebloks_Dialog
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +85,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AppCompatDialog(requireActivity(), theme).apply {
+        return super.onCreateDialog(savedInstanceState).apply {
             if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
             } else {

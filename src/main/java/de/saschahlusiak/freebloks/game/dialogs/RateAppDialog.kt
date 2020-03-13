@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.rate_app_dialog.*
 
 class RateAppDialog : MaterialDialogFragment() {
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
+    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.rate_app_dialog, container, false)

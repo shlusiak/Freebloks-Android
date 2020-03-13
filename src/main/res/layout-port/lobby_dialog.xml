@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:layout_margin="2dp"
-                android:src="@android:drawable/ic_menu_send"
+                android:src="@drawable/ic_send"
                 app:fabSize="mini" />
 
         </LinearLayout>

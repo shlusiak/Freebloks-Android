@@ -10,7 +10,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
 import de.saschahlusiak.freebloks.Global
@@ -85,7 +84,7 @@ class CustomGameDialog : MaterialDialogFragment(), OnSeekBarChangeListener, View
         players[it].isChecked && (gameMode != GAMEMODE_4_COLORS_2_PLAYERS || it < 2)
     }
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog
+    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.custom_game_dialog, container, false)

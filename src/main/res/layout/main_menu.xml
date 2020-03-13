@@ -49,7 +49,7 @@
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:src="@drawable/ic_action_help" />
+            android:src="@drawable/ic_help" />
     </LinearLayout>
 
     <LinearLayout

@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/clear"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="never"
         android:title="@string/clear_statistics" >
     </item>
     <item
         android:id="@+id/signout"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:showAsAction="never"
         android:title="@string/googleplus_signout" >
     </item>
     <item
         android:id="@+id/achievements"
-        android:showAsAction="always|withText"
+        app:showAsAction="always|withText"
         android:icon="@drawable/ic_play_games_badge_achievements_gray"
         android:visible="false"
         android:title="@string/googleplus_achievements" >
     </item>
     <item
         android:id="@+id/leaderboard"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_play_games_badge_leaderboards_gray"
         android:visible="false"
         android:title="@string/googleplus_leaderboard" >

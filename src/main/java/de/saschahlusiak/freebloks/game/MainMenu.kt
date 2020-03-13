@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.AboutActivity
@@ -23,10 +22,12 @@ import de.saschahlusiak.freebloks.game.dialogs.MultiplayerDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.analytics
+import kotlinx.android.synthetic.main.main_menu.*
 import kotlinx.android.synthetic.main.main_menu.view.*
 
-class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickListener {
+class MainMenu : MaterialDialogFragment(), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
@@ -45,13 +46,13 @@ class MainMenu : AppCompatDialogFragment(), View.OnClickListener, OnLongClickLis
 
         appIconIsDonate = !Global.IS_VIP && starts % Global.DONATE_STARTS == 0L
 
-        view.findViewById<View>(R.id.new_game).setOnClickListener(this)
-        view.findViewById<View>(R.id.new_game).setOnLongClickListener(this)
-        view.findViewById<View>(R.id.resume_game).setOnClickListener(this)
-        view.findViewById<View>(R.id.preferences).setOnClickListener(this)
-        view.findViewById<View>(R.id.join_game).setOnClickListener(this)
-        view.findViewById<View>(R.id.rules).setOnClickListener(this)
-        view.findViewById<View>(R.id.new_game_custom).setOnClickListener(this)
+        new_game.setOnClickListener(this)
+        new_game.setOnLongClickListener(this)
+        resume_game.setOnClickListener(this)
+        preferences.setOnClickListener(this)
+        join_game.setOnClickListener(this)
+        rules.setOnClickListener(this)
+        new_game_custom.setOnClickListener(this)
 
         appIcon = view.findViewById(R.id.appIcon)
 
