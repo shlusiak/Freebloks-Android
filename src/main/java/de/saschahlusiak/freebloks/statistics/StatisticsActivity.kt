@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.statistics
 
-import android.app.ActionBar
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -8,7 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -20,7 +19,7 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import kotlinx.android.synthetic.main.statistics_activity.*
 
-class StatisticsActivity : FragmentActivity() {
+class StatisticsActivity : AppCompatActivity() {
     private val REQUEST_LEADERBOARD = 1
     private val REQUEST_ACHIEVEMENTS = 2
     private val REQUEST_SIGN_IN = 3
@@ -52,6 +51,7 @@ class StatisticsActivity : FragmentActivity() {
 
         refreshData()
 
+        val actionBar = supportActionBar
         if (actionBar == null) {
             game_mode.setSelection(gameMode.ordinal)
             (findViewById<View>(R.id.game_mode) as Spinner).onItemSelectedListener = object : OnItemSelectedListener {
@@ -60,21 +60,21 @@ class StatisticsActivity : FragmentActivity() {
                     refreshData()
                 }
 
-                override fun onNothingSelected(arg0: AdapterView<*>?) {}
+                override fun onNothingSelected(adapterView: AdapterView<*>?) {}
             }
         } else {
             findViewById<View>(R.id.game_mode).visibility = View.GONE
             val mSpinnerAdapter: SpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.game_modes,
                 android.R.layout.simple_spinner_dropdown_item)
-            actionBar?.navigationMode = ActionBar.NAVIGATION_MODE_LIST
-            actionBar?.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, itemId ->
+            actionBar.navigationMode = androidx.appcompat.app.ActionBar.NAVIGATION_MODE_LIST
+            actionBar.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, itemId ->
                 gameMode = from(itemPosition)
                 refreshData()
                 true
             }
-            actionBar?.setSelectedNavigationItem(gameMode.ordinal)
-            actionBar?.setDisplayShowTitleEnabled(false)
-            actionBar?.setDisplayHomeAsUpEnabled(true)
+            actionBar.setSelectedNavigationItem(gameMode.ordinal)
+            actionBar.setDisplayShowTitleEnabled(false)
+            actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
         if (gameHelper.isAvailable) {

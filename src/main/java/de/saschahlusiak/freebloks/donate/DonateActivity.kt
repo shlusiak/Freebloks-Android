@@ -1,27 +1,28 @@
 package de.saschahlusiak.freebloks.donate
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.utils.analytics
 import kotlinx.android.synthetic.main.donate_activity.*
 
-class DonateActivity : Activity() {
+class DonateActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         analytics.logEvent("show_donate", null)
 
         setContentView(R.layout.donate_activity)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         donation_freebloksvip.isChecked = true
         next.setOnClickListener { onNextButtonPress() }
+
         donate_icon.startAnimation(AnimationUtils.loadAnimation(this, R.anim.heart))
     }
 
