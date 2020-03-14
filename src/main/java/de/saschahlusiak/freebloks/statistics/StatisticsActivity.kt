@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighscoreDB
 import de.saschahlusiak.freebloks.model.GameMode
@@ -134,7 +135,13 @@ class StatisticsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            REQUEST_SIGN_IN -> gameHelper.onActivityResult(resultCode, data)
+            REQUEST_SIGN_IN -> gameHelper.onActivityResult(resultCode, data)?.let { error ->
+                MaterialAlertDialogBuilder(this).apply {
+                    setMessage(error)
+                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
+                    show()
+                }
+            }
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
