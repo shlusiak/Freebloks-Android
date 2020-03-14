@@ -19,7 +19,6 @@ import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.game.dialogs.MultiplayerDialog
-import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog

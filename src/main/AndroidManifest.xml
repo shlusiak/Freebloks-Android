@@ -34,7 +34,8 @@
         android:icon="@drawable/appicon_small"
         android:isGame="true"
         android:label="@string/app_name"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="m">
 
         <meta-data
             android:name="android.max_aspect"
@@ -68,12 +69,7 @@
             android:name=".game.finish.GameFinishActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Freebloks.Dialog.MinWidth"></activity>
-        <activity
-            android:name=".preferences.FreebloksPreferencesLegacy"
-            android:exported="false"
-            android:label="@string/preferences"
-            android:theme="@style/Theme.Freebloks.Preferences"></activity>
+            android:theme="@style/Theme.Freebloks.Dialog.MinWidth"/>
         <activity
             android:name=".preferences.SettingsActivity"
             android:exported="false"
@@ -83,7 +79,7 @@
             android:name=".statistics.StatisticsActivity"
             android:exported="false"
             android:label="@string/statistics"
-            android:theme="@style/Theme.Freebloks.Auto.Light"></activity>
+            android:theme="@style/Theme.Freebloks.Auto.Light"/>
         <activity
             android:name=".donate.DonateActivity"
             android:exported="false"
@@ -98,12 +94,12 @@
             android:name=".AboutActivity"
             android:exported="false"
             android:label="@string/about_freebloks"
-            android:theme="@style/Theme.Freebloks.Light.Dialog.MinWidth"></activity>
+            android:theme="@style/Theme.Freebloks.Light.Dialog.MinWidth"/>
         <activity
             android:name=".rules.RulesActivity"
             android:exported="false"
             android:label="@string/rules_title"
-            android:theme="@style/Theme.Freebloks.Light"></activity>
+            android:theme="@style/Theme.Freebloks.Light"/>
     </application>
 
 </manifest>

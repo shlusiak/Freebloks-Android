@@ -35,7 +35,6 @@
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
     <style name="Theme.Freebloks.Auto.Light" parent="Theme.Freebloks.Light"></style>
-    <style name="Theme.Freebloks.Preferences" parent="android:Theme.DeviceDefault.Light"></style>
 
     <style name="Theme.Freebloks.Dialog" parent="Theme.MaterialComponents.Dialog">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>

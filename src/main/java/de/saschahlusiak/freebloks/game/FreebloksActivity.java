@@ -12,7 +12,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +30,7 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -63,7 +63,7 @@ import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.Player;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
-import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy;
+import de.saschahlusiak.freebloks.preferences.SettingsActivity;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
 import de.saschahlusiak.freebloks.view.effects.Effect;
@@ -629,7 +629,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				return true;
 
 			case R.id.preferences:
-				intent = new Intent(this, FreebloksPreferencesLegacy.class);
+				intent = new Intent(this, SettingsActivity.class);
 				startActivity(intent);
 				return true;
 

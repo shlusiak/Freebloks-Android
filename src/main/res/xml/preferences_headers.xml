@@ -66,7 +66,7 @@
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
         android:icon="@drawable/ic_action_favorite"
         android:key="DONATE"
-        android:title="@string/prefs_donate"
+        android:title="@string/prefs_donation"
         android:widgetLayout="@null"
         app:persistent="false">
 

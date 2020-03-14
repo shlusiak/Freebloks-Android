@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.TwoStatePreference
+import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
 
@@ -30,10 +31,16 @@ class HeadersFragment : PreferenceFragmentCompat() {
         }
 
         // donate is not a TwoStatePreference
-        findPreference<Preference>(SettingsFragment.SCREEN_DONATE)?.setOnPreferenceClickListener {
-            val intent = Intent(requireContext(), DonateActivity::class.java)
-            startActivity(intent)
-            true
+        findPreference<Preference>(SettingsFragment.SCREEN_DONATE)?.apply {
+            if (Global.IS_VIP) {
+                isVisible = false
+            } else {
+                setOnPreferenceClickListener {
+                    val intent = Intent(requireContext(), DonateActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+            }
         }
 
         arguments?.getString(SettingsFragment.KEY_SCREEN)?.let {
