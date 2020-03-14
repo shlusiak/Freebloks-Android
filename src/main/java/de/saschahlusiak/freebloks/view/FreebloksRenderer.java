@@ -7,6 +7,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.Board;
@@ -67,7 +68,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	public PointF windowToModel(PointF point) {
 		float x1, y1, z1, x2, y2, z2, u;
 
-		synchronized(outputfar) {
+		synchronized (outputfar) {
 			GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputnear, 0);
 			GLU.gluUnProject(point.x, viewport[3] - point.y, 1.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputfar, 0);
 		}
@@ -90,7 +91,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	boolean updateModelViewMatrix = true;
 
 	public synchronized void onDrawFrame(GL10 gl) {
-		GL11 gl11 = (GL11)gl;
+		GL11 gl11 = (GL11) gl;
 		final float camera_distance = zoom;
 //		long t = System.currentTimeMillis();
 		float cameraAngle = model.boardObject.getCameraAngle();
@@ -110,17 +111,16 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glLoadIdentity();
 		if (model.verticalLayout) {
 			gl.glTranslatef(0, 7.0f, 0);
-		}
-		else
+		} else
 			gl.glTranslatef(-5.0f, 0.6f, 0);
 
 		GLU.gluLookAt(gl,
-				(float) (fixed_zoom/camera_distance*Math.sin(cameraAngle * Math.PI/180.0)*Math.cos(mAngleX*Math.PI/180.0)),
-				(float) (fixed_zoom/camera_distance*Math.sin(mAngleX*Math.PI/180.0)),
-				(float) (fixed_zoom/camera_distance*Math.cos(mAngleX*Math.PI/180.0)*Math.cos(-cameraAngle*Math.PI/180.0)),
-				0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f);
-		if (updateModelViewMatrix) synchronized(outputfar) {
+			(float) (fixed_zoom / camera_distance * Math.sin(cameraAngle * Math.PI / 180.0) * Math.cos(mAngleX * Math.PI / 180.0)),
+			(float) (fixed_zoom / camera_distance * Math.sin(mAngleX * Math.PI / 180.0)),
+			(float) (fixed_zoom / camera_distance * Math.cos(mAngleX * Math.PI / 180.0) * Math.cos(-cameraAngle * Math.PI / 180.0)),
+			0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f);
+		if (updateModelViewMatrix) synchronized (outputfar) {
 //				Log.w("onDrawFrame", "updating modelViewMatrix");
 			if (isSoftwareRenderer) {
 				/* FIXME: add path for software renderer */
@@ -143,8 +143,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 			return;
 
 		/* render player stones on board, unless they are "effected" */
-	    gl.glPushMatrix();
-	    gl.glTranslatef(-BoardRenderer.stone_size * (float)(model.board.width - 1), 0, -BoardRenderer.stone_size * (float)(model.board.width - 1) );
+		gl.glPushMatrix();
+		gl.glTranslatef(-BoardRenderer.stone_size * (float) (model.board.width - 1), 0, -BoardRenderer.stone_size * (float) (model.board.width - 1));
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board.stone_specular, 0);
@@ -154,28 +154,28 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		synchronized (model.effects) {
 			// FIXME: board size may change randomly when starting a new game
-		    for (int y = 0; y < model.board.height; y++) {
-		    	int x;
-		    	for (x = 0; x < model.board.width; x++) {
-		    		int field = model.board.getFieldPlayer(y, x);
-		    		if (field != Board.FIELD_FREE) {
-		    			boolean effected = false;
+			for (int y = 0; y < model.board.height; y++) {
+				int x;
+				for (x = 0; x < model.board.width; x++) {
+					int field = model.board.getFieldPlayer(y, x);
+					if (field != Board.FIELD_FREE) {
+						boolean effected = false;
 						for (int i = 0; i < model.effects.size(); i++)
 							if (model.effects.get(i).isEffected(x, y)) {
 								effected = true;
 								break;
-		    				}
-		    			if (!effected)
-		    				board.renderStone(gl11, model.getPlayerColor(field), BoardRenderer.DEFAULT_ALPHA);
-		    		}
-		    		gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
-		    	}
-		    	gl.glTranslatef(- x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
-		    }
-	    }
+							}
+						if (!effected)
+							board.renderStone(gl11, model.getPlayerColor(field), BoardRenderer.DEFAULT_ALPHA);
+					}
+					gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
+				}
+				gl.glTranslatef(-x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
+			}
+		}
 
-	    gl.glDisable(GL10.GL_BLEND);
-	    gl.glPopMatrix();
+		gl.glDisable(GL10.GL_BLEND);
+		gl.glPopMatrix();
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		/* render all effects */
@@ -210,7 +210,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		GL11 gl11 = (GL11)gl;
+		GL11 gl11 = (GL11) gl;
 
 		gl.glViewport(0, 0, width, height);
 		viewport[0] = 0;
@@ -219,8 +219,8 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		viewport[3] = height;
 
 
-		this.width = (float)width;
-		this.height = (float)height;
+		this.width = (float) width;
+		this.height = (float) height;
 		model.verticalLayout = (height >= width);
 
 		float fovy;
@@ -236,7 +236,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		GLU.gluPerspective(gl, fovy, this.width / this.height, 1.0f, 300.0f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 
-		synchronized(outputfar) {
+		synchronized (outputfar) {
 			if (isSoftwareRenderer) {
 				/* FIXME: add path for software renderer */
 			} else {
@@ -273,34 +273,54 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		backgroundRenderer.updateTexture(gl);
 	}
 
+	private static void loadKTXTexture(GL10 gl, KTXFile file) {
+		KTXHeader header = file.getHeader();
+		KTXTextureData data = file.getTextureData();
+
+		for (int level = 0; level < data.getNumberOfMipmapLevels(); level++) {
+			gl.glCompressedTexImage2D(GL10.GL_TEXTURE_2D,
+				level,
+				header.getGLInternalFormat(),
+				header.getPixelWidth(level),
+				header.getPixelHeight(level),
+				0,
+				data.getBytesPerFace(level),
+				data.getFace(level, 0));
+		}
+	}
+
+	@Deprecated
 	public static void loadKTXTexture(GL10 gl, Resources resources, int resId) {
 		InputStream input;
 
 		if (isEmulator)
 			return;
 
-	    try {
-	    	input = resources.openRawResource(resId);
-	    	KTXFile file = new KTXFile();
-	    	file.read(input);
-	        input.close();
+		try {
+			input = resources.openRawResource(resId);
+			KTXFile file = new KTXFile();
+			file.read(input);
+			input.close();
 
-	    	KTXHeader header = file.getHeader();
-	    	KTXTextureData data = file.getTextureData();
+			loadKTXTexture(gl, file);
+		} catch (IOException | KTXFormatException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	    	for (int level = 0; level < data.getNumberOfMipmapLevels(); level++) {
-	    		gl.glCompressedTexImage2D(GL10.GL_TEXTURE_2D,
-	        			level,
-	        			header.getGLInternalFormat(),
-	        			header.getPixelWidth(level),
-	        			header.getPixelHeight(level),
-	        			0,
-	        			data.getBytesPerFace(level),
-	        			data.getFace(level, 0));
-	    	}
-	    }
-	    catch (IOException | KTXFormatException e) {
-	    	throw new RuntimeException(e);
-	    }
+	public static void loadKTXTexture(GL10 gl, Context context, String asset) {
+		if (isEmulator)
+			return;
+
+		try {
+			final InputStream input = context.getAssets().open(asset, AssetManager.ACCESS_STREAMING);
+			KTXFile file = new KTXFile();
+			file.read(input);
+			input.close();
+
+			loadKTXTexture(gl, file);
+		} catch (IOException | KTXFormatException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

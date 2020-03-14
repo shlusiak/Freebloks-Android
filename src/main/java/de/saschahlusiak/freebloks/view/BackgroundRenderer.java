@@ -9,17 +9,17 @@ import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 import android.content.res.Resources;
 
 public class BackgroundRenderer extends SimpleModel {
-	float rgba[] = { 0, 0, 0, 1 };
-	int texture[];
-	boolean hasTexture;
+	private float[] rgba = { 0, 0, 0, 1 };
+	private int[] texture;
+	private boolean hasTexture;
 
-    final static int num_vertices = 4;
-    final static int num_triangles = 2;
-    final static float size = 80.0f;
-    final static float textures = 15.0f;
+    private final static int num_vertices = 4;
+    private final static int num_triangles = 2;
+    private final static float size = 80.0f;
+    private final static float textures = 15.0f;
 
-    LegacyTheme theme;
-    Resources resources;
+    private LegacyTheme theme;
+    private Resources resources;
 
     public BackgroundRenderer(Resources resources) {
 		super(num_vertices, num_triangles, false);
@@ -38,7 +38,7 @@ public class BackgroundRenderer extends SimpleModel {
 	    commit();
 	}
 
-	boolean valid = false;
+	private boolean valid = false;
 
 	public void setTheme(LegacyTheme theme) {
 		this.theme = theme;
