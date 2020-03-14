@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.game
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
@@ -58,7 +57,6 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         val points: TextView = background.findViewById(R.id.points)
         val progressBar: View = background.findViewById(R.id.progressBar)
 
-        progressBar.visibility = View.GONE
         points.visibility = View.GONE
         movesLeft.visibility = View.GONE
 
@@ -68,6 +66,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         if (viewModel.intro != null) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.touch_to_skip)
+            progressBar.visibility = View.GONE
             return
         }
 
@@ -75,6 +74,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         if (client == null || !client.isConnected()) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.not_connected)
+            progressBar.visibility = View.GONE
             return
         }
 
@@ -82,6 +82,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         if (data.player < 0) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
             status.setText(R.string.no_player)
+            progressBar.visibility = View.GONE
             return
         }
 
@@ -106,12 +107,14 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
             status.text = "[$playerName]"
             movesLeft.visibility = View.VISIBLE
             movesLeft.text = resources.getQuantityString(R.plurals.number_of_stones_left, p.stonesLeft, p.stonesLeft)
+            progressBar.visibility = View.GONE
             return
         }
 
         if (isYourTurn) {
             movesLeft.text = resources.getQuantityString(R.plurals.player_status_moves, p.numberOfPossibleTurns, p.numberOfPossibleTurns)
             movesLeft.visibility = View.VISIBLE
+            progressBar.visibility = View.INVISIBLE
         } else {
             progressBar.visibility = View.VISIBLE
         }

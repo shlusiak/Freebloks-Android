@@ -146,7 +146,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         when(i) {
             R.id.radioButtonInternet -> {
                 server_address.visibility = View.GONE
-                host_game.visibility = View.GONE
+                host_game.visibility = View.INVISIBLE
                 bluetoothList.visibility = View.GONE
             }
             R.id.radioButtonWifi -> {

@@ -97,12 +97,13 @@
             android:animateLayoutChanges="true"
             android:gravity="center_vertical"
             style="?android:attr/buttonBarStyle"
-            android:layout_marginTop="@dimen/dialog_button_margin">
+            android:layout_marginTop="@dimen/dialog_button_margin"
+            android:clipChildren="false">
 
             <Button
                 android:id="@+id/host_game"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_height="wrap_content"
                 android:textSize="@dimen/textSizeSmall"
                 style="?borderlessButtonStyle"
                 android:text="@string/host_game"/>
@@ -111,12 +112,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="right|center_vertical">
+                android:gravity="right|center_vertical"
+                android:clipChildren="false">
 
                 <Button
                     android:id="@+id/close_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/main_menu_button_height"
+                    android:layout_height="wrap_content"
                     android:textSize="@dimen/textSizeSmall"
                     style="?borderlessButtonStyle"
                     android:text="@android:string/cancel"/>
@@ -124,7 +126,7 @@
                 <Button
                     android:id="@+id/ok_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/main_menu_button_height"
+                    android:layout_height="wrap_content"
                     android:textSize="@dimen/textSizeSmall"
                     android:text="@android:string/ok"/>
             </LinearLayout>

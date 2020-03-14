@@ -26,6 +26,7 @@
         android:layout_alignParentRight="true"
         android:layout_above="@+id/bottomSheet"
         android:layout_margin="12dp"
+        app:backgroundTint="?colorPrimary"
         android:src="@drawable/ic_my_location" />
 
     <RelativeLayout

@@ -261,17 +261,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dialog_button_margin">
+            android:layout_marginTop="@dimen/dialog_button_margin"
+            android:clipChildren="false">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:clipChildren="false">
 
                 <Button
                     android:id="@+id/advanced"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/main_menu_button_height"
+                    android:layout_height="wrap_content"
                     style="?borderlessButtonStyle"
                     android:text="@string/advanced"/>
             </LinearLayout>
@@ -279,13 +281,14 @@
             <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_height="wrap_content"
                 style="?borderlessButtonStyle"
                 android:text="@android:string/cancel"/>
+
             <Button
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_height="wrap_content"
                 android:text="@android:string/ok"/>
         </LinearLayout>
     </LinearLayout>
