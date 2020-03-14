@@ -47,17 +47,18 @@ interface Theme {
      * @return a drawable for the preview to show in the theme selector
      */
     fun getPreview(resources: Resources): Drawable
+
+    /**
+     * Returns the solid color in float, if resource is false
+     *
+     * @param resources the context resources
+     * @param rgb output float array to receive rgb, but not a
+     */
+    fun getColor(resources: Resources, rgb: FloatArray) {
+        val color = getColor(resources)
+        rgb[0] = Color.red(color).toFloat() / 255.0f
+        rgb[1] = Color.green(color).toFloat() / 255.0f
+        rgb[2] = Color.blue(color).toFloat() / 255.0f
+    }
 }
 
-/**
- * Returns the solid color in float, if resource is false
- *
- * @param resources the context resources
- * @param rgb output float array to receive rgb, but not a
- */
-fun Theme.getColor(resources: Resources, rgb: FloatArray) {
-    val color = getColor(resources)
-    rgb[0] = Color.red(color).toFloat() / 255.0f
-    rgb[1] = Color.green(color).toFloat() / 255.0f
-    rgb[2] = Color.blue(color).toFloat() / 255.0f
-}

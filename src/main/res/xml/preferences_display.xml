@@ -32,8 +32,6 @@
     <de.saschahlusiak.freebloks.preferences.types.ThemePreference
         android:defaultValue="texture_wood"
         android:dialogTitle="@string/prefs_theme"
-        android:entries="@array/theme_labels"
-        android:entryValues="@array/theme_values"
         android:key="theme"
         android:persistent="true"
         android:title="@string/prefs_theme"

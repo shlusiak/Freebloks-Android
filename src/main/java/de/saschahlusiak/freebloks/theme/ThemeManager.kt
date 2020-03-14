@@ -13,7 +13,6 @@ import de.saschahlusiak.freebloks.BuildConfig
  */
 class ThemeManager private constructor(context: Context) {
     private val tag = ThemeManager::class.java.simpleName
-    private val BASE_THEMES = AssetThemes::class.java.canonicalName!!
 
     private val allThemes: MutableList<Theme> = mutableListOf()
 
@@ -35,7 +34,7 @@ class ThemeManager private constructor(context: Context) {
             allThemes.add(ColorThemes.White)
         }
 
-        allThemes.addAll(loadThemesFromPackage(context, BASE_THEMES))
+        allThemes.addAll(AssetThemes().getAllThemes(context))
     }
 
     /**

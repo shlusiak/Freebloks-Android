@@ -1,7 +1,25 @@
 package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
+import androidx.annotation.DrawableRes
 import de.saschahlusiak.freebloks.R
+
+private class AssetTheme(
+    label: Int,
+    @DrawableRes preview: Int,
+    private val assetName: String,
+    override val name: String = assetName,
+    override val ratio: Float = 1.0f
+) : BaseTheme(label, preview) {
+
+    override val asset: String? get() = "textures/$assetName.ktx"
+    override val isResource: Boolean
+        get() = true
+
+    override fun getColor(resources: Resources) = Color.argb(255, 214, 214, 214)
+}
 
 class AssetThemes : ThemeProvider {
     private val FloweryCloth = AssetTheme(

@@ -19,13 +19,13 @@ import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.Stone;
 import de.saschahlusiak.freebloks.model.Turn;
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus;
+import de.saschahlusiak.freebloks.theme.Theme;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.effects.EffectSet;
 import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect;
 import de.saschahlusiak.freebloks.view.effects.ShapeUndoEffect;
 import de.saschahlusiak.freebloks.view.scene.Scene;
-import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 
 public class Freebloks3DView extends GLSurfaceView implements GameEventObserver {
 	private final static String tag = Freebloks3DView.class.getSimpleName();
@@ -52,7 +52,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
 	}
 
-	public void setTheme(LegacyTheme theme) {
+	public void setTheme(Theme theme) {
 		renderer.backgroundRenderer.setTheme(theme);
 	}
 

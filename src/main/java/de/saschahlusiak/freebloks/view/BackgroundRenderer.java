@@ -3,44 +3,43 @@ package de.saschahlusiak.freebloks.view;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
-
+import de.saschahlusiak.freebloks.theme.Theme;
 
 import android.content.res.Resources;
 
 public class BackgroundRenderer extends SimpleModel {
-	private float[] rgba = { 0, 0, 0, 1 };
+	private float[] rgba = {0, 0, 0, 1};
 	private int[] texture;
 	private boolean hasTexture;
 
-    private final static int num_vertices = 4;
-    private final static int num_triangles = 2;
-    private final static float size = 80.0f;
-    private final static float textures = 15.0f;
+	private final static int num_vertices = 4;
+	private final static int num_triangles = 2;
+	private final static float size = 80.0f;
+	private final static float textures = 15.0f;
 
-    private LegacyTheme theme;
-    private Resources resources;
+	private Theme theme;
+	private Resources resources;
 
-    public BackgroundRenderer(Resources resources) {
+	public BackgroundRenderer(Resources resources) {
 		super(num_vertices, num_triangles, false);
 
 		this.resources = resources;
 		hasTexture = false;
 
-	    addVertex(-size, 0, -size, 0, 1, 0, 0, 0);
-	    addVertex( size, 0, -size, 0, 1, 0, textures, 0);
-	    addVertex( size, 0,  size, 0, 1, 0, textures, textures);
-	    addVertex(-size, 0,  size, 0, 1, 0, 0, textures);
+		addVertex(-size, 0, -size, 0, 1, 0, 0, 0);
+		addVertex(size, 0, -size, 0, 1, 0, textures, 0);
+		addVertex(size, 0, size, 0, 1, 0, textures, textures);
+		addVertex(-size, 0, size, 0, 1, 0, 0, textures);
 
-	    addIndex(0, 2, 1);
-	    addIndex(0, 3, 2);
+		addIndex(0, 2, 1);
+		addIndex(0, 3, 2);
 
-	    commit();
+		commit();
 	}
 
 	private boolean valid = false;
 
-	public void setTheme(LegacyTheme theme) {
+	public void setTheme(Theme theme) {
 		this.theme = theme;
 		valid = false;
 	}
@@ -53,27 +52,28 @@ public class BackgroundRenderer extends SimpleModel {
 			rgba[2] = 0.0f;
 			rgba[3] = 0.0f;
 			hasTexture = false;
-		} else if (theme.isDrawable()) {
+		} else if (theme.isResource()) {
 			hasTexture = true;
 
 			texture = new int[1];
 			gl.glGenTextures(1, texture, 0);
 
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0]);
-		  	if (gl instanceof GL11) {
+			if (gl instanceof GL11) {
 				gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_LINEAR);
-		  		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
-		  	} else {
+				gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+			} else {
 				gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-		  		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_FALSE);
-		  	}
-		  	gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-		  	FreebloksRenderer.loadKTXTexture(gl, resources, theme.getTexture());
-
-			rgba = theme.getRGBA();
+				gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_FALSE);
+			}
+			gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+			FreebloksRenderer.loadKTXTexture(gl, resources, theme.getAsset());
+			theme.getColor(resources, rgba);
+			rgba[3] = 1.0f;
 		} else {
 			hasTexture = false;
-			rgba = theme.getRGBA();
+			theme.getColor(resources, rgba);
+			rgba[3] = 1.0f;
 		}
 	}
 

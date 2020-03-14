@@ -11,6 +11,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.Board;
+import de.saschahlusiak.freebloks.theme.ThemeManager;
 import de.saschahlusiak.freebloks.view.scene.Scene;
 import nl.weeaboo.jktx.KTXFile;
 import nl.weeaboo.jktx.KTXFormatException;
@@ -24,7 +25,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
 import de.saschahlusiak.freebloks.view.scene.Intro;
-import de.saschahlusiak.freebloks.view.scene.LegacyTheme;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private static final String tag = FreebloksRenderer.class.getSimpleName();
@@ -55,7 +55,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		board = new BoardRenderer(Board.DEFAULT_BOARD_SIZE);
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
 
-		backgroundRenderer.setTheme(LegacyTheme.getLegacy(context, "blue"));
+		backgroundRenderer.setTheme(ThemeManager.get(context).getTheme("blue", null));
 	}
 
 	public void init(int field_size) {
@@ -308,12 +308,12 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 	}
 
-	public static void loadKTXTexture(GL10 gl, Context context, String asset) {
+	public static void loadKTXTexture(GL10 gl, Resources resources, String asset) {
 		if (isEmulator)
 			return;
 
 		try {
-			final InputStream input = context.getAssets().open(asset, AssetManager.ACCESS_STREAMING);
+			final InputStream input = resources.getAssets().open(asset, AssetManager.ACCESS_STREAMING);
 			KTXFile file = new KTXFile();
 			file.read(input);
 			input.close();

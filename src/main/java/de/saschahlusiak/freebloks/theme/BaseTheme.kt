@@ -28,7 +28,7 @@ abstract class BaseTheme(@StringRes val label: Int, @DrawableRes val preview: In
     override val ratio: Float
         get() = 1.0f
 
-    override fun getColor(resources: Resources): Int = 0
+    abstract override fun getColor(resources: Resources): Int
 
     override fun getLabel(context: Context): String = context.getString(label)
 

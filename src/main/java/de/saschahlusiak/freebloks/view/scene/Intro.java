@@ -12,13 +12,13 @@ import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.OrientedShape;
 import de.saschahlusiak.freebloks.model.Rotation;
 import de.saschahlusiak.freebloks.model.Shape;
+import de.saschahlusiak.freebloks.theme.ThemeManager;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.effects.PhysicalShapeEffect;
 import android.graphics.PointF;
 import android.opengl.GLU;
-
 
 public class Intro {
 	public interface IntroCompleteListener {
@@ -48,7 +48,7 @@ public class Intro {
 
 	public Intro(Context context, Scene model, IntroCompleteListener listener) {
 		backgroundRenderer = new BackgroundRenderer(context.getResources());
-		backgroundRenderer.setTheme(LegacyTheme.getLegacy(context, "blue"));
+		backgroundRenderer.setTheme(ThemeManager.get(context).getTheme("blue", null));
 		setModel(model, listener);
 		init();
 	}

@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.theme.ThemeManager
-import de.saschahlusiak.freebloks.view.scene.LegacyTheme
 
 class ThemePreferenceAdapter(context: Context) : ArrayAdapter<CharSequence>(context, 0) {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -19,13 +17,9 @@ class ThemePreferenceAdapter(context: Context) : ArrayAdapter<CharSequence>(cont
 
         val themeName = getItem(position).toString()
 
-        if (Feature.NEW_THEMES) {
-            val theme = themeManager.getTheme(themeName, null)
-            v.background = theme?.getPreview(v.resources)
-        } else {
-            val t = LegacyTheme.getLegacy(context, themeName)
-            t?.apply(v)
-        }
+        val theme = themeManager.getTheme(themeName, null)
+        v.background = theme?.getPreview(v.resources)
+
         return v
     }
 }
