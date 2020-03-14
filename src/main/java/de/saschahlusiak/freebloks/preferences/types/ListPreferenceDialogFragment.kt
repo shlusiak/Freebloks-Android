@@ -1,18 +1,13 @@
-package de.saschahlusiak.wordmix.preferences.types
+package de.saschahlusiak.freebloks.preferences.types
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
-import androidx.preference.ListPreference
 import androidx.preference.ListPreferenceDialogFragmentCompat
 import androidx.preference.PreferenceDialogFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 open class ListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat() {
-    // TODO: support material design
-    /*
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // exactly the same as super.onCreateDialog, but uses a MaterialAlertDialogBuilder instead
         val context: Context? = activity
@@ -31,7 +26,6 @@ open class ListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat() {
         onPrepareDialogBuilder(builder)
         return builder.create()
     }
-    */
 
     fun setKey(key: String): ListPreferenceDialogFragment {
         if (arguments == null) arguments = Bundle()

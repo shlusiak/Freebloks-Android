@@ -20,6 +20,7 @@ import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
 import de.saschahlusiak.freebloks.game.dialogs.MultiplayerDialog
 import de.saschahlusiak.freebloks.preferences.FreebloksPreferencesLegacy
+import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
@@ -100,7 +101,7 @@ class MainMenu : MaterialDialogFragment(), View.OnClickListener, OnLongClickList
             R.id.new_game -> ColorListDialog().show(parentFragmentManager, null)
             R.id.resume_game -> dismiss()
             R.id.preferences -> {
-                intent = Intent(context, FreebloksPreferencesLegacy::class.java)
+                intent = Intent(context, SettingsActivity::class.java)
                 requireContext().startActivity(intent)
             }
             R.id.appIcon -> {

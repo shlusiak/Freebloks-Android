@@ -19,7 +19,7 @@ public class AboutFragment extends PreferenceFragment implements OnPreferenceCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.preferences_about);
+        addPreferencesFromResource(R.xml.old_preferences_about);
 
 		findPreference("rate_review").setTitle(getString(R.string.prefs_rate_review, BuildConfig.IS_AMAZON ? "Amazon App Store" : "Google Play"));
     }

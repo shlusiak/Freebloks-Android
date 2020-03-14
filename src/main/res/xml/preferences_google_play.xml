@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceScreen
+        android:key="googleplus_signin"
+        android:summary="@string/googleplus_signin_long"
+        android:title="@string/googleplus_signin"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceScreen
+        android:enabled="false"
+        android:key="googleplus_achievements"
+        android:summary="@string/googleplus_achievements_long"
+        android:title="@string/googleplus_achievements"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceScreen
+        android:enabled="false"
+        android:key="googleplus_leaderboard"
+        android:summary="@string/googleplus_leaderboard_long"
+        android:title="@string/googleplus_leaderboard"
+        app:iconSpaceReserved="false" />
+    
+</PreferenceScreen>

@@ -13,7 +13,7 @@ public class DisplayFragment extends PreferenceFragment implements OnSharedPrefe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.preferences_display);
+        addPreferencesFromResource(R.xml.old_preferences_display);
     }
 
     @Override

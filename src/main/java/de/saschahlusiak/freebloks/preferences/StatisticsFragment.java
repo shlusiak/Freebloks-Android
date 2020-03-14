@@ -7,8 +7,6 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +31,7 @@ public class StatisticsFragment extends PreferenceFragment implements GameHelper
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.preferences_stats);
+        addPreferencesFromResource(R.xml.old_preferences_stats);
     }
 
     @Override

@@ -96,10 +96,12 @@ android {
         Google {
             dimension 'store'
             buildConfigField 'boolean', 'IS_AMAZON', 'false'
+            buildConfigField 'String', 'APP_STORE_NAME', '\"Google Play Store\"'
         }
         Amazon {
             dimension 'store'
             buildConfigField 'boolean', 'IS_AMAZON', 'true'
+            buildConfigField 'String', 'APP_STORE_NAME', '\"Amazon App Store\"'
         }
     }
     externalNativeBuild {

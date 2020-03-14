@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="de.saschahlusiak.freebloks.preferences.InterfaceFragment"
+        android:icon="@drawable/ic_action_mouse"
+        android:title="@string/prefs_interface"></header>
+
+    <header
+        android:fragment="de.saschahlusiak.freebloks.preferences.DisplayFragment"
+        android:icon="@drawable/ic_action_brightness_medium"
+        android:title="@string/prefs_display"></header>
+
+    <header
+        android:fragment="de.saschahlusiak.freebloks.preferences.MiscFragment"
+        android:icon="@drawable/ic_action_labels"
+        android:title="@string/prefs_misc"></header>
+
+    <header
+        android:fragment="de.saschahlusiak.freebloks.preferences.StatisticsFragment"
+        android:icon="@drawable/stats"
+        android:title="@string/prefs_statistics"></header>
+
+    <header
+        android:fragment="de.saschahlusiak.freebloks.preferences.AboutFragment"
+        android:icon="@drawable/ic_action_about"
+        android:title="@string/about"></header>
+
+    <header
+        android:id="@+id/prefs_header_donate"
+        android:icon="@drawable/ic_action_favorite"
+        android:title="@string/prefs_donate">
+        <intent android:action="de.saschahlusiak.freebloks.SHOW_DONATE" />
+    </header>
+
+</preference-headers>
+

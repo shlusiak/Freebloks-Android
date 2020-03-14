@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceScreen
+        android:summary="@string/prefs_statistics_long"
+        android:title="@string/prefs_statistics"
+        android:key="statistics" >
+    </PreferenceScreen>
+
+    <PreferenceCategory android:title="@string/googleplus" android:key="googleplus_category" >
+        <PreferenceScreen
+            android:summary="@string/googleplus_signin_long"
+            android:title="@string/googleplus_signin"
+            android:key="googleplus_signin" >
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="@string/googleplus_achievements_long"
+            android:title="@string/googleplus_achievements"
+            android:enabled="false"
+            android:key="googleplus_achievements" >
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:summary="@string/googleplus_leaderboard_long"
+            android:title="@string/googleplus_leaderboard"
+            android:enabled="false"
+            android:key="googleplus_leaderboard" >
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+</PreferenceScreen>

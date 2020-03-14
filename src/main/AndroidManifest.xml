@@ -1,53 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.saschahlusiak.freebloks"
-    android:installLocation="auto" >
+    android:installLocation="auto">
 
-    <uses-sdk
-        tools:overrideLibrary="com.github.clans.fab"/>
+    <uses-sdk tools:overrideLibrary="com.github.clans.fab" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="21" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="21" />
 
-	<uses-feature android:glEsVersion="0x00010001" android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00010001"
+        android:required="true" />
     <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
 
-    <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
 
     <supports-screens
-	    android:smallScreens="true"
-	    android:normalScreens="true"
-	    android:largeScreens="true"
-	    android:xlargeScreens="true"/>
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <application
-        android:icon="@drawable/appicon_small"
-        android:label="@string/app_name"
-        android:isGame="true"
         android:allowBackup="true"
         android:extractNativeLibs="true"
+        android:icon="@drawable/appicon_small"
+        android:isGame="true"
+        android:label="@string/app_name"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <meta-data android:name="android.max_aspect" android:value="3.0" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="3.0" />
 
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
-        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
 
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/app_id" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".game.FreebloksActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Freebloks.Game"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Freebloks.Game">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -55,27 +66,29 @@
         </activity>
         <activity
             android:name=".game.finish.GameFinishActivity"
+            android:exported="false"
             android:label="@string/app_name"
-            android:exported="false"
-            android:theme="@style/Theme.Freebloks.Dialog.MinWidth" >
-        </activity>
-   		<activity
+            android:theme="@style/Theme.Freebloks.Dialog.MinWidth"></activity>
+        <activity
             android:name=".preferences.FreebloksPreferencesLegacy"
-            android:theme="@style/Theme.Freebloks.Preferences"
             android:exported="false"
-            android:label="@string/preferences" >
-        </activity>
+            android:label="@string/preferences"
+            android:theme="@style/Theme.Freebloks.Preferences"></activity>
+        <activity
+            android:name=".preferences.SettingsActivity"
+            android:exported="false"
+            android:label="@string/preferences"
+            android:theme="@style/Theme.Freebloks.Light" />
         <activity
             android:name=".statistics.StatisticsActivity"
+            android:exported="false"
             android:label="@string/statistics"
-            android:theme="@style/Theme.Freebloks.Auto.Light"
-            android:exported="false" >
-        </activity>
+            android:theme="@style/Theme.Freebloks.Auto.Light"></activity>
         <activity
             android:name=".donate.DonateActivity"
+            android:exported="false"
             android:label="@string/please_donate"
-            android:theme="@style/Theme.Freebloks.Light"
-            android:exported="false" >
+            android:theme="@style/Theme.Freebloks.Light">
             <intent-filter>
                 <action android:name="de.saschahlusiak.freebloks.SHOW_DONATE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -83,16 +96,14 @@
         </activity>
         <activity
             android:name=".AboutActivity"
-            android:label="@string/about_freebloks"
             android:exported="false"
-            android:theme="@style/Theme.Freebloks.Light.Dialog.MinWidth" >
-        </activity>
+            android:label="@string/about_freebloks"
+            android:theme="@style/Theme.Freebloks.Light.Dialog.MinWidth"></activity>
         <activity
             android:name=".rules.RulesActivity"
-            android:label="@string/rules_title"
             android:exported="false"
-            android:theme="@style/Theme.Freebloks.Light">
-        </activity>
+            android:label="@string/rules_title"
+            android:theme="@style/Theme.Freebloks.Light"></activity>
     </application>
 
 </manifest>

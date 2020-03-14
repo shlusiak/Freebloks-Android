@@ -13,8 +13,6 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +56,7 @@ public class FreebloksPreferencesLegacy extends PreferenceActivity implements On
 
 		mHelper = new GooglePlayGamesHelper(this, this);
 
-		addPreferencesFromResource(R.xml.preferences);
+		addPreferencesFromResource(R.xml.old_preferences);
 
 		findPreference("rules").setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
@@ -143,7 +141,7 @@ public class FreebloksPreferencesLegacy extends PreferenceActivity implements On
 		if (!onIsMultiPane())
 			return;
 		hasHeaders = true;
-        loadHeadersFromResource(R.xml.preference_headers, target);
+        loadHeadersFromResource(R.xml.old_preferences_headers, target);
         
         if (Global.IS_VIP) {
 	        for (Header header: target) {

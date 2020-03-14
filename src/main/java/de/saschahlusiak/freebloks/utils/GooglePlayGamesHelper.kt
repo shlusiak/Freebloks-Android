@@ -1,8 +1,6 @@
 package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
 import android.app.Fragment
 import android.content.Context
 import android.content.Intent
@@ -19,7 +17,6 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import java.lang.IllegalStateException
 
@@ -57,6 +54,7 @@ class GooglePlayGamesHelper(private val context: Context) {
 
     val isAvailable: Boolean
         get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
+//        get() = false
 
     @Deprecated("Use LiveData instead of Listener")
     constructor(context: Context, listener: GameHelperListener): this(context) {
@@ -77,13 +75,21 @@ class GooglePlayGamesHelper(private val context: Context) {
         }
     }
 
+    @Deprecated("Remove me")
     fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) {
         Log.d(tag, "Starting sign in to Google Play Games")
         val intent = googleSignInClient.signInIntent
         activity.startActivityForResult(intent, requestCode)
     }
 
+    @Deprecated("Remove me")
     fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) {
+        Log.d(tag, "Starting sign in to Google Play Games")
+        val intent = googleSignInClient.signInIntent
+        fragment.startActivityForResult(intent, requestCode)
+    }
+
+    fun beginUserInitiatedSignIn(fragment: androidx.fragment.app.Fragment, requestCode: Int) {
         Log.d(tag, "Starting sign in to Google Play Games")
         val intent = googleSignInClient.signInIntent
         fragment.startActivityForResult(intent, requestCode)
@@ -173,13 +179,27 @@ class GooglePlayGamesHelper(private val context: Context) {
         }
     }
 
+    @Deprecated("Remove me")
     fun startAchievementsIntent(fragment: Fragment, requestCode: Int) {
         achievementsClient?.achievementsIntent?.addOnSuccessListener { intent ->
             fragment.startActivityForResult(intent, requestCode)
         }
     }
 
+    @Deprecated("Remove me")
     fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) {
+        leaderboardsClient?.getLeaderboardIntent(leaderboard)?.addOnSuccessListener { intent ->
+            fragment.startActivityForResult(intent, requestCode)
+        }
+    }
+
+    fun startAchievementsIntent(fragment: androidx.fragment.app.Fragment, requestCode: Int) {
+        achievementsClient?.achievementsIntent?.addOnSuccessListener { intent ->
+            fragment.startActivityForResult(intent, requestCode)
+        }
+    }
+
+    fun startLeaderboardIntent(fragment: androidx.fragment.app.Fragment, leaderboard: String, requestCode: Int) {
         leaderboardsClient?.getLeaderboardIntent(leaderboard)?.addOnSuccessListener { intent ->
             fragment.startActivityForResult(intent, requestCode)
         }
@@ -189,27 +209,26 @@ class GooglePlayGamesHelper(private val context: Context) {
      * Handle activity result. Call this method from your Activity's
      * onActivityResult callback . If the activity result pertains to the sign-in
      * process, processes it appropriately.
+     *
+     * @return an optional error message, in case of error
      */
-    fun onActivityResult(responseCode: Int, data: Intent?) {
+    fun onActivityResult(responseCode: Int, data: Intent?): String? {
         val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-        if (result.isSuccess) {
+        if (result.status.isSuccess) {
             val account = result.signInAccount ?: throw IllegalStateException("account is null")
             setGoogleAccount(account)
+
+            return null
+        } else if (result.status.isCanceled) {
+            // user aborted is no error
+            return null
         } else {
             Log.e(tag, "Sign in result: ${result.status}")
             var message = result.status.statusMessage
             if (message == null) message = context.getString(R.string.playgames_sign_in_failed)
 
             listener?.onGoogleAccountSignedOut()
-
-            makeSimpleDialog(message).show()
+            return message
         }
-    }
-
-    private fun makeSimpleDialog(text: String): Dialog {
-        // FIXME: use MaterialAlertDialogBuilder once the preferences are migrated to use material design theme
-        return AlertDialog.Builder(context).setMessage(text)
-            .setPositiveButton(android.R.string.ok, null)
-            .create()
     }
 }

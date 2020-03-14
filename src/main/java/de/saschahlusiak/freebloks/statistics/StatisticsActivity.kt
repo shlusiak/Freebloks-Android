@@ -78,9 +78,9 @@ class StatisticsActivity : AppCompatActivity() {
         }
 
         if (gameHelper.isAvailable) {
-            signin.visibility = View.GONE
-        } else {
             gameHelper.googleAccount.observe(this, Observer { onGoogleAccountChanged(it) })
+        } else {
+            signin.visibility = View.GONE
         }
     }
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
+        android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
+        android:icon="@drawable/ic_action_mouse"
+        android:key="INTERFACE"
+        android:title="@string/prefs_interface"
+        android:widgetLayout="@null"
+        app:persistent="false">
+        <extra
+            android:name="EXTRA_SCREEN"
+            android:value="INTERFACE" />
+    </de.saschahlusiak.freebloks.preferences.types.SelectablePreference>
+
+    <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
+        android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
+        android:icon="@drawable/ic_action_brightness_medium"
+        android:key="DISPLAY"
+        android:title="@string/prefs_display"
+        android:widgetLayout="@null"
+        app:persistent="false">
+        <extra
+            android:name="EXTRA_SCREEN"
+            android:value="DISPLAY" />
+    </de.saschahlusiak.freebloks.preferences.types.SelectablePreference>
+
+    <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
+        android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
+        android:icon="@drawable/ic_action_labels"
+        android:key="MISC"
+        android:title="@string/prefs_misc"
+        android:widgetLayout="@null"
+        app:persistent="false">
+        <extra
+            android:name="EXTRA_SCREEN"
+            android:value="MISC" />
+    </de.saschahlusiak.freebloks.preferences.types.SelectablePreference>
+
+    <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
+        android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
+        android:icon="@drawable/stats"
+        android:key="STATISTICS"
+        android:title="@string/prefs_statistics"
+        android:widgetLayout="@null"
+        app:persistent="false">
+        <extra
+            android:name="EXTRA_SCREEN"
+            android:value="STATISTICS" />
+    </de.saschahlusiak.freebloks.preferences.types.SelectablePreference>
+
+    <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
+        android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
+        android:icon="@drawable/ic_action_about"
+        android:key="ABOUT"
+        android:title="@string/about"
+        android:widgetLayout="@null"
+        app:persistent="false">
+        <extra
+            android:name="EXTRA_SCREEN"
+            android:value="ABOUT" />
+    </de.saschahlusiak.freebloks.preferences.types.SelectablePreference>
+
+    <Preference
+        android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
+        android:icon="@drawable/ic_action_favorite"
+        android:key="DONATE"
+        android:title="@string/prefs_donate"
+        android:widgetLayout="@null"
+        app:persistent="false">
+
+    </Preference>
+</PreferenceScreen>
+

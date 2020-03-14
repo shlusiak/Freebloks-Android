@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.preferences.types
 
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.ListPreference
-import de.saschahlusiak.wordmix.preferences.types.ListPreferenceDialogFragment
 
 class ThemePreferenceDialogFragment : ListPreferenceDialogFragment() {
     override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {

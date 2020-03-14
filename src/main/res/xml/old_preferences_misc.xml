@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <EditTextPreference
         android:inputType="textCapWords"
@@ -8,32 +7,27 @@
         android:persistent="true"
         android:singleLine="true"
         android:summary="@string/prefs_player_name_default"
-        android:title="@string/prefs_player_name"
-        app:iconSpaceReserved="false"
-        app:useSimpleSummaryProvider="true" />
+        android:title="@string/prefs_player_name" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="notifications"
         android:persistent="true"
         android:summary="@string/prefs_notifications_long"
-        android:title="@string/prefs_notifications"
-        app:iconSpaceReserved="false" />
+        android:title="@string/prefs_notifications" />
 
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="skip_intro"
         android:persistent="true"
         android:summary="@string/prefs_skip_intro_long"
-        android:title="@string/prefs_skip_intro"
-        app:iconSpaceReserved="false" />
+        android:title="@string/prefs_skip_intro" />
 
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="auto_resume"
         android:persistent="true"
         android:summary="@string/prefs_auto_resume_long"
-        android:title="@string/prefs_auto_resume"
-        app:iconSpaceReserved="false" />
+        android:title="@string/prefs_auto_resume" />
 
 </PreferenceScreen>

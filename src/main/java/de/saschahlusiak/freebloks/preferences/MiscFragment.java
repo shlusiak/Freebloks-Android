@@ -14,7 +14,7 @@ public class MiscFragment extends PreferenceFragment implements OnSharedPreferen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.preferences_misc);
+        addPreferencesFromResource(R.xml.old_preferences_misc);
     }
 
     @Override

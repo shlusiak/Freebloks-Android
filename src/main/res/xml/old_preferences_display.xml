@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_seeds"
         android:persistent="true"
         android:summary="@string/prefs_show_corners_long"
-        android:title="@string/prefs_show_corners"
-        app:iconSpaceReserved="false" />
-
+        android:title="@string/prefs_show_corners" />
+    
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_opponents"
         android:persistent="true"
         android:summary="@string/prefs_show_opponents_long"
-        android:title="@string/prefs_show_opponents"
-        app:iconSpaceReserved="false" />
+        android:title="@string/prefs_show_opponents" />
 
     <ListPreference
         android:defaultValue="0"
@@ -25,19 +22,15 @@
         android:entryValues="@array/prefs_animations_values"
         android:key="animations"
         android:persistent="true"
-        android:title="@string/prefs_show_animations"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
+        android:title="@string/prefs_show_animations" />
 
-    <de.saschahlusiak.freebloks.preferences.types.ThemePreference
+    <de.saschahlusiak.freebloks.preferences.ThemePreference
         android:defaultValue="texture_wood"
         android:dialogTitle="@string/prefs_theme"
         android:entries="@array/theme_labels"
         android:entryValues="@array/theme_values"
         android:key="theme"
         android:persistent="true"
-        android:title="@string/prefs_theme"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
+        android:title="@string/prefs_theme" />
 
 </PreferenceScreen>

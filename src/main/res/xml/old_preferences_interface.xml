@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<CheckBoxPreference
+	    android:summary="@string/prefs_sounds_long"
+	    android:title="@string/prefs_sounds"
+	    android:key="sounds"
+	    android:persistent="true"
+	    android:defaultValue="true" />
+
+       <CheckBoxPreference
+	    android:summary="@string/prefs_vibrate_long"
+	    android:title="@string/prefs_vibrate"
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="vibrate" />
+
+	<CheckBoxPreference
+	    android:summary="@string/prefs_snap_to_corners_long"
+	    android:title="@string/prefs_snap_to_corners"
+	    android:defaultValue="true"
+	    android:persistent="true"
+	    android:key="snap_aid" />
+
+	<CheckBoxPreference
+	    android:summary="@string/prefs_undo_long"
+	    android:title="@string/prefs_undo"
+	    android:defaultValue="false"
+	    android:persistent="true"
+	    android:key="back_undo" />
+	
+</PreferenceScreen>
