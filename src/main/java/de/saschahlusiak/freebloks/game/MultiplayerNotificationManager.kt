@@ -219,11 +219,11 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         val text = context.getString(R.string.player_left_color, clientName, colorName)
 
         if (game.isStarted) {
-            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, text = text))
-
             if (isInBackground && lastStatus?.clients == 1) {
-                notificationManager.cancel(ONGOING_NOTIFICATION_ID)
+                stopBackgroundNotification()
             }
+
+            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, text = text))
         } else {
             notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, text = text))
         }

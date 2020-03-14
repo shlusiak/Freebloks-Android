@@ -51,9 +51,9 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
 
         host_game.setOnClickListener {
             saveSettings()
-            dismiss()
             val config = GameConfig(server = null, showLobby = true)
             listener.onStartClientGameWithConfig(config, clientName)
+            dismiss()
         }
         server_address.apply {
             setText(prefs.getString("custom_server", ""))
@@ -174,9 +174,9 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
             val config = GameConfig(showLobby = true)
             saveSettings()
             val device = v.tag as BluetoothDevice
-            dismiss()
             Log.i(TAG, "Device selected: " + device.name)
             listener.onConnectToBluetoothDevice(config, clientName, device)
+            dismiss()
         }
 
         bluetoothList.removeAllViews()
@@ -209,11 +209,12 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
 
     override fun onBluetoothClientConnected(socket: BluetoothSocket) {
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
-        dismiss()
         val config = GameConfig(server = null, showLobby = true)
+        val listener = listener
         listener.onStartClientGameWithConfig(config, clientName, Runnable {
             // we can only run this after the TCP server is running, so we can connect to it and start the bridge
             BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
         })
+        dismiss()
     }
 }

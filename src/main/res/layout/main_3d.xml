@@ -33,6 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
