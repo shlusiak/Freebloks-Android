@@ -168,6 +168,13 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
         }
 
         updateViewsFromStatus()
+        client.addObserver(this)
+    }
+
+    override fun onDestroyView() {
+        client?.removeObserver(this)
+
+        super.onDestroyView()
     }
 
     override fun onStart() {
@@ -184,13 +191,6 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
             dismiss()
             return
         }
-
-        client.addObserver(this)
-    }
-
-    override fun onStop() {
-        client?.removeObserver(this)
-        super.onStop()
     }
 
     override fun onCancel(dialog: DialogInterface) {

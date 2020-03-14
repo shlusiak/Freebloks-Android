@@ -12,6 +12,7 @@ import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.model.OrientedShape;
 import de.saschahlusiak.freebloks.model.Rotation;
 import de.saschahlusiak.freebloks.model.Shape;
+import de.saschahlusiak.freebloks.theme.ColorThemes;
 import de.saschahlusiak.freebloks.theme.ThemeManager;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
@@ -45,10 +46,8 @@ public class Intro {
 	private OrientedShape[] stones = new OrientedShape[14];
 	private BackgroundRenderer backgroundRenderer;
 
-
 	public Intro(Context context, Scene model, IntroCompleteListener listener) {
-		backgroundRenderer = new BackgroundRenderer(context.getResources());
-		backgroundRenderer.setTheme(ThemeManager.get(context).getTheme("blue", null));
+		backgroundRenderer = new BackgroundRenderer(context.getResources(), ColorThemes.Blue);
 		setModel(model, listener);
 		init();
 	}

@@ -20,11 +20,13 @@ public class BackgroundRenderer extends SimpleModel {
 	private Theme theme;
 	private Resources resources;
 
-	public BackgroundRenderer(Resources resources) {
+	public BackgroundRenderer(Resources resources, Theme theme) {
 		super(num_vertices, num_triangles, false);
 
 		this.resources = resources;
 		hasTexture = false;
+		this.theme = theme;
+		valid = false;
 
 		addVertex(-size, 0, -size, 0, 1, 0, 0, 0);
 		addVertex(size, 0, -size, 0, 1, 0, textures, 0);

@@ -109,18 +109,16 @@
     <string name="donation_next">Siguiente</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
-    <string-array name="theme_labels">
-        <item>Negro</item>
-        <item>Azul</item>
-        <item>Tela de flores</item>
-        <item>Tela a rayas</item>
-        <item>Madera</item>
-        <item>Ladrillos</item>
-        <item>Metal</item>
-        <item>Velvet</item>
-        <item>Carpet</item>
-        <item>Grass</item>
-    </string-array>
+    <string name="theme_black">Negro</string>
+    <string name="theme_blue">Azul</string>
+    <string name="theme_flowery_cloth">Tela de flores</string>
+    <string name="theme_striped_cloth">Tela a rayas</string>
+    <string name="theme_wood">Madera</string>
+    <string name="theme_bricks">Ladrillos</string>
+    <string name="theme_metal">Metal</string>
+    <string name="theme_velvet">Velvet</string>
+    <string name="theme_carpet">Carpet</string>
+    <string name="theme_grass">Grass</string>
 
     <string name="prefs_interface">Interface</string>
     <string name="prefs_display">Pantalla</string>

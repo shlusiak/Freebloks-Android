@@ -11,7 +11,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import de.saschahlusiak.freebloks.model.Board;
-import de.saschahlusiak.freebloks.theme.ThemeManager;
+import de.saschahlusiak.freebloks.theme.ColorThemes;
 import de.saschahlusiak.freebloks.view.scene.Scene;
 import nl.weeaboo.jktx.KTXFile;
 import nl.weeaboo.jktx.KTXFormatException;
@@ -53,9 +53,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		this.model = model;
 		mAngleX = 70.0f;
 		board = new BoardRenderer(Board.DEFAULT_BOARD_SIZE);
-		backgroundRenderer = new BackgroundRenderer(context.getResources());
-
-		backgroundRenderer.setTheme(ThemeManager.get(context).getTheme("blue", null));
+		backgroundRenderer = new BackgroundRenderer(context.getResources(), ColorThemes.Blue);
 	}
 
 	public void init(int field_size) {

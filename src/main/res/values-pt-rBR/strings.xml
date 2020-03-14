@@ -135,31 +135,17 @@
     <string name="donation_next">Próximo</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
-    <string-array name="theme_labels">
-        <item>Preto</item>
-        <item>Azul</item>
-        <item>Pano florido</item>
-        <item>Pano listrado</item>
-        <item>Madeira</item>
-        <item>Tijolos</item>
-        <item>Metal</item>
-        <item>Veludo</item>
-        <item>Tapete</item>
-        <item>Grama</item>
-    </string-array>
-    <string-array name="theme_values" translatable="false" >
-        <item>black</item>
-        <item>blue</item>
-        <item>texture_table_cloth_1</item>
-        <item>texture_table_cloth_2</item>
-        <item>texture_wood</item>
-        <item>texture_bricks</item>
-        <item>texture_metal</item>
-		<item>texture_velvet</item>
-        <item>texture_carpet_blue</item>
-        <item>texture_grass</item>
-    </string-array>
-    
+    <string name="theme_black">Preto</string>
+    <string name="theme_blue">Azul</string>
+    <string name="theme_flowery_cloth">Pano florido</string>
+    <string name="theme_striped_cloth">Pano listrado</string>
+    <string name="theme_wood">Madeira</string>
+    <string name="theme_bricks">Tijolos</string>
+    <string name="theme_metal">Metal</string>
+    <string name="theme_velvet">Veludo</string>
+    <string name="theme_carpet">Tapete</string>
+    <string name="theme_grass">Grama</string>
+
     <string name="notification_continue">Continuar</string>
     <string name="notification_disconnect">Desconectar</string>
     

@@ -8,7 +8,6 @@ import de.saschahlusiak.freebloks.BuildConfig
  * Manages available [Theme] definitions. Get the singleton instance using [.get].
  *
  * @see [getAllThemes]
- * @see [randomTheme]
  * @see [getTheme]
  */
 class ThemeManager private constructor(context: Context) {
@@ -31,6 +30,7 @@ class ThemeManager private constructor(context: Context) {
         allThemes.add(ColorThemes.Blue)
 
         if (BuildConfig.DEBUG) {
+            allThemes.add(ColorThemes.Green)
             allThemes.add(ColorThemes.White)
         }
 

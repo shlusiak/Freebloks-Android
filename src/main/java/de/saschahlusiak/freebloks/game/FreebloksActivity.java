@@ -326,7 +326,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", Integer.toString(Scene.ANIMATIONS_FULL)));
 		view.model.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
-		final Theme t = ThemeManager.get(this).getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.INSTANCE.getBlue());
+		final Theme t = ThemeManager.get(this).getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.Blue);
 		view.setTheme(t);
 
 		viewModel.onStart();
