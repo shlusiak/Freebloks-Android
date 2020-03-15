@@ -271,6 +271,8 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 		if (showRateDialog)
 			new RateAppDialog().show(getSupportFragmentManager(), null);
+
+		view.requestRender();
 	}
 
 	@Override

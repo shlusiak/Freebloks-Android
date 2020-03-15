@@ -19,6 +19,11 @@ import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.effects.PhysicalShapeEffect;
 import android.graphics.PointF;
 import android.opengl.GLU;
+import android.os.Handler;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 
 public class Intro {
 	public interface IntroCompleteListener {
@@ -45,6 +50,8 @@ public class Intro {
 	private OrientedShape[] stones = new OrientedShape[14];
 	private BackgroundRenderer backgroundRenderer;
 	private final Board board = new Board(20);
+
+	private final Handler handler = new Handler();
 
 	public Intro(Context context, Scene model, IntroCompleteListener listener) {
 		backgroundRenderer = new BackgroundRenderer(context.getResources(), ColorThemes.Blue);
@@ -154,16 +161,12 @@ public class Intro {
 		return false;
 	}
 
+	@UiThread
 	public void cancel() {
-		model.view.post(new Runnable() {
-			@Override
-			public void run() {
-				listener.onIntroCompleted();
-				model.view.requestRender();
-			}
-		});
+		listener.onIntroCompleted();
 	}
 
+	@WorkerThread
 	public boolean execute(float elapsed) {
 		elapsed *= 1.2f * INTRO_SPEED;
 		anim += elapsed;
@@ -255,13 +258,15 @@ public class Intro {
 					addChar('k',3,16,11);
 				}
 				/* Nach der 7. Phase ist das Intro vorrueber */
-				if (phase==7)cancel();
+				if (phase==7) {
+					handler.post(this::cancel);
+				}
 			}
 		}
 		return true;
 	}
 
-	void add(int stone, int player, int dx, int dy) {
+	private void add(int stone, int player, int dx, int dy) {
 		float x,y,z;
 		/* Eine Rotationsachse berechnen */
 		float angx=(float)(Math.random() * 2.0 *Math.PI);
@@ -298,7 +303,7 @@ public class Intro {
 		effects.add(s);
 	}
 
-	void addChar(char c, int color, int x, int y) {
+	private void addChar(char c, int color, int x, int y) {
 		switch (c)
 		{
 		case 'a':

@@ -61,14 +61,15 @@ public class Wheel implements ViewElement {
 			tmp.y = lastPointerLocation.y;
 			scene.boardObject.modelToBoard(tmp);
 
-			if (scene.soundPool != null && !scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1))
+			if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1))
 				scene.vibrate(Global.VIBRATE_START_DRAGGING);
 			showStone(highlightStone.getShape().getNumber());
 			scene.currentStone.startDragging(tmp, highlightStone, Orientation.Default, scene.getPlayerColor(currentPlayer));
 			scene.currentStone.hasMoved = true;
 			scene.boardObject.resetRotation();
 			status = Status.IDLE;
-			scene.view.requestRender();
+
+			scene.requestRender();
 		}
 	};
 

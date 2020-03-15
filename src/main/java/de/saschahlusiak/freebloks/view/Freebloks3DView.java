@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -370,6 +371,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 	
 	float lastRender = 1.0f;
 
+	@WorkerThread
 	public final void execute(float elapsed) {
 		if (elapsed < 0.001f)
 			elapsed = 0.001f;
