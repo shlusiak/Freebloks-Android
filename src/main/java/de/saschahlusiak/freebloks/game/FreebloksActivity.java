@@ -70,7 +70,7 @@ import de.saschahlusiak.freebloks.theme.ThemeManager;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
 import de.saschahlusiak.freebloks.view.effects.Effect;
-import de.saschahlusiak.freebloks.view.scene.Intro;
+import de.saschahlusiak.freebloks.view.scene.intro.Intro;
 import de.saschahlusiak.freebloks.view.scene.Scene;
 import io.fabric.sdk.android.Fabric;
 
@@ -154,7 +154,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		client = viewModel.getClient();
 		lastStatus = viewModel.getLastStatus();
 		if (viewModel.getIntro() != null)
-			viewModel.getIntro().setModel(view.model, this);
+			viewModel.getIntro().setListener(this);
 
 		chatButton.setVisibility((lastStatus != null && lastStatus.getClients() > 1) ? View.VISIBLE : View.INVISIBLE);
 

@@ -20,6 +20,10 @@ data class OrientedShape(
         orientation = orientation.rotatedRight(shape.rotatable)
     }
 
+    fun rotate180Degrees() {
+        orientation = orientation.rotatedLeft(shape.rotatable).rotatedLeft(shape.rotatable)
+    }
+
     fun mirrorVertically() {
         if (shape.mirrorable === Mirrorable.Not) return
         orientation = orientation.mirroredVertically()

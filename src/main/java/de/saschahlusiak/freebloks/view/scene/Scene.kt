@@ -14,6 +14,7 @@ import de.saschahlusiak.freebloks.view.effects.Effect
 import de.saschahlusiak.freebloks.view.effects.EffectSet
 import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect
+import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import java.util.*
 
 /**
@@ -88,7 +89,7 @@ class Scene(
         redraw = false
         val intro = intro
         if (intro != null) {
-            redraw = intro.handlePointerDown(m)
+            redraw = intro.handlePointerDown()
             return redraw
         }
         for (i in 0 until size) if (get(i).handlePointerDown(m)) return redraw

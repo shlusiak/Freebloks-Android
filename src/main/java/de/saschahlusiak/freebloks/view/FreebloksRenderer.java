@@ -27,7 +27,7 @@ import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
-import de.saschahlusiak.freebloks.view.scene.Intro;
+import de.saschahlusiak.freebloks.view.scene.intro.Intro;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private static final String tag = FreebloksRenderer.class.getSimpleName();
