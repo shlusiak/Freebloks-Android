@@ -5,10 +5,16 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
+
+        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
@@ -27,7 +33,16 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+
+        <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
+        <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
+
+        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
@@ -43,6 +58,9 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="android:windowMinWidthMajor">10%</item>
@@ -62,6 +80,9 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
@@ -83,6 +104,9 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
+        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
