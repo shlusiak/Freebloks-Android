@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <style name="Theme.Freebloks.Dark" parent="Theme.MaterialComponents">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
@@ -23,11 +24,14 @@
         <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
+
     <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.Dark">
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
+
     <style name="Theme.Freebloks.Light" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
@@ -51,6 +55,7 @@
         <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
+
     <style name="Theme.Freebloks.Auto.Light" parent="Theme.Freebloks.Light"></style>
 
     <style name="Theme.Freebloks.Dialog" parent="Theme.MaterialComponents.Dialog">
@@ -94,7 +99,9 @@
     </style>
 
     <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush</item>
+        <item name="android:buttonBarButtonStyle">
+            @style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush
+        </item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
         <item name="colorPrimary">@color/secondaryColor</item>
     </style>
