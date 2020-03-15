@@ -280,7 +280,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
     }
 
     override fun gameStarted() {
-        dismiss()
+        dismissAllowingStateLoss()
     }
 
     override fun serverStatus(status: MessageServerStatus) {

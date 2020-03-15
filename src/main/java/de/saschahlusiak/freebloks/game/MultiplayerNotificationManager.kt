@@ -136,19 +136,19 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
             if (!client.game.isStarted) {
                 // we are in lobby
-                setSmallIcon(R.drawable.notification_waiting_small)
+                setSmallIcon(R.drawable.notification_icon)
                 setContentText(context.getString(R.string.lobby_waiting_for_players))
                 setTicker(context.getString(R.string.lobby_waiting_for_players))
             } else if (client.game.isFinished) {
                 // game is over notification
-                setSmallIcon(R.drawable.notification_your_turn)
+                setSmallIcon(R.drawable.notification_icon)
                 setContentText(context.getString(R.string.game_finished))
             } else {
                 // current player / your turn notification
                 val playerName = lastStatus?.getPlayerName(game.currentPlayer) ?: Global.getColorName(context, game.currentPlayer, game.gameMode)
 
                 if (client.game.isLocalPlayer()) {
-                    setSmallIcon(R.drawable.notification_your_turn)
+                    setSmallIcon(R.drawable.notification_icon)
                     setContentText(context.getString(R.string.your_turn, playerName))
                     setTicker(context.getString(R.string.your_turn, playerName))
                     if (withAlert) {
@@ -157,7 +157,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
                         setChannelId(CHANNEL_CHAT)
                     }
                 } else {
-                    setSmallIcon(R.drawable.notification_waiting_small)
+                    setSmallIcon(R.drawable.notification_icon)
                     setContentText(context.getString(R.string.waiting_for_color, playerName))
                     setTicker(context.getString(R.string.waiting_for_color, playerName))
                 }
@@ -182,7 +182,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             setContentIntent(pendingContentIntent)
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
 
-            setSmallIcon(R.drawable.notification_chat)
+            setSmallIcon(R.drawable.notification_icon)
             setContentText(text)
             setTicker(text)
             setColor(context.resources.getColor(R.color.primaryColor))
