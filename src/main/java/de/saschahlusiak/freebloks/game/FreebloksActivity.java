@@ -201,12 +201,12 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		});
 		viewModel.getCanRequestHint().observe(this, enabled -> {
 			if (optionsMenu != null) {
-				optionsMenu.findItem(R.id.hint).setEnabled(enabled);
+				invalidateOptionsMenu();
 			}
 		});
 		viewModel.getCanRequestUndo().observe(this, enabled -> {
 			if (optionsMenu != null) {
-				optionsMenu.findItem(R.id.undo).setEnabled(enabled);
+				invalidateOptionsMenu();
 			}
 		});
 	}
@@ -404,6 +404,10 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	private void resumeGame(@NonNull final Game game) {
 		final GameMode gameMode = game.getGameMode();
 
+		// Unfortunately the JNI portion does not recognise the turn history, even though we have persisted it in the
+		// bundle. As such, to avoid minor inconsistencies, we clear the history to be in sync with the JNI portion.
+		game.getHistory().clear();
+
 		final int previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY);
 		int ret = JNIServer.runServerForExistingGame(game, previousDifficulty);
 		if (ret != 0) {
@@ -467,10 +471,11 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	private void restoreOldGame() throws Exception {
 		try {
-			FileInputStream fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			Parcel p = Parcel.obtain();
-			byte[] b = new byte[1024];
+			final FileInputStream fis = openFileInput(FreebloksActivity.GAME_STATE_FILE);
+			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			final Parcel p = Parcel.obtain();
+			final byte[] b = new byte[1024];
+
 			int bytesRead;
 			while ((bytesRead = fis.read(b)) != -1) {
 				bos.write(b, 0, bytesRead);
@@ -480,17 +485,14 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			byte[] bytes = bos.toByteArray();
 			bos.close();
 
-			Bundle bundle;
 			p.unmarshall(bytes, 0, bytes.length);
 			p.setDataPosition(0);
-			bundle = p.readBundle(FreebloksActivity.class.getClassLoader());
+			final Bundle bundle = p.readBundle(FreebloksActivity.class.getClassLoader());
 			p.recycle();
 
 			deleteFile(GAME_STATE_FILE);
 
-			if (readStateFromBundle(bundle)) {
-			} else {
-			}
+			readStateFromBundle(bundle);
 		} catch (FileNotFoundException fe) {
 			/* signal non-failure if game state file is missing */
 		} catch (Exception e) {
@@ -533,10 +535,9 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+	public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
 		menu.findItem(R.id.undo).setEnabled(viewModel.getCanRequestUndo().getValue());
 		menu.findItem(R.id.hint).setEnabled(viewModel.getCanRequestHint().getValue());
-		menu.findItem(R.id.sound_toggle_button).setVisible(true);
 		soundEnabledChanged(viewModel.getSoundsEnabled());
 
 		return super.onPrepareOptionsMenu(menu);

@@ -15,12 +15,14 @@
         android:id="@+id/hint"
         android:icon="@drawable/ic_info"
         android:title="@string/hint"
+        app:iconTint="@color/menu_item_icon_color"
         app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/undo"
         android:icon="@drawable/ic_undo"
         android:title="@string/undo"
+        app:iconTint="@color/menu_item_icon_color"
         app:showAsAction="ifRoom">
     </item>
     <item
