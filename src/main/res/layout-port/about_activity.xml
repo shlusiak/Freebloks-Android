@@ -50,7 +50,7 @@
             android:autoLink="web"
             android:gravity="center"
             android:linksClickable="true"
-            android:text="https://github.com/shlusiak/Freebloks-Android"
+            android:text="@string/github_link"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
 		<TextView
@@ -112,7 +112,7 @@
             android:layout_marginTop="@dimen/dialog_button_margin"
             android:minWidth="160dp"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_button_height"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/textSizeSmall"
             android:layout_gravity="center"
             android:text="@android:string/ok" />

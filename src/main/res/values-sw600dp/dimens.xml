@@ -3,7 +3,7 @@
     <dimen name="activity_padding">32dp</dimen>
     <dimen name="dialog_padding">12dp</dimen>
     <dimen name="dialog_button_margin">12dp</dimen>
-    <dimen name="dialog_button_height">58dp</dimen>
+    <dimen name="game_finish_social_button_size">58dp</dimen>
 
     <dimen name="main_menu_padding">16dp</dimen>
     <dimen name="main_menu_button_margin">8dp</dimen>

@@ -287,25 +287,6 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		}
 	}
 
-	@Deprecated
-	public static void loadKTXTexture(GL10 gl, Resources resources, int resId) {
-		InputStream input;
-
-		if (isEmulator)
-			return;
-
-		try {
-			input = resources.openRawResource(resId);
-			KTXFile file = new KTXFile();
-			file.read(input);
-			input.close();
-
-			loadKTXTexture(gl, file);
-		} catch (IOException | KTXFormatException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public static void loadKTXTexture(GL10 gl, Resources resources, String asset) {
 		if (isEmulator)
 			return;

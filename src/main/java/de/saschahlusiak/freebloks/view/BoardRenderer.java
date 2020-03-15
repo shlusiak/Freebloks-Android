@@ -197,8 +197,7 @@ public class BoardRenderer {
 		gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
 		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 
-        FreebloksRenderer.loadKTXTexture(gl, context.getResources(), R.raw.field_wood);
-
+        FreebloksRenderer.loadKTXTexture(gl, context.getResources(), "textures/field_wood.ktx");
 
 		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone_shadow);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1]);
