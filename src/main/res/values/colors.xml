@@ -7,7 +7,6 @@
     <color name="secondaryLightColor">#F6B175</color>
     <color name="secondaryDarkColor">#9B6332</color>
 
-    <color name="theme_background_black">#000000</color>
     <color name="theme_background_blue">#0D1A40</color>
 
     <!-- Background color for player status / lobby -->

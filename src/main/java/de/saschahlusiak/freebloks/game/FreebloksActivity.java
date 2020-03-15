@@ -72,9 +72,10 @@ import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
 import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.scene.intro.Intro;
 import de.saschahlusiak.freebloks.view.scene.Scene;
+import de.saschahlusiak.freebloks.view.scene.intro.IntroCompletedListener;
 import io.fabric.sdk.android.Fabric;
 
-public class FreebloksActivity extends AppCompatActivity implements GameEventObserver, Intro.IntroCompleteListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
+public class FreebloksActivity extends AppCompatActivity implements GameEventObserver, IntroCompletedListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
 
 	static final int DIALOG_QUIT = 3;

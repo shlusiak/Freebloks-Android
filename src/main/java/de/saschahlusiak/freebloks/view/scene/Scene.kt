@@ -116,8 +116,8 @@ class Scene(
         val intro = intro
 
         if (intro != null) {
-            redraw = intro.execute(elapsed)
-            return redraw
+            intro.execute(elapsed)
+            return true
         }
 
         synchronized(effects) {

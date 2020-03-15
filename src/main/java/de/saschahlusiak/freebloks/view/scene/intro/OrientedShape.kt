@@ -1,11 +1,15 @@
-package de.saschahlusiak.freebloks.model
+package de.saschahlusiak.freebloks.view.scene.intro
 
+import de.saschahlusiak.freebloks.model.Mirrorable
+import de.saschahlusiak.freebloks.model.Orientation
+import de.saschahlusiak.freebloks.model.Rotation
+import de.saschahlusiak.freebloks.model.Shape
 import java.io.Serializable
 
 /**
- * A stone that has a [Shape] and an [Orientation]
+ * A stone that has a [Shape] and an [Orientation], used in [Intro]
  */
-data class OrientedShape(
+internal data class OrientedShape(
     val shape: Shape,
     var orientation: Orientation = Orientation()
 ): Serializable {
