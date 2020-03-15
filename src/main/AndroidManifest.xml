@@ -31,7 +31,7 @@
     <application
         android:allowBackup="true"
         android:extractNativeLibs="true"
-        android:icon="@drawable/appicon_small"
+        android:icon="@mipmap/launcher_icon"
         android:isGame="true"
         android:label="@string/app_name"
         tools:ignore="GoogleAppIndexingWarning"
