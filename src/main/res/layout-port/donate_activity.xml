@@ -79,7 +79,7 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center"
             android:text="@string/donation_next"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textSize="@dimen/textSizeLarge" />
     </LinearLayout>
 
 </ScrollView>

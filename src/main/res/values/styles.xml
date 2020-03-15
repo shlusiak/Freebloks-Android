@@ -4,11 +4,17 @@
     <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">@dimen/textSizeSmall</item>
     </style>
+
     <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">@dimen/textSizeMedium</item>
     </style>
+
     <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large">
         <item name="android:textSize">@dimen/textSizeLarge</item>
+    </style>
+
+    <style name="TextAppearance.Button" parent="@style/TextAppearance.MaterialComponents.Button">
+        <item name="android:textSize">@dimen/textSizeSmall</item>
     </style>
 
     <style name="Rules_Heading1" parent="@style/TextAppearance.Large">

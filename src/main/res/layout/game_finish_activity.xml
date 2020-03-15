@@ -81,8 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
-            android:text="@string/new_local_game"
-            android:textSize="@dimen/textSizeSmall" />
+            android:text="@string/new_local_game" />
 
         <Button
             android:id="@+id/show_main_menu"
@@ -90,8 +89,7 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
             android:layout_marginLeft="@dimen/dialog_button_margin"
-            android:text="@string/main_menu"
-            android:textSize="@dimen/textSizeSmall" />
+            android:text="@string/main_menu" />
 
     </LinearLayout>
 

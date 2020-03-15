@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:animateLayoutChanges="true"
+        android:orientation="vertical"
         android:padding="@dimen/dialog_padding">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:id="@+id/spinner_layout"
-            android:layout_marginBottom="@dimen/dialog_button_margin"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_button_margin"
+            android:orientation="horizontal">
 
             <Spinner
                 android:id="@+id/game_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:entries="@array/game_modes"/>
+                android:entries="@array/game_modes" />
 
             <Spinner
                 android:id="@+id/field_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:entries="@array/game_field_sizes"/>
+                android:entries="@array/game_field_sizes" />
         </LinearLayout>
 
         <LinearLayout
@@ -48,17 +47,17 @@
 
                 <CheckBox
                     android:id="@+id/player2"
-                    android:padding="@dimen/dialog_button_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Yellow"/>
+                    android:padding="@dimen/dialog_button_margin"
+                    android:text="Yellow" />
 
                 <CheckBox
                     android:id="@+id/player1"
-                    android:padding="@dimen/dialog_button_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Blue"/>
+                    android:padding="@dimen/dialog_button_margin"
+                    android:text="Blue" />
             </LinearLayout>
 
             <LinearLayout
@@ -72,14 +71,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dialog_button_margin"
-                    android:text="Red"/>
+                    android:text="Red" />
 
                 <CheckBox
                     android:id="@+id/player4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dialog_button_margin"
-                    android:text="Green"/>
+                    android:text="Green" />
             </LinearLayout>
 
         </LinearLayout>
@@ -98,7 +97,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/difficulty"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/difficulty_label"
@@ -108,153 +107,162 @@
                 android:layout_centerHorizontal="true"
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:typeface="monospace"/>
+                android:typeface="monospace" />
 
             <SeekBar
                 android:id="@+id/difficulty_slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/difficulty_label"
-                android:max="10"/>
+                android:max="10" />
         </RelativeLayout>
 
         <TableLayout
+            android:id="@+id/custom_stones_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="8dp"
-            android:id="@+id/custom_stones_layout"
-            android:stretchColumns="1">
+            android:stretchColumns="1"
+            android:visibility="gone">
 
             <TableRow>
+
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
+                    android:text="1"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge"
-                    android:text="1"/>
+                    android:textSize="@dimen/textSizeLarge" />
 
                 <TextView
                     android:layout_column="1"
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
-                    android:text="@string/monomino"/>
+                    android:text="@string/monomino" />
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker1"
                     android:layout_column="1"
+                    app:np_dividerColor="?colorAccent"
                     app:np_max="9"
                     app:np_min="0"
-                    app:np_value="1"
+                    app:np_orientation="horizontal"
                     app:np_selectedTextColor="?colorAccent"
                     app:np_textColor="?colorAccent"
-                    app:np_dividerColor="?colorAccent"
-                    app:np_wrapSelectorWheel="false"
-                    app:np_orientation="horizontal"/>
+                    app:np_value="1"
+                    app:np_wrapSelectorWheel="false" />
             </TableRow>
+
             <TableRow>
+
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
+                    android:text="2"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge"
-                    android:text="2"/>
+                    android:textSize="@dimen/textSizeLarge" />
 
                 <TextView
                     android:layout_column="1"
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
-                    android:text="@string/domino"/>
+                    android:text="@string/domino" />
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker2"
                     android:layout_column="1"
+                    app:np_dividerColor="?colorAccent"
                     app:np_max="9"
                     app:np_min="0"
-                    app:np_value="1"
+                    app:np_orientation="horizontal"
                     app:np_selectedTextColor="?colorAccent"
                     app:np_textColor="?colorAccent"
-                    app:np_dividerColor="?colorAccent"
-                    app:np_wrapSelectorWheel="false"
-                    app:np_orientation="horizontal"/>
+                    app:np_value="1"
+                    app:np_wrapSelectorWheel="false" />
             </TableRow>
+
             <TableRow>
+
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
+                    android:text="3"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge"
-                    android:text="3"/>
+                    android:textSize="@dimen/textSizeLarge" />
 
                 <TextView
                     android:layout_column="1"
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
-                    android:text="@string/tromino"/>
+                    android:text="@string/tromino" />
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker3"
                     android:layout_column="1"
+                    app:np_dividerColor="?colorAccent"
                     app:np_max="9"
                     app:np_min="0"
-                    app:np_value="1"
+                    app:np_orientation="horizontal"
                     app:np_selectedTextColor="?colorAccent"
                     app:np_textColor="?colorAccent"
-                    app:np_dividerColor="?colorAccent"
-                    app:np_wrapSelectorWheel="false"
-                    app:np_orientation="horizontal"/>
+                    app:np_value="1"
+                    app:np_wrapSelectorWheel="false" />
             </TableRow>
+
             <TableRow>
+
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
+                    android:text="4"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge"
-                    android:text="4"/>
+                    android:textSize="@dimen/textSizeLarge" />
 
                 <TextView
                     android:layout_column="1"
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
-                    android:text="@string/tetromino"/>
+                    android:text="@string/tetromino" />
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker4"
                     android:layout_column="1"
+                    app:np_dividerColor="?colorAccent"
                     app:np_max="9"
                     app:np_min="0"
-                    app:np_value="1"
+                    app:np_orientation="horizontal"
                     app:np_selectedTextColor="?colorAccent"
                     app:np_textColor="?colorAccent"
-                    app:np_dividerColor="?colorAccent"
-                    app:np_wrapSelectorWheel="false"
-                    app:np_orientation="horizontal"/>
+                    app:np_value="1"
+                    app:np_wrapSelectorWheel="false" />
             </TableRow>
+
             <TableRow>
+
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
+                    android:text="5"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge"
-                    android:text="5"/>
+                    android:textSize="@dimen/textSizeLarge" />
 
                 <TextView
                     android:layout_column="1"
                     android:layout_gravity="center_vertical"
                     android:padding="8dp"
-                    android:text="@string/pentomino"/>
+                    android:text="@string/pentomino" />
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker5"
                     android:layout_column="1"
+                    app:np_dividerColor="?colorAccent"
                     app:np_max="9"
                     app:np_min="0"
-                    app:np_value="1"
+                    app:np_orientation="horizontal"
                     app:np_selectedTextColor="?colorAccent"
                     app:np_textColor="?colorAccent"
-                    app:np_dividerColor="?colorAccent"
-                    app:np_wrapSelectorWheel="false"
-                    app:np_orientation="horizontal"/>
+                    app:np_value="1"
+                    app:np_wrapSelectorWheel="false" />
             </TableRow>
         </TableLayout>
 
@@ -270,26 +278,29 @@
                 android:layout_weight="1"
                 android:clipChildren="false">
 
-                <Button
+                <ImageButton
                     android:id="@+id/advanced"
+                    style="?actionButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="?borderlessButtonStyle"
-                    android:text="@string/advanced"/>
+                    android:tint="?colorPrimary"
+                    android:src="@drawable/ic_expand_more" />
+
             </LinearLayout>
 
             <Button
                 android:id="@+id/cancel"
+                style="?borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="?borderlessButtonStyle"
-                android:text="@android:string/cancel"/>
+                android:layout_marginRight="@dimen/dialog_button_margin"
+                android:text="@android:string/cancel" />
 
             <Button
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@android:string/ok"/>
+                android:text="@android:string/ok" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

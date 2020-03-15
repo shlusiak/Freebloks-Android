@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="@dimen/activity_padding">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.5"
+        android:layout_weight="0.55"
+        android:paddingLeft="@dimen/activity_padding"
         android:orientation="vertical">
 
         <ImageView
@@ -43,8 +43,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.5"
+        android:layout_weight="0.45"
         android:clipChildren="false"
+        android:paddingRight="@dimen/activity_padding"
+        android:paddingLeft="@dimen/activity_padding"
         android:orientation="vertical">
 
         <TextView
@@ -90,7 +92,7 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center"
             android:text="@string/donation_next"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textSize="@dimen/textSizeLarge" />
     </LinearLayout>
 
 </LinearLayout>

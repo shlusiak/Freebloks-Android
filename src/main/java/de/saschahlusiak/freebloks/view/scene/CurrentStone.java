@@ -117,6 +117,8 @@ public class CurrentStone implements ViewElement {
 
 		float hover_height = (status == Status.IDLE) ? hover_height_low : hover_height_high;
 		final float offset = (float)(stone.getShape().getSize()) - 1.0f;
+		final int currentPlayer = scene.game.getCurrentPlayer();
+		if (currentPlayer < 0) return;
 
 		if (status == Status.FLIPPING_HORIZONTAL ||
 			status == Status.FLIPPING_VERTICAL)
@@ -151,7 +153,7 @@ public class CurrentStone implements ViewElement {
 				0,
 				-BoardRenderer.stoneSize * offset);
 
-		renderer.boardRenderer.renderShapeShadow(gl, scene.game.getCurrentPlayer(), stone.getShape(), orientation, 0.80f);
+		renderer.boardRenderer.renderShapeShadow(gl, currentPlayer, stone.getShape(), orientation, 0.80f);
 		gl.glPopMatrix();
 
 

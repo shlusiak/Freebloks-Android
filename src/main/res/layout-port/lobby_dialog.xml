@@ -106,7 +106,7 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:padding="4dp"
             android:text="@string/start"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/textSizeMedium"
             android:visibility="visible" />
     </LinearLayout>
 </RelativeLayout>

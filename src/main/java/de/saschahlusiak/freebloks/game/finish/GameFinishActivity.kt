@@ -18,6 +18,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
+import de.saschahlusiak.freebloks.utils.applyMaterialBackground
 import kotlinx.android.synthetic.main.game_finish_activity.*
 import kotlinx.android.synthetic.main.game_finish_player_row.view.*
 import java.lang.IllegalStateException
@@ -59,6 +60,8 @@ class GameFinishActivity : AppCompatActivity(), View.OnClickListener {
             achievements.visibility = if (signedIn) View.VISIBLE else View.GONE
             leaderboard.visibility = if (signedIn) View.VISIBLE else View.GONE
         })
+
+        applyMaterialBackground()
     }
 
     override fun onClick(v: View) {

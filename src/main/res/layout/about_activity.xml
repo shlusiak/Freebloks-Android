@@ -121,7 +121,6 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:textSize="@dimen/textSizeSmall"
                 android:text="@android:string/ok"/>
         </LinearLayout>
     </ScrollView>

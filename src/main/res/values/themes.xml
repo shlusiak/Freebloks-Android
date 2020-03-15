@@ -5,6 +5,7 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
@@ -26,6 +27,7 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
@@ -41,9 +43,11 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="android:windowMinWidthMajor">10%</item>
         <item name="android:windowMinWidthMinor">10%</item>
+
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
@@ -58,6 +62,7 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>
@@ -69,6 +74,7 @@
 
     <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
         <item name="colorPrimary">@color/secondaryColor</item>
     </style>
 
@@ -77,6 +83,7 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>

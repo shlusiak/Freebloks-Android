@@ -1,43 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/dialog_padding">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:id="@+id/spinner_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/game_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/game_modes"/>
+            android:entries="@array/game_modes" />
 
         <Spinner
             android:id="@+id/field_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/game_field_sizes"/>
+            android:entries="@array/game_field_sizes" />
     </LinearLayout>
 
     <GridView
         android:id="@+id/color_grid"
         android:layout_width="130dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/startButton"
+        android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
-        android:verticalSpacing="2dp"
         android:numColumns="1"
         android:stretchMode="columnWidth"
-        tools:listitem="@layout/color_grid_item">
-    </GridView>
+        android:verticalSpacing="2dp"
+        tools:listitem="@layout/color_grid_item"></GridView>
 
     <ListView
         android:id="@+id/chatList"
@@ -45,36 +43,35 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/chatLayout"
         android:layout_below="@+id/spinner_layout"
-        android:layout_toLeftOf="@+id/color_grid"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="4dp"
+        android:layout_toLeftOf="@+id/color_grid"
         android:background="@drawable/layout_chat_background"
         android:isScrollContainer="true"
         android:stackFromBottom="true"
-        android:transcriptMode="normal">
-    </ListView>
+        android:transcriptMode="normal"></ListView>
 
     <LinearLayout
+        android:id="@+id/chatLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/chatList"
         android:layout_alignLeft="@+id/chatList"
-        android:id="@+id/chatLayout"
-        android:gravity="bottom">
+        android:layout_alignRight="@+id/chatList"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/chatText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/lobby_message_hint"
             android:imeOptions="actionSend|flagNoExtractUi"
             android:inputType="textNoSuggestions|textCapSentences"
-            android:layout_weight="1"
-            android:singleLine="true"
-            android:hint="@string/lobby_message_hint">
+            android:singleLine="true">
 
-            <requestFocus/>
+            <requestFocus />
         </EditText>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -91,10 +88,10 @@
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignLeft="@+id/color_grid"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:text="@string/start"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textSize="@dimen/textSizeMedium" />
 
 </RelativeLayout>
