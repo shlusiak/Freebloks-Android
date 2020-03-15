@@ -68,7 +68,6 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
             gl.glTexCoordPointer(2, GL10.GL_FLOAT, 4 * 8, 6 * 4)
 
             gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, vbo[1])
-
         }
     }
 

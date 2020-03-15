@@ -178,9 +178,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				.commit();
 		}
 
-		if (view.model.soundPool == null)
-			view.model.soundPool = viewModel.getSounds();
-
 		if (client != null) {
 			/* we just rotated and got *hot* objects */
 			setGameClient(client);

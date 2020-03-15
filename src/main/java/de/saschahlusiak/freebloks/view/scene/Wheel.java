@@ -43,7 +43,7 @@ public class Wheel implements ViewElement {
 	private PointF tmp = new PointF();
 	private Handler handler = new Handler();
 
-	private static final float stone_spacing = 5.5f * BoardRenderer.stone_size * 2.0f;
+	private static final float stone_spacing = 5.5f * BoardRenderer.stoneSize * 2.0f;
 
 	private Runnable hapticTimerRunnable = new Runnable() {
 		@Override
@@ -275,14 +275,14 @@ public class Wheel implements ViewElement {
 		if (scene.game == null)
 			return;
 
-		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stone_size * (scene.board.width + 10));
+		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stoneSize * (scene.board.width + 10));
 		for (int i = stones.size() - 1; i >= 0; i--) {
 			Stone s = stones.get(i);
 
 			if (s.getAvailable() - ((s == scene.currentStone.stone) ? 1 : 0) > 0) {
 				final float col = i / 2;
 				final float row = i % 2;
-				final float offset = -((float)(s.getShape().getSize()) - 1.0f) * BoardRenderer.stone_size;
+				final float offset = -((float)(s.getShape().getSize()) - 1.0f) * BoardRenderer.stoneSize;
 
 				final float x = col * stone_spacing;
 				final float effect = 12.5f / (12.5f + (float)Math.pow(Math.abs(x - currentOffset) * 0.5f, 2.5f));
@@ -309,13 +309,13 @@ public class Wheel implements ViewElement {
 
 				if (s.getAvailable() > 1 && s == highlightStone && s != scene.currentStone.stone) {
 					gl.glPushMatrix();
-					gl.glTranslatef(BoardRenderer.stone_size, 0, BoardRenderer.stone_size * 0.6f);
+					gl.glTranslatef(BoardRenderer.stoneSize, 0, BoardRenderer.stoneSize * 0.6f);
 					gl.glRotatef(rotate, 0, 1, 0);
 					gl.glScalef(0.85f, 0.85f, 0.85f);
 					gl.glTranslatef(offset, 0, offset);
 
 				//	gl.glTranslatef(BoardRenderer.stone_size * 0.5f, y - 1.2f, BoardRenderer.stone_size * 0.5f);
-					renderer.board.renderPlayerStone(gl, scene.getPlayerColor(currentPlayer), s.getShape(), Orientation.Default, alpha);
+					renderer.boardRenderer.renderShape(gl, scene.getPlayerColor(currentPlayer), s.getShape(), Orientation.Default, alpha);
 					gl.glPopMatrix();
 				}
 				
@@ -323,11 +323,11 @@ public class Wheel implements ViewElement {
 				gl.glTranslatef(offset, 0, offset);
 
 				gl.glPushMatrix();
-				renderer.board.renderShadow(gl, s.getShape(), scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0, 0, 0, 0, 90 * scene.boardObject.centerPlayer, alpha, 1.0f);
+				renderer.boardRenderer.renderShapeShadow(gl, s.getShape(), scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0, 0, 0, 0, 90 * scene.boardObject.centerPlayer, alpha, 1.0f);
 				gl.glPopMatrix();
 
 				gl.glTranslatef(0, y, 0);
-				renderer.board.renderPlayerStone(gl, (s == highlightStone && s != scene.currentStone.stone) ? 0 : scene.getPlayerColor(currentPlayer), s.getShape(), Orientation.Default, alpha);
+				renderer.boardRenderer.renderShape(gl, (s == highlightStone && s != scene.currentStone.stone) ? 0 : scene.getPlayerColor(currentPlayer), s.getShape(), Orientation.Default, alpha);
 				gl.glPopMatrix();
 			}
 		}

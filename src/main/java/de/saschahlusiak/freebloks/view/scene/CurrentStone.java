@@ -125,9 +125,9 @@ public class CurrentStone implements ViewElement {
 		gl.glDisable(GL10.GL_CULL_FACE);
 		gl.glPushMatrix();
 		gl.glTranslatef(
-				BoardRenderer.stone_size * (-(float)(scene.board.width - 1) + 2.0f * pos.x + offset),
+				BoardRenderer.stoneSize * (-(float)(scene.board.width - 1) + 2.0f * pos.x + offset),
 				0,
-				BoardRenderer.stone_size * (-(float)(scene.board.width - 1) + 2.0f * pos.y + offset));
+				BoardRenderer.stoneSize * (-(float)(scene.board.width - 1) + 2.0f * pos.y + offset));
 
 		/* STONE SHADOW */
 	    gl.glPushMatrix();
@@ -147,11 +147,11 @@ public class CurrentStone implements ViewElement {
 		gl.glScalef(1.09f, 0.01f, 1.09f);
 
 	    gl.glTranslatef(
-				-BoardRenderer.stone_size * offset,
+				-BoardRenderer.stoneSize * offset,
 				0,
-				-BoardRenderer.stone_size * offset);
+				-BoardRenderer.stoneSize * offset);
 
-		renderer.board.renderStoneShadow(gl, scene.game.getCurrentPlayer(), stone.getShape(), orientation, 0.80f);
+		renderer.boardRenderer.renderShapeShadow(gl, scene.game.getCurrentPlayer(), stone.getShape(), orientation, 0.80f);
 		gl.glPopMatrix();
 
 
@@ -212,13 +212,13 @@ public class CurrentStone implements ViewElement {
 			gl.glRotatef(rotate_angle, 1, 0, 0);
 
 	    gl.glTranslatef(
-				-BoardRenderer.stone_size * offset,
+				-BoardRenderer.stoneSize * offset,
 				0,
-				-BoardRenderer.stone_size * offset);
+				-BoardRenderer.stoneSize * offset);
 
 	    gl.glEnable(GL10.GL_DEPTH_TEST);
-		renderer.board.renderPlayerStone(gl, current_color, stone.getShape(), orientation,
-				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.DEFAULT_ALPHA);
+		renderer.boardRenderer.renderShape(gl, current_color, stone.getShape(), orientation,
+				(status != Status.IDLE || isValid) ? 1.0f : BoardRenderer.defaultStoneAlpha);
 
 		gl.glPopMatrix();
 	}

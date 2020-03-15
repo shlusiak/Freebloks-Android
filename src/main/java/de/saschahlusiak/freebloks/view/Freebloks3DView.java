@@ -283,7 +283,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			queueEvent(new Runnable() {
 				@Override
 				public void run() {
-					renderer.board.initBorder(model.board.width);
+					renderer.boardRenderer.setFieldSize(model.board.width);
 					requestRender();
 				}
 			});

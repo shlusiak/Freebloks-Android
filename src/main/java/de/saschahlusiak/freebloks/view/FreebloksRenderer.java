@@ -10,7 +10,10 @@ import javax.microedition.khronos.opengles.GL11;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Board;
+import de.saschahlusiak.freebloks.model.Game;
+import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.theme.ColorThemes;
 import de.saschahlusiak.freebloks.view.scene.Scene;
 import nl.weeaboo.jktx.KTXFile;
@@ -45,19 +48,19 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 	private float[] modelViewMatrix = new float[16];
 	public static boolean isSoftwareRenderer, isEmulator;
 
-	public BoardRenderer board;
+	public BoardRenderer boardRenderer;
 	BackgroundRenderer backgroundRenderer;
 
 	public FreebloksRenderer(Context context, Scene model) {
 		this.context = context;
 		this.model = model;
 		mAngleX = 70.0f;
-		board = new BoardRenderer(Board.DEFAULT_BOARD_SIZE);
+		boardRenderer = new BoardRenderer();
 		backgroundRenderer = new BackgroundRenderer(context.getResources(), ColorThemes.Blue);
 	}
 
 	public void init(int field_size) {
-		board.initBorder(field_size);
+		boardRenderer.setFieldSize(field_size);
 	}
 
 	private final float[] outputfar = new float[4];
@@ -135,27 +138,31 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		gl.glRotatef(boardAngle, 0, 1, 0);
 		backgroundRenderer.render(gl11);
-		board.renderBoard(gl11, model.board, model.boardObject.getShowSeedsPlayer());
+		boardRenderer.renderBoard(gl11, model.board, model.boardObject.getShowSeedsPlayer());
 
-		if (model.game == null)
+		final Game game = model.game;
+		if (game == null)
 			return;
+
+		final GameMode gameMode = game.getGameMode();
+		final Board board = game.getBoard();
 
 		/* render player stones on board, unless they are "effected" */
 		gl.glPushMatrix();
-		gl.glTranslatef(-BoardRenderer.stone_size * (float) (model.board.width - 1), 0, -BoardRenderer.stone_size * (float) (model.board.width - 1));
+		gl.glTranslatef(-BoardRenderer.stoneSize * (float) (model.board.width - 1), 0, -BoardRenderer.stoneSize * (float) (model.board.width - 1));
 		gl.glEnable(GL10.GL_BLEND);
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, board.stone_specular, 0);
-		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, board.stone_shininess, 0);
 
-		board.stone.bindBuffers(gl11);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, BoardRenderer.materialStoneSpecular, 0);
+		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS,BoardRenderer.materialStoneShininess, 0);
+
+		boardRenderer.stone.bindBuffers(gl11);
 
 		synchronized (model.effects) {
-			// FIXME: board size may change randomly when starting a new game
-			for (int y = 0; y < model.board.height; y++) {
+			for (int y = 0; y < board.height; y++) {
 				int x;
-				for (x = 0; x < model.board.width; x++) {
-					int field = model.board.getFieldPlayer(y, x);
+				for (x = 0; x < board.width; x++) {
+					int field = board.getFieldPlayer(y, x);
 					if (field != Board.FIELD_FREE) {
 						boolean effected = false;
 						for (int i = 0; i < model.effects.size(); i++)
@@ -164,11 +171,11 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 								break;
 							}
 						if (!effected)
-							board.renderStone(gl11, model.getPlayerColor(field), BoardRenderer.DEFAULT_ALPHA);
+							boardRenderer.renderSingleStone(gl11, Global.getPlayerColor(field, gameMode), BoardRenderer.defaultStoneAlpha);
 					}
-					gl.glTranslatef(BoardRenderer.stone_size * 2.0f, 0, 0);
+					gl.glTranslatef(BoardRenderer.stoneSize * 2.0f, 0, 0);
 				}
-				gl.glTranslatef(-x * BoardRenderer.stone_size * 2.0f, 0, BoardRenderer.stone_size * 2.0f);
+				gl.glTranslatef(-x * BoardRenderer.stoneSize * 2.0f, 0, BoardRenderer.stoneSize * 2.0f);
 			}
 		}
 
@@ -179,13 +186,13 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		/* render all effects */
 		synchronized (model.effects) {
 			for (int i = 0; i < model.effects.size(); i++) {
-				model.effects.get(i).renderShadow(gl11, board);
+				model.effects.get(i).renderShadow(gl11, boardRenderer);
 			}
 
 			gl.glEnable(GL10.GL_DEPTH_TEST);
 
 			for (int i = 0; i < model.effects.size(); i++) {
-				model.effects.get(i).render(gl11, board);
+				model.effects.get(i).render(gl11, boardRenderer);
 			}
 		}
 		gl.glDisable(GL10.GL_DEPTH_TEST);
@@ -201,7 +208,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		gl.glPopMatrix();
 
 		/* render current player stone on the field */
-		if (model.game.isLocalPlayer())
+		if (game.isLocalPlayer())
 			model.currentStone.render(this, gl11);
 
 //		Log.d("Renderer", "render took " + (System.currentTimeMillis() - t) + " ms");
@@ -209,6 +216,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		GL11 gl11 = (GL11) gl;
+		Log.d(tag, "onSurfaceChanged: " + width + ", " + height);
 
 		gl.glViewport(0, 0, width, height);
 		viewport[0] = 0;
@@ -267,7 +275,7 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 
 		updateModelViewMatrix = true;
 		model.currentStone.updateTexture(context, gl);
-		board.updateTexture(context, (GL11) gl);
+		boardRenderer.onSurfaceChanged(context, (GL11) gl);
 		backgroundRenderer.updateTexture(gl);
 	}
 

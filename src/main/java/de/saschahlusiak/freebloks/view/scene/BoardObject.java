@@ -34,8 +34,8 @@ public class BoardObject implements ViewElement {
 	 * @return point
 	 */
 	public PointF modelToBoard(PointF point) {
-		point.x = point.x / (BoardRenderer.stone_size * 2.0f);
-		point.y = point.y / (BoardRenderer.stone_size * 2.0f);
+		point.x = point.x / (BoardRenderer.stoneSize * 2.0f);
+		point.y = point.y / (BoardRenderer.stoneSize * 2.0f);
 
 		point.x = point.x + 0.5f * (float)(scene.board.width - 1);
 		point.y = point.y + 0.5f * (float)(scene.board.height - 1);

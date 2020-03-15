@@ -13,7 +13,6 @@ import de.saschahlusiak.freebloks.model.OrientedShape;
 import de.saschahlusiak.freebloks.model.Rotation;
 import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.theme.ColorThemes;
-import de.saschahlusiak.freebloks.theme.ThemeManager;
 import de.saschahlusiak.freebloks.view.BackgroundRenderer;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
@@ -45,6 +44,7 @@ public class Intro {
 	private float field_anim = 0.0f;
 	private OrientedShape[] stones = new OrientedShape[14];
 	private BackgroundRenderer backgroundRenderer;
+	private final Board board = new Board(20);
 
 	public Intro(Context context, Scene model, IntroCompleteListener listener) {
 		backgroundRenderer = new BackgroundRenderer(context.getResources(), ColorThemes.Blue);
@@ -276,8 +276,8 @@ public class Intro {
 		PhysicalShapeEffect s = new PhysicalShapeEffect(model, shape, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), st.getOrientation());
 
 		/* Lokale dx/dy des Feldes in globale Welt-Koordinaten umrechnen. */
-		x=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dx+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
-		z=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stone_size+((double)dy+(double)shape.getSize()/2.0)*BoardRenderer.stone_size*2.0-BoardRenderer.stone_size);
+		x=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stoneSize +((double)dx+(double)shape.getSize()/2.0)*BoardRenderer.stoneSize *2.0-BoardRenderer.stoneSize);
+		z=(float)(-(Board.DEFAULT_BOARD_SIZE - 1)*BoardRenderer.stoneSize +((double)dy+(double)shape.getSize()/2.0)*BoardRenderer.stoneSize *2.0-BoardRenderer.stoneSize);
 		/* Zufaellige Hoehe geben. */
 		y=22.0f+(float)(Math.random() * 18.0f);
 
@@ -404,7 +404,7 @@ public class Intro {
 			/* Winkel, in dem die Steine beschleunigt werden */
 			final float ANG = WIPE_ANGLE / 180.0f * (float)Math.PI;
 			/* Radialgeschwindigkeit errechnen. */
-			final float v = (ANG*WIPE_SPEED)*(e.getCurrentZ()-20*BoardRenderer.stone_size)-(float)(Math.random() * 10.0 - 8.0);
+			final float v = (ANG*WIPE_SPEED)*(e.getCurrentZ()-20*BoardRenderer.stoneSize)-(float)(Math.random() * 10.0 - 8.0);
 			/* Stein nur leicht rotieren lassen, und nicht ganz zufaellig */
 			final float a1=0.95f;
 			final float a2=(float)((Math.random() < 0.5 ? 1 : -1)*Math.sqrt((1.0-a1*a1)/2.0));
@@ -468,22 +468,22 @@ public class Intro {
 		/* Umgebung und Feld rendern. */
 		gl.glPushMatrix();
 		if (field_anim > 0.0001f) {
-			gl.glTranslatef(0,0,20*BoardRenderer.stone_size);
+			gl.glTranslatef(0,0,20*BoardRenderer.stoneSize);
 			gl.glRotatef(field_anim*WIPE_ANGLE,1,0,0);
-			gl.glTranslatef(0,0,-20*BoardRenderer.stone_size);
+			gl.glTranslatef(0,0,-20*BoardRenderer.stoneSize);
 		}
 		gl.glDisable(GL10.GL_DEPTH_TEST);
-		renderer.board.renderBoard(gl, null, -1);
+		renderer.boardRenderer.renderBoard(gl, board, -1);
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		gl.glPopMatrix();
 		/* Alle Steine rendern. */
 		synchronized(effects) {
 			for (int i = 0; i < effects.size(); i++)
-				effects.get(i).renderShadow(gl, renderer.board);
+				effects.get(i).renderShadow(gl, renderer.boardRenderer);
 			gl.glEnable(GL10.GL_DEPTH_TEST);
 			for (int i = 0; i < effects.size(); i++)
-				effects.get(i).render(gl, renderer.board);
+				effects.get(i).render(gl, renderer.boardRenderer);
 		}
 	}
 }

@@ -38,8 +38,7 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 	public Board board;
 	public final BoardObject boardObject;
 	public final ArrayList<Effect> effects;
-	@Deprecated // delegate to viewModel
-	public Sounds soundPool;
+	public final Sounds soundPool;
 
 	public boolean showSeeds, showOpponents, snapAid;
 	public int showAnimations;
@@ -53,6 +52,8 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 	public Scene(Freebloks3DView view, FreebloksActivityViewModel viewModel) {
 		this.view = view;
 		this.viewModel = viewModel;
+
+		this.soundPool = viewModel.getSounds();
 
 		this.board = new Board();
 		this.game = new Game(board);
@@ -99,7 +100,6 @@ public class Scene extends ArrayList<ViewElement> implements ViewElement {
 			this.board = null;
 			this.game = null;
 		}
-
 	}
 
 	@Override

@@ -60,11 +60,11 @@ class PhysicalShapeEffect(model: Scene, stone: Shape, color: Int, orientation: O
         gl.glRotatef(ang, ax, ay, az)
         gl.glScalef(1.0f + currentY / 18.0f, 1f, 1.0f + currentY / 18.0f)
         gl.glTranslatef(
-            +BoardRenderer.stone_size - shape.size.toFloat() / 2.0f * BoardRenderer.stone_size * 2.0f,
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f,
             0.0f,
-            +BoardRenderer.stone_size - shape.size.toFloat() / 2.0f * BoardRenderer.stone_size * 2.0f
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f
         )
-        renderer.renderStoneShadow(gl, color, shape, orientation, alpha)
+        renderer.renderShapeShadow(gl, color, shape, orientation, alpha)
         gl.glPopMatrix()
     }
 
@@ -73,10 +73,10 @@ class PhysicalShapeEffect(model: Scene, stone: Shape, color: Int, orientation: O
         gl.glTranslatef(currentX, currentY, currentZ)
         gl.glRotatef(ang, ax, ay, az)
         gl.glTranslatef(
-            +BoardRenderer.stone_size - shape.size.toFloat() / 2.0f * BoardRenderer.stone_size * 2.0f,
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f,
             0.0f,
-            +BoardRenderer.stone_size - shape.size.toFloat() / 2.0f * BoardRenderer.stone_size * 2.0f)
-        renderer.renderPlayerStone(gl, color, shape, orientation, BoardRenderer.DEFAULT_ALPHA)
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f)
+        renderer.renderShape(gl, color, shape, orientation, BoardRenderer.defaultStoneAlpha)
         gl.glPopMatrix()
     }
 

@@ -21,10 +21,10 @@ class ShapeFadeEffect(model: Scene, turn: Turn, private val numberOfIterations: 
         val alpha = fromAlpha + amp * (toAlpha - fromAlpha)
         gl.glPushMatrix()
         gl.glTranslatef(
-            -BoardRenderer.stone_size * (model.board.width - 1).toFloat() + BoardRenderer.stone_size * 2.0f * x.toFloat(),
+            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
             0f,
-            -BoardRenderer.stone_size * (model.board.height - 1).toFloat() + BoardRenderer.stone_size * 2.0f * y.toFloat())
-        renderer.renderPlayerStone(gl, color, shape, orientation, alpha * BoardRenderer.DEFAULT_ALPHA)
+            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
+        renderer.renderShape(gl, color, shape, orientation, alpha * BoardRenderer.defaultStoneAlpha)
         gl.glPopMatrix()
     }
 }

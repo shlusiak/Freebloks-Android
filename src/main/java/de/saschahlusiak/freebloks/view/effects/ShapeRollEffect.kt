@@ -74,11 +74,11 @@ class ShapeRollEffect(
     override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
         gl.glPushMatrix()
         gl.glTranslatef(
-            -BoardRenderer.stone_size * (model.board.width - 1).toFloat() + BoardRenderer.stone_size * 2.0f * x,
+            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
             0f,
-            -BoardRenderer.stone_size * (model.board.height - 1).toFloat() + BoardRenderer.stone_size * 2.0f * y
+            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
         )
-        renderer.renderShadow(gl,
+        renderer.renderShapeShadow(gl,
             shape, color, orientation,
             z,
             r, ax, ay, az,
@@ -93,19 +93,19 @@ class ShapeRollEffect(
         gl.glPushMatrix()
         val offset = shape.size.toFloat() - 1.0f
         gl.glTranslatef(
-            -BoardRenderer.stone_size * (model.board.width - 1).toFloat() + BoardRenderer.stone_size * 2.0f * x.toFloat(),
+            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
             z,
-            -BoardRenderer.stone_size * (model.board.height - 1).toFloat() + BoardRenderer.stone_size * 2.0f * y.toFloat())
+            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
         gl.glTranslatef(
-            BoardRenderer.stone_size * offset, 0f,
-            BoardRenderer.stone_size * offset
+            BoardRenderer.stoneSize * offset, 0f,
+            BoardRenderer.stoneSize * offset
         )
         gl.glRotatef(r, ax, ay, az)
         gl.glTranslatef(
-            -BoardRenderer.stone_size * offset, 0f,
-            -BoardRenderer.stone_size * offset
+            -BoardRenderer.stoneSize * offset, 0f,
+            -BoardRenderer.stoneSize * offset
         )
-        renderer.renderPlayerStone(gl, color, shape, orientation, BoardRenderer.DEFAULT_ALPHA)
+        renderer.renderShape(gl, color, shape, orientation, BoardRenderer.defaultStoneAlpha)
         gl.glPopMatrix()
     }
 }
