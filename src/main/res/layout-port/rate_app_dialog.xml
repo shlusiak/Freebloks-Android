@@ -9,7 +9,7 @@
     android:paddingBottom="12dp" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/appIcon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
