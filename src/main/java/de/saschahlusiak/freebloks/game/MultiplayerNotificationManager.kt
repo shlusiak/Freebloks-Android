@@ -167,7 +167,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         return builder.build()
     }
 
-    private fun buildChatNotification(ongoing: Boolean = false, text: String): Notification {
+    private fun buildChatNotification(ongoing: Boolean = false, title: String?, text: String): Notification {
         val builder = NotificationCompat.Builder(context, CHANNEL_CHAT)
 
         val contentIntent = Intent(Intent.ACTION_MAIN, null, context, FreebloksActivity::class.java).apply {
@@ -178,6 +178,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         val pendingContentIntent = PendingIntent.getActivity(context, 1, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         builder.apply {
+            setContentTitle(title ?: context.getString(R.string.app_name))
             setContentIntent(pendingContentIntent)
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
 
@@ -203,9 +204,9 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
 
         if (game.isStarted) {
-            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, text = text))
+            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = null, text = text))
         } else {
-            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, text = text))
+            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, title = null, text = text))
         }
     }
 
@@ -223,9 +224,9 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
                 stopBackgroundNotification()
             }
 
-            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, text = text))
+            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = null, text = text))
         } else {
-            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, text = text))
+            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, title = null, text = text))
         }
     }
 
@@ -239,8 +240,8 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         else
             status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
 
-        val text = "${name}: $message"
-        notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, text = text))
+        val title = context.getString(R.string.notification_title, name)
+        notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = title, text = message))
     }
 
     override fun newCurrentPlayer(player: Int) {
