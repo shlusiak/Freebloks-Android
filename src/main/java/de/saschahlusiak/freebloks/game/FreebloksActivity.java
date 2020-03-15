@@ -985,6 +985,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	@Override
 	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
 		if (Intent.ACTION_DELETE.equals(intent.getAction())) {
 			Log.d(tag, "ACTION_DELETE");
 			finish();
@@ -994,7 +995,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				new LobbyDialog().show(getSupportFragmentManager(), null);
 			}
 		}
-		super.onNewIntent(intent);
 	}
 
 	@Override
