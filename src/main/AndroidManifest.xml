@@ -91,11 +91,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AboutActivity"
-            android:exported="false"
-            android:label="@string/about_freebloks"
-            android:theme="@style/Theme.Freebloks.Light.Dialog.MinWidth"/>
-        <activity
             android:name=".rules.RulesActivity"
             android:exported="false"
             android:label="@string/rules_title"

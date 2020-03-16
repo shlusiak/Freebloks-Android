@@ -11,7 +11,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import de.saschahlusiak.freebloks.AboutActivity
+import de.saschahlusiak.freebloks.AboutFragment
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
@@ -191,8 +191,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("about")?.setOnPreferenceClickListener {
-            val intent = Intent(requireContext(), AboutActivity::class.java)
-            startActivity(intent)
+            AboutFragment().show(parentFragmentManager, null)
             true
         }
     }

@@ -12,7 +12,7 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
-import de.saschahlusiak.freebloks.AboutActivity
+import de.saschahlusiak.freebloks.AboutFragment
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.donate.DonateActivity
@@ -104,8 +104,12 @@ class MainMenu : MaterialDialogFragment(), View.OnClickListener, OnLongClickList
                 requireContext().startActivity(intent)
             }
             R.id.appIcon -> {
-                intent = Intent(context, if (appIconIsDonate) DonateActivity::class.java else AboutActivity::class.java)
-                requireContext().startActivity(intent)
+                if (appIconIsDonate) {
+                    intent = Intent(context, DonateActivity::class.java)
+                    requireContext().startActivity(intent)
+                } else {
+                    AboutFragment().show(parentFragmentManager, null)
+                }
             }
             R.id.join_game -> MultiplayerDialog().show(parentFragmentManager, null)
             R.id.new_game_custom -> CustomGameDialog().show(parentFragmentManager, null)
