@@ -43,7 +43,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.Serializable;
 
 import de.saschahlusiak.freebloks.BuildConfig;
 import de.saschahlusiak.freebloks.Global;
@@ -54,7 +53,7 @@ import de.saschahlusiak.freebloks.client.JNIServer;
 import de.saschahlusiak.freebloks.donate.DonateActivity;
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog;
 import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog;
-import de.saschahlusiak.freebloks.game.finish.GameFinishActivity;
+import de.saschahlusiak.freebloks.game.finish.GameFinishFragment;
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog;
 import de.saschahlusiak.freebloks.model.Board;
 import de.saschahlusiak.freebloks.model.Game;
@@ -80,8 +79,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	static final int DIALOG_QUIT = 3;
 	static final int DIALOG_NEW_GAME_CONFIRMATION = 8;
-
-	static final int REQUEST_FINISH_GAME = 1;
 
 	private static final String GAME_STATE_FILE = "gamestate.bin";
 
@@ -382,6 +379,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	 *
 	 * Called e.g. during long-press, "start new game" in the finish dialog, or on initial startup.
 	 */
+	@Override
 	public void startNewDefaultGame() {
 		if (client != null) {
 			// when starting a new game from the options menu, keep previous config
@@ -554,7 +552,8 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		optionsMenu.findItem(R.id.sound_toggle_button).setIcon(enabled ? R.drawable.ic_volume_up_white_48dp : R.drawable.ic_volume_off_white_48dp);
 	}
 
-	private void showMainMenu() {
+	@Override
+	public void showMainMenu() {
 		new MainMenu().show(getSupportFragmentManager(), "game_menu");
 	}
 
@@ -669,21 +668,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 			default:
 				return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case REQUEST_FINISH_GAME:
-				if (resultCode == GameFinishActivity.RESULT_NEW_GAME) {
-					startNewDefaultGame();
-				}
-				if (resultCode == GameFinishActivity.RESULT_SHOW_MENU) {
-					showMainMenu();
-				}
-				break;
 		}
 	}
 
@@ -822,10 +806,14 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				if (client == null)
 					return;
 
-				Intent intent = new Intent(FreebloksActivity.this, GameFinishActivity.class);
-				intent.putExtra("game", (Serializable) client.game);
-				intent.putExtra("lastStatus", (Serializable) lastStatus);
-				startActivityForResult(intent, REQUEST_FINISH_GAME);
+				Bundle args = new Bundle();
+				args.putSerializable("game", client.game);
+				args.putSerializable("lastStatus", lastStatus);
+
+				DialogFragment d = new GameFinishFragment();
+				d.setArguments(args);
+
+				d.show(getSupportFragmentManager(), null);
 			}
 		});
 	}

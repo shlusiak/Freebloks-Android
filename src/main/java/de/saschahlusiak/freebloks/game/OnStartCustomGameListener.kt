@@ -22,4 +22,16 @@ interface OnStartCustomGameListener {
      * @param device the remote device
      */
     fun onConnectToBluetoothDevice(config: GameConfig, localClientName: String?, device: BluetoothDevice)
+
+    /**
+     * Show the [MainMenu], no questions asked.
+     */
+    fun showMainMenu()
+
+    /**
+     * Start a new game with the last config or a default config
+     */
+    fun startNewDefaultGame()
 }
+
+

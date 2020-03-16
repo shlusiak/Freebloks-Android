@@ -2,9 +2,9 @@ package de.saschahlusiak.freebloks.game.finish
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.database.sqlite.SQLiteException
+import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
@@ -19,7 +19,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import kotlin.concurrent.thread
 
-class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app) {
+class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
     val gameHelper = GooglePlayGamesHelper(app)
     private var unlockAchievementsCalled = false
 
@@ -39,12 +39,12 @@ class GameFinishActivityViewModel(app: Application) : AndroidViewModel(app) {
 
     fun isInitialised() = (game != null)
 
-    fun setDataFromIntent(intent: Intent) {
+    fun setDataFromBundle(bundle: Bundle) {
         if (this.game != null) throw IllegalStateException("Already initialised")
 
-        val game = intent.getSerializableExtra("game") as? Game
+        val game = bundle.getSerializable("game") as? Game
         this.game = game ?: throw IllegalArgumentException("game must not be null")
-        this.lastStatus = intent.getSerializableExtra("lastStatus") as MessageServerStatus?
+        this.lastStatus = bundle.getSerializable("lastStatus") as MessageServerStatus?
         this.localClientName = prefs.getString("player_name", null)?.ifBlank { null }
 
         this.data = game.getPlayerScores().also { data ->

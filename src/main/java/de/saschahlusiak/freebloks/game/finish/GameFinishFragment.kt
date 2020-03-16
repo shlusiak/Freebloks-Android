@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game.finish
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -7,38 +8,53 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
-import de.saschahlusiak.freebloks.utils.applyMaterialBackground
+import de.saschahlusiak.freebloks.utils.MaterialDialog
+import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.game_finish_activity.*
 import kotlinx.android.synthetic.main.game_finish_player_row.view.*
 import java.lang.IllegalStateException
 
-class GameFinishActivity : AppCompatActivity(), View.OnClickListener {
-    private val REQUEST_LEADERBOARD = 1
-    private val REQUEST_ACHIEVEMENTS = 2
+class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
 
-    private val viewModel by lazy { ViewModelProvider(this).get(GameFinishActivityViewModel::class.java) }
+    private val REQUEST_ACHIEVEMENTS = 1000
+    private val REQUEST_LEADERBOARD = 1001
+
+    private val viewModel by lazy { ViewModelProvider(this).get(GameFinishFragmentViewModel::class.java) }
     private val gameHelper by lazy { viewModel.gameHelper }
-    
+
+    private val listener get() = requireActivity() as OnStartCustomGameListener
+
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.game_finish_activity)
+
         if (!viewModel.isInitialised()) {
-            viewModel.setDataFromIntent(intent)
+            viewModel.setDataFromBundle(requireArguments())
         }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.game_finish_activity, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val data = viewModel.data
         val gameMode = viewModel.gameMode
+
         if (data != null && gameMode != null) {
             updateViews(data, gameMode)
         } else {
@@ -51,31 +67,35 @@ class GameFinishActivity : AppCompatActivity(), View.OnClickListener {
         achievements.setOnClickListener(this)
         leaderboard.setOnClickListener(this)
 
-        viewModel.googleAccount.observe(this, Observer { account ->
+        viewModel.googleAccount.observe(viewLifecycleOwner, Observer { account ->
             val signedIn = account != null
-            viewModel.gameHelper.setWindowForPopups(window)
+            dialog?.window?.let { viewModel.gameHelper.setWindowForPopups(it) }
             if (signedIn) {
                 viewModel.unlockAchievements()
             }
             achievements.visibility = if (signedIn) View.VISIBLE else View.GONE
             leaderboard.visibility = if (signedIn) View.VISIBLE else View.GONE
         })
+    }
 
-        applyMaterialBackground()
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return MaterialDialog(requireContext(), theme).apply {
+            supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
+        }
     }
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.new_game -> {
-                setResult(RESULT_NEW_GAME)
-                finish()
+                dismiss()
+                listener.startNewDefaultGame()
             }
             R.id.show_main_menu -> {
-                setResult(RESULT_SHOW_MENU)
-                finish()
+                dismiss()
+                listener.showMainMenu()
             }
             R.id.statistics -> {
-                val intent = Intent(this, StatisticsActivity::class.java)
+                val intent = Intent(requireContext(), StatisticsActivity::class.java)
                 startActivity(intent)
             }
             R.id.achievements -> gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
@@ -186,10 +206,5 @@ class GameFinishActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         return l
-    }
-
-    companion object {
-        const val RESULT_NEW_GAME = 1
-        const val RESULT_SHOW_MENU = 2
     }
 }

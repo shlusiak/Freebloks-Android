@@ -66,11 +66,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".game.finish.GameFinishActivity"
-            android:exported="false"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Freebloks.Dialog.MinWidth"/>
-        <activity
             android:name=".preferences.SettingsActivity"
             android:exported="false"
             android:label="@string/preferences"
