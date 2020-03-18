@@ -10,14 +10,13 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighscoreDB
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.DependencyProvider
 import kotlinx.android.synthetic.main.statistics_activity.*
 
 class StatisticsActivity : AppCompatActivity() {
@@ -31,7 +30,7 @@ class StatisticsActivity : AppCompatActivity() {
     private val values: Array<String?> = arrayOfNulls(9)
     private var menu: Menu? = null
 
-    private lateinit var gameHelper: GooglePlayGamesHelper
+    private lateinit var gameHelper: de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +43,7 @@ class StatisticsActivity : AppCompatActivity() {
         listView.adapter = adapter
         ok.setOnClickListener { finish() }
 
-        gameHelper =  GooglePlayGamesHelper(this)
+        gameHelper = DependencyProvider.googlePlayGamesHelper(this)
         signin.setOnClickListener { gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN) }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -79,7 +78,7 @@ class StatisticsActivity : AppCompatActivity() {
         }
 
         if (gameHelper.isAvailable) {
-            gameHelper.googleAccount.observe(this, Observer { onGoogleAccountChanged(it) })
+            gameHelper.signedIn.observe(this, Observer { onGoogleAccountChanged(it) })
         } else {
             signin.visibility = View.GONE
         }
@@ -135,9 +134,9 @@ class StatisticsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            REQUEST_SIGN_IN -> gameHelper.onActivityResult(resultCode, data)?.let { error ->
+            REQUEST_SIGN_IN -> gameHelper.onActivityResult(resultCode, data) { error ->
                 MaterialAlertDialogBuilder(this).apply {
-                    setMessage(error)
+                    setMessage(error ?: getString(R.string.playgames_sign_in_failed))
                     setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
                     show()
                 }
@@ -189,8 +188,8 @@ class StatisticsActivity : AppCompatActivity() {
         adapter?.notifyDataSetChanged()
     }
 
-    private fun onGoogleAccountChanged(account: GoogleSignInAccount?) {
-        if (account != null) {
+    private fun onGoogleAccountChanged(signedIn: Boolean) {
+        if (signedIn) {
             findViewById<View>(R.id.signin).visibility = View.GONE
             invalidateOptionsMenu()
             gameHelper.submitScore(

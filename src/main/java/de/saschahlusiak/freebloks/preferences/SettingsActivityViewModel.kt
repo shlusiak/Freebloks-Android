@@ -2,11 +2,11 @@ package de.saschahlusiak.freebloks.preferences
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.DependencyProvider
 
 class SettingsActivityViewModel(val context: Application): AndroidViewModel(context) {
-    val googleHelper = GooglePlayGamesHelper(context)
+    val googleHelper = DependencyProvider.googlePlayGamesHelper(context)
 
-    val googleAccount = googleHelper.googleAccount
-    val currentPlayer = googleHelper.currentPlayer
+    val isSignedIn = googleHelper.signedIn
+    val playerName = googleHelper.playerName
 }

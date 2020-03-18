@@ -78,17 +78,17 @@ class SettingsFragment: PreferenceFragmentCompat() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.googleAccount.observe(viewLifecycleOwner, Observer { googleAccount ->
+        viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { googleAccount ->
             val signedIn = (googleAccount != null)
             findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.googleplus_signout else R.string.googleplus_signin)
             findPreference<Preference>("googleplus_leaderboard")?.isEnabled = signedIn
             findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn
         })
 
-        viewModel.currentPlayer.observe(viewLifecycleOwner, Observer { player ->
+        viewModel.playerName.observe(viewLifecycleOwner, Observer { player ->
             findPreference<Preference>("googleplus_signin")?.apply {
                 summary = if (player != null) {
-                    getString(R.string.googleplus_signout_long, player.displayName)
+                    getString(R.string.googleplus_signout_long, player)
                 } else {
                     getString(R.string.googleplus_signin_long)
                 }
@@ -99,9 +99,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
-            REQUEST_GOOGLE_SIGN_IN -> viewModel.googleHelper.onActivityResult(resultCode, data)?.let { error ->
+            REQUEST_GOOGLE_SIGN_IN -> viewModel.googleHelper.onActivityResult(resultCode, data) { error ->
                 MaterialAlertDialogBuilder(requireContext()).apply {
-                    setMessage(error)
+                    setMessage(error ?: getString(R.string.playgames_sign_in_failed))
                     setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
                     show()
                 }

@@ -4,7 +4,6 @@ Google Play game services IDs.
 Save this file as res/values/games-ids.xml in your project.
 -->
 <resources>
-  <string name="app_id" translatable="false">786410326200</string>
   <string name="achievement_blokus_classic" translatable="false">CgkIuJHVzfEWEAIQAw</string>
   <string name="achievement_blokus_duo" translatable="false">CgkIuJHVzfEWEAIQBA</string>
   <string name="achievement_perfect" translatable="false">CgkIuJHVzfEWEAIQBQ</string>

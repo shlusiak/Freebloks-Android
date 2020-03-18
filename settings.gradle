@@ -1,1 +1,3 @@
 rootProject.name = 'Freebloks-Android'
+include ':common'
+include ':googleServices'

@@ -13,8 +13,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.analytics.FirebaseAnalytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
@@ -31,6 +29,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.theme.Sounds
+import de.saschahlusiak.freebloks.DependencyProvider
 import java.net.NetworkInterface
 import java.net.SocketException
 import kotlin.concurrent.thread
@@ -50,7 +49,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
-    private val analytics by lazy { FirebaseAnalytics.getInstance(context) }
+    private val analytics by lazy { DependencyProvider.analytics(context) }
 
     // UI Thread handler
     private val handler = Handler()
@@ -88,14 +87,14 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
-    val currentGoogleAccount: MutableLiveData<GoogleSignInAccount?>
+    val googleAccountSignedIn: MutableLiveData<Boolean>
     val canRequestUndo = MutableLiveData(false)
     val canRequestHint = MutableLiveData(false)
 
     init {
         client = null
-        gameHelper = GooglePlayGamesHelper(app)
-        currentGoogleAccount = gameHelper.googleAccount
+        gameHelper = DependencyProvider.googlePlayGamesHelper(app)
+        googleAccountSignedIn = gameHelper.signedIn
         reloadPreferences()
     }
 

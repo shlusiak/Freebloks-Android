@@ -2,7 +2,7 @@ package de.saschahlusiak.freebloks.utils
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import com.google.firebase.analytics.FirebaseAnalytics
+import de.saschahlusiak.freebloks.DependencyProvider
 
-val Context.analytics get() = FirebaseAnalytics.getInstance(this)
+val Context.analytics get() = DependencyProvider.analytics(this)
 val Context.prefs get() = PreferenceManager.getDefaultSharedPreferences(this)

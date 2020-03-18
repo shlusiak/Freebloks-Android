@@ -35,7 +35,6 @@ import androidx.preference.PreferenceManager;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import de.saschahlusiak.freebloks.BuildConfig;
+import de.saschahlusiak.freebloks.DependencyProvider;
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.R;
 import de.saschahlusiak.freebloks.client.GameClient;
@@ -66,6 +66,7 @@ import de.saschahlusiak.freebloks.preferences.SettingsActivity;
 import de.saschahlusiak.freebloks.theme.ColorThemes;
 import de.saschahlusiak.freebloks.theme.Theme;
 import de.saschahlusiak.freebloks.theme.ThemeManager;
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider;
 import de.saschahlusiak.freebloks.view.Freebloks3DView;
 import de.saschahlusiak.freebloks.view.effects.BoardStoneGlowEffect;
 import de.saschahlusiak.freebloks.view.effects.Effect;
@@ -90,6 +91,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	private Menu optionsMenu;
 	private ImageButton chatButton;
 	private boolean showRateDialog = false;
+	private AnalyticsProvider analytics;
 
 	private FreebloksActivityViewModel viewModel;
 
@@ -110,7 +112,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				.penaltyLog()
 //				 .penaltyDeath()
 				.build());
-
 		}
 
 		Crashlytics crashlyticsKit = new Crashlytics.Builder()
@@ -118,6 +119,8 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			.build();
 
 		Fabric.with(this, crashlyticsKit);
+
+		analytics = DependencyProvider.analytics(this);
 
 		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
 
@@ -191,7 +194,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		viewModel.getConnectionStatus().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
 		viewModel.getSoundsEnabledLiveData().observe(this, this::soundEnabledChanged);
-		viewModel.getCurrentGoogleAccount().observe(this, signedIn -> {
+		viewModel.getGoogleAccountSignedIn().observe(this, signedIn -> {
 			viewModel.getGameHelper().setWindowForPopups(getWindow());
 			if (Global.IS_VIP) {
 				viewModel.getGameHelper().unlock(getString(R.string.achievement_vip));
@@ -775,7 +778,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	@Override
 	public void hintReceived(@NonNull final Turn turn) {
-		FirebaseAnalytics.getInstance(this).logEvent("hint_received", null);
+		analytics.logEvent("hint_received", null);
 
 		runOnUiThread(new Runnable() {
 			@Override
@@ -797,7 +800,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		b.putInt("h", client.game.getBoard().height);
 		b.putInt("clients", lastStatus.getClients());
 		b.putInt("players", lastStatus.getPlayer());
-		FirebaseAnalytics.getInstance(this).logEvent("game_finished", b);
+		analytics.logEvent("game_finished", b);
 
 		/* TODO: play sound on game finish */
 		runOnUiThread(new Runnable() {
@@ -859,10 +862,10 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		b.putInt("clients", lastStatus.getClients());
 		b.putInt("players", lastStatus.getPlayer());
 
-		FirebaseAnalytics.getInstance(this).logEvent("game_started", b);
+		analytics.logEvent("game_started", b);
 
 		if (lastStatus.getClients() >= 2) {
-			FirebaseAnalytics.getInstance(this).logEvent("game_start_multiplayer", b);
+			analytics.logEvent("game_start_multiplayer", b);
 		}
 
 		Log.d(tag, "Game started");
@@ -873,7 +876,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	@Override
 	public void stoneUndone(@NonNull Turn t) {
-		FirebaseAnalytics.getInstance(this).logEvent("undo_move", null);
+		analytics.logEvent("undo_move", null);
 	}
 
 	@Override
@@ -892,7 +895,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				final Bundle bundle = new Bundle();
 				final String server = client.getConfig().getServer() == null ? "localhost" : client.getConfig().getServer();
 				bundle.putString("server", server);
-				FirebaseAnalytics.getInstance(this).logEvent("show_lobby", bundle);
+				analytics.logEvent("show_lobby", bundle);
 
 				new LobbyDialog().show(getSupportFragmentManager(), null);
 			});
@@ -988,7 +991,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	@Override
 	public void onLobbyDialogClosed() {
 		if (client != null && !client.game.isStarted() && !client.game.isFinished()) {
-			FirebaseAnalytics.getInstance(this).logEvent("lobby_close", null);
+			analytics.logEvent("lobby_close", null);
 			viewModel.disconnectClient();
 			showMainMenu();
 		}

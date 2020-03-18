@@ -67,8 +67,7 @@ class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
         achievements.setOnClickListener(this)
         leaderboard.setOnClickListener(this)
 
-        viewModel.googleAccount.observe(viewLifecycleOwner, Observer { account ->
-            val signedIn = account != null
+        viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { signedIn ->
             dialog?.window?.let { viewModel.gameHelper.setWindowForPopups(it) }
             if (signedIn) {
                 viewModel.unlockAchievements()

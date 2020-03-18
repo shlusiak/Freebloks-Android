@@ -16,11 +16,11 @@ import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.DependencyProvider
 import kotlin.concurrent.thread
 
 class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
-    val gameHelper = GooglePlayGamesHelper(app)
+    val gameHelper = DependencyProvider.googlePlayGamesHelper(app)
     private var unlockAchievementsCalled = false
 
     // prefs
@@ -35,7 +35,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
     // LiveData
     @JvmField
-    val googleAccount = gameHelper.googleAccount
+    val isSignedIn = gameHelper.signedIn
 
     fun isInitialised() = (game != null)
 
@@ -55,7 +55,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
             thread { addScores(data, game.gameMode) }
 
             // and unlock achievements if we are logged in
-            if (gameHelper.isSignedIn && !unlockAchievementsCalled) {
+            if (gameHelper.signedIn.value == true && !unlockAchievementsCalled) {
                 thread { unlockAchievements(data, game.gameMode) }
             }
         }
