@@ -215,6 +215,8 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
             // we can only run this after the TCP server is running, so we can connect to it and start the bridge
             BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
         })
+
+        // dismissing this dialog will stop the listener, which will be started again by the LobbyDialog
         dismiss()
     }
 }
