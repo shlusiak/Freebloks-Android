@@ -74,8 +74,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { googleAccount ->
-            val signedIn = (googleAccount != null)
+        viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { signedIn ->
             findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.googleplus_signout else R.string.googleplus_signin)
             findPreference<Preference>("googleplus_leaderboard")?.isEnabled = signedIn
             findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn

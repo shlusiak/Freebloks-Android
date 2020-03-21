@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.utils
 import android.content.Context
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import de.saschahlusiak.freebloks.common.BuildConfig
+import de.saschahlusiak.freebloks.googleServices.BuildConfig
 import io.fabric.sdk.android.Fabric
 
 class CrashlyticsCrashReporter(context: Context) : CrashReporter() {

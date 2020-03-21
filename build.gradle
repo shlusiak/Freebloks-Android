@@ -60,16 +60,19 @@ android {
             dimension 'store'
             buildConfigField 'boolean', 'IS_AMAZON', 'false'
             buildConfigField 'String', 'APP_STORE_NAME', '\"Google Play Store\"'
+            buildConfigField 'String', 'APP_STORE_LINK', '\"https://play.google.com/store/apps/details?id=%s\"'
         }
         amazon {
             dimension 'store'
             buildConfigField 'boolean', 'IS_AMAZON', 'true'
             buildConfigField 'String', 'APP_STORE_NAME', '\"Amazon App Store\"'
+            buildConfigField 'String', 'APP_STORE_LINK', '\"http://www.amazon.com/gp/mas/dl/android?p=%s\"'
         }
         fdroid {
             dimension 'store'
             buildConfigField 'boolean', 'IS_AMAZON', 'false'
             buildConfigField 'String', 'APP_STORE_NAME', '\"F-Droid\"'
+            buildConfigField 'String', 'APP_STORE_LINK', '\"https://f-droid.org/en/packages/%s\"'
         }
     }
     externalNativeBuild {

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import java.util.Locale;
+
 import de.saschahlusiak.freebloks.model.GameMode;
 
 public class Global {
@@ -28,10 +30,7 @@ public class Global {
 
 
 	public static String getMarketURLString(@NonNull String packageName) {
-		if (BuildConfig.IS_AMAZON)
-			return "http://www.amazon.com/gp/mas/dl/android?p=" + packageName;
-		else
-			return "https://play.google.com/store/apps/details?id=" + packageName;
+		return String.format(Locale.ROOT, BuildConfig.APP_STORE_LINK, packageName);
 	}
 
 
