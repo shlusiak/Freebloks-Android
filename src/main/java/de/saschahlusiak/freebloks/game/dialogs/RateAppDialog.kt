@@ -12,9 +12,9 @@ import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import de.saschahlusiak.freebloks.utils.analytics
 import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.rate_app_dialog.*
 

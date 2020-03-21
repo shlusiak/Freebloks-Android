@@ -6,10 +6,9 @@ import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.annotation.UiThread
-import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
+import de.saschahlusiak.freebloks.crashReporter
 import java.io.IOException
 import java.util.*
 
@@ -37,7 +36,7 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
                 Log.i(tag, "enabled " + bluetoothAdapter.isEnabled)
             } catch (e: SecurityException) { // doesn't matter, but is interesting
                 e.printStackTrace()
-                Crashlytics.logException(e)
+                crashReporter.logException(e)
             }
         }
     }
@@ -53,11 +52,11 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
             bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("freebloks", SERVICE_UUID)
         } catch (e: IOException) {
             e.printStackTrace()
-            Crashlytics.logException(e)
+            crashReporter.logException(e)
             return
         } catch (e: SecurityException) {
             e.printStackTrace()
-            Crashlytics.logException(e)
+            crashReporter.logException(e)
             return
         }
 

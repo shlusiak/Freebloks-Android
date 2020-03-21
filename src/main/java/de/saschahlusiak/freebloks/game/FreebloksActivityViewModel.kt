@@ -12,7 +12,6 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
-import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
@@ -49,7 +48,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
-    private val analytics by lazy { DependencyProvider.analytics(context) }
+    private val analytics by lazy { DependencyProvider.analytics() }
 
     // UI Thread handler
     private val handler = Handler()
@@ -93,7 +92,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     init {
         client = null
-        gameHelper = DependencyProvider.googlePlayGamesHelper(app)
+        gameHelper = DependencyProvider.googlePlayGamesHelper()
         googleAccountSignedIn = gameHelper.signedIn
         reloadPreferences()
     }
@@ -186,8 +185,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
         connectThread = thread(name = "ConnectionThread") {
             val name = config.server ?: "(null)"
-            Crashlytics.log(Log.INFO, tag, "Connecting to: $name")
-            Crashlytics.setString("server", name)
+            val crashReporting = DependencyProvider.crashReporter()
+            crashReporting.log(Log.INFO, tag, "Connecting to: $name")
+            crashReporting.setString("server", name)
 
             try {
                 // client will notify observers about connection failed
@@ -249,7 +249,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectThread?.join(100)
         connectionStatus.value = ConnectionStatus.Connecting
 
-        Crashlytics.log(Log.INFO, tag, "Connecting to bluetooth device")
+        DependencyProvider.crashReporter().log(Log.INFO, tag, "Connecting to bluetooth device")
 
         connectThread = thread(name = "BluetoothConnectThread") {
             try {

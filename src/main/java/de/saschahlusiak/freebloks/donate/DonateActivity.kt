@@ -8,7 +8,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.utils.analytics
+import de.saschahlusiak.freebloks.analytics
 import kotlinx.android.synthetic.main.donate_activity.*
 
 class DonateActivity : AppCompatActivity() {

@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.AboutFragment
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
@@ -23,7 +24,6 @@ import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import de.saschahlusiak.freebloks.utils.analytics
 import kotlinx.android.synthetic.main.main_menu.*
 import kotlinx.android.synthetic.main.main_menu.view.*
 

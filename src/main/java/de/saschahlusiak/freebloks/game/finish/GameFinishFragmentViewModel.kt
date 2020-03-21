@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
-import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighscoreDB
@@ -17,10 +16,11 @@ import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.DependencyProvider
+import de.saschahlusiak.freebloks.crashReporter
 import kotlin.concurrent.thread
 
 class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
-    val gameHelper = DependencyProvider.googlePlayGamesHelper(app)
+    val gameHelper = DependencyProvider.googlePlayGamesHelper()
     private var unlockAchievementsCalled = false
 
     // prefs
@@ -101,7 +101,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
             db.close()
         } catch (e: SQLiteException) {
-            Crashlytics.logException(e)
+            crashReporter.logException(e)
             e.printStackTrace()
         }
     }
@@ -148,7 +148,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
         try {
             db.open()
         } catch (e: SQLiteException) {
-            Crashlytics.logException(e)
+            crashReporter.logException(e)
             return
         }
 

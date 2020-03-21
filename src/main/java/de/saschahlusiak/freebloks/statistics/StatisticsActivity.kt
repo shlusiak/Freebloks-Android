@@ -43,8 +43,7 @@ class StatisticsActivity : AppCompatActivity() {
         listView.adapter = adapter
         ok.setOnClickListener { finish() }
 
-        gameHelper = DependencyProvider.googlePlayGamesHelper(this)
-        signin.setOnClickListener { gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN) }
+        gameHelper = DependencyProvider.googlePlayGamesHelper()
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         gameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
@@ -78,9 +77,11 @@ class StatisticsActivity : AppCompatActivity() {
         }
 
         if (gameHelper.isAvailable) {
-            gameHelper.signedIn.observe(this, Observer { onGoogleAccountChanged(it) })
-        } else {
-            signin.visibility = View.GONE
+            signin_stub.inflate()
+            findViewById<View>(R.id.signin).apply {
+                gameHelper.signedIn.observe(this@StatisticsActivity, Observer { onGoogleAccountChanged(it) })
+                setOnClickListener { gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN) }
+            }
         }
     }
 
@@ -116,7 +117,6 @@ class StatisticsActivity : AppCompatActivity() {
             }
             R.id.signout -> {
                 gameHelper.startSignOut()
-                signin.visibility = View.VISIBLE
                 invalidateOptionsMenu()
                 return true
             }

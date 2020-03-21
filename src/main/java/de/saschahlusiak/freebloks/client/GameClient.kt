@@ -6,8 +6,8 @@ import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import com.crashlytics.android.Crashlytics
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Board
@@ -18,7 +18,6 @@ import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageReadThread
 import de.saschahlusiak.freebloks.network.MessageWriter
 import de.saschahlusiak.freebloks.network.message.*
-import io.fabric.sdk.android.Fabric
 import java.io.Closeable
 import java.io.IOException
 import java.io.InputStream
@@ -169,9 +168,8 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
 
         val lastError = readThread?.error
         try {
-            if (Fabric.isInitialized()) {
-                Crashlytics.log("Disconnecting from " + config.server)
-            }
+            crashReporter.log(tag = "GameClient", message = "Disconnecting from ${config.server}")
+
             readThread?.goDown()
             if (sendExecutor != null) {
                 sendExecutor?.shutdown()

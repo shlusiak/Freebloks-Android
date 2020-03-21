@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import de.saschahlusiak.freebloks.DependencyProvider
 
 class SettingsActivityViewModel(val context: Application): AndroidViewModel(context) {
-    val googleHelper = DependencyProvider.googlePlayGamesHelper(context)
+    val googleHelper = DependencyProvider.googlePlayGamesHelper()
 
     val isSignedIn = googleHelper.signedIn
     val playerName = googleHelper.playerName

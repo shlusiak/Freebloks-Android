@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -10,32 +9,35 @@
         android:id="@+id/game_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/game_modes"/>
+        android:entries="@array/game_modes" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="wrap_content"></ListView>
 
     <LinearLayout
         android:id="@+id/buttons"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/signin"
+        <ViewStub
+            android:id="@+id/signin_stub"
+            android:inflatedId="@+id/signin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
+            android:visibility="gone"
+            android:layout="@layout/google_signin_button"
+            android:layout_weight="0.5">
+        </ViewStub>
 
         <Button
             android:id="@+id/ok"
+            style="?borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            style="?borderlessButtonStyle"
-            android:text="@android:string/ok"/>
+            android:text="@android:string/ok" />
     </LinearLayout>
 </LinearLayout>

@@ -131,13 +131,6 @@ dependencies {
 
     googleImplementation project(':googleServices')
     amazonImplementation project(':googleServices')
-
-    // See fdroid flavour for free variant
-
-    // https://docs.fabric.io/android/changelog.html#crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
-        transitive = true
-    }
 }
 
 apply plugin: 'com.google.gms.google-services'

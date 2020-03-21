@@ -1,21 +1,29 @@
 package de.saschahlusiak.freebloks
 
 import android.content.Context
-import de.saschahlusiak.freebloks.utils.DefaultGooglePlayGamesHelper
-import de.saschahlusiak.freebloks.utils.FirebaseAnalyticsProvider
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import java.lang.ref.WeakReference
+import de.saschahlusiak.freebloks.utils.*
 
 object DependencyProvider {
-    private var gamesHelper: WeakReference<GooglePlayGamesHelper>? = null
-
-    @Synchronized
-    fun googlePlayGamesHelper(context: Context): GooglePlayGamesHelper {
-        return gamesHelper?.get() ?: DefaultGooglePlayGamesHelper(context.applicationContext).also {
-            gamesHelper = WeakReference(it)
-        }
-    }
+    private lateinit var gamesHelper: GooglePlayGamesHelper
+    private lateinit var analytics: AnalyticsProvider
+    private lateinit var crashReporter: CrashReporter
 
     @JvmStatic
-    fun analytics(context: Context) = FirebaseAnalyticsProvider(context)
+    fun initialise(context: Context) {
+        crashReporter = CrashlyticsCrashReporter(context)
+        analytics = FirebaseAnalyticsProvider(context)
+        gamesHelper = DefaultGooglePlayGamesHelper(context.applicationContext)
+    }
+
+    @Synchronized
+    fun googlePlayGamesHelper() = gamesHelper
+
+    @JvmStatic
+    fun analytics() = analytics
+
+    @JvmStatic
+    fun crashReporter() = crashReporter
 }
+
+val analytics get() = DependencyProvider.analytics()
+val crashReporter get() = DependencyProvider.crashReporter()

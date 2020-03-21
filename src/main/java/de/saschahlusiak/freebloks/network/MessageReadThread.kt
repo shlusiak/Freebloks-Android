@@ -1,9 +1,8 @@
 package de.saschahlusiak.freebloks.network
 
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.model.GameStateException
-import io.fabric.sdk.android.Fabric
 import java.io.IOException
 import java.io.InputStream
 
@@ -67,7 +66,7 @@ class MessageReadThread(
         } catch (e: IOException) {
             if (goDown) return
 
-            if (Fabric.isInitialized()) Crashlytics.logException(e)
+            crashReporter.logException(e)
             synchronized(this) {
                 error = e
             }

@@ -32,8 +32,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +71,6 @@ import de.saschahlusiak.freebloks.view.effects.Effect;
 import de.saschahlusiak.freebloks.view.scene.intro.Intro;
 import de.saschahlusiak.freebloks.view.scene.Scene;
 import de.saschahlusiak.freebloks.view.scene.intro.IntroCompletedListener;
-import io.fabric.sdk.android.Fabric;
 
 public class FreebloksActivity extends AppCompatActivity implements GameEventObserver, IntroCompletedListener, OnStartCustomGameListener, LobbyDialog.LobbyDialogListener {
 	static final String tag = FreebloksActivity.class.getSimpleName();
@@ -114,13 +111,10 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				.build());
 		}
 
-		Crashlytics crashlyticsKit = new Crashlytics.Builder()
-			.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-			.build();
+		// must initialise before anything else
+		DependencyProvider.initialise(this);
 
-		Fabric.with(this, crashlyticsKit);
-
-		analytics = DependencyProvider.analytics(this);
+		analytics = DependencyProvider.analytics();
 
 		Log.d(tag, "nativeLibraryDir=" + getApplicationInfo().nativeLibraryDir);
 
@@ -364,7 +358,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			if (game.isFinished())
 				return false;
 
-			Crashlytics.log("Resuming game from bundle");
+			DependencyProvider.crashReporter().log(Log.INFO, tag, "Resuming game from bundle");
 			Log.d(tag, "Resuming game from bundle");
 			resumeGame(game);
 
@@ -415,7 +409,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		final int previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY);
 		int ret = JNIServer.runServerForExistingGame(game, previousDifficulty);
 		if (ret != 0) {
-			Crashlytics.log("Error starting server: " + ret);
+			DependencyProvider.crashReporter().log(Log.INFO, tag, "Error starting server: " + ret);
 		}
 
 		final GameConfig config = new GameConfig(
@@ -453,7 +447,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			);
 
 			if (ret != 0) {
-				Crashlytics.log("Error starting server: " + ret);
+				DependencyProvider.crashReporter().log(Log.INFO, tag, "Error starting server: " + ret);
 			}
 		}
 
@@ -507,7 +501,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 
 	private void saveGameState(final String filename) {
 		final Parcel p = Parcel.obtain();
-		Bundle b = new Bundle();
+		final Bundle b = new Bundle();
 		synchronized (client) {
 			writeStateToBundle(b);
 			p.writeBundle(b);
@@ -522,7 +516,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 					fos.close();
 					p.recycle();
 				} catch (Exception e) {
-					Crashlytics.logException(e);
 					e.printStackTrace();
 				}
 			}

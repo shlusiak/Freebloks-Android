@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData

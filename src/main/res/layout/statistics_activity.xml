@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <Spinner
         android:id="@+id/game_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-	    android:entries="@array/game_modes"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:entries="@array/game_modes" />
 
     <LinearLayout
         android:id="@+id/buttons"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
-	    <com.google.android.gms.common.SignInButton
-	        android:id="@+id/signin"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5" />
+        <ViewStub
+			android:id="@+id/signin_stub"
+            android:inflatedId="@+id/signin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+			android:visibility="gone"
+            android:layout="@layout/google_signin_button"
+            android:layout_weight="0.5">
+        </ViewStub>
 
-	    <Button
-	        android:id="@+id/ok"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5"
-	        style="?borderlessButtonStyle"
-	        android:text="@android:string/ok" />
+        <Button
+            android:id="@+id/ok"
+            style="?borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@android:string/ok" />
 
-	</LinearLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@+id/game_mode"
-        android:layout_above="@+id/buttons" >
-    </ListView>
+        android:layout_above="@+id/buttons"
+        android:layout_below="@+id/game_mode"></ListView>
 
 </RelativeLayout>

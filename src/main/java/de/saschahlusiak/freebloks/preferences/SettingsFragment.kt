@@ -11,17 +11,13 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import de.saschahlusiak.freebloks.AboutFragment
-import de.saschahlusiak.freebloks.BuildConfig
-import de.saschahlusiak.freebloks.Global
-import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.*
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SCREEN
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SHOW_CATEGORY
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.SCREEN_INTERFACE
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
-import de.saschahlusiak.freebloks.utils.analytics
 
 /**
  * Root preferences screen, hosted in [SettingsActivity].

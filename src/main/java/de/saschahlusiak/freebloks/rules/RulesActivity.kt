@@ -7,7 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.utils.analytics
+import de.saschahlusiak.freebloks.analytics
 import kotlinx.android.synthetic.main.rules_activity.*
 
 class RulesActivity : AppCompatActivity() {
