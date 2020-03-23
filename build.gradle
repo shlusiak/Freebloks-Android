@@ -3,37 +3,33 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
     }
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
         classpath 'com.android.tools.build:gradle:3.6.1'
 
-        // kotlin
+        // Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // https://developers.google.com/android/guides/releases
         classpath 'com.google.gms:google-services:4.3.3'
-
-        // https://docs.fabric.io/android/changelog.html
-        classpath 'io.fabric.tools:gradle:1.31.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0-beta03'
     }
 }
 
 repositories {
     jcenter()
-    maven {
-        url "https://maven.google.com"
-    }
+    google()
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
+
+// Note: these plugins are NON-FREE. How to exclude them in the "Fdroid" build flavour?
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -129,11 +125,9 @@ dependencies {
     // https://github.com/ShawnLin013/NumberPicker
     implementation 'com.shawnlin:number-picker:2.4.8'
 
-    /// INCLUDE NON-FREE DEPENDENCIES
-    /// =============================
+    /// NON-FREE DEPENDENCIES, only included in "google" and "amazon" store flavours, excluded in "fdroid"
+    /// =====================
 
     googleImplementation project(':googleServices')
     amazonImplementation project(':googleServices')
 }
-
-apply plugin: 'com.google.gms.google-services'

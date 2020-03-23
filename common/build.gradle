@@ -1,8 +1,6 @@
 repositories {
     jcenter()
-    maven {
-        url "https://maven.google.com"
-    }
+    google()
 }
 
 apply plugin: 'com.android.library'

@@ -10,7 +10,7 @@ object DependencyProvider {
 
     @JvmStatic
     fun initialise(context: Context) {
-        crashReporter = CrashlyticsCrashReporter(context)
+        crashReporter = CrashlyticsCrashReporter()
         analytics = FirebaseAnalyticsProvider(context)
         gamesHelper = DefaultGooglePlayGamesHelper(context.applicationContext)
     }
