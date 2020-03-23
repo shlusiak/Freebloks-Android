@@ -358,7 +358,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			if (game.isFinished())
 				return false;
 
-			DependencyProvider.crashReporter().log(Log.INFO, tag, "Resuming game from bundle");
+			DependencyProvider.crashReporter().log("Resuming game from bundle");
 			Log.d(tag, "Resuming game from bundle");
 			resumeGame(game);
 
@@ -409,7 +409,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		final int previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY);
 		int ret = JNIServer.runServerForExistingGame(game, previousDifficulty);
 		if (ret != 0) {
-			DependencyProvider.crashReporter().log(Log.INFO, tag, "Error starting server: " + ret);
+			DependencyProvider.crashReporter().log("Error starting server: " + ret);
 		}
 
 		final GameConfig config = new GameConfig(
@@ -447,7 +447,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			);
 
 			if (ret != 0) {
-				DependencyProvider.crashReporter().log(Log.INFO, tag, "Error starting server: " + ret);
+				DependencyProvider.crashReporter().log("Error starting server: " + ret);
 			}
 		}
 

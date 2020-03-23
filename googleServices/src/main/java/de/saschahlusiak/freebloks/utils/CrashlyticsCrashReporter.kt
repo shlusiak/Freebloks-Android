@@ -9,15 +9,9 @@ class CrashlyticsCrashReporter : CrashReporter() {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
 
-    override fun log(priority: Int, tag: String, message: String) {
-        FirebaseCrashlytics.getInstance().log(message)
-    }
+    override fun log(message: String) = FirebaseCrashlytics.getInstance().log(message)
 
-    override fun logException(e: Exception) {
-        FirebaseCrashlytics.getInstance().recordException(e)
-    }
+    override fun logException(e: Exception) = FirebaseCrashlytics.getInstance().recordException(e)
 
-    override fun setString(key: String, value: String) {
-        FirebaseCrashlytics.getInstance().setCustomKey(key, value)
-    }
+    override fun setString(key: String, value: String) = FirebaseCrashlytics.getInstance().setCustomKey(key, value)
 }

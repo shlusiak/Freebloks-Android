@@ -27,7 +27,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-// Note: these plugins are NON-FREE. How to exclude them in the "Fdroid" build flavour?
+// Note: these plugins are NON-FREE.
+// TODO: How to exclude them in the "Fdroid" build flavour?
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.gms.google-services'
 

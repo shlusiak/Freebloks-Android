@@ -186,7 +186,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectThread = thread(name = "ConnectionThread") {
             val name = config.server ?: "(null)"
             val crashReporting = DependencyProvider.crashReporter()
-            crashReporting.log(Log.INFO, tag, "Connecting to: $name")
+            crashReporting.log("Connecting to: $name")
             crashReporting.setString("server", name)
 
             try {
@@ -249,7 +249,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectThread?.join(100)
         connectionStatus.value = ConnectionStatus.Connecting
 
-        DependencyProvider.crashReporter().log(Log.INFO, tag, "Connecting to bluetooth device")
+        DependencyProvider.crashReporter().log("Connecting to bluetooth device")
 
         connectThread = thread(name = "BluetoothConnectThread") {
             try {

@@ -15,7 +15,6 @@ object DependencyProvider {
         gamesHelper = DefaultGooglePlayGamesHelper(context.applicationContext)
     }
 
-    @Synchronized
     fun googlePlayGamesHelper() = gamesHelper
 
     @JvmStatic

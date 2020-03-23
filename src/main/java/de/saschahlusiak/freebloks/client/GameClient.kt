@@ -168,7 +168,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
 
         val lastError = readThread?.error
         try {
-            crashReporter.log(tag = "GameClient", message = "Disconnecting from ${config.server}")
+            crashReporter.log("Disconnecting from ${config.server}")
 
             readThread?.goDown()
             if (sendExecutor != null) {
