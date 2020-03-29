@@ -27,6 +27,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
@@ -277,7 +278,11 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
     @AnyThread
     private fun send(msg: Message) {
         // ignore sending to closed stream
-        sendExecutor?.submit { messageWriter?.write(msg) }
+        try {
+            sendExecutor?.submit { messageWriter?.write(msg) }
+        } catch (e: RejectedExecutionException) {
+            crashReporter.logException(e)
+        }
     }
 
     companion object {
