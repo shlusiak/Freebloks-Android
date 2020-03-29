@@ -212,13 +212,14 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
     override fun onBluetoothClientConnected(socket: BluetoothSocket) {
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
         val config = GameConfig(server = null, showLobby = true)
-        val listener = listener
+        val listener = this.listener
 
         if (listener == null || bluetoothServer == null) {
             // not quite sure why this would happen as we are only dismissing the dialog on success,
             // so we should never get a second connection coming in
 
             // maybe this is a second connection attempt from the same device though. Just reject the client.
+            Log.e(TAG, "Listener is null, disconnecting client")
             socket.close()
             return
         }

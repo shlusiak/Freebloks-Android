@@ -22,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
+import de.saschahlusiak.freebloks.game.ConnectionStatus
 import de.saschahlusiak.freebloks.game.FreebloksActivity
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
@@ -161,6 +162,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
 
         viewModel.chatHistoryAsLiveData.observe(viewLifecycleOwner, Observer { chatAdapter?.setData(it) })
 
+        viewModel.connectionStatus.observe(viewLifecycleOwner, Observer { onConnectionStatusChanged(it) })
         if (client.game.isStarted) {
             /* chat */
             startButton.visibility = View.GONE
@@ -298,7 +300,10 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
         handler.post { updateViewsFromStatus() }
     }
 
-    override fun onDisconnected(client: GameClient, error: Exception?) {
-        handler.post { dismissAllowingStateLoss() }
+    private fun onConnectionStatusChanged(status: ConnectionStatus) {
+        when (status) {
+            ConnectionStatus.Disconnected,
+            ConnectionStatus.Failed -> dismiss()
+        }
     }
 }
