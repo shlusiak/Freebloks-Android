@@ -115,7 +115,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
             }
 
             is MessageSetStone -> {
-                assert(game.isStarted || game.isFinished) { "received MSG_SET_STONE but game not yet running" }
+                assert(game.isStarted) { "received MSG_SET_STONE but game not started" }
                 val turn = message.toTurn()
                 assert(board.isValidTurn(turn)) { "invalid turn $turn" }
 
@@ -208,7 +208,6 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 board.startNewGame(game.gameMode)
                 game.isFinished = false
                 game.isStarted = true
-                /* Unbedingt history leeren. */
                 game.history.clear()
 
                 game.currentPlayer = -1

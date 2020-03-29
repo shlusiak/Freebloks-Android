@@ -54,7 +54,7 @@ class StatisticsActivity : AppCompatActivity() {
         if (actionBar == null) {
             game_mode.setSelection(gameMode.ordinal)
             (findViewById<View>(R.id.game_mode) as Spinner).onItemSelectedListener = object : OnItemSelectedListener {
-                override fun onItemSelected(adapter: AdapterView<*>?, view: View, position: Int, id: Long) {
+                override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     gameMode = from(position)
                     refreshData()
                 }

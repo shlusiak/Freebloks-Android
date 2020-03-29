@@ -131,11 +131,11 @@ data class MessageServerStatus(
         // highest version we understand.
         private const val VERSION_MAX = 3
 
-        // the size of version 1.5 header in bytes
+        // the size of version 3 header in bytes
         const val HEADER_SIZE_1_5 = 166
 
         fun from(buffer: ByteBuffer): MessageServerStatus {
-            assert(buffer.remaining() >= HEADER_SIZE_1_5) { "Unsupported header data size ${buffer.remaining()}" }
+            assert(buffer.remaining() >= HEADER_SIZE_1_5) { "Message too small, expected 166 bytes but got ${buffer.remaining()}" }
 
             val player = buffer.get().toInt()
             val computer = buffer.get().toInt()
