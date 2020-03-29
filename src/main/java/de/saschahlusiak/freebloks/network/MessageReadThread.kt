@@ -66,7 +66,7 @@ class MessageReadThread(
         } catch (e: IOException) {
             if (goDown) return
 
-            crashReporter.logException(e)
+            // crashReporter.logException(e)
             synchronized(this) {
                 error = e
             }
