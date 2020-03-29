@@ -159,23 +159,25 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		boardRenderer.stone.bindBuffers(gl11);
 
 		synchronized (model.effects) {
-			for (int y = 0; y < board.height; y++) {
-				int x;
-				for (x = 0; x < board.width; x++) {
-					int field = board.getFieldPlayer(y, x);
-					if (field != Board.FIELD_FREE) {
-						boolean effected = false;
-						for (int i = 0; i < model.effects.size(); i++)
-							if (model.effects.get(i).isEffected(x, y)) {
-								effected = true;
-								break;
-							}
-						if (!effected)
-							boardRenderer.renderSingleStone(gl11, Global.getPlayerColor(field, gameMode), BoardRenderer.defaultStoneAlpha);
+			synchronized (board) {
+				for (int y = 0; y < board.height; y++) {
+					int x;
+					for (x = 0; x < board.width; x++) {
+						int field = board.getFieldPlayer(y, x);
+						if (field != Board.FIELD_FREE) {
+							boolean effected = false;
+							for (int i = 0; i < model.effects.size(); i++)
+								if (model.effects.get(i).isEffected(x, y)) {
+									effected = true;
+									break;
+								}
+							if (!effected)
+								boardRenderer.renderSingleStone(gl11, Global.getPlayerColor(field, gameMode), BoardRenderer.defaultStoneAlpha);
+						}
+						gl.glTranslatef(BoardRenderer.stoneSize * 2.0f, 0, 0);
 					}
-					gl.glTranslatef(BoardRenderer.stoneSize * 2.0f, 0, 0);
+					gl.glTranslatef(-x * BoardRenderer.stoneSize * 2.0f, 0, BoardRenderer.stoneSize * 2.0f);
 				}
-				gl.glTranslatef(-x * BoardRenderer.stoneSize * 2.0f, 0, BoardRenderer.stoneSize * 2.0f);
 			}
 		}
 

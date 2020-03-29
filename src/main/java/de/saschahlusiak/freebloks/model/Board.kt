@@ -134,6 +134,7 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
      * Initialise board and player state
      */
     @JvmOverloads
+    @Synchronized
     fun startNewGame(gameMode: GameMode, width: Int = this.width, height: Int = this.height) {
         this.width = width
         this.height = height
