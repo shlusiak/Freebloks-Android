@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -37,13 +38,14 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
         fun onLobbyDialogClosed()
     }
 
-    private val activity get() = requireActivity() as FreebloksActivity
-    private val viewModel get() = activity.viewModel
+    private val viewModel by lazy { (requireActivity() as FreebloksActivity).viewModel }
     private val client get() = viewModel.client
     private val listener get() = activity as LobbyDialogListener
 
     private var chatAdapter: ChatListAdapter? = null
     private var colorAdapter: ColorAdapter? = null
+
+    private val handler = Handler()
 
     private val gameModeSelectedListener = object : OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -233,6 +235,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
 
     private fun updateViewsFromStatus() {
         /* better: dismiss */
+        if (isDetached) return
         val client = client ?: return
         val status = client.lastStatus
 
@@ -280,22 +283,22 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
     }
 
     override fun gameStarted() {
-        dismissAllowingStateLoss()
+        handler.post { dismissAllowingStateLoss() }
     }
 
     override fun serverStatus(status: MessageServerStatus) {
-        chatList.post { updateViewsFromStatus() }
+        handler.post { updateViewsFromStatus() }
     }
 
     override fun playerJoined(client: Int, player: Int, name: String?) {
-        chatList.post { updateViewsFromStatus() }
+        handler.post { updateViewsFromStatus() }
     }
 
     override fun playerLeft(client: Int, player: Int, name: String?) {
-        chatList.post { updateViewsFromStatus() }
+        handler.post { updateViewsFromStatus() }
     }
 
     override fun onDisconnected(client: GameClient, error: Exception?) {
-        dismiss()
+        handler.post { dismissAllowingStateLoss() }
     }
 }

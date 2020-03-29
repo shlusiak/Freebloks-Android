@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.UiThread
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.crashReporter
@@ -25,6 +26,7 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
     private val handler = Handler(Looper.getMainLooper())
 
     interface OnBluetoothConnectedListener {
+        @UiThread
         fun onBluetoothClientConnected(socket: BluetoothSocket)
     }
 
