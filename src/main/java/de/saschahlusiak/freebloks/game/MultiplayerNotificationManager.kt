@@ -145,7 +145,9 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
                 setContentText(context.getString(R.string.game_finished))
             } else {
                 // current player / your turn notification
-                val playerName = lastStatus?.getPlayerName(game.currentPlayer) ?: Global.getColorName(context, game.currentPlayer, game.gameMode)
+                val player = game.currentPlayer
+                // note that player -1 is basically mapped to "White"
+                val playerName = lastStatus?.getPlayerName(player) ?: Global.getColorName(context, player, game.gameMode)
 
                 if (client.game.isLocalPlayer()) {
                     setSmallIcon(R.drawable.notification_icon)

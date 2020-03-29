@@ -86,6 +86,7 @@ data class MessageServerStatus(
      * @return the name of the client playing the given player, or null if unset
      */
     fun getPlayerName(player: Int): String? {
+        if (player < 0) return null
         val client = clientForPlayer[player] ?: return null
         return clientNames[client]
     }
