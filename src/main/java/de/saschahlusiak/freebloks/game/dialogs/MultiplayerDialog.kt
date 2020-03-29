@@ -32,7 +32,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothServer: BluetoothServerThread? = null
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
-    private val listener get() = activity as? OnStartCustomGameListener
+    private val listener get() = requireActivity() as OnStartCustomGameListener
 
     private val clientName: String?
         get() = name.text.toString().trim { it <= ' ' }.ifBlank { null }
@@ -53,7 +53,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         host_game.setOnClickListener {
             saveSettings()
             val config = GameConfig(server = null, showLobby = true)
-            listener?.onStartClientGameWithConfig(config, clientName)
+            listener.onStartClientGameWithConfig(config, clientName)
             dismiss()
         }
         server_address.apply {
@@ -123,12 +123,12 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         when (server_type.checkedRadioButtonId) {
             R.id.radioButtonInternet -> {
                 val config = GameConfig(server = Global.DEFAULT_SERVER_ADDRESS, showLobby = true)
-                listener?.onStartClientGameWithConfig(config, clientName)
+                listener.onStartClientGameWithConfig(config, clientName)
             }
             R.id.radioButtonWifi -> {
                 customServerAddress ?: return
                 val config = GameConfig(server = customServerAddress, showLobby =  true)
-                listener?.onStartClientGameWithConfig(config, clientName)
+                listener.onStartClientGameWithConfig(config, clientName)
             }
         }
 
@@ -162,7 +162,9 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
                 host_game.visibility = View.VISIBLE
                 bluetoothList.visibility = View.VISIBLE
 
-                startBluetoothServer()
+                if (bluetoothServer == null) {
+                    bluetoothServer = startBluetoothServer()
+                }
                 updateBluetoothDeviceList()
             }
         }
@@ -176,7 +178,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
             saveSettings()
             val device = v.tag as BluetoothDevice
             Log.i(TAG, "Device selected: " + device.name)
-            listener?.onConnectToBluetoothDevice(config, clientName, device)
+            listener.onConnectToBluetoothDevice(config, clientName, device)
             dismiss()
         }
 
@@ -212,20 +214,6 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
     override fun onBluetoothClientConnected(socket: BluetoothSocket) {
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
         val config = GameConfig(server = null, showLobby = true)
-        val listener = this.listener
-
-        if (listener == null || bluetoothServer == null) {
-            // not quite sure why this would happen as we are only dismissing the dialog on success,
-            // so we should never get a second connection coming in
-
-            // maybe this is a second connection attempt from the same device though. Just reject the client.
-            Log.e(TAG, "Listener is null, disconnecting client")
-            socket.close()
-            return
-        }
-
-        bluetoothServer?.shutdown()
-        bluetoothServer = null
 
         listener.onStartClientGameWithConfig(config, clientName, Runnable {
             // we can only run this after the TCP server is running, so we can connect to it and start the bridge
