@@ -796,22 +796,26 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		b.putInt("players", lastStatus.getPlayer());
 		analytics.logEvent("game_finished", b);
 
-		/* TODO: play sound on game finish */
+		/* TODO: play sound on game finish? */
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if (client == null)
 					return;
 
-				Bundle args = new Bundle();
+				final Bundle args = new Bundle();
 				args.putSerializable("game", client.game);
 				args.putSerializable("lastStatus", lastStatus);
 
-				DialogFragment d = new GameFinishFragment();
+				final DialogFragment d = new GameFinishFragment();
 				d.setArguments(args);
 
-				// FIXME: this can cause a crash if instance state is already saved
-				d.show(getSupportFragmentManager(), null);
+				// this is not ideal but avoids a crash when the game finishes while the activity
+				// is in the background. Maybe look into having observable events that adhere to lifecycle.
+				getSupportFragmentManager()
+					.beginTransaction()
+					.add(d, null)
+					.commitAllowingStateLoss();
 			}
 		});
 	}
