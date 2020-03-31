@@ -237,7 +237,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
 
     private fun updateViewsFromStatus() {
         /* better: dismiss */
-        if (isDetached) return
+        if (!isVisible) return
         val client = client ?: return
         val status = client.lastStatus
 

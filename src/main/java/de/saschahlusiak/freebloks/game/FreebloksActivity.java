@@ -809,6 +809,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				DialogFragment d = new GameFinishFragment();
 				d.setArguments(args);
 
+				// FIXME: this can cause a crash if instance state is already saved
 				d.show(getSupportFragmentManager(), null);
 			}
 		});
