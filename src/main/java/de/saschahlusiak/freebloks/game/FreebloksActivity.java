@@ -234,6 +234,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 					// so it fails to be dismissed later. So we force executing the above transaction.
 					getSupportFragmentManager().executePendingTransactions();
 				}
+				chatButton.setVisibility(View.INVISIBLE);
 				break;
 
 			case Connected:
