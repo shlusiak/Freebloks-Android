@@ -8,11 +8,17 @@ object DependencyProvider {
     private lateinit var analytics: AnalyticsProvider
     private lateinit var crashReporter: CrashReporter
 
+    private var initialised = false
+
     @JvmStatic
     fun initialise(context: Context) {
+        if (initialised) return
+
         crashReporter = CrashlyticsCrashReporter()
         analytics = FirebaseAnalyticsProvider(context)
         gamesHelper = DefaultGooglePlayGamesHelper(context.applicationContext)
+
+        initialised = true
     }
 
     fun googlePlayGamesHelper() = gamesHelper
@@ -24,5 +30,6 @@ object DependencyProvider {
     fun crashReporter() = crashReporter
 }
 
+val gamesHelper get() = DependencyProvider.googlePlayGamesHelper()
 val analytics get() = DependencyProvider.analytics()
 val crashReporter get() = DependencyProvider.crashReporter()

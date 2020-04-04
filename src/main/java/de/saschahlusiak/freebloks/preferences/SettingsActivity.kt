@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.preferences.types.ListPreferenceDialogFragment
@@ -27,17 +28,13 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.apply {
-            // status bar should not be transparent, because we have an action bar
-//            setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-//            setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-        }
-
         if (resources.configuration.smallestScreenWidthDp >= 600 || Feature.FORCE_TWO_PANES) {
             setContentView(R.layout.settings_activity_twopane)
         } else {
             setContentView(R.layout.settings_activity)
         }
+
+        DependencyProvider.initialise(this)
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)

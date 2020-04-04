@@ -43,6 +43,7 @@ class StatisticsActivity : AppCompatActivity() {
         listView.adapter = adapter
         ok.setOnClickListener { finish() }
 
+        DependencyProvider.initialise(this)
         gameHelper = DependencyProvider.googlePlayGamesHelper()
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
