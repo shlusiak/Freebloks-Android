@@ -22,9 +22,10 @@ import java.lang.IllegalStateException
  * This is the actual implementation of Google Play provider. The [GooglePlayGamesHelper]
  * implementation is just a dummy that does not require any dependencies.
  */
-class DefaultGooglePlayGamesHelper(private val context: Context): GooglePlayGamesHelper() {
+class DefaultGooglePlayGamesHelper: GooglePlayGamesHelper {
     private val tag = DefaultGooglePlayGamesHelper::class.java.simpleName
 
+    private val context: Context
     private var googleSignInClient: GoogleSignInClient
     private var gamesClient: GamesClient? = null
     private var leaderboardsClient: LeaderboardsClient? = null
@@ -36,7 +37,9 @@ class DefaultGooglePlayGamesHelper(private val context: Context): GooglePlayGame
     override val isAvailable: Boolean
         get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
 
-    init {
+    constructor(context: Context): super() {
+        this.context = context
+
         googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
 
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)

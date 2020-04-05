@@ -200,7 +200,7 @@ class BoardRenderer internal constructor() {
         gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST)
         gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
         gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
-        FreebloksRenderer.loadKTXTexture(gl, context.resources, "textures/field_wood.ktx")
+        KTX.loadKTXTexture(context.assets, "textures/field_wood.ktx")
 
         // shadow texture
         val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_shadow)

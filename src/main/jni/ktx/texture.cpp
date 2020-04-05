@@ -41,14 +41,14 @@ unsigned int loadKTXFile(JNIEnv *env, jobject assetManager, const char* file, GL
 	return 0;
 }
 
-
 extern "C"
 JNIEXPORT jint JNICALL
-Java_de_saschahlusiak_wordmix_game_view_BackgroundRenderer_loadKTXTexture(JNIEnv *env, jclass, jobject assetManager, jstring file, jint target, jint skipMipmaps) {
+Java_de_saschahlusiak_freebloks_view_KTX_loadKTXTexture(JNIEnv *env, jobject thiz,
+					jobject asset_manager, jstring file,
+					jint target, jint skip_mipmaps) {
 	const char *p = env->GetStringUTFChars(file, 0);
 	int ret;
-	ret = loadKTXFile(env, assetManager, p, target, skipMipmaps);
+	ret = loadKTXFile(env, asset_manager, p, target, skip_mipmaps);
 	env->ReleaseStringUTFChars(file, p);
 	return ret;
 }
-

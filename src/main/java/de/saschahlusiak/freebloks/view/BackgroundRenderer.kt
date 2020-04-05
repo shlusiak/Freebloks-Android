@@ -33,8 +33,9 @@ class BackgroundRenderer(private val resources: Resources, private var theme: Th
 
     fun updateTexture(gl: GL10) {
         valid = true
+        val asset = theme.asset
 
-        if (theme.isResource) {
+        if (theme.isResource && asset != null) {
             hasTexture = true
             texture = IntArray(1).also { texture ->
                 gl.glGenTextures(1, texture, 0)
@@ -50,7 +51,7 @@ class BackgroundRenderer(private val resources: Resources, private var theme: Th
             }
             gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
 
-            FreebloksRenderer.loadKTXTexture(gl, resources, theme.asset)
+            KTX.loadKTXTexture(resources.assets, asset)
 
             theme.getColor(resources, rgba)
             rgba[3] = 1.0f

@@ -1,14 +1,15 @@
 package de.saschahlusiak.freebloks.view;
 
-import java.io.IOException;
-import java.io.InputStream;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.PointF;
+import android.opengl.GLSurfaceView;
+import android.opengl.GLU;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-
-import android.content.res.AssetManager;
-import android.util.Log;
 
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Board;
@@ -16,17 +17,6 @@ import de.saschahlusiak.freebloks.model.Game;
 import de.saschahlusiak.freebloks.model.GameMode;
 import de.saschahlusiak.freebloks.theme.ColorThemes;
 import de.saschahlusiak.freebloks.view.scene.Scene;
-import nl.weeaboo.jktx.KTXFile;
-import nl.weeaboo.jktx.KTXFormatException;
-import nl.weeaboo.jktx.KTXHeader;
-import nl.weeaboo.jktx.KTXTextureData;
-
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.PointF;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLU;
-
 import de.saschahlusiak.freebloks.view.scene.intro.Intro;
 
 public class FreebloksRenderer implements GLSurfaceView.Renderer {
@@ -279,37 +269,5 @@ public class FreebloksRenderer implements GLSurfaceView.Renderer {
 		model.currentStone.updateTexture(context, gl);
 		boardRenderer.onSurfaceChanged(context, (GL11) gl);
 		backgroundRenderer.updateTexture(gl);
-	}
-
-	private static void loadKTXTexture(GL10 gl, KTXFile file) {
-		KTXHeader header = file.getHeader();
-		KTXTextureData data = file.getTextureData();
-
-		for (int level = 0; level < data.getNumberOfMipmapLevels(); level++) {
-			gl.glCompressedTexImage2D(GL10.GL_TEXTURE_2D,
-				level,
-				header.getGLInternalFormat(),
-				header.getPixelWidth(level),
-				header.getPixelHeight(level),
-				0,
-				data.getBytesPerFace(level),
-				data.getFace(level, 0));
-		}
-	}
-
-	public static void loadKTXTexture(GL10 gl, Resources resources, String asset) {
-		if (isEmulator)
-			return;
-
-		try {
-			final InputStream input = resources.getAssets().open(asset, AssetManager.ACCESS_STREAMING);
-			KTXFile file = new KTXFile();
-			file.read(input);
-			input.close();
-
-			loadKTXTexture(gl, file);
-		} catch (IOException | KTXFormatException e) {
-			throw new RuntimeException(e);
-		}
 	}
 }
