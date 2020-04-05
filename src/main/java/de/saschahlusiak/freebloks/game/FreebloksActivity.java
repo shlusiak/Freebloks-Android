@@ -91,6 +91,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	private AnalyticsProvider analytics;
 
 	private FreebloksActivityViewModel viewModel;
+	private Scene scene;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -135,7 +136,8 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		viewModel = new ViewModelProvider(this).get(FreebloksActivityViewModel.class);
 
 		view = findViewById(R.id.board);
-		view.setActivity(viewModel);
+		scene = new Scene(view, viewModel);
+		view.setScene(scene);
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		chatButton = findViewById(R.id.chatButton);
@@ -178,12 +180,12 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 			setGameClient(client);
 		} else if (savedInstanceState == null) {
 			if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
-				viewModel.setIntro(new Intro(getApplicationContext(), view.model, this));
+				viewModel.setIntro(new Intro(getApplicationContext(), scene, this));
 			} else
 				onIntroCompleted();
 		}
 
-		findViewById(R.id.myLocation).setOnClickListener(v -> view.model.boardObject.resetRotation());
+		findViewById(R.id.myLocation).setOnClickListener(v -> scene.boardObject.resetRotation());
 
 		viewModel.getConnectionStatus().observe(this, this::onConnectionStatusChanged);
 		viewModel.getPlayerToShowInSheet().observe(this, this::playerSheetChanged);
@@ -316,10 +318,10 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		view.onResume();
 
 		viewModel.reloadPreferences();
-		view.model.showSeeds = prefs.getBoolean("show_seeds", true);
-		view.model.showOpponents = prefs.getBoolean("show_opponents", true);
-		view.model.showAnimations = Integer.parseInt(prefs.getString("animations", Integer.toString(Scene.ANIMATIONS_FULL)));
-		view.model.snapAid = prefs.getBoolean("snap_aid", true);
+		scene.showSeeds = prefs.getBoolean("show_seeds", true);
+		scene.showOpponents = prefs.getBoolean("show_opponents", true);
+		scene.showAnimations = Integer.parseInt(prefs.getString("animations", Integer.toString(Scene.ANIMATIONS_FULL)));
+		scene.snapAid = prefs.getBoolean("snap_aid", true);
 		undo_with_back = prefs.getBoolean("back_undo", false);
 		final Theme t = ThemeManager.get(this).getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.Blue);
 		view.setTheme(t);
@@ -327,7 +329,7 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		viewModel.onStart();
 
 		/* update wheel in case showOpponents has changed */
-		view.model.wheel.update(view.model.boardObject.getShowWheelPlayer());
+		scene.wheel.update(scene.boardObject.getShowWheelPlayer());
 	}
 
 	@Override
@@ -641,16 +643,16 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 					return true;
 				findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 				findViewById(R.id.movesLeft).setVisibility(View.INVISIBLE);
-				view.model.currentStone.stopDragging();
+				scene.currentStone.stopDragging();
 				client.requestHint();
 				return true;
 
 			case R.id.undo:
 				if (client == null)
 					return true;
-				view.model.clearEffects();
+				scene.clearEffects();
 				client.requestUndo();
-				view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
+				scene.soundPool.play(scene.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 				return true;
 
 			case R.id.show_main_menu:
@@ -715,9 +717,9 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 				if (!game.isLocalPlayer(turn.getPlayer())) {
 					if (view == null)
 						return;
-					if (view.model.soundPool == null)
+					if (scene.soundPool == null)
 						return;
-					view.model.soundPool.play(view.model.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
+					scene.soundPool.play(scene.soundPool.SOUND_CLICK1, 1.0f, 0.9f + (float) Math.random() * 0.2f);
 					viewModel.vibrate(Global.VIBRATE_SET_STONE);
 				}
 			}
@@ -733,9 +735,9 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 							final String playerName = viewModel.getPlayerName(p.getNumber());
 							Toast.makeText(FreebloksActivity.this, getString(R.string.color_is_out_of_moves, playerName), Toast.LENGTH_SHORT).show();
 
-							if (view.model.soundPool != null)
-								view.model.soundPool.play(view.model.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
-							if (view.model.hasAnimations()) {
+							if (scene.soundPool != null)
+								scene.soundPool.play(scene.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f);
+							if (scene.hasAnimations()) {
 								int sx, sy;
 								final GameMode gameMode = game.getGameMode();
 								sx = board.getPlayerSeedX(p.getNumber(), gameMode);
@@ -744,9 +746,9 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 									for (int y = 0; y < board.height; y++)
 										if (board.getFieldPlayer(y, x) == p.getNumber()) {
 											boolean effected = false;
-											synchronized (view.model.effects) {
-												for (int j = 0; j < view.model.effects.size(); j++)
-													if (view.model.effects.get(j).isEffected(x, y)) {
+											synchronized (scene.effects) {
+												for (int j = 0; j < scene.effects.size(); j++)
+													if (scene.effects.get(j).isEffected(x, y)) {
 														effected = true;
 														break;
 													}
@@ -754,12 +756,12 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 											if (!effected) {
 												final float distance = (float) Math.sqrt((x - sx) * (x - sx) + (y - sy) * (y - sy));
 												Effect effect = new BoardStoneGlowEffect(
-													view.model,
-													view.model.getPlayerColor(p.getNumber()),
+													scene,
+													scene.getPlayerColor(p.getNumber()),
 													x,
 													y,
 													distance);
-												view.model.addEffect(effect);
+												scene.addEffect(effect);
 											}
 										}
 							}
@@ -955,11 +957,11 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 	@Override
 	public void onBackPressed() {
 		if (undo_with_back && client != null && client.isConnected()) {
-			view.model.clearEffects();
+			scene.clearEffects();
 
 			client.requestUndo();
 
-			view.model.soundPool.play(view.model.soundPool.SOUND_UNDO, 1.0f, 1.0f);
+			scene.soundPool.play(scene.soundPool.SOUND_UNDO, 1.0f, 1.0f);
 			return;
 		}
 		if (client != null && client.game.isStarted() && !client.game.isFinished() && lastStatus != null && lastStatus.getClients() > 1)
@@ -979,7 +981,6 @@ public class FreebloksActivity extends AppCompatActivity implements GameEventObs
 		if (Intent.ACTION_DELETE.equals(intent.getAction())) {
 			Log.d(tag, "ACTION_DELETE");
 			finish();
-			return;
 		} else {
 			if (intent.hasExtra("showChat") && client != null && client.game.isStarted()) {
 				new LobbyDialog().show(getSupportFragmentManager(), null);

@@ -45,17 +45,14 @@ class ChatEntry(
             Color.WHITE
         )
 
-        @JvmStatic
         fun clientMessage(client: Int, player: Int, text: String, name: String): ChatEntry {
             return ChatEntry(client, if (player < 0) null else player, text, name)
         }
 
-        @JvmStatic
         fun serverMessage(player: Int, text: String, name: String): ChatEntry {
             return ChatEntry(null, player, text, name)
         }
 
-        @JvmStatic
         fun genericMessage(text: String): ChatEntry {
             return ChatEntry(null, null, text, null)
         }
