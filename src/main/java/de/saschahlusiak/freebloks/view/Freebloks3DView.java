@@ -47,7 +47,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 		model = new Scene(this, viewModel);
 
 		renderer = new FreebloksRenderer(getContext(), model);
-		renderer.zoom = scale;
+		renderer.setZoom(scale);
 		setRenderer(renderer);
 		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR);
@@ -124,7 +124,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			    		scale = 0.3f;
 			    	oldDist = newDist;
 			    	renderer.updateModelViewMatrix = true;
-			    	renderer.zoom = scale;
+			    	renderer.setZoom(scale);
 			    	requestRender();
 			    }
 			} else {
@@ -284,7 +284,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 			queueEvent(new Runnable() {
 				@Override
 				public void run() {
-					renderer.boardRenderer.setFieldSize(model.board.width);
+					renderer.boardRenderer.setBoardSize(model.board.width);
 					requestRender();
 				}
 			});
@@ -421,7 +421,7 @@ public class Freebloks3DView extends GLSurfaceView implements GameEventObserver 
 
 	public void setScale(float scale) {
 		this.scale = scale;
-		renderer.zoom = scale;
+		renderer.setZoom(scale);
 		renderer.updateModelViewMatrix = true;
 	}
 

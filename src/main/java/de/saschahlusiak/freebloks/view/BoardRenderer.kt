@@ -154,9 +154,9 @@ class BoardRenderer internal constructor() {
     /**
      * Builds the square model of the border of the field with the given size
      */
-    private fun buildBorderModel(fieldWidth: Int): SimpleModel {
+    private fun buildBorderModel(boardSize: Int): SimpleModel {
         return SimpleModel(12, 6, true).apply {
-            val w1 = stoneSize * fieldWidth
+            val w1 = stoneSize * boardSize
             val w2 = w1 + borderWidth
 
             /* front */addVertex(w2, borderTop, w2, 0f, 0f, 1f, w2, borderTop)
@@ -184,8 +184,8 @@ class BoardRenderer internal constructor() {
         }
     }
 
-    fun setFieldSize(fieldWidth: Int) {
-        this.border = buildBorderModel(fieldWidth)
+    fun setBoardSize(boardSize: Int) {
+        this.border = buildBorderModel(boardSize)
     }
 
     fun onSurfaceChanged(context: Context, gl: GL11) {
