@@ -4,9 +4,10 @@ import android.content.Context
 import de.saschahlusiak.freebloks.utils.*
 
 object DependencyProvider {
-    private lateinit var gamesHelper: GooglePlayGamesHelper
-    private lateinit var analytics: AnalyticsProvider
-    private lateinit var crashReporter: CrashReporter
+    // defaults to dummy implementations until initialised
+    private var gamesHelper: GooglePlayGamesHelper = GooglePlayGamesHelper()
+    private var analytics: AnalyticsProvider = AnalyticsProvider()
+    private var crashReporter: CrashReporter = CrashReporter()
 
     private var initialised = false
 
