@@ -11,7 +11,7 @@ object KTX {
     fun loadKTXTexture(assetManager: AssetManager, file: String) {
         crashReporter.log("Loading texture $file")
         val ret = loadKTXTexture(assetManager, file, GL10.GL_TEXTURE_2D, 0)
-        if (ret != 0) throw RuntimeException("loadKTXTexture returned \$ret for texture \$file")
+        if (ret != 0) throw RuntimeException("loadKTXTexture returned $ret for texture $file")
     }
 
     init {
