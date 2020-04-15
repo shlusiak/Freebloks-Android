@@ -17,18 +17,19 @@ data class MessageServerStatus(
     val height: Int,                // int8
     val gameMode: GameMode,         // int8
 
-// since 1.5, optional
+    // since 1.5, optional
     // a map of player number to client number, or -1 if played by computer
     val clientForPlayer: Array<Int?>,          // int8[4]
     // names for each client. we don't have names for players, unfortunately.
     val clientNames: Array<String?>, // uint8[8][16]
+    // since 1.6, optional
     // the version of this header
     val version: Int = VERSION_MAX,               // int8
     // the client should reject any version that is below this
     val minVersion: Int = VERSION_MAX,            // int8
     val stoneNumbers: IntArray = IntArray(21) { 1 } // int8[21]
 
-) : Message(MessageType.ServerStatus, HEADER_SIZE_1_5), Serializable {
+) : Message(MessageType.ServerStatus, HEADER_SIZE_1_6), Serializable {
 
     init {
         assert(player in 0..4) { "Invalid number of players $player"}
@@ -131,12 +132,20 @@ data class MessageServerStatus(
         // highest version we understand.
         private const val VERSION_MAX = 3
 
-        // the size of version 3 header in bytes
-        const val HEADER_SIZE_1_5 = 166
+        // the original header size, 11 bytes
+        const val HEADER_SIZE_1_0 = 6 + 5
+
+        // the size of version 2 header in bytes, 143 bytes
+        const val HEADER_SIZE_1_5 = HEADER_SIZE_1_0 + 4 + 8 * 16
+
+        // the size of version 3 header in bytes, 166 bytes
+        const val HEADER_SIZE_1_6 = HEADER_SIZE_1_5 + 2 + 21
 
         fun from(buffer: ByteBuffer): MessageServerStatus {
-            assert(buffer.remaining() >= HEADER_SIZE_1_5) { "Message too small, expected 166 bytes but got ${buffer.remaining()}" }
+            // we only support header version 3 in the Android version
+            assert(buffer.remaining() >= HEADER_SIZE_1_6) { "Message too small, expected 166 bytes but got ${buffer.remaining()}" }
 
+            // original data
             val player = buffer.get().toInt()
             val computer = buffer.get().toInt()
             val clients = buffer.get().toInt()
@@ -145,6 +154,8 @@ data class MessageServerStatus(
             // consume deprecated stoneNumbers
             Array(5) { buffer.get() }
             val gameMode = GameMode.from(buffer.get().toInt())
+            
+            // start of 1.5 data
             val clientForPlayer = Array(4) {
                 buffer.get().toInt().takeIf { it >= 0 }
             }
@@ -155,6 +166,8 @@ data class MessageServerStatus(
                 if (length <= 0) null
                 else String(bytes, 0, length, Charsets.UTF_8)
             }
+
+            // start of 1.6 data
             val version = buffer.get().toInt()
             val minVersion = buffer.get().toInt()
             val stoneNumbers = IntArray(Shape.COUNT) { buffer.get().toInt() }
