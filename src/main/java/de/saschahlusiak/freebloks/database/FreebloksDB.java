@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 public abstract class FreebloksDB {
-	Context context;
-	SQLiteDatabase db;
-	FreebloksDBOpenHandler dbHelper;
+	private Context context;
+	protected SQLiteDatabase db;
+	private FreebloksDBOpenHandler dbHelper;
 
 	public FreebloksDB(Context context) {
 		this.context = context;

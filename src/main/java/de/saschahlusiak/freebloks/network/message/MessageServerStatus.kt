@@ -154,7 +154,7 @@ data class MessageServerStatus(
             // consume deprecated stoneNumbers
             Array(5) { buffer.get() }
             val gameMode = GameMode.from(buffer.get().toInt())
-            
+
             // start of 1.5 data
             val clientForPlayer = Array(4) {
                 buffer.get().toInt().takeIf { it >= 0 }
