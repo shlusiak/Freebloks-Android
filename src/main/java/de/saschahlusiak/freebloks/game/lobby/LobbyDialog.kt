@@ -210,7 +210,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
             setText(lastStatus.getClientName(lastStatus.getClient(player)))
         }
 
-        MaterialAlertDialogBuilder(context).apply {
+        MaterialAlertDialogBuilder(requireContext()).apply {
             setView(dialogView)
             setTitle(R.string.prefs_player_name)
             setPositiveButton(android.R.string.ok) { _, _ ->

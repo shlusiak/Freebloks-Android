@@ -11,7 +11,7 @@ open class ListPreferenceDialogFragment : ListPreferenceDialogFragmentCompat() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // exactly the same as super.onCreateDialog, but uses a MaterialAlertDialogBuilder instead
         val context: Context? = activity
-        val builder = MaterialAlertDialogBuilder(context)
+        val builder = MaterialAlertDialogBuilder(requireContext())
             .setTitle(preference.dialogTitle)
             .setIcon(preference.dialogIcon)
             .setPositiveButton(preference.positiveButtonText, this)
