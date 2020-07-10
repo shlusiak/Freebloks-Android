@@ -147,8 +147,8 @@ class DefaultGooglePlayGamesHelper: GooglePlayGamesHelper {
      *
      * @return an optional error message, in case of error
      */
-    override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit): Unit {
-        val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+    override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) {
+        val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data) ?: return
         if (result.status.isSuccess) {
             val account = result.signInAccount ?: throw IllegalStateException("account is null")
             setGoogleAccount(account)
