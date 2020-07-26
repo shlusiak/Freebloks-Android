@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -66,7 +67,6 @@ import java.lang.Runnable
 class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, OnStartCustomGameListener, LobbyDialogDelegate {
     private lateinit var view: Freebloks3DView
     private var client: GameClient? = null
-    private var lastStatus: MessageServerStatus? = null
     private var optionsMenu: Menu? = null
     private var showRateDialog = false
     private val analytics by lazy { DependencyProvider.analytics() }
@@ -118,16 +118,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         volumeControlStream = AudioManager.STREAM_MUSIC
 
-        chatButton.setOnClickListener {
-            chatButton.clearAnimation()
-            LobbyDialog().show(supportFragmentManager, null)
-        }
-
         this.client = viewModel.client
         val client = client
-        lastStatus = viewModel.lastStatus
         viewModel.intro?.listener = this
-        chatButton.visibility = if ((lastStatus?.clients ?: 0) > 1) View.VISIBLE else View.INVISIBLE
 
         if (savedInstanceState != null) {
             view.setScale(savedInstanceState.getFloat("view_scale", 1.0f))
@@ -152,30 +145,29 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             /* we just rotated and got *hot* objects */
             setGameClient(client)
         } else if (savedInstanceState == null) {
-            if (prefs.getBoolean("show_animations", true) && !prefs.getBoolean("skip_intro", false)) {
+            if (viewModel.showIntro) {
                 viewModel.intro = Intro(applicationContext, scene, this)
-            } else onIntroCompleted()
+            } else
+                onIntroCompleted()
+        }
+
+        chatButton.setOnClickListener {
+            chatButton.clearAnimation()
+            LobbyDialog().show(supportFragmentManager, null)
         }
 
         myLocation.setOnClickListener { scene.boardObject.resetRotation() }
 
         viewModel.connectionStatus.observe(this) { onConnectionStatusChanged(it) }
-        viewModel.playerToShowInSheet.observe(this) { playerSheetChanged(it) }
-        viewModel.soundsEnabledLiveData.observe(this) { soundEnabledChanged(it) }
+        viewModel.playerToShowInSheet.observe(this) { onPlayerSheetChanged(it) }
+        viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
+        viewModel.canRequestHint.observe(this) { invalidateOptionsMenu() }
+        viewModel.canRequestUndo.observe(this) { invalidateOptionsMenu() }
+        viewModel.chatButtonVisible.observe(this) { chatButton.isVisible = it }
         viewModel.googleAccountSignedIn.observe(this) {
             viewModel.gameHelper.setWindowForPopups(window)
             if (Global.IS_VIP) {
                 viewModel.gameHelper.unlock(getString(R.string.achievement_vip))
-            }
-        }
-        viewModel.canRequestHint.observe(this) {
-            if (optionsMenu != null) {
-                invalidateOptionsMenu()
-            }
-        }
-        viewModel.canRequestUndo.observe(this) {
-            if (optionsMenu != null) {
-                invalidateOptionsMenu()
             }
         }
     }
@@ -187,46 +179,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         if (client == null) {
             readStateFromBundle(savedInstanceState)
         }
-    }
-
-    private fun onConnectionStatusChanged(status: ConnectionStatus) {
-        Log.d(tag, "Connection status: $status")
-        val tag = "connecting_progress_dialog"
-
-        val f = supportFragmentManager.findFragmentByTag(tag) as DialogFragment?
-        when (status) {
-            ConnectionStatus.Connecting -> {
-                if (f == null) {
-                    ConnectingDialog().show(supportFragmentManager, tag)
-                    // there seems to be a race condition where disconnecting happens before the dialog is done showing,
-                    // so it fails to be dismissed later. So we force executing the above transaction.
-                    supportFragmentManager.executePendingTransactions()
-                }
-                chatButton.visibility = View.INVISIBLE
-            }
-
-            ConnectionStatus.Connected,
-            ConnectionStatus.Failed,
-            ConnectionStatus.Disconnected -> {
-                f?.dismiss()
-            }
-        }
-    }
-
-    @UiThread
-    override fun onIntroCompleted() {
-        viewModel.intro = null
-        viewModel.setSheetPlayer(-1, false)
-        try {
-            restoreOldGame()
-        } catch (e: Exception) {
-            Toast.makeText(this@FreebloksActivity, R.string.could_not_restore_game, Toast.LENGTH_LONG).show()
-        }
-        val client = client
-        val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
-        if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
-        if (showRateDialog) RateAppDialog().show(supportFragmentManager, null)
-        view.requestRender()
     }
 
     override fun onDestroy() {
@@ -449,12 +401,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-
-    private fun dismissMainMenu() {
-        val f = supportFragmentManager.findFragmentByTag("game_menu") as DialogFragment?
-        f?.dismiss()
-    }
-
     override fun onCreateDialog(id: Int, args: Bundle): Dialog? {
         when (id) {
             DIALOG_QUIT -> {
@@ -477,7 +423,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     override fun onBackPressed() {
         val client = client
-        val lastStatus = lastStatus
+        val lastStatus = viewModel.lastStatus
 
         if (viewModel.undoWithBack && (client != null) && client.isConnected()) {
             scene.clearEffects()
@@ -510,6 +456,85 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
+    private fun dismissMainMenu() {
+        val f = supportFragmentManager.findFragmentByTag("game_menu") as DialogFragment?
+        f?.dismiss()
+    }
+
+    @UiThread
+    override fun onIntroCompleted() {
+        viewModel.intro = null
+        viewModel.setSheetPlayer(-1, false)
+        try {
+            restoreOldGame()
+        } catch (e: Exception) {
+            Toast.makeText(this@FreebloksActivity, R.string.could_not_restore_game, Toast.LENGTH_LONG).show()
+        }
+        val client = client
+        val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
+        if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
+        if (showRateDialog) RateAppDialog().show(supportFragmentManager, null)
+        view.requestRender()
+    }
+
+    @UiThread
+    override fun onLobbyDialogCancelled() {
+        val client = client
+        if ((client != null) && !client.game.isStarted && !client.game.isFinished) {
+            analytics.logEvent("lobby_close", null)
+            viewModel.disconnectClient()
+            showMainMenu()
+        }
+    }
+
+    //region LiveData Observers
+
+    private fun onConnectionStatusChanged(status: ConnectionStatus) {
+        Log.d(tag, "Connection status: $status")
+        val tag = "connecting_progress_dialog"
+
+        val f = supportFragmentManager.findFragmentByTag(tag) as DialogFragment?
+        when (status) {
+            ConnectionStatus.Connecting -> {
+                if (f == null) {
+                    ConnectingDialog().show(supportFragmentManager, tag)
+                    // there seems to be a race condition where disconnecting happens before the dialog is done showing,
+                    // so it fails to be dismissed later. So we force executing the above transaction.
+                    supportFragmentManager.executePendingTransactions()
+                }
+            }
+
+            ConnectionStatus.Connected,
+            ConnectionStatus.Failed,
+            ConnectionStatus.Disconnected -> {
+                f?.dismiss()
+            }
+        }
+    }
+
+    /**
+     * The player to show in the bottom sheet has changed
+     * @param data the new data to show
+     */
+    @UiThread
+    private fun onPlayerSheetChanged(data: SheetPlayer) {
+        val client = client
+        if (data.isRotated && (client != null) && !client.game.isFinished) {
+            myLocation.visibility = View.VISIBLE
+        } else {
+            myLocation.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun onSoundEnabledChanged(enabled: Boolean) {
+        optionsMenu?.run {
+            findItem(R.id.sound_toggle_button).setTitle(if (enabled) R.string.sound_on else R.string.sound_off)
+            findItem(R.id.sound_toggle_button).setIcon(if (enabled) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp)
+        }
+    }
+
+    //endregion
+
     //region OnStartCustomGameListener
 
     override fun showMainMenu() {
@@ -534,21 +559,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     //endregion
 
-    /**
-     * The player to show in the bottom sheet has changed
-     * @param data the new data to show
-     */
-    @UiThread
-    private fun playerSheetChanged(data: SheetPlayer) {
-        val client = client
-        if (data.isRotated && (client != null) && !client.game.isFinished) {
-            myLocation.visibility = View.VISIBLE
-        } else {
-            myLocation.visibility = View.INVISIBLE
-        }
-    }
-
-
     //region Menu handling
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -561,15 +571,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.undo).isEnabled = (viewModel.canRequestUndo.value) ?: false
         menu.findItem(R.id.hint).isEnabled = (viewModel.canRequestHint.value) ?: false
-        soundEnabledChanged(viewModel.soundsEnabled)
+        onSoundEnabledChanged(viewModel.soundsEnabled)
         return super.onPrepareOptionsMenu(menu)
-    }
-
-    private fun soundEnabledChanged(enabled: Boolean) {
-        optionsMenu?.run {
-            findItem(R.id.sound_toggle_button).setTitle(if (enabled) R.string.sound_on else R.string.sound_off)
-            findItem(R.id.sound_toggle_button).setIcon(if (enabled) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -607,7 +610,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 scene.soundPool.play(scene.soundPool.SOUND_UNDO, 1.0f, 1.0f)
             }
             R.id.show_main_menu -> {
-                val clients = lastStatus?.clients ?: 1
+                val clients = viewModel.lastStatus?.clients ?: 0
                 val isStarted = client?.game?.isStarted ?: false
                 if (isStarted && clients > 1) showDialog(DIALOG_QUIT) else {
                     showMainMenu()
@@ -644,7 +647,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     @WorkerThread
     override fun gameFinished() {
         val client = client ?: return
-        val lastStatus = lastStatus ?: return
+        val lastStatus = viewModel.lastStatus ?: return
 
         GlobalScope.launch(Dispatchers.IO) {
             deleteFile(GAME_STATE_FILE)
@@ -694,7 +697,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     @WorkerThread
     override fun gameStarted() {
         val client = client ?: return
-        val lastStatus = lastStatus ?: return
+        val lastStatus = viewModel.lastStatus ?: return
 
         val b = Bundle().apply {
             putString("server", client.config.server)
@@ -720,14 +723,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     @WorkerThread
     override fun stoneUndone(t: Turn) {
         analytics.logEvent("undo_move", null)
-    }
-
-    @WorkerThread
-    override fun serverStatus(status: MessageServerStatus) {
-        lastStatus = status
-        if (status.clients > 1) {
-            chatButton.post { chatButton.visibility = View.VISIBLE }
-        }
     }
 
     @WorkerThread
@@ -760,9 +755,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     override fun onDisconnected(client: GameClient, error: Exception?) {
         Log.w(tag, "onDisconnected()")
         lifecycleScope.launch {
-            lastStatus = null
             view.setGameClient(null)
-            chatButton.visibility = View.INVISIBLE
 
             if (error != null) {
                 /* TODO: add sound on disconnect on error */
@@ -785,15 +778,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
     //endregion
-
-    override fun onLobbyDialogCancelled() {
-        val client = client
-        if ((client != null) && !client.game.isStarted && !client.game.isFinished) {
-            analytics.logEvent("lobby_close", null)
-            viewModel.disconnectClient()
-            showMainMenu()
-        }
-    }
 
     companion object {
         val tag = FreebloksActivity::class.java.simpleName

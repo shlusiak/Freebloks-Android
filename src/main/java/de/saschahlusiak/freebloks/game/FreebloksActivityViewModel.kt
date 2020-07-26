@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Vibrator
 import android.util.Log
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
@@ -61,6 +62,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // settings
     private var vibrateOnMove: Boolean = false
     private var showNotifications: Boolean = true
+    var showIntro = true
     val soundsEnabled get() = sounds.isEnabled
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
@@ -90,6 +92,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
     val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
+    val chatButtonVisible = MutableLiveData(false)
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
     val googleAccountSignedIn: MutableLiveData<Boolean>
@@ -120,6 +123,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             showAnimations = getString("animations", Scene.ANIMATIONS_FULL.toString())?.toInt() ?: 0
             snapAid = getBoolean("snap_aid", true)
             undoWithBack = getBoolean("back_undo", false)
+            showIntro = !getBoolean("skip_intro", false)
         }
 
         soundsEnabledLiveData.value = sounds.isEnabled
@@ -195,6 +199,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
         connectionStatus.value = ConnectionStatus.Connecting
         setSheetPlayer(-1, false)
+        chatButtonVisible.value = false
 
         connectThread = thread(name = "ConnectionThread") {
             val name = config.server ?: "(null)"
@@ -261,6 +266,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectThread?.interrupt()
         connectThread?.join(100)
         connectionStatus.value = ConnectionStatus.Connecting
+        chatButtonVisible.value = false
 
         DependencyProvider.crashReporter().log("Connecting to bluetooth device")
 
@@ -385,6 +391,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     override fun serverStatus(status: MessageServerStatus) {
         this.lastStatus = status
+
+        if (status.clients > 1) {
+            chatButtonVisible.value = true
+        }
     }
 
     override fun newCurrentPlayer(player: Int) {
@@ -457,6 +467,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             lastStatus = null
             connectionStatus.postValue(ConnectionStatus.Disconnected)
             setSheetPlayer(-1, false)
+            chatButtonVisible.value = false
         }
         chatHistory.clear()
     }
