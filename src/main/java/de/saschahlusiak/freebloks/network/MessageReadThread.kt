@@ -25,9 +25,11 @@ class MessageReadThread(
 ) : Thread("GameClientThread") {
     private val tag = MessageReadThread::class.java.simpleName
 
-    constructor(inputStream: InputStream,
-                handler: MessageHandler,
-                onGoDown: () -> Unit): this(MessageReader(inputStream), handler, onGoDown)
+    constructor(
+        inputStream: InputStream,
+        handler: MessageHandler,
+        onGoDown: () -> Unit
+    ) : this(MessageReader(inputStream), handler, onGoDown)
 
     @get:Synchronized
     private var goDown = false

@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit
 // Extend Object so we can override finalize()
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Object() {
+
     private var clientSocket: Closeable?
     private var messageWriter: MessageWriter? = null
     private var readThread: MessageReadThread? = null
