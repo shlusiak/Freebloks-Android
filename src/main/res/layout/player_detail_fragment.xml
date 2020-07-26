@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:elevation="8dp"
     android:clipChildren="false"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:elevation="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,10 +30,11 @@
 
         <TextView
             android:id="@+id/currentPlayer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
             android:shadowColor="#9f000000"
             android:shadowDy="2"
             android:shadowRadius="5"
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:gravity="right"
             android:shadowColor="#9f000000"
             android:shadowDy="2"
             android:shadowRadius="4"

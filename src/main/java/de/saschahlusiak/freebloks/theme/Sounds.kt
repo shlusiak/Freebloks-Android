@@ -5,14 +5,14 @@ import android.media.AudioManager
 import android.media.SoundPool
 import android.util.Log
 import de.saschahlusiak.freebloks.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 
 class Sounds(context: Context) : SoundPool(10, AudioManager.STREAM_MUSIC, 0) {
     var isEnabled = true
+
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     @JvmField var SOUND_CLICK1 = 0
     @JvmField var SOUND_CLICK2 = 0
@@ -23,13 +23,13 @@ class Sounds(context: Context) : SoundPool(10, AudioManager.STREAM_MUSIC, 0) {
     @JvmField var SOUND_CHAT = 0
 
     init {
-        thread(name = "SoundLoadThread") {
+        scope.launch {
             loadSounds(context)
         }
     }
 
     fun shutdown() {
-        // TODO: cancel all outstanding sounds
+        scope.cancel()
         release()
     }
 
@@ -53,7 +53,7 @@ class Sounds(context: Context) : SoundPool(10, AudioManager.STREAM_MUSIC, 0) {
         if (!isEnabled) return false
         if (id == 0) return false
 
-        GlobalScope.launch(Dispatchers.Default) {
+        scope.launch {
             play(id, volume * GLOBAL_VOLUME, volume * GLOBAL_VOLUME, 1, 0, rate)
         }
 

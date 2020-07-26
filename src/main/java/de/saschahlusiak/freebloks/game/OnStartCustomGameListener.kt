@@ -15,7 +15,7 @@ interface OnStartCustomGameListener {
      * @param localClientName the initial local client name for all players that are requested
      * @param runAfter an optional Runnable to run after connection is successful
      */
-    fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?, runAfter: Runnable? = null)
+    fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?, runAfter: () -> Unit = {})
 
     /**
      * Join a game by connecting to the given remote device.

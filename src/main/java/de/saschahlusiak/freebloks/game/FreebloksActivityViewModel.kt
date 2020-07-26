@@ -4,10 +4,10 @@ import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import android.os.Bundle
 import android.os.Handler
 import android.os.Vibrator
 import android.util.Log
-import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
@@ -23,6 +23,7 @@ import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.genericMessage
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.serverMessage
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
@@ -98,6 +99,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val googleAccountSignedIn: MutableLiveData<Boolean>
     val canRequestUndo = MutableLiveData(false)
     val canRequestHint = MutableLiveData(false)
+    val inProgress = MutableLiveData(false)
 
     init {
         client = null
@@ -191,7 +193,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     @UiThread
-    fun startConnectingClient(config: GameConfig, clientName: String?, onConnected: Runnable? = null) {
+    fun startConnectingClient(config: GameConfig, clientName: String?, onConnected: () -> Unit = {}) {
         val client = client ?: return
         Log.d(tag, "startConnectingClient")
         connectThread?.interrupt()
@@ -252,7 +254,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
             handler.post {
                 connectionStatus.value = ConnectionStatus.Connected
-                onConnected?.run()
+                onConnected()
             }
 
             connectThread = null
@@ -369,6 +371,15 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         return lastStatus?.getPlayerName(player) ?: colorName
     }
 
+    fun requestHint() {
+        analytics.logEvent("hint_received", null)
+        client?.run {
+            inProgress.value = true
+            canRequestHint.value = false
+            requestHint()
+        }
+    }
+
     //region GameEventObserver callbacks
 
     override fun onConnected(client: GameClient) {
@@ -387,6 +398,26 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         handler.post {
             reloadPreferences()
         }
+
+        // Send analytics event
+        val lastStatus = lastStatus ?: return
+
+        val client = client ?: return
+        val game = client.game
+
+        val b = Bundle().apply {
+            putString("server", client.config.server ?: "")
+            putString("game_mode", game.gameMode.toString())
+            putInt("w", game.board.width)
+            putInt("h", game.board.height)
+            putInt("clients", lastStatus.clients)
+            putInt("players", lastStatus.player)
+        }
+
+        analytics.logEvent("game_started", b)
+        if (lastStatus.clients >= 2) {
+            analytics.logEvent("game_start_multiplayer", b)
+        }
     }
 
     override fun serverStatus(status: MessageServerStatus) {
@@ -397,6 +428,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
+    @WorkerThread
     override fun newCurrentPlayer(player: Int) {
         val client = client ?: return
         if (playerToShowInSheet.value?.isRotated == true) {
@@ -405,6 +437,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         } else {
             setSheetPlayer(player, false)
         }
+
+        inProgress.postValue(!client.game.isLocalPlayer())
 
         canRequestHint.postValue(client.game.isLocalPlayer() && client.game.isStarted)
         canRequestUndo.postValue(
@@ -460,6 +494,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         chatHistoryAsLiveData.postValue(chatHistory)
     }
 
+    override fun hintReceived(turn: Turn) {
+        inProgress.postValue(false)
+        canRequestHint.postValue(client?.game?.isStarted ?: false)
+    }
+
+    @WorkerThread
+    override fun stoneUndone(t: Turn) {
+        analytics.logEvent("undo_move", null)
+    }
+
     override fun onDisconnected(client: GameClient, error: Exception?) {
         Log.d(tag, "onDisconneced")
         if (client === this.client) {
@@ -467,7 +511,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             lastStatus = null
             connectionStatus.postValue(ConnectionStatus.Disconnected)
             setSheetPlayer(-1, false)
-            chatButtonVisible.value = false
+            chatButtonVisible.postValue(false)
         }
         chatHistory.clear()
     }

@@ -56,7 +56,6 @@ import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
 import kotlinx.android.synthetic.main.main_3d.*
-import kotlinx.android.synthetic.main.player_detail_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -94,10 +93,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 //			    .penaltyDeath()
                 .build())
         }
-
-        // TODO: move to App
-        // must initialise before anything else
-        DependencyProvider.initialise(this)
 
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
 
@@ -277,10 +272,10 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val client = client
         if (client != null) {
             // when starting a new game from the options menu, keep previous config
-            startNewGame(client.config, viewModel.localClientNameOverride, null)
+            startNewGame(client.config, viewModel.localClientNameOverride)
         } else {
             // else start default game
-            startNewGame(GameConfig(), null, null)
+            startNewGame(GameConfig(), null)
         }
     }
 
@@ -324,11 +319,11 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         // unfortunately we have lost all player names from before, but this shouldn't matter
         // as the local client name should overwrite what the server believes anyway, and
         // all other players are computers when resuming.
-        viewModel.startConnectingClient(config, null, null)
+        viewModel.startConnectingClient(config, null)
     }
 
     @UiThread
-    private fun startNewGame(config: GameConfig, localClientName: String?, onConnected: Runnable?) {
+    private fun startNewGame(config: GameConfig, localClientName: String?, onConnected: () -> Unit = {}) {
         if (config.server == null) {
             val ret = runServerForNewGame(
                 config.gameMode,
@@ -346,10 +341,11 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val requestGameStart = !config.showLobby
         board.startNewGame(config.gameMode, config.fieldSize, config.fieldSize)
         setGameClient(GameClient(game, config))
-        viewModel.startConnectingClient(config, localClientName, Runnable {
-            onConnected?.run()
+
+        viewModel.startConnectingClient(config, localClientName) {
+            onConnected()
             if (requestGameStart) client?.requestGameStart()
-        })
+        }
     }
 
     @Throws(Exception::class)
@@ -382,21 +378,22 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun saveGameState(client: GameClient, filename: String = GAME_STATE_FILE) {
-        val p = Parcel.obtain()
         val b = Bundle()
         synchronized(client) {
             writeStateToBundle(client, b)
-            p.writeBundle(b)
         }
 
         GlobalScope.launch(Dispatchers.IO) {
+            val p = Parcel.obtain()
+            p.writeBundle(b)
             try {
                 openFileOutput(filename, Context.MODE_PRIVATE).use {
                     it.write(p.marshall())
                 }
-                p.recycle()
             } catch (e: Exception) {
                 e.printStackTrace()
+            } finally {
+                p.recycle()
             }
         }
     }
@@ -541,7 +538,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         MainMenu().show(supportFragmentManager, "game_menu")
     }
 
-    override fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?, runAfter: Runnable?) {
+    override fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?, runAfter: () -> Unit) {
         dismissMainMenu()
         startNewGame(config, localClientName, runAfter)
     }
@@ -598,10 +595,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             }
             R.id.hint -> {
                 if (client == null) return true
-                progressBar.visibility = View.VISIBLE
-                movesLeft.visibility = View.INVISIBLE
                 scene.currentStone.stopDragging()
-                client.requestHint()
+                viewModel.requestHint()
             }
             R.id.undo -> {
                 if (client == null) return true
@@ -621,26 +616,18 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
         return true
     }
+
     //endregion
 
     //region GameEventObserver callbacks
+
     @WorkerThread
     override fun playerIsOutOfMoves(player: Player) {
         scene.soundPool.play(scene.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f)
 
-        runOnUiThread {
+        lifecycleScope.launchWhenStarted {
             val playerName = viewModel.getPlayerName(player.number)
             Toast.makeText(this@FreebloksActivity, getString(R.string.color_is_out_of_moves, playerName), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    @WorkerThread
-    override fun hintReceived(turn: Turn) {
-        analytics.logEvent("hint_received", null)
-
-        lifecycleScope.launch {
-            progressBar.visibility = View.INVISIBLE
-            movesLeft.visibility = View.VISIBLE
         }
     }
 
@@ -692,37 +679,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 chatButton.startAnimation(animation)
             }
         }
-    }
-
-    @WorkerThread
-    override fun gameStarted() {
-        val client = client ?: return
-        val lastStatus = viewModel.lastStatus ?: return
-
-        val b = Bundle().apply {
-            putString("server", client.config.server)
-            putString("game_mode", client.game.gameMode.toString())
-            putInt("w", client.game.board.width)
-            putInt("h", client.game.board.height)
-            putInt("clients", lastStatus.clients)
-            putInt("players", lastStatus.player)
-        }
-
-        analytics.logEvent("game_started", b)
-        if (lastStatus.clients >= 2) {
-            analytics.logEvent("game_start_multiplayer", b)
-        }
-
-        Log.d(tag, "Game started")
-
-        for (i in 0 until Board.PLAYER_MAX)
-            if (client.game.isLocalPlayer(i))
-                Log.d(tag, "Local player: $i")
-    }
-
-    @WorkerThread
-    override fun stoneUndone(t: Turn) {
-        analytics.logEvent("undo_move", null)
     }
 
     @WorkerThread

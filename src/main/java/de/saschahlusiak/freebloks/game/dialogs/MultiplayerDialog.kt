@@ -215,10 +215,10 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
         val config = GameConfig(server = null, showLobby = true)
 
-        listener.onStartClientGameWithConfig(config, clientName, Runnable {
+        listener.onStartClientGameWithConfig(config, clientName) {
             // we can only run this after the TCP server is running, so we can connect to it and start the bridge
             BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
-        })
+        }
 
         // dismissing this dialog will stop the listener, which will be started again by the LobbyDialog
         dismiss()
