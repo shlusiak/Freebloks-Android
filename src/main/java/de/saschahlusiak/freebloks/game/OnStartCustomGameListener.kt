@@ -4,6 +4,9 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import de.saschahlusiak.freebloks.model.GameConfig
 
+/**
+ * The interface implemented by [FreebloksActivity], to be used by dialogs.
+ */
 interface OnStartCustomGameListener {
     /**
      * Start a new game with the given config.

@@ -112,14 +112,12 @@ public class BoardObject implements ViewElement {
 	 * returns the number of the player whose seeds are to be shown
 	 *
 	 * @return -1 if seeds are disabled
-	 * @return detail player if board is rotated
-	 * @return current player, if local
-	 * @return -1 otherwise
+	 *         detail player if board is rotated
+	 *         current player, if local
+	 *         -1 otherwise
 	 */
 	public int getShowSeedsPlayer() {
 		if (!scene.showSeeds)
-			return -1;
-		if (scene.game == null)
 			return -1;
 		if (lastDetailsPlayer >= 0)
 			return lastDetailsPlayer;
@@ -138,7 +136,7 @@ public class BoardObject implements ViewElement {
 	private int getShowDetailsPlayer() {
 		if (lastDetailsPlayer >= 0)
 			return lastDetailsPlayer;
-		if (scene.game == null || !scene.game.isStarted())
+		if (!scene.game.isStarted())
 			return -1;
 		if (scene.game.isFinished())
 			return centerPlayer;

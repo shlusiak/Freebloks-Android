@@ -19,7 +19,7 @@ import java.util.*
 
 /**
  * This scene model is owned by the [Freebloks3DView] and
- * encapsulates 3D objects and renderable effects and sounds.
+ * encapsulates 3D objects and effects and sounds.
  *
  * This is a View class and is allowed to have references to the current View and Activity.
  */
@@ -34,12 +34,12 @@ class Scene(
         const val ANIMATIONS_OFF = 2
     }
 
+    private var client: GameClient? = null
+
     @JvmField var board = Board()
     @JvmField var game = Game()
-
     @JvmField val wheel = Wheel(this)
     @JvmField val currentStone = CurrentStone(this)
-    private var client: GameClient? = null
     @JvmField val boardObject = BoardObject(this, Board.DEFAULT_BOARD_SIZE)
     @JvmField val effects = ArrayList<Effect>()
     @JvmField val soundPool = viewModel.sounds

@@ -12,11 +12,9 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
+import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
-import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
-import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry
@@ -24,11 +22,14 @@ import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.genericMessage
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.serverMessage
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
+import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.theme.Sounds
-import de.saschahlusiak.freebloks.DependencyProvider
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.view.scene.Scene
+import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import java.net.NetworkInterface
 import java.net.SocketException
 import kotlin.concurrent.thread
@@ -64,6 +65,11 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
         private set
+    var showSeeds = false
+    var showOpponents = false
+    var snapAid = false
+    var showAnimations = 0
+    var undoWithBack = false
 
     // other stuff
     var intro: Intro? = null
@@ -99,15 +105,22 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     override fun onCleared() {
         disconnectClient()
-        sounds.release()
+        sounds.shutdown()
     }
 
     @UiThread
     fun reloadPreferences() {
-        vibrateOnMove = prefs.getBoolean("vibrate", true)
-        sounds.isEnabled = prefs.getBoolean("sounds", true)
-        showNotifications = prefs.getBoolean("notifications", true)
-        localClientNameOverride = prefs.getString("player_name", null)?.ifBlank { null }
+        with(prefs) {
+            vibrateOnMove = getBoolean("vibrate", true)
+            sounds.isEnabled = getBoolean("sounds", true)
+            showNotifications = getBoolean("notifications", true)
+            localClientNameOverride = getString("player_name", null)?.ifBlank { null }
+            showSeeds = getBoolean("show_seeds", true)
+            showOpponents = getBoolean("show_opponents", true)
+            showAnimations = getString("animations", Scene.ANIMATIONS_FULL.toString())?.toInt() ?: 0
+            snapAid = getBoolean("snap_aid", true)
+            undoWithBack = getBoolean("back_undo", false)
+        }
 
         soundsEnabledLiveData.value = sounds.isEnabled
 

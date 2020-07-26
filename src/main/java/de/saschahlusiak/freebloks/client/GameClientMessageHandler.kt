@@ -123,10 +123,19 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 // inform listeners first, so that effects can be added before the stone
                 // is committed. fixes drawing glitches, where stone is set, but
                 // effect hasn't been added yet.
-
                 notifyObservers { it.stoneWillBeSet(turn) }
+
+                // also for each player the number of possible turns before setting the stone and after
+                val numberOfPossibleTurns = board.player.map { it.numberOfPossibleTurns }
                 board.setStone(turn)
                 notifyObservers { it.stoneHasBeenSet(turn) }
+
+                // detect which player is now out of moves, but wasn't before and notify listeners
+                board.player.forEachIndexed { index, player ->
+                    if (player.numberOfPossibleTurns <= 0 && numberOfPossibleTurns[index] > 0) {
+                        notifyObservers { it.playerIsOutOfMoves(player) }
+                    }
+                }
             }
 
             is MessageStoneHint -> {

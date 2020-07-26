@@ -20,7 +20,7 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
     /**
      * Encapsulated player information
      */
-    private val player = Array(PLAYER_MAX) { Player(it) }
+    val player = Array(PLAYER_MAX) { Player(it) }
 
     /**
      * One dimensional board field [y * width + x]

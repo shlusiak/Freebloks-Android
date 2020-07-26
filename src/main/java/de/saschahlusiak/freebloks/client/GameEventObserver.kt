@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.client
 
+import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.network.MessageReadThread
@@ -36,6 +37,7 @@ interface GameEventObserver {
     fun newCurrentPlayer(player: Int) {}
     fun stoneWillBeSet(turn: Turn) {}
     fun stoneHasBeenSet(turn: Turn) {}
+    fun playerIsOutOfMoves(player: Player) {}
     fun hintReceived(turn: Turn) {}
     fun gameFinished() {}
     fun gameStarted() {}

@@ -15,7 +15,7 @@ import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.sin
 
-class Intro(context: Context, private val scene: Scene, var listener: IntroCompletedListener?) {
+class Intro(context: Context, private val scene: Scene, var listener: IntroDelegate?) {
 
     companion object {
         private const val INTRO_SPEED = 1.2f

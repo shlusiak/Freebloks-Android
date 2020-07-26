@@ -1,15 +1,16 @@
 package de.saschahlusiak.freebloks.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PointF
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.annotation.WorkerThread
+import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.Board
+import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.model.Stone
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
@@ -135,6 +136,42 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         if (scene.game.isLocalPlayer(turn.player) || turn.player == scene.wheel.currentPlayer)
             scene.wheel.update(scene.boardObject.showWheelPlayer)
         requestRender()
+
+        if (!scene.game.isLocalPlayer(turn.player)) {
+            scene.soundPool.play(scene.soundPool.SOUND_CLICK1, 1.0f, 0.9f + Math.random().toFloat() * 0.2f)
+            scene.vibrate(Global.VIBRATE_SET_STONE.toLong())
+        }
+    }
+
+    override fun playerIsOutOfMoves(player: Player) {
+        val game = scene.game
+        val board = game.board
+
+        if (scene.hasAnimations()) {
+            val sx: Int
+            val sy: Int
+            val gameMode = game.gameMode
+            val seed = board.getPlayerSeed(player.number, gameMode) ?: return
+            for (x in 0 until board.width) for (y in 0 until board.height) if (board.getFieldPlayer(y, x) == player.number) {
+                var effected = false
+                synchronized(scene.effects) {
+                    for (j in scene.effects.indices) if (scene.effects.get(j).isEffected(x, y)) {
+                        effected = true
+                        break
+                    }
+                }
+                if (!effected) {
+                    val distance = sqrt((x - seed.x) * (x - seed.x) + (y - seed.y) * (y - seed.y).toFloat())
+                    val effect: Effect = BoardStoneGlowEffect(
+                        (scene),
+                        Global.getPlayerColor(player.number, gameMode),
+                        x,
+                        y,
+                        distance)
+                    scene.addEffect(effect)
+                }
+            }
+        }
     }
 
     override fun hintReceived(turn: Turn) {

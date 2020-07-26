@@ -20,7 +20,6 @@ import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.ConnectionStatus
 import de.saschahlusiak.freebloks.game.FreebloksActivity
@@ -35,13 +34,10 @@ import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
 class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
-    interface LobbyDialogListener {
-        fun onLobbyDialogClosed()
-    }
 
     private val viewModel by lazy { (requireActivity() as FreebloksActivity).viewModel }
     private val client get() = viewModel.client
-    private val listener get() = activity as LobbyDialogListener
+    private val listener get() = activity as LobbyDialogDelegate
 
     private var chatAdapter: ChatListAdapter? = null
     private var colorAdapter: ColorAdapter? = null
@@ -198,7 +194,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        listener.onLobbyDialogClosed()
+        listener.onLobbyDialogCancelled()
     }
 
     override fun onEditPlayerName(player: Int) {
