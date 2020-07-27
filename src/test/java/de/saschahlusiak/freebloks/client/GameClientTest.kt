@@ -1,10 +1,16 @@
 package de.saschahlusiak.freebloks.client
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.Game.Companion.PLAYER_LOCAL
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.network.message.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -13,9 +19,6 @@ import java.io.Closeable
 import java.io.EOFException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 
 class GameClientTest {
     private val game = Game()
@@ -27,7 +30,6 @@ class GameClientTest {
     private val fromClientStream = PipedInputStream()
 
     private val toClient = MessageWriter(toClientStream)
-    private val fromClient = MessageReader(fromClientStream)
     private lateinit var serverThread: MessageReadThread
 
     private var readerClosed = false
@@ -49,55 +51,54 @@ class GameClientTest {
         }
     }
 
+    private enum class Event {
+        Status, Disconnected
+    }
 
     /**
      * Used to watch for the client to have processed a server status message
      */
     private val gameObserver = object: GameEventObserver {
-        private val lock = ReentrantLock()
-        private val condition = lock.newCondition()
+
+        private val events = Channel<Event>(Channel.UNLIMITED)
         var statusReceived: Boolean = false
 
+        @WorkerThread
         override fun serverStatus(status: MessageServerStatus) {
-            lock.withLock {
-                statusReceived = true
-                condition.signalAll()
-            }
+            events.sendBlocking(Event.Status)
         }
 
+        @UiThread
         override fun onDisconnected(client: GameClient, error: Exception?) {
             clientDisconnectError = error
-            lock.withLock { condition.signalAll() }
+            events.sendBlocking(Event.Disconnected)
         }
 
         /**
          * Block until the server status message is received
          */
-        fun awaitStatus() {
-            lock.withLock {
-                do {
-                    if (statusReceived) return
-                    awaitGameEvent()
-                } while (true)
+        suspend fun awaitStatus() {
+            for (event in events) {
+                if (event == Event.Status) return
             }
         }
 
         /**
          * Blocks until any game event is received
          */
-        fun awaitGameEvent() {
-            lock.withLock {
-                assertTrue(condition.await(250, TimeUnit.MILLISECONDS))
+        suspend fun awaitGameEvent(): Event {
+            return withTimeout(250) {
+                events.receive()
             }
         }
     }
 
-    private fun awaitGameEvent() = gameObserver.awaitGameEvent()
+    private suspend fun awaitGameEvent() = gameObserver.awaitGameEvent()
 
     /**
      * Sends out a [MessageServerStatus] to the client and blocks until it is processed
      */
-    private fun MessageWriter.flush() {
+    private fun MessageWriter.flush() = runBlocking {
         gameObserver.statusReceived = false
 
         write(MessageServerStatus(
@@ -115,6 +116,7 @@ class GameClientTest {
 
     @Before
     fun setup() {
+        Dispatchers.setMain(Dispatchers.Default)
 
         fromServerStream.connect(toClientStream)
         fromClientStream.connect(toServerStream)
@@ -122,7 +124,7 @@ class GameClientTest {
         client.connected(serverMessageHandler, fromServerStream, toServerStream)
         client.addObserver(gameObserver)
 
-        serverThread = MessageReadThread(fromClient, serverMessageHandler) { readerClosed = true }
+        serverThread = MessageReadThread(fromClientStream, serverMessageHandler) { readerClosed = true }
         serverThread.start()
 
         // player 1 is local and the current player
@@ -164,7 +166,7 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_server_disconnect() {
+    fun test_gameClient_server_disconnect() = runBlocking {
         assertTrue(client.isConnected())
         toClientStream.close()
         awaitGameEvent()

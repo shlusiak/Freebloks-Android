@@ -37,22 +37,6 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
     }
 
     /**
-     * @return The x-coordinate of the player's start corner
-     */
-    @Deprecated("Use getPlayerSeed instead")
-    fun getPlayerSeedX(player: Int, gameMode: GameMode): Int {
-        return getPlayerSeed(player, gameMode)?.x ?: throw IllegalArgumentException("Player $player has no seed")
-    }
-
-    /**
-     * @return The y-coordinate of the player's start corner
-     */
-    @Deprecated("Use getPlayerSeed instead")
-    fun getPlayerSeedY(player: Int, gameMode: GameMode): Int {
-        return getPlayerSeed(player, gameMode)?.y ?: throw IllegalArgumentException("Player $player has no seed")
-    }
-
-    /**
      * @return the seed position for the given player
      */
     fun getPlayerSeed(player: Int, gameMode: GameMode): Point? {
@@ -283,7 +267,7 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
     /**
      * Clear the PLAYER_BIT_ALLOWED bit, because there is no possible valid turn for this field.
      */
-    fun clearAllowedBit(player: Int, y: Int, x: Int) {
+    private fun clearAllowedBit(player: Int, y: Int, x: Int) {
         fields[y * width + x] = fields[y * width + x] and PLAYER_BIT_ALLOWED[player].inv()
     }
 
