@@ -551,6 +551,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val game = Game()
         board.startNewGame(config.gameMode, config.fieldSize, config.fieldSize)
         setGameClient(GameClient(game, config))
+
         viewModel.startConnectingBluetooth(device, localClientName)
     }
 

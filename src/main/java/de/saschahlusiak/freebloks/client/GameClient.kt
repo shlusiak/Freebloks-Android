@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
@@ -18,6 +17,9 @@ import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageReadThread
 import de.saschahlusiak.freebloks.network.MessageWriter
 import de.saschahlusiak.freebloks.network.message.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.sendBlocking
 import java.io.Closeable
 import java.io.IOException
 import java.io.InputStream
@@ -25,20 +27,17 @@ import java.io.OutputStream
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.RejectedExecutionException
-import java.util.concurrent.TimeUnit
 
 // Extend Object so we can override finalize()
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Object() {
 
     private var clientSocket: Closeable?
-    private var messageWriter: MessageWriter? = null
     private var readThread: MessageReadThread? = null
-    private var sendExecutor: ExecutorService? = null
     private val gameClientMessageHandler: GameClientMessageHandler
+
+    private val sendQueue = Channel<Message>(Channel.UNLIMITED)
+    private var sender: Job? = null
 
     /**
      * The last status message received by our handler
@@ -89,25 +88,33 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      *
      * @throws IOException on connection refused
      */
-    @WorkerThread
-    fun connect(context: Context, host: String?, port: Int): Boolean {
+    suspend fun connect(context: Context, host: String?, port: Int): Boolean {
         val socket = Socket()
-        val address = host?.let { InetSocketAddress(it, port) } ?: InetSocketAddress(null as InetAddress?, port)
+        val error = runInterruptible(Dispatchers.IO) {
+            val address = host?.let { InetSocketAddress(it, port) }
+                ?: InetSocketAddress(null as InetAddress?, port)
 
-        try {
-            socket.connect(address, CONNECT_TIMEOUT)
-        } catch (e: IOException) {
-            if (Thread.interrupted()) return false
+            try {
+                socket.connect(address, CONNECT_TIMEOUT)
+                null
+            } catch (e: IOException) {
+                e.printStackTrace()
 
-            e.printStackTrace()
+                // translate any IOException to "Connection refused"
+                IOException(context.getString(R.string.connection_refused), e)
+            }
+        }
 
-            // translate any IOException to "Connection refused"
-            val e2 = IOException(context.getString(R.string.connection_refused), e)
-            gameClientMessageHandler.notifyConnectionFailed(this, e2)
-
+        if (error != null) {
+            gameClientMessageHandler.notifyConnectionFailed(this, error)
             return false
         }
-        connected(socket, socket.getInputStream(), socket.getOutputStream())
+
+        val (input, output) = runInterruptible(Dispatchers.IO) {
+            socket.getInputStream() to socket.getOutputStream()
+        }
+
+        connected(socket, input, output)
         return true
     }
 
@@ -116,23 +123,24 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      *
      * On success will call [.connected]
      */
-    @WorkerThread
-    fun connect(context: Context, remote: BluetoothDevice): Boolean {
-        val socket: BluetoothSocket
-        try {
-            socket = remote.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID)
-            socket.connect()
-        }  catch (e: IOException) {
-            if (Thread.interrupted()) return false
+    suspend fun connect(context: Context, remote: BluetoothDevice): Boolean {
+        val (socket, error) = runInterruptible(Dispatchers.IO) {
+            try {
+                remote.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID).also {
+                    it.connect()
+                } to null
+            } catch (e: IOException) {
+                e.printStackTrace()
 
-            e.printStackTrace()
-
-            // translate any IOException to "Connection refused"
-            val e2 = IOException(context.getString(R.string.connection_refused), e)
-            gameClientMessageHandler.notifyConnectionFailed(this, e2)
-
+                // translate any IOException to "Connection refused"
+                null to IOException(context.getString(R.string.connection_refused), e)
+            }
+        }
+        if (error != null) {
+            gameClientMessageHandler.notifyConnectionFailed(this, error)
             return false
         }
+        socket ?: return false
 
         connected(socket, socket.inputStream, socket.outputStream)
         return true
@@ -151,8 +159,10 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
         clientSocket = socket
 
         // first we set up writing to the server
-        messageWriter = MessageWriter(output)
-        sendExecutor = Executors.newSingleThreadExecutor()
+        sender = GlobalScope.launch(Dispatchers.IO) {
+            val writer = MessageWriter(output)
+            for (message in sendQueue) writer.write(message)
+        }
 
         // we start reading from the server, we will likely begin receiving and processing
         // messages and sending events to the observers.
@@ -160,8 +170,11 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
         // observers so far about it.
         gameClientMessageHandler.notifyConnected(this)
 
-        readThread = MessageReadThread(input, gameClientMessageHandler) { 
-            disconnect()
+        readThread = MessageReadThread(input, gameClientMessageHandler) {
+            // this current thread is interrupted, so not a good idea to do much from it
+            GlobalScope.launch {
+                disconnect()
+            }
         }.also { it.start() }
     }
 
@@ -174,14 +187,14 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
             crashReporter.log("Disconnecting from ${config.server}")
 
             readThread?.goDown()
-            if (sendExecutor != null) {
-                sendExecutor?.shutdown()
-                try {
-                    sendExecutor?.awaitTermination(200, TimeUnit.MILLISECONDS)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
+            sendQueue.close()
+
+            runBlocking {
+                withTimeoutOrNull(200) {
+                    sender?.join()
                 }
             }
+
             if (socket is Socket && socket.isConnected) {
                 socket.shutdownInput()
             }
@@ -190,14 +203,15 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
             e.printStackTrace()
         }
         readThread = null
-        sendExecutor = null
+        sender = null
         clientSocket = null
 
         gameClientMessageHandler.notifyDisconnected(this, lastError)
     }
 
     /**
-     * Request a new player from the server
+     * Request a new player from the server. This can be called before the client is connected.
+     *
      * @param player player to request or -1 for random
      * @param name name for the player
      */
@@ -249,14 +263,15 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      * The request is sent to the server, the stone will not be placed locally.
      */
     fun setStone(turn: Turn) {
-// locally set no player as the current player
-// on success the server will send us the new current player
+        // locally set no player as the current player
+        // on success the server will send us the new current player
         game.currentPlayer = -1
+
         send(MessageSetStone(turn))
     }
 
     /**
-     * Request server to start the game
+     * Request server to start the game. This can be called before the client is connected.
      */
     fun requestGameStart() {
         send(MessageStartGame())
@@ -272,19 +287,15 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
     }
 
     /**
-     * Relay the given message to the sendExecutor to be sent to the server asynchronously.
+     * Queue the given message to be sent via the [sendQueue]. This can be done even when the [sender] is not running yet.
+     *
      * Write errors will be silently ignored.
      *
      * @param msg the message to send
      */
     @AnyThread
     private fun send(msg: Message) {
-        // ignore sending to closed stream
-        try {
-            sendExecutor?.submit { messageWriter?.write(msg) }
-        } catch (e: RejectedExecutionException) {
-            crashReporter.logException(e)
-        }
+        sendQueue.sendBlocking(msg)
     }
 
     companion object {

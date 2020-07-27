@@ -12,6 +12,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.Global
@@ -32,9 +33,9 @@ import de.saschahlusiak.freebloks.theme.Sounds
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
+import kotlinx.coroutines.*
 import java.net.NetworkInterface
 import java.net.SocketException
-import kotlin.concurrent.thread
 
 enum class ConnectionStatus {
     Disconnected, Connecting, Connected, Failed
@@ -76,7 +77,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     // other stuff
     var intro: Intro? = null
-    private var connectThread: Thread? = null
+    private var connectJob: Job? = null
     val gameHelper: GooglePlayGamesHelper
 
     // client data
@@ -196,32 +197,31 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     fun startConnectingClient(config: GameConfig, clientName: String?, onConnected: () -> Unit = {}) {
         val client = client ?: return
         Log.d(tag, "startConnectingClient")
-        connectThread?.interrupt()
-        connectThread?.join(100)
+
+        runBlocking {
+            // FIXME: remove runBlocking
+            withTimeoutOrNull(200) {
+                connectJob?.cancelAndJoin()
+            }
+        }
 
         connectionStatus.value = ConnectionStatus.Connecting
         setSheetPlayer(-1, false)
         chatButtonVisible.value = false
 
-        connectThread = thread(name = "ConnectionThread") {
+        connectJob = viewModelScope.launch {
             val name = config.server ?: "(null)"
             val crashReporting = DependencyProvider.crashReporter()
             crashReporting.log("Connecting to: $name")
             crashReporting.setString("server", name)
 
-            try {
-                // client will notify observers about connection failed
-                if (!client.connect(context, config.server, GameClient.DEFAULT_PORT)) {
-                    // connection has failed, observers have been notified
-                    connectionStatus.postValue(ConnectionStatus.Failed)
-                    connectThread = null
-                    Log.d(tag, "Connection failed")
-                    return@thread
-                }
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-                connectThread = null
-                return@thread
+            // client will notify observers about connection failed
+            if (!client.connect(context, config.server, GameClient.DEFAULT_PORT)) {
+                // connection has failed, observers have been notified
+                connectionStatus.postValue(ConnectionStatus.Failed)
+                connectJob = null
+                Log.d(tag, "Connection failed")
+                return@launch
             }
 
             Log.d(tag, "Connection successful")
@@ -252,64 +252,54 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                 }
             }
 
-            handler.post {
-                connectionStatus.value = ConnectionStatus.Connected
-                onConnected()
-            }
-
-            connectThread = null
+            connectionStatus.value = ConnectionStatus.Connected
+            onConnected()
         }
     }
 
     @UiThread
-    fun startConnectingBluetooth(remote: BluetoothDevice, clientName: String?) {
-        val client = client ?: return
+    fun startConnectingBluetooth(remote: BluetoothDevice, clientName: String?) = viewModelScope.launch {
+        val client = client ?: return@launch
         val config = client.config
-        connectThread?.interrupt()
-        connectThread?.join(100)
+
+        withTimeoutOrNull(200) {
+            connectJob?.cancelAndJoin()
+        }
+
         connectionStatus.value = ConnectionStatus.Connecting
         chatButtonVisible.value = false
 
         DependencyProvider.crashReporter().log("Connecting to bluetooth device")
 
-        connectThread = thread(name = "BluetoothConnectThread") {
-            try {
-                Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
-                if (!client.connect(context, remote)) {
-                    // connection has failed, observers have been notified
-                    connectionStatus.postValue(ConnectionStatus.Failed)
-                    connectThread = null
-                    return@thread
-                }
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-                connectThread = null
-                return@thread
-            }
+        connectJob = coroutineContext[Job]
 
-            Log.i(tag, "Connection successful")
-
-            analytics.logEvent("bluetooth_connected", null)
-
-            if (config.requestPlayers == null) {
-                client.requestPlayer(-1, clientName)
-            } else {
-                for (i in 0..3)
-                    if (config.requestPlayers[i])
-                        client.requestPlayer(i, clientName)
-            }
-
-            connectionStatus.postValue(ConnectionStatus.Connected)
-
-            connectThread = null
+        Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
+        if (!client.connect(context, remote)) {
+            // connection has failed, observers have been notified
+            connectionStatus.postValue(ConnectionStatus.Failed)
+            connectJob = null
+            return@launch
         }
+
+        Log.i(tag, "Connection successful")
+
+        analytics.logEvent("bluetooth_connected", null)
+
+        if (config.requestPlayers == null) {
+            client.requestPlayer(-1, clientName)
+        } else {
+            for (i in 0..3)
+                if (config.requestPlayers[i])
+                    client.requestPlayer(i, clientName)
+        }
+
+        connectionStatus.postValue(ConnectionStatus.Connected)
     }
 
     @UiThread
     fun disconnectClient() {
         Log.d(tag, "disconnectClient")
-        connectThread?.interrupt()
-        connectThread = null
+        connectJob?.cancel()
         val c = this.client
         this.client = null
         c?.disconnect()
@@ -424,7 +414,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         this.lastStatus = status
 
         if (status.clients > 1) {
-            chatButtonVisible.value = true
+            chatButtonVisible.postValue(true)
         }
     }
 
