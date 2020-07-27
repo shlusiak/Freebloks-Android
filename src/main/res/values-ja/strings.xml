@@ -21,7 +21,6 @@
     <string name="waiting_for_color">%1$s の待機中</string>
     <string name="color_is_out_of_moves">%1$s は移動範囲外です</string>
     <plurals name="player_status_moves">
-        <item quantity="one">%1$d 移動</item>
         <item quantity="other">%1$d 移動</item>
     </plurals>
     <string name="touch_to_skip">タッチしてスキップ</string>
@@ -60,7 +59,6 @@
 
     <string name="lobby_waiting_for_players">プレイヤーを待機しています</string>
     <plurals name="connected_clients">
-        <item quantity="one">%1$d クライアント</item>
         <item quantity="other">%1$d クライアント</item>
     </plurals>
     <string name="chat">チャット</string>
@@ -81,11 +79,9 @@
 
 
     <plurals name="number_of_stones_left">
-        <item quantity="one">残り %1$d ストーン</item>
         <item quantity="other">残り %1$d ストーン</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d ポイント</item>
         <item quantity="other">%1$d ポイント</item>
     </plurals>
     <string-array name="places">

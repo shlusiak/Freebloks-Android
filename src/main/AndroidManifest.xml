@@ -29,13 +29,13 @@
         android:xlargeScreens="true" />
 
     <application
+        android:name=".app.App"
         android:allowBackup="true"
         android:extractNativeLibs="true"
         android:icon="@mipmap/launcher_icon"
         android:isGame="true"
-        android:name=".app.App"
         android:label="@string/app_name"
-        tools:ignore="GoogleAppIndexingWarning"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
 
         <meta-data
@@ -65,7 +65,7 @@
             android:name=".statistics.StatisticsActivity"
             android:exported="false"
             android:label="@string/statistics"
-            android:theme="@style/Theme.Freebloks.Auto.Light"/>
+            android:theme="@style/Theme.Freebloks.Auto.Light" />
         <activity
             android:name=".donate.DonateActivity"
             android:exported="false"
@@ -80,7 +80,7 @@
             android:name=".rules.RulesActivity"
             android:exported="false"
             android:label="@string/rules_title"
-            android:theme="@style/Theme.Freebloks.Light"/>
+            android:theme="@style/Theme.Freebloks.Light" />
     </application>
 
 </manifest>

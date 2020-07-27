@@ -9,7 +9,6 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.model.GameConfig
-import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Turn
@@ -30,11 +29,11 @@ import java.net.Socket
 
 // Extend Object so we can override finalize()
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Object() {
+class GameClient @UiThread constructor(@JvmField val game: Game, val config: GameConfig): Object() {
 
-    private var clientSocket: Closeable?
+    private var clientSocket: Closeable? = null
     private var readThread: MessageReadThread? = null
-    private val gameClientMessageHandler: GameClientMessageHandler
+    private val gameClientMessageHandler = GameClientMessageHandler(game)
 
     private val sendQueue = Channel<Message>(Channel.UNLIMITED)
     private var sender: Job? = null
@@ -43,20 +42,6 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      * The last status message received by our handler
      */
     val lastStatus get() = gameClientMessageHandler.lastStatus
-
-    @JvmField
-	val game: Game
-
-    init {
-        if (game == null) {
-            val board = Board(config.fieldSize)
-            board.startNewGame(GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
-            this.game = Game(board)
-        } else this.game = game
-
-        clientSocket = null
-        gameClientMessageHandler = GameClientMessageHandler(this.game)
-    }
 
     @Throws(Throwable::class)
     override fun finalize() {

@@ -35,7 +35,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothServer: BluetoothServerThread? = null
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
-    private val listener get() = requireActivity() as OnStartCustomGameListener
+    private val listener get() = activity as? OnStartCustomGameListener
 
     private val clientName: String?
         get() = name.text.toString().trim { it <= ' ' }.ifBlank { null }
@@ -56,7 +56,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         host_game.setOnClickListener {
             saveSettings()
             val config = GameConfig(server = null, showLobby = true)
-            listener.onStartClientGameWithConfig(config, clientName)
+            listener?.onStartClientGameWithConfig(config, clientName)
             dismiss()
         }
         server_address.apply {
@@ -126,12 +126,12 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         when (server_type.checkedRadioButtonId) {
             R.id.radioButtonInternet -> {
                 val config = GameConfig(server = Global.DEFAULT_SERVER_ADDRESS, showLobby = true)
-                listener.onStartClientGameWithConfig(config, clientName)
+                listener?.onStartClientGameWithConfig(config, clientName)
             }
             R.id.radioButtonWifi -> {
                 customServerAddress ?: return
                 val config = GameConfig(server = customServerAddress, showLobby =  true)
-                listener.onStartClientGameWithConfig(config, clientName)
+                listener?.onStartClientGameWithConfig(config, clientName)
             }
         }
 
@@ -181,7 +181,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
             saveSettings()
             val device = v.tag as BluetoothDevice
             Log.i(TAG, "Device selected: " + device.name)
-            listener.onConnectToBluetoothDevice(config, clientName, device)
+            listener?.onConnectToBluetoothDevice(config, clientName, device)
             dismiss()
         }
 
@@ -219,6 +219,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         val config = GameConfig(server = null, showLobby = true)
 
         GlobalScope.launch(Dispatchers.Main) {
+            val listener = listener ?: return@launch
             val job = listener.onStartClientGameWithConfig(config, clientName)
             job.join()
             if (job.isCancelled) return@launch
