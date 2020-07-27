@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Parcel
 import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.UiThread
@@ -22,6 +23,7 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.genericMessage
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.serverMessage
+import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Turn
@@ -34,8 +36,10 @@ import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.*
+import java.io.ByteArrayOutputStream
 import java.net.NetworkInterface
 import java.net.SocketException
+import kotlin.coroutines.coroutineContext
 
 enum class ConnectionStatus {
     Disconnected, Connecting, Connected, Failed
@@ -191,74 +195,129 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     fun onStop() {
         notificationManager?.startBackgroundNotification()
+        saveGameState()
+    }
+
+    fun saveGameState(filename: String = GAME_STATE_FILE) {
+        val client = client ?: return
+        val game = client.game
+
+        if (!game.isStarted || game.isFinished) return
+
+        val b = Bundle()
+        synchronized(client) {
+            b.putSerializable("game", game)
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val p = Parcel.obtain()
+            p.writeBundle(b)
+            try {
+                context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                    it.write(p.marshall())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                p.recycle()
+            }
+        }
+    }
+
+    fun loadGameState(filename: String = GAME_STATE_FILE): Game? {
+        val bytes = ByteArrayOutputStream().use { output ->
+            context.openFileInput(GAME_STATE_FILE).use { input ->
+                input.copyTo(output)
+            }
+            output.toByteArray()
+        }
+
+        val p = Parcel.obtain()
+        p.unmarshall(bytes, 0, bytes.size)
+        p.setDataPosition(0)
+
+        val bundle = p.readBundle(javaClass.classLoader)
+        p.recycle()
+
+        val game = bundle?.getSerializable("game") as Game? ?: return null
+        if (game.isFinished) return null
+
+        viewModelScope.launch(Dispatchers.IO) {
+            context.deleteFile(GAME_STATE_FILE)
+        }
+
+        return game
     }
 
     @UiThread
-    fun startConnectingClient(config: GameConfig, clientName: String?, onConnected: () -> Unit = {}) {
+    suspend fun connectToHost(config: GameConfig, clientName: String?, requestGameStart: Boolean) {
         val client = client ?: return
         Log.d(tag, "startConnectingClient")
 
-        runBlocking {
-            // FIXME: remove runBlocking
-            withTimeoutOrNull(200) {
-                connectJob?.cancelAndJoin()
-            }
+        withTimeoutOrNull(200) {
+            connectJob?.cancelAndJoin()
         }
 
         connectionStatus.value = ConnectionStatus.Connecting
         setSheetPlayer(-1, false)
         chatButtonVisible.value = false
 
-        connectJob = viewModelScope.launch {
-            val name = config.server ?: "(null)"
-            val crashReporting = DependencyProvider.crashReporter()
-            crashReporting.log("Connecting to: $name")
-            crashReporting.setString("server", name)
+        connectJob = coroutineContext[Job]
 
-            // client will notify observers about connection failed
-            if (!client.connect(context, config.server, GameClient.DEFAULT_PORT)) {
-                // connection has failed, observers have been notified
-                connectionStatus.postValue(ConnectionStatus.Failed)
-                connectJob = null
-                Log.d(tag, "Connection failed")
-                return@launch
-            }
+        val name = config.server ?: "(null)"
+        val crashReporting = DependencyProvider.crashReporter()
+        crashReporting.log("Connecting to: $name")
+        crashReporting.setString("server", name)
 
-            Log.d(tag, "Connection successful")
+        // client will notify observers about connection failed
+        if (!client.connect(context, config.server, GameClient.DEFAULT_PORT)) {
+            // connection has failed, observers have been notified
+            connectionStatus.value = ConnectionStatus.Failed
+            connectJob = null
+            Log.d(tag, "Connection failed")
+            return
+        }
 
-            if (config.requestPlayers == null) {
-                client.requestPlayer(-1, clientName)
-            } else {
-                for (i in 0..3)
-                    if (config.requestPlayers[i])
-                        client.requestPlayer(i, clientName)
-            }
-            if (config.showLobby) {
-                if (config.server == null) {
-                    appendServerInterfacesToChat()
+        Log.d(tag, "Connection successful")
 
-                    // hosting a game locally, start bluetooth server and bridges.
-                    // start a new client bridge for every connected bluetooth client
-                    val connectedListener = object: OnBluetoothConnectedListener {
-                        override fun onBluetoothClientConnected(socket: BluetoothSocket) {
-                            BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
-                        }
-                    }
-                    // the bluetooth server has to be constructed on the main thread
-                    val bluetoothServer = BluetoothServerThread(connectedListener)
-                    // the server is a thread and will have a strong reference for as long as it lives
-                    client.addObserver(bluetoothServer)
-                    bluetoothServer.start()
-                }
-            }
+        if (config.requestPlayers == null) {
+            client.requestPlayer(-1, clientName)
+        } else {
+            for (i in 0..3)
+                if (config.requestPlayers[i])
+                    client.requestPlayer(i, clientName)
+        }
 
-            connectionStatus.value = ConnectionStatus.Connected
-            onConnected()
+        if (config.showLobby && (config.server == null)) {
+            appendServerInterfacesToChat()
+            startBluetoothServer(client)
+        }
+
+        connectionStatus.value = ConnectionStatus.Connected
+
+        if (requestGameStart) {
+            client.requestGameStart()
         }
     }
 
+    private fun startBluetoothServer(client: GameClient) {
+        // hosting a game locally, start bluetooth server and bridges.
+        // start a new client bridge for every connected bluetooth client
+        val connectedListener = object: OnBluetoothConnectedListener {
+            override fun onBluetoothClientConnected(socket: BluetoothSocket) {
+                BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
+            }
+        }
+
+        // the bluetooth server has to be constructed on the main thread
+        val bluetoothServer = BluetoothServerThread(connectedListener)
+        // the server is a thread and will have a strong reference for as long as it lives
+        client.addObserver(bluetoothServer)
+        bluetoothServer.start()
+    }
+
     @UiThread
-    fun startConnectingBluetooth(remote: BluetoothDevice, clientName: String?) = viewModelScope.launch {
+    fun connectToBluetooth(remote: BluetoothDevice, clientName: String?) = viewModelScope.launch {
         val client = client ?: return@launch
         val config = client.config
 
@@ -308,7 +367,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectionStatus.value = ConnectionStatus.Disconnected
     }
 
-    @WorkerThread
     private fun appendServerInterfacesToChat() {
         try {
             for (i in NetworkInterface.getNetworkInterfaces()) {
@@ -370,17 +428,23 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
+    fun requestUndo() {
+        client?.requestUndo()
+    }
+
     //region GameEventObserver callbacks
 
+    @UiThread
     override fun onConnected(client: GameClient) {
         Log.d(tag, "onConnected")
         lastStatus = null
-        connectionStatus.postValue(ConnectionStatus.Connected)
-        playerToShowInSheet.postValue(SheetPlayer(client.game.currentPlayer, false))
-        canRequestHint.postValue(client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
-        canRequestUndo.postValue(false)
+        connectionStatus.value = ConnectionStatus.Connected
+        playerToShowInSheet.value = SheetPlayer(client.game.currentPlayer, false)
+        canRequestHint.value = (client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
+        canRequestUndo.value = false
     }
 
+    @WorkerThread
     override fun gameStarted() {
         // this is so we get to update our [localClientNameOverride], because
         // we start a new local game without any player name, and it allows the
@@ -410,11 +474,21 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
+    @WorkerThread
     override fun serverStatus(status: MessageServerStatus) {
         this.lastStatus = status
 
         if (status.clients > 1) {
             chatButtonVisible.postValue(true)
+        }
+    }
+
+    @WorkerThread
+    override fun gameFinished() {
+        super.gameFinished()
+
+        viewModelScope.launch {
+            context.deleteFile(GAME_STATE_FILE)
         }
     }
 
@@ -507,4 +581,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     //endregion
+
+    companion object {
+        private const val GAME_STATE_FILE = "gamestate.bin"
+    }
 }

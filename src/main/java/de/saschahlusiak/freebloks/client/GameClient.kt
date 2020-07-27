@@ -88,6 +88,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      *
      * @throws IOException on connection refused
      */
+    @UiThread
     suspend fun connect(context: Context, host: String?, port: Int): Boolean {
         val socket = Socket()
         val error = runInterruptible(Dispatchers.IO) {
@@ -155,6 +156,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
      * @param output the OutputStream to the socket
      */
     @Synchronized
+    @UiThread
     fun connected(socket: Closeable, input: InputStream, output: OutputStream) {
         clientSocket = socket
 
@@ -172,13 +174,14 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
 
         readThread = MessageReadThread(input, gameClientMessageHandler) {
             // this current thread is interrupted, so not a good idea to do much from it
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.Main) {
                 disconnect()
             }
         }.also { it.start() }
     }
 
     @Synchronized
+    @UiThread
     fun disconnect() {
         val socket = clientSocket ?: return
 
@@ -189,6 +192,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
             readThread?.goDown()
             sendQueue.close()
 
+            // FIXME: remove runBlocking
             runBlocking {
                 withTimeoutOrNull(200) {
                     sender?.join()
@@ -202,6 +206,7 @@ class GameClient @UiThread constructor(game: Game?, val config: GameConfig): Obj
         } catch (e: IOException) {
             e.printStackTrace()
         }
+
         readThread = null
         sender = null
         clientSocket = null

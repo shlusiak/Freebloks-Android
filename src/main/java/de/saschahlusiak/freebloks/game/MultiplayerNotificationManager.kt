@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.annotation.UiThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import de.saschahlusiak.freebloks.BuildConfig
@@ -256,6 +257,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         lastStatus = status
     }
 
+    @UiThread
     override fun onDisconnected(client: GameClient, error: Exception?) {
         shutdown()
     }

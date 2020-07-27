@@ -1,13 +1,13 @@
 package de.saschahlusiak.freebloks.client
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.network.MessageReadThread
 
 /**
- * All callbacks happen on a background thread!
- *
  * This is usually the [MessageReadThread].
  *
  * Register with [GameClientMessageHandler] to get updates.
@@ -16,6 +16,7 @@ interface GameEventObserver {
     /**
      * The first message ever received; we are connected to a client.
      */
+    @UiThread
     fun onConnected(client: GameClient) {}
 
     /**
@@ -24,6 +25,7 @@ interface GameEventObserver {
      * @param client the [GameClient]
      * @param error the final error of the connection attempt
      */
+    @UiThread
     fun onConnectionFailed(client: GameClient, error: Exception) {}
 
     /**
@@ -32,23 +34,24 @@ interface GameEventObserver {
      * @param client the GameClient
      * @param error optional error received while we were connected
      */
+    @UiThread
     fun onDisconnected(client: GameClient, error: Exception?) {}
 
-    fun newCurrentPlayer(player: Int) {}
-    fun stoneWillBeSet(turn: Turn) {}
-    fun stoneHasBeenSet(turn: Turn) {}
-    fun playerIsOutOfMoves(player: Player) {}
-    fun hintReceived(turn: Turn) {}
-    fun gameFinished() {}
-    fun gameStarted() {}
-    fun stoneUndone(t: Turn) {}
-    fun serverStatus(status: MessageServerStatus) {}
+    @WorkerThread fun newCurrentPlayer(player: Int) {}
+    @WorkerThread fun stoneWillBeSet(turn: Turn) {}
+    @WorkerThread fun stoneHasBeenSet(turn: Turn) {}
+    @WorkerThread fun playerIsOutOfMoves(player: Player) {}
+    @WorkerThread fun hintReceived(turn: Turn) {}
+    @WorkerThread fun gameFinished() {}
+    @WorkerThread fun gameStarted() {}
+    @WorkerThread fun stoneUndone(t: Turn) {}
+    @WorkerThread fun serverStatus(status: MessageServerStatus) {}
 
     /**
      * Player may be -1 if client has no player
      * TODO: make nullable instead
      */
-    fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {}
+    @WorkerThread fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {}
 
     /**
      * Player has joined.
@@ -57,7 +60,7 @@ interface GameEventObserver {
      * @param player the color the player is playing
      * @param name the name of the client playing this player
      */
-    fun playerJoined(client: Int, player: Int, name: String?) {}
+    @WorkerThread fun playerJoined(client: Int, player: Int, name: String?) {}
 
     /**
      * Player has left
@@ -66,5 +69,5 @@ interface GameEventObserver {
      * @param player the player the client was playing
      * @param name the name that client had
      */
-    fun playerLeft(client: Int, player: Int, name: String?) {}
+    @WorkerThread fun playerLeft(client: Int, player: Int, name: String?) {}
 }

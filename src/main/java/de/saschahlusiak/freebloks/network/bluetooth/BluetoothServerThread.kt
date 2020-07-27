@@ -10,6 +10,8 @@ import androidx.annotation.UiThread
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.crashReporter
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
@@ -97,6 +99,7 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
         }
     }
 
+    @UiThread
     override fun onDisconnected(client: GameClient, error: Exception?) {
         shutdown()
     }

@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.game
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import de.saschahlusiak.freebloks.model.GameConfig
+import kotlinx.coroutines.Job
 
 /**
  * The interface implemented by [FreebloksActivity], to be used by dialogs.
@@ -13,9 +14,8 @@ interface OnStartCustomGameListener {
      *
      * @param config the game config
      * @param localClientName the initial local client name for all players that are requested
-     * @param runAfter an optional Runnable to run after connection is successful
      */
-    fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?, runAfter: () -> Unit = {})
+    fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?): Job
 
     /**
      * Join a game by connecting to the given remote device.

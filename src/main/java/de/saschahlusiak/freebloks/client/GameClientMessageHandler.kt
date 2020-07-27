@@ -1,6 +1,8 @@
 package de.saschahlusiak.freebloks.client
 
 import android.util.Log
+import androidx.annotation.AnyThread
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.Message
@@ -46,6 +48,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
         }
     }
 
+    @AnyThread
     private fun notifyObservers(block: (GameEventObserver) -> Unit) {
         synchronized(observer) {
             var i = 0
@@ -64,6 +67,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     /**
      * Notify all observers about a successful connection to a server.
      */
+    @UiThread
     fun notifyConnected(client: GameClient) {
         Log.d("Network", "onConnected")
         notifyObservers { it.onConnected(client) }
@@ -75,6 +79,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
      * @param client the gameClient
      * @param error the Exception that was caught during [GameClient.connect]
      */
+    @UiThread
     fun notifyConnectionFailed(client: GameClient, error: Exception) {
         Log.d("Network", "onConnectionFailed")
         notifyObservers { it.onConnectionFailed(client, error) }
@@ -83,6 +88,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     /**
      * Notify all observers about the disconnect, then clear all observers, to never ever relay another message.
      */
+    @UiThread
     fun notifyDisconnected(client: GameClient, error: Exception?) {
         Log.d("Network", "onDisconnected")
         notifyObservers { it.onDisconnected(client, error) }

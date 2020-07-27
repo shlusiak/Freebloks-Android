@@ -5,6 +5,7 @@ import android.graphics.PointF
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
@@ -117,6 +118,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     override fun newCurrentPlayer(player: Int) {
         if (scene.game.isLocalPlayer() || scene.wheel.currentPlayer != scene.boardObject.showWheelPlayer)
             scene.wheel.update(scene.boardObject.showWheelPlayer)
+
         requestRender()
     }
 
@@ -233,6 +235,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         }
     }
 
+    @UiThread
     override fun onConnected(client: GameClient) {
         newCurrentPlayer(client.game.currentPlayer)
     }

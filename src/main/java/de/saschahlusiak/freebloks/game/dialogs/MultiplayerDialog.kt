@@ -25,6 +25,9 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.multiplayer_dialog.*
 import kotlinx.android.synthetic.main.multiplayer_dialog.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
     private val TAG = MultiplayerDialog::class.java.simpleName
@@ -215,7 +218,11 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
         val config = GameConfig(server = null, showLobby = true)
 
-        listener.onStartClientGameWithConfig(config, clientName) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val job = listener.onStartClientGameWithConfig(config, clientName)
+            job.join()
+            if (job.isCancelled) return@launch
+
             // we can only run this after the TCP server is running, so we can connect to it and start the bridge
             BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
         }

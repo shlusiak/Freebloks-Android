@@ -2,13 +2,11 @@ package de.saschahlusiak.freebloks.game
 
 import android.app.Dialog
 import android.bluetooth.BluetoothDevice
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Parcel
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
@@ -28,6 +26,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.BuildConfig
@@ -45,8 +44,11 @@ import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog.Companion.checkShow
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
-import de.saschahlusiak.freebloks.model.*
+import de.saschahlusiak.freebloks.model.Board
+import de.saschahlusiak.freebloks.model.Game
+import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
+import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.theme.ColorThemes
@@ -56,16 +58,12 @@ import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
 import kotlinx.android.synthetic.main.main_3d.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
-import java.lang.Runnable
 
 class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, OnStartCustomGameListener, LobbyDialogDelegate {
     private lateinit var view: Freebloks3DView
-    private var client: GameClient? = null
     private var optionsMenu: Menu? = null
     private var showRateDialog = false
     private val analytics by lazy { DependencyProvider.analytics() }
@@ -113,8 +111,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         volumeControlStream = AudioManager.STREAM_MUSIC
 
-        this.client = viewModel.client
-        val client = client
         viewModel.intro?.listener = this
 
         if (savedInstanceState != null) {
@@ -136,9 +132,12 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 .commit()
         }
 
+        val client = viewModel.client
         if (client != null) {
-            /* we just rotated and got *hot* objects */
-            setGameClient(client)
+            // game in progress during configuration change
+            client.addObserver(this)
+            client.addObserver(view)
+            view.setGameClient(client)
         } else if (savedInstanceState == null) {
             if (viewModel.showIntro) {
                 viewModel.intro = Intro(applicationContext, scene, this)
@@ -171,24 +170,21 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         Log.d(tag, "onRestoreInstanceState (bundle=$savedInstanceState)")
         super.onRestoreInstanceState(savedInstanceState)
 
-        if (client == null) {
-            readStateFromBundle(savedInstanceState)
+        if (viewModel.client == null) {
+            val game = savedInstanceState.getSerializable("game") as? Game
+            if (game != null) {
+                resumeGame(game)
+            }
         }
     }
 
     override fun onDestroy() {
         Log.d(tag, "onDestroy")
-        client?.removeObserver(this)
-        client?.removeObserver((view))
-        super.onDestroy()
-    }
-
-    override fun onPause() {
-        Log.d(tag, "onPause")
-        client?.run {
-            if (game.isStarted && !game.isFinished) saveGameState(this)
+        viewModel.client?.run {
+            removeObserver(this@FreebloksActivity)
+            removeObserver(view)
         }
-        super.onPause()
+        super.onDestroy()
     }
 
     override fun onResume() {
@@ -234,32 +230,14 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         outState.putFloat("view_scale", view.getScale())
         outState.putBoolean("showRateDialog", showRateDialog)
 
+        val client = viewModel.client
         client?.run {
-            writeStateToBundle(this, outState)
-        }
-    }
-
-    private fun writeStateToBundle(client: GameClient, outState: Bundle) {
-        synchronized(client) {
             val game = client.game
-            if (!game.isFinished && game.isStarted) outState.putSerializable("game", game)
-        }
-    }
-
-    private fun readStateFromBundle(input: Bundle): Boolean {
-        try {
-            val game = input.getSerializable("game") as Game? ?: return false
-
-            // don't restore games that have finished; the server would not detach the listener
-            if (game.isFinished) return false
-            DependencyProvider.crashReporter().log("Resuming game from bundle")
-            Log.d(tag, "Resuming game from bundle")
-
-            resumeGame(game)
-            return true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false
+            synchronized(client) {
+                if (game.isStarted && !game.isFinished) {
+                    outState.putSerializable("game", game)
+                }
+            }
         }
     }
 
@@ -269,20 +247,21 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
      * Called e.g. during long-press, "start new game" in the finish dialog, or on initial startup.
      */
     override fun startNewDefaultGame() {
-        val client = client
-        if (client != null) {
-            // when starting a new game from the options menu, keep previous config
-            startNewGame(client.config, viewModel.localClientNameOverride)
-        } else {
-            // else start default game
-            startNewGame(GameConfig(), null)
+        viewModel.viewModelScope.launch {
+            val config = viewModel.client?.config
+            if (config != null) {
+                // when starting a new game from the options menu, keep previous config
+                startNewGame(config, viewModel.localClientNameOverride)
+            } else {
+                // else start default game
+                startNewGame(GameConfig(), null)
+            }
         }
     }
 
     private fun setGameClient(client: GameClient) {
-        this.client = client
         client.addObserver(this)
-        client.addObserver((view))
+        client.addObserver(view)
         viewModel.setClient(client)
         view.setGameClient(client)
     }
@@ -319,11 +298,13 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         // unfortunately we have lost all player names from before, but this shouldn't matter
         // as the local client name should overwrite what the server believes anyway, and
         // all other players are computers when resuming.
-        viewModel.startConnectingClient(config, null)
+        viewModel.viewModelScope.launch {
+            viewModel.connectToHost(config, null, false)
+        }
     }
 
     @UiThread
-    private fun startNewGame(config: GameConfig, localClientName: String?, onConnected: () -> Unit = {}) {
+    private fun startNewGame(config: GameConfig, localClientName: String?): Job {
         if (config.server == null) {
             val ret = runServerForNewGame(
                 config.gameMode,
@@ -335,6 +316,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 DependencyProvider.crashReporter().log("Error starting server: $ret")
             }
         }
+
         viewModel.disconnectClient()
         val board = Board()
         val game = Game(board)
@@ -342,33 +324,16 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         board.startNewGame(config.gameMode, config.fieldSize, config.fieldSize)
         setGameClient(GameClient(game, config))
 
-        viewModel.startConnectingClient(config, localClientName) {
-            onConnected()
-            if (requestGameStart) client?.requestGameStart()
+        return viewModel.viewModelScope.launch {
+            viewModel.connectToHost(config, localClientName, requestGameStart)
         }
     }
 
     @Throws(Exception::class)
     private fun restoreOldGame() {
         try {
-            val bytes = ByteArrayOutputStream().use { output ->
-                openFileInput(GAME_STATE_FILE).use { input ->
-                    input.copyTo(output)
-                }
-                output.toByteArray()
-            }
-
-            val p = Parcel.obtain()
-            p.unmarshall(bytes, 0, bytes.size)
-            p.setDataPosition(0)
-
-            val bundle = p.readBundle(classLoader)
-            p.recycle()
-
-            deleteFile(GAME_STATE_FILE)
-            if (bundle != null) {
-                readStateFromBundle(bundle)
-            }
+            val game = viewModel.loadGameState() ?: return
+            resumeGame(game)
         } catch (fe: FileNotFoundException) {
             /* signal non-failure if game state file is missing */
         } catch (e: Exception) {
@@ -377,28 +342,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    private fun saveGameState(client: GameClient, filename: String = GAME_STATE_FILE) {
-        val b = Bundle()
-        synchronized(client) {
-            writeStateToBundle(client, b)
-        }
-
-        GlobalScope.launch(Dispatchers.IO) {
-            val p = Parcel.obtain()
-            p.writeBundle(b)
-            try {
-                openFileOutput(filename, Context.MODE_PRIVATE).use {
-                    it.write(p.marshall())
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                p.recycle()
-            }
-        }
-    }
-
-    override fun onCreateDialog(id: Int, args: Bundle): Dialog? {
+    override fun onCreateDialog(id: Int, args: Bundle?): Dialog? {
         when (id) {
             DIALOG_QUIT -> {
                 return MaterialAlertDialogBuilder(this)
@@ -419,7 +363,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     override fun onBackPressed() {
-        val client = client
+        val client = viewModel.client
         val lastStatus = viewModel.lastStatus
 
         if (viewModel.undoWithBack && (client != null) && client.isConnected()) {
@@ -439,10 +383,11 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    override fun onNewIntent(intent: Intent) {
+    override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        intent?: return
 
-        val client = client
+        val client = viewModel.client
         if ((Intent.ACTION_DELETE == intent.action)) {
             Log.d(tag, "ACTION_DELETE")
             finish()
@@ -467,7 +412,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         } catch (e: Exception) {
             Toast.makeText(this@FreebloksActivity, R.string.could_not_restore_game, Toast.LENGTH_LONG).show()
         }
-        val client = client
+        val client = viewModel.client
         val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
         if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
         if (showRateDialog) RateAppDialog().show(supportFragmentManager, null)
@@ -476,7 +421,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     @UiThread
     override fun onLobbyDialogCancelled() {
-        val client = client
+        val client = viewModel.client
         if ((client != null) && !client.game.isStarted && !client.game.isFinished) {
             analytics.logEvent("lobby_close", null)
             viewModel.disconnectClient()
@@ -515,8 +460,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
      */
     @UiThread
     private fun onPlayerSheetChanged(data: SheetPlayer) {
-        val client = client
-        if (data.isRotated && (client != null) && !client.game.isFinished) {
+        val client = viewModel.client
+        if (data.isRotated && (client?.game?.isFinished == false)) {
             myLocation.visibility = View.VISIBLE
         } else {
             myLocation.visibility = View.INVISIBLE
@@ -538,9 +483,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         MainMenu().show(supportFragmentManager, "game_menu")
     }
 
-    override fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?, runAfter: () -> Unit) {
+    override fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?): Job {
         dismissMainMenu()
-        startNewGame(config, localClientName, runAfter)
+        return startNewGame(config, localClientName)
     }
 
     override fun onConnectToBluetoothDevice(config: GameConfig, localClientName: String?, device: BluetoothDevice) {
@@ -552,7 +497,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         board.startNewGame(config.gameMode, config.fieldSize, config.fieldSize)
         setGameClient(GameClient(game, config))
 
-        viewModel.startConnectingBluetooth(device, localClientName)
+        viewModel.connectToBluetooth(device, localClientName)
     }
 
     //endregion
@@ -574,7 +519,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val client = client
         val intent: Intent
 
         when (item.itemId) {
@@ -584,6 +528,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             }
             R.id.new_game -> {
                 if (viewModel.intro != null) viewModel.intro?.cancel() else {
+                    val client = viewModel.client
                     if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(DIALOG_NEW_GAME_CONFIRMATION)
                 }
             }
@@ -595,17 +540,16 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 viewModel.toggleSound()
             }
             R.id.hint -> {
-                if (client == null) return true
                 scene.currentStone.stopDragging()
                 viewModel.requestHint()
             }
             R.id.undo -> {
-                if (client == null) return true
                 scene.clearEffects()
-                client.requestUndo()
+                viewModel.requestUndo()
                 scene.soundPool.play(scene.soundPool.SOUND_UNDO, 1.0f, 1.0f)
             }
             R.id.show_main_menu -> {
+                val client = viewModel.client
                 val clients = viewModel.lastStatus?.clients ?: 0
                 val isStarted = client?.game?.isStarted ?: false
                 if (isStarted && clients > 1) showDialog(DIALOG_QUIT) else {
@@ -634,12 +578,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     @WorkerThread
     override fun gameFinished() {
-        val client = client ?: return
+        val client = viewModel.client ?: return
         val lastStatus = viewModel.lastStatus ?: return
-
-        GlobalScope.launch(Dispatchers.IO) {
-            deleteFile(GAME_STATE_FILE)
-        }
 
         val b = Bundle().apply {
             putString("server", client.config.server)
@@ -682,7 +622,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun onConnected(client: GameClient) {
         if (client.config.showLobby) {
             val server = client.config.server ?: "localhost"
@@ -697,7 +637,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun onConnectionFailed(client: GameClient, error: Exception) {
         lifecycleScope.launchWhenStarted {
             MaterialAlertDialogBuilder(this@FreebloksActivity)
@@ -708,16 +648,16 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun onDisconnected(client: GameClient, error: Exception?) {
         Log.w(tag, "onDisconnected()")
-        lifecycleScope.launch {
-            view.setGameClient(null)
+        view.setGameClient(null)
 
-            if (error != null) {
-                /* TODO: add sound on disconnect on error */
-                saveGameState(client)
+        if (error != null) {
+            /* TODO: add sound on disconnect on error */
+            viewModel.saveGameState()
 
+            lifecycleScope.launchWhenStarted {
                 MaterialAlertDialogBuilder(this@FreebloksActivity)
                     .setTitle(android.R.string.dialog_alert_title)
                     .setMessage(getString(R.string.disconnect_error, error.message))
@@ -741,6 +681,5 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         private const val DIALOG_QUIT = 3
         private const val DIALOG_NEW_GAME_CONFIRMATION = 8
-        private const val GAME_STATE_FILE = "gamestate.bin"
     }
 }
