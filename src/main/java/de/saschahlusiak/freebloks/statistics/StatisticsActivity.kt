@@ -9,22 +9,22 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.database.HighscoreDB
+import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.DependencyProvider
 import kotlinx.android.synthetic.main.statistics_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
-    private val REQUEST_LEADERBOARD = 1
-    private val REQUEST_ACHIEVEMENTS = 2
-    private val REQUEST_SIGN_IN = 3
-
-    private val db = HighscoreDB(this)
+    private val db = HighScoreDB(this)
     private var adapter: StatisticsAdapter? = null
     private var gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
     private val values: Array<String?> = arrayOfNulls(9)
@@ -86,8 +86,8 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
     }
 
     override fun onDestroy() {
-        db.close()
         super.onDestroy()
+        db.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -111,7 +111,7 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
                 return true
             }
             R.id.clear -> {
-                db.clearHighscores()
+                db.clearHighScores()
                 refreshData()
                 return true
             }
@@ -145,45 +145,49 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
         }
     }
 
-    private fun refreshData() {
-        var games = db.getTotalNumberOfGames(gameMode)
-        val points = db.getTotalNumberOfPoints(gameMode)
-        val perfect = db.getNumberOfPerfectGames(gameMode)
-        var good = db.getNumberOfGoodGames(gameMode)
-        val stonesLeft = db.getTotalNumberOfStonesLeft(gameMode)
-        var stonesUsed = games * Shape.COUNT - stonesLeft
-        var i: Int
-        i = 0
-        while (i < values.size) {
-            values[i] = ""
-            i++
-        }
-        values[0] = String.format("%d", games)
-        values[8] = String.format("%d", points)
-        if (games == 0) /* avoid divide by zero */ {
-            games = 1
-            stonesUsed = 0
-        }
-        good -= perfect
-        values[1] = String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat())
-        values[2] = String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat())
-        i = 0
-        while (i < 4) {
-            val n = db.getNumberOfPlace(gameMode, i + 1)
-            values[3 + i] = String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat())
-            i++
-        }
-        when(gameMode) {
-            GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
-            GameMode.GAMEMODE_DUO,
-            GameMode.GAMEMODE_JUNIOR -> {
-                values[6] = null
-                values[5] = values[6]
-            }
+    private fun refreshData() = lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            var games = db.getTotalNumberOfGames(gameMode)
+            val points = db.getTotalNumberOfPoints(gameMode)
+            val perfect = db.getNumberOfPerfectGames(gameMode)
+            var good = db.getNumberOfGoodGames(gameMode)
+            val stonesLeft = db.getTotalNumberOfStonesLeft(gameMode)
 
-            else -> {}
+            var stonesUsed = games * Shape.COUNT - stonesLeft
+
+            var i = 0
+            while (i < values.size) {
+                values[i] = ""
+                i++
+            }
+            values[0] = String.format("%d", games)
+            values[8] = String.format("%d", points)
+            if (games == 0) /* avoid divide by zero */ {
+                games = 1
+                stonesUsed = 0
+            }
+            good -= perfect
+            values[1] = String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat())
+            values[2] = String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat())
+            i = 0
+            while (i < 4) {
+                val n = db.getNumberOfPlace(gameMode, i + 1)
+                values[3 + i] = String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat())
+                i++
+            }
+            when (gameMode) {
+                GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
+                GameMode.GAMEMODE_DUO,
+                GameMode.GAMEMODE_JUNIOR -> {
+                    values[6] = null
+                    values[5] = values[6]
+                }
+
+                else -> {
+                }
+            }
+            values[7] = String.format("%.1f%%", 100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat())
         }
-        values[7] = String.format("%.1f%%", 100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat())
 
         adapter?.notifyDataSetChanged()
     }
@@ -202,5 +206,11 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
             findViewById<View>(R.id.signin).visibility = View.VISIBLE
             invalidateOptionsMenu()
         }
+    }
+
+    companion object {
+        private const val REQUEST_LEADERBOARD = 1
+        private const val REQUEST_ACHIEVEMENTS = 2
+        private const val REQUEST_SIGN_IN = 3
     }
 }

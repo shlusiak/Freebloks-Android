@@ -60,7 +60,7 @@ class Wheel(private val scene: Scene) : SceneElement {
                 scene.vibrate(Global.VIBRATE_START_DRAGGING)
 
             showStone(stone.shape.number)
-            scene.currentStone.startDragging(tmp, currentStone, Orientation.Default, scene.getPlayerColor(currentPlayer))
+            scene.currentStone.startDragging(tmp, stone, Orientation.Default, scene.getPlayerColor(currentPlayer))
             scene.currentStone.hasMoved = true
             scene.boardObject.resetRotation()
             status = Status.IDLE

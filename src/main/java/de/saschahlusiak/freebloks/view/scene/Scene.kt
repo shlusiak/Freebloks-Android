@@ -30,18 +30,18 @@ class Scene(
 
     private var client: GameClient? = null
 
-    @JvmField var board = Board()
-    @JvmField var game = Game()
-    @JvmField val wheel = Wheel(this)
+    var board = Board()
+    var game = Game()
+    val wheel = Wheel(this)
     val currentStone = CurrentStone(this)
-    @JvmField val boardObject = BoardObject(this, Board.DEFAULT_BOARD_SIZE)
+    val boardObject = BoardObject(this, Board.DEFAULT_BOARD_SIZE)
     val effects = ArrayList<Effect>()
-    @JvmField val soundPool = viewModel.sounds
+    val soundPool = viewModel.sounds
     var showSeeds = false
     var showOpponents = false
-    @JvmField var snapAid = false
+    var snapAid = false
     var showAnimations = AnimationType.Full
-    @JvmField var verticalLayout = true
+    var verticalLayout = true
 
     private var invalidated = false
 
@@ -165,7 +165,7 @@ class Scene(
 
         if (hasAnimations()) {
             val set = EffectSet()
-            set.add(ShapeRollEffect(this, turn, currentStone.hover_height_high, -15.0f))
+            set.add(ShapeRollEffect(this, turn, currentStone.hoverHeightHigh, -15.0f))
             set.add(ShapeFadeEffect(this, turn, 1.0f))
             addEffect(set)
         }

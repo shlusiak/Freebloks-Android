@@ -10,7 +10,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.database.HighscoreDB
+import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
@@ -85,7 +85,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
     @WorkerThread
     private fun addScores(scores: Array<PlayerScore>, gameMode: GameMode) {
-        val db = HighscoreDB(getApplication())
+        val db = HighScoreDB(getApplication())
 
         try {
             db.open()
@@ -94,9 +94,9 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
                 .filter { it.isLocal }
                 .forEach { score ->
                     var flags = 0
-                    if (score.isPerfect) flags = flags or HighscoreDB.FLAG_IS_PERFECT
+                    if (score.isPerfect) flags = flags or HighScoreDB.FLAG_IS_PERFECT
 
-                    db.addHighscore(gameMode, score.totalPoints, score.stonesLeft, score.color1, score.place, flags)
+                    db.addHighScore(gameMode, score.totalPoints, score.stonesLeft, score.color1, score.place, flags)
                 }
 
             db.close()
@@ -144,7 +144,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
         gameHelper.increment(context.getString(R.string.achievement_addicted), 1)
 
-        val db = HighscoreDB(getApplication())
+        val db = HighScoreDB(getApplication())
         try {
             db.open()
         } catch (e: SQLiteException) {
