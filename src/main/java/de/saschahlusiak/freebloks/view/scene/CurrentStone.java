@@ -18,7 +18,7 @@ import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 import de.saschahlusiak.freebloks.view.SimpleModel;
 
-public class CurrentStone implements ViewElement {
+public class CurrentStone implements SceneElement {
 	private static final String tag = CurrentStone.class.getSimpleName();
 
 	enum Status {
@@ -345,8 +345,9 @@ public class CurrentStone implements ViewElement {
 
 			boolean mv = snap(x, y, false);
 			hasMoved |= mv;
-			scene.redraw |= mv;
-			scene.redraw |= scene.hasAnimations();
+			if (mv || scene.hasAnimations()) {
+				scene.invalidate();
+			}
 		}
 		if (status == Status.ROTATING) {
 			float rx = (pos.x - fieldPoint.x) + stone.getShape().getSize() / 2;
@@ -358,7 +359,7 @@ public class CurrentStone implements ViewElement {
 				rotate_angle = 0.0f;
 				status = Math.abs(stone_rel_y) < 3 ? Status.FLIPPING_HORIZONTAL : Status.FLIPPING_VERTICAL;
 			}
-			scene.redraw = true;
+			scene.invalidate();
 		}
 		if (status == Status.FLIPPING_HORIZONTAL) {
 			float rx = (pos.x - fieldPoint.x) + stone.getShape().getSize() / 2;
@@ -372,7 +373,7 @@ public class CurrentStone implements ViewElement {
 				p = -p;
 
 			rotate_angle = p * 180;
-			scene.redraw = true;
+			scene.invalidate();
 		}
 		if (status == Status.FLIPPING_VERTICAL) {
 			float ry = (pos.y - fieldPoint.y) + stone.getShape().getSize() / 2;
@@ -386,25 +387,25 @@ public class CurrentStone implements ViewElement {
 				p = -p;
 
 			rotate_angle = p * 180;
-			scene.redraw = true;
+			scene.invalidate();
 		}
 		return true;
 	}
 
-	private final void rotate_left(){
+	private void rotate_left(){
 		orientation = orientation.rotatedLeft(stone.getShape().getRotatable());
 	}
 
-	private final void rotate_right(){
+	private void rotate_right(){
 		orientation = orientation.rotatedRight(stone.getShape().getRotatable());
 	}
 
-	private final void mirror_over_x(){
+	private void mirror_over_x(){
 		if (stone.getShape().getMirrorable() == Mirrorable.Not) return;
 		orientation = orientation.mirroredVertically();
 	}
 
-	private final void mirror_over_y(){
+	private void mirror_over_y(){
 		if (stone.getShape().getMirrorable() == Mirrorable.Not) return;
 		orientation = orientation.mirroredHorizontally();
 	}

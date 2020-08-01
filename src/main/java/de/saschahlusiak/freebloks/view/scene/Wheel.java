@@ -6,6 +6,9 @@ import javax.microedition.khronos.opengles.GL11;
 
 import android.graphics.PointF;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
+
 import de.saschahlusiak.freebloks.Global;
 import de.saschahlusiak.freebloks.model.Orientation;
 import de.saschahlusiak.freebloks.model.Player;
@@ -14,7 +17,7 @@ import de.saschahlusiak.freebloks.model.Shape;
 import de.saschahlusiak.freebloks.view.BoardRenderer;
 import de.saschahlusiak.freebloks.view.FreebloksRenderer;
 
-public class Wheel implements ViewElement {
+public class Wheel implements SceneElement {
 	private final static String tag = Wheel.class.getSimpleName();
 
 	private final float MAX_FLING_SPEED = 100.0f;
@@ -198,10 +201,8 @@ public class Wheel implements ViewElement {
 	}
 
 	@Override
-	synchronized public boolean handlePointerMove(PointF m) {
+	synchronized public boolean handlePointerMove(@NonNull PointF m) {
 		if (status != Status.SPINNING)
-			return false;
-		if (scene.game == null)
 			return false;
 
 		tmp.x = m.x;
@@ -226,8 +227,8 @@ public class Wheel implements ViewElement {
 
 		originalX = tmp.x;
 
-		scene.redraw = true;
 		if (!scene.game.isLocalPlayer() || scene.game.getCurrentPlayer() != currentPlayer) {
+			scene.invalidate();
 			return true;
 		}
 
@@ -247,11 +248,12 @@ public class Wheel implements ViewElement {
 			status = Status.IDLE;
 			scene.boardObject.resetRotation();
 		}
+		scene.invalidate();
 		return true;
 	}
 
 	@Override
-	public boolean handlePointerUp(PointF m) {
+	public boolean handlePointerUp(@NonNull PointF m) {
 		handler.removeCallbacks(hapticTimerRunnable);
 		if (status == Status.SPINNING) {
 			if (highlightStone != null && scene.currentStone.stone != highlightStone && (Math.abs(lastOffset - currentOffset) < 0.5f)) {

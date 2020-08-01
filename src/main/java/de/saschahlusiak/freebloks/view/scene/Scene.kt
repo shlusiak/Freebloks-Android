@@ -26,7 +26,7 @@ import java.util.*
 class Scene(
     private val view: Freebloks3DView,
     private val viewModel: FreebloksActivityViewModel
-) : ArrayList<ViewElement>(), ViewElement {
+) : ArrayList<SceneElement>(), SceneElement {
 
     companion object {
         const val ANIMATIONS_FULL = 0
@@ -48,7 +48,8 @@ class Scene(
     @JvmField var snapAid = false
     @JvmField var showAnimations = 0
     @JvmField var verticalLayout = true
-    @JvmField var redraw = false
+
+    private var invalidated = false
 
     /**
      * The intro is part of the scene but owned by the viewModel
@@ -84,30 +85,46 @@ class Scene(
         }
     }
 
+    @Synchronized
+    fun invalidate() {
+        invalidated = true
+    }
+
+    @Synchronized
+    fun isInvalidated(): Boolean {
+        return invalidated.also {
+            invalidated = false
+        }
+    }
+
     @UiThread
     override fun handlePointerDown(m: PointF): Boolean {
-        redraw = false
         val intro = intro
         if (intro != null) {
-            redraw = intro.handlePointerDown()
-            return redraw
+            intro.handlePointerDown()
+            invalidate()
+            return true
         }
-        for (i in 0 until size) if (get(i).handlePointerDown(m)) return redraw
-        return redraw
+        for (i in 0 until size) if (get(i).handlePointerDown(m)) {
+            invalidate()
+            return true
+        }
+        return false
     }
 
     @UiThread
     override fun handlePointerMove(m: PointF): Boolean {
-        redraw = false
-        for (i in 0 until size) if (get(i).handlePointerMove(m)) return redraw
-        return redraw
+        for (i in 0 until size) if (get(i).handlePointerMove(m)) return true
+        return false
     }
 
     @UiThread
     override fun handlePointerUp(m: PointF): Boolean {
-        redraw = false
-        for (i in 0 until size) if (get(i).handlePointerUp(m)) return redraw
-        return redraw
+        for (i in 0 until size) if (get(i).handlePointerUp(m)) {
+            invalidate()
+            return true
+        }
+        return false
     }
 
     @WorkerThread

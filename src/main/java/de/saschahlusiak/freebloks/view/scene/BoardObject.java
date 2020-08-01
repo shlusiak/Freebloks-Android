@@ -7,7 +7,7 @@ import android.graphics.PointF;
 
 import androidx.annotation.NonNull;
 
-public class BoardObject implements ViewElement {
+public class BoardObject implements SceneElement {
 	private Scene scene;
 	public int lastSize;
 	public float mAngleY;
@@ -200,7 +200,7 @@ public class BoardObject implements ViewElement {
 			scene.wheel.update(s);
 		}
 
-		scene.redraw = true;
+		scene.invalidate();
 		return true;
 	}
 

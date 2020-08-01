@@ -30,16 +30,16 @@ class ShapeUndoEffect(model: Scene, turn: Turn) : AbsShapeEffect(model, turn) {
     override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
         gl.glPushMatrix()
         gl.glTranslatef(
-            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
+            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
             0f,
-            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
+            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
         )
 
         renderer.renderShapeShadow(gl,
             shape, color, orientation,
             z,
             rot, 0f, 1f, 0f,
-            90.0f * model.boardObject.centerPlayer.toFloat(),
+            90.0f * scene.boardObject.centerPlayer.toFloat(),
             alpha, 1.0f
 
         )
@@ -50,9 +50,9 @@ class ShapeUndoEffect(model: Scene, turn: Turn) : AbsShapeEffect(model, turn) {
         gl.glPushMatrix()
         gl.glTranslatef(0f, z, 0f)
         gl.glTranslatef(
-            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
+            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
             0f,
-            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat()
+            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat()
         )
         gl.glRotatef(rot, 0f, 1f, 0f)
         renderer.renderShape(gl, color, shape, orientation, alpha * BoardRenderer.defaultStoneAlpha)

@@ -58,7 +58,7 @@ class ShapeRollEffect(
                 vr = 0.0f
                 val volume = (-vz / 16.0f).pow(2.0f)
                 if (vz > -6.0f) vz = 0.0f
-                model.soundPool.play(model.soundPool.SOUND_CLICK1, volume, 0.90f + Random.nextFloat() * 0.2f)
+                scene.soundPool.play(scene.soundPool.SOUND_CLICK1, volume, 0.90f + Random.nextFloat() * 0.2f)
             }
         } else {
             vr = 0.0f
@@ -74,15 +74,15 @@ class ShapeRollEffect(
     override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
         gl.glPushMatrix()
         gl.glTranslatef(
-            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
+            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
             0f,
-            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
+            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
         )
         renderer.renderShapeShadow(gl,
             shape, color, orientation,
             z,
             r, ax, ay, az,
-            90 * model.boardObject.centerPlayer.toFloat(),
+            90 * scene.boardObject.centerPlayer.toFloat(),
             1.0f, 1.0f
         )
 
@@ -93,9 +93,9 @@ class ShapeRollEffect(
         gl.glPushMatrix()
         val offset = shape.size.toFloat() - 1.0f
         gl.glTranslatef(
-            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
+            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
             z,
-            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
+            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
         gl.glTranslatef(
             BoardRenderer.stoneSize * offset, 0f,
             BoardRenderer.stoneSize * offset

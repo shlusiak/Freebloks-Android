@@ -8,7 +8,7 @@ import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
 
 abstract class AbsShapeEffect internal constructor(
-    protected val model: Scene,
+    protected val scene: Scene,
     protected val shape: Shape,
     protected val color: Int,
     protected val x: Int,

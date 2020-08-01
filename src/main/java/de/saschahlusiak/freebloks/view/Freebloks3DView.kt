@@ -77,12 +77,10 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         modelPoint.x = event.x
         modelPoint.y = event.y
         renderer.windowToModel(modelPoint)
+
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-            //	if (model.spiel != null && model.spiel.is_finished())
-            //		model.activity.gameFinished();
                 scene.handlePointerDown(modelPoint)
-                requestRender()
             }
             MotionEvent.ACTION_MOVE -> if (event.pointerCount > 1) {
                 val newDist = spacing(event)
@@ -96,7 +94,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
                     requestRender()
                 }
             } else {
-                if (scene.handlePointerMove(modelPoint)) requestRender()
+                scene.handlePointerMove(modelPoint)
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
                 scene.handlePointerUp(modelPoint)
@@ -104,8 +102,11 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
             }
             MotionEvent.ACTION_UP -> {
                 scene.handlePointerUp(modelPoint)
-                requestRender()
             }
+        }
+
+        if (scene.isInvalidated()) {
+            requestRender()
         }
         return true
     }
@@ -252,7 +253,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     @WorkerThread
     fun execute(elapsed: Float, lastRendered: Float): Boolean {
         val currentRenderMode = renderMode
-        if (scene.execute(elapsed)) {
+        if (scene.execute(elapsed) || scene.isInvalidated()) {
             // scene has changed and would like to be rendered
             // without animations we render exactly when the scene wants to, but ideally it would be smart
             // enough to not have animations at all
