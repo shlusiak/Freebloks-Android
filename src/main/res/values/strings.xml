@@ -45,7 +45,7 @@
     <string name="touch_to_skip">touch to skip</string>
     <string name="no_player">no player</string>
     <string name="not_connected">not connected</string>
-    <string name="your_turn">It\'s your turn, %1$s!</string>
+    <string name="your_turn">It’s your turn, %1$s!</string>
     <string name="difficulty">Difficulty</string>
     <string name="start">Start</string>
     <string name="custom_game_title">Custom Game</string>
@@ -149,7 +149,7 @@
     </string-array>
 
     <string name="please_donate">Support the development</string>
-    <string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That\'s why you can decide how much the game is worth to you and support the development of free software.</string>
+    <string name="donation_text_long">Freebloks is free software. You can use and modify it completely free of charge!\n\nBut that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
     <string name="donation_text_short">What is Freebloks worth to you?</string>
     <string name="donation_nothing">Nothing</string>
     <string name="donation_next">Next</string>
@@ -190,7 +190,7 @@
     <string name="prefs_undo">Undo with Back</string>
     <string name="prefs_show_corners_long">Show possible corners of your stones</string>
     <string name="prefs_show_corners">Corners</string>
-    <string name="prefs_show_opponents_long">Show opponents\' stones</string>
+    <string name="prefs_show_opponents_long">Show opponents’ stones</string>
     <string name="prefs_show_opponents">Opponents</string>
     <string name="prefs_show_animations">Animations</string>
     
@@ -238,7 +238,7 @@
     <string name="rules_variants">Two player variants</string>
     <string name="rules_variants_1">Two players usually play with either two colors each, or by leaving out two colors.</string>
     <string name="rules_scoring">Scoring</string>
-    <string name="rules_scoring_1">At the end, all squares of each player\'s pieces on the board are added up (e.g. a \"pentomino\" is worth 5 points). If a player played all of their pieces, he gets a bonus score of +20 points if the last piece played was the single-square piece, +15 points otherwise.</string>
+    <string name="rules_scoring_1">At the end, all squares of each player’s pieces on the board are added up (e.g. a “pentomino” is worth 5 points). If a player played all of their pieces, he gets a bonus score of +20 points if the last piece played was the single-square piece, +15 points otherwise.</string>
     <string name="rules_scoring_2">The maximum points a player can get in a game is therefore 89+20=109. The player with the highest score wins.</string>
 
     <string name="rules_duo_1">Blokus Duo is played by two players only on a much smaller board but with the same pieces as in Blokus Classic. The two starting squares are placed nearer to the centre.</string>
