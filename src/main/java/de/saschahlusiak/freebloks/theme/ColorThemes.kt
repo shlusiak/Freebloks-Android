@@ -8,7 +8,6 @@ import de.saschahlusiak.freebloks.R
  */
 object ColorThemes {
     val Green = ColorTheme("green", label = R.string.theme_green, r = 0, g = 64, b = 0)
-    @JvmField
     val Blue = ColorTheme("blue", label = R.string.theme_blue, colorRes = R.color.theme_background_blue)
 
     // only added in Debug builds

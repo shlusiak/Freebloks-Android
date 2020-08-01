@@ -58,7 +58,6 @@ class RateAppDialog : MaterialDialogFragment() {
     companion object {
         private val tag = RateAppDialog::class.java.simpleName
 
-        @JvmStatic
         fun checkShowRateDialog(context: Context?): Boolean {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = prefs.edit()

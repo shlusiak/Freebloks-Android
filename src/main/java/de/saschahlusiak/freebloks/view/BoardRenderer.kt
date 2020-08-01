@@ -34,14 +34,14 @@ class BoardRenderer internal constructor() {
         private val materialBoardDiffuseSeed = floatArrayOf(0.50f, 0.8f, 0.60f, 1.0f)
         private val materialBoardSpecular = floatArrayOf(0.25f, 0.24f, 0.24f, 1.0f)
         private val materialBoardShininess = floatArrayOf(35.0f)
-        @JvmField val materialStoneSpecular = floatArrayOf(0.3f, 0.3f, 0.3f, 1.0f)
-        @JvmField val materialStoneShininess = floatArrayOf(30.0f)
+        val materialStoneSpecular = floatArrayOf(0.3f, 0.3f, 0.3f, 1.0f)
+        val materialStoneShininess = floatArrayOf(30.0f)
         private val materialBlack = floatArrayOf(0f, 0f, 0f, 1f)
     }
 
     private val field: SimpleModel
     private var border: SimpleModel
-    @JvmField val stone: SimpleModel
+    val stone: SimpleModel
     private val shadow: SimpleModel
 
     private var texture = IntArray(2)

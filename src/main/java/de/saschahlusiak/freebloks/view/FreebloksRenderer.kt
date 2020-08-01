@@ -37,12 +37,11 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
     private val viewport = IntArray(4)
     private val projectionMatrix = FloatArray(16)
     private val modelViewMatrix = FloatArray(16)
-    @JvmField var boardRenderer = BoardRenderer()
-    @JvmField var backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
+    val boardRenderer = BoardRenderer()
+    val backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
     private val outputFar = FloatArray(4)
     private val outputNear = FloatArray(4)
-    @JvmField var updateModelViewMatrix = true
-
+    var updateModelViewMatrix = true
 
     fun init(boardSize: Int) {
         boardRenderer.setBoardSize(boardSize)

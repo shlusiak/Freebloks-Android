@@ -29,7 +29,7 @@ import java.net.Socket
 
 // Extend Object so we can override finalize()
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-class GameClient @UiThread constructor(@JvmField val game: Game, val config: GameConfig): Object() {
+class GameClient constructor(val game: Game, val config: GameConfig): Object() {
 
     private var clientSocket: Closeable? = null
     private var readThread: MessageReadThread? = null

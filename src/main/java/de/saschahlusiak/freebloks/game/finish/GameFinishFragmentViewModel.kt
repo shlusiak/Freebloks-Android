@@ -34,7 +34,6 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
     val gameMode get() = game?.gameMode
 
     // LiveData
-    @JvmField
     val isSignedIn = gameHelper.signedIn
 
     fun isInitialised() = (game != null)

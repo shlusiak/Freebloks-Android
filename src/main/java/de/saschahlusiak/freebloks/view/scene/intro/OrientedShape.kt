@@ -13,7 +13,6 @@ internal data class OrientedShape(
     val shape: Shape,
     var orientation: Orientation = Orientation()
 ): Serializable {
-    @JvmOverloads
     constructor(shape: Int, mirrored: Boolean = false, rotation: Rotation = Rotation.None): this(Shape.get(shape), Orientation(mirrored, rotation))
 
     fun rotateLeft() {

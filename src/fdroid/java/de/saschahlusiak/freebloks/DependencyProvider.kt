@@ -6,16 +6,12 @@ import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 
 object DependencyProvider {
-    @JvmStatic
     fun initialise(context: Context) { }
 
-    @JvmStatic
     fun googlePlayGamesHelper() = GooglePlayGamesHelper()
 
-    @JvmStatic
     fun analytics() = AnalyticsProvider()
 
-    @JvmStatic
     fun crashReporter() = CrashReporter()
 }
 

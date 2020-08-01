@@ -27,7 +27,6 @@ data class Orientation(val mirrored: Boolean = false, val rotation: Rotation = R
     }
 
     companion object {
-        @JvmField
         val Default = Orientation()
     }
 }

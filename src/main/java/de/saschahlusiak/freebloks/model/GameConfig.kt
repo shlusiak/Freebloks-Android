@@ -8,8 +8,8 @@ fun GameMode.defaultStoneSet() = GameConfig.defaultStonesForMode(this)
 class GameConfig(
     val server: String? = null,
     val gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
-    @JvmField val showLobby: Boolean = false,
-    @JvmField val requestPlayers: BooleanArray? = null, // 4
+    val showLobby: Boolean = false,
+    val requestPlayers: BooleanArray? = null, // 4
     val difficulty: Int = DEFAULT_DIFFICULTY,
     val stones: IntArray = gameMode.defaultStoneSet(), // 21
     val fieldSize: Int = gameMode.defaultBoardSize()
@@ -42,7 +42,6 @@ class GameConfig(
          *
          * Matches the labels in R.array.game_field_sizes
          */
-        @JvmField
         val FIELD_SIZES = intArrayOf(
             13, 14, 15, 17, 20, 23
         )
@@ -50,7 +49,6 @@ class GameConfig(
         /**
          * @return the availability numbers for each stone for the given game mode
          */
-        @JvmStatic
         fun defaultStonesForMode(gameMode: GameMode) = when (gameMode) {
             GameMode.GAMEMODE_JUNIOR -> JUNIOR_STONE_SET
 

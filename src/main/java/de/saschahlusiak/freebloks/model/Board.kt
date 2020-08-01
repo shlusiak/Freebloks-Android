@@ -13,8 +13,7 @@ import java.lang.IllegalArgumentException
  * Does not contain meta information about the game, like current player.
  * See [Game] for that.
  */
-class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable {
-    @JvmOverloads
+class Board(var width: Int, var height: Int) : Serializable {
     constructor(size: Int = DEFAULT_BOARD_SIZE) : this(size, size)
 
     /**
@@ -117,7 +116,6 @@ class Board(@JvmField var width: Int, @JvmField var height: Int) : Serializable 
     /**
      * Initialise board and player state
      */
-    @JvmOverloads
     @Synchronized
     fun startNewGame(gameMode: GameMode, width: Int = this.width, height: Int = this.height) {
         this.width = width

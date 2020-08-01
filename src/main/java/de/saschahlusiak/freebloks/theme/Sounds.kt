@@ -14,13 +14,13 @@ class Sounds(context: Context) : SoundPool(10, AudioManager.STREAM_MUSIC, 0) {
 
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    @JvmField var SOUND_CLICK1 = 0
-    @JvmField var SOUND_CLICK2 = 0
-    @JvmField var SOUND_CLICK3 = 0
-    @JvmField var SOUND_HINT = 0
-    @JvmField var SOUND_UNDO = 0
-    @JvmField var SOUND_PLAYER_OUT = 0
-    @JvmField var SOUND_CHAT = 0
+    var SOUND_CLICK1 = 0
+    var SOUND_CLICK2 = 0
+    var SOUND_CLICK3 = 0
+    var SOUND_HINT = 0
+    var SOUND_UNDO = 0
+    var SOUND_PLAYER_OUT = 0
+    var SOUND_CHAT = 0
 
     init {
         scope.launch {

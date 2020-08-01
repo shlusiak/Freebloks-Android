@@ -19,6 +19,7 @@ object JNIServer {
         ki_threads: Int
     ): Int
 
+    @Suppress("FunctionName")
     private external fun native_resume_server(
         field_size_x: Int,
         field_size_y: Int,
@@ -31,14 +32,12 @@ object JNIServer {
         ki_threads: Int
     ): Int
 
-    @JvmStatic
     fun runServerForNewGame(gameMode: GameMode, size: Int, stones: IntArray?, kiMode: Int): Int {
         val threads = get_number_of_processors()
         Log.d(tag, "spawning server with $threads threads")
         return native_run_server(gameMode.ordinal, size, size, stones, kiMode, threads)
     }
 
-    @JvmStatic
     fun runServerForExistingGame(game: Game, kiMode: Int): Int {
         val threads = get_number_of_processors()
         Log.d(tag, "spawning server with $threads threads")

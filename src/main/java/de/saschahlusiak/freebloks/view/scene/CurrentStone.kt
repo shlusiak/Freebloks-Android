@@ -74,6 +74,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
         bitmap.recycle()
+
         bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_overlay_red)
         gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1])
         if (gl is GL11) {
@@ -85,6 +86,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
         bitmap.recycle()
+
         bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_overlay_shadow)
         gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[2])
         if (gl is GL11) {

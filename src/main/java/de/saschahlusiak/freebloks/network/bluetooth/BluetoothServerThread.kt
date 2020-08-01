@@ -111,7 +111,6 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
     companion object {
         private val tag = BluetoothServerThread::class.java.simpleName
 
-        @JvmField
 		val SERVICE_UUID: UUID = UUID.fromString("B4C72729-2E7F-48B2-B15C-BDD73CED0D13")
     }
 }

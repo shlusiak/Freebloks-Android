@@ -177,7 +177,6 @@ class Shape private constructor(
         const val SIZE_MAX = 5
         const val COUNT = 21
 
-        @JvmStatic
         fun get(shape: Int) = All[shape]
 
         val All = arrayOf(

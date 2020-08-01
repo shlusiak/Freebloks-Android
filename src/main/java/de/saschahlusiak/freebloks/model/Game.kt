@@ -48,7 +48,6 @@ class Game(val board: Board = Board()): Serializable {
      * @param player the player number to check or currentPlayer
      * @return true if the given player is played on the local device
      */
-    @JvmOverloads
     fun isLocalPlayer(player: Int = currentPlayer): Boolean {
         return if (player == -1) false else playerTypes[player] != PLAYER_COMPUTER
     }

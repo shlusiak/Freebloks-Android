@@ -35,7 +35,6 @@ enum class Rotation(val value: Int) {
     }
 
     companion object {
-        @JvmStatic
         fun from(rotation: Int) = values()[rotation]
     }
 }

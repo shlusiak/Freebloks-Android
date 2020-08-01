@@ -98,7 +98,6 @@ class ThemeManager private constructor(context: Context) {
          * @param context Context
          * @return the singleton instance
          */
-        @JvmStatic
         fun get(context: Context): ThemeManager {
             return singleton ?: ThemeManager(context).also { singleton = it }
         }
@@ -106,7 +105,6 @@ class ThemeManager private constructor(context: Context) {
         /**
          * Release all resources
          */
-        @JvmStatic
         fun release() {
             singleton = null
         }

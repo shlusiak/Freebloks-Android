@@ -11,7 +11,6 @@ object DependencyProvider {
 
     private var initialised = false
 
-    @JvmStatic
     fun initialise(context: Context) {
         if (initialised) return
 
@@ -24,10 +23,8 @@ object DependencyProvider {
 
     fun googlePlayGamesHelper() = gamesHelper
 
-    @JvmStatic
     fun analytics() = analytics
 
-    @JvmStatic
     fun crashReporter() = crashReporter
 }
 

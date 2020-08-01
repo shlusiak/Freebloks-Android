@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 
 abstract class FreebloksDB(private val context: Context) {
-    @JvmField
 	protected var db: SQLiteDatabase? = null
     private var dbHelper: FreebloksDBOpenHandler? = null
 
