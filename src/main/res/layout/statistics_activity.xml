@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
 
     <Spinner
         android:id="@+id/game_mode"
@@ -20,14 +21,13 @@
         android:orientation="horizontal">
 
         <ViewStub
-			android:id="@+id/signin_stub"
-            android:inflatedId="@+id/signin"
+            android:id="@+id/signin_stub"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-			android:visibility="gone"
+            android:layout_weight="0.5"
+            android:inflatedId="@+id/signin"
             android:layout="@layout/google_signin_button"
-            android:layout_weight="0.5">
-        </ViewStub>
+            android:visibility="gone"></ViewStub>
 
         <Button
             android:id="@+id/ok"

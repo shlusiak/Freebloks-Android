@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:padding="@dimen/activity_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/donate_icon"
@@ -16,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingTop="16dp"
-            android:src="@drawable/donate_black" />
+            android:src="@drawable/donate_black"
+            app:tint="?colorOnBackground" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -29,12 +32,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/github_link"
+            android:autoLink="web"
             android:gravity="center_horizontal"
             android:linksClickable="true"
-            android:autoLink="web"
             android:paddingBottom="16dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:text="@string/github_link"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -49,28 +52,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingTop="4dp"
-            android:paddingBottom="8dp" >
+            android:paddingBottom="8dp">
 
             <RadioButton
                 android:id="@+id/donation_none"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/donation_nothing"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <RadioButton
                 android:id="@+id/donation_freebloksvip"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/donation_freebloksvip"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <RadioButton
-                android:text="@string/donation_paypal"
+                android:id="@+id/donation_paypal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/donation_paypal"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:text="@string/donation_paypal"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </RadioGroup>
 
         <Button

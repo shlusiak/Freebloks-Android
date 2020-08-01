@@ -14,6 +14,10 @@
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
 
+        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+
         <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
@@ -56,7 +60,9 @@
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
 
-    <style name="Theme.Freebloks.Auto.Light" parent="Theme.Freebloks.Light"></style>
+    <style name="Theme.Freebloks.DayNight" parent="Theme.Freebloks.Light" />
+
+    <style name="Theme.Freebloks.Auto" parent="Theme.Freebloks.DayNight" />
 
     <style name="Theme.Freebloks.Dialog" parent="Theme.MaterialComponents.Dialog">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
@@ -91,7 +97,7 @@
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimary">@color/primaryLightColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorOnSecondary">@android:color/white</item>
@@ -123,4 +129,6 @@
         <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
+
+    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Freebloks.Light.Dialog.MinWidth" />
 </resources>

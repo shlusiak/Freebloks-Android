@@ -19,7 +19,7 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.DependencyProvider
 import kotlinx.android.synthetic.main.statistics_activity.*
 
-class StatisticsActivity : AppCompatActivity() {
+class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
     private val REQUEST_LEADERBOARD = 1
     private val REQUEST_ACHIEVEMENTS = 2
     private val REQUEST_SIGN_IN = 3
@@ -37,7 +37,6 @@ class StatisticsActivity : AppCompatActivity() {
 
         db.open()
 
-        setContentView(R.layout.statistics_activity)
         val labels = resources.getStringArray(R.array.statistics_labels)
         adapter = StatisticsAdapter(this, labels, values)
         listView.adapter = adapter

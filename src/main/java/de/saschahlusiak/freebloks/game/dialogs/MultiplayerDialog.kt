@@ -43,7 +43,7 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
     private val customServerAddress: String?
         get() = server_address.text.toString().trim { it <= ' ' }.ifBlank { null }
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.multiplayer_dialog, container, false)

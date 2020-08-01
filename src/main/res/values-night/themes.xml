@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Freebloks.DayNight" parent="Theme.Freebloks.Dark" />
+    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Freebloks.Dialog.MinWidth" />
+</resources>

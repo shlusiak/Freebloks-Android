@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.about_activity.*
 
 class AboutFragment : MaterialDialogFragment() {
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.about_activity, container, false)

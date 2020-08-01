@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_padding"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/activity_padding">
 
         <Button
             android:id="@+id/youtube"
-            android:layout_gravity="center_horizontal"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:text="@string/rules_youtube"/>
+            android:layout_gravity="center_horizontal"
+            android:text="@string/rules_youtube" />
 
 
         <LinearLayout
@@ -34,7 +35,7 @@
             <ImageView
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:src="@drawable/appicon_big"/>
+                android:src="@drawable/appicon_big" />
         </LinearLayout>
 
         <TextView
@@ -53,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:src="@drawable/rules_2"/>
+                android:src="@drawable/rules_2" />
 
             <TextView
                 style="@style/Rules_Paragraph"
@@ -81,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:src="@drawable/rules_1"/>
+                android:src="@drawable/rules_1" />
 
         </LinearLayout>
 
@@ -107,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/rules_3"/>
+            android:src="@drawable/rules_3" />
 
         <TextView
             style="@style/Rules_Paragraph"
@@ -159,14 +160,14 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/rules_4"/>
+                android:src="@drawable/rules_4" />
 
             <TextView
                 style="@style/Rules_Paragraph"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/rules_duo_1"/>
+                android:text="@string/rules_duo_1" />
 
         </LinearLayout>
 
@@ -180,7 +181,7 @@
             style="@style/Rules_Paragraph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/rules_junior_1"/>
+            android:text="@string/rules_junior_1" />
 
     </LinearLayout>
 
