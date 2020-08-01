@@ -275,15 +275,12 @@ public class Wheel implements SceneElement {
 	}
 
 	public synchronized void render(FreebloksRenderer renderer, GL11 gl) {
-		if (scene.game == null)
-			return;
-
 		gl.glTranslatef(-currentOffset, 0, BoardRenderer.stoneSize * (scene.board.width + 10));
 		for (int i = stones.size() - 1; i >= 0; i--) {
 			Stone s = stones.get(i);
 
 			if (s.getAvailable() - ((s == scene.currentStone.stone) ? 1 : 0) > 0) {
-				final float col = i / 2;
+				final float col = (float)(i / 2);
 				final float row = i % 2;
 				final float offset = -((float)(s.getShape().getSize()) - 1.0f) * BoardRenderer.stoneSize;
 
@@ -292,7 +289,7 @@ public class Wheel implements SceneElement {
 				float y = 0.35f + effect * 0.75f;
 				final float z = row * stone_spacing;
 				final float scale = 0.9f + effect * 0.3f;
-				float rotate = 90.0f * scene.boardObject.centerPlayer;
+				float rotate = -scene.boardObject.getBaseAngle();
 				if (!scene.verticalLayout)
 					rotate -= 90.0f;
 
@@ -326,7 +323,7 @@ public class Wheel implements SceneElement {
 				gl.glTranslatef(offset, 0, offset);
 
 				gl.glPushMatrix();
-				renderer.boardRenderer.renderShapeShadow(gl, s.getShape(), scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0, 0, 0, 0, 90 * scene.boardObject.centerPlayer, alpha, 1.0f);
+				renderer.boardRenderer.renderShapeShadow(gl, s.getShape(), scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0, 0, 0, 0, -rotate, alpha, 1.0f);
 				gl.glPopMatrix();
 
 				gl.glTranslatef(0, y, 0);

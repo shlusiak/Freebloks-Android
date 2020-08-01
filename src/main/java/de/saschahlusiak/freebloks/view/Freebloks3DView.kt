@@ -55,7 +55,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
                 val game = client.game
                 scene.boardObject.lastSize = game.board.width
                 for (i in 0 until Board.PLAYER_MAX) if (game.isLocalPlayer(i)) {
-                    scene.boardObject.centerPlayer = i
+                    scene.boardObject.basePlayer = i
                     break
                 }
                 renderer.updateModelViewMatrix = true
@@ -206,9 +206,9 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     }
 
     override fun gameStarted() {
-        scene.boardObject.centerPlayer = 0
+        scene.boardObject.basePlayer = 0
         for (i in 0 until Board.PLAYER_MAX) if (scene.game.isLocalPlayer(i)) {
-            scene.boardObject.centerPlayer = i
+            scene.boardObject.basePlayer = i
             break
         }
         scene.wheel.update(scene.boardObject.showWheelPlayer)

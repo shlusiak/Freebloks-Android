@@ -213,7 +213,7 @@ class Scene(
      */
     fun boardToUnified(p: PointF) {
         val tmp: Float
-        when (boardObject.centerPlayer) {
+        when (boardObject.basePlayer) {
             0 -> p.y = board.height - p.y - 1
             1 -> {
                 tmp = p.x

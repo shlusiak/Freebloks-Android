@@ -136,9 +136,10 @@ public class CurrentStone implements SceneElement {
 		/* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */
 		/* TODO: merge with BoardRenderer.renderShadow() */
-		gl.glRotatef(-scene.boardObject.centerPlayer * 90, 0, 1, 0);
+		final float baseAngle = scene.boardObject.getBaseAngle();
+		gl.glRotatef(baseAngle, 0, 1, 0);
 	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
-		gl.glRotatef(scene.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(-baseAngle, 0, 1, 0);
 
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
@@ -168,9 +169,9 @@ public class CurrentStone implements SceneElement {
 	    /* OVERLAY SHADOW */
 	    gl.glPushMatrix();
 	    gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[2]);
-		gl.glRotatef(-scene.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(baseAngle, 0, 1, 0);
 	    gl.glTranslatef(2.5f * hover_height * 0.08f, 0, 2.0f * hover_height * 0.08f);
-		gl.glRotatef(scene.boardObject.centerPlayer * 90, 0, 1, 0);
+		gl.glRotatef(-baseAngle, 0, 1, 0);
 		if (status == Status.ROTATING)
 			gl.glRotatef(rotate_angle, 0, 1, 0);
 		if (status == Status.FLIPPING_HORIZONTAL)
