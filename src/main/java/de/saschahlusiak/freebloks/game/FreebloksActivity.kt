@@ -106,7 +106,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         setContentView(R.layout.main_3d)
 
         view = findViewById(R.id.board)
-        scene = Scene(view, viewModel)
+        scene = Scene(viewModel)
         view.setScene(scene)
 
         volumeControlStream = AudioManager.STREAM_MUSIC

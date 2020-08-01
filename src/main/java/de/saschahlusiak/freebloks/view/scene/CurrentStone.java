@@ -303,7 +303,7 @@ public class CurrentStone implements SceneElement {
 		if (stone != null) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
-			scene.boardObject.modelToBoard(fieldPoint);
+			scene.modelToBoard(fieldPoint);
 			screenPoint.x = fieldPoint.x;
 			screenPoint.y = fieldPoint.y;
 
@@ -334,7 +334,7 @@ public class CurrentStone implements SceneElement {
 
 		fieldPoint.x = m.x;
 		fieldPoint.y = m.y;
-		scene.boardObject.modelToBoard(fieldPoint);
+		scene.modelToBoard(fieldPoint);
 
 		if (status == Status.DRAGGING) {
 			final float THRESHOLD = 1.0f;
@@ -461,13 +461,13 @@ public class CurrentStone implements SceneElement {
 		if (status == Status.DRAGGING) {
 			fieldPoint.x = m.x;
 			fieldPoint.y = m.y;
-			scene.boardObject.modelToBoard(fieldPoint);
+			scene.modelToBoard(fieldPoint);
 
 			int x = (int)Math.floor(0.5f + fieldPoint.x + stone_rel_x - stone.getShape().getSize() / 2);
 			int y = (int)Math.floor(0.5f + fieldPoint.y + stone_rel_y - stone.getShape().getSize() / 2);
 			fieldPoint.x = x;
 			fieldPoint.y = y;
-			scene.boardObject.boardToUnified(fieldPoint);
+			scene.boardToUnified(fieldPoint);
 			if (!scene.verticalLayout)
 				fieldPoint.y = scene.board.width - fieldPoint.x - 1;
 

@@ -62,7 +62,7 @@ public class Wheel implements SceneElement {
 
 			tmp.x = lastPointerLocation.x;
 			tmp.y = lastPointerLocation.y;
-			scene.boardObject.modelToBoard(tmp);
+			scene.modelToBoard(tmp);
 
 			if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1))
 				scene.vibrate(Global.VIBRATE_START_DRAGGING);
@@ -72,7 +72,7 @@ public class Wheel implements SceneElement {
 			scene.boardObject.resetRotation();
 			status = Status.IDLE;
 
-			scene.requestRender();
+			scene.invalidate();
 		}
 	};
 
@@ -155,8 +155,8 @@ public class Wheel implements SceneElement {
 
 		tmp.x = m.x;
 		tmp.y = m.y;
-		scene.boardObject.modelToBoard(tmp);
-		scene.boardObject.boardToUnified(tmp);
+		scene.modelToBoard(tmp);
+		scene.boardToUnified(tmp);
 		if (!scene.verticalLayout) {
 			float t = tmp.x;
 			tmp.x = tmp.y;
@@ -207,8 +207,8 @@ public class Wheel implements SceneElement {
 
 		tmp.x = m.x;
 		tmp.y = m.y;
-		scene.boardObject.modelToBoard(tmp);
-		scene.boardObject.boardToUnified(tmp);
+		scene.modelToBoard(tmp);
+		scene.boardToUnified(tmp);
 
 		if (!scene.verticalLayout) {
 			float t = tmp.x;
@@ -240,7 +240,7 @@ public class Wheel implements SceneElement {
 		if (highlightStone != null && (tmp.y >= 0.0f || Math.abs(tmp.y - originalY) >= 3.5f)) {
 			tmp.x = m.x;
 			tmp.y = m.y;
-			scene.boardObject.modelToBoard(tmp);
+			scene.modelToBoard(tmp);
 			showStone(highlightStone.getShape().getNumber());
 			if (scene.currentStone.stone != highlightStone)
 				scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1);

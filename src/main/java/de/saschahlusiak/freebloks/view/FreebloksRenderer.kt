@@ -71,8 +71,8 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
     override fun onDrawFrame(gl: GL10) {
         val gl11 = gl as GL11
         val cameraDistance = zoom
-        val cameraAngle = model.boardObject.cameraAngle
-        val boardAngle = model.boardObject.mAngleY
+        val cameraAngle = model.boardObject.getCameraAngle()
+        val boardAngle = model.boardObject.currentAngle
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
         gl.glEnableClientState(GL10.GL_NORMAL_ARRAY)

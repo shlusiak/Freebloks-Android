@@ -9,6 +9,7 @@ import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.effects.Effect
 import de.saschahlusiak.freebloks.view.effects.EffectSet
@@ -24,7 +25,6 @@ import java.util.*
  * This is a View class and is allowed to have references to the current View and Activity.
  */
 class Scene(
-    private val view: Freebloks3DView,
     private val viewModel: FreebloksActivityViewModel
 ) : ArrayList<SceneElement>(), SceneElement {
 
@@ -190,5 +190,43 @@ class Scene(
 
     fun setShowPlayerOverride(player: Int, isRotated: Boolean) = viewModel.setSheetPlayer(player, isRotated)
 
-    fun requestRender() = view.requestRender()
+    /**
+     * Converts a point from model coordinates to (non-uniformed) board coordinates.
+     * The top-left corner is 0/0, the blue starting point is 0/19.
+     *
+     * @param point
+     * @return point
+     */
+    fun modelToBoard(point: PointF): PointF {
+        point.x = point.x / (BoardRenderer.stoneSize * 2.0f)
+        point.y = point.y / (BoardRenderer.stoneSize * 2.0f)
+        point.x = point.x + 0.5f * (board.width - 1).toFloat()
+        point.y = point.y + 0.5f * (board.height - 1).toFloat()
+        return point
+    }
+
+    /**
+     * converts p from relative board coordinates, to rotated board coordinates
+     * relative board coordinates: yellow starting point is 0/0, blue starting point is 0/19
+     * unified coordinates: bottom left corner is always 0/0
+     * @param p
+     */
+    fun boardToUnified(p: PointF) {
+        val tmp: Float
+        when (boardObject.centerPlayer) {
+            0 -> p.y = board.height - p.y - 1
+            1 -> {
+                tmp = p.x
+                p.x = p.y
+                p.y = tmp
+            }
+            2 -> p.x = board.width - p.x - 1
+            3 -> {
+                tmp = p.y
+                p.y = board.width - p.x - 1
+                p.x = board.height - tmp - 1
+            }
+            else -> p.y = board.height - p.y - 1
+        }
+    }
 }
