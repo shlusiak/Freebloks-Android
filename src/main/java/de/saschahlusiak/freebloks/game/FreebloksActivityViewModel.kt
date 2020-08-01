@@ -33,6 +33,7 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBlue
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.Sounds
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.*
@@ -76,7 +77,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var showSeeds = false
     var showOpponents = false
     var snapAid = false
-    var showAnimations = 0
+    var showAnimations = AnimationType.Full
     var undoWithBack = false
 
     // other stuff
@@ -127,7 +128,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             localClientNameOverride = getString("player_name", null)?.ifBlank { null }
             showSeeds = getBoolean("show_seeds", true)
             showOpponents = getBoolean("show_opponents", true)
-            showAnimations = getString("animations", Scene.ANIMATIONS_FULL.toString())?.toInt() ?: 0
+            val animationType = getString("animations", AnimationType.Full.settingsValue.toString())?.toInt() ?: 0
+            showAnimations = AnimationType.values().firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
             snapAid = getBoolean("snap_aid", true)
             undoWithBack = getBoolean("back_undo", false)
             showIntro = !getBoolean("skip_intro", false)
@@ -226,7 +228,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     fun loadGameState(filename: String = GAME_STATE_FILE): Game? {
         val bytes = ByteArrayOutputStream().use { output ->
-            context.openFileInput(GAME_STATE_FILE).use { input ->
+            context.openFileInput(filename).use { input ->
                 input.copyTo(output)
             }
             output.toByteArray()
@@ -243,7 +245,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         if (game.isFinished) return null
 
         viewModelScope.launch(Dispatchers.IO) {
-            context.deleteFile(GAME_STATE_FILE)
+            context.deleteFile(filename)
         }
 
         return game

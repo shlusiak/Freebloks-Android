@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view
 
 import android.util.Log
+import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene
 
 class AnimateThread(private val scene: Scene, private val execute: (Float, Float) -> Boolean) : Thread("AnimateThread") {
@@ -27,9 +28,9 @@ class AnimateThread(private val scene: Scene, private val execute: (Float, Float
 
         while (!goDown) {
             delay = when (scene.showAnimations) {
-                Scene.ANIMATIONS_FULL -> if (lastRendered < 0.2f) 1000 / 60 else 1000 / 15
-                Scene.ANIMATIONS_HALF -> if (lastRendered < 0.2f) 1000 / 30 else 1000 / 15
-                Scene.ANIMATIONS_OFF -> if (scene.intro != null) 1000 / 30 else 1000 / 3
+                AnimationType.Full -> if (lastRendered < 0.2f) 1000 / 60 else 1000 / 15
+                AnimationType.Half -> if (lastRendered < 0.2f) 1000 / 30 else 1000 / 15
+                AnimationType.Off -> if (scene.intro != null) 1000 / 30 else 1000 / 3
                 else -> if (scene.intro != null) 1000 / 30 else 1000 / 3
             }.toLong()
 

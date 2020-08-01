@@ -17,6 +17,7 @@ import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.view.effects.*
+import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene
 import kotlin.math.sqrt
 
@@ -257,7 +258,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
             // scene has changed and would like to be rendered
             // without animations we render exactly when the scene wants to, but ideally it would be smart
             // enough to not have animations at all
-            if (scene.showAnimations == Scene.ANIMATIONS_OFF) {
+            if (scene.showAnimations == AnimationType.Off) {
                 requestRender()
             } else {
                 // we switch to continuous render mode whenever the scene has changed

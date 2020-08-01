@@ -9,9 +9,9 @@ import java.util.Locale;
 import de.saschahlusiak.freebloks.model.GameMode;
 
 public class Global {
-	public final static int VIBRATE_START_DRAGGING = 85;
-	public final static int VIBRATE_SET_STONE = 65;
-	public final static int VIBRATE_STONE_SNAP = 40;
+	public final static long VIBRATE_START_DRAGGING = 85;
+	public final static long VIBRATE_SET_STONE = 65;
+	public final static long VIBRATE_STONE_SNAP = 40;
 	
 	/* is this Freebloks VIP? */
 	public final static boolean IS_VIP;

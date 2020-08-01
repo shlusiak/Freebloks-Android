@@ -28,25 +28,19 @@ class Scene(
     private val viewModel: FreebloksActivityViewModel
 ) : ArrayList<SceneElement>(), SceneElement {
 
-    companion object {
-        const val ANIMATIONS_FULL = 0
-        const val ANIMATIONS_HALF = 1
-        const val ANIMATIONS_OFF = 2
-    }
-
     private var client: GameClient? = null
 
     @JvmField var board = Board()
     @JvmField var game = Game()
     @JvmField val wheel = Wheel(this)
-    @JvmField val currentStone = CurrentStone(this)
+    val currentStone = CurrentStone(this)
     @JvmField val boardObject = BoardObject(this, Board.DEFAULT_BOARD_SIZE)
-    @JvmField val effects = ArrayList<Effect>()
+    val effects = ArrayList<Effect>()
     @JvmField val soundPool = viewModel.sounds
-    @JvmField var showSeeds = false
-    @JvmField var showOpponents = false
+    var showSeeds = false
+    var showOpponents = false
     @JvmField var snapAid = false
-    @JvmField var showAnimations = 0
+    var showAnimations = AnimationType.Full
     @JvmField var verticalLayout = true
 
     private var invalidated = false
@@ -66,7 +60,7 @@ class Scene(
     }
 
     fun hasAnimations(): Boolean {
-        return showAnimations != ANIMATIONS_OFF
+        return showAnimations != AnimationType.Off
     }
 
     fun reset() {
