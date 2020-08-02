@@ -1,8 +1,8 @@
 package de.saschahlusiak.freebloks.view.scene
 
-import android.graphics.PointF
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import de.saschahlusiak.freebloks.utils.PointF
 
 interface SceneElement {
     /**
@@ -21,10 +21,9 @@ interface SceneElement {
 
     /**
      * @param m model coordinates of touch event
-     * @return true if event has been handled
      */
     @UiThread
-    fun handlePointerUp(m: PointF): Boolean
+    fun handlePointerUp(m: PointF)
 
     /**
      * @param elapsed time in seconds

@@ -107,7 +107,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         setContentView(R.layout.main_3d)
 
         view = findViewById(R.id.board)
-        scene = Scene(viewModel)
+        scene = Scene(viewModel, viewModel.intro, viewModel.sounds)
         view.setScene(scene)
 
         volumeControlStream = AudioManager.STREAM_MUSIC
@@ -142,8 +142,10 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         } else if (savedInstanceState == null) {
             if (viewModel.showIntro) {
                 viewModel.intro = Intro(applicationContext, scene, this)
-            } else
+                scene.intro = viewModel.intro
+            } else {
                 onIntroCompleted()
+            }
         }
 
         chatButton.setOnClickListener {
@@ -408,6 +410,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     @UiThread
     override fun onIntroCompleted() {
         viewModel.intro = null
+        scene.intro = null
         viewModel.setSheetPlayer(-1, false)
         try {
             restoreOldGame()

@@ -1,14 +1,13 @@
 package de.saschahlusiak.freebloks.view.scene
 
-import android.graphics.PointF
 import android.os.Handler
 import androidx.annotation.UiThread
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Stone
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.theme.FeedbackType
+import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import javax.microedition.khronos.opengles.GL11
@@ -198,8 +197,9 @@ class Wheel(private val scene: Scene) : SceneElement {
     }
 
     @UiThread
-    override fun handlePointerUp(m: PointF): Boolean {
+    override fun handlePointerUp(m: PointF) {
         handler.removeCallbacks(hapticTimerRunnable)
+
         if (status == Status.SPINNING) {
             val currentStone = currentStone
             if (currentStone != null && scene.currentStone.stone != currentStone && Math.abs(lastOffset - currentOffset) < 0.5f) {
@@ -211,9 +211,7 @@ class Wheel(private val scene: Scene) : SceneElement {
                 lastOffset = currentOffset
                 status = if (scene.hasAnimations()) Status.FLINGING else Status.IDLE
             }
-            return true
         }
-        return false
     }
 
     @Synchronized

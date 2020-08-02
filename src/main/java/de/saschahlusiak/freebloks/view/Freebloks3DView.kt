@@ -2,19 +2,18 @@ package de.saschahlusiak.freebloks.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.PointF
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.Theme
+import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.effects.*
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene

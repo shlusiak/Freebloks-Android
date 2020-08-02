@@ -2,12 +2,11 @@ package de.saschahlusiak.freebloks.view.scene
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.graphics.PointF
 import android.opengl.GLUtils
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
+import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.SimpleModel
@@ -385,7 +384,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             hasMoved = moveTo(x, y)
             isValid = isValidTurn(x, y)
             if (isValid && (hasMoved || forceSound)) {
-                scene.sounds.play(FeedbackType.Snap, volume = 0.2f)
+                scene.playSound(FeedbackType.Snap, volume = 0.2f)
             }
             return hasMoved
         }
@@ -393,7 +392,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             isValid = true
             hasMoved = moveTo(floor(x + 0.5f), floor(y + 0.5f))
             if (hasMoved || forceSound) {
-                scene.sounds.play(FeedbackType.Snap, volume = 0.2f)
+                scene.playSound(FeedbackType.Snap, volume = 0.2f)
             }
             return hasMoved
         }
@@ -402,7 +401,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
                 isValid = true
                 hasMoved = moveTo(floor(0.5f + x + i.toDouble()).toFloat(), floor(0.5f + y + j.toFloat()))
                 if (hasMoved) {
-                    scene.sounds.play(FeedbackType.Snap, volume = 0.2f)
+                    scene.playSound(FeedbackType.Snap, volume = 0.2f)
                 }
                 return hasMoved
             }
@@ -412,8 +411,9 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     }
 
     @Synchronized
-    override fun handlePointerUp(m: PointF): Boolean {
+    override fun handlePointerUp(m: PointF) {
         val stone = stone
+
         if (status == Status.DRAGGING && stone != null) {
             fieldPoint.x = m.x
             fieldPoint.y = m.y
@@ -470,7 +470,6 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             snap(pos.x, pos.y, true)
         }
         status = Status.IDLE
-        return false
     }
 
     @Synchronized

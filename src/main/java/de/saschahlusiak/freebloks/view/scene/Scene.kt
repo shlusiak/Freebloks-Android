@@ -1,14 +1,12 @@
 package de.saschahlusiak.freebloks.view.scene
 
-import android.graphics.PointF
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
-import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackProvider
 import de.saschahlusiak.freebloks.theme.FeedbackType
+import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.effects.Effect
@@ -20,6 +18,21 @@ import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import java.util.*
 import kotlin.random.Random
 
+interface SceneDelegate {
+    /**
+     * Set the override of the player to show, when rotating the board.
+     *
+     * @param player the new player to show
+     * @param isRotated whether the board is rotated or not
+     */
+    fun setSheetPlayer(player: Int, isRotated: Boolean)
+
+    /**
+     * The [CurrentStone] would like to commit this stone
+     */
+    fun commitCurrentStone(turn: Turn)
+}
+
 /**
  * This scene model is owned by the [Freebloks3DView] and
  * encapsulates 3D objects and effects and sounds.
@@ -27,16 +40,10 @@ import kotlin.random.Random
  * This is a View class and is allowed to have references to the current View and Activity.
  */
 class Scene(
-    private val viewModel: FreebloksActivityViewModel,
-    val sounds: FeedbackProvider
+    private val delegate: SceneDelegate?,
+    var intro: Intro?,
+    private val sounds: FeedbackProvider?
 ) : ArrayList<SceneElement>(), SceneElement {
-
-    constructor(viewModel: FreebloksActivityViewModel): this(
-        viewModel,
-        viewModel.sounds
-    )
-
-    private var client: GameClient? = null
 
     var board = Board()
     var game = Game()
@@ -50,6 +57,9 @@ class Scene(
     var showAnimations = AnimationType.Full
     var verticalLayout = true
 
+    /**
+     * If the scene has been invalidated since the last render pass and require rendering again
+     */
     private var invalidated = false
 
     /**
@@ -65,16 +75,8 @@ class Scene(
 
     var baseAngle = 0f
 
-
-    /**
-     * The intro is part of the scene but owned by the viewModel
-     *
-     * @return current intro
-     */
-    val intro: Intro?
-        get() = viewModel.intro
-
     init {
+        // events are processed in this order
         add(currentStone)
         add(wheel)
         add(boardObject)
@@ -89,15 +91,12 @@ class Scene(
         boardObject.resetRotation()
     }
 
-    fun setGameClient(client: GameClient?) {
-        this.client = client
-        if (client != null) {
-            game = client.game
-            board = game.board
-            boardObject.resetRotation()
-            wheel.update(boardObject.showWheelPlayer)
-            boardObject.updateDetailsPlayer()
-        }
+    fun setGameClient(client: GameClient) {
+        game = client.game
+        board = game.board
+        boardObject.resetRotation()
+        wheel.update(boardObject.showWheelPlayer)
+        boardObject.updateDetailsPlayer()
     }
 
     @Synchronized
@@ -134,12 +133,9 @@ class Scene(
     }
 
     @UiThread
-    override fun handlePointerUp(m: PointF): Boolean {
-        for (i in 0 until size) if (get(i).handlePointerUp(m)) {
-            invalidate()
-            return true
-        }
-        return false
+    override fun handlePointerUp(m: PointF) {
+        for (i in 0 until size) get(i).handlePointerUp(m)
+        invalidate()
     }
 
     @WorkerThread
@@ -179,10 +175,10 @@ class Scene(
     }
 
     fun commitCurrentStone(turn: Turn): Boolean {
-        val client = client ?: return false
+        if (!game.isLocalPlayer()) return false
+        if (!game.board.isValidTurn(turn)) return false
 
-        if (!client.game.isLocalPlayer()) return false
-        if (!client.game.board.isValidTurn(turn)) return false
+        delegate?.commitCurrentStone(turn)
 
         if (hasAnimations()) {
             val set = EffectSet()
@@ -193,16 +189,14 @@ class Scene(
 
         playSound(FeedbackType.StoneHasBeenSet, 1.0f, 0.9f + Random.nextFloat() * 0.2f)
 
-        client.setStone(turn)
-
         return true
     }
 
     fun getPlayerColor(player: Int) = game.gameMode.colorOf(player)
 
-    fun playSound(sound: FeedbackType, volume: Float = 1.0f, speed: Float = 1.0f) = sounds.play(sound, volume, speed)
+    fun playSound(sound: FeedbackType, volume: Float = 1.0f, speed: Float = 1.0f) = sounds?.play(sound, volume, speed)
 
-    fun setShowPlayerOverride(player: Int, isRotated: Boolean) = viewModel.setSheetPlayer(player, isRotated)
+    fun setShowPlayerOverride(player: Int, isRotated: Boolean) = delegate?.setSheetPlayer(player, isRotated)
 
     /**
      * In model coordinates, the center of the board is (0/0).

@@ -27,10 +27,10 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.BaseSounds
-import de.saschahlusiak.freebloks.theme.FeedbackProvider
 import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
+import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
@@ -49,7 +49,7 @@ data class SheetPlayer(
     val isRotated: Boolean
 )
 
-class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver {
+class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver, SceneDelegate {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
@@ -385,8 +385,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
      * @param player the new player to show
      * @param isRotated whether the board is rotated or not
      */
-    fun setSheetPlayer(player: Int, isRotated: Boolean) {
+    override fun setSheetPlayer(player: Int, isRotated: Boolean) {
         playerToShowInSheet.postValue(SheetPlayer(player, isRotated))
+    }
+
+    override fun commitCurrentStone(turn: Turn) {
+        client?.setStone(turn)
     }
 
     /**

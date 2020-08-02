@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.view.scene
 
-import android.graphics.PointF
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.utils.PointF
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -26,12 +26,12 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
     /**
      * When rotating and the pointer is released, this is the target angle to "settle" the board to.
      */
-    private var targetAngle = 0f
+    internal var targetAngle = 0f
 
     /**
      * True if the user is currently touching and rotating the board
      */
-    private var rotating = false
+    internal var rotating = false
 
     /**
      * If true, the board will automatically rotate in [execute] when the game is finished.
@@ -52,7 +52,7 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
     /**
      * TODO: document me
      */
-    private var lastDetailsPlayer = -1
+    internal var lastDetailsPlayer = -1
 
     fun updateDetailsPlayer() {
         val p = if (currentAngle > 0) (currentAngle.toInt() + 45) / 90 else (currentAngle.toInt() - 45) / 90
@@ -141,8 +141,8 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
         return true
     }
 
-    override fun handlePointerUp(m: PointF): Boolean {
-        if (!rotating) return false
+    override fun handlePointerUp(m: PointF) {
+        if (!rotating) return
 
         if (abs(m.x - originalTouchPoint.x) < 1 && abs(m.y - originalTouchPoint.y) < 1) {
             resetRotation()
@@ -153,8 +153,6 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
                 ((currentAngle.toInt() - 45) / 90 * 90).toFloat()
         }
         rotating = false
-
-        return false
     }
 
     fun resetRotation() {

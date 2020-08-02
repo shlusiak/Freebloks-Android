@@ -1,13 +1,13 @@
 package de.saschahlusiak.freebloks.view
 
 import android.content.Context
-import android.graphics.PointF
 import android.opengl.GLSurfaceView
 import android.opengl.GLU
 import android.util.Log
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.theme.ColorThemes
+import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
