@@ -7,7 +7,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcel
-import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -16,7 +15,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.DependencyProvider
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
@@ -28,7 +26,8 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThrea
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.theme.Sounds
+import de.saschahlusiak.freebloks.theme.FeedbackProvider
+import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
@@ -59,14 +58,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     private val handler = Handler()
 
     // services
-    private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
     private var notificationManager: MultiplayerNotificationManager? = null
 
     // settings
-    private var vibrateOnMove: Boolean = false
     private var showNotifications: Boolean = true
     var showIntro = true
-    val soundsEnabled get() = sounds.isEnabled
+    val soundsEnabled get() = sounds.soundsEnabled
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
         private set
@@ -90,11 +87,11 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         private set
 
     private val chatHistory = mutableListOf<ChatEntry>()
-    val sounds = Sounds(app)
+    val sounds: FeedbackProvider = DefaultSounds(app)
 
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)
-    val soundsEnabledLiveData = MutableLiveData(sounds.isEnabled)
+    val soundsEnabledLiveData = MutableLiveData(sounds.soundsEnabled)
     val chatButtonVisible = MutableLiveData(false)
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
@@ -118,8 +115,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     @UiThread
     fun reloadPreferences() {
         with(prefs) {
-            vibrateOnMove = getBoolean("vibrate", true)
-            sounds.isEnabled = getBoolean("sounds", true)
+            sounds.vibrationEnabled = getBoolean("vibrate", true)
+            sounds.soundsEnabled = getBoolean("sounds", true)
             showNotifications = getBoolean("notifications", true)
             localClientNameOverride = getString("player_name", null)?.ifBlank { null }
             showSeeds = getBoolean("show_seeds", true)
@@ -131,7 +128,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             showIntro = !getBoolean("skip_intro", false)
         }
 
-        soundsEnabledLiveData.value = sounds.isEnabled
+        soundsEnabledLiveData.value = sounds.soundsEnabled
 
         if (showNotifications) {
             client?.let {
@@ -156,14 +153,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             .edit()
             .putBoolean("sounds", value)
             .apply()
-        sounds.isEnabled = value
+        sounds.soundsEnabled = value
         soundsEnabledLiveData.value = value
-    }
-
-    fun vibrate(milliseconds: Long) {
-        @Suppress("DEPRECATION")
-        if (vibrateOnMove)
-            vibrator?.vibrate(milliseconds)
     }
 
     @UiThread

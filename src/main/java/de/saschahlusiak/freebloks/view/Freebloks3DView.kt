@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PointF
 import android.opengl.GLSurfaceView
@@ -12,11 +13,13 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.view.effects.*
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs), GameEventObserver {
 	private lateinit var scene: Scene
@@ -71,6 +74,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         return sqrt(x * x + y * y)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         modelPoint.x = event.x
         modelPoint.y = event.y
@@ -139,8 +143,8 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         requestRender()
 
         if (!scene.game.isLocalPlayer(turn.player)) {
-            scene.soundPool.play(scene.soundPool.SOUND_CLICK1, 1.0f, 0.9f + Math.random().toFloat() * 0.2f)
-            scene.vibrate(Global.VIBRATE_SET_STONE.toLong())
+            scene.playSound(FeedbackType.StoneHasBeenSet, speed = 0.9f + Random.nextFloat() * 0.2f)
+            scene.vibrate(Global.VIBRATE_SET_STONE)
         }
     }
 
@@ -149,8 +153,6 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         val board = game.board
 
         if (scene.hasAnimations()) {
-            val sx: Int
-            val sy: Int
             val gameMode = game.gameMode
             val seed = board.getPlayerSeed(player.number, gameMode) ?: return
             for (x in 0 until board.width) for (y in 0 until board.height) if (board.getFieldPlayer(y, x) == player.number) {
@@ -183,7 +185,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
             scene.boardObject.resetRotation()
             scene.wheel.update(turn.player)
             scene.wheel.showStone(turn.shapeNumber)
-            scene.soundPool.play(scene.soundPool.SOUND_HINT, 0.9f, 1.0f)
+            scene.playSound(FeedbackType.Hint, volume = 0.9f)
             val currentPlayer = scene.game.currentPlayer
             val st: Stone
             if (currentPlayer >= 0)

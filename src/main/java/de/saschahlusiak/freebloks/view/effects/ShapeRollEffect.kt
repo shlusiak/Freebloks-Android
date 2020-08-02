@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view.effects
 
 import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL11
@@ -58,7 +59,7 @@ class ShapeRollEffect(
                 vr = 0.0f
                 val volume = (-vz / 16.0f).pow(2.0f)
                 if (vz > -6.0f) vz = 0.0f
-                scene.soundPool.play(scene.soundPool.SOUND_CLICK1, volume, 0.90f + Random.nextFloat() * 0.2f)
+                scene.playSound(FeedbackType.StoneBounce, volume, 0.90f + Random.nextFloat() * 0.2f)
             }
         } else {
             vr = 0.0f

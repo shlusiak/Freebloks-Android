@@ -8,6 +8,7 @@ import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Stone
 import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import javax.microedition.khronos.opengles.GL11
@@ -57,7 +58,7 @@ class Wheel(private val scene: Scene) : SceneElement {
             tmp.y = lastPointerLocation.y
             scene.modelToBoard(tmp)
 
-            if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1f))
+            if (!scene.playSound(FeedbackType.StartDragging))
                 scene.vibrate(Global.VIBRATE_START_DRAGGING)
 
             showStone(stone.shape.number)
@@ -137,7 +138,7 @@ class Wheel(private val scene: Scene) : SceneElement {
             /* we tapped on a stone; start timer */
             handler.removeCallbacks(hapticTimerRunnable)
             if (scene.currentStone.stone != null && scene.currentStone.stone != currentStone) {
-                scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1f)
+                scene.playSound(FeedbackType.StartDragging)
                 status = Status.SPINNING
             } else {
                 status = Status.SPINNING
@@ -186,7 +187,8 @@ class Wheel(private val scene: Scene) : SceneElement {
             tmp.y = m.y
             scene.modelToBoard(tmp)
             showStone(currentStone.shape.number)
-            if (scene.currentStone.stone != currentStone) scene.soundPool.play(scene.soundPool.SOUND_CLICK2, 1.0f, 1f)
+            if (scene.currentStone.stone != currentStone)
+                scene.playSound(FeedbackType.StartDragging)
             scene.currentStone.startDragging(tmp, currentStone, Orientation.Default, scene.getPlayerColor(currentPlayer))
             status = Status.IDLE
             scene.boardObject.resetRotation()

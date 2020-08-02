@@ -52,6 +52,7 @@ import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.theme.ColorThemes
+import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager.Companion.get
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
@@ -369,9 +370,10 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         if (viewModel.undoWithBack && (client != null) && client.isConnected()) {
             scene.clearEffects()
             client.requestUndo()
-            scene.soundPool.play(scene.soundPool.SOUND_UNDO, 1.0f, 1.0f)
+            scene.sounds.play(FeedbackType.UndoStone)
             return
         }
+
         if ((client != null) && client.game.isStarted && !client.game.isFinished && (lastStatus != null) && (lastStatus.clients > 1))
             showDialog(DIALOG_QUIT)
         else {
@@ -546,7 +548,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             R.id.undo -> {
                 scene.clearEffects()
                 viewModel.requestUndo()
-                scene.soundPool.play(scene.soundPool.SOUND_UNDO, 1.0f, 1.0f)
+                scene.sounds.play(FeedbackType.UndoStone)
             }
             R.id.show_main_menu -> {
                 val client = viewModel.client
@@ -568,7 +570,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     @WorkerThread
     override fun playerIsOutOfMoves(player: Player) {
-        scene.soundPool.play(scene.soundPool.SOUND_PLAYER_OUT, 0.8f, 1.0f)
+        scene.sounds.play(FeedbackType.OutOfMoves, volume = 0.8f)
 
         lifecycleScope.launchWhenStarted {
             val playerName = viewModel.getPlayerName(player.number)

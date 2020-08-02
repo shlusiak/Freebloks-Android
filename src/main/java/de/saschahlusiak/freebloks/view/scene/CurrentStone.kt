@@ -7,6 +7,7 @@ import android.opengl.GLUtils
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.*
+import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.SimpleModel
@@ -384,7 +385,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             hasMoved = moveTo(x, y)
             isValid = isValidTurn(x, y)
             if (isValid && (hasMoved || forceSound)) {
-                if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK3, 1.0f, 1.0f)) scene.vibrate(Global.VIBRATE_STONE_SNAP)
+                scene.sounds.playOrVibrate(FeedbackType.Snap, Global.VIBRATE_STONE_SNAP, volume = 0.2f)
             }
             return hasMoved
         }
@@ -392,7 +393,8 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             isValid = true
             hasMoved = moveTo(floor(x + 0.5f), floor(y + 0.5f))
             if (hasMoved || forceSound) {
-                if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK3, 0.2f, 1.0f)) scene.vibrate(Global.VIBRATE_STONE_SNAP)
+                scene.sounds.playOrVibrate(FeedbackType.Snap, Global.VIBRATE_STONE_SNAP, volume = 0.2f)
+
             }
             return hasMoved
         }
@@ -401,7 +403,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
                 isValid = true
                 hasMoved = moveTo(floor(0.5f + x + i.toDouble()).toFloat(), floor(0.5f + y + j.toFloat()))
                 if (hasMoved) {
-                    if (!scene.soundPool.play(scene.soundPool.SOUND_CLICK3, 0.2f, 1.0f)) scene.vibrate(Global.VIBRATE_STONE_SNAP)
+                    scene.sounds.playOrVibrate(FeedbackType.Snap, Global.VIBRATE_STONE_SNAP, volume = 0.2f)
                 }
                 return hasMoved
             }

@@ -7,6 +7,8 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.*
+import de.saschahlusiak.freebloks.theme.FeedbackProvider
+import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.effects.Effect
@@ -16,6 +18,7 @@ import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import java.util.*
+import kotlin.random.Random
 
 /**
  * This scene model is owned by the [Freebloks3DView] and
@@ -24,8 +27,14 @@ import java.util.*
  * This is a View class and is allowed to have references to the current View and Activity.
  */
 class Scene(
-    private val viewModel: FreebloksActivityViewModel
+    private val viewModel: FreebloksActivityViewModel,
+    val sounds: FeedbackProvider
 ) : ArrayList<SceneElement>(), SceneElement {
+
+    constructor(viewModel: FreebloksActivityViewModel): this(
+        viewModel,
+        viewModel.sounds
+    )
 
     private var client: GameClient? = null
 
@@ -35,7 +44,6 @@ class Scene(
     val currentStone = CurrentStone(this)
     val boardObject = BoardObject(this, Board.DEFAULT_BOARD_SIZE)
     val effects = ArrayList<Effect>()
-    val soundPool = viewModel.sounds
     var showSeeds = false
     var showOpponents = false
     var snapAid = false
@@ -183,8 +191,9 @@ class Scene(
             addEffect(set)
         }
 
-        soundPool.play(soundPool.SOUND_CLICK1, 1.0f, 0.9f + Math.random().toFloat() * 0.2f)
-        viewModel.vibrate(Global.VIBRATE_SET_STONE)
+        playSound(FeedbackType.StoneHasBeenSet, 1.0f, 0.9f + Random.nextFloat() * 0.2f)
+        vibrate(Global.VIBRATE_SET_STONE)
+
         client.setStone(turn)
 
         return true
@@ -192,7 +201,8 @@ class Scene(
 
     fun getPlayerColor(player: Int) = game.gameMode.colorOf(player)
 
-    fun vibrate(milliseconds: Long) = viewModel.vibrate(milliseconds)
+    fun vibrate(milliseconds: Long) = sounds.vibrate(milliseconds)
+    fun playSound(sound: FeedbackType, volume: Float = 1.0f, speed: Float = 1.0f) = sounds.play(sound, volume, speed)
 
     fun setShowPlayerOverride(player: Int, isRotated: Boolean) = viewModel.setSheetPlayer(player, isRotated)
 
