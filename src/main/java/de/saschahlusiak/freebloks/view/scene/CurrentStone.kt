@@ -131,7 +131,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
 		 * so we always have light coming from top left */
         /* TODO: merge with BoardRenderer.renderShadow() */
 
-        val baseAngle = scene.boardObject.baseAngle
+        val baseAngle = scene.baseAngle
         gl.glRotatef(baseAngle, 0f, 1f, 0f)
         gl.glTranslatef(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
         gl.glRotatef(-baseAngle, 0f, 1f, 0f)
@@ -417,11 +417,13 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             fieldPoint.x = m.x
             fieldPoint.y = m.y
             scene.modelToBoard(fieldPoint)
+
             val x = floor(0.5f + fieldPoint.x + stoneRelX - stone.shape.size.toFloat() / 2f)
             val y = floor(0.5f + fieldPoint.y + stoneRelY - stone.shape.size.toFloat() / 2f)
             fieldPoint.x = x
             fieldPoint.y = y
-            scene.boardToUnified(fieldPoint)
+            scene.boardToScreenOrientation(fieldPoint)
+
             if (!scene.verticalLayout) fieldPoint.y = scene.board.width - fieldPoint.x - 1
             if (fieldPoint.y < -2.0f && hasMoved) {
                 scene.wheel.currentStone = stone

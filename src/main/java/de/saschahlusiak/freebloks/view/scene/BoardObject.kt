@@ -6,26 +6,17 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow
 
+/**
+ * The board object that is rendered on the screen. Responsible for rendering the board and invidiudal stones, but not the actual field.
+ *
+ * The board is always rendered in the middle of the model coordinates, with yellow being
+ * top-left (-10/-10) and blue being bottom-left (-10/10).
+ *
+ * It is then the *camera* that is rotated by [baseAngle] to focus on the [basePlayer].
+ *
+ * All model coordinates in touch events in [SceneElement] are above model coordinates.
+ */
 class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
-
-    /**
-     * The "center" position of the board, usually the first local player.
-     *
-     * This controls the base position of the camera of the board.
-     */
-    var basePlayer = 0
-        set(value) {
-            field = value
-            baseAngle = -90.0f * value.toFloat()
-        }
-
-    /**
-     * The base camera angle that would focus on the [basePlayer].
-     *
-     * TODO: remove me, we should always use 0 as we are rotating the board anyway.
-     */
-    var baseAngle: Float = 0.0f
-
     /**
      * This is the amount the board is rotated when touching. Note that this is rotated around the baseAngle, so 0.0f means
      * to center on the [basePlayer] using the camera angle of [baseAngle].
@@ -65,7 +56,7 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
 
     fun updateDetailsPlayer() {
         val p = if (currentAngle > 0) (currentAngle.toInt() + 45) / 90 else (currentAngle.toInt() - 45) / 90
-        lastDetailsPlayer = if (currentAngle < 10.0f && currentAngle >= -10.0f) -1 else (basePlayer + p + 4) % 4
+        lastDetailsPlayer = if (currentAngle < 10.0f && currentAngle >= -10.0f) -1 else (scene.basePlayer + p + 4) % 4
         val game = scene.game
         if (game.gameMode === GameMode.GAMEMODE_2_COLORS_2_PLAYERS || game.gameMode === GameMode.GAMEMODE_DUO || game.gameMode === GameMode.GAMEMODE_JUNIOR) {
             if (lastDetailsPlayer == 1) lastDetailsPlayer = 0
@@ -86,7 +77,7 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
         get() {
             if (!scene.showSeeds) return -1
             if (lastDetailsPlayer >= 0) return lastDetailsPlayer
-            if (scene.game.isFinished) return basePlayer
+            if (scene.game.isFinished) return scene.basePlayer
             return if (scene.game.isLocalPlayer()) scene.game.currentPlayer else -1
         }
 
@@ -101,8 +92,8 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
         get() {
             if (lastDetailsPlayer >= 0) return lastDetailsPlayer
             if (!scene.game.isStarted) return -1
-            if (scene.game.isFinished) return basePlayer
-            return if (scene.game.currentPlayer >= 0) scene.game.currentPlayer else basePlayer
+            if (scene.game.isFinished) return scene.basePlayer
+            return if (scene.game.currentPlayer >= 0) scene.game.currentPlayer else scene.basePlayer
         }
 
     /**
@@ -116,9 +107,9 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
         get() {
             if (lastDetailsPlayer >= 0) return lastDetailsPlayer
             if (scene.game.isFinished) {
-                return basePlayer
+                return scene.basePlayer
             }
-            return if (scene.game.isLocalPlayer() || scene.showOpponents) scene.game.currentPlayer else basePlayer
+            return if (scene.game.isLocalPlayer() || scene.showOpponents) scene.game.currentPlayer else scene.basePlayer
         }
 
     override fun handlePointerDown(m: PointF): Boolean {

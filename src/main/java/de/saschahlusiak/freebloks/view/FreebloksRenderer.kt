@@ -5,7 +5,6 @@ import android.graphics.PointF
 import android.opengl.GLSurfaceView
 import android.opengl.GLU
 import android.util.Log
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.theme.ColorThemes
@@ -16,7 +15,7 @@ import javax.microedition.khronos.opengles.GL11
 import kotlin.math.cos
 import kotlin.math.sin
 
-class FreebloksRenderer(private val context: Context, private val model: Scene) : GLSurfaceView.Renderer {
+class FreebloksRenderer(private val context: Context, private val scene: Scene) : GLSurfaceView.Renderer {
     private val tag = FreebloksRenderer::class.java.simpleName
 
     private val lightAmbientColor = floatArrayOf(0.35f, 0.35f, 0.35f, 1.0f)
@@ -71,22 +70,22 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
     override fun onDrawFrame(gl: GL10) {
         val gl11 = gl as GL11
         val cameraDistance = zoom
-        val cameraAngle = model.boardObject.baseAngle
-        val boardAngle = model.boardObject.currentAngle
+        val cameraAngle = scene.baseAngle
+        val boardAngle = scene.boardObject.currentAngle
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
         gl.glEnableClientState(GL10.GL_NORMAL_ARRAY)
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY)
         gl.glMatrixMode(GL10.GL_MODELVIEW)
 
-        val intro = model.intro
+        val intro = scene.intro
         if (intro != null) {
             intro.render(gl11, this)
             return
         }
 
         gl.glLoadIdentity()
-        if (model.verticalLayout) {
+        if (scene.verticalLayout) {
             gl.glTranslatef(0f, 7.0f, 0f)
         } else gl.glTranslatef(-5.0f, 0.6f, 0f)
 
@@ -112,9 +111,9 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         gl.glRotatef(boardAngle, 0f, 1f, 0f)
 
         backgroundRenderer.render(gl11)
-        boardRenderer.renderBoard(gl11, model.board, model.boardObject.showSeedsPlayer)
+        boardRenderer.renderBoard(gl11, scene.board, scene.boardObject.showSeedsPlayer)
 
-        val game = model.game
+        val game = scene.game
         val gameMode = game.gameMode
         val board = game.board
 
@@ -127,14 +126,14 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
 
         /* render player stones on board, unless they are "effected" */
         gl.glPushMatrix()
-        gl.glTranslatef(-BoardRenderer.stoneSize * (model.board.width - 1).toFloat(), 0f, -BoardRenderer.stoneSize * (model.board.width - 1).toFloat())
+        gl.glTranslatef(-BoardRenderer.stoneSize * (scene.board.width - 1).toFloat(), 0f, -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat())
         gl.glEnable(GL10.GL_BLEND)
         gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA)
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, BoardRenderer.materialStoneSpecular, 0)
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, BoardRenderer.materialStoneShininess, 0)
         boardRenderer.stone.bindBuffers(gl11)
 
-        synchronized(model.effects) {
+        synchronized(scene.effects) {
 
             synchronized(board) {
                 for (y in 0 until board.height) {
@@ -143,7 +142,7 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
                         val field = board.getFieldPlayer(y, x)
                         if (field != Board.FIELD_FREE) {
                             // value between 0 and 3
-                            if (model.effects.none { it.isEffected(x, y) }) {
+                            if (scene.effects.none { it.isEffected(x, y) }) {
                                 boardRenderer.renderSingleStone(gl11, colors[field], BoardRenderer.defaultStoneAlpha)
                             }
                         }
@@ -159,13 +158,13 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         gl.glDisable(GL10.GL_DEPTH_TEST)
 
         /* render all effects */
-        synchronized(model.effects) {
-            for (i in model.effects.indices) {
-                model.effects[i].renderShadow(gl11, boardRenderer)
+        synchronized(scene.effects) {
+            for (i in scene.effects.indices) {
+                scene.effects[i].renderShadow(gl11, boardRenderer)
             }
             gl.glEnable(GL10.GL_DEPTH_TEST)
-            for (i in model.effects.indices) {
-                model.effects[i].render(gl11, boardRenderer)
+            for (i in scene.effects.indices) {
+                scene.effects[i].render(gl11, boardRenderer)
             }
         }
 
@@ -174,12 +173,12 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         gl.glPushMatrix()
         /* reverse the cameraAngle to always fix wheel in front of camera */
         gl.glRotatef(cameraAngle, 0f, 1f, 0f)
-        if (!model.verticalLayout) gl.glRotatef(90.0f, 0f, 1f, 0f)
-        model.wheel.render(this, gl11)
+        if (!scene.verticalLayout) gl.glRotatef(90.0f, 0f, 1f, 0f)
+        scene.wheel.render(this, gl11)
         gl.glPopMatrix()
 
         /* render current player stone on the field */
-        if (game.isLocalPlayer()) model.currentStone.render(this, gl11)
+        if (game.isLocalPlayer()) scene.currentStone.render(this, gl11)
     }
 
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
@@ -192,9 +191,9 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         viewport[3] = height
         this.width = width.toFloat()
         this.height = height.toFloat()
-        model.verticalLayout = height >= width
+        scene.verticalLayout = height >= width
 
-        val fovY = if (model.verticalLayout) 35.0f else 21.0f
+        val fovY = if (scene.verticalLayout) 35.0f else 21.0f
 
         gl.glMatrixMode(GL10.GL_PROJECTION)
         gl.glLoadIdentity()
@@ -232,7 +231,7 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         }
 
         updateModelViewMatrix = true
-        model.currentStone.updateTexture(context, gl)
+        scene.currentStone.updateTexture(context, gl)
         boardRenderer.onSurfaceChanged(context, (gl as GL11))
         backgroundRenderer.updateTexture(gl)
     }

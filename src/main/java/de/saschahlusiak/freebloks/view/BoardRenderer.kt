@@ -14,7 +14,7 @@ import javax.microedition.khronos.opengles.GL11
 /**
  * Renders the content of the board, including the board itself and the player's stones, or any stone, really.
  */
-class BoardRenderer internal constructor() {
+class BoardRenderer() {
     companion object {
         const val stoneSize = 0.45f
         const val defaultStoneAlpha = 0.75f
@@ -360,7 +360,7 @@ class BoardRenderer internal constructor() {
         orientation: Orientation,
         height: Float,
         ang: Float, ax: Float, ay: Float, az: Float,
-        light_angle: Float,
+        lightAngle: Float,
         alpha: Float,
         scale: Float
     ) {
@@ -370,9 +370,9 @@ class BoardRenderer internal constructor() {
 
         /* TODO: remove this and always show the board at the exact same angle,
 		 * so we always have light coming from top left */
-        gl.glRotatef(-light_angle, 0f, 1f, 0f)
+        gl.glRotatef(-lightAngle, 0f, 1f, 0f)
         gl.glTranslatef(2.5f * height * 0.08f, 0f, 2.0f * height * 0.08f)
-        gl.glRotatef(light_angle, 0f, 1f, 0f)
+        gl.glRotatef(lightAngle, 0f, 1f, 0f)
         gl.glTranslatef(
             stoneSize * offset, 0f,
             stoneSize * offset

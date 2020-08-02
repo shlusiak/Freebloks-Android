@@ -82,7 +82,7 @@ class ShapeRollEffect(
             shape, color, orientation,
             z,
             r, ax, ay, az,
-            90 * scene.boardObject.basePlayer.toFloat(),
+            -scene.baseAngle,
             1.0f, 1.0f
         )
 

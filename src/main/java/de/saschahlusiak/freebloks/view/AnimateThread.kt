@@ -31,7 +31,6 @@ class AnimateThread(private val scene: Scene, private val execute: (Float, Float
                 AnimationType.Full -> if (lastRendered < 0.2f) 1000 / 60 else 1000 / 15
                 AnimationType.Half -> if (lastRendered < 0.2f) 1000 / 30 else 1000 / 15
                 AnimationType.Off -> if (scene.intro != null) 1000 / 30 else 1000 / 3
-                else -> if (scene.intro != null) 1000 / 30 else 1000 / 3
             }.toLong()
 
             try {

@@ -72,10 +72,10 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
     }
 
     fun invalidateBuffers(gl: GL11) {
-        if (useVBO)
-            vbo = makeVBO(gl)
+        vbo = if (useVBO)
+            makeVBO(gl)
         else
-            vbo = null
+            null
     }
 
     fun drawElements(gl: GL11, mode: Int) {

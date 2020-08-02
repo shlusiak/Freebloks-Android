@@ -13,6 +13,7 @@ import de.saschahlusiak.freebloks.view.effects.Effect
 import de.saschahlusiak.freebloks.view.effects.EffectSet
 import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect
+import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import java.util.*
 
@@ -42,6 +43,20 @@ class Scene(
     var verticalLayout = true
 
     private var invalidated = false
+
+    /**
+     * The "center" position of the board, usually the first local player.
+     *
+     * This controls the base position of the camera of the board.
+     */
+    var basePlayer = 0
+        set(value) {
+            field = value
+            baseAngle = value * -90.0f
+        }
+
+    var baseAngle = 0f
+
 
     /**
      * The intro is part of the scene but owned by the viewModel
@@ -169,7 +184,7 @@ class Scene(
         }
 
         soundPool.play(soundPool.SOUND_CLICK1, 1.0f, 0.9f + Math.random().toFloat() * 0.2f)
-        viewModel.vibrate(Global.VIBRATE_SET_STONE.toLong())
+        viewModel.vibrate(Global.VIBRATE_SET_STONE)
         client.setStone(turn)
 
         return true
@@ -182,10 +197,19 @@ class Scene(
     fun setShowPlayerOverride(player: Int, isRotated: Boolean) = viewModel.setSheetPlayer(player, isRotated)
 
     /**
-     * Converts a point from model coordinates to (non-uniformed) board coordinates.
-     * The top-left corner is 0/0, the blue starting point is 0/19.
+     * In model coordinates, the center of the board is (0/0).
      *
-     * @param point
+     * The other coordinates depend on the direction of the camera and because the board is rotated, the blue corner
+     * is always about being ~(-10/10) and yellow being ~(-10/-10), on a 20x20 board.
+     *
+     * This moves the center of this coordinate system to the yellow corner (top left, 0/0).
+     *
+     * Converts a point from model coordinates to absolute board coordinates, with blue starting point being 0/19
+     * and yellow starting point being 0/0.
+     *
+     * @see [FreebloksRenderer.windowToModel]
+     *
+     * @param point, input will be modified
      * @return point
      */
     fun modelToBoard(point: PointF): PointF {
@@ -197,14 +221,16 @@ class Scene(
     }
 
     /**
-     * converts p from relative board coordinates, to rotated board coordinates
-     * relative board coordinates: yellow starting point is 0/0, blue starting point is 0/19
+     * Rotates p from board coordinates to screen coordinates.
+     *
+     * Relative board coordinates: yellow starting point is 0/0, blue starting point is 0/19
      * unified coordinates: bottom left corner is always 0/0
-     * @param p
+     *
+     * @param p input and output
      */
-    fun boardToUnified(p: PointF) {
+    fun boardToScreenOrientation(p: PointF) {
         val tmp: Float
-        when (boardObject.basePlayer) {
+        when (basePlayer) {
             0 -> p.y = board.height - p.y - 1
             1 -> {
                 tmp = p.x

@@ -115,7 +115,7 @@ class Wheel(private val scene: Scene) : SceneElement {
         tmp.x = m.x
         tmp.y = m.y
         scene.modelToBoard(tmp)
-        scene.boardToUnified(tmp)
+        scene.boardToScreenOrientation(tmp)
         if (!scene.verticalLayout) {
             val t = tmp.x
             tmp.x = tmp.y
@@ -155,7 +155,7 @@ class Wheel(private val scene: Scene) : SceneElement {
         tmp.x = m.x
         tmp.y = m.y
         scene.modelToBoard(tmp)
-        scene.boardToUnified(tmp)
+        scene.boardToScreenOrientation(tmp)
         if (!scene.verticalLayout) {
             val t = tmp.x
             tmp.x = tmp.y
@@ -230,7 +230,7 @@ class Wheel(private val scene: Scene) : SceneElement {
                 var y = 0.35f + effect * 0.75f
                 val z = row * STONE_SPACING
                 val scale = 0.9f + effect * 0.3f
-                var rotate = -scene.boardObject.baseAngle
+                var rotate = -scene.baseAngle
                 if (!scene.verticalLayout) rotate -= 90.0f
                 var alpha = 1.0f
                 if (currentStone == s && s != scene.currentStone.stone) y += 1.2f

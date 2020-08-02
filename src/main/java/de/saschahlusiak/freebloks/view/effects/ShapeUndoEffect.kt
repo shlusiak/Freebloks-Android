@@ -39,7 +39,7 @@ class ShapeUndoEffect(model: Scene, turn: Turn) : AbsShapeEffect(model, turn) {
             shape, color, orientation,
             z,
             rot, 0f, 1f, 0f,
-            90.0f * scene.boardObject.basePlayer.toFloat(),
+            -scene.baseAngle,
             alpha, 1.0f
 
         )
