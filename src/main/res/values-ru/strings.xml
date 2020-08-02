@@ -93,15 +93,13 @@
         <item>4е место</item>
     </string-array>
     <string name="game_finished">Игра Окончена</string>
-    <string-array name="color_names">
-        <item>Белый</item>
-        <item>Синий</item>
-        <item>Жёлтый</item>
-        <item>Красный</item>
-        <item>Зелёный</item>
-        <item>Оранжевый</item>
-        <item>Фиолетовый</item>
-    </string-array>
+    <string name="white">Белый</string>
+    <string name="blue">Синий</string>
+    <string name="yellow">Жёлтый</string>
+    <string name="red">Красный</string>
+    <string name="green">Зелёный</string>
+    <string name="orange">Оранжевый</string>
+    <string name="purple">Фиолетовый</string>
     <string-array name="difficulties">
         <item>очень сложно</item>
         <item>сложно</item>

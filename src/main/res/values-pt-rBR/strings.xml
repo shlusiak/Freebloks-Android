@@ -96,15 +96,13 @@
     </string-array>
     <string name="game_finished">O jogo terminou</string>
     <string name="random_color">Cor aleatória</string>
-    <string-array name="color_names">
-        <item>Branco</item>
-        <item>Azul</item>
-        <item>Amarelo</item>
-        <item>Vermelho</item>
-        <item>Verde</item>
-        <item>Laranja</item>
-        <item>Violeta</item>
-    </string-array>
+    <string name="white">Branco</string>
+    <string name="blue">Azul</string>
+    <string name="yellow">Amarelo</string>
+    <string name="red">Vermelho</string>
+    <string name="green">Verde</string>
+    <string name="orange">Laranja</string>
+    <string name="purple">Violeta</string>
     <string-array name="difficulties">
         <item>impossível</item>
         <item>difícil</item>
@@ -117,7 +115,7 @@
         <item>2 Jogadores, 4 Cores</item>
         <item>Blokus Classic</item>
         <item>Blokus Duo</item>
-        <item>Blokus Junior</item>
+        <item>Blokus Júnior</item>
     </string-array>
     <string-array name="game_field_sizes">
         <item>13x13</item>

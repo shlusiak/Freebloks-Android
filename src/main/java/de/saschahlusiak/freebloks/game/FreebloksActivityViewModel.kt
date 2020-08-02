@@ -23,10 +23,7 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.genericMessage
 import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.serverMessage
-import de.saschahlusiak.freebloks.model.Game
-import de.saschahlusiak.freebloks.model.GameConfig
-import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
@@ -34,7 +31,6 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.Sounds
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
-import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
@@ -409,7 +405,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
      */
     fun getPlayerName(player: Int): String {
         val gameMode = client?.game?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-        val colorName = Global.getColorName(context, player, gameMode)
+        val color = gameMode.colorOf(player)
+        val colorName = color.getName(context.resources)
         val game = client?.game ?: return colorName
 
         // always return the current override, so that changing the name in the preferences trumps what the server believes
@@ -525,15 +522,11 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     override fun playerJoined(client: Int, player: Int, name: String?) {
+        val gameMode = game?.gameMode ?: GameMode.DEFAULT
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
 
-        // the names of colors
-        val colorNames = context.resources.getStringArray(R.array.color_names)
-        // the index into colorNames
-        val playerColor = Global.getPlayerColor(player, game?.gameMode
-            ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
-        // the name of the player's color
-        val colorName = colorNames[playerColor]
+        val playerColor = gameMode.colorOf(player)
+        val colorName = playerColor.getName(context.resources)
 
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
         val e = serverMessage(player, text, clientName)
@@ -544,14 +537,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     override fun playerLeft(client: Int, player: Int, name: String?) {
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
+        val gameMode = game?.gameMode ?: GameMode.DEFAULT
 
-        // the names of colors
-        val colorNames = context.resources.getStringArray(R.array.color_names)
-        // the index into colorNames
-        val playerColor = Global.getPlayerColor(player, game?.gameMode
-            ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS)
-        // the name of the player's color
-        val colorName = colorNames[playerColor]
+        val playerColor = gameMode.colorOf(player)
+        val colorName = playerColor.getName(context.resources)
 
         val text = context.getString(R.string.player_left_color, clientName, colorName)
         val e = serverMessage(player, text, clientName)

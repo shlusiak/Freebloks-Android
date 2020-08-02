@@ -10,9 +10,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.Game
+import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.model.colorOf
 import kotlinx.android.synthetic.main.player_detail_fragment.view.*
 
 /**
@@ -99,13 +100,12 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         // is it "your turn", like, in general?
         val isYourTurn = client.game.isLocalPlayer()
 
-        val playerColor = Global.getPlayerColor(data.player, game.gameMode)
-        val backgroundColorResource = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor]
+        val playerColor = game.gameMode.colorOf(data.player)
 
         val playerName = viewModel.getPlayerName(data.player)
         val p = board.getPlayer(data.player)
 
-        background.setCardBackgroundColor(resources.getColor(backgroundColorResource))
+        background.setCardBackgroundColor(resources.getColor(playerColor.backgroundColorId))
 
         points.visibility = View.VISIBLE
         points.text = resources.getQuantityString(R.plurals.number_of_points, p.totalPoints, p.totalPoints)

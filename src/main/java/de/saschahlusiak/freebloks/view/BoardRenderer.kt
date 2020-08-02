@@ -3,11 +3,11 @@ package de.saschahlusiak.freebloks.view
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLUtils
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
+import de.saschahlusiak.freebloks.model.StoneColor
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11
 
@@ -307,8 +307,8 @@ class BoardRenderer internal constructor() {
      *
      * This is ONLY used when rendering non-effected player stones of the field
      */
-    fun renderSingleStone(gl: GL11, color: Int, alpha: Float) {
-        val c = Global.stone_color_a[color]
+    fun renderSingleStone(gl: GL11, color: StoneColor, alpha: Float) {
+        val c = color.stoneColor
         tmp[0] = c[0] * alpha
         tmp[1] = c[1] * alpha
         tmp[2] = c[2] * alpha
@@ -320,8 +320,8 @@ class BoardRenderer internal constructor() {
     /**
      * Render the shadow of the shape at the current position.
      */
-    fun renderShapeShadow(gl: GL11, color: Int, shape: Shape, orientation: Orientation, alpha: Float) {
-        val c = Global.stone_shadow_color_a[color]
+    fun renderShapeShadow(gl: GL11, color: StoneColor, shape: Shape, orientation: Orientation, alpha: Float) {
+        val c = color.shadowColor
         tmp[0] = c[0] * alpha
         tmp[1] = c[1] * alpha
         tmp[2] = c[2] * alpha
@@ -355,8 +355,8 @@ class BoardRenderer internal constructor() {
 
     fun renderShapeShadow(
         gl: GL11,
-        stone: Shape,
-        color: Int,
+        shape: Shape,
+        color: StoneColor,
         orientation: Orientation,
         height: Float,
         ang: Float, ax: Float, ay: Float, az: Float,
@@ -364,7 +364,7 @@ class BoardRenderer internal constructor() {
         alpha: Float,
         scale: Float
     ) {
-        val offset = stone.size.toFloat() - 1.0f
+        val offset = shape.size.toFloat() - 1.0f
         val heightAlphaMultiplier = 0.80f - height / 16.0f
         if (heightAlphaMultiplier < 0.0f) return
 
@@ -385,14 +385,14 @@ class BoardRenderer internal constructor() {
             -stoneSize * offset
         )
 
-        renderShapeShadow(gl, color, stone, orientation, heightAlphaMultiplier * alpha)
+        renderShapeShadow(gl, color, shape, orientation, heightAlphaMultiplier * alpha)
     }
 
     /**
      * Renders the full shape at the current position and angle.
      */
-    fun renderShape(gl: GL11, color: Int, shape: Shape, orientation: Orientation, alpha: Float) {
-        val c = Global.stone_color_a[color]
+    fun renderShape(gl: GL11, color: StoneColor, shape: Shape, orientation: Orientation, alpha: Float) {
+        val c = color.stoneColor
         tmp[0] = c[0] * alpha
         tmp[1] = c[1] * alpha
         tmp[2] = c[2] * alpha

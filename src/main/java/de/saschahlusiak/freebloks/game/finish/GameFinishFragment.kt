@@ -15,11 +15,11 @@ import android.view.Window
 import android.view.animation.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
@@ -194,14 +194,14 @@ class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
             else -> resources.getDrawable(R.drawable.bg_card_1)
         }.mutate() as LayerDrawable
 
-        var color = Global.getPlayerColor(data.color1, gameMode)
+        var color = gameMode.colorOf(data.color1)
         val grad1 = l.findDrawableByLayerId(R.id.color1) as GradientDrawable
-        grad1.setColor(resources.getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]))
+        grad1.setColor(resources.getColor(color.backgroundColorId))
 
         if (data.color2 >= 0) {
-            color = Global.getPlayerColor(data.color2, gameMode)
+            color = gameMode.colorOf(data.color2)
             val grad2 = l.findDrawableByLayerId(R.id.color2) as GradientDrawable
-            grad2.setColor(resources.getColor(Global.PLAYER_BACKGROUND_COLOR_RESOURCE[color]))
+            grad2.setColor(resources.getColor(color.backgroundColorId))
         }
 
         return l

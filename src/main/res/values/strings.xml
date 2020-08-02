@@ -116,15 +116,13 @@
     </string-array>
     <string name="game_finished">Game Over</string>
     <string name="random_color">Random color</string>
-    <string-array name="color_names">
-        <item>White</item>
-        <item>Blue</item>
-        <item>Yellow</item>
-        <item>Red</item>
-        <item>Green</item>
-        <item>Orange</item>
-        <item>Purple</item>
-    </string-array>
+    <string name="white">White</string>
+    <string name="blue">Blue</string>
+    <string name="yellow">Yellow</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="orange">Orange</string>
+    <string name="purple">Purple</string>
     <string-array name="difficulties">
         <item>nuts</item>
         <item>hard</item>

@@ -70,15 +70,13 @@
 
     <string name="game_finished">Fin del juego</string>
 
-    <string-array name="color_names">
-        <item>Blanco</item>
-        <item>Azul</item>
-        <item>Amarillo</item>
-        <item>Rojo</item>
-        <item>Verde</item>
-        <item>Naranja</item>
-        <item>Morado</item>
-    </string-array>
+    <string name="white">Blanco</string>
+    <string name="blue">Azul</string>
+    <string name="yellow">Amarillo</string>
+    <string name="red">Rojo</string>
+    <string name="green">Verde</string>
+    <string name="orange">Naranja</string>
+    <string name="purple">Morado</string>
     <string-array name="difficulties">
         <item>chalado</item>
         <item>difícil</item>

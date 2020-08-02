@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="TextAppearance.Small" parent="@style/TextAppearance.AppCompat.Small">
+    <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">@dimen/textSizeSmall</item>
     </style>
 
-    <style name="TextAppearance.Medium" parent="@style/TextAppearance.AppCompat.Medium">
+    <style name="TextAppearance.Medium" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">@dimen/textSizeMedium</item>
     </style>
 
-    <style name="TextAppearance.Large" parent="@style/TextAppearance.AppCompat.Large">
+    <style name="TextAppearance.Large" parent="@android:style/TextAppearance.Large">
         <item name="android:textSize">@dimen/textSizeLarge</item>
     </style>
 

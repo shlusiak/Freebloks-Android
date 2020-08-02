@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.model
 import java.io.Serializable
 
 /**
- * Immutable definition of a shape of a stone.
+ * Immutable definition of the geometrical shape of a stone.
  *
  * See [Stone] for the member of [Player], which adds attributes like count and orientation.
  */

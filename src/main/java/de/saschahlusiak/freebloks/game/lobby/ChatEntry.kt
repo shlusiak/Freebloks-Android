@@ -2,8 +2,9 @@ package de.saschahlusiak.freebloks.game.lobby
 
 import android.content.Context
 import android.graphics.Color
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.model.colorOf
 import java.io.Serializable
 
 class ChatEntry(
@@ -22,10 +23,9 @@ class ChatEntry(
         return if (player == null) {
             if (client == null) Color.WHITE else extraColors[client % extraColors.size]
         } else {
-            val playerColor = Global.getPlayerColor(player, gameMode)
-            val resource = Global.PLAYER_FOREGROUND_COLOR_RESOURCE[playerColor]
+            val playerColor = gameMode.colorOf(player)
 
-            context.resources.getColor(resource)
+            context.resources.getColor(playerColor.foregroundColorId)
         }
     }
 

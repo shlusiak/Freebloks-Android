@@ -12,15 +12,11 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
-import de.saschahlusiak.freebloks.model.Board
-import de.saschahlusiak.freebloks.model.GameConfig
-import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.GameMode.*
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
-import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.custom_game_dialog.view.*
@@ -233,7 +229,7 @@ class CustomGameDialog : MaterialDialogFragment(), OnSeekBarChangeListener, View
 
     private fun updateColorNames() {
         players.forEachIndexed { index, checkBox ->
-            checkBox.text = Global.getColorName(requireContext(), index, gameMode)
+            checkBox.text = gameMode.colorOf(index).getName(requireContext().resources)
         }
     }
 

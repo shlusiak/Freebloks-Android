@@ -10,10 +10,7 @@ import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.model.Board
-import de.saschahlusiak.freebloks.model.Player
-import de.saschahlusiak.freebloks.model.Stone
-import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.view.effects.*
@@ -168,7 +165,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
                     val distance = sqrt((x - seed.x) * (x - seed.x) + (y - seed.y) * (y - seed.y).toFloat())
                     val effect: Effect = BoardStoneGlowEffect(
                         (scene),
-                        Global.getPlayerColor(player.number, gameMode),
+                        gameMode.colorOf(player.number),
                         x,
                         y,
                         distance)

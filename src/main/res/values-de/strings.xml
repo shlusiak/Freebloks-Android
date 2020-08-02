@@ -108,15 +108,14 @@
     <string name="game_finished">Spiel vorbei</string>
 
     <string name="random_color">Zufällig</string>
-    <string-array name="color_names">
-        <item>Weiß</item>
-        <item>Blau</item>
-        <item>Gelb</item>
-        <item>Rot</item>
-        <item>Grün</item>
-        <item>Orange</item>
-        <item>Lila</item>
-    </string-array>
+    <string name="white">Weiß</string>
+    <string name="blue">Blau</string>
+    <string name="yellow">Gelb</string>
+    <string name="red">Rot</string>
+    <string name="green">Grün</string>
+    <string name="orange">Orange</string>
+    <string name="purple">Lila</string>
+
     <string-array name="difficulties">
         <item>sehr schwer</item>
         <item>schwer</item>

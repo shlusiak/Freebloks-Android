@@ -14,10 +14,10 @@ import androidx.annotation.UiThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import de.saschahlusiak.freebloks.BuildConfig
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 
 /**
@@ -148,7 +148,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
                 // current player / your turn notification
                 val player = game.currentPlayer
                 // note that player -1 is basically mapped to "White"
-                val playerName = lastStatus?.getPlayerName(player) ?: Global.getColorName(context, player, game.gameMode)
+                val playerName = lastStatus?.getPlayerName(player) ?: game.colorOf(player).getName(context.resources)
 
                 if (client.game.isLocalPlayer()) {
                     setSmallIcon(R.drawable.notification_icon)
@@ -202,7 +202,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         if (!isInBackground) return
 
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
-        val colorName = Global.getColorName(context, player, game.gameMode)
+        val colorName = game.colorOf(player).getName(context.resources)
 
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
 
@@ -218,7 +218,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         if (game.isLocalPlayer(player)) return
 
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
-        val colorName = Global.getColorName(context, player, game.gameMode)
+        val colorName = game.colorOf(player).getName(context.resources)
 
         val text = context.getString(R.string.player_left_color, clientName, colorName)
 
@@ -239,7 +239,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         if (game.isLocalPlayer(player)) return
 
         val name = if (player >= 0)
-            status.getPlayerName(player) ?: Global.getColorName(context, player, status.gameMode)
+            status.getPlayerName(player) ?: game.colorOf(player).getName(context.resources)
         else
             status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
 

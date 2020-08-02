@@ -92,15 +92,13 @@
     </string-array>
     <string name="game_finished">ゲームオーバー</string>
     <string name="random_color">ランダム色</string>
-    <string-array name="color_names">
-        <item>白</item>
-        <item>青</item>
-        <item>黄</item>
-        <item>赤</item>
-        <item>緑</item>
-        <item>オレンジ</item>
-        <item>紫</item>
-    </string-array>
+    <string name="white">白</string>
+    <string name="blue">青</string>
+    <string name="yellow">黄</string>
+    <string name="red">赤</string>
+    <string name="green">緑</string>
+    <string name="orange">オレンジ</string>
+    <string name="purple">紫</string>
     <string-array name="difficulties">
         <item>狂気</item>
         <item>難しい</item>

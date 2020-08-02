@@ -83,7 +83,7 @@ class Board(var width: Int, var height: Int) : Serializable {
     }
 
     /**
-     * @return The value of the player occupying the field or FIELD_FREE
+     * @return The value of the player occupying the field or FIELD_FREE, a value between 0 and 3 or [FIELD_FREE]
      */
     fun getFieldPlayer(y: Int, x: Int): Int {
         val value = fields[y * width + x]

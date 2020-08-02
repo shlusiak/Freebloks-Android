@@ -15,10 +15,11 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlinx.android.synthetic.main.color_grid_item.view.*
 import java.lang.IllegalStateException
@@ -119,10 +120,10 @@ class ColorAdapter(
     }
 
     private fun setupView(view: View, background: GradientDrawable, player: Int) {
-        val playerColor = Global.getPlayerColor(player, game.gameMode)
         val lastStatus = lastStatus ?: throw IllegalStateException("lastStatus is null")
+        val playerColor = game.gameMode.colorOf(player)
 
-        background.setColor(ContextCompat.getColor(context, Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor]))
+        background.setColor(ContextCompat.getColor(context, playerColor.backgroundColorId))
 
         view.editButton.setOnClickListener { listener.onEditPlayerName(player) }
 

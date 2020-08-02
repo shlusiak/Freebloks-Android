@@ -7,6 +7,7 @@ import android.opengl.GLU
 import android.util.Log
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.model.Board
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.egl.EGLConfig
@@ -117,6 +118,13 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         val gameMode = game.gameMode
         val board = game.board
 
+        val colors = arrayOf(
+            gameMode.colorOf(0),
+            gameMode.colorOf(1),
+            gameMode.colorOf(2),
+            gameMode.colorOf(3)
+        )
+
         /* render player stones on board, unless they are "effected" */
         gl.glPushMatrix()
         gl.glTranslatef(-BoardRenderer.stoneSize * (model.board.width - 1).toFloat(), 0f, -BoardRenderer.stoneSize * (model.board.width - 1).toFloat())
@@ -127,14 +135,16 @@ class FreebloksRenderer(private val context: Context, private val model: Scene) 
         boardRenderer.stone.bindBuffers(gl11)
 
         synchronized(model.effects) {
+
             synchronized(board) {
                 for (y in 0 until board.height) {
                     var x = 0
                     while (x < board.width) {
                         val field = board.getFieldPlayer(y, x)
                         if (field != Board.FIELD_FREE) {
+                            // value between 0 and 3
                             if (model.effects.none { it.isEffected(x, y) }) {
-                                boardRenderer.renderSingleStone(gl11, Global.getPlayerColor(field, gameMode), BoardRenderer.defaultStoneAlpha)
+                                boardRenderer.renderSingleStone(gl11, colors[field], BoardRenderer.defaultStoneAlpha)
                             }
                         }
                         gl.glTranslatef(BoardRenderer.stoneSize * 2.0f, 0f, 0f)

@@ -96,15 +96,13 @@
     </string-array>
     <string name="game_finished">Fin de la partie</string>
     <string name="random_color">Couleur aléatoire</string>
-    <string-array name="color_names">
-        <item>Blanc</item>
-        <item>Bleu</item>
-        <item>Jaune</item>
-        <item>Rouge</item>
-        <item>Vert</item>
-        <item>Orange</item>
-        <item>Violet</item>
-    </string-array>
+    <string name="white">Blanc</string>
+    <string name="blue">Bleu</string>
+    <string name="yellow">Jaune</string>
+    <string name="red">Rouge</string>
+    <string name="green">Vert</string>
+    <string name="orange">Orange</string>
+    <string name="purple">Violet</string>
     <string-array name="difficulties">
         <item>dingue</item>
         <item>difficile</item>

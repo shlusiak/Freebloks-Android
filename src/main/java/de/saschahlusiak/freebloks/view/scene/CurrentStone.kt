@@ -6,10 +6,7 @@ import android.graphics.PointF
 import android.opengl.GLUtils
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.model.Mirrorable
-import de.saschahlusiak.freebloks.model.Orientation
-import de.saschahlusiak.freebloks.model.Stone
-import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.SimpleModel
@@ -29,7 +26,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     var stone: Stone? = null
         private set
 
-    private var currentColor = 0
+    private var currentColor = StoneColor.White
     private val pos = PointF()
 
     /* has the stone been moved since it was touched? */
@@ -147,7 +144,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             0f,
             -BoardRenderer.stoneSize * offset
         )
-        renderer.boardRenderer.renderShapeShadow(gl, currentPlayer, stone.shape, orientation, 0.80f)
+        renderer.boardRenderer.renderShapeShadow(gl, currentColor, stone.shape, orientation, 0.80f)
         gl.glPopMatrix()
         gl.glEnable(GL_TEXTURE_2D)
         gl.glEnable(GL_BLEND)
@@ -476,12 +473,12 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     @Synchronized
     fun stopDragging() {
         stone = null
-        currentColor = 0
+        currentColor = StoneColor.White
         status = Status.IDLE
     }
 
     @Synchronized
-    fun startDragging(fieldPoint: PointF?, stone: Stone, orientation: Orientation, color: Int) {
+    fun startDragging(fieldPoint: PointF?, stone: Stone, orientation: Orientation, color: StoneColor) {
         this.stone = stone
         currentColor = color
         status = Status.DRAGGING

@@ -12,13 +12,13 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.content.ContextCompat
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
@@ -49,7 +49,8 @@ class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSel
         field_size.onItemSelectedListener = this
 
         if (savedInstanceState != null) {
-            selection = savedInstanceState.getBooleanArray("color_selection") ?: BooleanArray(4) { false }
+            selection = savedInstanceState.getBooleanArray("color_selection")
+                ?: BooleanArray(4) { false }
         }
 
         adapter = ColorListAdapter()
@@ -166,8 +167,7 @@ class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSel
             .apply()
     }
 
-    private inner class ColorListAdapter : ArrayAdapter<String>(requireContext(), R.layout.color_list_item) {
-        private val colors = context.resources.getStringArray(R.array.color_names)
+    private inner class ColorListAdapter : ArrayAdapter<StoneColor>(requireContext(), R.layout.color_list_item) {
         private var gameMode: GameMode? = null
         private var passAndPlay = false
 
@@ -186,22 +186,23 @@ class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSel
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = convertView ?: layoutInflater.inflate(R.layout.color_list_item, parent, false)
+            val view = convertView
+                ?: layoutInflater.inflate(R.layout.color_list_item, parent, false)
 
             view.findViewById<TextView>(android.R.id.text1).apply {
-                text = getItem(position)
+                text = getItem(position)?.getName(resources)
             }
 
-            val playerColor = Global.getPlayerColor(getItemId(position).toInt(), gameMode ?: GameMode.DEFAULT)
+            val playerColor = getItem(position) ?: return view
             val ld = ContextCompat.getDrawable(context, R.drawable.bg_card_1) as LayerDrawable
             ld.mutate()
 
             (ld.findDrawableByLayerId(R.id.shadow) as GradientDrawable).apply {
-                val res = Global.PLAYER_BACKGROUND_COLOR_RESOURCE[playerColor]
+                val res = playerColor.backgroundColorId
                 setColor(ContextCompat.getColor(context, res))
             }
             (ld.findDrawableByLayerId(R.id.color1) as GradientDrawable).apply {
-                val res = Global.PLAYER_FOREGROUND_COLOR_RESOURCE[playerColor]
+                val res = playerColor.foregroundColorId
                 setColor(ContextCompat.getColor(context, res))
             }
 
@@ -232,22 +233,22 @@ class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSel
             clear()
 
             when (gameMode) {
-                GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> {
-                    add(colors[1]) // blue
-                    add(colors[3]) // red
-                }
+                GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> addAll(
+                    StoneColor.Blue,
+                    StoneColor.Red
+                )
                 GameMode.GAMEMODE_DUO,
-                GameMode.GAMEMODE_JUNIOR -> {
-                    add(colors[5])
-                    add(colors[6])
-                }
+                GameMode.GAMEMODE_JUNIOR -> addAll(
+                    StoneColor.Orange,
+                    StoneColor.Purple
+                )
                 GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
-                GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {
-                    add(colors[1]) // blue
-                    add(colors[2]) // Yellow
-                    add(colors[3]) // blue
-                    add(colors[4]) // green
-                }
+                GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> addAll(
+                    StoneColor.Blue,
+                    StoneColor.Yellow,
+                    StoneColor.Red,
+                    StoneColor.Green
+                )
             }
             this.gameMode = gameMode
             notifyDataSetChanged()

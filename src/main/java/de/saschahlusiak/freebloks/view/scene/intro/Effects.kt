@@ -1,9 +1,8 @@
 package de.saschahlusiak.freebloks.view.scene.intro
 
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.model.Board
-import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Rotation
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.effects.PhysicalShapeEffect
 import de.saschahlusiak.freebloks.view.scene.Scene
@@ -95,7 +94,7 @@ internal class Effects(val scene: Scene) : ArrayList<PhysicalShapeEffect>() {
     }
 
     @Synchronized
-    private fun add(os: OrientedShape, player: Int, dx: Int, dy: Int) {
+    private fun add(os: OrientedShape, color: StoneColor, dx: Int, dy: Int) {
         val angleX = Random.nextFloat() * 2.0f * Math.PI.toFloat()
         val angleY = Random.nextFloat() * 2.0f * Math.PI.toFloat()
         val axisX = sin(angleX) * cos(angleY)
@@ -103,7 +102,7 @@ internal class Effects(val scene: Scene) : ArrayList<PhysicalShapeEffect>() {
         val axisZ = cos(angleX) * cos(angleY)
 
         val shape = os.shape
-        val s = PhysicalShapeEffect(scene, shape, Global.getPlayerColor(player, GameMode.GAMEMODE_4_COLORS_4_PLAYERS), os.orientation)
+        val s = PhysicalShapeEffect(scene, shape, color, os.orientation)
 
         // convert board dx/dy coordinate to world coordinates
         val x = (-(Board.DEFAULT_BOARD_SIZE - 1) * BoardRenderer.stoneSize + (dx + shape.size.toFloat() / 2.0f) * BoardRenderer.stoneSize * 2.0f - BoardRenderer.stoneSize)
@@ -125,9 +124,9 @@ internal class Effects(val scene: Scene) : ArrayList<PhysicalShapeEffect>() {
         add(s)
     }
 
-    private fun add(stone: Int, player: Int, dx: Int, dy: Int) = add(shapes[stone], player, dx, dy)
+    private fun add(stone: Int, color: StoneColor, dx: Int, dy: Int) = add(shapes[stone], color, dx, dy)
 
-    internal fun addChar(c: Char, color: Int, x: Int, y: Int) {
+    internal fun addChar(c: Char, color: StoneColor, x: Int, y: Int) {
         when (c) {
             'a' -> {
                 add(5, color, x - 2, y)

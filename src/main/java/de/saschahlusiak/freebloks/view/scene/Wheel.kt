@@ -7,6 +7,7 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.Stone
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import javax.microedition.khronos.opengles.GL11
@@ -256,7 +257,13 @@ class Wheel(private val scene: Scene) : SceneElement {
                 renderer.boardRenderer.renderShapeShadow(gl, s.shape, scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0f, 0f, 0f, 0f, -rotate, alpha, 1.0f)
                 gl.glPopMatrix()
                 gl.glTranslatef(0f, y, 0f)
-                renderer.boardRenderer.renderShape(gl, if (s == currentStone && s != scene.currentStone.stone) 0 else scene.getPlayerColor(currentPlayer), s.shape, Orientation.Default, alpha)
+                renderer.boardRenderer.renderShape(
+                    gl,
+                    if (s == currentStone && s != scene.currentStone.stone) StoneColor.White else scene.getPlayerColor(currentPlayer),
+                    s.shape,
+                    Orientation.Default,
+                    alpha
+                )
                 gl.glPopMatrix()
             }
         }

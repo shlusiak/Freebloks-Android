@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
-import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.Game
@@ -17,6 +16,7 @@ import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.crashReporter
+import de.saschahlusiak.freebloks.model.colorOf
 import kotlin.concurrent.thread
 
 class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
@@ -64,7 +64,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
         val context: Context = getApplication()
 
         scores.forEach { score ->
-            val colorName = Global.getColorName(context, score.color1, gameMode)
+            val colorName = gameMode.colorOf(score.color1).getName(context.resources)
 
             if (score.isLocal && localClientName != null) {
                 score.clientName = localClientName

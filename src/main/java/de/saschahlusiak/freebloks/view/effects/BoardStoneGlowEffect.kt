@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.view.effects
 
-import de.saschahlusiak.freebloks.Global
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL10
@@ -9,15 +9,15 @@ import kotlin.math.sin
 
 class BoardStoneGlowEffect(
     private var model: Scene,
-    color: Int,
+    color: StoneColor,
     private val x: Int,
     private val y: Int,
     distance: Float
 ) : AbsEffect() {
     private val timeMax = 0.55f
 
-    private val color1 = Global.stone_color_a[color]
-    private val color2 = Global.stone_color_a[0]
+    private val color1 = color.stoneColor
+    private val color2 = StoneColor.White.stoneColor
     private val color = FloatArray(4) { color1[it] * BoardRenderer.defaultStoneAlpha }
 
     init {

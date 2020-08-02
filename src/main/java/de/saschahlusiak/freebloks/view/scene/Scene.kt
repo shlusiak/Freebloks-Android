@@ -6,9 +6,7 @@ import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
-import de.saschahlusiak.freebloks.model.Board
-import de.saschahlusiak.freebloks.model.Game
-import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.effects.Effect
@@ -177,8 +175,7 @@ class Scene(
         return true
     }
 
-    @Deprecated("use Global.getPlayerColor instead")
-    fun getPlayerColor(player: Int) = Global.getPlayerColor(player, game.gameMode)
+    fun getPlayerColor(player: Int) = game.gameMode.colorOf(player)
 
     fun vibrate(milliseconds: Long) = viewModel.vibrate(milliseconds)
 
