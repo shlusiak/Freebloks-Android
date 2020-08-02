@@ -192,7 +192,7 @@ class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSel
                 text = getItem(position)
             }
 
-            val playerColor = Global.getPlayerColor(getItemId(position).toInt(), gameMode)
+            val playerColor = Global.getPlayerColor(getItemId(position).toInt(), gameMode ?: GameMode.DEFAULT)
             val ld = ContextCompat.getDrawable(context, R.drawable.bg_card_1) as LayerDrawable
             ld.mutate()
 

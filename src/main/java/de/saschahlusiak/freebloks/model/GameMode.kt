@@ -11,6 +11,8 @@ enum class GameMode {
     GAMEMODE_JUNIOR;
 
     companion object {
+        val DEFAULT = GAMEMODE_4_COLORS_4_PLAYERS
+
 		fun from(ordinal: Int): GameMode {
             for (gm in values()) if (gm.ordinal == ordinal) return gm
             throw RuntimeException("Unknown game mode: $ordinal")
