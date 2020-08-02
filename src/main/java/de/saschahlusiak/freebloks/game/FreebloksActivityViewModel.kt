@@ -26,6 +26,7 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThrea
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.theme.BaseSounds
 import de.saschahlusiak.freebloks.theme.FeedbackProvider
 import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
@@ -87,7 +88,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         private set
 
     private val chatHistory = mutableListOf<ChatEntry>()
-    val sounds: FeedbackProvider = DefaultSounds(app)
+    val sounds: BaseSounds = DefaultSounds(app)
 
     // LiveData
     val chatHistoryAsLiveData = MutableLiveData(chatHistory)

@@ -144,7 +144,6 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
 
         if (!scene.game.isLocalPlayer(turn.player)) {
             scene.playSound(FeedbackType.StoneHasBeenSet, speed = 0.9f + Random.nextFloat() * 0.2f)
-            scene.vibrate(Global.VIBRATE_SET_STONE)
         }
     }
 

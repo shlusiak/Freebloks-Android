@@ -385,7 +385,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             hasMoved = moveTo(x, y)
             isValid = isValidTurn(x, y)
             if (isValid && (hasMoved || forceSound)) {
-                scene.sounds.playOrVibrate(FeedbackType.Snap, Global.VIBRATE_STONE_SNAP, volume = 0.2f)
+                scene.sounds.play(FeedbackType.Snap, volume = 0.2f)
             }
             return hasMoved
         }
@@ -393,8 +393,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             isValid = true
             hasMoved = moveTo(floor(x + 0.5f), floor(y + 0.5f))
             if (hasMoved || forceSound) {
-                scene.sounds.playOrVibrate(FeedbackType.Snap, Global.VIBRATE_STONE_SNAP, volume = 0.2f)
-
+                scene.sounds.play(FeedbackType.Snap, volume = 0.2f)
             }
             return hasMoved
         }
@@ -403,7 +402,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
                 isValid = true
                 hasMoved = moveTo(floor(0.5f + x + i.toDouble()).toFloat(), floor(0.5f + y + j.toFloat()))
                 if (hasMoved) {
-                    scene.sounds.playOrVibrate(FeedbackType.Snap, Global.VIBRATE_STONE_SNAP, volume = 0.2f)
+                    scene.sounds.play(FeedbackType.Snap, volume = 0.2f)
                 }
                 return hasMoved
             }

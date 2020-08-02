@@ -58,8 +58,7 @@ class Wheel(private val scene: Scene) : SceneElement {
             tmp.y = lastPointerLocation.y
             scene.modelToBoard(tmp)
 
-            if (!scene.playSound(FeedbackType.StartDragging))
-                scene.vibrate(Global.VIBRATE_START_DRAGGING)
+            scene.playSound(FeedbackType.StartDragging)
 
             showStone(stone.shape.number)
             scene.currentStone.startDragging(tmp, stone, Orientation.Default, scene.getPlayerColor(currentPlayer))

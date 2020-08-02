@@ -55,7 +55,8 @@ class ShapeRollEffect(
             if (z < 0.0f) { /* impact */
                 vz *= -0.55f
                 z = 0.0f
-                /* reset rotation */r = 0.0f
+                /* reset rotation */
+                r = 0.0f
                 vr = 0.0f
                 val volume = (-vz / 16.0f).pow(2.0f)
                 if (vz > -6.0f) vz = 0.0f

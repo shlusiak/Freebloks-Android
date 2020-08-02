@@ -370,7 +370,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         if (viewModel.undoWithBack && (client != null) && client.isConnected()) {
             scene.clearEffects()
             client.requestUndo()
-            scene.sounds.play(FeedbackType.UndoStone)
+            scene.playSound(FeedbackType.UndoStone)
             return
         }
 
@@ -548,7 +548,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             R.id.undo -> {
                 scene.clearEffects()
                 viewModel.requestUndo()
-                scene.sounds.play(FeedbackType.UndoStone)
+                scene.playSound(FeedbackType.UndoStone)
             }
             R.id.show_main_menu -> {
                 val client = viewModel.client
@@ -570,7 +570,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     @WorkerThread
     override fun playerIsOutOfMoves(player: Player) {
-        scene.sounds.play(FeedbackType.OutOfMoves, volume = 0.8f)
+        scene.playSound(FeedbackType.OutOfMoves, volume = 0.8f)
 
         lifecycleScope.launchWhenStarted {
             val playerName = viewModel.getPlayerName(player.number)

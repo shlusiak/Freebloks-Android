@@ -192,7 +192,6 @@ class Scene(
         }
 
         playSound(FeedbackType.StoneHasBeenSet, 1.0f, 0.9f + Random.nextFloat() * 0.2f)
-        vibrate(Global.VIBRATE_SET_STONE)
 
         client.setStone(turn)
 
@@ -201,7 +200,6 @@ class Scene(
 
     fun getPlayerColor(player: Int) = game.gameMode.colorOf(player)
 
-    fun vibrate(milliseconds: Long) = sounds.vibrate(milliseconds)
     fun playSound(sound: FeedbackType, volume: Float = 1.0f, speed: Float = 1.0f) = sounds.play(sound, volume, speed)
 
     fun setShowPlayerOverride(player: Int, isRotated: Boolean) = viewModel.setSheetPlayer(player, isRotated)

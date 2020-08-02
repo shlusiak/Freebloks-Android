@@ -3,10 +3,6 @@ package de.saschahlusiak.freebloks
 import java.util.*
 
 object Global {
-    const val VIBRATE_START_DRAGGING = 85L
-    const val VIBRATE_SET_STONE = 65L
-    const val VIBRATE_STONE_SNAP = 40L
-
     /**
      * Is this Freebloks VIP?
      */
