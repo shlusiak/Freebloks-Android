@@ -178,6 +178,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         }
     }
 
+    @WorkerThread
     override fun hintReceived(turn: Turn) {
         queueEvent {
             if (turn.player != scene.game.currentPlayer) return@queueEvent
@@ -194,8 +195,8 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
                 return@queueEvent
 
             val p = PointF()
-            p.x = turn.x - 0.5f + st.shape.size / 2
-            p.y = turn.y - 0.5f + st.shape.size / 2
+            p.x = turn.x - 0.5f + st.shape.size.toFloat() / 2.0f
+            p.y = turn.y - 0.5f + st.shape.size.toFloat() / 2.0f
             scene.currentStone.startDragging(p, st, turn.orientation, scene.getPlayerColor(turn.player))
             requestRender()
         }
