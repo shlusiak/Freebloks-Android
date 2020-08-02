@@ -9,24 +9,24 @@ import javax.microedition.khronos.opengles.GL11
 
 open class SimpleModel(numVertices: Int, private val numTriangles: Int, private val useVBO: Boolean = true) {
     // short has 2 bytes
-    private val _indexBuffer: ShortBuffer = ByteBuffer.allocateDirect(numTriangles * 3 * 2)
+    internal val indexBuffer: ShortBuffer = ByteBuffer.allocateDirect(numTriangles * 3 * 2)
         .order(ByteOrder.nativeOrder())
         .asShortBuffer()
 
     // float has 4 bytes
-    private val _vertexBuffer = ByteBuffer.allocateDirect(numVertices * 8 * 4)
+    internal val vertexBuffer = ByteBuffer.allocateDirect(numVertices * 8 * 4)
         .order(ByteOrder.nativeOrder())
         .asFloatBuffer()
 
-    private var vbo: IntArray? = null
+    internal var vbo: IntArray? = null
 
     fun commit() {
-        _vertexBuffer.position(0)
-        _indexBuffer.position(0)
+        vertexBuffer.position(0)
+        indexBuffer.position(0)
     }
 
     fun addVertex(x: Float, y: Float, z: Float, nx: Float, ny: Float, nz: Float, tu: Float, tv: Float) {
-        _vertexBuffer.apply {
+        vertexBuffer.apply {
             put(x)
             put(y)
             put(z)
@@ -39,7 +39,7 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
     }
 
     fun addIndex(v1: Int, v2: Int, v3: Int) {
-        _indexBuffer.apply {
+        indexBuffer.apply {
             put(v1.toShort())
             put(v2.toShort())
             put(v3.toShort())
@@ -55,9 +55,9 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
             gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0)
             gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0)
 
-            gl.glVertexPointer(3, GL10.GL_FLOAT, 4 * 8, _vertexBuffer.position(0))
-            gl.glNormalPointer(GL10.GL_FLOAT, 4 * 8, _vertexBuffer.position(3))
-            gl.glTexCoordPointer(2, GL10.GL_FLOAT, 4 * 8, _vertexBuffer.position(6))
+            gl.glVertexPointer(3, GL10.GL_FLOAT, 4 * 8, vertexBuffer.position(0))
+            gl.glNormalPointer(GL10.GL_FLOAT, 4 * 8, vertexBuffer.position(3))
+            gl.glTexCoordPointer(2, GL10.GL_FLOAT, 4 * 8, vertexBuffer.position(6))
         } else {
             val vbo = vbo ?: makeVBO(gl)
 
@@ -82,7 +82,7 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
         if (useVBO)
             gl.glDrawElements(mode, numTriangles * 3, GL10.GL_UNSIGNED_SHORT, 0)
         else
-            gl.glDrawElements(mode, numTriangles * 3, GL10.GL_UNSIGNED_SHORT, _indexBuffer)
+            gl.glDrawElements(mode, numTriangles * 3, GL10.GL_UNSIGNED_SHORT, indexBuffer)
     }
 
     private fun makeVBO(gl: GL11): IntArray {
@@ -95,15 +95,15 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
 
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, vbo[0])
         gl.glBufferData(GL11.GL_ARRAY_BUFFER,
-            _vertexBuffer.capacity() * 4,
-            _vertexBuffer.rewind(),
+            vertexBuffer.capacity() * 4,
+            vertexBuffer.rewind(),
             GL11.GL_STATIC_DRAW)
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0)
 
         gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, vbo[1])
         gl.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER,
-            _indexBuffer.capacity() * 2,
-            _indexBuffer,
+            indexBuffer.capacity() * 2,
+            indexBuffer,
             GL11.GL_STATIC_DRAW)
         gl.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0)
 
