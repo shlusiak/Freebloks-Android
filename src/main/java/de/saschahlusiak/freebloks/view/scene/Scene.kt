@@ -45,8 +45,8 @@ class Scene(
     private val sounds: FeedbackProvider?
 ) : ArrayList<SceneElement>(), SceneElement {
 
-    var board = Board()
     var game = Game()
+    var board = game.board
     val wheel = Wheel(this)
     val currentStone = CurrentStone(this)
     val boardObject = BoardObject(this, Board.DEFAULT_BOARD_SIZE)

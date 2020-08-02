@@ -16,7 +16,7 @@ import kotlin.math.pow
 
 class Wheel(private val scene: Scene) : SceneElement {
 
-    private enum class Status {
+    enum class Status {
         IDLE, SPINNING, FLINGING
     }
 
@@ -34,11 +34,11 @@ class Wheel(private val scene: Scene) : SceneElement {
     private var originalY = 0f
     private var flingSpeed = 0f
     private var lastFlingOffset = 0f
-    private var status = Status.IDLE
-    private val stones = mutableListOf<Stone>()
+    internal var status = Status.IDLE
+    internal val stones = mutableListOf<Stone>()
 
     /* returns the player number currently shown in the wheel (aka. last call of update) */
-    var currentPlayer: Int = -1 /* the currently shown player */
+    var currentPlayer: Int = -1
         private set
 
     private var movesLeft = false

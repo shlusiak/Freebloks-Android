@@ -100,7 +100,7 @@ class Board(var width: Int, var height: Int) : Serializable {
     }
 
     /**
-     * Sets the number of available stones for each stone.
+     * Sets the number of available stones for each stone. Call after [startNewGame]
      *
      * @param stoneAvailability for each shape, the number of available stones
      */

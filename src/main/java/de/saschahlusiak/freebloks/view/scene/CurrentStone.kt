@@ -27,7 +27,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         private set
 
     private var currentColor = StoneColor.White
-    private val pos = PointF()
+    internal val pos = PointF()
 
     /* has the stone been moved since it was touched? */
     var hasMoved = false
@@ -35,7 +35,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     /* is the stone commitable if it has not been moved? */
     private var canCommit = false
 
-    private var isValid = false
+    internal var isValid = false
     private var stoneRelX = 0f
     private var stoneRelY = 0f
     private var rotateAngle = 0f
@@ -410,6 +410,17 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         return moveTo(x, y)
     }
 
+    fun asTurn(): Turn? {
+        val stone = stone ?: return null
+        return Turn(
+            scene.game.currentPlayer,
+            stone.shape.number,
+            floor(pos.y + 0.5f).toInt(),
+            floor(pos.x + 0.5f).toInt(),
+            orientation
+        )
+    }
+
     @Synchronized
     override fun handlePointerUp(m: PointF) {
         val stone = stone
@@ -431,16 +442,11 @@ class CurrentStone(private val scene: Scene) : SceneElement {
                 status = Status.IDLE
                 this.stone = null
             } else if (canCommit && !hasMoved) {
-                val turn = Turn(
-                    scene.game.currentPlayer,
-                    stone.shape.number,
-                    floor(pos.y + 0.5f).toInt(),
-                    floor(pos.x + 0.5f).toInt(),
-                    orientation
-                )
-                if (scene.commitCurrentStone(turn)) {
+                val turn = asTurn()
+                if (turn != null && scene.commitCurrentStone(turn)) {
                     status = Status.IDLE
                     this.stone = null
+                    isValid = false
                     scene.wheel.currentStone = null
                 }
             } else if (hasMoved) {
