@@ -97,7 +97,7 @@
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryLightColor</item>
+        <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorOnSecondary">@android:color/white</item>
