@@ -16,8 +16,7 @@ class SceneTest {
         scene = Scene(null, null, null)
         game = scene.game
 
-        game.board.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
-        game.board.startNewGame(GameMode.DEFAULT)
+        game.board.startNewGame(GameMode.DEFAULT, GameConfig.DEFAULT_STONE_SET)
     }
 
     @Test

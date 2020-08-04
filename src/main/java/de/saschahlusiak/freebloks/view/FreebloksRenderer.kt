@@ -134,7 +134,7 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
         boardRenderer.stone.bindBuffers(gl11)
 
         synchronized(scene.effects) {
-
+            // Synchronized with [Board.startNewGame]
             synchronized(board) {
                 for (y in 0 until board.height) {
                     var x = 0

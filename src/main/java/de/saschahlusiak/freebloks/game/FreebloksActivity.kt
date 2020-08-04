@@ -324,7 +324,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val board = Board()
         val game = Game(board)
         val requestGameStart = !config.showLobby
-        board.startNewGame(config.gameMode, config.fieldSize, config.fieldSize)
+        board.startNewGame(config.gameMode, config.stones, config.fieldSize, config.fieldSize)
         setGameClient(GameClient(game, config))
 
         return viewModel.viewModelScope.launch {
@@ -499,7 +499,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         val board = Board()
         val game = Game()
-        board.startNewGame(config.gameMode, config.fieldSize, config.fieldSize)
+        board.startNewGame(config.gameMode, config.stones, config.fieldSize, config.fieldSize)
         setGameClient(GameClient(game, config))
 
         viewModel.connectToBluetooth(device, localClientName)

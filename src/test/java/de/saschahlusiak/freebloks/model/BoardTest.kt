@@ -54,9 +54,7 @@ class BoardTest {
     fun test_basic_stone() {
         val s = Board(20)
 
-        // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
-        s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
+        s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, GameConfig.DEFAULT_STONE_SET, 20, 20)
 
         assertEquals(20, s.width)
         assertEquals(20, s.height)
@@ -118,9 +116,8 @@ class BoardTest {
     @Test
     fun test_single_stone_next_to_each_other() {
         val board = Board()
+        board.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, GameConfig.DEFAULT_STONE_SET, 20, 20)
         board.getPlayer(0).getStone(0).available = 2
-        board.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
-        board.refreshPlayerData()
         val turn1 = Turn(0, 0, 19, 0, Orientation())
         val turn2 = Turn(0, 0, 18, 0, Orientation())
         assertTrue(board.isValidTurn(turn1))
@@ -135,8 +132,7 @@ class BoardTest {
     fun test_single_stone_twice() {
         val board = Board()
         board.getPlayer(0).getStone(0).available = 2
-        board.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
-        board.refreshPlayerData()
+        board.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, GameConfig.DEFAULT_STONE_SET, 20, 20)
         val turn = Turn(0, 0, 19, 0, Orientation())
         assertTrue(board.isValidTurn(turn))
         try {
@@ -186,10 +182,7 @@ class BoardTest {
         val s = Board(20)
         val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
-        // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
-        s.startNewGame(mode, 20, 20)
-        s.refreshPlayerData()
+        s.startNewGame(mode, GameConfig.DEFAULT_STONE_SET, 20, 20)
 
         assertEquals(58, s.getPlayer(0).numberOfPossibleTurns)
         assertEquals(58, s.getPlayer(1).numberOfPossibleTurns)
@@ -238,9 +231,7 @@ class BoardTest {
         val mode = GAMEMODE_DUO
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
-        s.startNewGame(mode, 15, 15)
-        s.refreshPlayerData()
+        s.startNewGame(mode, GameConfig.DEFAULT_STONE_SET, 15, 15)
 
         assertEquals(309, s.getPlayer(0).numberOfPossibleTurns)
         assertEquals(0, s.getPlayer(1).numberOfPossibleTurns)
@@ -289,10 +280,7 @@ class BoardTest {
         val s = Board()
         val mode = GAMEMODE_JUNIOR
 
-        // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfig.JUNIOR_STONE_SET)
-        s.startNewGame(mode, 14, 14)
-        s.refreshPlayerData()
+        s.startNewGame(mode, GameConfig.JUNIOR_STONE_SET, 14, 14)
 
         assertEquals(169, s.getPlayer(0).numberOfPossibleTurns)
         assertEquals(0, s.getPlayer(1).numberOfPossibleTurns)
@@ -342,9 +330,7 @@ class BoardTest {
         val mode = GAMEMODE_4_COLORS_4_PLAYERS
 
         // we have to make stones available before starting a new game, otherwise we won't get seeds set
-        s.setAvailableStones(GameConfig.DEFAULT_STONE_SET)
-        s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, 20, 20)
-        s.refreshPlayerData()
+        s.startNewGame(GAMEMODE_4_COLORS_4_PLAYERS, GameConfig.DEFAULT_STONE_SET, 20, 20)
 
         assertEquals(58, s.getPlayer(0).numberOfPossibleTurns)
         assertEquals(58, s.getPlayer(1).numberOfPossibleTurns)

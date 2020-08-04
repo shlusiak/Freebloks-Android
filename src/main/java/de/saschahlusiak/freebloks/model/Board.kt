@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.model
 
 import de.saschahlusiak.freebloks.utils.Point
 import java.io.Serializable
-import java.lang.IllegalArgumentException
 
 /**
  * Current state of the board.Contains:
@@ -100,26 +99,27 @@ class Board(var width: Int, var height: Int) : Serializable {
     }
 
     /**
-     * Sets the number of available stones for each stone. Call after [startNewGame]
-     *
-     * @param stoneAvailability for each shape, the number of available stones
-     */
-    fun setAvailableStones(stoneAvailability: IntArray) {
-        player.forEach { player ->
-            for (n in 0 until Shape.COUNT) {
-                player.getStone(n).available = stoneAvailability[n]
-            }
-        }
-        refreshPlayerData()
-    }
-
-    /**
      * Initialise board and player state
+     *
+     * This is synchronized to not change field and size during render pass
+     * @param gameMode new [GameMode]
+     * @param stones the stone availability, e.g. [GameConfig.DEFAULT_STONE_SET]
+     * @param width new width of board
+     * @param height new height of board
      */
     @Synchronized
-    fun startNewGame(gameMode: GameMode, width: Int = this.width, height: Int = this.height) {
+    fun startNewGame(gameMode: GameMode, stones: IntArray?, width: Int = this.width, height: Int = this.height) {
         this.width = width
         this.height = height
+
+        if (stones != null) {
+            player.forEach { player ->
+                for (n in 0 until Shape.COUNT) {
+                    player.getStone(n).available = stones[n]
+                }
+            }
+        }
+
         fields = IntArray(this.width * this.height)
         when (gameMode) {
             GameMode.GAMEMODE_2_COLORS_2_PLAYERS,

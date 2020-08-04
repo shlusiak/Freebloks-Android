@@ -53,8 +53,6 @@ class RateAppDialog : MaterialDialogFragment(R.layout.rate_app_dialog) {
         private val tag = RateAppDialog::class.java.simpleName
 
         fun shouldShowRateDialog(context: Context): Boolean {
-            if (true) return true
-
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = prefs.edit()
 

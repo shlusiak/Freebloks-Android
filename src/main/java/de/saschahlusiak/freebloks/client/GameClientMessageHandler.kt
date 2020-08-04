@@ -160,8 +160,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 assert(message.isAtLeastVersion(3)) { "Only version 3 or above supported" }
 
                 if (!game.isStarted) {
-                    board.startNewGame(message.gameMode, message.width, message.height)
-                    board.setAvailableStones(message.stoneNumbers)
+                    board.startNewGame(message.gameMode, message.stoneNumbers, message.width, message.height)
                 }
 
                 game.gameMode = message.gameMode
@@ -220,7 +219,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
             is MessageStartGame -> {
                 assert(!game.isStarted) { "Game already started" }
 
-                board.startNewGame(game.gameMode)
+                board.startNewGame(game.gameMode, null)
                 game.isFinished = false
                 game.isStarted = true
                 game.history.clear()
