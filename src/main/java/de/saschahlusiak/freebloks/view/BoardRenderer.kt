@@ -368,8 +368,6 @@ class BoardRenderer() {
         val heightAlphaMultiplier = 0.80f - height / 16.0f
         if (heightAlphaMultiplier < 0.0f) return
 
-        /* TODO: remove this and always show the board at the exact same angle,
-		 * so we always have light coming from top left */
         gl.glRotatef(-lightAngle, 0f, 1f, 0f)
         gl.glTranslatef(2.5f * height * 0.08f, 0f, 2.0f * height * 0.08f)
         gl.glRotatef(lightAngle, 0f, 1f, 0f)

@@ -64,7 +64,6 @@ import java.io.FileNotFoundException
 
 class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, OnStartCustomGameListener, LobbyDialogDelegate {
     private lateinit var view: Freebloks3DView
-    private var optionsMenu: Menu? = null
     private var showRateDialog = false
     private val analytics by lazy { DependencyProvider.analytics() }
     private lateinit var scene: Scene
@@ -72,8 +71,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     private var menuShown = false
 
-    // TODO: make private
-    val viewModel: FreebloksActivityViewModel by lazy { ViewModelProvider(this).get(FreebloksActivityViewModel::class.java) }
+    private val viewModel: FreebloksActivityViewModel by lazy { ViewModelProvider(this).get(FreebloksActivityViewModel::class.java) }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(tag, "onCreate")
@@ -446,7 +444,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val lastStatus = viewModel.lastStatus
 
         if (viewModel.undoWithBack && (client != null) && client.isConnected()) {
-            scene.clearEffects()
             client.requestUndo()
             scene.playSound(FeedbackType.UndoStone)
             return
@@ -604,7 +601,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     private fun onUndoButtonClick() {
         showMenu(false, true)
-        scene.clearEffects()
         viewModel.requestUndo()
         scene.playSound(FeedbackType.UndoStone)
     }

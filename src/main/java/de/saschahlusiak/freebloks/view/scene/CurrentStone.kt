@@ -134,9 +134,6 @@ class CurrentStone(private val scene: Scene) : SceneElement {
 
         /* STONE SHADOW */
         gl.glPushMatrix()
-        /* TODO: remove this and always show the board at the exact same angle,
-		 * so we always have light coming from top left */
-        /* TODO: merge with BoardRenderer.renderShadow() */
 
         val baseAngle = scene.baseAngle
         gl.glRotatef(baseAngle, 0f, 1f, 0f)
@@ -396,7 +393,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         for (i in -1..1) for (j in -1..1) {
             if (isValidTurn(x + i, y + j)) {
                 isValid = true
-                hasMoved = moveTo(floor(0.5f + x + i.toDouble()).toFloat(), floor(0.5f + y + j.toFloat()))
+                hasMoved = moveTo(floor(0.5f + x + i.toFloat()), floor(0.5f + y + j.toFloat()))
                 if (hasMoved) {
                     scene.playSound(FeedbackType.Snap, volume = 0.2f)
                 }

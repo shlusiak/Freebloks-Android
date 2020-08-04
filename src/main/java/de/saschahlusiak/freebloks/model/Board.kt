@@ -168,12 +168,6 @@ class Board(var width: Int, var height: Int) : Serializable {
                         }
 
                     numberOfPossibleTurns += turnsInPosition
-
-                    if (turnsInPosition == 0) {
-                        // FIXME: this doesn't belong in here
-                        /* there is no available turn in this position. mark as not allowed */
-                        clearAllowedBit(player.number, y, x)
-                    }
                 } else if (getFieldPlayer(y, x) == player.number) totalPoints++
             }
         }
@@ -260,13 +254,6 @@ class Board(var width: Int, var height: Int) : Serializable {
                 }
             }
         }
-    }
-
-    /**
-     * Clear the PLAYER_BIT_ALLOWED bit, because there is no possible valid turn for this field.
-     */
-    private fun clearAllowedBit(player: Int, y: Int, x: Int) {
-        fields[y * width + x] = fields[y * width + x] and PLAYER_BIT_ALLOWED[player].inv()
     }
 
     /**

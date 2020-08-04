@@ -3,14 +3,13 @@ package de.saschahlusiak.freebloks.game
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
-import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.AboutFragment
 import de.saschahlusiak.freebloks.Global
@@ -32,7 +31,7 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
 
-    private val viewModel by lazy { activity.viewModel }
+    private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog
 

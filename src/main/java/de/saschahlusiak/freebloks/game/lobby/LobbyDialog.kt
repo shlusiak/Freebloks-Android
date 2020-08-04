@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams.*
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
@@ -17,12 +15,13 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.ConnectionStatus
-import de.saschahlusiak.freebloks.game.FreebloksActivity
+import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
@@ -35,7 +34,7 @@ import kotlinx.android.synthetic.main.lobby_dialog.*
 
 class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
 
-    private val viewModel by lazy { (requireActivity() as FreebloksActivity).viewModel }
+    private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
     private val client get() = viewModel.client
     private val listener get() = activity as LobbyDialogDelegate
 
