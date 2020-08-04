@@ -2,19 +2,13 @@ package de.saschahlusiak.freebloks
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.about_activity.*
 
-class AboutFragment : MaterialDialogFragment() {
+class AboutFragment : MaterialDialogFragment(R.layout.about_activity) {
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.about_activity, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         ok.setOnClickListener { dismiss() }

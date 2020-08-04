@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -29,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
+class MultiplayerDialog : MaterialDialogFragment(R.layout.multiplayer_dialog), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
     private val TAG = MultiplayerDialog::class.java.simpleName
 
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -44,10 +43,6 @@ class MultiplayerDialog : MaterialDialogFragment(), RadioGroup.OnCheckedChangeLi
         get() = server_address.text.toString().trim { it <= ' ' }.ifBlank { null }
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.multiplayer_dialog, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.close_button.setOnClickListener { dismiss() }

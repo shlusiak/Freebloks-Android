@@ -30,8 +30,8 @@ class BoardRenderer() {
         private const val y1 = -bevelHeight
         private const val y2 = 0.0f
 
-        private val materialBoardDiffuse = floatArrayOf(0.6f, 0.6f, 0.6f, 1.0f)
-        private val materialBoardDiffuseSeed = floatArrayOf(0.50f, 0.8f, 0.60f, 1.0f)
+        private val materialBoardDiffuse = floatArrayOf(0.57f, 0.57f, 0.57f, 1.0f)
+        private val materialBoardDiffuseSeed = floatArrayOf(0.45f, 0.8f, 0.55f, 1.0f)
         private val materialBoardSpecular = floatArrayOf(0.25f, 0.24f, 0.24f, 1.0f)
         private val materialBoardShininess = floatArrayOf(35.0f)
         val materialStoneSpecular = floatArrayOf(0.3f, 0.3f, 0.3f, 1.0f)

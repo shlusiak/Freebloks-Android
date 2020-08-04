@@ -27,7 +27,7 @@ import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.main_menu.*
 import kotlinx.android.synthetic.main.main_menu.view.*
 
-class MainMenu : MaterialDialogFragment(), View.OnClickListener, OnLongClickListener {
+class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
@@ -35,10 +35,6 @@ class MainMenu : MaterialDialogFragment(), View.OnClickListener, OnLongClickList
     private val viewModel by lazy { activity.viewModel }
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.main_menu, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
