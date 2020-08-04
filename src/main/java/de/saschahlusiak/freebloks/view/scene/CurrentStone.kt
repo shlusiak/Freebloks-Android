@@ -49,7 +49,11 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     private var orientation = Orientation()
     val hoverHeightLow = 0.55f
     val hoverHeightHigh = 0.55f
-    private var screenPoint = PointF()
+
+    /**
+     * Model coordinates of last touch down event, to detect taps
+     */
+    private var lastTouchPos = PointF()
 
     init {
         overlay = SimpleModel(4, 2, false).apply {
@@ -266,9 +270,9 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         val stone = stone
 
         if (stone != null) {
-            screenPoint = scene.modelToBoard(m)
-            stoneRelX = pos.x - screenPoint.x + stone.shape.size / 2
-            stoneRelY = pos.y - screenPoint.y + stone.shape.size / 2
+            lastTouchPos = scene.modelToBoard(m)
+            stoneRelX = pos.x - lastTouchPos.x + stone.shape.size / 2
+            stoneRelY = pos.y - lastTouchPos.y + stone.shape.size / 2
 
 //			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
             if (abs(stoneRelX) <= overlayRadius + 3.0f && abs(stoneRelY) <= overlayRadius + 3.0f) {
@@ -295,7 +299,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
             val THRESHOLD = 1.0f
             val x = fieldPoint.x + stoneRelX - stone.shape.size / 2
             val y = fieldPoint.y + stoneRelY - stone.shape.size / 2
-            if (!hasMoved && abs(screenPoint.x - fieldPoint.x) < THRESHOLD && abs(screenPoint.y - fieldPoint.y) < THRESHOLD)
+            if (!hasMoved && abs(lastTouchPos.x - fieldPoint.x) < THRESHOLD && abs(lastTouchPos.y - fieldPoint.y) < THRESHOLD)
                 return true
             val mv = snap(x, y, false)
             hasMoved = hasMoved or mv

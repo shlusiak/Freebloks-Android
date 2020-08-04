@@ -2,10 +2,7 @@ package de.saschahlusiak.freebloks.view.scene
 
 import android.os.Handler
 import androidx.annotation.UiThread
-import de.saschahlusiak.freebloks.model.Orientation
-import de.saschahlusiak.freebloks.model.Shape
-import de.saschahlusiak.freebloks.model.Stone
-import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
@@ -40,8 +37,13 @@ class Wheel(private val scene: Scene) : SceneElement {
     /* returns the player number currently shown in the wheel (aka. last call of update) */
     var currentPlayer: Int = -1
         private set
+    private var playerColor: StoneColor = StoneColor.White
 
     private var movesLeft = false
+
+    /**
+     * Last model coordinates of touch down event
+     */
     private var lastPointerLocation = PointF()
     private val handler = Handler()
 
@@ -80,6 +82,7 @@ class Wheel(private val scene: Scene) : SceneElement {
         maxOffset = ((stones.size - 1) / 2).toFloat() * STONE_SPACING
         if (stones.size > 0) rotateTo((stones.size + 1) / 2 - 2)
         currentPlayer = player
+        playerColor = scene.getPlayerColor(player)
     }
 
     private fun rotateTo(column: Int) {
@@ -174,7 +177,7 @@ class Wheel(private val scene: Scene) : SceneElement {
             showStone(currentStone.shape.number)
             if (scene.currentStone.stone != currentStone)
                 scene.playSound(FeedbackType.StartDragging)
-            scene.currentStone.startDragging(scene.modelToBoard(m), currentStone, Orientation.Default, scene.getPlayerColor(currentPlayer))
+            scene.currentStone.startDragging(scene.modelToBoard(m), currentStone, Orientation.Default, playerColor)
             status = Status.IDLE
             scene.boardObject.resetRotation()
         }
@@ -190,7 +193,7 @@ class Wheel(private val scene: Scene) : SceneElement {
         if (status == Status.SPINNING) {
             val currentStone = currentStone
             if (currentStone != null && scene.currentStone.stone != currentStone && Math.abs(lastOffset - currentOffset) < 0.5f) {
-                if (scene.currentStone.stone != null) scene.currentStone.startDragging(null, currentStone, Orientation.Default, scene.getPlayerColor(currentPlayer))
+                if (scene.currentStone.stone != null) scene.currentStone.startDragging(null, currentStone, Orientation.Default, playerColor)
                 scene.currentStone.status = CurrentStone.Status.IDLE
                 showStone(currentStone.shape.number)
                 status = Status.IDLE
@@ -234,18 +237,18 @@ class Wheel(private val scene: Scene) : SceneElement {
                     gl.glTranslatef(offset, 0f, offset)
 
                     //	gl.glTranslatef(BoardRenderer.stone_size * 0.5f, y - 1.2f, BoardRenderer.stone_size * 0.5f);
-                    renderer.boardRenderer.renderShape(gl, scene.getPlayerColor(currentPlayer), s.shape, Orientation.Default, alpha)
+                    renderer.boardRenderer.renderShape(gl, playerColor, s.shape, Orientation.Default, alpha)
                     gl.glPopMatrix()
                 }
                 gl.glRotatef(rotate, 0f, 1f, 0f)
                 gl.glTranslatef(offset, 0f, offset)
                 gl.glPushMatrix()
-                renderer.boardRenderer.renderShapeShadow(gl, s.shape, scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
+                renderer.boardRenderer.renderShapeShadow(gl, s.shape, playerColor, Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
                 gl.glPopMatrix()
                 gl.glTranslatef(0f, y, 0f)
                 renderer.boardRenderer.renderShape(
                     gl,
-                    if (s == currentStone && s != scene.currentStone.stone) StoneColor.White else scene.getPlayerColor(currentPlayer),
+                    if (s == currentStone && s != scene.currentStone.stone) StoneColor.White else playerColor,
                     s.shape,
                     Orientation.Default,
                     alpha
