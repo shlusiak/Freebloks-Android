@@ -60,10 +60,11 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
         val y2 = outputNear[1] / outputNear[3]
         val z2 = outputNear[2] / outputNear[3]
         val u = (0.0f - y1) / (y2 - y1)
-        point.x = x1 + u * (x2 - x1)
-        point.y = z1 + u * (z2 - z1)
 
-        return point
+        return PointF(
+            x1 + u * (x2 - x1),
+            z1 + u * (z2 - z1)
+        )
     }
 
     @Synchronized

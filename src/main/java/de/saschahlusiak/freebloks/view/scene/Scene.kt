@@ -215,11 +215,10 @@ class Scene(
      * @return point
      */
     fun modelToBoard(point: PointF): PointF {
-        point.x = point.x / (BoardRenderer.stoneSize * 2.0f)
-        point.y = point.y / (BoardRenderer.stoneSize * 2.0f)
-        point.x = point.x + 0.5f * (board.width - 1).toFloat()
-        point.y = point.y + 0.5f * (board.height - 1).toFloat()
-        return point
+        return PointF(
+            point.x / (BoardRenderer.stoneSize * 2.0f) + 0.5f * (board.width - 1).toFloat(),
+            point.y / (BoardRenderer.stoneSize * 2.0f) + 0.5f * (board.height - 1).toFloat()
+        )
     }
 
     /**
@@ -230,22 +229,10 @@ class Scene(
      *
      * @param p input and output
      */
-    fun boardToScreenOrientation(p: PointF) {
-        val tmp: Float
-        when (basePlayer) {
-            0 -> p.y = board.height - p.y - 1
-            1 -> {
-                tmp = p.x
-                p.x = p.y
-                p.y = tmp
-            }
-            2 -> p.x = board.width - p.x - 1
-            3 -> {
-                tmp = p.y
-                p.y = board.width - p.x - 1
-                p.x = board.height - tmp - 1
-            }
-            else -> p.y = board.height - p.y - 1
-        }
+    fun boardToScreenOrientation(p: PointF) = when (basePlayer) {
+        1 -> PointF(p.y, p.x)
+        2 -> p.copy(x = board.width - p.x - 1)
+        3 -> PointF(board.height - p.y - 1, board.width - p.x - 1)
+        else -> p.copy(y = board.height - p.y - 1)
     }
 }

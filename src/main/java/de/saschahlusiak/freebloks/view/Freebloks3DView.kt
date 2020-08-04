@@ -28,7 +28,6 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     private var thread: AnimateThread? = null
 
     private var oldDist = 0f
-    private var modelPoint = PointF() // current position in field coordinates
 
     fun setScene(scene: Scene) {
         setEGLConfigChooser(GLConfigChooser(2))
@@ -75,9 +74,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        modelPoint.x = event.x
-        modelPoint.y = event.y
-        renderer.windowToModel(modelPoint)
+        val modelPoint = renderer.windowToModel(PointF(event.x, event.y))
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -191,9 +188,10 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
             else
                 return@queueEvent
 
-            val p = PointF()
-            p.x = turn.x - 0.5f + st.shape.size.toFloat() / 2.0f
-            p.y = turn.y - 0.5f + st.shape.size.toFloat() / 2.0f
+            val p = PointF(
+                turn.x - 0.5f + st.shape.size.toFloat() / 2.0f,
+                turn.y - 0.5f + st.shape.size.toFloat() / 2.0f
+            )
             scene.currentStone.startDragging(p, st, turn.orientation, scene.getPlayerColor(turn.player))
             requestRender()
         }

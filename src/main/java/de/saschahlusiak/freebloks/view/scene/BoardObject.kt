@@ -47,7 +47,7 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
     /**
      * Stores the coordinates of the first "down" event, to detect whether we have moved at all when handling the "up" event
      */
-    private val originalTouchPoint = PointF()
+    private var originalTouchPoint = PointF()
 
     /**
      * TODO: document me
@@ -114,8 +114,7 @@ class BoardObject(private val scene: Scene, var lastSize: Int) : SceneElement {
 
     override fun handlePointerDown(m: PointF): Boolean {
         lastTouchAngle = atan2(m.y, m.x)
-        originalTouchPoint.x = m.x
-        originalTouchPoint.y = m.y
+        originalTouchPoint = m
         rotating = true
         autoRotate = false
         return true

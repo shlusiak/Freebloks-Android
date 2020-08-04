@@ -84,7 +84,7 @@ class ShapeRollEffect(
             shape, color, orientation,
             z,
             r, ax, ay, az,
-            -scene.baseAngle,
+            scene.boardObject.currentAngle - scene.baseAngle,
             1.0f, 1.0f
         )
 

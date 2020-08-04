@@ -27,7 +27,11 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         private set
 
     private var currentColor = StoneColor.White
-    internal val pos = PointF()
+
+    /**
+     * Current position in board coordinates
+     */
+    internal var pos = PointF()
 
     /* has the stone been moved since it was touched? */
     var hasMoved = false
@@ -45,7 +49,6 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     private var orientation = Orientation()
     val hoverHeightLow = 0.55f
     val hoverHeightHigh = 0.55f
-    private var fieldPoint = PointF()
     private var screenPoint = PointF()
 
     init {
@@ -250,14 +253,9 @@ class CurrentStone(private val scene: Scene) : SceneElement {
 			}
 			*/
 
-        if (floor(0.5f + pos.x) != floor(0.5f + x) || floor(pos.y + 0.5f) != floor(0.5f + y)) {
-            pos.x = x
-            pos.y = y
-            return true
+        return (floor(0.5f + pos.x) != floor(0.5f + x) || floor(pos.y + 0.5f) != floor(0.5f + y)).also {
+            pos = PointF(x, y)
         }
-        pos.x = x
-        pos.y = y
-        return false
     }
 
     @Synchronized
@@ -268,13 +266,9 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         val stone = stone
 
         if (stone != null) {
-            fieldPoint.x = m.x
-            fieldPoint.y = m.y
-            scene.modelToBoard(fieldPoint)
-            screenPoint.x = fieldPoint.x
-            screenPoint.y = fieldPoint.y
-            stoneRelX = pos.x - fieldPoint.x + stone.shape.size / 2
-            stoneRelY = pos.y - fieldPoint.y + stone.shape.size / 2
+            screenPoint = scene.modelToBoard(m)
+            stoneRelX = pos.x - screenPoint.x + stone.shape.size / 2
+            stoneRelY = pos.y - screenPoint.y + stone.shape.size / 2
 
 //			Log.d(tag, "rel = (" + stone_rel_x + " / " + stone_rel_y+ ")");
             if (abs(stoneRelX) <= overlayRadius + 3.0f && abs(stoneRelY) <= overlayRadius + 3.0f) {
@@ -288,6 +282,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
                 return true
             }
         }
+
         return false
     }
 
@@ -295,9 +290,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     override fun handlePointerMove(m: PointF): Boolean {
         if (status == Status.IDLE) return false
         val stone = stone ?: return false
-        fieldPoint.x = m.x
-        fieldPoint.y = m.y
-        scene.modelToBoard(fieldPoint)
+        val fieldPoint = scene.modelToBoard(m)
         if (status == Status.DRAGGING) {
             val THRESHOLD = 1.0f
             val x = fieldPoint.x + stoneRelX - stone.shape.size / 2
@@ -426,18 +419,14 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         val stone = stone
 
         if (status == Status.DRAGGING && stone != null) {
-            fieldPoint.x = m.x
-            fieldPoint.y = m.y
-            scene.modelToBoard(fieldPoint)
+            val fieldPoint = scene.modelToBoard(m)
 
             val x = floor(0.5f + fieldPoint.x + stoneRelX - stone.shape.size.toFloat() / 2f)
             val y = floor(0.5f + fieldPoint.y + stoneRelY - stone.shape.size.toFloat() / 2f)
-            fieldPoint.x = x
-            fieldPoint.y = y
-            scene.boardToScreenOrientation(fieldPoint)
 
-            if (!scene.verticalLayout) fieldPoint.y = scene.board.width - fieldPoint.x - 1
-            if (fieldPoint.y < -2.0f && hasMoved) {
+            val wheelPoint = scene.wheel.modelToWheel(m)
+
+            if (wheelPoint.y < -2.0f && hasMoved) {
                 scene.wheel.currentStone = stone
                 status = Status.IDLE
                 this.stone = null

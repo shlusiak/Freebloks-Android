@@ -42,8 +42,7 @@ class Wheel(private val scene: Scene) : SceneElement {
         private set
 
     private var movesLeft = false
-    private val lastPointerLocation = PointF()
-    private val tmp = PointF()
+    private var lastPointerLocation = PointF()
     private val handler = Handler()
 
     private val hapticTimerRunnable = object : Runnable {
@@ -53,9 +52,7 @@ class Wheel(private val scene: Scene) : SceneElement {
             if (abs(currentOffset - lastOffset) > 3.0f) return
 
             if (!scene.game.isLocalPlayer()) return
-            tmp.x = lastPointerLocation.x
-            tmp.y = lastPointerLocation.y
-            scene.modelToBoard(tmp)
+            val tmp = scene.modelToBoard(lastPointerLocation)
 
             scene.playSound(FeedbackType.StartDragging)
 
@@ -102,6 +99,16 @@ class Wheel(private val scene: Scene) : SceneElement {
         rotateTo(getStonePositionInWheel(stone) / 2)
     }
 
+    fun modelToWheel(m: PointF): PointF {
+        return if (scene.verticalLayout) {
+            scene.boardToScreenOrientation(scene.modelToBoard(m))
+        } else {
+            scene.boardToScreenOrientation(scene.modelToBoard(m)).let {
+                PointF(it.y, scene.board.width - it.x - 1)
+            }
+        }
+    }
+
     @UiThread
     @Synchronized
     override fun handlePointerDown(m: PointF): Boolean {
@@ -109,17 +116,8 @@ class Wheel(private val scene: Scene) : SceneElement {
         lastOffset = currentOffset
         lastFlingOffset = currentOffset
         flingSpeed = 0.0f
-        lastPointerLocation.x = m.x
-        lastPointerLocation.y = m.y
-        tmp.x = m.x
-        tmp.y = m.y
-        scene.modelToBoard(tmp)
-        scene.boardToScreenOrientation(tmp)
-        if (!scene.verticalLayout) {
-            val t = tmp.x
-            tmp.x = tmp.y
-            tmp.y = scene.board.width - t - 1
-        }
+        lastPointerLocation = m
+        val tmp = modelToWheel(m)
         originalX = tmp.x
         originalY = tmp.y
         if (tmp.y > 0) return false
@@ -151,15 +149,7 @@ class Wheel(private val scene: Scene) : SceneElement {
     @Synchronized
     override fun handlePointerMove(m: PointF): Boolean {
         if (status != Status.SPINNING) return false
-        tmp.x = m.x
-        tmp.y = m.y
-        scene.modelToBoard(tmp)
-        scene.boardToScreenOrientation(tmp)
-        if (!scene.verticalLayout) {
-            val t = tmp.x
-            tmp.x = tmp.y
-            tmp.y = scene.board.width - t - 1
-        }
+        val tmp = modelToWheel(m)
 
         /* everything underneath row 0 spins the wheel */
         var offset = (originalX - tmp.x) * 1.7f
@@ -181,13 +171,10 @@ class Wheel(private val scene: Scene) : SceneElement {
         }
 
         if (currentStone != null && (tmp.y >= 0.0f || abs(tmp.y - originalY) >= 3.5f)) {
-            tmp.x = m.x
-            tmp.y = m.y
-            scene.modelToBoard(tmp)
             showStone(currentStone.shape.number)
             if (scene.currentStone.stone != currentStone)
                 scene.playSound(FeedbackType.StartDragging)
-            scene.currentStone.startDragging(tmp, currentStone, Orientation.Default, scene.getPlayerColor(currentPlayer))
+            scene.currentStone.startDragging(scene.modelToBoard(m), currentStone, Orientation.Default, scene.getPlayerColor(currentPlayer))
             status = Status.IDLE
             scene.boardObject.resetRotation()
         }
@@ -253,7 +240,7 @@ class Wheel(private val scene: Scene) : SceneElement {
                 gl.glRotatef(rotate, 0f, 1f, 0f)
                 gl.glTranslatef(offset, 0f, offset)
                 gl.glPushMatrix()
-                renderer.boardRenderer.renderShapeShadow(gl, s.shape, scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0f, 0f, 0f, 0f, -rotate, alpha, 1.0f)
+                renderer.boardRenderer.renderShapeShadow(gl, s.shape, scene.getPlayerColor(currentPlayer), Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
                 gl.glPopMatrix()
                 gl.glTranslatef(0f, y, 0f)
                 renderer.boardRenderer.renderShape(
