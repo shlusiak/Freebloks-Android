@@ -20,11 +20,14 @@ class StatisticsAdapter(private val context: Context, private val labels: Array<
     override fun getItemId(position: Int) = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val v = convertView ?: LayoutInflater.from(context).inflate(R.layout.statistics_item, parent, false)
+        val v = convertView ?: LayoutInflater.from(context)
+            .inflate(R.layout.statistics_item, parent, false)
+
         v.text1.apply {
             isEnabled = isEnabled(position)
             text = labels[position]
         }
+
         v.text2.apply {
             isEnabled = isEnabled(position)
             text = values1[position] ?: "--"
