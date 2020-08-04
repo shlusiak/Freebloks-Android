@@ -8,6 +8,7 @@ import java.io.OutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketAddress
+import kotlin.concurrent.thread
 
 /**
  * Thread that connects to a local TCP socket and spawns two more threads to copy data between them:
@@ -54,11 +55,12 @@ class BluetoothClientToSocketThread(
             shutdownSockets()
         }
 
-        val bluetoothThread = Thread({ copyTo(remote.inputStream, local.outputStream) }, "BluetoothReader")
-        val socketThread = Thread({ copyTo(local.inputStream, remote.outputStream) }, "SocketReader")
-
-        bluetoothThread.start()
-        socketThread.start()
+        val bluetoothThread = thread(name = "BluetoothReader") {
+            copyTo(remote.inputStream, local.outputStream)
+        }
+        val socketThread = thread(name = "SocketReader") {
+            copyTo(local.inputStream, remote.outputStream)
+        }
 
         try {
             socketThread.join()
