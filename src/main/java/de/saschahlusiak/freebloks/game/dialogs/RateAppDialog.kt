@@ -5,9 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
@@ -18,13 +16,9 @@ import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.rate_app_dialog.*
 
-class RateAppDialog : MaterialDialogFragment() {
+class RateAppDialog : MaterialDialogFragment(R.layout.rate_app_dialog) {
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.rate_app_dialog, container, false)
-    }
+    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog?.setTitle(R.string.rate_freebloks_title)
@@ -58,15 +52,16 @@ class RateAppDialog : MaterialDialogFragment() {
     companion object {
         private val tag = RateAppDialog::class.java.simpleName
 
-        fun checkShowRateDialog(context: Context?): Boolean {
+        fun shouldShowRateDialog(context: Context): Boolean {
+            if (true) return true
+
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = prefs.edit()
 
-            var starts = prefs.getLong("rate_number_of_starts", 0)
+            var starts = prefs.getLong("rate_number_of_starts", 0) + 1
             var firstStarted = prefs.getLong("rate_first_started", 0)
 
             var show = false
-            starts++
             if (prefs.getBoolean("rate_show_again", true)) {
                 if (firstStarted <= 0) {
                     firstStarted = System.currentTimeMillis()

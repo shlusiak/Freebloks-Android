@@ -8,9 +8,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.*
 import androidx.lifecycle.Observer
@@ -27,16 +25,14 @@ import kotlinx.android.synthetic.main.game_finish_activity.*
 import kotlinx.android.synthetic.main.game_finish_player_row.view.*
 import java.lang.IllegalStateException
 
-class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
-
-    private val REQUEST_ACHIEVEMENTS = 1000
-    private val REQUEST_LEADERBOARD = 1001
+class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_activity), View.OnClickListener {
 
     private val viewModel by lazy { ViewModelProvider(this).get(GameFinishFragmentViewModel::class.java) }
     private val gameHelper by lazy { viewModel.gameHelper }
 
     private val listener get() = requireActivity() as OnStartCustomGameListener
 
+    // TODO: support a light dialog theme variant?
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,10 +41,6 @@ class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
         if (!viewModel.isInitialised()) {
             viewModel.setDataFromBundle(requireArguments())
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.game_finish_activity, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,8 +89,8 @@ class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
                 val intent = Intent(requireContext(), StatisticsActivity::class.java)
                 startActivity(intent)
             }
-            R.id.achievements -> gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
-            R.id.leaderboard -> gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD)
+            R.id.achievements -> gameHelper.startAchievementsIntent(this, Companion.REQUEST_ACHIEVEMENTS)
+            R.id.leaderboard -> gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), Companion.REQUEST_LEADERBOARD)
         }
     }
 
@@ -205,5 +197,10 @@ class GameFinishFragment : MaterialDialogFragment(), View.OnClickListener {
         }
 
         return l
+    }
+
+    companion object {
+        private const val REQUEST_ACHIEVEMENTS = 1000
+        private const val REQUEST_LEADERBOARD = 1001
     }
 }

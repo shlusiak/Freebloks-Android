@@ -21,7 +21,7 @@ import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.custom_game_dialog.view.*
 
-class CustomGameDialog : MaterialDialogFragment(), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
+class CustomGameDialog : MaterialDialogFragment(R.layout.custom_game_dialog), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
     private val difficultyValues = intArrayOf(
         200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
@@ -80,11 +80,7 @@ class CustomGameDialog : MaterialDialogFragment(), OnSeekBarChangeListener, View
         players[it].isChecked && (gameMode != GAMEMODE_4_COLORS_2_PLAYERS || it < 2)
     }
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.custom_game_dialog, container, false)
-    }
+    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(view) {

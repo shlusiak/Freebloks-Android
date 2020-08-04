@@ -33,7 +33,7 @@ import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog.*
 
-class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
+class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
 
     private val viewModel by lazy { (requireActivity() as FreebloksActivity).viewModel }
     private val client get() = viewModel.client
@@ -76,6 +76,7 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
         }
     }
 
+    // TODO: support a light dialog theme variant?
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,10 +103,6 @@ class LobbyDialog: MaterialDialogFragment(), GameEventObserver, OnItemClickListe
                 setCanceledOnTouchOutside(false)
             }
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.lobby_dialog, container, true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

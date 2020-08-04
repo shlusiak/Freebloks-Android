@@ -97,7 +97,7 @@
     <string name="rate_never">No</string>
     <string name="rate_freebloks_title">Rate Freebloks</string>
     <string name="rate_freebloks_text">If you enjoy Freebloks, would you like to take a minute and rate it?</string>
-    <string name="rate_freebloks_donate_link"><u>Please support Freebloks</u></string>
+    <string name="rate_freebloks_donate_link">Please support Freebloks</string>
 
 
     <plurals name="number_of_stones_left">

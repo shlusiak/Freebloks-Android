@@ -36,6 +36,7 @@
         <LinearLayout
             android:id="@+id/players_layout"
             android:layout_width="match_parent"
+            android:padding="@dimen/dialog_button_margin"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -49,14 +50,12 @@
                     android:id="@+id/player2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dialog_button_margin"
                     android:text="Yellow" />
 
                 <CheckBox
                     android:id="@+id/player1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dialog_button_margin"
                     android:text="Blue" />
             </LinearLayout>
 
@@ -70,14 +69,12 @@
                     android:id="@+id/player3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dialog_button_margin"
                     android:text="Red" />
 
                 <CheckBox
                     android:id="@+id/player4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dialog_button_margin"
                     android:text="Green" />
             </LinearLayout>
 
@@ -123,27 +120,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:stretchColumns="1"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TableRow>
 
                 <TextView
                     android:layout_gravity="center_vertical"
-                    android:padding="8dp"
+                    android:paddingLeft="8dp"
                     android:text="1"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge" />
+                    android:textSize="@dimen/textSizeMedium" />
 
                 <TextView
                     android:layout_column="1"
                     android:layout_gravity="center_vertical"
-                    android:padding="8dp"
+                    android:paddingLeft="8dp"
                     android:text="@string/monomino" />
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker1"
+                    android:layout_height="42dp"
                     android:layout_column="1"
                     app:np_dividerColor="?colorAccent"
+                    app:np_height="48dp"
                     app:np_max="9"
                     app:np_min="0"
                     app:np_orientation="horizontal"
@@ -160,7 +159,7 @@
                     android:padding="8dp"
                     android:text="2"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge" />
+                    android:textSize="@dimen/textSizeMedium" />
 
                 <TextView
                     android:layout_column="1"
@@ -170,8 +169,10 @@
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker2"
+                    android:layout_height="42dp"
                     android:layout_column="1"
                     app:np_dividerColor="?colorAccent"
+                    app:np_height="48dp"
                     app:np_max="9"
                     app:np_min="0"
                     app:np_orientation="horizontal"
@@ -188,7 +189,7 @@
                     android:padding="8dp"
                     android:text="3"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge" />
+                    android:textSize="@dimen/textSizeMedium" />
 
                 <TextView
                     android:layout_column="1"
@@ -198,8 +199,10 @@
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker3"
+                    android:layout_height="42dp"
                     android:layout_column="1"
                     app:np_dividerColor="?colorAccent"
+                    app:np_height="48dp"
                     app:np_max="9"
                     app:np_min="0"
                     app:np_orientation="horizontal"
@@ -216,7 +219,7 @@
                     android:padding="8dp"
                     android:text="4"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge" />
+                    android:textSize="@dimen/textSizeMedium" />
 
                 <TextView
                     android:layout_column="1"
@@ -226,8 +229,10 @@
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker4"
+                    android:layout_height="42dp"
                     android:layout_column="1"
                     app:np_dividerColor="?colorAccent"
+                    app:np_height="48dp"
                     app:np_max="9"
                     app:np_min="0"
                     app:np_orientation="horizontal"
@@ -244,7 +249,7 @@
                     android:padding="8dp"
                     android:text="5"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/textSizeLarge" />
+                    android:textSize="@dimen/textSizeMedium" />
 
                 <TextView
                     android:layout_column="1"
@@ -254,8 +259,10 @@
 
                 <com.shawnlin.numberpicker.NumberPicker
                     android:id="@+id/picker5"
+                    android:layout_height="42dp"
                     android:layout_column="1"
                     app:np_dividerColor="?colorAccent"
+                    app:np_height="48dp"
                     app:np_max="9"
                     app:np_min="0"
                     app:np_orientation="horizontal"
@@ -283,8 +290,8 @@
                     style="?actionButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:tint="?colorPrimary"
-                    android:src="@drawable/ic_expand_more" />
+                    android:src="@drawable/ic_expand_more"
+                    android:tint="?colorPrimary" />
 
             </LinearLayout>
 

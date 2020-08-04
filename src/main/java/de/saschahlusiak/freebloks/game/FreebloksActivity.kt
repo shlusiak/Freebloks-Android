@@ -40,7 +40,7 @@ import de.saschahlusiak.freebloks.client.JNIServer.runServerForNewGame
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
 import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog
-import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog.Companion.checkShowRateDialog
+import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -119,7 +119,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             showRateDialog = savedInstanceState.getBoolean("showRateDialog", false)
         } else {
             view.setScale(prefs.getFloat("view_scale", 1.0f))
-            showRateDialog = checkShowRateDialog(this)
+            showRateDialog = shouldShowRateDialog(this)
             val starts = prefs.getLong("rate_number_of_starts", 0)
 
             if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {

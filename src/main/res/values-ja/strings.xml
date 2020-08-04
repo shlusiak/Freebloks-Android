@@ -75,7 +75,7 @@
     <string name="rate_never">いいえ</string>
     <string name="rate_freebloks_title">Freebloks を評価する</string>
     <string name="rate_freebloks_text">Freebloks を楽しんでいただけたら、少しお時間をいただいて評価していただけませんか?</string>
-    <string name="rate_freebloks_donate_link"><u>Freebloks をサポートしてください</u></string>
+    <string name="rate_freebloks_donate_link">Freebloks をサポートしてください</string>
 
 
     <plurals name="number_of_stones_left">

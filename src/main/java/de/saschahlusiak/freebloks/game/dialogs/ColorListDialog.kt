@@ -26,22 +26,18 @@ import kotlinx.android.synthetic.main.color_grid_item.view.*
 import kotlinx.android.synthetic.main.color_list_custom_title.*
 import kotlinx.android.synthetic.main.color_list_dialog.*
 
-class ColorListDialog : MaterialDialogFragment(), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class ColorListDialog : MaterialDialogFragment(R.layout.color_list_dialog), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private var list: AdapterView<ColorListAdapter>? = null
     private var adapter: ColorListAdapter? = null
     private var selection = BooleanArray(4) { false }
     private val listener get() = (requireActivity() as OnStartCustomGameListener)
 
-    override fun getTheme() = R.style.Theme_Freebloks_Light_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialDialog(requireContext(), theme).apply {
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.color_list_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

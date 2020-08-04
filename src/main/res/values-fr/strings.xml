@@ -77,7 +77,7 @@
     <string name="rate_never">Non</string>
     <string name="rate_freebloks_title">Évaluez Freebloks</string>
     <string name="rate_freebloks_text">Si vous aimez Freebloks, voudriez-vous prendre une minute pour le noter&#160;?</string>
-    <string name="rate_freebloks_donate_link"><u>S\'il vous plaît, soutenez Freebloks</u></string>
+    <string name="rate_freebloks_donate_link">S\'il vous plaît, soutenez Freebloks</string>
 
 
     <plurals name="number_of_stones_left">

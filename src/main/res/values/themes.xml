@@ -29,7 +29,7 @@
         <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
 
-    <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.Dark">
+    <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.DayNight">
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -105,11 +105,8 @@
     </style>
 
     <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:buttonBarButtonStyle">
-            @style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush
-        </item>
+        <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-        <item name="colorPrimary">@color/secondaryColor</item>
     </style>
 
     <style name="Theme.Freebloks.Light.Dialog.MinWidth" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">

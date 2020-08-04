@@ -88,7 +88,7 @@
     <string name="rate_never">Nein</string>
     <string name="rate_freebloks_title">Freebloks bewerten</string>
     <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, nimm dir doch bitte eine Minute Zeit, es zu bewerten.</string>
-    <string name="rate_freebloks_donate_link"><u>Freebloks unterstützen</u></string>
+    <string name="rate_freebloks_donate_link">Freebloks unterstützen</string>
 
 
     <plurals name="number_of_stones_left">
