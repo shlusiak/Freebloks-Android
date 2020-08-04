@@ -159,6 +159,10 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         undoButton.setOnClickListener { onUndoButtonClick() }
         newGameButton.setOnClickListener { onNewGameButtonClick() }
         preferencesButton.setOnClickListener { onPreferencesButtonClick() }
+        mainMenuButton.setOnClickListener {
+            showMainMenu()
+            showMenu(false, true)
+        }
         view.setOnTouchListener { v, event ->
             showMenu(false, true)
             false
@@ -303,9 +307,11 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         preferencesButton.visibility = visible
         newGameButton.visibility = visible
+        mainMenuButton.visibility = visible
 
         showFloatingMenuLabel(preferencesButton, Gravity.LEFT, shown, getString(R.string.preferences))
         showFloatingMenuLabel(newGameButton, Gravity.LEFT, shown, getString(R.string.new_local_game))
+        showFloatingMenuLabel(mainMenuButton, Gravity.LEFT, shown, getString(R.string.main_menu))
 
         menuShown = shown
     }

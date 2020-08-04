@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clipChildren="false">
 
     <de.saschahlusiak.freebloks.view.Freebloks3DView
@@ -19,12 +19,12 @@
             android:id="@+id/soundContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:layout_toLeftOf="@id/menuContainer"
             android:alpha="0.75"
-            android:orientation="horizontal"
             android:background="@drawable/pill_background"
-            android:elevation="6dp">
+            android:elevation="6dp"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/soundOnOff"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="8dp"
+            android:layout_margin="6dp"
             android:alpha="0.75"
             android:background="@drawable/pill_background"
             android:elevation="6dp"
@@ -70,6 +70,11 @@
                 style="@style/PillButton"
                 android:src="@drawable/ic_settings" />
 
+            <ImageButton
+                android:id="@+id/mainMenuButton"
+                style="@style/PillButton"
+                android:src="@drawable/ic_menu" />
+
         </LinearLayout>
     </RelativeLayout>
 
@@ -87,11 +92,11 @@
         android:id="@+id/myLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/bottomSheet"
+        android:layout_alignParentRight="true"
         android:layout_margin="12dp"
-        app:backgroundTint="?colorPrimary"
-        android:src="@drawable/ic_my_location" />
+        android:src="@drawable/ic_my_location"
+        app:backgroundTint="?colorPrimary" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -105,11 +110,13 @@
             android:id="@+id/chatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/ic_message" />
+            android:layout_margin="6dp"
+            android:fitsSystemWindows="true"
+            android:src="@drawable/ic_message"
+            app:backgroundTint="?colorPrimary"
+            app:fabSize="mini" />
 
     </RelativeLayout>
 </RelativeLayout>
