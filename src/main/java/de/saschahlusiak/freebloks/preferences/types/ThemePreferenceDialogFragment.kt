@@ -10,7 +10,9 @@ class ThemePreferenceDialogFragment : ListPreferenceDialogFragment() {
         val preference = preference as ListPreference
         val values = preference.entryValues
 
-        val adapter = ThemePreferenceAdapter(builder.context).apply {
+        val checked = values.indexOf(preference.value)
+
+        val adapter = ThemePreferenceAdapter(builder.context, checked).apply {
             addAll(values.toList())
         }
         builder.setAdapter(adapter) { dialog, which ->

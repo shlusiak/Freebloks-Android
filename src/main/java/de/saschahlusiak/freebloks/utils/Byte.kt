@@ -8,6 +8,5 @@ package de.saschahlusiak.freebloks.utils
  */
 fun Byte.toUnsignedByte(): Int = this.toInt() and 0xFF
 
-fun ubyteArrayOf(vararg bytes: Int): ByteArray {
-    return ByteArray(bytes.size) { index -> (bytes[index] and 0xFF).toByte() }
-}
+fun ubyteArrayOf(vararg bytes: Int) =
+    ByteArray(bytes.size) { index -> (bytes[index] and 0xFF).toByte() }

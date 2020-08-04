@@ -443,7 +443,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val client = viewModel.client
         val lastStatus = viewModel.lastStatus
 
-        if (viewModel.undoWithBack && (client != null) && client.isConnected()) {
+        if (viewModel.undoWithBack && (client != null) && client.isConnected() && client.game.history.isNotEmpty() && client.game.isLocalPlayer()) {
             client.requestUndo()
             scene.playSound(FeedbackType.UndoStone)
             return
