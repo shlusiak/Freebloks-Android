@@ -14,4 +14,7 @@
     <dimen name="textSizeSmall">18sp</dimen>
     <dimen name="textSizeMedium">21sp</dimen>
     <dimen name="textSizeLarge">26sp</dimen>
+
+    <dimen name="pill_button_size">48dp</dimen>
+    <dimen name="pill_button_size_large">58dp</dimen>
 </resources>

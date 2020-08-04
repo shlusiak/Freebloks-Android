@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <size
+        android:width="32dp"
+        android:height="32dp" />
+
+    <solid
+        android:color="@color/pill_button_background"/>
+
+    <stroke
+        android:color="@color/pill_button_stroke_color"
+        android:width="1dp"/>
+
+    <corners android:radius="@dimen/pill_button_size_large"/>
+
+</shape>

@@ -6,15 +6,14 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
+import android.transition.TransitionManager
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
+import android.view.*
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.Toast
@@ -71,6 +70,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     private lateinit var scene: Scene
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
+    private var menuShown = false
+
     // TODO: make private
     val viewModel: FreebloksActivityViewModel by lazy { ViewModelProvider(this).get(FreebloksActivityViewModel::class.java) }
 
@@ -93,16 +94,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 .build())
         }
 
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
-
         super.onCreate(savedInstanceState)
-
-        supportActionBar?.run {
-            setHomeButtonEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
-            setBackgroundDrawable(ColorDrawable(0))
-            setDisplayShowTitleEnabled(false)
-        }
 
         setContentView(R.layout.main_3d)
 
@@ -148,18 +140,35 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             }
         }
 
+        menuOverlayContainer.isVisible = (viewModel.intro == null)
+
+        menuOverlayContainer.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
+            v.setPadding(0, findTopPaddingForView(insets, Gravity.RIGHT), insets.systemWindowInsetRight, 0)
+            insets
+        }
+
         chatButton.setOnClickListener {
             chatButton.clearAnimation()
             LobbyDialog().show(supportFragmentManager, null)
         }
 
         myLocation.setOnClickListener { scene.boardObject.resetRotation() }
+        menuButton.setOnClickListener { onMenuButtonClick() }
+        soundOnOff.setOnClickListener { onSoundButtonClick() }
+        hintButton.setOnClickListener { onHintButtonClick() }
+        undoButton.setOnClickListener { onUndoButtonClick() }
+        newGameButton.setOnClickListener { onNewGameButtonClick() }
+        preferencesButton.setOnClickListener { onPreferencesButtonClick() }
+        view.setOnTouchListener { v, event ->
+            showMenu(false, true)
+            false
+        }
 
         viewModel.connectionStatus.observe(this) { onConnectionStatusChanged(it) }
         viewModel.playerToShowInSheet.observe(this) { onPlayerSheetChanged(it) }
         viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
-        viewModel.canRequestHint.observe(this) { invalidateOptionsMenu() }
-        viewModel.canRequestUndo.observe(this) { invalidateOptionsMenu() }
+        viewModel.canRequestHint.observe(this) { hintButton.isEnabled = it }
+        viewModel.canRequestUndo.observe(this) { undoButton.isEnabled = it }
         viewModel.chatButtonVisible.observe(this) { chatButton.isVisible = it }
         viewModel.googleAccountSignedIn.observe(this) {
             viewModel.gameHelper.setWindowForPopups(window)
@@ -167,6 +176,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 viewModel.gameHelper.unlock(getString(R.string.achievement_vip))
             }
         }
+
+        showMenu(shown = false, animate = false)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -242,6 +253,65 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 }
             }
         }
+    }
+
+    private fun findTopPaddingForView(insets: WindowInsets, gravity: Int): Int {
+        val padding = insets.systemWindowInsetTop
+
+        // unfortunately we use full screen everywhere, which would make the top padding 0
+        // so on devices with a display cutout with API level < 28, we unfortunately overlap the cutout
+        // FIXME: behaviour on Android 8 on a device with cutout?
+        if (Build.VERSION.SDK_INT < 28) {
+            return padding
+        }
+        val cutout = insets.displayCutout ?: return padding
+        val rects = cutout.boundingRects
+        val displaySize = resources.displayMetrics.widthPixels
+        for (rect in rects) {
+            if (rect.top == 0) {
+                // only interested in top cutouts
+                when (gravity) {
+                    Gravity.LEFT -> if (rect.left == 0 && insets.systemWindowInsetLeft == 0) return rect.bottom
+                    Gravity.CENTER_HORIZONTAL -> if (rect.left != 0 && rect.right != displaySize) return rect.bottom
+                    Gravity.RIGHT -> if (rect.right == displaySize && insets.systemWindowInsetRight == 0) return rect.bottom
+                }
+            }
+        }
+        return 0
+    }
+
+    @Suppress("SameParameterValue")
+    private fun showFloatingMenuLabel(anchor: View, gravity: Int, show: Boolean, label: String) {
+        var v = anchor.tag as? FloatingMenuLabel
+        if (v == null) {
+            v = FloatingMenuLabel(this, menuOverlayContainer, anchor, gravity)
+            anchor.tag = v
+        }
+        v.setText(label)
+        if (show) {
+            v.show()
+        } else {
+            v.hide()
+        }
+    }
+
+    private fun showMenu(shown: Boolean, animate: Boolean) {
+        if (animate) {
+            TransitionManager.beginDelayedTransition(menuOverlayContainer)
+        }
+        val visible = if (shown) View.VISIBLE else View.GONE
+
+        preferencesButton.visibility = visible
+        newGameButton.visibility = visible
+
+        showFloatingMenuLabel(preferencesButton, Gravity.LEFT, shown, getString(R.string.preferences))
+        showFloatingMenuLabel(newGameButton, Gravity.LEFT, shown, getString(R.string.new_local_game))
+
+        menuShown = shown
+    }
+
+    private fun onMenuButtonClick() {
+        showMenu(!menuShown, true)
     }
 
     /**
@@ -409,6 +479,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     @UiThread
     override fun onIntroCompleted() {
+        menuOverlayContainer.isVisible = true
+
         viewModel.intro = null
         scene.intro = null
         viewModel.setSheetPlayer(-1, false)
@@ -474,10 +546,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun onSoundEnabledChanged(enabled: Boolean) {
-        optionsMenu?.run {
-            findItem(R.id.sound_toggle_button).setTitle(if (enabled) R.string.sound_on else R.string.sound_off)
-            findItem(R.id.sound_toggle_button).setIcon(if (enabled) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp)
-        }
+        soundOnOff.setImageResource(if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off)
     }
 
     //endregion
@@ -509,62 +578,35 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     //region Menu handling
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.game_optionsmenu, menu)
-        optionsMenu = menu
-        return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.undo).isEnabled = (viewModel.canRequestUndo.value) ?: false
-        menu.findItem(R.id.hint).isEnabled = (viewModel.canRequestHint.value) ?: false
-        onSoundEnabledChanged(viewModel.soundsEnabled)
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val intent: Intent
-
-        when (item.itemId) {
-            android.R.id.home -> {
-                showMainMenu()
-                viewModel.intro?.cancel()
-            }
-            R.id.new_game -> {
-                if (viewModel.intro != null) viewModel.intro?.cancel() else {
-                    val client = viewModel.client
-                    if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(DIALOG_NEW_GAME_CONFIRMATION)
-                }
-            }
-            R.id.preferences -> {
-                intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.sound_toggle_button -> {
-                viewModel.toggleSound()
-            }
-            R.id.hint -> {
-                scene.currentStone.stopDragging()
-                viewModel.requestHint()
-            }
-            R.id.undo -> {
-                scene.clearEffects()
-                viewModel.requestUndo()
-                scene.playSound(FeedbackType.UndoStone)
-            }
-            R.id.show_main_menu -> {
-                val client = viewModel.client
-                val clients = viewModel.lastStatus?.clients ?: 0
-                val isStarted = client?.game?.isStarted ?: false
-                if (isStarted && clients > 1) showDialog(DIALOG_QUIT) else {
-                    showMainMenu()
-                    viewModel.intro?.cancel()
-                }
-            }
-            else -> return super.onOptionsItemSelected(item)
+    private fun onNewGameButtonClick() {
+        showMenu(false, true)
+        if (viewModel.intro != null) viewModel.intro?.cancel() else {
+            val client = viewModel.client
+            if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(DIALOG_NEW_GAME_CONFIRMATION)
         }
-        return true
+    }
+
+    private fun onHintButtonClick() {
+        showMenu(false, true)
+        scene.currentStone.stopDragging()
+        viewModel.requestHint()
+    }
+
+    private fun onSoundButtonClick() {
+        viewModel.toggleSound()
+    }
+
+    private fun onUndoButtonClick() {
+        showMenu(false, true)
+        scene.clearEffects()
+        viewModel.requestUndo()
+        scene.playSound(FeedbackType.UndoStone)
+    }
+
+    private fun onPreferencesButtonClick() {
+        showMenu(false, true)
+        intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
     }
 
     //endregion

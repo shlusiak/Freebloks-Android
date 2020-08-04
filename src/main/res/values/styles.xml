@@ -37,4 +37,13 @@
         <item name="android:layout_marginBottom">2dp</item>
     </style>
 
+    <style name="PillButton" parent="">
+        <item name="android:layout_width">@dimen/pill_button_size</item>
+        <item name="android:layout_height">@dimen/pill_button_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/pill_button_background</item>
+        <item name="android:scaleType">center</item>
+    </style>
+
 </resources>

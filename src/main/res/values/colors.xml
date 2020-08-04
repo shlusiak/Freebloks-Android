@@ -33,4 +33,12 @@
     <color name="player_foreground_orange">#ff8c5c</color>
     <color name="player_foreground_purple">#b440ff</color>
 
+    <color name="pill_button_background">#1F1F1F</color>
+    <color name="pill_button_stroke_color">#070707</color>
+    <color name="pill_button_ripple_color">#FFFFFF</color>
+
+    <color name="floating_menu_background_color">#FFFFFF</color>
+    <color name="floating_menu_background_stroke">#BFBFBF</color>
+    <color name="floating_menu_text_color">#000000</color>
+    <color name="floating_menu_ripple">#5F5F5F</color>
 </resources>

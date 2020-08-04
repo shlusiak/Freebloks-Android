@@ -10,6 +10,70 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:id="@+id/menuOverlayContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/soundContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/menuContainer"
+            android:alpha="0.75"
+            android:orientation="horizontal"
+            android:background="@drawable/pill_background"
+            android:elevation="6dp">
+
+            <ImageButton
+                android:id="@+id/soundOnOff"
+                style="@style/PillButton"
+                android:src="@drawable/ic_volume_up_white_48dp" />
+
+            <ImageButton
+                android:id="@+id/hintButton"
+                style="@style/PillButton"
+                android:src="@drawable/ic_info" />
+
+            <ImageButton
+                android:id="@+id/undoButton"
+                style="@style/PillButton"
+                android:src="@drawable/ic_undo" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menuContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="8dp"
+            android:alpha="0.75"
+            android:background="@drawable/pill_background"
+            android:elevation="6dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/menuButton"
+                style="@style/PillButton"
+                android:src="@drawable/ic_more_vertical" />
+
+            <ImageButton
+                android:id="@+id/newGameButton"
+                style="@style/PillButton"
+                android:src="@drawable/ic_new_game" />
+
+            <ImageButton
+                android:id="@+id/preferencesButton"
+                style="@style/PillButton"
+                android:src="@drawable/ic_settings" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
     <FrameLayout
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
