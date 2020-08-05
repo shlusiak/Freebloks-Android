@@ -70,11 +70,6 @@
                 style="@style/PillButton"
                 android:src="@drawable/ic_settings" />
 
-            <ImageButton
-                android:id="@+id/mainMenuButton"
-                style="@style/PillButton"
-                android:src="@drawable/ic_menu" />
-
         </LinearLayout>
     </RelativeLayout>
 
