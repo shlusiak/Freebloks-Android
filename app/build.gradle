@@ -1,0 +1,133 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        // https://developers.google.com/android/guides/releases
+        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+// Note: these plugins are NON-FREE.
+// TODO: How to exclude them in the "Fdroid" build flavour?
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion '29.0.3'
+    ndkVersion '21.3.6528147'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+
+        versionCode 103
+        versionName "1.2.3"
+    }
+    flavorDimensions 'app', 'store'
+    productFlavors {
+        standard {
+            dimension 'app'
+            applicationId 'de.saschahlusiak.freebloks'
+        }
+        vip {
+            dimension 'app'
+            applicationId 'de.saschahlusiak.freebloksvip'
+        }
+        google {
+            dimension 'store'
+            buildConfigField 'boolean', 'IS_AMAZON', 'false'
+            buildConfigField 'String', 'APP_STORE_NAME', '\"Google Play Store\"'
+            buildConfigField 'String', 'APP_STORE_LINK', '\"https://play.google.com/store/apps/details?id=%s\"'
+        }
+        amazon {
+            dimension 'store'
+            buildConfigField 'boolean', 'IS_AMAZON', 'true'
+            buildConfigField 'String', 'APP_STORE_NAME', '\"Amazon App Store\"'
+            buildConfigField 'String', 'APP_STORE_LINK', '\"http://www.amazon.com/gp/mas/dl/android?p=%s\"'
+        }
+        fdroid {
+            dimension 'store'
+            buildConfigField 'boolean', 'IS_AMAZON', 'false'
+            buildConfigField 'String', 'APP_STORE_NAME', '\"F-Droid\"'
+            buildConfigField 'String', 'APP_STORE_LINK', '\"https://f-droid.org/en/packages/%s\"'
+        }
+    }
+    externalNativeBuild {
+         ndkBuild {
+            path "src/main/jni/Android.mk"
+         }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+}
+
+dependencies {
+    // for unit tests
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.8'
+    testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation project(':common')
+
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
+
+    // https://github.com/material-components/material-components-android
+    // https://mvnrepository.com/artifact/com.google.android.material/material
+    // FIXME: since 1.2.0-alpha06 the ImageButton background is broken in the main menu
+    //        last checked: 1.3.0-alpha02
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8"
+
+    // https://developer.android.com/jetpack/androidx/releases/lifecycle
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+
+    // https://mvnrepository.com/artifact/androidx.preference/preference
+    implementation 'androidx.preference:preference:1.1.1'
+
+    // https://github.com/ShawnLin013/NumberPicker
+    implementation 'com.shawnlin:number-picker:2.4.8'
+
+    /// NON-FREE DEPENDENCIES, only included in "google" and "amazon" store flavours, excluded in "fdroid"
+    /// =====================
+
+    googleImplementation project(':google-services')
+    amazonImplementation project(':google-services')
+}
