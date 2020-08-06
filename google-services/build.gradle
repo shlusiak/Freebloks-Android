@@ -8,14 +8,6 @@ buildscript {
         jcenter()
         google()
     }
-
-    dependencies {
-        // https://developers.google.com/android/guides/releases
-        classpath 'com.google.gms:google-services:4.3.3'
-
-        // https://firebase.google.com/support/release-notes/android
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
-    }
 }
 
 apply plugin: 'com.android.library'
