@@ -8,6 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical"
         android:padding="@dimen/dialog_padding">
 
@@ -36,9 +38,9 @@
         <LinearLayout
             android:id="@+id/players_layout"
             android:layout_width="match_parent"
-            android:padding="@dimen/dialog_button_margin"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/dialog_button_margin">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -277,13 +279,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dialog_button_margin"
-            android:clipChildren="false">
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:clipChildren="false">
+                android:clipChildren="false"
+                android:clipToPadding="false">
 
                 <ImageButton
                     android:id="@+id/advanced"
