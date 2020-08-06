@@ -9,6 +9,11 @@ object Global {
     const val IS_VIP = (BuildConfig.FLAVOR_app == "vip")
 
     /**
+     * This this the F-Droid build flavor?
+     */
+    const val IS_FDROID = (BuildConfig.FLAVOR_store == "fdroid")
+
+    /**
      * Minimum number of starts before rating dialog appears
      */
     const val RATE_MIN_STARTS = 8
