@@ -40,4 +40,9 @@ GitHub: https://github.com/shlusiak/Freebloks-Android
 
 This project uses the Linux port as a git submodule: https://github.com/shlusiak/Freebloks-3D
 
+Support
+-------
 
+Support the development of Freebloks
+- Paypal: https://paypal.me/saschahlusiak.de
+- Bitcoin: bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl
