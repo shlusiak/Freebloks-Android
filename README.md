@@ -44,5 +44,5 @@ Support
 -------
 
 Support the development of Freebloks
-- Paypal: https://paypal.me/saschahlusiak.de
+- Paypal: https://paypal.me/saschahlusiak/3eur
 - Bitcoin: bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl
