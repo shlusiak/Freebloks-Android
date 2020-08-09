@@ -79,7 +79,7 @@ If you like Freebloks I'd be happy about a donation. You can either purchase Fre
 
 <table>
   <tr>
-    <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/app_icon_big_coin.png" alt="Freebloks VIP"></a></td>
+    <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/appicon_big_coin.png" alt="Freebloks VIP"></a></td>
     <td><img src="stuff/freebloks_vip_qr_code.png" alt="Freebloks VIP URL QR code" width="100px"></td>
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip">https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip</a></td>
   </tr> 
