@@ -20,7 +20,7 @@
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_01.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_01.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_02.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_02.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_05.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_05.png)
-[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png" width=4050](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png" width=405>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_04.png" width=405>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_04.png)
 [<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_06.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_06.png)
 [<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_07.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_07.png)
