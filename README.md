@@ -10,7 +10,7 @@
 </p> 
   
 <hr>
-<p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#features">Features</a> &bull; <a href="#updates">Updates</a> &bull; <a href="#contribution">Contribution</a> &bull; <a href="#donate">Donate</a> &bull; <a href="#license">License</a></p>
+<p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#getting-started">Getting Started</a> &bull; <a href="#donate">Donate</a> &bull; <a href="#license">License</a></p>
 <p align="center"><a href="http://www.saschahlusiak.de/Freebloks-Android">Website</a> &bull; <a href="http://www.saschahlusiak.de/category/general/">Blog</a></p>
 <hr>
 
@@ -20,8 +20,8 @@
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_01.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_01.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_02.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_02.png)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_05.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_05.png)
-[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png)
-[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_04.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_04.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png" width=4050](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_03.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_04.png" width=405>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_04.png)
 [<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_06.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_06.png)
 [<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_07.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_07.png)
 [<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_08.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_08.png)
@@ -73,26 +73,24 @@ git submodule init
 git submodule update
 ```
 
-## Contribution 
-
 ## Donate
 
 If you like Freebloks I'd be happy about a donation. You can either purchase Freebloks VIP on Google Play, send bitcoin or donate via Paypal.
 
 <table>
   <tr>
-    <td><img src="stuff/app_icon_big_coin.png" alt="Freebloks VIP"></td>
+    <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/app_icon_big_coin.png" alt="Freebloks VIP"></a></td>
     <td><img src="stuff/freebloks_vip_qr_code.png" alt="Freebloks VIP URL QR code" width="100px"></td>
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip">https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip</a></td>
   </tr> 
   <tr>
     <td><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin"></td>
-    <td><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="100px"></td>
+    <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="100px"></a></td>
     <td><samp>bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</samp></td>
   </tr>
   <tr>
     <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_74x46.jpg" alt="Paypal" width="80px" ></a></td>
-    <td></td>
+    <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="stuff/paypal_qr_code.png" alt="Paypal QR code" width="100px"></a></td>
     <td><a href="https://paypal.me/saschahlusiak/3eur">https://paypal.me/saschahlusiak/3eur</a></td>
   </tr>
 </table>
