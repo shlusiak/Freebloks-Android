@@ -79,12 +79,12 @@ If you like Freebloks I'd be happy about a donation. You can either purchase Fre
 
 <table>
   <tr>
-    <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/appicon_big_coin.png" alt="Freebloks VIP"></a></td>
+    <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/appicon_big_coin.png" alt="Freebloks VIP" width="80px"></a></td>
     <td><img src="stuff/freebloks_vip_qr_code.png" alt="Freebloks VIP URL QR code" width="100px"></td>
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip">https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip</a></td>
   </tr> 
   <tr>
-    <td><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin"></td>
+    <td><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin" width="80px"></td>
     <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="100px"></a></td>
     <td><samp>bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</samp></td>
   </tr>
