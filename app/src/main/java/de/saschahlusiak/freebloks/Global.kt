@@ -26,7 +26,7 @@ object Global {
     /**
      * Number of starts before the donate dialog appears
      */
-    const val DONATE_STARTS = 20
+    const val DONATE_STARTS = 25
 
     /**
      * The default server address for Internet play

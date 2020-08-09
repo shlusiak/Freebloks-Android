@@ -39,7 +39,7 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val starts = prefs.getLong("rate_number_of_starts", 0)
 
-        appIconIsDonate = !Global.IS_VIP && starts % Global.DONATE_STARTS == 0L
+        appIconIsDonate = !Global.IS_VIP && (starts % Global.DONATE_STARTS == 0L)
 
         new_game.setOnClickListener(this)
         new_game.setOnLongClickListener(this)
@@ -53,7 +53,7 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
 
         if (appIconIsDonate) {
             analytics.logEvent("show_donate_button", null)
-            appIcon.setImageResource(R.drawable.ic_action_favorite)
+            appIcon.setImageResource(R.drawable.ic_coffee)
         }
         appIcon.setOnClickListener(this)
 

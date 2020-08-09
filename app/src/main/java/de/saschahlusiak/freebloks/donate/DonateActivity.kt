@@ -86,7 +86,11 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
 
     private fun onBitcoinClick() {
         analytics.logEvent("donate_bitcoin", null)
-        startActivity(bitcoinIntent)
+        try {
+            startActivity(bitcoinIntent)
+        } catch (e: Exception) {
+            startActivity(bitcoinFallbackIntent)
+        }
     }
 
     private fun onPayPalClick() {
@@ -95,6 +99,7 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
     }
 
     private val bitcoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN))
+    private val bitcoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN_EXPLORER))
     private val freebloksVipIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_FREEBLOKS_VIP))
     private val paypalIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PAYPAL))
 
@@ -103,5 +108,6 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
         private const val URL_PAYPAL = "https://paypal.me/saschahlusiak/3eur"
         private const val BITCOIN_WALLET_ADDRESS = "bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl"
         private const val URL_BITCOIN = "bitcoin:$BITCOIN_WALLET_ADDRESS?amount=0.0002"
+        private const val URL_BITCOIN_EXPLORER = "https://www.blockchain.com/btc/address/$BITCOIN_WALLET_ADDRESS"
     }
 }
