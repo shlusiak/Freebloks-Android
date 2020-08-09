@@ -1,102 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:fitsSystemWindows="true"
-    android:orientation="horizontal">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.55"
+        android:animateLayoutChanges="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_padding">
+        android:padding="@dimen/activity_padding">
+
+        <LinearLayout
+            android:id="@+id/block1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingBottom="8dp"
+                android:text="@string/donation_text_line1"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:gravity="center_horizontal"
+                android:linksClickable="true"
+                android:paddingBottom="16dp"
+                android:text="@string/github_link"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingBottom="8dp"
+                android:text="@string/donation_text_line2"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/donate_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_gravity="center"
-            android:src="@drawable/donate_black"
-            app:tint="?colorOnBackground" />
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_coffee" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/donate_question"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:paddingBottom="8dp"
-            android:text="@string/donation_text_long"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:gravity="center_horizontal"
-            android:linksClickable="true"
-            android:text="@string/github_link"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.45"
-        android:clipChildren="false"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_padding"
-        android:paddingRight="@dimen/activity_padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:text="@string/donation_text_short"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <RadioGroup
-            android:id="@+id/radioGroup"
+        <LinearLayout
+            android:id="@+id/donateButtonGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/skip"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="@string/donation_skip" />
+
+            <Button
+                android:id="@+id/next"
+                style="?materialButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="@string/donation_next" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/donationsGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingBottom="8dp">
+            android:layout_marginTop="32dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <RadioButton
-                android:id="@+id/donation_none"
-                android:layout_width="fill_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/donationFreebloksVip"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/donation_nothing"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="?colorSurface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:contentPadding="8dp">
 
-            <RadioButton
-                android:id="@+id/donation_freebloksvip"
-                android:layout_width="fill_parent"
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/freebloks_vip" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/donationPaypal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/donation_freebloksvip"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="?colorSurface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:contentPadding="8dp">
 
-            <RadioButton
-                android:id="@+id/donation_paypal"
-                android:layout_width="fill_parent"
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_paypal" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/donationBitcoin"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/donation_paypal"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </RadioGroup>
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="?colorSurface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:contentPadding="8dp">
 
-        <Button
-            android:id="@+id/next"
-            android:layout_width="200dp"
-            android:layout_height="@dimen/main_menu_button_height"
-            android:layout_gravity="center"
-            android:text="@string/donation_next"
-            android:textSize="@dimen/textSizeLarge" />
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_bitcoin" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/donateThankYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="@string/donate_thank_you"
+            android:textColor="?android:textColorTertiary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

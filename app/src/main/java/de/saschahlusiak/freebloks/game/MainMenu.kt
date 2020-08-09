@@ -85,7 +85,7 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
     override fun onStart() {
         super.onStart()
         if (appIconIsDonate) {
-            appIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.heart))
+            appIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.donate_pulse))
         }
     }
 
