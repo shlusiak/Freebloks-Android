@@ -1,5 +1,5 @@
-<p align="center"><img src="stuff/appicon_big.png" width="150"></p> 
-<h2 align="center"><b>Freebloks-Android</b></h2>
+<p align="center"><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloks" target="_blank"><img src="stuff/appicon_big.png" width="150"></a></p> 
+<h2 align="center"><b>Freebloks App for Android</b></h2>
 <h4 align="center">Android port of <a href="https://github.com/shlusiak/freebloks-3d">Freebloks 3D</a></h4>
   
 <p align="center">
@@ -80,17 +80,17 @@ If you like Freebloks I'd be happy about a donation. You can either purchase Fre
 <table>
   <tr>
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/appicon_big_coin.png" alt="Freebloks VIP" width="80px"></a></td>
-    <td><img src="stuff/freebloks_vip_qr_code.png" alt="Freebloks VIP URL QR code" width="100px"></td>
+    <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/freebloks_vip_qr_code.png" alt="Freebloks VIP URL QR code" width="130px"></a></td>
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip">https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip</a></td>
   </tr> 
   <tr>
-    <td><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin" width="80px"></td>
-    <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="100px"></a></td>
-    <td><samp>bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</samp></td>
+    <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin" width="80px"></a></td>
+    <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="130px"></a></td>
+    <td><samp><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002">bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</a></samp></td>
   </tr>
   <tr>
     <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_74x46.jpg" alt="Paypal" width="80px" ></a></td>
-    <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="stuff/paypal_qr_code.png" alt="Paypal QR code" width="100px"></a></td>
+    <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="stuff/paypal_qr_code.png" alt="Paypal QR code" width="130px"></a></td>
     <td><a href="https://paypal.me/saschahlusiak/3eur">https://paypal.me/saschahlusiak/3eur</a></td>
   </tr>
 </table>
