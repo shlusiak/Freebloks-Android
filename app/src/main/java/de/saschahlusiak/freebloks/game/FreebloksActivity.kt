@@ -438,15 +438,12 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val client = viewModel.client
         val lastStatus = viewModel.lastStatus
 
-        if (viewModel.undoWithBack && (client != null) && client.isConnected() && client.game.history.isNotEmpty() && client.game.isLocalPlayer()) {
-            client.requestUndo()
-            scene.playSound(FeedbackType.UndoStone)
+        if (menuShown) {
+            showMenu(shown = false, animate = true)
             return
-        }
-
-        if ((client != null) && client.game.isStarted && !client.game.isFinished && (lastStatus != null) && (lastStatus.clients > 1))
+        } else if ((client != null) && client.game.isStarted && !client.game.isFinished && (lastStatus != null) && (lastStatus.clients > 1)) {
             showDialog(DIALOG_QUIT)
-        else {
+        } else {
             if (viewModel.intro != null) {
                 viewModel.intro?.cancel()
             } else {

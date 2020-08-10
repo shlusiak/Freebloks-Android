@@ -153,8 +153,6 @@
     <string name="prefs_notifications">Уведомления</string>
     <string name="prefs_snap_to_corners_long">Притягивать фишки к ближайшей возможной позиции</string>
     <string name="prefs_snap_to_corners">Притягивать к уголкам</string>
-    <string name="prefs_undo_long">Отменять последний ход нажатием кнопки назад</string>
-    <string name="prefs_undo">Отмена кнопкой назад</string>
     <string name="prefs_show_corners_long">Показывать возможные ходы</string>
     <string name="prefs_show_corners">Уголки</string>
     <string name="prefs_show_opponents_long">Показывать фишки противников</string>

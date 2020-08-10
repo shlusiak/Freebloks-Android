@@ -72,7 +72,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var showOpponents = false
     var snapAid = false
     var showAnimations = AnimationType.Full
-    var undoWithBack = false
 
     // other stuff
     var intro: Intro? = null
@@ -125,7 +124,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             val animationType = getString("animations", AnimationType.Full.settingsValue.toString())?.toInt() ?: 0
             showAnimations = AnimationType.values().firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
             snapAid = getBoolean("snap_aid", true)
-            undoWithBack = getBoolean("back_undo", false)
             showIntro = !getBoolean("skip_intro", false)
         }
 
