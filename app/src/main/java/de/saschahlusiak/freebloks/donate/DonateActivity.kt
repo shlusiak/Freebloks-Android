@@ -104,7 +104,12 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
     private val paypalIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PAYPAL))
 
     companion object {
-        private val URL_FREEBLOKS_VIP = Global.getMarketURLString("de.saschahlusiak.freebloksvip")
+        // F-Droid does not have a Freebloks VIP, so redirect the user to the Google Play Store.
+        private val URL_FREEBLOKS_VIP = if (Global.IS_FDROID)
+            "https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"
+        else
+            Global.getMarketURLString("de.saschahlusiak.freebloksvip")
+
         private const val URL_PAYPAL = "https://paypal.me/saschahlusiak/3eur"
         private const val BITCOIN_WALLET_ADDRESS = "bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl"
         private const val URL_BITCOIN = "bitcoin:$BITCOIN_WALLET_ADDRESS?amount=0.0002"
