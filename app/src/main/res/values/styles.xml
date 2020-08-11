@@ -43,7 +43,8 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/pill_button_background</item>
-        <item name="android:scaleType">center</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">8dp</item>
     </style>
 
 </resources>

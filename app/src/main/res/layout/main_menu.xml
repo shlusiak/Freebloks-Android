@@ -40,6 +40,8 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_weight="0"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
             tools:src="@drawable/ic_volume_up" />
 
         <ImageButton
