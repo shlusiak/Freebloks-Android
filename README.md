@@ -86,7 +86,7 @@ If you like Freebloks I'd be happy about a donation. You can either purchase Fre
   <tr>
     <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin" width="80px"></a></td>
     <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="130px"></a></td>
-    <td><samp><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002">bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</a></samp></td>
+    <td><samp><a href="https://www.blockchain.com/btc/address/bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl">bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</a></samp></td>
   </tr>
   <tr>
     <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_74x46.jpg" alt="Paypal" width="80px" ></a></td>
