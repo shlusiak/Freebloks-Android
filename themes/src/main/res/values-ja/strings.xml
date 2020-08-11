@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_black">黒</string>
+    <string name="theme_blue">青</string>
+    <string name="theme_flowery_cloth">花柄</string>
+    <string name="theme_striped_cloth">縞模様</string>
+    <string name="theme_wood">木目</string>
+    <string name="theme_bricks">レンガ</string>
+    <string name="theme_metal">メタル</string>
+    <string name="theme_velvet">ベルベット</string>
+    <string name="theme_carpet">カーペット</string>
+    <string name="theme_grass">草原</string>
+</resources>

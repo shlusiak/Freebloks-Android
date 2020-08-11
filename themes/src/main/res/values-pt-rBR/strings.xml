@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_black">Preto</string>
+    <string name="theme_blue">Azul</string>
+    <string name="theme_flowery_cloth">Pano florido</string>
+    <string name="theme_striped_cloth">Pano listrado</string>
+    <string name="theme_wood">Madeira</string>
+    <string name="theme_bricks">Tijolos</string>
+    <string name="theme_metal">Metal</string>
+    <string name="theme_velvet">Veludo</string>
+    <string name="theme_carpet">Tapete</string>
+    <string name="theme_grass">Grama</string>
+</resources>

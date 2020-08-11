@@ -149,17 +149,6 @@
     <string name="advanced">Erweitert</string>
     <string name="configure_stones_dialog_title">Spielsteine</string>
 
-    <string name="theme_black">Schwarz</string>
-    <string name="theme_blue">Blau</string>
-    <string name="theme_flowery_cloth">Tischdecke mit Blumenmuster</string>
-    <string name="theme_striped_cloth">Karierte Tischdecke</string>
-    <string name="theme_wood">Holz</string>
-    <string name="theme_bricks">Ziegelsteine</string>
-    <string name="theme_metal">Metall</string>
-    <string name="theme_velvet">Samt</string>
-    <string name="theme_carpet">Blauer Teppich</string>
-    <string name="theme_grass">Gras</string>
-
     <string name="notification_continue">Fortsetzen</string>
     <string name="notification_disconnect">Trennen</string>
 

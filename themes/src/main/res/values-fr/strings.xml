@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_black">Noir</string>
+    <string name="theme_blue">Bleu</string>
+    <string name="theme_flowery_cloth">Tissu fleuri</string>
+    <string name="theme_striped_cloth">Tissu rayé</string>
+    <string name="theme_wood">Bois</string>
+    <string name="theme_bricks">Briques</string>
+    <string name="theme_metal">Métal</string>
+    <string name="theme_velvet">Velours</string>
+    <string name="theme_carpet">Tapis</string>
+    <string name="theme_grass">Pelouse</string>
+</resources>

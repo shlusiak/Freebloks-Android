@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
 import android.util.Log
-import de.saschahlusiak.freebloks.BuildConfig
 
 /**
  * Manages available [Theme] definitions. Get the singleton instance using [.get].

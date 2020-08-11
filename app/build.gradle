@@ -23,7 +23,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    buildToolsVersion '30.0.1'
     ndkVersion '21.3.6528147'
 
     defaultConfig {
@@ -97,7 +97,9 @@ dependencies {
     testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
     implementation project(':common')
+    implementation project(':themes')
 
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_black">Black</string>
+    <string name="theme_green">Green</string>
+    <string name="theme_blue">Blue</string>
+    <string name="theme_white">White</string>
+    <string name="theme_flowery_cloth">Flowery cloth</string>
+    <string name="theme_striped_cloth">Striped cloth</string>
+    <string name="theme_wood">Wood</string>
+    <string name="theme_bricks">Bricks</string>
+    <string name="theme_metal">Metal</string>
+    <string name="theme_velvet">Velvet</string>
+    <string name="theme_carpet">Carpet</string>
+    <string name="theme_grass">Grass</string>
+</resources>

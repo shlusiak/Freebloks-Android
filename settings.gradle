@@ -1,4 +1,5 @@
 rootProject.name = 'Freebloks-Android'
 include ':app'
+include ':themes'
 include ':common'
 include ':google-services'

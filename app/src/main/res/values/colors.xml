@@ -9,8 +9,6 @@
 
     <color name="launcherIconBackground">#EFEFEF</color>
 
-    <color name="theme_background_blue">#0D1A40</color>
-
     <!-- Background color for player status / lobby -->
     <color name="player_background_white">#5C5C5C</color>
     <color name="player_background_blue">#00007F</color>

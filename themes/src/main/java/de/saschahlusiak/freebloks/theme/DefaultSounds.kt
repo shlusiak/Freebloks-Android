@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
-import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.theme.FeedbackType.*
 
 class DefaultSounds(context: Context): BaseSounds(context) {

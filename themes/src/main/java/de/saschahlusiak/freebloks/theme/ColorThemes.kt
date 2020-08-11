@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.theme
 
 import android.graphics.Color
-import de.saschahlusiak.freebloks.R
 
 /**
  * Some plain color themes

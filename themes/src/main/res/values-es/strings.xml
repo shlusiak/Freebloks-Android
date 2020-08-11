@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_black">Negro</string>
+    <string name="theme_blue">Azul</string>
+    <string name="theme_flowery_cloth">Tela de flores</string>
+    <string name="theme_striped_cloth">Tela a rayas</string>
+    <string name="theme_wood">Madera</string>
+    <string name="theme_bricks">Ladrillos</string>
+    <string name="theme_metal">Metal</string>
+    <string name="theme_velvet">Velvet</string>
+    <string name="theme_carpet">Carpet</string>
+    <string name="theme_grass">Grass</string>
+</resources>

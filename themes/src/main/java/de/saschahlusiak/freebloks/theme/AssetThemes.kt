@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import androidx.annotation.DrawableRes
-import de.saschahlusiak.freebloks.R
 
 private class AssetTheme(
     label: Int,

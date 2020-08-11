@@ -130,18 +130,6 @@
     <string name="donation_next">Далее</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
-
-    <string name="theme_black">Чёрная</string>
-    <string name="theme_blue">Синяя</string>
-    <string name="theme_flowery_cloth">В звёздочку</string>
-    <string name="theme_striped_cloth">В клеточку</string>
-    <string name="theme_wood">Дерево</string>
-    <string name="theme_bricks">Кирпич</string>
-    <string name="theme_metal">Metal</string>
-    <string name="theme_velvet">Velvet</string>
-    <string name="theme_carpet">Carpet</string>
-    <string name="theme_grass">Grass</string>
-
     <string name="prefs_interface">Интерфейс</string>
     <string name="prefs_display">Показывать</string>
     <string name="prefs_misc">Дополнительно</string>
