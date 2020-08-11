@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/main_menu_padding"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="@dimen/main_menu_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/main_menu_button_margin"
-        android:padding="0dp" >
+        android:padding="0dp">
 
         <ImageView
             android:id="@+id/appIcon"
@@ -21,7 +22,7 @@
 
         <TextView
             android:id="@+id/title"
-            android:textColor="?android:attr/textColorSecondary"
+            style="@style/TextAppearance.Medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -30,50 +31,51 @@
             android:paddingLeft="4dp"
             android:paddingRight="2dp"
             android:text="@string/app_name"
-            style="@style/TextAppearance.Medium" />
+            android:textColor="?android:attr/textColorSecondary" />
 
         <ImageButton
             android:id="@+id/sound_toggle_button"
             style="?materialButtonStyle"
-            android:layout_weight="0"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:src="@drawable/ic_volume_up_white_48dp" />
+            android:layout_weight="0"
+            tools:src="@drawable/ic_volume_up" />
 
         <ImageButton
             android:id="@+id/rules"
             style="?materialButtonStyle"
-			android:layout_marginLeft="@dimen/main_menu_button_margin"
-            android:layout_weight="0"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginLeft="@dimen/main_menu_button_margin"
+            android:layout_weight="0"
             android:src="@drawable/ic_help" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/main_menu_button_margin" >
-		<Button
-		    android:id="@+id/new_game"
-		    android:layout_width="0dp"
-		    android:layout_height="@dimen/main_menu_button_height"
-		    android:layout_weight="1"
-		    android:text="@string/new_local_game"
-            android:textSize="@dimen/textSizeMedium" />
-		    
-		<ImageButton
-		    android:id="@+id/new_game_custom"
-		    android:layout_width="@dimen/main_menu_button_height"
-		    android:layout_height="@dimen/main_menu_button_height"
-		    android:layout_weight="0"
-		    android:layout_marginLeft="@dimen/main_menu_button_margin"
-		    style="?materialButtonStyle"
-		    android:src="@drawable/gears" />
+        android:layout_marginBottom="@dimen/main_menu_button_margin">
 
-	</LinearLayout>
+        <Button
+            android:id="@+id/new_game"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:layout_weight="1"
+            android:text="@string/new_local_game"
+            android:textSize="@dimen/textSizeMedium" />
+
+        <ImageButton
+            android:id="@+id/new_game_custom"
+            style="?materialButtonStyle"
+            android:layout_width="@dimen/main_menu_button_height"
+            android:layout_height="@dimen/main_menu_button_height"
+            android:layout_marginLeft="@dimen/main_menu_button_margin"
+            android:layout_weight="0"
+            android:src="@drawable/ic_gears" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/resume_game"
@@ -93,7 +95,7 @@
         android:text="@string/multiplayer"
         android:textSize="@dimen/textSizeMedium" />
 
-	<Button
+    <Button
         android:id="@+id/preferences"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_menu_button_height"

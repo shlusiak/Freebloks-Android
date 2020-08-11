@@ -420,17 +420,17 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 return MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.do_you_want_to_leave_current_game)
                     .setPositiveButton(android.R.string.yes) { _, _ -> showMainMenu() }
-                    .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
+                    .setNegativeButton(android.R.string.no, null)
                     .create()
             }
             DIALOG_NEW_GAME_CONFIRMATION -> {
                 return MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.do_you_want_to_leave_current_game)
                     .setPositiveButton(android.R.string.yes) { _, _ -> startNewDefaultGame() }
-                    .setNegativeButton(android.R.string.no) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+                    .setNegativeButton(android.R.string.no, null)
                     .create()
             }
-            else -> return super.onCreateDialog(id)
+            else -> return super.onCreateDialog(id, args)
         }
     }
 

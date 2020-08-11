@@ -46,7 +46,7 @@
             android:layout_height="@dimen/game_finish_social_button_size"
 		    android:layout_weight="0"
 		    style="?android:attr/buttonStyle"
-		    android:src="@drawable/stats" />
+		    android:src="@drawable/ic_preferences_stats" />
     </LinearLayout>
 
     <LinearLayout

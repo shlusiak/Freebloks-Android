@@ -29,7 +29,7 @@
             <ImageButton
                 android:id="@+id/soundOnOff"
                 style="@style/PillButton"
-                android:src="@drawable/ic_volume_up_white_48dp" />
+                android:src="@drawable/ic_volume_up" />
 
             <ImageButton
                 android:id="@+id/hintButton"

@@ -4,7 +4,7 @@
 
     <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
-        android:icon="@drawable/ic_action_mouse"
+        android:icon="@drawable/ic_preferences_interface"
         android:key="INTERFACE"
         android:title="@string/prefs_interface"
         android:widgetLayout="@null"
@@ -16,7 +16,7 @@
 
     <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
-        android:icon="@drawable/ic_action_brightness_medium"
+        android:icon="@drawable/ic_preferences_display"
         android:key="DISPLAY"
         android:title="@string/prefs_display"
         android:widgetLayout="@null"
@@ -28,7 +28,7 @@
 
     <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
-        android:icon="@drawable/ic_action_labels"
+        android:icon="@drawable/ic_preferences_misc"
         android:key="MISC"
         android:title="@string/prefs_misc"
         android:widgetLayout="@null"
@@ -40,7 +40,7 @@
 
     <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
-        android:icon="@drawable/stats"
+        android:icon="@drawable/ic_preferences_stats"
         android:key="STATISTICS"
         android:title="@string/prefs_statistics"
         android:widgetLayout="@null"
@@ -52,7 +52,7 @@
 
     <de.saschahlusiak.freebloks.preferences.types.SelectablePreference
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
-        android:icon="@drawable/ic_action_about"
+        android:icon="@drawable/ic_preferences_about"
         android:key="ABOUT"
         android:title="@string/about"
         android:widgetLayout="@null"
@@ -64,7 +64,7 @@
 
     <Preference
         android:fragment="de.saschahlusiak.freebloks.preferences.SettingsFragment"
-        android:icon="@drawable/ic_action_favorite"
+        android:icon="@drawable/ic_preferences_donate"
         android:key="DONATE"
         android:title="@string/prefs_donation"
         android:widgetLayout="@null"

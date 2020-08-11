@@ -117,7 +117,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/freebloks_vip" />
+                    android:src="@drawable/logo_freebloks_vip" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -135,7 +135,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_paypal" />
+                    android:src="@drawable/logo_paypal" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -153,7 +153,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_bitcoin" />
+                    android:src="@drawable/logo_bitcoin" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>

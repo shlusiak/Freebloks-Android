@@ -2,7 +2,6 @@
 /bin
 /gen
 /obj
-/stuff/textures/*.ktx
 /stuff/video/
 /stuff/screenshots/
 .DS_Store

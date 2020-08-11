@@ -60,7 +60,7 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
         view.sound_toggle_button.setOnClickListener { viewModel.toggleSound() }
 
         viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner, Observer { enabled ->
-            val res = if (enabled) R.drawable.ic_volume_up_white_48dp else R.drawable.ic_volume_off_white_48dp
+            val res = if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
             view.sound_toggle_button.setImageResource(res)
         })
 
@@ -116,13 +116,13 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
     }
 
     override fun onLongClick(v: View): Boolean {
-        when (v.id) {
+        return when (v.id) {
             R.id.new_game -> {
                 activity.startNewDefaultGame()
                 dismiss()
-                return true
+                true
             }
-            else -> return false
+            else -> false
         }
     }
 }
