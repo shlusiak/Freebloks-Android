@@ -66,7 +66,7 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
             val mSpinnerAdapter: SpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.game_modes,
                 android.R.layout.simple_spinner_dropdown_item)
             actionBar.navigationMode = androidx.appcompat.app.ActionBar.NAVIGATION_MODE_LIST
-            actionBar.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, itemId ->
+            actionBar.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, _ ->
                 gameMode = from(itemPosition)
                 refreshData()
                 true

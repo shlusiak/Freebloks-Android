@@ -43,7 +43,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val cardView = view as CardView
-        view.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
+        view.setOnApplyWindowInsetsListener { _: View, insets: WindowInsets ->
             cardView.setContentPadding(insets.systemWindowInsetLeft, 0, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
             insets
         }

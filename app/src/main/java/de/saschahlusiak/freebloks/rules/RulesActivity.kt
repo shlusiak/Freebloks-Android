@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.analytics
@@ -17,22 +16,22 @@ class RulesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.rules_activity)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        youtube.setOnClickListener(this::onYoutubeButtonClick)
+        youtube.setOnClickListener { onYoutubeButtonClick() }
 
         analytics.logEvent("show_rules", null)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun onYoutubeButtonClick(v: View) {
+    private fun onYoutubeButtonClick() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
         startActivity(intent)
         analytics.logEvent("show_rules_video", null)

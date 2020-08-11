@@ -296,6 +296,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog), GameEventObser
         when (status) {
             ConnectionStatus.Disconnected,
             ConnectionStatus.Failed -> dismiss()
+            else -> { }
         }
     }
 }

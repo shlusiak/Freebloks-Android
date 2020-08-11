@@ -198,9 +198,9 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         gl.glPopMatrix()
     }
 
-    private fun moveTo(x: Float, y: Float): Boolean {
-        var x = x
-        var y = y
+    private fun moveTo(toX: Float, toY: Float): Boolean {
+        var x = toX
+        var y = toY
         if (stone == null) return false
 
         /* provide a weird but nice pseudo snapping feeling */

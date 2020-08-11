@@ -5,6 +5,7 @@ import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 
+@Suppress("UNUSED_PARAMETER")
 object DependencyProvider {
     fun initialise(context: Context) { }
 

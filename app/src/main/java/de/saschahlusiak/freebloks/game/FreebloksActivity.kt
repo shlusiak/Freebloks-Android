@@ -156,9 +156,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         undoButton.setOnClickListener { onUndoButtonClick() }
         newGameButton.setOnClickListener { onNewGameButtonClick() }
         preferencesButton.setOnClickListener { onPreferencesButtonClick() }
-        view.setOnTouchListener { v, event ->
+        view.setOnTouchListener { _, _ ->
             if (menuShown) {
-                showMenu(false, true)
+                showMenu(shown = false, animate = true)
             }
             false
         }

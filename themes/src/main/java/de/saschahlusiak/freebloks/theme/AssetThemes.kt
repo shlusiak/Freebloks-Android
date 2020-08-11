@@ -20,6 +20,7 @@ private class AssetTheme(
     override fun getColor(resources: Resources) = Color.argb(255, 214, 214, 214)
 }
 
+@Suppress("PrivatePropertyName")
 class AssetThemes : ThemeProvider {
     private val FloweryCloth = AssetTheme(
         R.string.theme_flowery_cloth,

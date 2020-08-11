@@ -68,8 +68,8 @@ class Intro(context: Context, private val scene: Scene, var listener: IntroDeleg
     }
 
     @WorkerThread
-    fun execute(elapsed: Float) {
-        val elapsed = elapsed * INTRO_SPEED
+    fun execute(elapsed_: Float) {
+        val elapsed = elapsed_ * INTRO_SPEED
 
         anim += elapsed
 
