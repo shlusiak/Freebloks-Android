@@ -1,1 +1,4 @@
 /build
+/src/textures/*.ktx
+/src/textures/hdpi
+/src/textures/xhdpi
