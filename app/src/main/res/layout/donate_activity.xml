@@ -76,7 +76,7 @@
                 android:id="@+id/skip"
                 style="?borderlessButtonStyle"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
                 android:text="@string/donation_skip" />
@@ -85,7 +85,7 @@
                 android:id="@+id/next"
                 style="?materialButtonStyle"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/main_menu_button_height"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
                 android:text="@string/donation_next" />
