@@ -303,8 +303,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         preferencesButton.visibility = visible
         newGameButton.visibility = visible
 
-        showFloatingMenuLabel(preferencesButton, Gravity.LEFT, shown, getString(R.string.preferences))
-        showFloatingMenuLabel(newGameButton, Gravity.LEFT, shown, getString(R.string.new_local_game))
+        showFloatingMenuLabel(preferencesButton, Gravity.LEFT, shown, getString(R.string.settings))
+        showFloatingMenuLabel(newGameButton, Gravity.LEFT, shown, getString(R.string.new_game))
 
         menuShown = shown
     }
@@ -588,7 +588,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun onSoundButtonClick() {
-        viewModel.toggleSound()
+        val soundOn = viewModel.toggleSound()
+        Toast.makeText(this, if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
     }
 
     private fun onUndoButtonClick() {

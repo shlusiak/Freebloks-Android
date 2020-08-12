@@ -98,7 +98,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
                 setCanceledOnTouchOutside(true)
             } else {
                 /* lobby */
-                setTitle(R.string.lobby_waiting_for_players)
+                setTitle(R.string.waiting_for_players)
                 setCanceledOnTouchOutside(false)
             }
         }

@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="new_local_game">新しいゲーム</string>
-    <string name="resume">再開</string>
-    <string name="join_game">参加</string>
+    <string name="new_game">新しいゲーム</string>
+    <string name="resume_game">再開</string>
     <string name="host_game">ホスト</string>
-    <string name="preferences">設定</string>
+    <string name="settings">設定</string>
     <string name="hint">ヒント</string>
     <string name="undo">元に戻す</string>
     <string name="main_menu">メインメニュー</string>
     <string name="about">アプリについて</string>
     <string name="about_freebloks">Freebloks について&#8230;</string>
     <string name="special_thanks_to">スペシャルサンクス</string>
-    <string name="connecting">サーバーに接続中&#8230;</string>
+    <string name="connecting_to_server">サーバーに接続中&#8230;</string>
     <string name="connection_refused">接続を拒否されました</string>
     <string name="could_not_restore_game">ゲームを復元できませんでした</string>
     <string name="do_you_want_to_leave_current_game">現在のゲームをキャンセルしてもよろしいですか?</string>
@@ -29,7 +27,7 @@
     <string name="your_turn">あなたの番です %1$s!</string>
     <string name="difficulty">難易度</string>
     <string name="start">開始</string>
-    <string name="custom_game_title">カスタム ゲーム</string>
+    <string name="custom_game">カスタム ゲーム</string>
     <string name="sound_on">サウンド オン</string>
     <string name="sound_off">サウンド オフ</string>
 
@@ -47,27 +45,25 @@
         <item>ポイント合計</item>
     </string-array>
 
-    <string name="googleplus">Google Play Games</string>
-    <string name="googleplus_signin">サインイン</string>
-    <string name="googleplus_signin_long">Google+ でサインイン</string>
-    <string name="googleplus_signout">サインアウト</string>
-    <string name="googleplus_signout_long">Google+ に %1$s としてサインインしました</string>
-    <string name="googleplus_leaderboard">リーダーボード</string>
-    <string name="googleplus_leaderboard_long">人々のスコアをサークルに表示します</string>
-    <string name="googleplus_achievements">成果</string>
-    <string name="googleplus_achievements_long">獲得した成果を表示します</string>
+    <string name="google_play_games">Google Play Games</string>
+    <string name="google_play_games_signin">サインイン</string>
+    <string name="google_play_games_signin_long">Google+ でサインイン</string>
+    <string name="google_play_games_signout">サインアウト</string>
+    <string name="google_play_games_signout_long">Google+ に %1$s としてサインインしました</string>
+    <string name="google_play_games_leaderboard">リーダーボード</string>
+    <string name="google_play_games_leaderboard_long">人々のスコアをサークルに表示します</string>
+    <string name="google_play_games_achievements">成果</string>
+    <string name="google_play_games_achievements_long">獲得した成果を表示します</string>
 
-    <string name="lobby_waiting_for_players">プレイヤーを待機しています</string>
+    <string name="waiting_for_players">プレイヤーを待機しています</string>
     <plurals name="connected_clients">
         <item quantity="other">%1$d クライアント</item>
     </plurals>
     <string name="chat">チャット</string>
-    <string name="join_server_address">サーバー:</string>
     <string name="join_player_name">あなたの名前:</string>
     <string name="client_d">プレイヤー %1$d</string>
     <string name="player_joined_color">%1$s は %2$s をプレイ中</string>
     <string name="player_left_color">%1$s (%2$s) 残り</string>
-    <string name="no_addresses_found">[IP アドレスが見つかりません]</string>
     <string name="lobby_message_hint">メッセージを入力</string>
 
     <string name="rate_now">はい</string>
@@ -123,14 +119,14 @@
     </string-array>
 
     <string name="please_donate">開発者をサポートする</string>
-    <string name="donation_text_long">Freebloks はフリーソフトウェアです。 完全に無料で使用および変更することができます!\n\nでも、それは価値がないという意味ではありません。 ゲームがどのくらいの価値があるかをあなたが決めて、フリーソフトウェアの開発をサポートすることができるようにするためです。</string>
+    <string name="donation_text_line1">Freebloks はフリーソフトウェアです。 完全に無料で使用および変更することができます!</string>
+    <string name="donation_text_line2">でも、それは価値がないという意味ではありません。 ゲームがどのくらいの価値があるかをあなたが決めて、フリーソフトウェアの開発をサポートすることができるようにするためです</string>
     <string name="donation_text_short">Freebloks の価値はあなたにとって何ですか?</string>
-    <string name="donation_nothing">ない</string>
     <string name="donation_next">次へ</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
-    <string name="notification_continue">続ける</string>
-    <string name="notification_disconnect">切断</string>
+    <string name="action_continue">続ける</string>
+    <string name="disconnect">切断</string>
     
     <string name="prefs_interface">インターフェイス</string>
     <string name="prefs_display">ディスプレイ</string>
@@ -163,7 +159,6 @@
     <string name="prefs_rate_review">%1$s の Freebloks&#8230;</string>
     <string name="prefs_donation_long">寄付をして開発をサポートしてください</string>
     <string name="prefs_donation">Freebloks をサポート&#8230;</string>
-    <string name="prefs_donate">寄付</string>
     <string name="prefs_player_name">プレイヤー名</string>
     <string name="prefs_player_name_default">[デフォルト]</string>
     <string name="prefs_theme">背景</string>

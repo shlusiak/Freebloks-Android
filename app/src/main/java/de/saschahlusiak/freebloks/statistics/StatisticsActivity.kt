@@ -136,7 +136,7 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
         when (requestCode) {
             REQUEST_SIGN_IN -> gameHelper.onActivityResult(resultCode, data) { error ->
                 MaterialAlertDialogBuilder(this).apply {
-                    setMessage(error ?: getString(R.string.playgames_sign_in_failed))
+                    setMessage(error ?: getString(R.string.google_play_games_signin_failed))
                     setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
                     show()
                 }

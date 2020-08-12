@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_weight="0.5"
-            android:text="@string/new_local_game" />
+            android:text="@string/new_game" />
 
         <Button
             android:id="@+id/show_main_menu"

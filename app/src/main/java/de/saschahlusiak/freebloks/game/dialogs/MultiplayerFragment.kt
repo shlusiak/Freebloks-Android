@@ -189,7 +189,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
             val v = layoutInflater.inflate(R.layout.join_bluetooth_device, bluetoothList, false)
             v.findViewById<View>(R.id.image).visibility = View.GONE
             v.findViewById<TextView>(android.R.id.text1).apply {
-                setText(R.string.bluetooth_disabled)
+                setText(R.string.bluetooth_disabled_message)
             }
             bluetoothList.addView(v, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             return

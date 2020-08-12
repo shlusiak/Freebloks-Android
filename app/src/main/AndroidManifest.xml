@@ -58,7 +58,7 @@
         <activity
             android:name=".preferences.SettingsActivity"
             android:exported="false"
-            android:label="@string/preferences"
+            android:label="@string/settings"
             android:theme="@style/Theme.Freebloks.DayNight" />
         <activity
             android:name=".statistics.StatisticsActivity"

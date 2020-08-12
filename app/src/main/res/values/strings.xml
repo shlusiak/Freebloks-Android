@@ -5,29 +5,29 @@
     <string name="github_link" translatable="false">https://github.com/shlusiak/Freebloks-Android</string>
     <string name="notification_channel_default" translatable="false">General</string>
 
-    <string name="new_local_game">New Game</string>
-    <string name="resume">Resume</string>
-    <string name="join_game">Join</string>
+    <string name="new_game">New Game</string>
+    <string name="resume_game">Resume</string>
     <string name="host_game">Host</string>
     <string name="multiplayer">Multiplayer</string>
     <string name="join_multiplayer_game">Join multiplayer game</string>
-    <string name="preferences">Settings</string>
+    <string name="settings">Settings</string>
     <string name="hint">Hint</string>
     <string name="undo">Undo</string>
     <string name="main_menu">Main menu</string>
     <string name="about">About</string>
     <string name="about_freebloks">About Freebloks&#8230;</string>
     <string name="special_thanks_to">Special thanks to</string>
-    <string name="connecting">Connecting to server&#8230;</string>
+    <string name="connecting_to_server">Connecting to server&#8230;</string>
     <string name="connection_refused">Connection refused</string>
     <string name="could_not_restore_game">Could not restore game</string>
     <string name="do_you_want_to_leave_current_game">Are you sure you want to cancel the current game?</string>
     <string name="disconnect_error">Connection closed: %1$s. You are now offline.</string>
+
     <string name="server_address_hint">Server name or address</string>
-    <string name="join_default_server">Internet</string>
-    <string name="join_custom_server">Wireless LAN</string>
-    <string name="join_bluetooth">Bluetooth</string>
-    <string name="bluetooth_disabled">Bluetooth turned off or no devices paired</string>
+    <string name="internet">Internet</string>
+    <string name="wireless_lan">Wireless LAN</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth_disabled_message">Bluetooth turned off or no devices paired</string>
     <string name="multiple_players">Multiple players</string>
 
     <string name="monomino">Monominos</string>
@@ -48,12 +48,13 @@
     <string name="your_turn">It’s your turn, %1$s!</string>
     <string name="difficulty">Difficulty</string>
     <string name="start">Start</string>
-    <string name="custom_game_title">Custom Game</string>
+    <string name="custom_game">Custom Game</string>
     <string name="sound_on">Sound On</string>
     <string name="sound_off">Sound Off</string>
 
     <string name="statistics">Statistics</string>
     <string name="clear_statistics">Reset All</string>
+
     <string-array name="statistics_labels">
         <item>Games played</item>
         <item>Good games (+15)</item>
@@ -66,39 +67,36 @@
         <item>Points total</item>
     </string-array>
 
-    <string name="googleplus">Google Play Games</string>
-    <string name="googleplus_signin">Sign in</string>
-    <string name="googleplus_signin_long">Sign in to Google Play Games</string>
-    <string name="googleplus_signout">Sign out</string>
-    <string name="googleplus_signout_long">Signed in as %1$s</string>
-    <string name="googleplus_leaderboard">Leaderboard</string>
-    <string name="googleplus_leaderboard_long">Show the global leaderboard</string>
-    <string name="googleplus_achievements">Achievements</string>
-    <string name="googleplus_achievements_long">Show earned achievements</string>
-    <string name="playgames_sign_in_failed">Failed to sign in. Please check your network connection and try again.</string>
+    <string name="google_play_games">Google Play Games</string>
+    <string name="google_play_games_signin">Sign in</string>
+    <string name="google_play_games_signin_long">Sign in to Google Play Games</string>
+    <string name="google_play_games_signout">Sign out</string>
+    <string name="google_play_games_signout_long">Signed in as %1$s</string>
+    <string name="google_play_games_leaderboard">Leaderboard</string>
+    <string name="google_play_games_leaderboard_long">Show the global leaderboard</string>
+    <string name="google_play_games_achievements">Achievements</string>
+    <string name="google_play_games_achievements_long">Show earned achievements</string>
+    <string name="google_play_games_signin_failed">Failed to sign in. Please check your network connection and try again.</string>
 
-    <string name="lobby_waiting_for_players">Waiting for players</string>
+    <string name="waiting_for_players">Waiting for players</string>
     <plurals name="connected_clients">
         <item quantity="one">%1$d client</item>
         <item quantity="other">%1$d clients</item>
     </plurals>
     <string name="chat">Chat</string>
-    <string name="join_server_address">Server:</string>
     <string name="join_player_name">Your name:</string>
     <string name="client_d">Player %1$d</string>
     <string name="player_joined_color">%1$s is playing %2$s</string>
     <string name="player_left_color">%1$s (%2$s) has left</string>
-    <string name="no_addresses_found">[no IP-address found]</string>
     <string name="lobby_message_hint">Type message</string>
-    <string name="notification_title">Message from %1$s</string>
+    <string name="message_notification_title">Message from %1$s</string>
 
+    <string name="rate_freebloks_title">Rate Freebloks</string>
+    <string name="rate_freebloks_text">If you enjoy Freebloks, would you like to take a minute and rate it?</string>
+    <string name="rate_freebloks_donate_link">Or buy me a coffee</string>
     <string name="rate_now">Yes</string>
     <string name="rate_later">Later</string>
     <string name="rate_never">No</string>
-    <string name="rate_freebloks_title">Rate Freebloks</string>
-    <string name="rate_freebloks_text">If you enjoy Freebloks, would you like to take a minute and rate it?</string>
-    <string name="rate_freebloks_donate_link">Please support Freebloks</string>
-
 
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d stone left</item>
@@ -114,8 +112,10 @@
         <item>3rd place</item>
         <item>4th place</item>
     </string-array>
+
     <string name="game_finished">Game Over</string>
     <string name="random_color">Random color</string>
+
     <string name="white">White</string>
     <string name="blue">Blue</string>
     <string name="yellow">Yellow</string>
@@ -123,6 +123,7 @@
     <string name="green">Green</string>
     <string name="orange">Orange</string>
     <string name="purple">Purple</string>
+
     <string-array name="difficulties">
         <item>nuts</item>
         <item>hard</item>
@@ -150,19 +151,17 @@
     <string name="donation_text_line1">Freebloks is free software. You can use and modify it completely free of charge!</string>
     <string name="donation_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
     <string name="donation_text_short">Would you support the development with a donation of your choice?</string>
-    <string name="donation_nothing">Nothing</string>
     <string name="donation_skip">Maybe later</string>
     <string name="donation_next">Yes!</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
-    <string name="donation_paypal">PayPal</string>
-    <string name="donation_bitcoin">Bitcoin</string>
+    <string name="donation_paypal" translatable="false">PayPal</string>
+    <string name="donation_bitcoin" translatable="false">Bitcoin</string>
     <string name="donate_thank_you">Thank you for making Freebloks better!</string>
 
     <string name="advanced">Advanced</string>
-    <string name="configure_stones_dialog_title">Configure Tiles</string>
 
-    <string name="notification_continue">Continue</string>
-    <string name="notification_disconnect">Disconnect</string>
+    <string name="action_continue">Continue</string>
+    <string name="disconnect">Disconnect</string>
     
     <string name="prefs_interface">Interface</string>
     <string name="prefs_display">Display</string>
@@ -202,18 +201,17 @@
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Please support the development with a donation</string>
     <string name="prefs_donation">Buy me a coffee&#8230;</string>
-    <string name="prefs_donate">Donate</string>
     <string name="prefs_player_name">Player Name</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_theme">Background</string>
     <string name="prefs_statistics">Statistics</string>
     <string name="prefs_statistics_long">Show game statistics</string>
 
-    <string name="blokus_duo">Blokus Duo</string>
-    <string name="blokus_junior">Blokus Junior</string>
+    <string name="blokus_duo" translatable="false">Blokus Duo</string>
+    <string name="blokus_junior" translatable="false">Blokus Junior</string>
 
     <string name="rules_title">Blokus rules</string>
-    <string name="rules_youtube">Watch HowTo Video</string>
+    <string name="rules_youtube">Watch How-To Video</string>
     <string name="rules_how_to_play">How to play</string>
     <string name="rules_how_to_play_1">Swipe the list of pieces to find and select the piece you want to play, then drag it onto the board.</string>
     <string name="rules_how_to_play_2">Touch the handles on the side of the piece to move, rotate and flip it into position. Tap the piece to place it onto the board.</string>

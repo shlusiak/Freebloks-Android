@@ -146,7 +146,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         playerToShowInSheet.value = playerToShowInSheet.value
     }
 
-    fun toggleSound() {
+    fun toggleSound(): Boolean {
         val value = !soundsEnabled
         prefs
             .edit()
@@ -154,6 +154,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             .apply()
         sounds.soundsEnabled = value
         soundsEnabledLiveData.value = value
+        return value
     }
 
     @UiThread

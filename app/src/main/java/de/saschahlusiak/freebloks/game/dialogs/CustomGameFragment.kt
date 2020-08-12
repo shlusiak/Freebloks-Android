@@ -259,7 +259,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
-            setTitle(R.string.custom_game_title)
+            setTitle(R.string.custom_game)
         }
     }
 }

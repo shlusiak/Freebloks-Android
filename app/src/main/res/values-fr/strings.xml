@@ -1,18 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="new_local_game">Nouvelle partie</string>
-    <string name="resume">Reprendre</string>
-    <string name="join_game">Rejoindre </string>
+    <string name="new_game">Nouvelle partie</string>
+    <string name="resume_game">Reprendre</string>
     <string name="host_game">Hôte&#8230;</string>
-    <string name="preferences">Préférences</string>
+    <string name="settings">Préférences</string>
     <string name="hint">Indice</string>
     <string name="undo">Annuler</string>
     <string name="main_menu">Menu principal</string>
     <string name="about">À propos&#8230;</string>
     <string name="about_freebloks">À propos de Freebloks&#8230;</string>
     <string name="special_thanks_to">Remerciements à&#160;:</string>
-    <string name="connecting">Connexion en cours&#8230;</string>
+    <string name="connecting_to_server">Connexion en cours&#8230;</string>
     <string name="connection_refused">Connexion refusée</string>
     <string name="could_not_restore_game">Impossible de récupérer la partie</string>
     <string name="do_you_want_to_leave_current_game">Êtes-vous sûr de vouloir quitter la partie en cours&#160;?</string>
@@ -30,7 +29,7 @@
     <string name="your_turn">À vous de jouer, %1$s&#160;!</string>
     <string name="difficulty">Difficulté</string>
     <string name="start">Commencer</string>
-    <string name="custom_game_title">Jeu personnalisé</string>
+    <string name="custom_game">Jeu personnalisé</string>
     <string name="sound_on">Effets sonores activés</string>
     <string name="sound_off">Effets sonores désactivés</string>
 
@@ -48,28 +47,26 @@
         <item>Total des points</item>
     </string-array>
 
-    <string name="googleplus">Google Play Games</string>
-    <string name="googleplus_signin">Se connecter</string>
-    <string name="googleplus_signin_long">Se connecter avec Google Play Games</string>
-    <string name="googleplus_signout">Se déconnecter</string>
-    <string name="googleplus_signout_long">Se connecter  en tant que %1$s</string>
-    <string name="googleplus_leaderboard">Meilleurs scores</string>
-    <string name="googleplus_leaderboard_long">Afficher les scores des personnes de vos cercles</string>
-    <string name="googleplus_achievements">Succès</string>
-    <string name="googleplus_achievements_long">Montrer les succès gagnés</string>
+    <string name="google_play_games">Google Play Games</string>
+    <string name="google_play_games_signin">Se connecter</string>
+    <string name="google_play_games_signin_long">Se connecter avec Google Play Games</string>
+    <string name="google_play_games_signout">Se déconnecter</string>
+    <string name="google_play_games_signout_long">Se connecter  en tant que %1$s</string>
+    <string name="google_play_games_leaderboard">Meilleurs scores</string>
+    <string name="google_play_games_leaderboard_long">Afficher les scores des personnes de vos cercles</string>
+    <string name="google_play_games_achievements">Succès</string>
+    <string name="google_play_games_achievements_long">Montrer les succès gagnés</string>
 
-    <string name="lobby_waiting_for_players">En attente de joueurs</string>
+    <string name="waiting_for_players">En attente de joueurs</string>
     <plurals name="connected_clients">
         <item quantity="one">%1$d client</item>
         <item quantity="other">%1$d clients</item>
     </plurals>
     <string name="chat">Chat</string>
-    <string name="join_server_address">Serveur&#160;:</string>
     <string name="join_player_name">Votre nom&#160;:</string>
     <string name="client_d">Joueur %1$d</string>
     <string name="player_joined_color">%1$s joue %2$s</string>
     <string name="player_left_color">%1$s (%2$s) a abandonné</string>
-    <string name="no_addresses_found">[aucune adresse IP trouvée]</string>
     <string name="lobby_message_hint">Tapez votre message</string>
 
     <string name="rate_now">Oui</string>
@@ -127,14 +124,14 @@
     </string-array>
 
     <string name="please_donate">Soutenez les développeurs</string>
-    <string name="donation_text_long">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!\n\ Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
+    <string name="donation_text_line1">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!</string>
+    <string name="donation_text_line2">Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
     <string name="donation_text_short">Combien Freebloks vaut-il pour vous&#160;?</string>
-    <string name="donation_nothing">Rien</string>
     <string name="donation_next">Suivant</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
-    <string name="notification_continue">Continuer</string>
-    <string name="notification_disconnect">Déconnecter</string>
+    <string name="action_continue">Continuer</string>
+    <string name="disconnect">Déconnecter</string>
 
     <string name="prefs_interface">Interface</string>
     <string name="prefs_display">Affichage</string>
@@ -167,7 +164,6 @@
     <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
     <string name="prefs_donation_long">Veuillez soutenir le développement par un don</string>
     <string name="prefs_donation">Soutenez Freebloks&#8230;</string>
-    <string name="prefs_donate">Faire un don</string>
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_theme">Fond d\'écran </string>

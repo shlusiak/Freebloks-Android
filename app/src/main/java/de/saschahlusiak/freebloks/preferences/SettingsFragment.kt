@@ -60,7 +60,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         if (screen == null || screen == SCREEN_STATISTICS) {
             addCategory(R.xml.preferences_stats, R.string.prefs_statistics, showCategory)
             if (viewModel.googleHelper.isAvailable) {
-                addCategory(R.xml.preferences_google_play, R.string.googleplus, true)
+                addCategory(R.xml.preferences_google_play, R.string.google_play_games, true)
             }
             configureStatisticsPreferences()
         }
@@ -75,7 +75,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { signedIn ->
-            findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.googleplus_signout else R.string.googleplus_signin)
+            findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.google_play_games_signout else R.string.google_play_games_signin)
             findPreference<Preference>("googleplus_leaderboard")?.isEnabled = signedIn
             findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn
         })
@@ -83,9 +83,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
         viewModel.playerName.observe(viewLifecycleOwner, Observer { player ->
             findPreference<Preference>("googleplus_signin")?.apply {
                 summary = if (player != null) {
-                    getString(R.string.googleplus_signout_long, player)
+                    getString(R.string.google_play_games_signout_long, player)
                 } else {
-                    getString(R.string.googleplus_signin_long)
+                    getString(R.string.google_play_games_signin_long)
                 }
             }
         })
@@ -96,7 +96,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         when(requestCode) {
             REQUEST_GOOGLE_SIGN_IN -> viewModel.googleHelper.onActivityResult(resultCode, data) { error ->
                 MaterialAlertDialogBuilder(requireContext()).apply {
-                    setMessage(error ?: getString(R.string.playgames_sign_in_failed))
+                    setMessage(error ?: getString(R.string.google_play_games_signin_failed))
                     setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
                     show()
                 }

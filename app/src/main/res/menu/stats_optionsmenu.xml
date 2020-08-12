@@ -7,20 +7,20 @@
     </item>
     <item
         android:id="@+id/signout"
-        android:title="@string/googleplus_signout" >
+        android:title="@string/google_play_games_signout" >
     </item>
     <item
         android:id="@+id/achievements"
         app:showAsAction="always|withText"
         android:icon="@drawable/ic_play_games_badge_achievements_gray"
         android:visible="false"
-        android:title="@string/googleplus_achievements" >
+        android:title="@string/google_play_games_achievements" >
     </item>
     <item
         android:id="@+id/leaderboard"
         app:showAsAction="ifRoom|withText"
         android:icon="@drawable/ic_play_games_badge_leaderboards_gray"
         android:visible="false"
-        android:title="@string/googleplus_leaderboard" >
+        android:title="@string/google_play_games_leaderboard" >
     </item>
 </menu>

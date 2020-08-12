@@ -23,7 +23,7 @@ class ConnectingDialog : MaterialDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         @Suppress("DEPRECATION")
         return MaterialProgressDialog(requireContext(), 0).apply {
-            setMessage(getString(R.string.connecting))
+            setMessage(getString(R.string.connecting_to_server))
             setProgressStyle(ProgressDialog.STYLE_SPINNER)
             setCancelable(true)
             setCanceledOnTouchOutside(true)

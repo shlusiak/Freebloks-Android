@@ -4,22 +4,22 @@
 
     <PreferenceScreen
         android:key="googleplus_signin"
-        android:summary="@string/googleplus_signin_long"
-        android:title="@string/googleplus_signin"
+        android:summary="@string/google_play_games_signin_long"
+        android:title="@string/google_play_games_signin"
         app:iconSpaceReserved="false" />
 
     <PreferenceScreen
         android:enabled="false"
         android:key="googleplus_achievements"
-        android:summary="@string/googleplus_achievements_long"
-        android:title="@string/googleplus_achievements"
+        android:summary="@string/google_play_games_achievements_long"
+        android:title="@string/google_play_games_achievements"
         app:iconSpaceReserved="false" />
 
     <PreferenceScreen
         android:enabled="false"
         android:key="googleplus_leaderboard"
-        android:summary="@string/googleplus_leaderboard_long"
-        android:title="@string/googleplus_leaderboard"
+        android:summary="@string/google_play_games_leaderboard_long"
+        android:title="@string/google_play_games_leaderboard"
         app:iconSpaceReserved="false" />
     
 </PreferenceScreen>

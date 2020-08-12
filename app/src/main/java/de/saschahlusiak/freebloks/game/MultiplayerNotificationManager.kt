@@ -113,7 +113,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         val pendingContentIntent = PendingIntent.getActivity(context, 1, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         builder.setContentIntent(pendingContentIntent)
-        builder.addAction(android.R.drawable.ic_media_play, context.getString(R.string.notification_continue), pendingContentIntent)
+        builder.addAction(android.R.drawable.ic_media_play, context.getString(R.string.action_continue), pendingContentIntent)
 
         val disconnectIntent = Intent(context, FreebloksActivity::class.java).apply {
             action = Intent.ACTION_DELETE
@@ -122,7 +122,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         }
 
         val pendingDisconnectIntent = PendingIntent.getActivity(context, 1, disconnectIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.notification_disconnect), pendingDisconnectIntent)
+        builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.disconnect), pendingDisconnectIntent)
 
         builder.apply {
             setContentTitle(context.getString(R.string.app_name))
@@ -138,8 +138,8 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             if (!client.game.isStarted) {
                 // we are in lobby
                 setSmallIcon(R.drawable.notification_icon)
-                setContentText(context.getString(R.string.lobby_waiting_for_players))
-                setTicker(context.getString(R.string.lobby_waiting_for_players))
+                setContentText(context.getString(R.string.waiting_for_players))
+                setTicker(context.getString(R.string.waiting_for_players))
             } else if (client.game.isFinished) {
                 // game is over notification
                 setSmallIcon(R.drawable.notification_icon)
@@ -243,7 +243,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         else
             status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
 
-        val title = context.getString(R.string.notification_title, name)
+        val title = context.getString(R.string.message_notification_title, name)
         notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = title, text = message))
     }
 

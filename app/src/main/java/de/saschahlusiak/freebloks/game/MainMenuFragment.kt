@@ -8,6 +8,7 @@ import android.view.View.OnLongClickListener
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -57,7 +58,10 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
         }
         appIcon.setOnClickListener(this)
 
-        view.sound_toggle_button.setOnClickListener { viewModel.toggleSound() }
+        view.sound_toggle_button.setOnClickListener {
+            val soundOn = viewModel.toggleSound()
+            Toast.makeText(requireContext(), if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
+        }
 
         viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner, Observer { enabled ->
             val res = if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off

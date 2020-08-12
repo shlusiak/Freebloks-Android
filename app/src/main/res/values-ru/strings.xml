@@ -1,18 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="new_local_game">Новая игра</string>
-    <string name="resume">Продолжить</string>
-    <string name="join_game">Присоединиться</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="new_game">Новая игра</string>
+    <string name="resume_game">Продолжить</string>
     <string name="host_game">Хост&#8230;</string>
-    <string name="preferences">Настройки</string>
+    <string name="settings">Настройки</string>
     <string name="hint">Подсказка</string>
     <string name="undo">Отменить ход</string>
     <string name="main_menu">Главное меню</string>
     <string name="about">О</string>
     <string name="about_freebloks">О Freebloks&#8230;</string>
     <string name="special_thanks_to">Большое спасибо</string>
-    <string name="connecting">Подключение&#8230;</string>
+    <string name="connecting_to_server">Подключение&#8230;</string>
     <string name="connection_refused">Не удалось подключиться</string>
     <string name="could_not_restore_game">Невозможно восстановить игру</string>
     <string name="do_you_want_to_leave_current_game">Вы уверенны, что хотите начать новую игру?</string>
@@ -20,7 +18,7 @@
 
     <string name="waiting_for_color">Ожидание %1$s</string>
     <string name="color_is_out_of_moves">У %1$s кончились ходы</string>
-    <plurals name="player_status_moves">
+    <plurals name="player_status_moves" tools:ignore="MissingQuantity">
         <item quantity="other">%1$d ходов</item>
     </plurals>
     <string name="touch_to_skip">нажмите чтобы продолжить</string>
@@ -29,7 +27,7 @@
     <string name="your_turn">Ваш ход, %1$s!</string>
     <string name="difficulty">Сложность</string>
     <string name="start">Начать</string>
-    <string name="custom_game_title">Параметры игры</string>
+    <string name="custom_game">Параметры игры</string>
     <string name="sound_on">Звук вкл.</string>
     <string name="sound_off">Звук выкл.</string>
 
@@ -47,27 +45,25 @@
         <item>Всего очков</item>
     </string-array>
 
-    <string name="googleplus">Google Play Games</string>
-    <string name="googleplus_signin">Войти</string>
-    <string name="googleplus_signin_long">Войти через Google Play Games</string>
-    <string name="googleplus_signout">Выйти</string>
-    <string name="googleplus_signout_long">Вошли через Google+ как %1$s</string>
-    <string name="googleplus_leaderboard">Список лучших</string>
-    <string name="googleplus_leaderboard_long">Показать результат людей из ваших кругов</string>
-    <string name="googleplus_achievements">Достижения</string>
-    <string name="googleplus_achievements_long">Показать заработанные достижения</string>
+    <string name="google_play_games">Google Play Games</string>
+    <string name="google_play_games_signin">Войти</string>
+    <string name="google_play_games_signin_long">Войти через Google Play Games</string>
+    <string name="google_play_games_signout">Выйти</string>
+    <string name="google_play_games_signout_long">Вошли через Google+ как %1$s</string>
+    <string name="google_play_games_leaderboard">Список лучших</string>
+    <string name="google_play_games_leaderboard_long">Показать результат людей из ваших кругов</string>
+    <string name="google_play_games_achievements">Достижения</string>
+    <string name="google_play_games_achievements_long">Показать заработанные достижения</string>
 
-    <string name="lobby_waiting_for_players">Ожидание хода игроков</string>
-    <plurals name="connected_clients">
+    <string name="waiting_for_players">Ожидание хода игроков</string>
+    <plurals name="connected_clients" tools:ignore="MissingQuantity">
         <item quantity="other">%1$d игрок</item>
     </plurals>
     <string name="chat">Чат</string>
-    <string name="join_server_address">Сервер:</string>
     <string name="join_player_name">Ваше имя:</string>
     <string name="client_d">Игрок %1$d</string>
     <string name="player_joined_color">%1$s выбрал %2$s цвет</string>
     <string name="player_left_color">%1$s (%2$s) вышел из игры</string>
-    <string name="no_addresses_found">[не найдено такого IP]</string>
     <string name="lobby_message_hint">Напишите сообщение</string>
 
     <string name="rate_now">Да</string>
@@ -78,11 +74,11 @@
     <string name="rate_freebloks_donate_link"><u>Пожалуйста, поддержите игру Freebloks</u></string>
 
 
-    <plurals name="number_of_stones_left">
+    <plurals name="number_of_stones_left" tools:ignore="MissingQuantity">
         <item quantity="one">Осталась %1$d фишка</item>
         <item quantity="other">Осталось %1$d фишек</item>
     </plurals>
-    <plurals name="number_of_points">
+    <plurals name="number_of_points" tools:ignore="MissingQuantity">
         <item quantity="one">%1$d очко</item>
         <item quantity="other">%1$d очков</item>
     </plurals>
@@ -124,9 +120,9 @@
     </string-array>
 
     <string name="please_donate">Помогите разработчикам</string>
-    <string name="donation_text_long">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!\n\n Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.\n\n </string>
+    <string name="donation_text_line1">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!</string>
+    <string name="donation_text_line2">Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.</string>
     <string name="donation_text_short">Сколько вы готовы отдать?</string>
-    <string name="donation_nothing">Нисколько</string>
     <string name="donation_next">Далее</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 

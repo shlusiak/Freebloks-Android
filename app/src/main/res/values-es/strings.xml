@@ -1,18 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="new_local_game">Nuevo juego</string>
-    <string name="resume">Reanudar</string>
-    <string name="join_game">Únete</string>
+    <string name="new_game">Nuevo juego</string>
+    <string name="resume_game">Reanudar</string>
     <string name="host_game">Host</string>
-    <string name="preferences">Ajustes</string>
+    <string name="settings">Ajustes</string>
     <string name="hint">Pista</string>
     <string name="undo">Deshacer</string>
     <string name="main_menu">Menú principal</string>
     <string name="about">Acerca de&#8230;</string>
     <string name="about_freebloks">Acerca Freebloks&#8230;</string>
     <string name="special_thanks_to">Agradecimiento especial a</string>
-    <string name="connecting">Conectando&#8230;</string>
+    <string name="connecting_to_server">Conectando&#8230;</string>
     <string name="connection_refused">Conexión rechazada</string>
     <string name="could_not_restore_game">No se pudo restaurar el juego</string>
     <string name="do_you_want_to_leave_current_game">¿Estás seguro de que deseas cancelar el juego actual?</string>
@@ -29,21 +28,19 @@
     <string name="your_turn">¡Es tu turno, %1$s!</string>
     <string name="difficulty">Dificultad</string>
     <string name="start">Inicio</string>
-    <string name="custom_game_title">Partida personalizada</string>
+    <string name="custom_game">Partida personalizada</string>
     <string name="sound_on">Sonidos activados</string>
     <string name="sound_off">Sonidos desactivados</string>
-    <string name="lobby_waiting_for_players">Esperando a los jugadores</string>
+    <string name="waiting_for_players">Esperando a los jugadores</string>
     <plurals name="connected_clients">
         <item quantity="one">%1$d cliente</item>
         <item quantity="other">%1$d clientes</item>
     </plurals>
     <string name="chat">Chatear</string>
-    <string name="join_server_address">Servidor:</string>
     <string name="join_player_name">Tu nombre:</string>
     <string name="client_d">Jugaor %1$d</string>
     <string name="player_joined_color">%1$s está jugando %2$s</string>
     <string name="player_left_color">%1$s (%2$s) ha abandonado</string>
-    <string name="no_addresses_found">[no se ha encontrado dirección IP]</string>
     <string name="lobby_message_hint">Escribe tu mensaje</string>
     <string name="rate_now">Sí</string>
     <string name="rate_later">Más tarde</string>
@@ -101,13 +98,13 @@
     </string-array>
 
     <string name="please_donate">Apoya a los desarrolladores</string>
-    <string name="donation_text_long">Freebloks es software gratis. Lo puedes utilizar y modificar completamente gratis.\n\nPero eso no significa que no tenga ningún valor. Puedes decidir tú mismo cuánto vale el juego para tí y apoyar el desarrollo de software gratis.</string>
-    <string name="donation_text_short">¿Cuánto vale Freebloks para tí?</string>
-    <string name="donation_nothing">Nada</string>
+    <string name="donation_text_line1">Freebloks es software gratis. Lo puedes utilizar y modificar completamente gratis.</string>
+    <string name="donation_text_line2">Pero eso no significa que no tenga ningún valor. Puedes decidir tú mismo cuánto vale el juego para ti y apoyar el desarrollo de software gratis.</string>
+    <string name="donation_text_short">¿Cuánto vale Freebloks para ti?</string>
     <string name="donation_next">Siguiente</string>
     <string name="donation_freebloksvip">Freebloks VIP</string>
 
-    <string name="prefs_interface">Interface</string>
+    <string name="prefs_interface">Interfaz</string>
     <string name="prefs_display">Pantalla</string>
     <string name="prefs_misc">Diversos</string>
     <string name="prefs_sounds_long">Activar los efectos de sonido</string>
