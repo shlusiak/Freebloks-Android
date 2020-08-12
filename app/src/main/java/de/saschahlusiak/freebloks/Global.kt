@@ -24,7 +24,7 @@ object Global {
     const val RATE_MIN_ELAPSED = 4 * (24 * 60 * 60 * 1000).toLong()
 
     /**
-     * Number of starts before the donate dialog appears
+     * Number of starts before the donate dialog appears / the donate symbol replaces the app icon in the menu
      */
     const val DONATE_STARTS = 25
 
