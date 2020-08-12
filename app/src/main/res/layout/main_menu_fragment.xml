@@ -40,8 +40,8 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_weight="0"
-            android:scaleType="fitCenter"
             android:padding="10dp"
+            android:scaleType="fitCenter"
             tools:src="@drawable/ic_volume_up" />
 
         <ImageButton
@@ -51,6 +51,8 @@
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginLeft="@dimen/main_menu_button_margin"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
             android:layout_weight="0"
             android:src="@drawable/ic_help" />
     </LinearLayout>
@@ -74,6 +76,8 @@
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_marginLeft="@dimen/main_menu_button_margin"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
             android:layout_weight="0"
             android:src="@drawable/ic_gears" />
 
@@ -89,7 +93,7 @@
         android:textSize="@dimen/textSizeMedium" />
 
     <Button
-        android:id="@+id/join_game"
+        android:id="@+id/multiplayer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_menu_button_height"
         android:layout_marginBottom="@dimen/main_menu_button_margin"
@@ -98,7 +102,7 @@
         android:textSize="@dimen/textSizeMedium" />
 
     <Button
-        android:id="@+id/preferences"
+        android:id="@+id/settings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_menu_button_height"
         android:text="@string/settings"

@@ -45,8 +45,8 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
         new_game.setOnClickListener(this)
         new_game.setOnLongClickListener(this)
         resume_game.setOnClickListener(this)
-        preferences.setOnClickListener(this)
-        join_game.setOnClickListener(this)
+        settings.setOnClickListener(this)
+        multiplayer.setOnClickListener(this)
         rules.setOnClickListener(this)
         new_game_custom.setOnClickListener(this)
 
@@ -98,7 +98,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
         when (v.id) {
             R.id.new_game -> ColorListFragment().show(parentFragmentManager, null)
             R.id.resume_game -> dismiss()
-            R.id.preferences -> {
+            R.id.settings -> {
                 intent = Intent(context, SettingsActivity::class.java)
                 requireContext().startActivity(intent)
             }
@@ -110,7 +110,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
                     AboutFragment().show(parentFragmentManager, null)
                 }
             }
-            R.id.join_game -> MultiplayerFragment().show(parentFragmentManager, null)
+            R.id.multiplayer -> MultiplayerFragment().show(parentFragmentManager, null)
             R.id.new_game_custom -> CustomGameFragment().show(parentFragmentManager, null)
             R.id.rules -> {
                 intent = Intent(context, RulesActivity::class.java)
