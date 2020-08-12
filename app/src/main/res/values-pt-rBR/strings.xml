@@ -123,7 +123,7 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="please_donate">Apoie os desenvolvedores</string>
+    <string name="donation_title">Apoie os desenvolvedores</string>
     <string name="donation_text_line1">O Freebloks é um software livre. Você pode usá-lo e modificá-lo livre de custos!</string>
     <string name="donation_text_line2">Mas não significa que não tenha valor. Por isso você pode decidir quanto o jogo vale para você e apoiar o desenvolvimento de software livre.</string>
     <string name="donation_text_short">O quanto o Freebloks vale para você?</string>

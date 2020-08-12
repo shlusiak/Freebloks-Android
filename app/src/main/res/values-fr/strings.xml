@@ -123,7 +123,7 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="please_donate">Soutenez les développeurs</string>
+    <string name="donation_title">Soutenez les développeurs</string>
     <string name="donation_text_line1">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!</string>
     <string name="donation_text_line2">Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
     <string name="donation_text_short">Combien Freebloks vaut-il pour vous&#160;?</string>
@@ -163,10 +163,25 @@
     <string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
     <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
     <string name="prefs_donation_long">Veuillez soutenir le développement par un don</string>
-    <string name="prefs_donation">Soutenez Freebloks&#8230;</string>
+    <string name="prefs_donation">Achète-moi un café&#8230;</string>
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_theme">Fond d\'écran </string>
     <string name="prefs_statistics">Statistiques</string>
     <string name="prefs_statistics_long">Afficher les statistiques des parties</string>
+    <string name="multiplayer">Multijoueur</string>
+    <string name="join_multiplayer_game">Rejoignez le jeu multijoueur</string>
+    <string name="server_address_hint">Adresse du serveur</string>
+    <string name="internet">Internet</string>
+    <string name="wireless_lan">WiFi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth_disabled_message">Bluetooth est désactivé ou aucun appareil n\'est jumelé</string>
+    <string name="multiple_players">Plusieurs joueurs</string>
+    <string name="google_play_games_signin_failed">La connexion a échoué. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="message_notification_title">Message de %1$s</string>
+    <string name="donation_skip">Plus tard</string>
+    <string name="donate_thank_you">Merci d\'avoir amélioré Freebloks!</string>
+    <string name="advanced">Avancé</string>
+    <string name="prefs_rules">Afficher les règles&#8230;</string>
+    <string name="prefs_rules_long">Montrez les règles du jeu</string>
 </resources>

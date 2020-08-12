@@ -119,7 +119,7 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="please_donate">Помогите разработчикам</string>
+    <string name="donation_title">Помогите разработчикам</string>
     <string name="donation_text_line1">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!</string>
     <string name="donation_text_line2">Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.</string>
     <string name="donation_text_short">Сколько вы готовы отдать?</string>

@@ -68,7 +68,7 @@
         <activity
             android:name=".donate.DonateActivity"
             android:exported="false"
-            android:label="@string/please_donate"
+            android:label="@string/donation_title"
             android:theme="@style/Theme.Freebloks.DayNight">
             <intent-filter>
                 <action android:name="de.saschahlusiak.freebloks.SHOW_DONATE" />

@@ -70,7 +70,7 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Sign in</string>
     <string name="google_play_games_signin_long">Sign in to Google Play Games</string>
-    <string name="google_play_games_signout">Sign out</string>
+    <string name="google_play_games_signout">Cerrar sesión</string>
     <string name="google_play_games_signout_long">Signed in as %1$s</string>
     <string name="google_play_games_leaderboard">Leaderboard</string>
     <string name="google_play_games_leaderboard_long">Show the global leaderboard</string>
@@ -147,7 +147,7 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="please_donate">Buy the developers a coffee</string>
+    <string name="donation_title">Buy the developers a coffee</string>
     <string name="donation_text_line1">Freebloks is free software. You can use and modify it completely free of charge!</string>
     <string name="donation_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
     <string name="donation_text_short">Would you support the development with a donation of your choice?</string>
