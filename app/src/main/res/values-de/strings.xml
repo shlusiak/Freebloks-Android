@@ -83,7 +83,7 @@
     <string name="rate_never">Nein</string>
     <string name="rate_freebloks_title">Freebloks bewerten</string>
     <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, nimm dir doch bitte eine Minute Zeit, es zu bewerten.</string>
-    <string name="rate_freebloks_donate_link">Freebloks unterstützen</string>
+    <string name="rate_freebloks_donate_link">Oder Freebloks unterstützen</string>
 
 
     <plurals name="number_of_stones_left">
@@ -139,8 +139,7 @@
     <string name="donation_text_line2">Aber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wie du die Entwickler bei ihrer Arbeit unterstützen möchtest.</string>
     <string name="donation_text_short">Möchtest du die Entwickler mit einer Spende deiner Wahl unterstützen?</string>
     <string name="donation_skip">Später</string>
-    <string name="donation_next">Ja!</string>
-    <string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="donation_yes">Ja!</string>
 
     <string name="advanced">Erweitert</string>
 

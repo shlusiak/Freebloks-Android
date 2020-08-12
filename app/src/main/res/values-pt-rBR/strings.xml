@@ -74,7 +74,7 @@
     <string name="rate_never">Não</string>
     <string name="rate_freebloks_title">Avaliar Freebloks</string>
     <string name="rate_freebloks_text">Se você gostou do Freebloks, gostaria de levar um minuto para avaliá-lo?</string>
-    <string name="rate_freebloks_donate_link"><u>Por favor, apoie o Freebloks</u></string>
+    <string name="rate_freebloks_donate_link">Por favor, apoie o Freebloks</string>
 
 
     <plurals name="number_of_stones_left">
@@ -126,9 +126,8 @@
     <string name="donation_title">Apoie os desenvolvedores</string>
     <string name="donation_text_line1">O Freebloks é um software livre. Você pode usá-lo e modificá-lo livre de custos!</string>
     <string name="donation_text_line2">Mas não significa que não tenha valor. Por isso você pode decidir quanto o jogo vale para você e apoiar o desenvolvimento de software livre.</string>
-    <string name="donation_text_short">O quanto o Freebloks vale para você?</string>
-    <string name="donation_next">Próximo</string>
-    <string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="donation_text_short">Você apoiaria o desenvolvimento com uma doação de sua escolha?</string>
+    <string name="donation_yes">Sim!</string>
 
     <string name="action_continue">Continuar</string>
     <string name="disconnect">Desconectar</string>
@@ -174,4 +173,18 @@
     <string name="prefs_theme">Fundo</string>
     <string name="prefs_statistics">Estatísticas</string>
     <string name="prefs_statistics_long">Mostrar estatísticas de partida</string>
+    <string name="multiplayer">Multijogador</string>
+    <string name="join_multiplayer_game">Junte-se ao jogo multijogador</string>
+    <string name="server_address_hint">Nome ou endereço do servidor</string>
+    <string name="internet">Internet</string>
+    <string name="wireless_lan">Wifi</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth_disabled_message">Bluetooth está desligado ou nenhum dispositivo pareado</string>
+    <string name="multiple_players">Vários jogadores</string>
+    <string name="message_notification_title">Mensagem do %1$s</string>
+    <string name="donation_skip">Mais tarde</string>
+    <string name="donate_thank_you">Obrigado por tornar o Freebloks melhor!</string>
+    <string name="advanced">Avançado</string>
+    <string name="prefs_rules">Mostrar regras&#8230;</string>
+    <string name="prefs_rules_long">Mostra as regras do jogo</string>
 </resources>

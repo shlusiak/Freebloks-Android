@@ -71,7 +71,7 @@
     <string name="rate_never">いいえ</string>
     <string name="rate_freebloks_title">Freebloks を評価する</string>
     <string name="rate_freebloks_text">Freebloks を楽しんでいただけたら、少しお時間をいただいて評価していただけませんか?</string>
-    <string name="rate_freebloks_donate_link">Freebloks をサポートしてください</string>
+    <string name="rate_freebloks_donate_link">または私にコーヒーを買う</string>
 
 
     <plurals name="number_of_stones_left">
@@ -118,12 +118,10 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">開発者をサポートする</string>
+    <string name="donation_title">開発者のためにコーヒーを買う</string>
     <string name="donation_text_line1">Freebloks はフリーソフトウェアです。 完全に無料で使用および変更することができます!</string>
     <string name="donation_text_line2">でも、それは価値がないという意味ではありません。 ゲームがどのくらいの価値があるかをあなたが決めて、フリーソフトウェアの開発をサポートすることができるようにするためです</string>
-    <string name="donation_text_short">Freebloks の価値はあなたにとって何ですか?</string>
-    <string name="donation_next">次へ</string>
-    <string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="donation_text_short">寄付で開発を支援しませんか?</string>
 
     <string name="action_continue">続ける</string>
     <string name="disconnect">切断</string>
@@ -164,4 +162,19 @@
     <string name="prefs_theme">背景</string>
     <string name="prefs_statistics">状態</string>
     <string name="prefs_statistics_long">ゲームの状態を表示します</string>
+    <string name="multiplayer">マルチプレイヤー</string>
+    <string name="join_multiplayer_game">マルチプレイヤーゲームに参加する</string>
+    <string name="server_address_hint">サーバー名またはアドレス</string>
+    <string name="internet">インターネット</string>
+    <string name="wireless_lan">Wi-Fi</string>
+    <string name="bluetooth">ブルートゥース</string>
+    <string name="bluetooth_disabled_message">ブルートゥースがオフになっているか、ペアリングされているデバイスがありません</string>
+    <string name="multiple_players">複数のプレイヤー</string>
+    <string name="donation_skip">たぶん後で</string>
+    <string name="donate_thank_you">Freebloksをより良くしてくれてありがとう</string>
+    <string name="advanced">上級</string>
+    <string name="message_notification_title">からのメッセージ %1$s</string>
+    <string name="prefs_rules">ルールを表示&#8230;</string>
+    <string name="prefs_rules_long">ゲームのルールを見せる</string>
+    <string name="donation_yes">はい!</string>
 </resources>

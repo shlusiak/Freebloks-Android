@@ -74,7 +74,7 @@
     <string name="rate_never">Non</string>
     <string name="rate_freebloks_title">Évaluez Freebloks</string>
     <string name="rate_freebloks_text">Si vous aimez Freebloks, voudriez-vous prendre une minute pour le noter&#160;?</string>
-    <string name="rate_freebloks_donate_link">S\'il vous plaît, soutenez Freebloks</string>
+    <string name="rate_freebloks_donate_link">Ou achète-moi un café</string>
 
 
     <plurals name="number_of_stones_left">
@@ -126,9 +126,8 @@
     <string name="donation_title">Soutenez les développeurs</string>
     <string name="donation_text_line1">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!</string>
     <string name="donation_text_line2">Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
-    <string name="donation_text_short">Combien Freebloks vaut-il pour vous&#160;?</string>
-    <string name="donation_next">Suivant</string>
-    <string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="donation_text_short">Soutiendriez-vous le développement avec un don de votre choix?&#160;?</string>
+    <string name="donation_yes">Suivant</string>
 
     <string name="action_continue">Continuer</string>
     <string name="disconnect">Déconnecter</string>

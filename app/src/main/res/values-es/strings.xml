@@ -100,9 +100,8 @@
     <string name="donation_title">Apoya a los desarrolladores</string>
     <string name="donation_text_line1">Freebloks es software gratis. Lo puedes utilizar y modificar completamente gratis.</string>
     <string name="donation_text_line2">Pero eso no significa que no tenga ningún valor. Puedes decidir tú mismo cuánto vale el juego para ti y apoyar el desarrollo de software gratis.</string>
-    <string name="donation_text_short">¿Cuánto vale Freebloks para ti?</string>
-    <string name="donation_next">Siguiente</string>
-    <string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="donation_text_short">¿Apoyaría el desarrollo con una donación de su elección?</string>
+    <string name="donation_yes">¡Si!</string>
 
     <string name="prefs_interface">Interfaz</string>
     <string name="prefs_display">Pantalla</string>
@@ -157,4 +156,8 @@
     <string name="prefs_rules_long">Mostrar reglas del juego</string>
     <string name="prefs_statistics">Estadísticas</string>
     <string name="prefs_statistics_long">Mostrar estadísticas de juegos</string>
+    <string name="google_play_games_leaderboard">Tabla de clasificación</string>
+    <string name="google_play_games_leaderboard_long">Mostrar la tabla de clasificación global</string>
+    <string name="google_play_games_achievements">Logros</string>
+    <string name="google_play_games_achievements_long">Mostrar logros obtenidos</string>
 </resources>

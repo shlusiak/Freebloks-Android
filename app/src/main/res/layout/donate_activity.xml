@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
-                android:text="@string/donation_next" />
+                android:text="@string/donation_yes" />
         </LinearLayout>
 
         <LinearLayout

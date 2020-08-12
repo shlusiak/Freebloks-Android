@@ -152,8 +152,8 @@
     <string name="donation_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
     <string name="donation_text_short">Would you support the development with a donation of your choice?</string>
     <string name="donation_skip">Maybe later</string>
-    <string name="donation_next">Yes!</string>
-    <string name="donation_freebloksvip">Freebloks VIP</string>
+    <string name="donation_yes">Yes!</string>
+    <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>
     <string name="donation_paypal" translatable="false">PayPal</string>
     <string name="donation_bitcoin" translatable="false">Bitcoin</string>
     <string name="donate_thank_you">Thank you for making Freebloks better!</string>
