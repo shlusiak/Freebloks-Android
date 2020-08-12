@@ -14,6 +14,7 @@ import android.view.animation.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
@@ -78,26 +79,35 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
     override fun onClick(v: View) {
         when (v.id) {
             R.id.new_game -> {
+                analytics.logEvent("finish_new_game_click", null)
                 dismiss()
                 listener.startNewDefaultGame()
             }
             R.id.show_main_menu -> {
+                analytics.logEvent("finish_main_menu_click", null)
                 dismiss()
                 listener.showMainMenu()
             }
             R.id.statistics -> {
+                analytics.logEvent("finish_statistics_click", null)
                 val intent = Intent(requireContext(), StatisticsActivity::class.java)
                 startActivity(intent)
             }
-            R.id.achievements -> gameHelper.startAchievementsIntent(this, Companion.REQUEST_ACHIEVEMENTS)
-            R.id.leaderboard -> gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), Companion.REQUEST_LEADERBOARD)
+            R.id.achievements -> {
+                analytics.logEvent("finish_achievements_click", null)
+                gameHelper.startAchievementsIntent(this, Companion.REQUEST_ACHIEVEMENTS)
+            }
+            R.id.leaderboard -> {
+                analytics.logEvent("finish_leaderboard_click", null)
+                gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), Companion.REQUEST_LEADERBOARD)
+            }
         }
     }
 
     private fun updateViews(data: Array<PlayerScore>, gameMode: GameMode) {
         val t = arrayOf(place1, place2, place3, place4)
 
-        when(gameMode) {
+        when (gameMode) {
             GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
             GameMode.GAMEMODE_DUO,
             GameMode.GAMEMODE_JUNIOR,
@@ -167,12 +177,12 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
                     repeatCount = Animation.INFINITE
                 }.also { row.name.startAnimation(it) }
 
-                 AlphaAnimation(0.5f, 1.0f).apply {
-                     duration = 750
-                     interpolator = LinearInterpolator()
-                     repeatMode = Animation.REVERSE
-                     repeatCount = Animation.INFINITE
-                 }.also { set.addAnimation(it) }
+                AlphaAnimation(0.5f, 1.0f).apply {
+                    duration = 750
+                    interpolator = LinearInterpolator()
+                    repeatMode = Animation.REVERSE
+                    repeatCount = Animation.INFINITE
+                }.also { set.addAnimation(it) }
             }
             row.data.startAnimation(set)
 

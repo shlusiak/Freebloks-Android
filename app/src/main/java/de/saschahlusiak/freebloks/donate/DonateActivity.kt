@@ -18,12 +18,12 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        analytics.logEvent("show_donate", null)
+        analytics.logEvent("donate_show", null)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        next.setOnClickListener { onNextButtonPress() }
-        skip.setOnClickListener { finish() }
+        next.setOnClickListener { onYesButtonPress() }
+        skip.setOnClickListener { onSkipButtonPress() }
 
         donationFreebloksVip.setOnClickListener { onFreebloksVIPClick() }
         donationPaypal.setOnClickListener { onPayPalClick() }
@@ -72,11 +72,19 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
         }
     }
 
-    private fun onNextButtonPress() {
+    private fun onYesButtonPress() {
+        analytics.logEvent("donate_yes", null)
+
         block1.isVisible = false
         donateButtonGroup.isVisible = false
         donationsGroup.isVisible = true
         donateThankYou.isVisible = true
+    }
+
+    private fun onSkipButtonPress() {
+        analytics.logEvent("donate_skip", null)
+
+        finish()
     }
 
     private fun onFreebloksVIPClick() {

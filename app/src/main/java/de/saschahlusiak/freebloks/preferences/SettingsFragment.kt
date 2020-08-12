@@ -135,6 +135,8 @@ class SettingsFragment: PreferenceFragmentCompat() {
         val helper = viewModel.googleHelper
 
         findPreference<Preference>("statistics")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_statistics_click", null)
+
             val intent = Intent(activity, StatisticsActivity::class.java)
             startActivity(intent)
             true
@@ -150,11 +152,13 @@ class SettingsFragment: PreferenceFragmentCompat() {
 
         findPreference<Preference>("googleplus_leaderboard")?.setOnPreferenceClickListener {
             if (!helper.isSignedIn) return@setOnPreferenceClickListener false
+            analytics.logEvent("settings_leaderboard_click", null)
             helper.startLeaderboardIntent(this@SettingsFragment, getString(R.string.leaderboard_points_total), REQUEST_GOOGLE_LEADERBOARD)
             true
         }
 
         findPreference<Preference>("googleplus_achievements")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_achievements_click", null)
             helper.startAchievementsIntent(this@SettingsFragment, REQUEST_GOOGLE_ACHIEVEMENTS)
             true
         }
@@ -162,6 +166,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
 
     private fun configureAboutPreferences() {
         findPreference<Preference>("rules")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_rules_click", null)
             val intent = Intent(activity, RulesActivity::class.java)
             startActivity(intent)
             true
@@ -170,7 +175,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         findPreference<Preference>("rate_review")?.apply {
             title = getString(R.string.prefs_rate_review, BuildConfig.APP_STORE_NAME)
             setOnPreferenceClickListener {
-                analytics.logEvent("preferences_show_market", null)
+                analytics.logEvent("settings_show_store_click", null)
 
                 val uri = Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
                 startActivity(Intent("android.intent.action.VIEW", uri))
@@ -180,12 +185,16 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("donate")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_donate_click", null)
+
             val intent = Intent(requireContext(), DonateActivity::class.java)
             startActivity(intent)
             true
         }
 
         findPreference<Preference>("about")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_about_click", null)
+
             AboutFragment().show(parentFragmentManager, null)
             true
         }

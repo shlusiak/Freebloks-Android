@@ -414,7 +414,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     fun requestHint() {
-        analytics.logEvent("hint_received", null)
         client?.run {
             inProgress.value = true
             canRequestHint.value = false

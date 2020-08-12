@@ -145,6 +145,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
 
         chatButton.setOnClickListener {
+            analytics.logEvent("game_chat_click", null)
+
             chatButton.clearAnimation()
             LobbyDialog().show(supportFragmentManager, null)
         }
@@ -574,7 +576,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     //region Menu handling
 
     private fun onNewGameButtonClick() {
-        showMenu(false, true)
+        analytics.logEvent("game_new_game_click", null)
+
+        showMenu(shown = false, animate = true)
         if (viewModel.intro != null) viewModel.intro?.cancel() else {
             val client = viewModel.client
             if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(DIALOG_NEW_GAME_CONFIRMATION)
@@ -582,24 +586,32 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun onHintButtonClick() {
-        showMenu(false, true)
+        analytics.logEvent("game_hint_click", null)
+
+        showMenu(shown = false, animate = true)
         scene.currentStone.stopDragging()
         viewModel.requestHint()
     }
 
     private fun onSoundButtonClick() {
+        analytics.logEvent("game_sound_click", null)
+
         val soundOn = viewModel.toggleSound()
         Toast.makeText(this, if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
     }
 
     private fun onUndoButtonClick() {
-        showMenu(false, true)
+        analytics.logEvent("game_undo_click", null)
+
+        showMenu(shown = false, animate = true)
         viewModel.requestUndo()
         scene.playSound(FeedbackType.UndoStone)
     }
 
     private fun onPreferencesButtonClick() {
-        showMenu(false, true)
+        analytics.logEvent("game_settings_click", null)
+
+        showMenu(shown = false, animate = true)
         intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }

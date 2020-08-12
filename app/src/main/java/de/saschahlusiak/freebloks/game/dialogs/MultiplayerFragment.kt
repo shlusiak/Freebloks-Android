@@ -15,6 +15,7 @@ import androidx.annotation.UiThread
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
@@ -49,6 +50,8 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         view.ok_button.setOnClickListener(this)
 
         host_game.setOnClickListener {
+            analytics.logEvent("multiplayer_host_click", null)
+
             saveSettings()
             val config = GameConfig(server = null, showLobby = true)
             listener?.onStartClientGameWithConfig(config, clientName)
@@ -120,11 +123,13 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     override fun onClick(view: View) {
         when (server_type.checkedRadioButtonId) {
             R.id.radioButtonInternet -> {
+                analytics.logEvent("multiplayer_internet_click", null)
                 val config = GameConfig(server = Global.DEFAULT_SERVER_ADDRESS, showLobby = true)
                 listener?.onStartClientGameWithConfig(config, clientName)
             }
             R.id.radioButtonWifi -> {
                 customServerAddress ?: return
+                analytics.logEvent("multiplayer_wireless_click", null)
                 val config = GameConfig(server = customServerAddress, showLobby =  true)
                 listener?.onStartClientGameWithConfig(config, clientName)
             }
@@ -176,6 +181,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
             saveSettings()
             val device = v.tag as BluetoothDevice
             Log.i(TAG, "Device selected: " + device.name)
+            analytics.logEvent("multiplayer_bluetooth_click", null)
             listener?.onConnectToBluetoothDevice(config, clientName, device)
             dismiss()
         }

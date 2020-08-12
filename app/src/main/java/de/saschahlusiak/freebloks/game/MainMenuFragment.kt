@@ -36,12 +36,19 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val starts = prefs.getLong("rate_number_of_starts", 0)
 
         appIconIsDonate = !Global.IS_VIP && (starts % Global.DONATE_STARTS == 0L)
+        if (appIconIsDonate) {
+            analytics.logEvent("menu_show_donate", null)
+        }
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         new_game.setOnClickListener(this)
         new_game.setOnLongClickListener(this)
         resume_game.setOnClickListener(this)
@@ -53,12 +60,13 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
         appIcon = view.findViewById(R.id.appIcon)
 
         if (appIconIsDonate) {
-            analytics.logEvent("show_donate_button", null)
             appIcon.setImageResource(R.drawable.ic_coffee)
         }
         appIcon.setOnClickListener(this)
 
         view.sound_toggle_button.setOnClickListener {
+            analytics.logEvent("menu_sound_click", null)
+
             val soundOn = viewModel.toggleSound()
             Toast.makeText(requireContext(), if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
         }
@@ -88,6 +96,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
 
     override fun onStart() {
         super.onStart()
+
         if (appIconIsDonate) {
             appIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.donate_pulse))
         }
@@ -96,23 +105,41 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
     override fun onClick(v: View) {
         val intent: Intent
         when (v.id) {
-            R.id.new_game -> ColorListFragment().show(parentFragmentManager, null)
-            R.id.resume_game -> dismiss()
+            R.id.new_game -> {
+                analytics.logEvent("menu_new_game_click", null)
+                ColorListFragment().show(parentFragmentManager, null)
+            }
+            R.id.resume_game -> {
+                analytics.logEvent("menu_resume_click", null)
+                dismiss()
+            }
             R.id.settings -> {
+                analytics.logEvent("menu_settings_click", null)
                 intent = Intent(context, SettingsActivity::class.java)
                 requireContext().startActivity(intent)
             }
             R.id.appIcon -> {
                 if (appIconIsDonate) {
+                    analytics.logEvent("menu_donate_click", null)
+
                     intent = Intent(context, DonateActivity::class.java)
                     requireContext().startActivity(intent)
                 } else {
+                    analytics.logEvent("menu_about_click", null)
+
                     AboutFragment().show(parentFragmentManager, null)
                 }
             }
-            R.id.multiplayer -> MultiplayerFragment().show(parentFragmentManager, null)
-            R.id.new_game_custom -> CustomGameFragment().show(parentFragmentManager, null)
+            R.id.multiplayer -> {
+                analytics.logEvent("menu_multiplayer_click", null)
+                MultiplayerFragment().show(parentFragmentManager, null)
+            }
+            R.id.new_game_custom -> {
+                analytics.logEvent("menu_custom_game_click", null)
+                CustomGameFragment().show(parentFragmentManager, null)
+            }
             R.id.rules -> {
+                analytics.logEvent("menu_rules_click", null)
                 intent = Intent(context, RulesActivity::class.java)
                 requireContext().startActivity(intent)
             }

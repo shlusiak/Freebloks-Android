@@ -22,9 +22,10 @@ class RateAppFragment : MaterialDialogFragment(R.layout.rate_app_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog?.setTitle(R.string.rate_freebloks_title)
-        analytics.logEvent("show_rate", null)
+        analytics.logEvent("rate_show", null)
 
         ok.setOnClickListener {
+            analytics.logEvent("rate_yes_click", null)
             val intent = Intent("android.intent.action.VIEW", Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID)))
             prefs.edit()
                 .putBoolean("rate_show_again", false)
@@ -34,9 +35,13 @@ class RateAppFragment : MaterialDialogFragment(R.layout.rate_app_fragment) {
             startActivity(intent)
         }
 
-        later.setOnClickListener { dismiss() }
+        later.setOnClickListener {
+            analytics.logEvent("rate_later_click", null)
+            dismiss()
+        }
 
         no.setOnClickListener {
+            analytics.logEvent("rate_no_click", null)
             prefs.edit()
                 .putBoolean("rate_show_again", false)
                 .apply()
@@ -45,6 +50,7 @@ class RateAppFragment : MaterialDialogFragment(R.layout.rate_app_fragment) {
         }
 
         link.setOnClickListener {
+            analytics.logEvent("rate_donate_click", null)
             startActivity(Intent(context, DonateActivity::class.java))
         }
     }
