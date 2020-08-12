@@ -16,17 +16,17 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.donate.DonateActivity
-import de.saschahlusiak.freebloks.game.dialogs.ColorListDialog
-import de.saschahlusiak.freebloks.game.dialogs.CustomGameDialog
-import de.saschahlusiak.freebloks.game.dialogs.MultiplayerDialog
+import de.saschahlusiak.freebloks.game.dialogs.ColorListFragment
+import de.saschahlusiak.freebloks.game.dialogs.CustomGameFragment
+import de.saschahlusiak.freebloks.game.dialogs.MultiplayerFragment
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.main_menu.*
-import kotlinx.android.synthetic.main.main_menu.view.*
+import kotlinx.android.synthetic.main.main_menu_fragment.*
+import kotlinx.android.synthetic.main.main_menu_fragment.view.*
 
-class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListener, OnLongClickListener {
+class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
@@ -92,7 +92,7 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
     override fun onClick(v: View) {
         val intent: Intent
         when (v.id) {
-            R.id.new_game -> ColorListDialog().show(parentFragmentManager, null)
+            R.id.new_game -> ColorListFragment().show(parentFragmentManager, null)
             R.id.resume_game -> dismiss()
             R.id.preferences -> {
                 intent = Intent(context, SettingsActivity::class.java)
@@ -106,8 +106,8 @@ class MainMenu : MaterialDialogFragment(R.layout.main_menu), View.OnClickListene
                     AboutFragment().show(parentFragmentManager, null)
                 }
             }
-            R.id.join_game -> MultiplayerDialog().show(parentFragmentManager, null)
-            R.id.new_game_custom -> CustomGameDialog().show(parentFragmentManager, null)
+            R.id.join_game -> MultiplayerFragment().show(parentFragmentManager, null)
+            R.id.new_game_custom -> CustomGameFragment().show(parentFragmentManager, null)
             R.id.rules -> {
                 intent = Intent(context, RulesActivity::class.java)
                 requireContext().startActivity(intent)

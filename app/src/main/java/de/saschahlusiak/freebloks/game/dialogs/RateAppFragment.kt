@@ -14,9 +14,9 @@ import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
-import kotlinx.android.synthetic.main.rate_app_dialog.*
+import kotlinx.android.synthetic.main.rate_app_fragment.*
 
-class RateAppDialog : MaterialDialogFragment(R.layout.rate_app_dialog) {
+class RateAppFragment : MaterialDialogFragment(R.layout.rate_app_fragment) {
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
@@ -50,7 +50,7 @@ class RateAppDialog : MaterialDialogFragment(R.layout.rate_app_dialog) {
     }
 
     companion object {
-        private val tag = RateAppDialog::class.java.simpleName
+        private val tag = RateAppFragment::class.java.simpleName
 
         fun shouldShowRateDialog(context: Context): Boolean {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)

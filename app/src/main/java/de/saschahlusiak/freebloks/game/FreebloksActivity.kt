@@ -37,8 +37,8 @@ import de.saschahlusiak.freebloks.client.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.client.JNIServer.runServerForNewGame
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
-import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog
-import de.saschahlusiak.freebloks.game.dialogs.RateAppDialog.Companion.shouldShowRateDialog
+import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment
+import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -56,7 +56,7 @@ import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
-import kotlinx.android.synthetic.main.main_3d.*
+import kotlinx.android.synthetic.main.freebloks_activity.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
@@ -93,7 +93,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.main_3d)
+        setContentView(R.layout.freebloks_activity)
 
         view = findViewById(R.id.board)
         scene = Scene(viewModel, viewModel.intro, viewModel.sounds)
@@ -487,7 +487,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val client = viewModel.client
         val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
         if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
-        if (showRateDialog) RateAppDialog().show(supportFragmentManager, null)
+        if (showRateDialog) RateAppFragment().show(supportFragmentManager, null)
         view.requestRender()
     }
 
@@ -549,7 +549,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     //region OnStartCustomGameListener
 
     override fun showMainMenu() {
-        MainMenu().show(supportFragmentManager, "game_menu")
+        MainMenuFragment().show(supportFragmentManager, "game_menu")
     }
 
     override fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?): Job {

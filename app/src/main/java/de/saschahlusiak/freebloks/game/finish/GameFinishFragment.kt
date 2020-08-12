@@ -21,11 +21,11 @@ import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.game_finish_activity.*
+import kotlinx.android.synthetic.main.game_finish_fragment.*
 import kotlinx.android.synthetic.main.game_finish_player_row.view.*
 import java.lang.IllegalStateException
 
-class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_activity), View.OnClickListener {
+class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment), View.OnClickListener {
 
     private val viewModel by lazy { ViewModelProvider(this).get(GameFinishFragmentViewModel::class.java) }
     private val gameHelper by lazy { viewModel.gameHelper }

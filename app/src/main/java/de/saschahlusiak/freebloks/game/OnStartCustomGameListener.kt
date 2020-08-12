@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.game
 
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
 import de.saschahlusiak.freebloks.model.GameConfig
 import kotlinx.coroutines.Job
 
@@ -27,7 +26,7 @@ interface OnStartCustomGameListener {
     fun onConnectToBluetoothDevice(config: GameConfig, localClientName: String?, device: BluetoothDevice)
 
     /**
-     * Show the [MainMenu], no questions asked.
+     * Show the [MainMenuFragment], no questions asked.
      */
     fun showMainMenu()
 

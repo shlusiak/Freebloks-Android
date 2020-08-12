@@ -30,9 +30,9 @@ import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
-import kotlinx.android.synthetic.main.lobby_dialog.*
+import kotlinx.android.synthetic.main.lobby_dialog_fragment.*
 
-class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
+class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
     private val client get() = viewModel.client

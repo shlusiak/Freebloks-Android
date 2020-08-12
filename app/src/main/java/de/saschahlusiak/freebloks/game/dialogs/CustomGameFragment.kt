@@ -2,9 +2,7 @@ package de.saschahlusiak.freebloks.game.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.CheckBox
@@ -19,9 +17,9 @@ import de.saschahlusiak.freebloks.model.GameMode.*
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.custom_game_dialog.view.*
+import kotlinx.android.synthetic.main.custom_game_fragment.view.*
 
-class CustomGameDialog : MaterialDialogFragment(R.layout.custom_game_dialog), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
+class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
     private val difficultyValues = intArrayOf(
         200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
@@ -84,18 +82,18 @@ class CustomGameDialog : MaterialDialogFragment(R.layout.custom_game_dialog), On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(view) {
-            difficulty_slider.setOnSeekBarChangeListener(this@CustomGameDialog)
+            difficulty_slider.setOnSeekBarChangeListener(this@CustomGameFragment)
             difficulty_slider.max = difficultyValues.size - 1
 
             players = arrayOf(player1, player2, player3, player4)
             picker = arrayOf(picker1, picker2, picker3, picker4, picker5)
 
-            game_mode.onItemSelectedListener = this@CustomGameDialog
-            view.advanced.setOnClickListener(this@CustomGameDialog)
-            player1.setOnClickListener(this@CustomGameDialog)
-            player2.setOnClickListener(this@CustomGameDialog)
-            cancel.setOnClickListener(this@CustomGameDialog)
-            ok.setOnClickListener(this@CustomGameDialog)
+            game_mode.onItemSelectedListener = this@CustomGameFragment
+            view.advanced.setOnClickListener(this@CustomGameFragment)
+            player1.setOnClickListener(this@CustomGameFragment)
+            player2.setOnClickListener(this@CustomGameFragment)
+            cancel.setOnClickListener(this@CustomGameFragment)
+            ok.setOnClickListener(this@CustomGameFragment)
         }
 
         difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)

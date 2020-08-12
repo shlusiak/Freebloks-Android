@@ -22,14 +22,14 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.multiplayer_dialog.*
-import kotlinx.android.synthetic.main.multiplayer_dialog.view.*
+import kotlinx.android.synthetic.main.multiplayer_fragment.*
+import kotlinx.android.synthetic.main.multiplayer_fragment.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MultiplayerDialog : MaterialDialogFragment(R.layout.multiplayer_dialog), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
-    private val TAG = MultiplayerDialog::class.java.simpleName
+class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
+    private val TAG = MultiplayerFragment::class.java.simpleName
 
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothServer: BluetoothServerThread? = null
@@ -56,7 +56,7 @@ class MultiplayerDialog : MaterialDialogFragment(R.layout.multiplayer_dialog), R
         }
         server_address.apply {
             setText(prefs.getString("custom_server", ""))
-            addTextChangedListener(this@MultiplayerDialog)
+            addTextChangedListener(this@MultiplayerFragment)
         }
         name.setText(prefs.getString("player_name", null))
 

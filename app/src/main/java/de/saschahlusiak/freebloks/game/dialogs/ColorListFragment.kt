@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -24,9 +23,9 @@ import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
 import kotlinx.android.synthetic.main.color_grid_item.view.*
 import kotlinx.android.synthetic.main.color_list_custom_title.*
-import kotlinx.android.synthetic.main.color_list_dialog.*
+import kotlinx.android.synthetic.main.color_list_fragment.*
 
-class ColorListDialog : MaterialDialogFragment(R.layout.color_list_dialog), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private var list: AdapterView<ColorListAdapter>? = null
     private var adapter: ColorListAdapter? = null
     private var selection = BooleanArray(4) { false }
@@ -55,8 +54,8 @@ class ColorListDialog : MaterialDialogFragment(R.layout.color_list_dialog), OnIt
         // with class cast exception
         list = view.findViewById(android.R.id.list) ?: view.findViewById(R.id.grid)
         list?.apply {
-            adapter = this@ColorListDialog.adapter
-            setOnItemClickListener(this@ColorListDialog)
+            adapter = this@ColorListFragment.adapter
+            setOnItemClickListener(this@ColorListFragment)
         }
 
         startButton.setOnClickListener(this)
