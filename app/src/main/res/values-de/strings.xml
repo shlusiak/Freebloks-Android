@@ -134,7 +134,7 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">Unterstütze die Entwicklung</string>
+    <string name="donation_title">Spendiere mir einen Kaffee</string>
     <string name="donation_text_line1">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!</string>
     <string name="donation_text_line2">Aber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wie du die Entwickler bei ihrer Arbeit unterstützen möchtest.</string>
     <string name="donation_text_short">Möchtest du die Entwickler mit einer Spende deiner Wahl unterstützen?</string>
@@ -176,7 +176,7 @@
     <string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
-    <string name="prefs_donation">Kauf mir einen Kaffee&#8230;</string>
+    <string name="prefs_donation">Spendiere mir einen Kaffee&#8230;</string>
     <string name="prefs_player_name">Spielername</string>
     <string name="prefs_player_name_default">[nicht gesetzt]</string>
     <string name="prefs_theme">Hintergrund</string>
