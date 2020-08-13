@@ -18,7 +18,7 @@ class RulesActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         youtube.setOnClickListener { onYoutubeButtonClick() }
 
-        analytics.logEvent("show_rules", null)
+        analytics.logEvent("rules_show", null)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -34,6 +34,6 @@ class RulesActivity : AppCompatActivity() {
     private fun onYoutubeButtonClick() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
         startActivity(intent)
-        analytics.logEvent("show_rules_video", null)
+        analytics.logEvent("rules_video_click", null)
     }
 }

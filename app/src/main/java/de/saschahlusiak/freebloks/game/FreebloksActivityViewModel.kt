@@ -550,7 +550,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     @WorkerThread
     override fun stoneUndone(t: Turn) {
-        analytics.logEvent("undo_move", null)
+        analytics.logEvent("game_undo", null)
     }
 
     override fun onDisconnected(client: GameClient, error: Exception?) {

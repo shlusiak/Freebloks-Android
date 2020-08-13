@@ -683,7 +683,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             val bundle = Bundle().apply {
                 putString("server", server)
             }
-            analytics.logEvent("show_lobby", bundle)
+            analytics.logEvent("lobby_show", bundle)
 
             lifecycleScope.launchWhenStarted {
                 LobbyDialog().show(supportFragmentManager, null)
