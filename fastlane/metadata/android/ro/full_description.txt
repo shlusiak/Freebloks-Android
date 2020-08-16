@@ -1,0 +1,55 @@
+Aceasta este versiunea pentru Android a jocului Freebloks 3D, implementarea celebrului Blokus creat de Sekkoïa. Încearcă să plasezi cât mai multe piese pe tablă, ţinând cont de doar două reguli simple: piesele tale trebuie să atingă cel puţin un colţ al unei piese pe care ai aşezat-o anterior, însă nu trebuie să atingă nicio muchie a celorlalte piese ale tale aflate deja pe tablă. Reuşeşti să plasezi mai multe piese decât adversarii tăi?
+
+REGULI
+Fiecare jucător dispune de 21 de piese asemănătoare celor de Tetris: 12 piese cu câte 5 pătrate, 5 piese cu câte 4 pătrate, 2 piese cu câte 3 pătrate, o piesă cu 2 pătrate şi o piesă de un singur pătrat.
+Jucătorii aşază pe rând câte o piesă pe tabla de 20x20 de pătrăţele. Prima piesă plasată de fiecare jucător trebuie să se afle în colţul tablei desemnat jucătorului respectiv. Fiecare piesă aşezată după aceea trebuie să atingă un colţ al unei piese de aceeaşi culoare, dar niciodată o muchie. Poate atinge însă muchiile pieselor oponenţilor.
+În cazul în care un jucător nu mai are mişcări disponibile, trebuie să-şi cedeze rândul. Partida se încheie atunci când niciunul din jucători nu mai are mişcări posibile.
+La final se face suma tuturor pătratelor aparţinând pieselor care i-au mai rămas fiecărui jucător. Câştigă cel care are cele mai puţine pătrate rămase.
+
+CUM SE JOACĂ
+- Glisează cu degetul peste lista de piese disponibile.
+- Selectează şi mută o piesă pe tablă.
+- Roteşte sau întoarce piesa folosind cele 4 mânere.
+- Aşază piesa în poziţia dorită. Piesa se va înverzi dacă poziţia este validă, şi se ve înroşi în caz contrar. Punctele de contact disponibile sunt marcate pe tablă pentru mai mult confort.
+- Atunci când se află într-o poziţie validă, atinge piesa pentru a o aşeza în locul respectiv.
+- Poţi roti oricând tabla de joc pentru a vedea piesele celorlalţi jucători.
+
+Poţi părăsi aplicaţia fără grijă în orice moment, deoarece partida în curs va fi salvată şi reluată la următoarea pornire a jocului.
+
+CARACTERISTICI
+- Sunt posibile şi partide de doar 2 jucători, fie cu 2 culori (Blokus Duo), fie cu 4 culori (2 pentru fiecare jucător).
+- Dimensiunea tablei de joc este variabilă (poţi seta altă dimensiune decât cea de 20x20)
+- Se poate juca atât împotriva computerului, cât şi a altor jucători, de pe acelaşi dispozitv.
+- Poţi juca online cu prietenii tăi (beta).
+- Jocul oferă indicii, precum şi posibilitatea de a anula ultima mişcare.
+- Arată grozav şi pe tablete!
+
+Aplicaţia este compatibilă şi se poate juca în reţea cu Freebloks 3D pentru Windows şi Linux: http://www.saschahlusiak.de/freebloks-3d/ 
+
+TE RUGĂM, FĂ O DONAŢIE
+Dacă joci cu plăcere Freebloks 3D, te rugăm să susţii activitatea programatorilor donând o sumă la alegere chiar din interiorul aplicaţiei!
+
+Jocul este absolut gratis şi nu conţine publicitate. Codul sursă integral este disponibil pe GitHub: https://github.com/shlusiak/Freebloks-Android 
+
+Dacă ai vreo idee sau vreo sugestie legată de joc, scrie un email la: mail@saschahlusiak.de
+
+Asemănător cu Blokish şi Blokr!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
