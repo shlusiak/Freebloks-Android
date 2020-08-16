@@ -12,6 +12,7 @@ class MessageUndoStone: Message(MessageType.UndoStone, 6) {
         super.write(buffer)
         repeat(6) { buffer.put(0) }
     }
+
     companion object {
         fun from(data: ByteBuffer): MessageUndoStone {
             repeat(6) { data.get() }

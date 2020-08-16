@@ -175,7 +175,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         findPreference<Preference>("rate_review")?.apply {
             title = getString(R.string.prefs_rate_review, BuildConfig.APP_STORE_NAME)
             setOnPreferenceClickListener {
-                analytics.logEvent("settings_show_store_click", null)
+                analytics.logEvent("settings_show_store_click")
 
                 val uri = Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
                 startActivity(Intent("android.intent.action.VIEW", uri))
@@ -185,7 +185,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("donate")?.setOnPreferenceClickListener {
-            analytics.logEvent("settings_donate_click", null)
+            analytics.logEvent("settings_donate_click")
 
             val intent = Intent(requireContext(), DonateActivity::class.java)
             startActivity(intent)
@@ -193,7 +193,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("about")?.setOnPreferenceClickListener {
-            analytics.logEvent("settings_about_click", null)
+            analytics.logEvent("settings_about_click")
 
             AboutFragment().show(parentFragmentManager, null)
             true

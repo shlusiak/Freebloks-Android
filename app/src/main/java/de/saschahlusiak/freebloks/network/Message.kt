@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.network
 
 import android.util.Log
+import androidx.annotation.CallSuper
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.network.message.*
 import de.saschahlusiak.freebloks.utils.hexString
@@ -25,6 +26,7 @@ abstract class Message(rawType: Int, val size: Int = 0): Serializable {
      *
      * @param buffer the entire message into the buffer, including the header
      */
+    @CallSuper
     open fun write(buffer: ByteBuffer) {
         header.write(buffer)
     }

@@ -79,27 +79,27 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
     override fun onClick(v: View) {
         when (v.id) {
             R.id.new_game -> {
-                analytics.logEvent("finish_new_game_click", null)
+                analytics.logEvent("finish_new_game_click")
                 dismiss()
                 listener.startNewDefaultGame()
             }
             R.id.show_main_menu -> {
-                analytics.logEvent("finish_main_menu_click", null)
+                analytics.logEvent("finish_main_menu_click")
                 dismiss()
                 listener.showMainMenu()
             }
             R.id.statistics -> {
-                analytics.logEvent("finish_statistics_click", null)
+                analytics.logEvent("finish_statistics_click")
                 val intent = Intent(requireContext(), StatisticsActivity::class.java)
                 startActivity(intent)
             }
             R.id.achievements -> {
-                analytics.logEvent("finish_achievements_click", null)
-                gameHelper.startAchievementsIntent(this, Companion.REQUEST_ACHIEVEMENTS)
+                analytics.logEvent("finish_achievements_click")
+                gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
             }
             R.id.leaderboard -> {
-                analytics.logEvent("finish_leaderboard_click", null)
-                gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), Companion.REQUEST_LEADERBOARD)
+                analytics.logEvent("finish_leaderboard_click")
+                gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), REQUEST_LEADER_BOARD)
             }
         }
     }
@@ -211,6 +211,6 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
 
     companion object {
         private const val REQUEST_ACHIEVEMENTS = 1000
-        private const val REQUEST_LEADERBOARD = 1001
+        private const val REQUEST_LEADER_BOARD = 1001
     }
 }

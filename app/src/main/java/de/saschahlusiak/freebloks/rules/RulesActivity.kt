@@ -34,6 +34,6 @@ class RulesActivity : AppCompatActivity() {
     private fun onYoutubeButtonClick() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
         startActivity(intent)
-        analytics.logEvent("rules_video_click", null)
+        analytics.logEvent("rules_video_click")
     }
 }
