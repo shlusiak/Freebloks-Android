@@ -30,8 +30,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
 
-        versionCode 107
-        versionName "1.2.7"
+        versionCode 108
+        versionName "1.2.8"
     }
     flavorDimensions 'app', 'store'
     productFlavors {
