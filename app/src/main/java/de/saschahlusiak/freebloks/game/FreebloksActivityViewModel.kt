@@ -193,15 +193,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
         if (!game.isStarted || game.isFinished) return
 
-        val b = Bundle()
-        synchronized(client) {
-            b.putSerializable("game", game)
-        }
-
         GlobalScope.launch(Dispatchers.IO) {
             val p = Parcel.obtain()
-            p.writeBundle(b)
+
             try {
+                synchronized(client) {
+                    val b = Bundle()
+                    b.putSerializable("game", game)
+                    p.writeBundle(b)
+                }
+
                 context.openFileOutput(filename, Context.MODE_PRIVATE).use {
                     it.write(p.marshall())
                 }

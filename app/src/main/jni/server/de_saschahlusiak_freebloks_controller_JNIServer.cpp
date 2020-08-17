@@ -118,7 +118,7 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServ
 
 	game->start_new_game((GAMEMODE)(int)gamemode);
 
-	/* copy spieler to game, map local players to client 0 */
+	/* copy player to game, map local players to client 0 */
 	jint *tmp = je->GetIntArrayElements(spieler, 0);
 	for (i = 0; i < PLAYER_MAX; i++) {
 		if (tmp[i] == PLAYER_LOCAL)
