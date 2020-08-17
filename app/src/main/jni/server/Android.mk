@@ -4,9 +4,9 @@ include $(CLEAR_VARS)
 
 LOCAL_CPPFLAGS  := -DHAVE_CONFIG_H=1
 LOCAL_MODULE    := server
-LOCAL_SRC_FILES := github/src/spiel.cpp \
+LOCAL_SRC_FILES := github/src/board.cpp \
 	github/src/stone.cpp \
-	github/src/spielleiter.cpp \
+	github/src/game.cpp \
 	github/src/player.cpp \
 	github/src/turn.cpp \
 	github/src/turnpool.cpp \

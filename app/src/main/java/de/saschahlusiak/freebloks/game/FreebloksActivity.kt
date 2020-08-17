@@ -151,7 +151,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             LobbyDialog().show(supportFragmentManager, null)
         }
 
-        myLocation.setOnClickListener { scene.boardObject.resetRotation() }
+        myLocation.setOnClickListener { onResetRotationButtonClick() }
         menuButton.setOnClickListener { onMenuButtonClick() }
         soundOnOff.setOnClickListener { onSoundButtonClick() }
         hintButton.setOnClickListener { onHintButtonClick() }
@@ -575,8 +575,14 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     //region Menu handling
 
+    private fun onResetRotationButtonClick() {
+        analytics.logEvent("game_reset_rotation_click")
+
+        scene.boardObject.resetRotation()
+    }
+
     private fun onNewGameButtonClick() {
-        analytics.logEvent("game_new_game_click", null)
+        analytics.logEvent("game_new_game_click")
 
         showMenu(shown = false, animate = true)
         if (viewModel.intro != null) viewModel.intro?.cancel() else {
@@ -586,7 +592,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun onHintButtonClick() {
-        analytics.logEvent("game_hint_click", null)
+        analytics.logEvent("game_hint_click")
 
         showMenu(shown = false, animate = true)
         scene.currentStone.stopDragging()
@@ -594,14 +600,14 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun onSoundButtonClick() {
-        analytics.logEvent("game_sound_click", null)
+        analytics.logEvent("game_sound_click")
 
         val soundOn = viewModel.toggleSound()
         Toast.makeText(this, if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
     }
 
     private fun onUndoButtonClick() {
-        analytics.logEvent("game_undo_click", null)
+        analytics.logEvent("game_undo_click")
 
         showMenu(shown = false, animate = true)
         viewModel.requestUndo()
@@ -609,7 +615,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     private fun onPreferencesButtonClick() {
-        analytics.logEvent("game_settings_click", null)
+        analytics.logEvent("game_settings_click")
 
         showMenu(shown = false, animate = true)
         intent = Intent(this, SettingsActivity::class.java)

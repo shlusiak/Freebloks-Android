@@ -35,7 +35,7 @@ data class MessageServerStatus(
         assert(player in 0..4) { "Invalid number of players $player"}
         assert(computer in 0..4) { "Invalid number of computers $computer"}
         assert(clients in 0..8) { "Invalid number of clients $clients"}
-        assert(clientForPlayer.size == 4) { "Invalid spieler size ${clientForPlayer.size}"}
+        assert(clientForPlayer.size == 4) { "Invalid player size ${clientForPlayer.size}"}
         assert(clientNames.size == 8) { "Invalid clientNames size ${clientNames.size}"}
         assert(stoneNumbers.size == Shape.COUNT) { "Invalid stoneNumbers size ${stoneNumbers.size}"}
     }

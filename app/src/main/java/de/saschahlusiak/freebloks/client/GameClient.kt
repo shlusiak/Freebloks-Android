@@ -18,6 +18,7 @@ import de.saschahlusiak.freebloks.network.MessageWriter
 import de.saschahlusiak.freebloks.network.message.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.sendBlocking
 import java.io.Closeable
 import java.io.IOException
@@ -285,7 +286,12 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
      */
     @AnyThread
     private fun send(msg: Message) {
-        sendQueue.sendBlocking(msg)
+        try {
+            sendQueue.sendBlocking(msg)
+        }
+        catch (e: ClosedSendChannelException) {
+            // ignore send failures
+        }
     }
 
     companion object {
