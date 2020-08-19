@@ -6,9 +6,10 @@ TEXTURES = \
 	texture_table_1.ktx \
 	texture_table_2.ktx \
 	texture_velvet.ktx \
-	texture_wood_fine.ktx
+	texture_wood_fine.ktx \
+	field_wood.ktx
 
-%.ktx: %.png Makefile
+%.ktx: %.png
 	@# xhdpi height: 2 * 64dp
 	mkdir -p xhdpi hdpi
 	convert $*.png -crop 512x128+0+0 xhdpi/$*_preview.png

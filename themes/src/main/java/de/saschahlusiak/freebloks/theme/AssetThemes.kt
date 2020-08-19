@@ -80,7 +80,7 @@ class BoardThemes : ThemeProvider {
 
     private val Wood = AssetTheme(
         R.string.theme_wood,
-        R.drawable.texture_wood_fine_preview,
+        R.drawable.field_wood_preview,
         "field_wood",
         color = Color.rgb(145, 145, 145)
     )
