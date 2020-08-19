@@ -133,13 +133,13 @@ data class MessageServerStatus(
         private const val VERSION_MAX = 3
 
         // the original header size, 11 bytes
-        const val HEADER_SIZE_1_0 = 6 + 5
+        private const val HEADER_SIZE_1_0 = 6 + 5
 
         // the size of version 2 header in bytes, 143 bytes
-        const val HEADER_SIZE_1_5 = HEADER_SIZE_1_0 + 4 + 8 * 16
+        private const val HEADER_SIZE_1_5 = HEADER_SIZE_1_0 + 4 + 8 * 16
 
         // the size of version 3 header in bytes, 166 bytes
-        const val HEADER_SIZE_1_6 = HEADER_SIZE_1_5 + 2 + 21
+        private const val HEADER_SIZE_1_6 = HEADER_SIZE_1_5 + 2 + 21
 
         fun from(buffer: ByteBuffer): MessageServerStatus {
             // we only support header version 3 in the Android version

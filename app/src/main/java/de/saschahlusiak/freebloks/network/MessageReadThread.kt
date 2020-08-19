@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.network
 
 import android.util.Log
-import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.model.GameStateException
 import java.io.IOException
 import java.io.InputStream

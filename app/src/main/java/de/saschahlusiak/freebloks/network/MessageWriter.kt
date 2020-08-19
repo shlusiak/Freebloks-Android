@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import java.io.IOException
 import java.io.OutputStream
-import java.nio.ByteBuffer
 
 /**
  * @param os the OutputStream to write to

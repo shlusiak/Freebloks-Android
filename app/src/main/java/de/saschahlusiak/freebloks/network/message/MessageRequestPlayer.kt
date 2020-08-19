@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.network.message
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.utils.put
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 data class MessageRequestPlayer(val player: Int, val name: String?): Message(MessageType.RequestPlayer, 17) {
     init {
