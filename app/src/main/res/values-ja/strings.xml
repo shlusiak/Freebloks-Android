@@ -159,7 +159,7 @@
     <string name="prefs_donation">Freebloks をサポート&#8230;</string>
     <string name="prefs_player_name">プレイヤー名</string>
     <string name="prefs_player_name_default">[デフォルト]</string>
-    <string name="prefs_theme">背景</string>
+    <string name="prefs_background_theme">背景</string>
     <string name="prefs_statistics">状態</string>
     <string name="prefs_statistics_long">ゲームの状態を表示します</string>
     <string name="multiplayer">マルチプレイヤー</string>

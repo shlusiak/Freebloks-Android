@@ -203,7 +203,8 @@
     <string name="prefs_donation">Buy me a coffee&#8230;</string>
     <string name="prefs_player_name">Player Name</string>
     <string name="prefs_player_name_default">[default]</string>
-    <string name="prefs_theme">Background</string>
+    <string name="prefs_background_theme">Background theme</string>
+    <string name="prefs_board_theme">Board theme</string>
     <string name="prefs_statistics">Statistics</string>
     <string name="prefs_statistics_long">Show game statistics</string>
 

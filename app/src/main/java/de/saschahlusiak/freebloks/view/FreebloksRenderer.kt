@@ -37,7 +37,7 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
     private val viewport = IntArray(4)
     private val projectionMatrix = FloatArray(16)
     private val modelViewMatrix = FloatArray(16)
-    val boardRenderer = BoardRenderer()
+    val boardRenderer = BoardRenderer(context.resources, ColorThemes.White)
     val backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
     private val outputFar = FloatArray(4)
     private val outputNear = FloatArray(4)
@@ -214,6 +214,8 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
         isEmulator = renderer.contains("Android Emulator OpenGL")
         isSoftwareRenderer = renderer.contains("PixelFlinger") || isEmulator
 
+        gl as GL11
+
         Log.i(tag, "Renderer: $renderer")
 
         with(gl) {
@@ -233,7 +235,7 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
 
         updateModelViewMatrix = true
         scene.currentStone.updateTexture(context, gl)
-        boardRenderer.onSurfaceChanged(context, (gl as GL11))
+        boardRenderer.onSurfaceChanged(gl)
         backgroundRenderer.updateTexture(gl)
     }
 }

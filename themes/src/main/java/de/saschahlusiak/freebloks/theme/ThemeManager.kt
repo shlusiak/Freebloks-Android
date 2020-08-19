@@ -6,34 +6,44 @@ import android.util.Log
 /**
  * Manages available [Theme] definitions. Get the singleton instance using [.get].
  *
- * @see [getAllThemes]
  * @see [getTheme]
  */
 class ThemeManager private constructor(context: Context) {
     private val tag = ThemeManager::class.java.simpleName
 
-    private val allThemes: MutableList<Theme> = mutableListOf()
+    val backgroundThemes: List<Theme>
+    val boardThemes: List<Theme>
 
     init {
-        initThemes(context)
+        backgroundThemes = loadBackgroundThemes(context)
+        boardThemes = loadBoardThemes(context)
     }
 
     /**
-     * Discovers and initialises all themes
+     * Discovers and initialises all background themes
      * @param context Context
      */
-    private fun initThemes(context: Context) {
-        allThemes.clear()
-
-        allThemes.add(ColorThemes.Black)
-        allThemes.add(ColorThemes.Blue)
+    private fun loadBackgroundThemes(context: Context): List<Theme> {
+        val themes: MutableList<Theme> = mutableListOf(
+            ColorThemes.Black,
+            ColorThemes.Blue
+        )
 
         if (BuildConfig.DEBUG) {
-            allThemes.add(ColorThemes.Green)
-            allThemes.add(ColorThemes.White)
+            themes.add(ColorThemes.Green)
+            themes.add(ColorThemes.White)
         }
 
-        allThemes.addAll(AssetThemes().getAllThemes(context))
+        themes.addAll(AssetThemes().getAllThemes(context))
+        return themes
+    }
+
+    /**
+     * Discovers and initialises all board themes
+     * @param context Context
+     */
+    private fun loadBoardThemes(context: Context): List<Theme> {
+        return BoardThemes().getAllThemes(context).toList()
     }
 
     /**
@@ -65,27 +75,14 @@ class ThemeManager private constructor(context: Context) {
     }
 
     /**
-     * @return all known themes, including [.RANDOM] and [ColorThemes]
-     */
-    fun getAllThemes(): List<Theme> {
-        return allThemes
-    }
-
-    /**
-     * Get a specified Theme by name, or the default theme if not found
+     * Get a specified Theme by name, or the default theme if not found.
      *
      * @param name name, as retrieved via [Theme.name]
      * @param defaultTheme fall back theme, if not found
      * @return Theme instance
      */
-    fun getTheme(name: String?, defaultTheme: Theme?): Theme? {
-        for (theme in allThemes) {
-            if (theme.name == name) {
-                return theme
-            }
-        }
-
-        return defaultTheme
+    fun getTheme(name: String?, defaultTheme: Theme): Theme {
+        return (backgroundThemes + boardThemes).firstOrNull { it.name == name } ?: defaultTheme
     }
 
     companion object {

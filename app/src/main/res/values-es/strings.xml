@@ -127,7 +127,7 @@
     <string name="prefs_donation">Apoya Freebloks&#8230;</string>
     <string name="prefs_player_name">Nombre del jugador</string>
     <string name="prefs_player_name_default">[default]</string>
-    <string name="prefs_theme">Fondo de pantalla</string>
+    <string name="prefs_background_theme">Fondo de pantalla</string>
     <string name="multiplayer">Multijugador</string>
     <string name="join_multiplayer_game">Únete al juego multijugador</string>
     <string name="server_address_hint">Nombre del servidor</string>

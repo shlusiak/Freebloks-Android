@@ -31,10 +31,19 @@
 
     <de.saschahlusiak.freebloks.preferences.types.ThemePreference
         android:defaultValue="texture_wood"
-        android:dialogTitle="@string/prefs_theme"
+        android:dialogTitle="@string/prefs_background_theme"
         android:key="theme"
         android:persistent="true"
-        android:title="@string/prefs_theme"
+        android:title="@string/prefs_background_theme"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <de.saschahlusiak.freebloks.preferences.types.ThemePreference
+        android:defaultValue="field_wood"
+        android:dialogTitle="@string/prefs_board_theme"
+        android:key="board_theme"
+        android:persistent="true"
+        android:title="@string/prefs_board_theme"
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />
 

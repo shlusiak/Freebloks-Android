@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckedTextView
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.ThemeManager
 
 class ThemePreferenceAdapter(context: Context, private val checkedPosition: Int) : ArrayAdapter<CharSequence>(context, 0) {
@@ -20,8 +21,8 @@ class ThemePreferenceAdapter(context: Context, private val checkedPosition: Int)
 
         val themeName = getItem(position).toString()
 
-        val theme = themeManager.getTheme(themeName, null)
-        v.background = theme?.getPreview(v.resources)
+        val theme = themeManager.getTheme(themeName, ColorThemes.Black)
+        v.background = theme.getPreview(v.resources)
 
         v.findViewById<CheckedTextView>(android.R.id.text1).isChecked = (position == checkedPosition)
 

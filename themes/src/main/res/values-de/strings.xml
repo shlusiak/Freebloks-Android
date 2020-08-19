@@ -2,6 +2,7 @@
 <resources>
     <string name="theme_black">Schwarz</string>
     <string name="theme_blue">Blau</string>
+    <string name="theme_grey">Hellgrau</string>
     <string name="theme_flowery_cloth">Tischdecke mit Blumenmuster</string>
     <string name="theme_striped_cloth">Karierte Tischdecke</string>
     <string name="theme_wood">Holz</string>

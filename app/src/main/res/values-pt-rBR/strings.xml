@@ -170,7 +170,7 @@
     <string name="prefs_donation">Apoie o Freebloks&#8230;</string>
     <string name="prefs_player_name">Nome do Jogador</string>
     <string name="prefs_player_name_default">[padrao]</string>
-    <string name="prefs_theme">Fundo</string>
+    <string name="prefs_background_theme">Fundo</string>
     <string name="prefs_statistics">Estatísticas</string>
     <string name="prefs_statistics_long">Mostrar estatísticas de partida</string>
     <string name="multiplayer">Multijogador</string>

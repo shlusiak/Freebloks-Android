@@ -179,7 +179,8 @@
     <string name="prefs_donation">Spendiere mir einen Kaffee&#8230;</string>
     <string name="prefs_player_name">Spielername</string>
     <string name="prefs_player_name_default">[nicht gesetzt]</string>
-    <string name="prefs_theme">Hintergrund</string>
+    <string name="prefs_background_theme">Hintergrundfarbe</string>
+    <string name="prefs_board_theme">Brettfarbe</string>
     <string name="prefs_statistics">Statistiken</string>
     <string name="prefs_statistics_long">Spielstatistiken zeigen</string>
 

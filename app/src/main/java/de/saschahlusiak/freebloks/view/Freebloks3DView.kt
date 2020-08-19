@@ -40,8 +40,9 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         debugFlags = DEBUG_CHECK_GL_ERROR
     }
 
-    fun setTheme(theme: Theme) {
-        renderer.backgroundRenderer.setTheme(theme)
+    fun setTheme(backgroundTheme: Theme, boardTheme: Theme) {
+        renderer.backgroundRenderer.setTheme(backgroundTheme)
+        renderer.boardRenderer.setTheme(boardTheme)
     }
 
     fun setGameClient(client: GameClient?) {

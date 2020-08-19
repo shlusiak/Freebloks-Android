@@ -165,7 +165,7 @@
     <string name="prefs_donation">Achète-moi un café&#8230;</string>
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
-    <string name="prefs_theme">Fond d\'écran </string>
+    <string name="prefs_background_theme">Fond d\'écran </string>
     <string name="prefs_statistics">Statistiques</string>
     <string name="prefs_statistics_long">Afficher les statistiques des parties</string>
     <string name="multiplayer">Multijoueur</string>

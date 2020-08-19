@@ -51,7 +51,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
-import de.saschahlusiak.freebloks.theme.ThemeManager.Companion.get
+import de.saschahlusiak.freebloks.theme.ThemeManager
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
@@ -229,8 +229,10 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         scene.showAnimations = viewModel.showAnimations
         scene.snapAid = viewModel.snapAid
 
-        val t = get(this).getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.Blue) ?: ColorThemes.Blue
-        view.setTheme(t)
+        val tm = ThemeManager.get(this)
+        val background = tm.getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.Blue)
+        val board = tm.getTheme(prefs.getString("board_theme", "field_wood"), ColorThemes.White)
+        view.setTheme(background, board)
 
         viewModel.onStart()
 

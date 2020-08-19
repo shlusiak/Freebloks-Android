@@ -151,7 +151,7 @@
     <string name="prefs_donation">Помогите Freebloks&#8230;</string>
     <string name="prefs_player_name">Имя игрока</string>
     <string name="prefs_player_name_default">[стандартное]</string>
-    <string name="prefs_theme">Задний фон</string>
+    <string name="prefs_background_theme">Задний фон</string>
     <string name="prefs_statistics">Статистика</string>
     <string name="prefs_statistics_long">Показать игровую статистику</string>
     <string name="multiplayer">Мультиплеер</string>

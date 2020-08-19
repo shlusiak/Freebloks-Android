@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.view
 
-import android.content.Context
+import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.opengl.GLUtils
 import de.saschahlusiak.freebloks.R
@@ -8,13 +8,14 @@ import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.theme.Theme
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11
 
 /**
  * Renders the content of the board, including the board itself and the player's stones, or any stone, really.
  */
-class BoardRenderer() {
+class BoardRenderer(private val resources: Resources, private var theme: Theme) {
     companion object {
         const val stoneSize = 0.45f
         const val defaultStoneAlpha = 0.75f
@@ -30,7 +31,6 @@ class BoardRenderer() {
         private const val y1 = -bevelHeight
         private const val y2 = 0.0f
 
-        private val materialBoardDiffuse = floatArrayOf(0.57f, 0.57f, 0.57f, 1.0f)
         private val materialBoardDiffuseSeed = floatArrayOf(0.45f, 0.8f, 0.55f, 1.0f)
         private val materialBoardSpecular = floatArrayOf(0.25f, 0.24f, 0.24f, 1.0f)
         private val materialBoardShininess = floatArrayOf(35.0f)
@@ -46,12 +46,23 @@ class BoardRenderer() {
 
     private var texture = IntArray(2)
     private val tmp = FloatArray(4)
+    private var valid = false
+    private var hasTexture = false
+    private val rgba = FloatArray(4) { 0.0f }
 
     init {
         field = buildSingleBoardFieldModel()
         border = buildBorderModel(Board.DEFAULT_BOARD_SIZE)
         stone = buildStoneModel()
         shadow = buildStoneShadow()
+    }
+
+    /**
+     * Applies a new theme to the board
+     */
+    fun setTheme(theme: Theme) {
+        this.theme = theme
+        valid = false
     }
 
     /**
@@ -188,7 +199,7 @@ class BoardRenderer() {
         this.border = buildBorderModel(boardSize)
     }
 
-    fun onSurfaceChanged(context: Context, gl: GL11) {
+    fun onSurfaceChanged(gl: GL11) {
         stone.invalidateBuffers(gl)
         field.invalidateBuffers(gl)
         border.invalidateBuffers(gl)
@@ -196,19 +207,42 @@ class BoardRenderer() {
 
         // wood texture
         gl.glGenTextures(texture.size, texture, 0)
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
-        gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST)
-        gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
-        gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
-        KTX.loadKTXTexture(context.assets, "textures/field_wood.ktx")
+        valid = false
 
         // shadow texture
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_shadow)
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stone_shadow)
         gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[1])
         gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_NEAREST)
         gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
         gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
+    }
+
+    private fun updateTexture(gl: GL11) {
+        val asset = theme.asset
+        texture = IntArray(2).also { texture ->
+            gl.glGenTextures(2, texture, 0)
+        }
+
+        if (theme.isResource && asset != null) {
+            hasTexture = true
+            gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
+
+            gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_LINEAR)
+            gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
+            gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
+
+            KTX.loadKTXTexture(resources.assets, asset)
+
+            theme.getColor(resources, rgba)
+            rgba[3] = 1.0f
+        } else {
+            hasTexture = false
+            theme.getColor(resources, rgba)
+            rgba[3] = 1.0f
+        }
+
+        gl.glBindTexture(GL10.GL_TEXTURE_2D, 0)
     }
 
     /**
@@ -219,15 +253,24 @@ class BoardRenderer() {
      * @param seedsPlayer the number of the player whose "seeds" to render or -1 if none
      */
     fun renderBoard(gl: GL11, board: Board, seedsPlayer: Int) {
+        if (!valid) {
+            updateTexture(gl)
+            valid = true
+        }
+
         val textureScale = 0.12f
         val textureRotation = 1.0f
+
+        val materialBoardDiffuse = rgba
 
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, materialBoardSpecular, 0)
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, materialBoardShininess, 0)
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, materialBoardDiffuse, 0)
 
-        gl.glEnable(GL10.GL_TEXTURE_2D)
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
+        if (hasTexture) {
+            gl.glEnable(GL10.GL_TEXTURE_2D)
+            gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
+        }
         field.bindBuffers(gl)
 
         gl.glMatrixMode(GL10.GL_TEXTURE)
@@ -253,7 +296,10 @@ class BoardRenderer() {
                         gl.glMaterialfv(
                             GL10.GL_FRONT_AND_BACK,
                             GL10.GL_AMBIENT_AND_DIFFUSE,
-                            if (fieldStatus == Board.FIELD_ALLOWED) materialBoardDiffuseSeed else materialBoardDiffuse,
+                            if (fieldStatus == Board.FIELD_ALLOWED)
+                                materialBoardDiffuseSeed
+                            else
+                                materialBoardDiffuse,
                             0
                         )
                         lastFieldStatus = fieldStatus

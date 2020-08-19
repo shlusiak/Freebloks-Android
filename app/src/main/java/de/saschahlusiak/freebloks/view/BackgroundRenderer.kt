@@ -31,7 +31,7 @@ class BackgroundRenderer(private val resources: Resources, private var theme: Th
         valid = false
     }
 
-    fun updateTexture(gl: GL10) {
+    fun updateTexture(gl: GL11) {
         valid = true
         val asset = theme.asset
 
@@ -42,13 +42,8 @@ class BackgroundRenderer(private val resources: Resources, private var theme: Th
                 gl.glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
             }
 
-            if (gl is GL11) {
-                gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_LINEAR)
-                gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
-            } else {
-                gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR)
-                gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_FALSE.toFloat())
-            }
+            gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR_MIPMAP_LINEAR)
+            gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
             gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR)
 
             KTX.loadKTXTexture(resources.assets, asset)
@@ -57,6 +52,7 @@ class BackgroundRenderer(private val resources: Resources, private var theme: Th
             rgba[3] = 1.0f
         } else {
             hasTexture = false
+            texture = null
             theme.getColor(resources, rgba)
             rgba[3] = 1.0f
         }
@@ -72,15 +68,17 @@ class BackgroundRenderer(private val resources: Resources, private var theme: Th
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT or GL10.GL_DEPTH_BUFFER_BIT)
 
-        texture?.let { texture ->
-            with(gl) {
-                glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, rgba, 0)
-                glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0)
-                glEnable(GL10.GL_TEXTURE_2D)
-                glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
-                bindBuffers(gl)
-                drawElements(gl, GL10.GL_TRIANGLES)
-                glDisable(GL10.GL_TEXTURE_2D)
+        if (hasTexture) {
+            texture?.let { texture ->
+                with(gl) {
+                    glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, rgba, 0)
+                    glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0)
+                    glEnable(GL10.GL_TEXTURE_2D)
+                    glBindTexture(GL10.GL_TEXTURE_2D, texture[0])
+                    bindBuffers(gl)
+                    drawElements(gl, GL10.GL_TRIANGLES)
+                    glDisable(GL10.GL_TEXTURE_2D)
+                }
             }
         }
     }

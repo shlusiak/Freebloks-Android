@@ -1,24 +1,7 @@
 package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
-import androidx.annotation.DrawableRes
-
-private class AssetTheme(
-    label: Int,
-    @DrawableRes preview: Int,
-    private val assetName: String,
-    override val name: String = assetName,
-    override val ratio: Float = 1.0f
-) : BaseTheme(label, preview) {
-
-    override val asset: String? get() = "textures/$assetName.ktx"
-    override val isResource: Boolean
-        get() = true
-
-    override fun getColor(resources: Resources) = Color.argb(255, 214, 214, 214)
-}
 
 @Suppress("PrivatePropertyName")
 class AssetThemes : ThemeProvider {
@@ -60,11 +43,13 @@ class AssetThemes : ThemeProvider {
         R.drawable.texture_carpet_blue_preview,
         "texture_carpet_blue"
     )
+
     private val Velvet = AssetTheme(
         R.string.theme_velvet,
         R.drawable.texture_velvet_preview,
         "texture_velvet"
     )
+
     private val Grass = AssetTheme(
         R.string.theme_grass,
         R.drawable.texture_grass_preview,
@@ -81,6 +66,29 @@ class AssetThemes : ThemeProvider {
             Carpet,
             Velvet,
             Grass
+        )
+    }
+}
+
+@Suppress("PrivatePropertyName")
+class BoardThemes : ThemeProvider {
+    private val LightGrey = ColorTheme(
+        "grey",
+        label = R.string.theme_grey,
+        color = Color.rgb(145, 145, 140)
+    )
+
+    private val Wood = AssetTheme(
+        R.string.theme_wood,
+        R.drawable.texture_wood_fine_preview,
+        "field_wood",
+        color = Color.rgb(145, 145, 145)
+    )
+
+    override fun getAllThemes(context: Context): Collection<Theme> {
+        return listOf(
+            LightGrey,
+            Wood
         )
     }
 }
