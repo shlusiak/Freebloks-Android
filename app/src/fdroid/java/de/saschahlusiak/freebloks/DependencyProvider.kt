@@ -18,3 +18,4 @@ object DependencyProvider {
 
 val analytics get() = DependencyProvider.analytics()
 val crashReporter get() = DependencyProvider.crashReporter()
+fun Exception.logException() = crashReporter.logException(this)

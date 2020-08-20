@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighScoreDB
@@ -15,13 +16,16 @@ import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.DependencyProvider
-import de.saschahlusiak.freebloks.crashReporter
+import de.saschahlusiak.freebloks.logException
 import de.saschahlusiak.freebloks.model.colorOf
+import kotlinx.coroutines.*
 import kotlin.concurrent.thread
 
 class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
     val gameHelper = DependencyProvider.googlePlayGamesHelper()
     private var unlockAchievementsCalled = false
+
+    private val db: Deferred<HighScoreDB>
 
     // prefs
     val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(getApplication()) }
@@ -38,6 +42,26 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
     fun isInitialised() = (game != null)
 
+    init {
+        db = viewModelScope.async(Dispatchers.IO) {
+            HighScoreDB(app).also {
+                it.open()
+            }
+        }
+    }
+
+    override fun onCleared() {
+        GlobalScope.launch {
+            try {
+                db.await().close()
+            }
+            catch (e: Exception) {
+                e.logException()
+            }
+        }
+        super.onCleared()
+    }
+
     fun setDataFromBundle(bundle: Bundle) {
         if (this.game != null) throw IllegalStateException("Already initialised")
 
@@ -51,7 +75,9 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
             assignClientNames(game.gameMode, data, lastStatus)
 
             // the first time we set data and calculate it, we add it to the database
-            thread { addScores(data, game.gameMode) }
+            viewModelScope.launch {
+                addScores(data, game.gameMode)
+            }
 
             // and unlock achievements if we are logged in
             if (gameHelper.signedIn.value == true && !unlockAchievementsCalled) {
@@ -76,18 +102,15 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
     fun unlockAchievements() {
         val data = data ?: return
-        val game = game?: return
+        val game = game ?: return
         if (!unlockAchievementsCalled) {
             thread { unlockAchievements(data, game.gameMode) }
         }
     }
 
-    @WorkerThread
-    private fun addScores(scores: Array<PlayerScore>, gameMode: GameMode) {
-        val db = HighScoreDB(getApplication())
-
+    private suspend fun addScores(scores: Array<PlayerScore>, gameMode: GameMode) {
         try {
-            db.open()
+            val db = db.await()
 
             scores
                 .filter { it.isLocal }
@@ -97,19 +120,17 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
                     db.addHighScore(gameMode, score.totalPoints, score.stonesLeft, score.color1, score.place, flags)
                 }
-
-            db.close()
         } catch (e: SQLiteException) {
-            crashReporter.logException(e)
+            e.logException()
             e.printStackTrace()
         }
     }
 
     @WorkerThread
-    private fun unlockAchievements(scores: Array<PlayerScore>, gameMode: GameMode) {
+    private fun unlockAchievements(scores: Array<PlayerScore>, gameMode: GameMode) = viewModelScope.launch {
         // ensure we are only calling this once during the lifetime of the view model
         synchronized(this) {
-            if (unlockAchievementsCalled) return
+            if (unlockAchievementsCalled) return@launch
             unlockAchievementsCalled = true
         }
 
@@ -143,32 +164,28 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
 
         gameHelper.increment(context.getString(R.string.achievement_addicted), 1)
 
-        val db = HighScoreDB(getApplication())
         try {
-            db.open()
+            val db = db.await()
+
+            var n = 0
+            for (i in 0..3) if (db.getNumberOfPlace(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 1, i) > 0) n++
+
+            if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 0) > 0) n++
+            if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 2) > 0) n++
+
+            if (n == 6) gameHelper.unlock(context.getString(R.string.achievement_all_colors))
+
+            gameHelper.submitScore(
+                context.getString(R.string.leaderboard_games_won),
+                db.getNumberOfPlace(null, 1).toLong()
+            )
+
+            gameHelper.submitScore(
+                context.getString(R.string.leaderboard_points_total),
+                db.getTotalNumberOfPoints(null).toLong()
+            )
         } catch (e: SQLiteException) {
-            crashReporter.logException(e)
-            return
+            e.logException()
         }
-
-        var n = 0
-        for (i in 0..3) if (db.getNumberOfPlace(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 1, i) > 0) n++
-
-        if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 0) > 0) n++
-        if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 2) > 0) n++
-
-        if (n == 6) gameHelper.unlock(context.getString(R.string.achievement_all_colors))
-
-        gameHelper.submitScore(
-            context.getString(R.string.leaderboard_games_won),
-            db.getNumberOfPlace(null, 1).toLong()
-        )
-
-        gameHelper.submitScore(
-            context.getString(R.string.leaderboard_points_total),
-            db.getTotalNumberOfPoints(null).toLong()
-        )
-
-        db.close()
     }
 }
