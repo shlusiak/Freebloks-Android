@@ -478,6 +478,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     @UiThread
     override fun onIntroCompleted() {
+        Log.d(tag, "onIntroCompleted")
         menuOverlayContainer.isVisible = true
 
         viewModel.intro = null

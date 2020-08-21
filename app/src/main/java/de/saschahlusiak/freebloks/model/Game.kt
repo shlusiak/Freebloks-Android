@@ -113,6 +113,8 @@ class Game(val board: Board = Board()): Serializable {
     }
 
     companion object {
+        private const val serialVersionUID = 1L
+
         const val PLAYER_COMPUTER = -2
         const val PLAYER_LOCAL = -1
     }

@@ -85,10 +85,18 @@ class BoardThemes : ThemeProvider {
         color = Color.rgb(145, 145, 145)
     )
 
+    private val Marble = AssetTheme(
+        R.string.theme_marble,
+        R.drawable.field_marble_preview,
+        "field_marble",
+        color = Color.rgb(120, 130, 120)
+    )
+
     override fun getAllThemes(context: Context): Collection<Theme> {
         return listOf(
             LightGrey,
-            Wood
+            Wood,
+            Marble
         )
     }
 }

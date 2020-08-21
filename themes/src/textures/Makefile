@@ -7,7 +7,8 @@ TEXTURES = \
 	texture_table_2.ktx \
 	texture_velvet.ktx \
 	texture_wood_fine.ktx \
-	field_wood.ktx
+	field_wood.ktx \
+	field_marble.ktx
 
 %.ktx: %.png
 	@# xhdpi height: 2 * 64dp

@@ -27,6 +27,7 @@ data class Orientation(val mirrored: Boolean = false, val rotation: Rotation = R
     }
 
     companion object {
+        private const val serialVersionUID = 1L
         val Default = Orientation()
     }
 }

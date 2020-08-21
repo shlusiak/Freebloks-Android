@@ -174,6 +174,8 @@ class Shape private constructor(
     }
 
     companion object {
+        private const val serialVersionUID = 1L
+
         const val SIZE_MAX = 5
         const val COUNT = 21
 

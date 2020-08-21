@@ -11,6 +11,6 @@ data class Turn(val player: Int, val shape: Shape, val orientation: Orientation,
     val shapeNumber = shape.number
 
     companion object {
-        private const val serialVersionUID = -1715006791524885742L
+        private const val serialVersionUID = 1L
     }
 }

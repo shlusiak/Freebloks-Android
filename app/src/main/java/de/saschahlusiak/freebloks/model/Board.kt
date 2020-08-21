@@ -357,6 +357,8 @@ class Board(var width: Int, var height: Int) : Serializable {
     }
 
     companion object {
+        private const val serialVersionUID = 1L
+
         const val FIELD_FREE = 240
         const val FIELD_ALLOWED = 241
         const val FIELD_DENIED = 255
@@ -378,7 +380,7 @@ class Board(var width: Int, var height: Int) : Serializable {
             0x01 or 0x02,  // 00000011b
             0x04 or 0x08,  // 00001100b
             0x10 or 0x20,  // 00110000b
-            0x40 or 0x80 // 11000000b
+            0x40 or 0x80   // 11000000b
         )
 
         /**
@@ -388,7 +390,7 @@ class Board(var width: Int, var height: Int) : Serializable {
             0x01,  // 00000001b
             0x04,  // 00000100b
             0x10,  // 00010000b
-            0x40 // 01000000b
+            0x40   // 01000000b
         )
 
         /**
@@ -398,7 +400,7 @@ class Board(var width: Int, var height: Int) : Serializable {
             0x02,  // 00000010b
             0x08,  // 00001000b
             0x20,  // 00100000b
-            0x80 // 10000000b
+            0x80   // 10000000b
         )
 
         /**

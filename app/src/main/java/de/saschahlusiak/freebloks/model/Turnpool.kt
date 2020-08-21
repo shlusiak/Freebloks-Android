@@ -6,4 +6,8 @@ import java.util.*
 /**
  * Simple Stack to contain Turns for the undo history
  */
-class Turnpool : LinkedList<Turn>(), Serializable
+class Turnpool : LinkedList<Turn>(), Serializable {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
+}

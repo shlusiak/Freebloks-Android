@@ -309,7 +309,7 @@ class BoardRenderer(private val resources: Resources, private var theme: Theme) 
                 field.drawElements(gl, GL10.GL_TRIANGLES)
 
                 gl.glMatrixMode(GL10.GL_TEXTURE)
-                gl.glTranslatef(stoneSize * 2.0f, 0f, 0f)
+                gl.glTranslatef(stoneSize * 4.0f, 0f, 0f)
 
                 gl.glMatrixMode(GL10.GL_MODELVIEW)
                 gl.glTranslatef(stoneSize * 2.0f, 0f, 0f)
@@ -317,7 +317,7 @@ class BoardRenderer(private val resources: Resources, private var theme: Theme) 
                 x++
             }
             gl.glMatrixMode(GL10.GL_TEXTURE)
-            gl.glTranslatef(-x * stoneSize * 2.0f, stoneSize * 2.0f, 0f)
+            gl.glTranslatef(-x * stoneSize * 4.0f, stoneSize *4.0f, 0f)
 
             gl.glMatrixMode(GL10.GL_MODELVIEW)
             gl.glTranslatef(-x * stoneSize * 2.0f, 0f, stoneSize * 2.0f)
