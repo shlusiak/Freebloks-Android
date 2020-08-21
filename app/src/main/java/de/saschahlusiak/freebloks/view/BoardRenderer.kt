@@ -8,6 +8,7 @@ import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Orientation
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.Theme
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11
@@ -15,7 +16,7 @@ import javax.microedition.khronos.opengles.GL11
 /**
  * Renders the content of the board, including the board itself and the player's stones, or any stone, really.
  */
-class BoardRenderer(private val resources: Resources, private var theme: Theme) {
+class BoardRenderer(private val resources: Resources) {
     companion object {
         const val stoneSize = 0.45f
         const val defaultStoneAlpha = 0.75f
@@ -44,6 +45,7 @@ class BoardRenderer(private val resources: Resources, private var theme: Theme) 
     val stone: SimpleModel
     private val shadow: SimpleModel
 
+    private var theme: Theme = ColorThemes.Black
     private var texture = IntArray(2)
     private val tmp = FloatArray(4)
     private var valid = false
