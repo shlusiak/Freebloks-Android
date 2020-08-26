@@ -32,8 +32,8 @@ class BoardRenderer(private val resources: Resources) {
         private const val y1 = -bevelHeight
         private const val y2 = 0.0f
 
-        private val materialBoardDiffuseSeed = floatArrayOf(0.45f, 0.8f, 0.55f, 1.0f)
-        private val materialBoardSpecular = floatArrayOf(0.25f, 0.24f, 0.24f, 1.0f)
+        private val materialBoardDiffuseSeed = floatArrayOf(0.45f, 0.85f, 0.6f, 0.75f)
+        private val materialBoardSpecular = floatArrayOf(0.25f, 0.25f, 0.25f, 1.0f)
         private val materialBoardShininess = floatArrayOf(35.0f)
         val materialStoneSpecular = floatArrayOf(0.3f, 0.3f, 0.3f, 1.0f)
         val materialStoneShininess = floatArrayOf(30.0f)
@@ -288,27 +288,45 @@ class BoardRenderer(private val resources: Resources) {
 
         gl.glPushMatrix()
         gl.glTranslatef(-stoneSize * (w - 1).toFloat(), 0f, -stoneSize * (h - 1).toFloat())
-        var lastFieldStatus = -1
+
+        gl.glMaterialfv(
+            GL10.GL_FRONT_AND_BACK,
+            GL10.GL_AMBIENT_AND_DIFFUSE,
+            materialBoardDiffuse,
+            0
+        )
+
         for (y in 0 until h) {
             var x = 0
             while (x < w) {
-                if (seedsPlayer >= 0) {
-                    val fieldStatus = board.getFieldStatus(seedsPlayer, y, x)
-                    if (fieldStatus != lastFieldStatus) {
-                        gl.glMaterialfv(
-                            GL10.GL_FRONT_AND_BACK,
-                            GL10.GL_AMBIENT_AND_DIFFUSE,
-                            if (fieldStatus == Board.FIELD_ALLOWED)
-                                materialBoardDiffuseSeed
-                            else
-                                materialBoardDiffuse,
-                            0
-                        )
-                        lastFieldStatus = fieldStatus
-                    }
-                }
-
                 field.drawElements(gl, GL10.GL_TRIANGLES)
+
+                if (seedsPlayer >= 0 && board.getFieldStatus(seedsPlayer, y, x) == Board.FIELD_ALLOWED) {
+                    gl.glDisable(GL10.GL_TEXTURE_2D)
+                    gl.glEnable(GL10.GL_BLEND)
+                    gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );
+
+                    gl.glMaterialfv(
+                        GL10.GL_FRONT_AND_BACK,
+                        GL10.GL_AMBIENT_AND_DIFFUSE,
+                        materialBoardDiffuseSeed,
+                        0
+                    )
+
+                    field.drawElements(gl, GL10.GL_TRIANGLES)
+
+                    gl.glMaterialfv(
+                        GL10.GL_FRONT_AND_BACK,
+                        GL10.GL_AMBIENT_AND_DIFFUSE,
+                        materialBoardDiffuse,
+                        0
+                    )
+
+                    if (hasTexture) {
+                        gl.glEnable(GL10.GL_TEXTURE_2D)
+                    }
+                    gl.glDisable(GL10.GL_BLEND)
+                }
 
                 gl.glMatrixMode(GL10.GL_TEXTURE)
                 gl.glTranslatef(stoneSize * 4.0f, 0f, 0f)

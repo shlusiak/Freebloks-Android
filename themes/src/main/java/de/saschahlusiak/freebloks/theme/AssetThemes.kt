@@ -75,28 +75,47 @@ class BoardThemes : ThemeProvider {
     private val LightGrey = ColorTheme(
         "grey",
         label = R.string.theme_grey,
-        color = Color.rgb(145, 145, 140)
+        color = Color.rgb(140, 140, 135)
+    )
+
+    private val LightBlue = ColorTheme(
+        "light_blue",
+        label = R.string.theme_blue,
+        color = Color.rgb(140, 165, 170)
     )
 
     private val Wood = AssetTheme(
         R.string.theme_wood,
         R.drawable.field_wood_preview,
-        "field_wood",
-        color = Color.rgb(145, 145, 145)
+        "field_wood"
     )
 
     private val Marble = AssetTheme(
         R.string.theme_marble,
         R.drawable.field_marble_preview,
-        "field_marble",
-        color = Color.rgb(120, 130, 120)
+        "field_marble"
+    )
+
+    private val Slate = AssetTheme(
+        R.string.theme_metal,
+        R.drawable.field_metal_preview,
+        "field_metal"
+    )
+
+    private val Granite = AssetTheme(
+        R.string.theme_granite,
+        R.drawable.field_granite_preview,
+        "field_granite"
     )
 
     override fun getAllThemes(context: Context): Collection<Theme> {
         return listOf(
             LightGrey,
+            LightBlue,
             Wood,
-            Marble
+            Marble,
+            Slate,
+            Granite
         )
     }
 }
