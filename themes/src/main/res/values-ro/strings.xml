@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_black">Negru</string>
+    <string name="theme_green">Verde</string>
+    <string name="theme_blue">Albastru</string>
+    <string name="theme_white">Alb</string>
+    <string name="theme_flowery_cloth">Material cu flori</string>
+    <string name="theme_striped_cloth">Material cu dungi</string>
+    <string name="theme_wood">Lemn</string>
+    <string name="theme_bricks">Cărămidă</string>
+    <string name="theme_metal">Metal</string>
+    <string name="theme_velvet">Catifea</string>
+    <string name="theme_carpet">Covor</string>
+    <string name="theme_grass">Iarbă</string>
+</resources>

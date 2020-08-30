@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Freebloks</string>
+    <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2020.</string>
+    <string name="github_link" translatable="false">https://github.com/shlusiak/Freebloks-Android</string>
+    <string name="notification_channel_default" translatable="false">General</string>
+
+    <string name="new_game">Joc nou</string>
+    <string name="resume_game">Continuă</string>
+    <string name="host_game">Gazda</string>
+    <string name="multiplayer">Multiplayer</string>
+    <string name="join_multiplayer_game">Alătură-te jocului multiplayer</string>
+    <string name="settings">Setări</string>
+    <string name="hint">Indiciu</string>
+    <string name="undo">Înapoi</string>
+    <string name="main_menu">Meniu principal</string>
+    <string name="about">Despre</string>
+    <string name="about_freebloks">Despre Freebloks&#8230;</string>
+    <string name="special_thanks_to">Mulţumiri speciale către</string>
+    <string name="connecting_to_server">Conectare la server&#8230;</string>
+    <string name="connection_refused">Conectare respinsă</string>
+    <string name="could_not_restore_game">Jocul poate fi recuperat</string>
+    <string name="do_you_want_to_leave_current_game">Eşti sigur că vrei să anulezi jocul actual?</string>
+    <string name="disconnect_error">Conexiune întreruptă: %1$s. Eşti offline.</string>
+
+    <string name="server_address_hint">Numele sau adresa serverului</string>
+    <string name="internet">Internet</string>
+    <string name="wireless_lan">Conexiune wireless</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth_disabled_message">Bluetooth oprit sau niciun dispozitiv conectat</string>
+    <string name="multiple_players">Mai mulţi jucători</string>
+
+    <string name="monomino">Monomino</string>
+    <string name="domino">Domino</string>
+    <string name="tromino">Tromino</string>
+    <string name="tetromino">Tetromino</string>
+    <string name="pentomino">Pentomino</string>
+
+    <string name="waiting_for_color">Urmează să mute %1$s</string>
+    <string name="color_is_out_of_moves">%1$s nu mai are mutări</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d mutare</item>
+        <item quantity="other">%1$d mutări</item>
+    </plurals>
+    <string name="touch_to_skip">atinge pentru a sări peste</string>
+    <string name="no_player">niciun jucător</string>
+    <string name="not_connected">deconectat</string>
+    <string name="your_turn">E rândul tău, %1$s!</string>
+    <string name="difficulty">Dificultate</string>
+    <string name="start">Start</string>
+    <string name="custom_game">Modifică joc</string>
+    <string name="sound_on">Sunet pornit</string>
+    <string name="sound_off">Sunet oprit</string>
+
+    <string name="statistics">Statistici</string>
+    <string name="clear_statistics">Resetează tot</string>
+
+    <string-array name="statistics_labels">
+        <item>Jocuri finalizate</item>
+        <item>Jocuri satisfăcătoare (+15)</item>
+        <item>Jocuri perfecte (+20)</item>
+        <item>Locul 1</item>
+        <item>Locul 2</item>
+        <item>Locul 3</item>
+        <item>Locul 4</item>
+        <item>Piese utilizate</item>
+        <item>Total puncte</item>
+    </string-array>
+
+    <string name="google_play_games">Google Play Games</string>
+    <string name="google_play_games_signin">Înregistrare</string>
+    <string name="google_play_games_signin_long">Înregistrare în Google Play Games</string>
+    <string name="google_play_games_signout">Închide sesiunea</string>
+    <string name="google_play_games_signout_long">Înregistrat ca %1$s</string>
+    <string name="google_play_games_leaderboard">Clasament</string>
+    <string name="google_play_games_leaderboard_long">Arată clasamentul global</string>
+    <string name="google_play_games_achievements">Succese</string>
+    <string name="google_play_games_achievements_long">Arată succesele obţinute</string>
+    <string name="google_play_games_signin_failed">Nu te-ai putut înregistra. Verifică-ţi conexiunea şi încearcă din nou.</string>
+
+    <string name="waiting_for_players">Aşteptăm jucătorii</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d client</item>
+        <item quantity="other">%1$d clienţi</item>
+    </plurals>
+    <string name="chat">Chat</string>
+    <string name="join_player_name">Numele tău:</string>
+    <string name="client_d">Jucătorul %1$d</string>
+    <string name="player_joined_color">%1$s joacă %2$s</string>
+    <string name="player_left_color">%1$s (%2$s) a părăsit conversaţia</string>
+    <string name="lobby_message_hint">Tastează mesajul</string>
+    <string name="message_notification_title">Mesaj de la %1$s</string>
+
+    <string name="rate_freebloks_title">Evaluează Freebloks</string>
+    <string name="rate_freebloks_text">Dacă îţi place Freebloks, ai vrea să-l evaluezi?</string>
+    <string name="rate_freebloks_donate_link">Sau cumpără-mi o cafea</string>
+    <string name="rate_now">Da</string>
+    <string name="rate_later">Mai târziu</string>
+    <string name="rate_never">Nu</string>
+
+    <plurals name="number_of_stones_left">
+        <item quantity="one">%1$d piesă rămasă</item>
+        <item quantity="other">%1$d piese rămase</item>
+    </plurals>
+    <plurals name="number_of_points">
+        <item quantity="one">%1$d punct</item>
+        <item quantity="other">%1$d puncte</item>
+    </plurals>
+    <string-array name="places">
+        <item>Locul 1</item>
+        <item>Locul 2</item>
+        <item>Locul 3</item>
+        <item>Locul 4</item>
+    </string-array>
+
+    <string name="game_finished">Joc încheiat</string>
+    <string name="random_color">Culoare aleatorie</string>
+
+    <string name="white">Alb</string>
+    <string name="blue">Albastru</string>
+    <string name="yellow">Galben</string>
+    <string name="red">Roşu</string>
+    <string name="green">Verde</string>
+    <string name="orange">Portocaliu</string>
+    <string name="purple">Violet</string>
+
+    <string-array name="difficulties">
+        <item>nebuneşte</item>
+        <item>dificil</item>
+        <item>moderat</item>
+        <item>uşor</item>
+        <item>foarte uşor</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 jucători, 2 culori</item>
+        <item>2 jucători, 4 culori</item>
+        <item>Blokus Clasic</item>
+        <item>Blokus Duo</item>
+        <item>Blokus Junior</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
+
+    <string name="donation_title">Cumpără-le o cafea creatorilor</string>
+    <string name="donation_text_line1">Freebloks este software gratuit. Îl poţi utiliza şi modifica fără niciun fel de costuri!</string>
+    <string name="donation_text_line2">Dar asta nu înseamnă că nu are valoare. De aceea, poţi decide cât valorează jocul pentru tine şi poţi susţine crearea de software gratuit.</string>
+    <string name="donation_text_short">Ai vrea să susţii creatorii cu o donaţie la alegere?</string>
+    <string name="donation_skip">Poate mai târziu</string>
+    <string name="donation_yes">Da!</string>
+    <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>
+    <string name="donation_paypal" translatable="false">PayPal</string>
+    <string name="donation_bitcoin" translatable="false">Bitcoin</string>
+    <string name="donate_thank_you">Îţi mulţumim că susţii Freebloks!</string>
+
+    <string name="advanced">Avansat</string>
+
+    <string name="action_continue">Continuă</string>
+    <string name="disconnect">Deconectare</string>
+
+    <string name="prefs_interface">Interfaţă</string>
+    <string name="prefs_display">Afişare</string>
+    <string name="prefs_misc">Diverse</string>
+    <string name="prefs_sounds_long">Efecte sonore</string>
+    <string name="prefs_sounds">Sunet</string>
+    <string name="prefs_vibrate_long">Vibrează la mutarea pieselor</string>
+    <string name="prefs_vibrate">Vibraţii</string>
+    <string name="prefs_notifications_long">Arată notificări în jocurile multiplayer</string>
+    <string name="prefs_notifications">Notificări</string>
+    <string name="prefs_snap_to_corners_long">Ataşează piesele în poziţii valide apropiate</string>
+    <string name="prefs_snap_to_corners">Ataşează la colţuri</string>
+    <string name="prefs_show_corners_long">Arată colţurile posibile ale pieselor tale</string>
+    <string name="prefs_show_corners">Colţuri</string>
+    <string name="prefs_show_opponents_long">Arată piesele oponenţilor</string>
+    <string name="prefs_show_opponents">Oponenţi</string>
+    <string name="prefs_show_animations">Animaţii</string>
+
+    <string-array name="prefs_animations_labels">
+        <item>Oprite</item>
+        <item>Reduse (30 fps)</item>
+        <item>Complete (60 fps)</item>
+    </string-array>
+    <string-array name="prefs_animations_values" translatable="false" >
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string name="prefs_skip_intro_long">Sari peste animaţia de intro la pornirea aplicaţiei</string>
+    <string name="prefs_skip_intro">Sari peste intro</string>
+    <string name="prefs_auto_resume_long">Continuă automat ultimul joc</string>
+    <string name="prefs_auto_resume">Continuă automat</string>
+    <string name="prefs_rules_long">Afişează regulile jocului</string>
+    <string name="prefs_rules">Afişează regulile&#8230;</string>
+    <string name="prefs_rate_review_long">Te rugăm, evaluează sau lasă un comentariu</string>
+    <string name="prefs_rate_review">Freebloks în %1$s&#8230;</string>
+    <string name="prefs_donation_long">Te rugăm, susţine creatorii cu o donaţie</string>
+    <string name="prefs_donation">Cumpără-mi o cafea&#8230;</string>
+    <string name="prefs_player_name">Numele jucătorului</string>
+    <string name="prefs_player_name_default">[default]</string>
+    <string name="prefs_background_theme">Fundal</string>
+    <string name="prefs_statistics">Statistici</string>
+    <string name="prefs_statistics_long">Afişează statisticile jocului</string>
+
+    <string name="blokus_duo" translatable="false">Blokus Duo</string>
+    <string name="blokus_junior" translatable="false">Blokus Junior</string>
+
+    <string name="rules_title">Reguli Blokus</string>
+    <string name="rules_youtube">Urmăreşte video de îndrumare</string>
+    <string name="rules_how_to_play">Cum se joacă</string>
+    <string name="rules_how_to_play_1">Trece în revistă lista de piese pentru a găsi şi selecta piesa dorită, apoi trage-o pe tabla de joc.</string>
+    <string name="rules_how_to_play_2">Atinge extremităţile piesei pentru a o mişca, roti şi aşeza în poziţia dorită. Atinge din nou piesa pentru a o fixa pe tablă.</string>
+    <string name="rules_blokus_classic">Blokus Clasic</string>
+    <string name="rules_classic_1">Fiecare jucător începe cu 21 de piese unice, de culoarea aleasă. Când îi vine rândul, fiecare jucător încearcă să aşeze o piesă pe tablă. Jucătorul cu cele mai multe piese pe tablă câştigă jocul.</string>
+    <string name="rules_classic_2">Prima piesă din fiecare culoare trebuie poziţionată într-unul din colţurile tablei de joc.</string>
+    <string name="rules_classic_3">Fiecare nouă piesă jucată trebuie plasată în aşa fel, încât să atingă cel puţin o altă piesă de aceeaşi culoare, într-un singur colţ. Muchiile pieselor de aceeaşi culoare nu se pot atinge, însă contactul cu muchiile pieselor de alte culori este permis.</string>
+    <string name="rules_classic_4">Când un jucător nu poate aşeza o piesă pe tablă, i se sare rândul, iar jocul continuă normal. Jocul se încheie atunci când niciun jucător nu mai are la dispoziţie mutări posibile.</string>
+    <string name="rules_variants">Variante cu doi jucători</string>
+    <string name="rules_variants_1">Dacă sunt doi jucători, aceştia fie joacă fiecare cu câte două culori, fie cu o singură culoare, iar celelalte două culori rămase se omit din joc.</string>
+    <string name="rules_scoring">Scorul</string>
+    <string name="rules_scoring_1">La final, se adună pătrăţelele componente ale tuturor pieselor de pe tablă ale fiecărui jucător (de exemplu, un “pentomino” valorează 5 puncte). Dacă un jucător şi-a utilizat toate piesele, acesta primeşte un bonus de +20 de puncte în cazul în care ultima piesă aşezată pe tablă a fost cea de un singur pătrăţel, altminteri primeşte +15 puncte.</string>
+    <string name="rules_scoring_2">Astfel, suma maximă a punctelor ce pot fi acumulate de un jucător într-un singur joc este 89+20=109. Jucătorul cu scorul cel mai mare câştigă.</string>
+
+    <string name="rules_duo_1">Blokus Duo se joacă cu doi jucători, pe o tablă mult mai mică, însă cu aceleaşi piese ca Blokus Clasic. Cele două pătrăţele iniţiale se plasează mai aproape de centru.</string>
+    <string name="rules_junior_1">Blokus Junior se adresează copiilor. La fel ca Blokus Duo, se joacă cu doi jucători pe o tablă de 14×14, însă se utilizează doar o parte din piese, şi anume acelea cu o formă mai simplă. Există 12 piese unice, iar fiecare jucător primeşte câte două din fiecare fel.</string>
+</resources>
