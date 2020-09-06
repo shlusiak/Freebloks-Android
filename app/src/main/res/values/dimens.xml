@@ -16,6 +16,6 @@
     <dimen name="textSizeLarge">21sp</dimen>
 
     <dimen name="pill_button_size">44dp</dimen>
-    <dimen name="pill_button_size_large">48dp</dimen>
+    <dimen name="pill_button_size_large">56dp</dimen>
 
 </resources>

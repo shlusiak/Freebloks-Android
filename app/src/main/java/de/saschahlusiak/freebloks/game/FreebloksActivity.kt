@@ -170,7 +170,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
         viewModel.canRequestHint.observe(this) { hintButton.isEnabled = it }
         viewModel.canRequestUndo.observe(this) { undoButton.isEnabled = it }
-        viewModel.chatButtonVisible.observe(this) { chatButton.isVisible = it }
+        viewModel.chatButtonVisible.observe(this) { chatButtonContainer.isVisible = it }
         viewModel.googleAccountSignedIn.observe(this) {
             viewModel.gameHelper.setWindowForPopups(window)
             if (Global.IS_VIP) {
@@ -539,9 +539,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     private fun onPlayerSheetChanged(data: SheetPlayer) {
         val client = viewModel.client
         if (data.isRotated && (client?.game?.isFinished == false)) {
-            myLocation.visibility = View.VISIBLE
+            myLocationContainer.visibility = View.VISIBLE
         } else {
-            myLocation.visibility = View.INVISIBLE
+            myLocationContainer.visibility = View.INVISIBLE
         }
     }
 

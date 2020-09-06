@@ -13,7 +13,23 @@
     <RelativeLayout
         android:id="@+id/menuOverlayContainer"
         android:layout_width="match_parent"
+        android:layout_above="@id/bottomSheet"
         android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/chatButtonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:alpha="0.75"
+            android:background="@drawable/pill_background">
+
+            <ImageButton
+                android:id="@+id/chatButton"
+                style="@style/PillButton.Large"
+                android:src="@drawable/ic_chat" />
+
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/soundContainer"
@@ -71,8 +87,25 @@
                 android:src="@drawable/ic_settings" />
 
         </LinearLayout>
-    </RelativeLayout>
 
+        <FrameLayout
+            android:id="@+id/myLocationContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.75"
+            android:background="@drawable/pill_background">
+
+            <ImageButton
+                android:id="@+id/myLocation"
+                style="@style/PillButton.Large"
+                android:src="@drawable/ic_my_location" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/bottomSheet"
@@ -83,35 +116,4 @@
         android:clipChildren="false"
         android:clipToPadding="false" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/myLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomSheet"
-        android:layout_alignParentRight="true"
-        android:layout_margin="12dp"
-        android:src="@drawable/ic_my_location"
-        app:backgroundTint="?colorPrimary" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/chatButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="6dp"
-            android:fitsSystemWindows="true"
-            android:src="@drawable/ic_message"
-            app:backgroundTint="?colorPrimary"
-            app:fabSize="mini" />
-
-    </RelativeLayout>
 </RelativeLayout>

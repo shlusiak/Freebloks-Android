@@ -47,4 +47,10 @@
         <item name="android:padding">8dp</item>
     </style>
 
+    <style name="PillButton.Large">
+        <item name="android:layout_width">@dimen/pill_button_size_large</item>
+        <item name="android:layout_height">@dimen/pill_button_size_large</item>
+        <item name="android:padding">14dp</item>
+    </style>
+
 </resources>
