@@ -57,7 +57,7 @@
 
     <string-array name="statistics_labels">
         <item>Jocuri finalizate</item>
-        <item>Jocuri satisfăcătoare (+15)</item>
+        <item>Jocuri bune (+15)</item>
         <item>Jocuri perfecte (+20)</item>
         <item>Locul 1</item>
         <item>Locul 2</item>
@@ -204,6 +204,7 @@
     <string name="prefs_player_name">Numele jucătorului</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_background_theme">Fundal</string>
+    <string name="prefs_board_theme">Tabla de joc</string>
     <string name="prefs_statistics">Statistici</string>
     <string name="prefs_statistics_long">Afişează statisticile jocului</string>
 
