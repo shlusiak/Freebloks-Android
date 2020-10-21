@@ -133,7 +133,7 @@ class Intro(context: Context, private val scene: Scene, var listener: IntroDeleg
         } else {
             gl.glTranslatef(0f, 1.5f, 0f)
         }
-        GLU.gluLookAt(gl, 0f, if (scene.verticalLayout) 4.0f else 1.0f, renderer.fixedZoom * 0.85f, 0f, 0f, 0f, 0f, 1f, 0f)
+        GLU.gluLookAt(gl, 0f, if (scene.verticalLayout) 4.0f else 1.0f, renderer.fixedZoom * 1.1f, 0f, 0f, 0f, 0f, 1f, 0f)
 
         gl.glRotatef(50f, 1f, 0f, 0f)
         val angle1 = 180.0f
