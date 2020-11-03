@@ -37,7 +37,7 @@
         android:verticalSpacing="2dp"
         tools:listitem="@layout/color_grid_item"></GridView>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,10 +46,8 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="4dp"
         android:layout_toLeftOf="@+id/color_grid"
-        android:background="@drawable/layout_chat_background"
         android:isScrollContainer="true"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal"></ListView>
+        android:background="@drawable/layout_chat_background"/>
 
     <LinearLayout
         android:id="@+id/chatLayout"

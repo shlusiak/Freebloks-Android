@@ -67,36 +67,34 @@ class Game(val board: Board = Board()): Serializable {
      * Note that calling this function will populate the place of the players,
      * something which [Board.calculatePlayerScore] does not.
      */
-    fun getPlayerScores(): Array<PlayerScore> {
-        val data: Array<PlayerScore>
-        val scores = Array(4) { board.getPlayer(it).scores }
+    fun getPlayerScores(): List<PlayerScore> {
+        val scores = board.player.map { it.scores }
 
-        when (gameMode) {
+        val data = when (gameMode) {
             GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
             GameMode.GAMEMODE_DUO,
             GameMode.GAMEMODE_JUNIOR -> {
-                data = arrayOf(
+                arrayOf(
                     scores[0],
                     scores[2]
                 )
             }
             GameMode.GAMEMODE_4_COLORS_2_PLAYERS -> {
-                data = arrayOf(
+                arrayOf(
                     PlayerScore(scores[0], scores[2]),
                     PlayerScore(scores[1], scores[3])
                 )
             }
             GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {
-                data = arrayOf(
+                arrayOf(
                     scores[0],
                     scores[1],
                     scores[2],
                     scores[3]
                 )
             }
-        }
+        }.sorted()
 
-        Arrays.sort(data)
         // first everybody gets the natural place number
         data.forEachIndexed { index, p ->
             p.place = index + 1

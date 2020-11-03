@@ -33,7 +33,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
     // game data to display
     var game: Game? = null
     var lastStatus: MessageServerStatus? = null
-    var data: Array<PlayerScore>? = null
+    var data: List<PlayerScore>? = null
     var localClientName: String? = null
     val gameMode get() = game?.gameMode
 
@@ -86,7 +86,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun assignClientNames(gameMode: GameMode, scores: Array<PlayerScore>, lastStatus: MessageServerStatus?) {
+    private fun assignClientNames(gameMode: GameMode, scores: List<PlayerScore>, lastStatus: MessageServerStatus?) {
         val context: Context = getApplication()
 
         scores.forEach { score ->
@@ -108,7 +108,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private suspend fun addScores(scores: Array<PlayerScore>, gameMode: GameMode) {
+    private suspend fun addScores(scores: List<PlayerScore>, gameMode: GameMode) {
         try {
             val db = db.await()
 
@@ -127,7 +127,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     @WorkerThread
-    private fun unlockAchievements(scores: Array<PlayerScore>, gameMode: GameMode) = viewModelScope.launch {
+    private fun unlockAchievements(scores: List<PlayerScore>, gameMode: GameMode) = viewModelScope.launch {
         // ensure we are only calling this once during the lifetime of the view model
         synchronized(this) {
             if (unlockAchievementsCalled) return@launch

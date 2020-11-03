@@ -104,7 +104,7 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
         }
     }
 
-    private fun updateViews(data: Array<PlayerScore>, gameMode: GameMode) {
+    private fun updateViews(data: List<PlayerScore>, gameMode: GameMode) {
         val t = arrayOf(place1, place2, place3, place4)
 
         when (gameMode) {

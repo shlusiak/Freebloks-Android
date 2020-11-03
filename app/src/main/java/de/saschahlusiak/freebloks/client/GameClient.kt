@@ -86,9 +86,7 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
                 null
             } catch (e: IOException) {
                 e.printStackTrace()
-
-                // translate any IOException to "Connection refused"
-                IOException(context.getString(R.string.connection_refused), e)
+                e
             }
         }
 
@@ -120,7 +118,7 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
                 e.printStackTrace()
 
                 // translate any IOException to "Connection refused"
-                null to IOException(context.getString(R.string.connection_refused), e)
+                null to e
             }
         }
         if (error != null) {

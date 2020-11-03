@@ -52,7 +52,7 @@
 
     </LinearLayout>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,9 +60,7 @@
         android:layout_below="@+id/linearLayout2"
         android:layout_centerHorizontal="true"
         android:background="@drawable/layout_chat_background"
-        android:isScrollContainer="true"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal"></ListView>
+        android:isScrollContainer="true"/>
 
     <LinearLayout
         android:id="@+id/linearLayout1"

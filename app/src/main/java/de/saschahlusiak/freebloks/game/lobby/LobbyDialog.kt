@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowManager.LayoutParams.*
 import android.view.inputmethod.EditorInfo
@@ -14,9 +14,11 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameEventObserver
@@ -31,6 +33,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.edit_name_dialog.view.*
 import kotlinx.android.synthetic.main.lobby_dialog_fragment.*
+import kotlinx.coroutines.launch
 
 class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
 
@@ -38,10 +41,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
     private val client get() = viewModel.client
     private val listener get() = activity as LobbyDialogDelegate
 
-    private var chatAdapter: ChatListAdapter? = null
     private var colorAdapter: ColorAdapter? = null
-
-    private val handler = Handler()
 
     private val gameModeSelectedListener = object : OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -149,12 +149,26 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
             setOnClickListener { sendChat() }
         }
 
-        chatAdapter = ChatListAdapter(requireContext(), client.game.gameMode)
-        chatList.adapter = chatAdapter
+        val chatAdapter = ChatListAdapter(requireContext(), client.game)
+        chatList.apply {
+            adapter = chatAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
 
-        viewModel.chatHistoryAsLiveData.observe(viewLifecycleOwner, Observer { chatAdapter?.setData(it) })
+        viewModel.chatHistoryAsLiveData.observe(viewLifecycleOwner) { list ->
+            val cells = chatAdapter.setData(list)
+            if (cells > 0) {
+                val linearSmoothScroller = object: LinearSmoothScroller(chatList.context) {
+                    override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+                        return 300.0f / displayMetrics.densityDpi
+                    }
+                }
+                linearSmoothScroller.targetPosition = cells - 1
+                chatList.layoutManager?.startSmoothScroll(linearSmoothScroller)
+            }
+        }
 
-        viewModel.connectionStatus.observe(viewLifecycleOwner, Observer { onConnectionStatusChanged(it) })
+        viewModel.connectionStatus.observe(viewLifecycleOwner) { onConnectionStatusChanged(it) }
         if (client.game.isStarted) {
             /* chat */
             startButton.visibility = View.GONE
@@ -239,8 +253,6 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
             game_mode.isEnabled = false
             field_size.isEnabled = false
         } else {
-            chatAdapter?.gameMode = status.gameMode
-
             game_mode.setSelection(status.gameMode.ordinal)
             game_mode.isEnabled = !client.game.isStarted
 
@@ -277,19 +289,27 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
     }
 
     override fun gameStarted() {
-        handler.post { dismissAllowingStateLoss() }
+        lifecycleScope.launchWhenStarted {
+            dismiss()
+        }
     }
 
     override fun serverStatus(status: MessageServerStatus) {
-        handler.post { updateViewsFromStatus() }
+        lifecycleScope.launch {
+            updateViewsFromStatus()
+        }
     }
 
     override fun playerJoined(client: Int, player: Int, name: String?) {
-        handler.post { updateViewsFromStatus() }
+        lifecycleScope.launch {
+            updateViewsFromStatus()
+        }
     }
 
     override fun playerLeft(client: Int, player: Int, name: String?) {
-        handler.post { updateViewsFromStatus() }
+        lifecycleScope.launch {
+            updateViewsFromStatus()
+        }
     }
 
     private fun onConnectionStatusChanged(status: ConnectionStatus) {

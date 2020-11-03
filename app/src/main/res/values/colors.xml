@@ -11,7 +11,7 @@
 
     <!-- Background color for player status / lobby -->
     <color name="player_background_white">#5C5C5C</color>
-    <color name="player_background_blue">#00007F</color>
+    <color name="player_background_blue">#00009F</color>
     <color name="player_background_yellow">#8C8C00</color>
     <color name="player_background_red">#600000</color>
     <color name="player_background_green">#006000</color>

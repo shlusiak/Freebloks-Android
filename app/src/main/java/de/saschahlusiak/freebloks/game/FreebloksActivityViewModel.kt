@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.os.Parcel
 import android.util.Log
 import androidx.annotation.UiThread
@@ -18,9 +17,7 @@ import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.game.lobby.ChatEntry
-import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.genericMessage
-import de.saschahlusiak.freebloks.game.lobby.ChatEntry.Companion.serverMessage
+import de.saschahlusiak.freebloks.game.lobby.ChatItem
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
@@ -55,9 +52,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
     private val analytics by lazy { DependencyProvider.analytics() }
 
-    // UI Thread handler
-    private val handler = Handler()
-
     // services
     private var notificationManager: MultiplayerNotificationManager? = null
 
@@ -86,7 +80,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var lastStatus: MessageServerStatus? = null
         private set
 
-    private val chatHistory = mutableListOf<ChatEntry>()
+    private val chatHistory = mutableListOf<ChatItem>()
     val sounds: BaseSounds = DefaultSounds(app)
 
     // LiveData
@@ -368,7 +362,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                     var a = address.hostAddress
                     if (a.contains("%")) a = a.substring(0, a.indexOf("%"))
 
-                    val e = genericMessage(String.format("[%s]", a))
+                    val e = ChatItem.Generic(String.format("[%s]", a))
                     chatHistory.add(e)
                 }
             }
@@ -443,7 +437,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         // this is so we get to update our [localClientNameOverride], because
         // we start a new local game without any player name, and it allows the
         // lobby to set a new name in the preferences before game start.
-        handler.post {
+        viewModelScope.launch {
             reloadPreferences()
         }
 
@@ -510,7 +504,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
         val name = status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
-        val e = ChatEntry.clientMessage(client, player, message, name)
+        val isLocal = game?.isLocalPlayer(player) ?: false
+        val e = ChatItem.Message(client, if (player < 0) null else player, isLocal, name, message)
 
         chatHistory.add(e)
         chatHistoryAsLiveData.postValue(chatHistory)
@@ -524,7 +519,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val colorName = playerColor.getName(context.resources)
 
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
-        val e = serverMessage(player, text, clientName)
+        val e = ChatItem.Server(player, text)
 
         chatHistory.add(e)
         chatHistoryAsLiveData.postValue(chatHistory)
@@ -538,7 +533,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val colorName = playerColor.getName(context.resources)
 
         val text = context.getString(R.string.player_left_color, clientName, colorName)
-        val e = serverMessage(player, text, clientName)
+        val e = ChatItem.Server(player, text)
 
         chatHistory.add(e)
         chatHistoryAsLiveData.postValue(chatHistory)

@@ -704,7 +704,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     override fun onConnectionFailed(client: GameClient, error: Exception) {
         lifecycleScope.launchWhenStarted {
             MaterialAlertDialogBuilder(this@FreebloksActivity)
-                .setMessage(error.message)
+                .setTitle(R.string.connection_refused)
+                .setMessage("${error.javaClass.simpleName}: ${error.message}")
                 .setOnDismissListener { showMainMenu() }
                 .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
                 .show()
@@ -724,7 +725,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 MaterialAlertDialogBuilder(this@FreebloksActivity)
                     .setTitle(android.R.string.dialog_alert_title)
                     .setMessage(getString(R.string.disconnect_error, error.message))
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.ok) { dialog, _ ->
                         dialog.dismiss()
                         try {
