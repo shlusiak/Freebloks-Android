@@ -103,6 +103,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
     override fun onCleared() {
         disconnectClient()
+        notificationManager?.shutdown()
+        notificationManager = null
         sounds.shutdown()
     }
 
