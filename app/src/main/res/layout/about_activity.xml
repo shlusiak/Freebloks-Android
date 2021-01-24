@@ -101,7 +101,8 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Alina Bilciurescu"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -109,7 +110,8 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Martin Hollingsworth"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -117,17 +119,34 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Egor Ponomarev"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
-            <Button
-                android:id="@+id/ok"
-                style="?borderlessButtonStyle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="8dp"
-                android:minWidth="160dp"
-                android:text="@android:string/ok" />
+                android:layout_marginTop="@dimen/dialog_button_margin"
+                android:clipChildren="false"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/donate"
+                    style="?borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_donation" />
+
+                <Button
+                    android:id="@+id/ok"
+                    style="?borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="160dp"
+                    android:text="@android:string/ok" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
