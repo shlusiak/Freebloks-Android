@@ -84,7 +84,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val sounds: BaseSounds = DefaultSounds(app)
 
     // LiveData
-    val chatHistoryAsLiveData = MutableLiveData(chatHistory)
+    val chatHistoryAsLiveData = MutableLiveData<List<ChatItem>>(chatHistory)
     val soundsEnabledLiveData = MutableLiveData(sounds.soundsEnabled)
     val chatButtonVisible = MutableLiveData(false)
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
@@ -372,7 +372,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             e.printStackTrace()
         }
 
-        chatHistoryAsLiveData.postValue(chatHistory)
+        chatHistoryAsLiveData.postValue(chatHistory.toList())
     }
 
     /**
@@ -510,7 +510,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val e = ChatItem.Message(client, if (player < 0) null else player, isLocal, name, message)
 
         chatHistory.add(e)
-        chatHistoryAsLiveData.postValue(chatHistory)
+        chatHistoryAsLiveData.postValue(chatHistory.toList())
     }
 
     override fun playerJoined(client: Int, player: Int, name: String?) {
@@ -524,7 +524,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val e = ChatItem.Server(player, text)
 
         chatHistory.add(e)
-        chatHistoryAsLiveData.postValue(chatHistory)
+        chatHistoryAsLiveData.postValue(chatHistory.toList())
     }
 
     override fun playerLeft(client: Int, player: Int, name: String?) {
@@ -538,7 +538,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val e = ChatItem.Server(player, text)
 
         chatHistory.add(e)
-        chatHistoryAsLiveData.postValue(chatHistory)
+        chatHistoryAsLiveData.postValue(chatHistory.toList())
     }
 
     override fun hintReceived(turn: Turn) {
