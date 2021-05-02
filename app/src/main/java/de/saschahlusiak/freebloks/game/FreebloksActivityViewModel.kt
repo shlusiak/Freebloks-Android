@@ -256,7 +256,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         crashReporting.setString("server", name)
 
         // client will notify observers about connection failed
-        if (!client.connect(context, config.server, GameClient.DEFAULT_PORT)) {
+        if (!client.connect(config.server, GameClient.DEFAULT_PORT)) {
             // connection has failed, observers have been notified
             connectionStatus.value = ConnectionStatus.Failed
             connectJob = null
@@ -319,7 +319,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectJob = coroutineContext[Job]
 
         Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
-        if (!client.connect(context, remote)) {
+        if (!client.connect(remote)) {
             // connection has failed, observers have been notified
             connectionStatus.postValue(ConnectionStatus.Failed)
             connectJob = null

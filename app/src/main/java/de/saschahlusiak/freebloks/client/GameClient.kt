@@ -2,10 +2,8 @@ package de.saschahlusiak.freebloks.client
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
-import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.model.GameConfig
@@ -68,14 +66,13 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
      * Try to establish a TCP connection to the given host and port.
      * On success will call [.connected]
      *
-     * @param context for getString()
      * @param host target hostname or null for localhost
      * @param port port
      *
      * @throws IOException on connection refused
      */
     @UiThread
-    suspend fun connect(context: Context, host: String?, port: Int): Boolean {
+    suspend fun connect(host: String?, port: Int): Boolean {
         val socket = Socket()
         val error = runInterruptible(Dispatchers.IO) {
             val address = host?.let { InetSocketAddress(it, port) }
@@ -108,7 +105,7 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
      *
      * On success will call [.connected]
      */
-    suspend fun connect(context: Context, remote: BluetoothDevice): Boolean {
+    suspend fun connect(remote: BluetoothDevice): Boolean {
         val (socket, error) = runInterruptible(Dispatchers.IO) {
             try {
                 remote.createInsecureRfcommSocketToServiceRecord(BluetoothServerThread.SERVICE_UUID).also {
