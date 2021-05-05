@@ -19,6 +19,7 @@ import java.io.Closeable
 import java.io.EOFException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
+import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 
 class GameClientTest {
     private val game = Game()
@@ -39,7 +40,7 @@ class GameClientTest {
     /**
      * Simulate a server and collect messages received by the client
      */
-    private val serverMessageHandler = object: MessageHandler, Closeable {
+    private val serverMessageHandler = object : MessageHandler, Closeable {
         override fun handleMessage(message: Message) {
             messages.add(message)
         }
@@ -58,7 +59,7 @@ class GameClientTest {
     /**
      * Used to watch for the client to have processed a server status message
      */
-    private val gameObserver = object: GameEventObserver {
+    private val gameObserver = object : GameEventObserver {
 
         private val events = Channel<Event>(Channel.UNLIMITED)
         var statusReceived: Boolean = false
@@ -84,6 +85,19 @@ class GameClientTest {
         }
 
         /**
+         * Block until the client is disconnected
+         */
+        suspend fun awaitDisconnect() {
+            if (!client.isConnected()) return
+            for (event in events) {
+                if (event == Event.Disconnected) {
+                    assertFalse(client.isConnected())
+                    return
+                }
+            }
+        }
+
+        /**
          * Blocks until any game event is received
          */
         suspend fun awaitGameEvent(): Event {
@@ -101,13 +115,15 @@ class GameClientTest {
     private fun MessageWriter.flush() = runBlocking {
         gameObserver.statusReceived = false
 
-        write(MessageServerStatus(
-            0, 4, 1,
-            game.board.width, game.board.height,
-            game.gameMode,
-            arrayOfNulls(4),
-            arrayOfNulls(8)
-        ))
+        write(
+            MessageServerStatus(
+                0, 4, 1,
+                game.board.width, game.board.height,
+                game.gameMode,
+                arrayOfNulls(4),
+                arrayOfNulls(8)
+            )
+        )
 
         toClientStream.flush()
 
@@ -273,5 +289,65 @@ class GameClientTest {
 
         assertEquals(1, messages.size)
         assertEquals(MessageRequestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 }), messages[0])
+    }
+
+    @Test
+    fun test_gameClient_readInvalidHeader() = runBlocking {
+        val dataInvalidHeader = ubyteArrayOf(
+            //region data
+            0x07, 0x00, 0x06, 0x03, 0xd5, 0x03
+            //endregion
+        )
+
+        toClientStream.write(dataInvalidHeader)
+
+        // Client will disconnect on its own on exception, so we can still join on the serverThread
+        gameObserver.awaitDisconnect()
+
+        assertTrue(clientDisconnectError is ProtocolException)
+    }
+
+    @Test
+    fun test_gameClient_readDataIncomplete() = runBlocking {
+        val dataIncomplete = ubyteArrayOf(
+            //region data
+            0x06, 0x00, 0xab, 0x07, 0xd7, 0x00, 0x04, 0x01, 0x14, 0x14, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0xfe, 0xfe, 0xfe, 0xfe, 0x00, 0xae, 0x62, 0xc4, 0x01,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb8, 0xab, 0x50, 0xbb, 0x00, 0x0b, 0x15, 0xee, 0x04, 0xac, 0x85, 0xd8, 0x00, 0x00, 0x40, 0xc4, 0xf4, 0xac,
+            0x85, 0xd8, 0x00, 0xac, 0x85, 0xd8, 0x00, 0x00, 0x00, 0x00, 0x40, 0x91, 0x22, 0xee, 0x01, 0x00, 0x00, 0x00, 0x00, 0xac, 0x50, 0xbb, 0x38, 0xac, 0x50,
+            0xbb, 0xc4, 0xfd, 0x51, 0xbb, 0xab, 0xa3, 0xa0, 0xa7, 0x00, 0x91, 0x22, 0xee, 0x46, 0xac, 0x50, 0xbb, 0xc4, 0xfd, 0x51, 0xbb, 0xe8, 0xab, 0x50, 0xbb,
+            0x00, 0xae, 0x62, 0xc4, 0x18, 0x00, 0x00, 0x00, 0x34, 0x7c, 0x22, 0xee, 0xe8, 0xab, 0x50, 0xbb, 0x00, 0x83, 0x14, 0xee, 0xa0, 0xae, 0x62, 0xc4, 0x08,
+            0x02, 0xff, 0xff, 0xf8, 0xab, 0x50, 0xbb, 0x00, 0x84, 0x14, 0xee, 0xff, 0x25, 0x19, 0xee, 0xc4, 0xfd, 0x51, 0xbb, 0x28, 0xac, 0x50, 0xbb, 0x03, 0x01,
+            0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x06, 0x00, 0xab, 0x07,
+            0xd7, 0x00, 0x04, 0x01, 0x14, 0x14, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0xfe, 0xfe, 0xfe, 0xfe, 0x00, 0x65, 0x51, 0xbb, 0xf8, 0x16, 0x89, 0xd8, 0x04,
+            0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x65, 0x51, 0xbb, 0x14, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00
+            //endregion
+        )
+
+        toClientStream.write(dataIncomplete)
+        toClientStream.close()
+
+        // Client will disconnect on its own on exception, so we can still join on the serverThread
+        gameObserver.awaitDisconnect()
+
+        assertTrue(clientDisconnectError is EOFException)
+    }
+
+    @Test
+    fun test_gameClient_readDataInvalidGameState() = runBlocking {
+        val dataInvalidGameState = ubyteArrayOf(
+            //region data
+            0x05, 0x00, 0x0b, 0x04, 0xd7, 0x01, 0x04, 0x00, 0x03, 0x04, 0x06
+            //endregion
+        )
+
+        toClientStream.write(dataInvalidGameState)
+        toClientStream.close()
+
+        // Client will disconnect on its own on exception, so we can still join on the serverThread
+        gameObserver.awaitDisconnect()
+
+        // the Thread will throw a RuntimeException(GameStateException), which would normally terminate the app,
+        // but here we can see it as a GameStateException
+        assertTrue(clientDisconnectError is GameStateException)
     }
 }
