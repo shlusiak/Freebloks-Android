@@ -20,6 +20,8 @@ import java.io.EOFException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
+import kotlinx.coroutines.channels.receiveOrNull
+import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -41,20 +43,21 @@ class GameClientTest {
     private var readerClosed = false
     private var serverDisconnectError: Throwable? = null
     private var clientDisconnectError: Throwable? = null
-    private val messages = mutableListOf<Message>()
+    private val messages = Channel<Message>(capacity = Channel.UNLIMITED)
 
     /**
-     * Simulate a server and collect messages received by the client
+     * Simulate a server and collect messages received from the client
      */
     private val serverMessageHandler = object : MessageHandler, Closeable {
         override fun handleMessage(message: Message) {
-            messages.add(message)
+            messages.sendBlocking(message)
         }
 
         override fun close() {
             toServerStream.close()
             fromServerStream.close()
             readerClosed = true
+            messages.close()
         }
     }
 
@@ -154,7 +157,8 @@ class GameClientTest {
 
     @After
     fun teardown() {
-        server.cancel()
+        client.disconnect()
+        scope.cancel()
     }
 
     @Test
@@ -176,6 +180,8 @@ class GameClientTest {
         assertFalse(client.isConnected())
         assertTrue(readerClosed)
         assertNull(clientDisconnectError)
+        assertTrue(serverDisconnectError is EOFException)
+        assertTrue(messages.toList().isEmpty())
     }
 
     @Test
@@ -183,6 +189,7 @@ class GameClientTest {
         assertTrue(client.isConnected())
         toClientStream.close()
         awaitClientDisconnect()
+
         assertFalse(client.isConnected())
         assertTrue(clientDisconnectError is EOFException)
     }
@@ -190,13 +197,8 @@ class GameClientTest {
     @Test
     fun test_gameClient_requestPlayer() = runBlocking {
         client.requestPlayer(3, "hello")
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageRequestPlayer(3, "hello"), messages[0])
+        assertEquals(MessageRequestPlayer(3, "hello"), messages.receive())
     }
 
     @Test
@@ -206,86 +208,51 @@ class GameClientTest {
         client.game.setPlayerType(2, PLAYER_LOCAL)
 
         client.requestHint()
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageRequestHint(2), messages[0])
+        assertEquals(MessageRequestHint(2), messages.receive())
     }
 
     @Test
     fun test_gameClient_requestStart() = runBlocking {
         client.requestGameStart()
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageStartGame(), messages[0])
+        assertEquals(MessageStartGame(), messages.receive())
     }
 
     @Test
     fun test_gameClient_revokePlayer() = runBlocking {
         client.revokePlayer(1)
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageRevokePlayer(1), messages[0])
+        assertEquals(MessageRevokePlayer(1), messages.receive())
     }
 
     @Test
     fun test_gameClient_chat() = runBlocking {
         client.sendChat("Hey hey")
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageChat(0, "Hey hey"), messages[0])
+        assertEquals(MessageChat(0, "Hey hey"), messages.receive())
     }
 
     @Test
     fun test_gameClient_setStone() = runBlocking {
         client.setStone(Turn(1, 2, 3, 4, Orientation.Default))
         assertEquals(-1, client.game.currentPlayer)
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageSetStone(1, 2, Orientation.Default, 4, 3), messages[0])
+        assertEquals(MessageSetStone(1, 2, Orientation.Default, 4, 3), messages.receive())
     }
 
     @Test
     fun test_gameClient_undo() = runBlocking {
         client.requestUndo()
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageRequestUndo(), messages[0])
+        assertEquals(MessageRequestUndo(), messages.receive())
     }
 
     @Test
     fun test_gameClient_requestGameMode() = runBlocking {
         client.requestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 })
-        client.disconnect()
-        server.join()
-        assertTrue(serverDisconnectError is EOFException)
-        assertFalse(client.isConnected())
 
-        assertEquals(1, messages.size)
-        assertEquals(MessageRequestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 }), messages[0])
+        assertEquals(MessageRequestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 }), messages.receive())
     }
 
     @Test

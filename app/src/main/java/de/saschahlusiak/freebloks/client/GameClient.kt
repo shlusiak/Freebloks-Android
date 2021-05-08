@@ -12,12 +12,18 @@ import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageReadThread
+import de.saschahlusiak.freebloks.network.MessageReader
 import de.saschahlusiak.freebloks.network.MessageWriter
 import de.saschahlusiak.freebloks.network.message.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import java.io.Closeable
 import java.io.IOException
 import java.io.InputStream
@@ -31,11 +37,11 @@ import java.net.Socket
 class GameClient constructor(val game: Game, val config: GameConfig): Object() {
 
     private var clientSocket: Closeable? = null
-    private var readThread: MessageReadThread? = null
     private val gameClientMessageHandler = GameClientMessageHandler(game)
 
     private val sendQueue = Channel<Message>(Channel.UNLIMITED)
-    private var sender: Job? = null
+    private val supervisorJob = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Main) + supervisorJob
 
     /**
      * The last status message received by our handler
@@ -142,10 +148,13 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
         clientSocket = socket
 
         // first we set up writing to the server
-        sender = GlobalScope.launch(Dispatchers.IO) {
-            val writer = MessageWriter(output)
-            for (message in sendQueue) writer.write(message)
-        }
+        val writer = MessageWriter(output)
+        val reader = MessageReader(input)
+
+        sendQueue.receiveAsFlow()
+            .onEach { writer.write(it) }
+            .flowOn(Dispatchers.IO)
+            .launchIn(scope)
 
         // we start reading from the server, we will likely begin receiving and processing
         // messages and sending events to the observers.
@@ -153,33 +162,22 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
         // observers so far about it.
         gameClientMessageHandler.notifyConnected(this)
 
-        readThread = MessageReadThread(input, gameClientMessageHandler) {
-            // this current thread is interrupted, so not a good idea to do much from it
-            GlobalScope.launch(Dispatchers.Main) {
-                disconnect()
-            }
-        }.also { it.start() }
+        reader.asFlow()
+            .onEach { gameClientMessageHandler.handleMessage(it) }
+            .catch { disconnect(it) }
+            .launchIn(scope)
     }
 
     @Synchronized
     @UiThread
-    fun disconnect() {
+    fun disconnect(error: Throwable? = null) {
         val socket = clientSocket ?: return
-
-        val lastError = readThread?.error
 
         try {
             crashReporter.log("Disconnecting from ${config.server}")
 
-            readThread?.goDown()
             sendQueue.close()
-
-            // FIXME: remove runBlocking
-            runBlocking {
-                withTimeoutOrNull(200) {
-                    sender?.join()
-                }
-            }
+            supervisorJob.cancel()
 
             if (socket is Socket && socket.isConnected) {
                 socket.shutdownInput()
@@ -189,11 +187,9 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
             e.printStackTrace()
         }
 
-        readThread = null
-        sender = null
         clientSocket = null
 
-        gameClientMessageHandler.notifyDisconnected(this, lastError)
+        gameClientMessageHandler.notifyDisconnected(this, error)
     }
 
     /**
