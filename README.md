@@ -71,7 +71,7 @@ The game is network-compatible with Freebloks 3D for Windows and Linux.
 
 ## Getting started
 
-This uses <a https://github.com/shlusiak/Freebloks-3D>Freebloks-3D</a> as a `git submodule` to build the backend. Make sure to initialise the submodule before building:
+This uses <a href="https://github.com/shlusiak/Freebloks-3D">shlusiak/Freebloks-3D</a> as a `git submodule` to build the backend. Make sure to initialise the submodule before building:
 
 ```
 git submodule init
