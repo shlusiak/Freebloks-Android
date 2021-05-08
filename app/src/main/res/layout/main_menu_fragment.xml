@@ -35,25 +35,25 @@
 
         <ImageButton
             android:id="@+id/sound_toggle_button"
-            style="?materialButtonStyle"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_weight="0"
+            android:backgroundTint="?colorPrimary"
             android:padding="10dp"
             android:scaleType="fitCenter"
             tools:src="@drawable/ic_volume_up" />
 
         <ImageButton
             android:id="@+id/rules"
-            style="?materialButtonStyle"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginLeft="@dimen/main_menu_button_margin"
+            android:layout_weight="0"
+            android:backgroundTint="?colorPrimary"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:layout_weight="0"
             android:src="@drawable/ic_help" />
     </LinearLayout>
 
@@ -72,13 +72,13 @@
 
         <ImageButton
             android:id="@+id/new_game_custom"
-            style="?materialButtonStyle"
             android:layout_width="@dimen/main_menu_button_height"
             android:layout_height="@dimen/main_menu_button_height"
             android:layout_marginLeft="@dimen/main_menu_button_margin"
+            android:layout_weight="0"
+            android:backgroundTint="?colorPrimary"
             android:padding="9dp"
             android:scaleType="fitCenter"
-            android:layout_weight="0"
             android:src="@drawable/ic_gears" />
 
     </LinearLayout>
