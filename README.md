@@ -89,6 +89,11 @@ If you like Freebloks I'd be happy about a donation. You can either purchase Fre
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip">https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip</a></td>
   </tr> 
   <tr>
+    <td><a href="litecoin:Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt?amount=0.001"><img src="https://cryptologos.cc/logos/versions/litecoin-ltc-logo-full.svg?v=010" alt="Litecoin" width="80px"></a></td>
+    <td><a href="litecoin:Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt?amount=0.001"><img src="stuff/litecoin_qr_code.png" alt="Bitcoin QR code" width="130px"></a></td>
+    <td><samp><a href="https://www.blockchain.com/ltc/address/Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt">Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt</a></samp></td>
+  </tr>
+  <tr>
     <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin" width="80px"></a></td>
     <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="130px"></a></td>
     <td><samp><a href="https://www.blockchain.com/btc/address/bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl">bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</a></samp></td>
