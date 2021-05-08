@@ -20,8 +20,13 @@ import java.io.EOFException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class GameClientTest {
+    private val scope = CoroutineScope(Dispatchers.Main)
+
     private val game = Game()
     private val client = GameClient(game, GameConfig())
 
@@ -31,9 +36,10 @@ class GameClientTest {
     private val fromClientStream = PipedInputStream()
 
     private val toClient = MessageWriter(toClientStream)
-    private lateinit var serverThread: MessageReadThread
 
+    private lateinit var server: Job
     private var readerClosed = false
+    private var serverDisconnectError: Throwable? = null
     private var clientDisconnectError: Throwable? = null
     private val messages = mutableListOf<Message>()
 
@@ -87,7 +93,7 @@ class GameClientTest {
         /**
          * Block until the client is disconnected
          */
-        suspend fun awaitDisconnect() {
+        suspend fun awaitClientDisconnect() {
             if (!client.isConnected()) return
             for (event in events) {
                 if (event == Event.Disconnected) {
@@ -96,18 +102,9 @@ class GameClientTest {
                 }
             }
         }
-
-        /**
-         * Blocks until any game event is received
-         */
-        suspend fun awaitGameEvent(): Event {
-            return withTimeout(250) {
-                events.receive()
-            }
-        }
     }
 
-    private suspend fun awaitGameEvent() = gameObserver.awaitGameEvent()
+    private suspend fun awaitClientDisconnect() = gameObserver.awaitClientDisconnect()
 
     /**
      * Sends out a [MessageServerStatus] to the client and blocks until it is processed
@@ -125,8 +122,6 @@ class GameClientTest {
             )
         )
 
-        toClientStream.flush()
-
         gameObserver.awaitStatus()
     }
 
@@ -140,8 +135,10 @@ class GameClientTest {
         client.connected(serverMessageHandler, fromServerStream, toServerStream)
         client.addObserver(gameObserver)
 
-        serverThread = MessageReadThread(fromClientStream, serverMessageHandler) { readerClosed = true }
-        serverThread.start()
+        server = MessageReader(fromClientStream).asFlow()
+            .onEach { serverMessageHandler.handleMessage(it) }
+            .catch { serverDisconnectError = it }
+            .launchIn(scope)
 
         // player 1 is local and the current player
         toClient.write(
@@ -157,7 +154,7 @@ class GameClientTest {
 
     @After
     fun teardown() {
-        serverThread.goDown()
+        server.cancel()
     }
 
     @Test
@@ -173,9 +170,9 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_client_disconnect() {
+    fun test_gameClient_client_disconnect() = runBlocking {
         client.disconnect()
-        serverThread.join()
+        server.join()
         assertFalse(client.isConnected())
         assertTrue(readerClosed)
         assertNull(clientDisconnectError)
@@ -185,17 +182,17 @@ class GameClientTest {
     fun test_gameClient_server_disconnect() = runBlocking {
         assertTrue(client.isConnected())
         toClientStream.close()
-        awaitGameEvent()
+        awaitClientDisconnect()
         assertFalse(client.isConnected())
         assertTrue(clientDisconnectError is EOFException)
     }
 
     @Test
-    fun test_gameClient_requestPlayer() {
+    fun test_gameClient_requestPlayer() = runBlocking {
         client.requestPlayer(3, "hello")
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -203,15 +200,15 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_requestHint() {
+    fun test_gameClient_requestHint() = runBlocking {
         // client will refuse to send request if the current player is not local
         client.game.currentPlayer = 2
         client.game.setPlayerType(2, PLAYER_LOCAL)
 
         client.requestHint()
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -219,11 +216,11 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_requestStart() {
+    fun test_gameClient_requestStart() = runBlocking {
         client.requestGameStart()
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -231,11 +228,11 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_revokePlayer() {
+    fun test_gameClient_revokePlayer() = runBlocking {
         client.revokePlayer(1)
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -243,11 +240,11 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_chat() {
+    fun test_gameClient_chat() = runBlocking {
         client.sendChat("Hey hey")
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -255,12 +252,12 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_setStone() {
+    fun test_gameClient_setStone() = runBlocking {
         client.setStone(Turn(1, 2, 3, 4, Orientation.Default))
         assertEquals(-1, client.game.currentPlayer)
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -268,11 +265,11 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_undo() {
+    fun test_gameClient_undo() = runBlocking {
         client.requestUndo()
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -280,11 +277,11 @@ class GameClientTest {
     }
 
     @Test
-    fun test_gameClient_requestGameMode() {
+    fun test_gameClient_requestGameMode() = runBlocking {
         client.requestGameMode(17, 17, GameMode.GAMEMODE_DUO, IntArray(21) { 1 })
         client.disconnect()
-        serverThread.join(2000)
-        assertTrue(serverThread.error is EOFException)
+        server.join()
+        assertTrue(serverDisconnectError is EOFException)
         assertFalse(client.isConnected())
 
         assertEquals(1, messages.size)
@@ -303,7 +300,7 @@ class GameClientTest {
         toClientStream.close()
 
         // Client will disconnect on its own on exception, so we can still join on the serverThread
-        gameObserver.awaitDisconnect()
+        gameObserver.awaitClientDisconnect()
 
         assertTrue(clientDisconnectError is ProtocolException)
     }
@@ -328,7 +325,7 @@ class GameClientTest {
         toClientStream.close()
 
         // Client will disconnect on its own on exception, so we can still join on the serverThread
-        gameObserver.awaitDisconnect()
+        gameObserver.awaitClientDisconnect()
 
         assertTrue(clientDisconnectError is EOFException)
     }
@@ -344,8 +341,7 @@ class GameClientTest {
         toClientStream.write(dataUndoStone)
         toClientStream.close()
 
-        // Client will disconnect on its own on exception, so we can still join on the serverThread
-        gameObserver.awaitDisconnect()
+        gameObserver.awaitClientDisconnect()
 
         assertTrue(clientDisconnectError is GameStateException)
     }
