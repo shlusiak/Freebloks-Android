@@ -46,7 +46,9 @@ import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
+import de.saschahlusiak.freebloks.model.GameStateException
 import de.saschahlusiak.freebloks.model.Player
+import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.theme.ColorThemes
@@ -713,11 +715,16 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     @UiThread
-    override fun onDisconnected(client: GameClient, error: Exception?) {
+    override fun onDisconnected(client: GameClient, error: Throwable?) {
         Log.w(tag, "onDisconnected()")
         view.setGameClient(null)
 
         if (error != null) {
+            when(error) {
+                // these two are fatal and cause an app crash, so we get reports in Crashlytics
+                is GameStateException, is ProtocolException -> throw RuntimeException(error)
+            }
+
             /* TODO: add sound on disconnect on error */
             viewModel.saveGameState()
 

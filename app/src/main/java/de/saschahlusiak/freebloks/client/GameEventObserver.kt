@@ -35,7 +35,7 @@ interface GameEventObserver {
      * @param error optional error received while we were connected
      */
     @UiThread
-    fun onDisconnected(client: GameClient, error: Exception?) {}
+    fun onDisconnected(client: GameClient, error: Throwable?) {}
 
     @WorkerThread fun newCurrentPlayer(player: Int) {}
     @WorkerThread fun stoneWillBeSet(turn: Turn) {}

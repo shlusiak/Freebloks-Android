@@ -258,7 +258,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
     }
 
     @UiThread
-    override fun onDisconnected(client: GameClient, error: Exception?) {
+    override fun onDisconnected(client: GameClient, error: Throwable?) {
         shutdown()
     }
 

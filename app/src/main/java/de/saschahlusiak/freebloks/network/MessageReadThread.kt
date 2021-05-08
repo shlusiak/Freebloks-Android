@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.network
 
 import android.util.Log
 import de.saschahlusiak.freebloks.model.GameStateException
-import java.io.IOException
 import java.io.InputStream
 
 /**
@@ -34,7 +33,7 @@ class MessageReadThread(
     private var goDown = false
 
     @get:Synchronized
-    var error: Exception? = null
+    var error: Throwable? = null
         private set
 
     @Synchronized
@@ -50,21 +49,7 @@ class MessageReadThread(
 
                 handler.handleMessage(message)
             }
-        } catch (e: GameStateException) {
-            e.printStackTrace()
-            synchronized(this) {
-                error = e
-            }
-            // this RuntimeException is fatal and supposed to terminate the app
-            throw RuntimeException(e)
-        } catch (e: ProtocolException) {
-            e.printStackTrace()
-            synchronized(this) {
-                error = e
-            }
-            // this RuntimeException is fatal and supposed to terminate the app
-            throw RuntimeException(e)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             if (goDown) return
 
             // crashReporter.logException(e)

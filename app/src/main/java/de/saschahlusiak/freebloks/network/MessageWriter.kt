@@ -22,6 +22,7 @@ class MessageWriter(val os: OutputStream) {
             val bytes = message.toByteArray()
             try {
                 os.write(bytes)
+                os.flush()
             } catch (e: IOException) {
                 // this is usually a broken pipe exception, which happens when the connection
                 // is closed. This is non-fatal here and does not need to be logged.

@@ -89,7 +89,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
      * Notify all observers about the disconnect, then clear all observers, to never ever relay another message.
      */
     @UiThread
-    fun notifyDisconnected(client: GameClient, error: Exception?) {
+    fun notifyDisconnected(client: GameClient, error: Throwable?) {
         Log.d("Network", "onDisconnected")
         notifyObservers { it.onDisconnected(client, error) }
 

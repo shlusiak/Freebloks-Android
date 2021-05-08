@@ -34,7 +34,7 @@ class GameClientTest {
     private lateinit var serverThread: MessageReadThread
 
     private var readerClosed = false
-    private var clientDisconnectError: Exception? = null
+    private var clientDisconnectError: Throwable? = null
     private val messages = mutableListOf<Message>()
 
     /**
@@ -70,7 +70,7 @@ class GameClientTest {
         }
 
         @UiThread
-        override fun onDisconnected(client: GameClient, error: Exception?) {
+        override fun onDisconnected(client: GameClient, error: Throwable?) {
             clientDisconnectError = error
             events.sendBlocking(Event.Disconnected)
         }
@@ -300,6 +300,7 @@ class GameClientTest {
         )
 
         toClientStream.write(dataInvalidHeader)
+        toClientStream.close()
 
         // Client will disconnect on its own on exception, so we can still join on the serverThread
         gameObserver.awaitDisconnect()
@@ -334,20 +335,18 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_readDataInvalidGameState() = runBlocking {
-        val dataInvalidGameState = ubyteArrayOf(
+        val dataUndoStone = ubyteArrayOf(
             //region data
-            0x05, 0x00, 0x0b, 0x04, 0xd7, 0x01, 0x04, 0x00, 0x03, 0x04, 0x06
+            0x0b, 0x00, 0x0b, 0x0a, 0xe7, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
             //endregion
         )
 
-        toClientStream.write(dataInvalidGameState)
+        toClientStream.write(dataUndoStone)
         toClientStream.close()
 
         // Client will disconnect on its own on exception, so we can still join on the serverThread
         gameObserver.awaitDisconnect()
 
-        // the Thread will throw a RuntimeException(GameStateException), which would normally terminate the app,
-        // but here we can see it as a GameStateException
         assertTrue(clientDisconnectError is GameStateException)
     }
 }

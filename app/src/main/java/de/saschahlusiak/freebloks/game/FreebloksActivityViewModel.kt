@@ -551,7 +551,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         analytics.logEvent("game_undo", null)
     }
 
-    override fun onDisconnected(client: GameClient, error: Exception?) {
+    override fun onDisconnected(client: GameClient, error: Throwable?) {
         Log.d(tag, "onDisconneced")
         if (client === this.client) {
             // we may already have swapped to another client, which drives the status

@@ -301,10 +301,10 @@ class GameClientMessageHandlerTest {
     @Test
     fun test_notifyDisconnected() {
         var disconnected = false
-        var receivedError: Exception? = null
+        var receivedError: Throwable? = null
 
         val observer = object : GameEventObserver {
-            override fun onDisconnected(client: GameClient, error: Exception?) {
+            override fun onDisconnected(client: GameClient, error: Throwable?) {
                 disconnected = true
                 receivedError = error
             }

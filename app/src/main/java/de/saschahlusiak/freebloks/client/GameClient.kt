@@ -9,12 +9,10 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.GameStateException
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageReadThread
 import de.saschahlusiak.freebloks.network.MessageWriter
-import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -196,12 +194,6 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
         clientSocket = null
 
         gameClientMessageHandler.notifyDisconnected(this, lastError)
-
-        when(lastError) {
-            // these should be fatal exceptions and cause the app to terminate so we get a crash report
-            is GameStateException,
-            is ProtocolException -> throw RuntimeException(lastError)
-        }
     }
 
     /**
