@@ -5,11 +5,8 @@ import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.network.MessageReadThread
 
 /**
- * This is usually the [MessageReadThread].
- *
  * Register with [GameClientMessageHandler] to get updates.
  */
 interface GameEventObserver {

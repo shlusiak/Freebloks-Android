@@ -11,7 +11,6 @@ import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.Message
-import de.saschahlusiak.freebloks.network.MessageReadThread
 import de.saschahlusiak.freebloks.network.MessageReader
 import de.saschahlusiak.freebloks.network.MessageWriter
 import de.saschahlusiak.freebloks.network.message.*

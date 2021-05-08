@@ -12,7 +12,7 @@ class MessageReaderTest {
     private fun MessageReader.readAll(): List<Message> {
         val messages = mutableListOf<Message>()
         try {
-            forEach { messages.add(it) }
+            messages.addAll(this)
         } catch (e: EOFException) {
             // pass
         }

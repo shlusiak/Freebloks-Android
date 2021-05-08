@@ -22,7 +22,7 @@ import kotlin.coroutines.coroutineContext
  *
  * When the stream finishes, the iterator will throw an [EOFException].
  */
-class MessageReader(private val stream: InputStream) : Iterable<Message> {
+class MessageReader(private val stream: InputStream): Iterable<Message> {
     /**
      * the buffer will grow as required when reading messages.
      */
@@ -65,11 +65,13 @@ class MessageReader(private val stream: InputStream) : Iterable<Message> {
     /**
      * Produce a sequence of message. The sequence will not stop naturally and will throw an [EOFException] at the end.
      *
+     * The sequence is blocking on IO and should be consumed on a background thread.
+     *
      * Unknown message types will be silently skipped.
      */
     @Throws(IOException::class, ProtocolException::class)
     @WorkerThread
-    private fun asSequence(): Sequence<Message> {
+    fun asSequence(): Sequence<Message> {
         return sequence {
             while (true) {
                 readNextIntoBuffer()

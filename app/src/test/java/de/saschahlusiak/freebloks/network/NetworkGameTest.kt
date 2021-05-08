@@ -318,7 +318,7 @@ class NetworkGameTest {
     private fun consumeAllPackets(from: InputStream): List<Message> {
         val list = mutableListOf<Message>()
         try {
-            MessageReader(from).forEach { list.add(it) }
+            list.addAll(MessageReader(from))
         } catch (e: EOFException) {
             // ignore
         }
