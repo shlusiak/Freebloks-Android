@@ -561,6 +561,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             chatButtonVisible.postValue(false)
         }
         chatHistory.clear()
+        chatHistoryAsLiveData.postValue(chatHistory.toList())
     }
 
     //endregion
