@@ -139,7 +139,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/donationBitcoin"
+                android:id="@+id/donationLitecoin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -153,7 +153,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo_bitcoin" />
+                    android:src="@drawable/logo_litecoin" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
