@@ -672,7 +672,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
         lifecycleScope.launch {
             if (hasWindowFocus()) {

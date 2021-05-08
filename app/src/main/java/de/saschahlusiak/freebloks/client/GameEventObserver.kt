@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.client
 
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
@@ -34,21 +33,21 @@ interface GameEventObserver {
     @UiThread
     fun onDisconnected(client: GameClient, error: Throwable?) {}
 
-    @WorkerThread fun newCurrentPlayer(player: Int) {}
-    @WorkerThread fun stoneWillBeSet(turn: Turn) {}
-    @WorkerThread fun stoneHasBeenSet(turn: Turn) {}
-    @WorkerThread fun playerIsOutOfMoves(player: Player) {}
-    @WorkerThread fun hintReceived(turn: Turn) {}
-    @WorkerThread fun gameFinished() {}
-    @WorkerThread fun gameStarted() {}
-    @WorkerThread fun stoneUndone(t: Turn) {}
-    @WorkerThread fun serverStatus(status: MessageServerStatus) {}
+    @UiThread fun newCurrentPlayer(player: Int) {}
+    @UiThread fun stoneWillBeSet(turn: Turn) {}
+    @UiThread fun stoneHasBeenSet(turn: Turn) {}
+    @UiThread fun playerIsOutOfMoves(player: Player) {}
+    @UiThread fun hintReceived(turn: Turn) {}
+    @UiThread fun gameFinished() {}
+    @UiThread fun gameStarted() {}
+    @UiThread fun stoneUndone(t: Turn) {}
+    @UiThread fun serverStatus(status: MessageServerStatus) {}
 
     /**
      * Player may be -1 if client has no player
      * TODO: make nullable instead
      */
-    @WorkerThread fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {}
+    @UiThread fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {}
 
     /**
      * Player has joined.
@@ -57,7 +56,7 @@ interface GameEventObserver {
      * @param player the color the player is playing
      * @param name the name of the client playing this player
      */
-    @WorkerThread fun playerJoined(client: Int, player: Int, name: String?) {}
+    @UiThread fun playerJoined(client: Int, player: Int, name: String?) {}
 
     /**
      * Player has left
@@ -66,5 +65,5 @@ interface GameEventObserver {
      * @param player the player the client was playing
      * @param name the name that client had
      */
-    @WorkerThread fun playerLeft(client: Int, player: Int, name: String?) {}
+    @UiThread fun playerLeft(client: Int, player: Int, name: String?) {}
 }

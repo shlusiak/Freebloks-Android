@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.MockitoAnnotations.initMocks
+import org.mockito.MockitoAnnotations.openMocks
 import javax.microedition.khronos.opengles.GL11
 
 /**
@@ -24,7 +25,7 @@ class BoardRendererTest {
 
     @Before
     fun setup() {
-        initMocks(this)
+        openMocks(this)
         renderer = BoardRenderer(resources)
     }
 

@@ -241,12 +241,6 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
         }
     }
 
-    @WorkerThread
-    @Throws(ProtocolException::class, GameStateException::class)
-    fun handleMessages(vararg message: Message) {
-        message.forEach { handleMessage(it) }
-    }
-
     @Throws(GameStateException::class)
     internal fun assert(condition: Boolean, lazyMessage: () -> String) {
         if (condition) return

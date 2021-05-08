@@ -434,14 +434,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         canRequestUndo.value = false
     }
 
-    @WorkerThread
+    @UiThread
     override fun gameStarted() {
         // this is so we get to update our [localClientNameOverride], because
         // we start a new local game without any player name, and it allows the
         // lobby to set a new name in the preferences before game start.
-        viewModelScope.launch {
-            reloadPreferences()
-        }
+        reloadPreferences()
 
         // Send analytics event
         val lastStatus = lastStatus ?: return
@@ -464,7 +462,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun serverStatus(status: MessageServerStatus) {
         this.lastStatus = status
 
@@ -546,7 +544,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         canRequestHint.postValue(client?.game?.isStarted ?: false)
     }
 
-    @WorkerThread
+    @UiThread
     override fun stoneUndone(t: Turn) {
         analytics.logEvent("game_undo", null)
     }

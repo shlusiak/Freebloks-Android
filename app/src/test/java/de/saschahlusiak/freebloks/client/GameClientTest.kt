@@ -20,7 +20,6 @@ import java.io.EOFException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
-import kotlinx.coroutines.channels.receiveOrNull
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -73,7 +72,7 @@ class GameClientTest {
         private val events = Channel<Event>(Channel.UNLIMITED)
         var statusReceived: Boolean = false
 
-        @WorkerThread
+        @UiThread
         override fun serverStatus(status: MessageServerStatus) {
             events.sendBlocking(Event.Status)
         }

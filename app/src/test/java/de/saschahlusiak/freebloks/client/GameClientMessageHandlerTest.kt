@@ -4,6 +4,7 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.Board.Companion.FIELD_FREE
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.*
 import org.junit.Assert.*
@@ -14,6 +15,10 @@ import java.io.IOException
 class GameClientMessageHandlerTest {
     private lateinit var game: Game
     private lateinit var handler: GameClientMessageHandler
+
+    private fun GameClientMessageHandler.handleMessages(vararg message: Message) {
+        message.forEach { handleMessage(it) }
+    }
 
     private fun serverStatus(
         size: Int = Board.DEFAULT_BOARD_SIZE,
@@ -44,7 +49,6 @@ class GameClientMessageHandlerTest {
         assertEquals(20, game.board.width)
         assertEquals(20, game.board.height)
         assertEquals(-1, game.currentPlayer)
-
     }
 
     @Test
