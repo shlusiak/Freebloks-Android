@@ -2,20 +2,14 @@ package de.saschahlusiak.freebloks.network
 
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.utils.read
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.handleCoroutineException
-import kotlinx.coroutines.runBlocking
 import java.io.EOFException
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
 import kotlin.concurrent.thread
-import kotlin.coroutines.coroutineContext
 
 /**
  * Use this iterable to read [Message] objects from the given [stream].
@@ -86,7 +80,7 @@ class MessageReader(private val stream: InputStream): Iterable<Message> {
     }
 
     fun asFlow() = channelFlow {
-        val t = thread {
+        val t = thread(name = "MessageReader") {
             try {
                 while (true) {
                     readNextIntoBuffer()

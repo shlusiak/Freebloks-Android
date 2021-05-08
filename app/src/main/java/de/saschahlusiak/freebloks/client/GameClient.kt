@@ -18,6 +18,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -162,6 +163,7 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
         gameClientMessageHandler.notifyConnected(this)
 
         reader.asFlow()
+            .buffer(2)
             .onEach { gameClientMessageHandler.handleMessage(it) }
             .catch { disconnect(it) }
             .launchIn(scope)
