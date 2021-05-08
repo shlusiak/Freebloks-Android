@@ -53,4 +53,13 @@
         <item name="android:padding">14dp</item>
     </style>
 
+    <style name="IconButton" parent="@style/Widget.MaterialComponents.Button">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetLeft">6dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconTint">@null</item>
+
+    </style>
+
 </resources>

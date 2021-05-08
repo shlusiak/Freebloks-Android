@@ -73,7 +73,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
 
         viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner, Observer { enabled ->
             val res = if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
-            view.sound_toggle_button.setImageResource(res)
+            view.sound_toggle_button.setIconResource(res)
         })
 
         viewModel.connectionStatus.observe(viewLifecycleOwner, Observer {
