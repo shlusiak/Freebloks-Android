@@ -150,7 +150,7 @@
     <string name="donation_title">Buy the developers a coffee</string>
     <string name="donation_text_line1">Freebloks is free software. You can use and modify it completely free of charge!</string>
     <string name="donation_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
-    <string name="donation_text_short">Would you support the development with a donation of your choice?</string>
+    <string name="donation_text_short">Would you like to support the developers with a small donation?</string>
     <string name="donation_skip">Maybe later</string>
     <string name="donation_yes">Yes!</string>
     <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>

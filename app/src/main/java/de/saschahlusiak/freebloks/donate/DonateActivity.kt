@@ -22,13 +22,27 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        next.setOnClickListener { onYesButtonPress() }
-        skip.setOnClickListener { onSkipButtonPress() }
-
         donationFreebloksVip.setOnClickListener { onFreebloksVIPClick() }
         donationPaypal.setOnClickListener { onPayPalClick() }
-//        donationBitcoin.setOnClickListener { onBitcoinClick() }
         donationLitecoin.setOnClickListener { onLitecoinClick() }
+
+        if (Global.IS_GOOGLE) {
+            // Google does not allow to pay with any other payment provider, so we fast track to
+            // FreebloksVIP.
+            donateThankYou.isVisible = true
+            donationsGroup.isVisible = true
+            donationPaypal.isVisible = false
+            donationLitecoin.isVisible = false
+
+            donateButtonGroup.isVisible = false
+
+            next.setOnClickListener { onFreebloksVIPClick() }
+            skip.setOnClickListener { onSkipButtonPress() }
+
+        } else {
+            next.setOnClickListener { onYesButtonPress() }
+            skip.setOnClickListener { onSkipButtonPress() }
+        }
 
         if (savedInstanceState == null) {
             donate_icon.scaleX = 0.0f
@@ -60,6 +74,24 @@ class DonateActivity : AppCompatActivity(R.layout.donate_activity) {
                 .alpha(1.0f)
                 .translationY(0.0f)
                 .start()
+
+            if (Global.IS_GOOGLE) {
+                donationsGroup.alpha = 0.0f
+                donationsGroup.animate()
+                    .setStartDelay(1300)
+                    .setDuration(2500)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .alpha(1.0f)
+                    .start()
+
+                donateThankYou.alpha = 0.0f
+                donateThankYou.animate()
+                    .setStartDelay(1300)
+                    .setDuration(2500)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .alpha(1.0f)
+                    .start()
+            }
         }
     }
 

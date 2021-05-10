@@ -14,6 +14,16 @@ object Global {
     const val IS_FDROID = (BuildConfig.FLAVOR_store == "fdroid")
 
     /**
+     * This this the F-Droid build flavor?
+     */
+    const val IS_GOOGLE = (BuildConfig.FLAVOR_store == "google")
+
+    /**
+     * This this the F-Droid build flavor?
+     */
+    const val IS_AMAZON = (BuildConfig.FLAVOR_store == "amazon")
+
+    /**
      * Minimum number of starts before rating dialog appears
      */
     const val RATE_MIN_STARTS = 8
