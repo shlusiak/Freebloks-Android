@@ -8,7 +8,6 @@ LOCAL_SRC_FILES := github/src/board.cpp \
 	github/src/stone.cpp \
 	github/src/game.cpp \
 	github/src/player.cpp \
-	github/src/turn.cpp \
 	github/src/turnpool.cpp \
 	github/src/spielserver.cpp \
 	github/src/network.cpp \

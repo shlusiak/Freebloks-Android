@@ -91,7 +91,7 @@ void* gameRunThread(void* param)
 
 
 static int max_humans = 4;
-static int force_delay = 1;
+static bool force_delay = true;
 static int port = 59995;
 static char* _interface = NULL;
 
@@ -138,7 +138,7 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServ
 	tmp = je->GetIntArrayElements(player_data, 0);
 	for (i = 0; i < PLAYER_MAX; i++)
 		for (j = 0; j < STONE_COUNT_ALL_SHAPES; j++) {
-			game->get_player(i)->get_stone(j)->set_available(tmp[i * STONE_COUNT_ALL_SHAPES + j]);
+			game->get_player(i)->get_stone(j).set_available(tmp[i * STONE_COUNT_ALL_SHAPES + j]);
 		}
 
 	if (pthread_create(&pt,NULL,gameRunThread,(void*)listener))

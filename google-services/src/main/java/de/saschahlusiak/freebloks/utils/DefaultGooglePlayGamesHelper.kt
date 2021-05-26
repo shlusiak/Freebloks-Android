@@ -13,7 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.common.GooglePlayServicesUtilLight
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
 import java.lang.IllegalStateException
@@ -22,10 +22,9 @@ import java.lang.IllegalStateException
  * This is the actual implementation of Google Play provider. The [GooglePlayGamesHelper]
  * implementation is just a dummy that does not require any dependencies.
  */
-class DefaultGooglePlayGamesHelper: GooglePlayGamesHelper {
+class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGamesHelper() {
     private val tag = DefaultGooglePlayGamesHelper::class.java.simpleName
 
-    private val context: Context
     private var googleSignInClient: GoogleSignInClient
     private var gamesClient: GamesClient? = null
     private var leaderboardsClient: LeaderboardsClient? = null
@@ -35,14 +34,12 @@ class DefaultGooglePlayGamesHelper: GooglePlayGamesHelper {
     var currentGoogleAccount: GoogleSignInAccount? = null
 
     override val isAvailable: Boolean
-        get() = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
+        get() = (GooglePlayServicesUtilLight.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
 
-    constructor(context: Context): super() {
-        this.context = context
-
+    init {
         googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
-
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)
+
         if (lastAccount == null) {
             googleSignInClient.silentSignIn().addOnSuccessListener { setGoogleAccount(it) }
         } else {

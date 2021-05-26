@@ -266,7 +266,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         // unfortunately we use full screen everywhere, which would make the top padding 0
         // so on devices with a display cutout with API level < 28, we unfortunately overlap the cutout
         // FIXME: behaviour on Android 8 on a device with cutout?
-        if (Build.VERSION.SDK_INT < 28) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             return padding
         }
         val cutout = insets.displayCutout ?: return padding

@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
  * This is the public facade of the Google Play interface, which is also the dummy implementation that does nothing.
  */
 open class GooglePlayGamesHelper {
-    val signedIn = MutableLiveData<Boolean>(false)
+    val signedIn = MutableLiveData(false)
     val playerName = MutableLiveData<String?>(null)
 
     open val isAvailable: Boolean
