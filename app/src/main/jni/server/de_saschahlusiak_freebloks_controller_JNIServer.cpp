@@ -19,6 +19,7 @@ void CAndroidLogWriter::log(const char* fmt, va_list va)
 	__android_log_vprint(ANDROID_LOG_INFO, "server", fmt, va);
 }
 
+static CAndroidLogWriter androidLogWriter;
 static int server_count = 0;
 
 
@@ -62,7 +63,7 @@ void* gameRunThread(void* param)
 
 	int server_id = server_count++;
 
-	CLogger logger(new CAndroidLogWriter());
+	CLogger logger(androidLogWriter);
 	listener->setLogger(&logger);
 	listener->get_game()->setLogger(&logger);
 
