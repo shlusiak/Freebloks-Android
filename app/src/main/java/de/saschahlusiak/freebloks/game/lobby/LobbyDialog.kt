@@ -284,7 +284,9 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
         val text = chatText.text.toString()
         if (text.isEmpty()) return
         // FIXME: The server cuts off the last character, so we have to append a new-line
-        client?.sendChat(text + "\n")
+        text.chunked(240).forEach {
+            client?.sendChat(it + "\n")
+        }
         chatText.setText("")
     }
 
