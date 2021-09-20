@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.DependencyProvider
@@ -30,6 +30,7 @@ import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.ByteArrayOutputStream
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -80,11 +81,11 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     var lastStatus: MessageServerStatus? = null
         private set
 
-    private val chatHistory = mutableListOf<ChatItem>()
+    private val chatHistory = MutableStateFlow(emptyList<ChatItem>())
     val sounds: BaseSounds = DefaultSounds(app)
 
     // LiveData
-    val chatHistoryAsLiveData = MutableLiveData<List<ChatItem>>(chatHistory)
+    val chatHistoryAsLiveData = chatHistory.asLiveData()
     val soundsEnabledLiveData = MutableLiveData(sounds.soundsEnabled)
     val chatButtonVisible = MutableLiveData(false)
     val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
@@ -361,18 +362,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
                     if (address.isLinkLocalAddress) continue
                     if (address.isLoopbackAddress) continue
                     if (address.isMulticastAddress) continue
-                    var a = address.hostAddress
+                    var a = address.hostAddress ?: continue
                     if (a.contains("%")) a = a.substring(0, a.indexOf("%"))
 
                     val e = ChatItem.Generic(String.format("[%s]", a))
-                    chatHistory.add(e)
+                    chatHistory.value = chatHistory.value + e
                 }
             }
         } catch (e: SocketException) {
             e.printStackTrace()
         }
-
-        chatHistoryAsLiveData.postValue(chatHistory.toList())
     }
 
     /**
@@ -471,7 +470,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun gameFinished() {
         super.gameFinished()
 
@@ -480,7 +479,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun newCurrentPlayer(player: Int) {
         val client = client ?: return
         if (playerToShowInSheet.value?.isRotated == true) {
@@ -502,15 +501,16 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         )
     }
 
+    @UiThread
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
         val name = status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
         val isLocal = game?.isLocalPlayer(player) ?: false
         val e = ChatItem.Message(client, if (player < 0) null else player, isLocal, name, message)
 
-        chatHistory.add(e)
-        chatHistoryAsLiveData.postValue(chatHistory.toList())
+        chatHistory.value = chatHistory.value + e
     }
 
+    @UiThread
     override fun playerJoined(client: Int, player: Int, name: String?) {
         val gameMode = game?.gameMode ?: GameMode.DEFAULT
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
@@ -521,10 +521,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
         val e = ChatItem.Server(player, text)
 
-        chatHistory.add(e)
-        chatHistoryAsLiveData.postValue(chatHistory.toList())
+        chatHistory.value = chatHistory.value + e
     }
 
+    @UiThread
     override fun playerLeft(client: Int, player: Int, name: String?) {
         val clientName = name ?: context.getString(R.string.client_d, client + 1)
         val gameMode = game?.gameMode ?: GameMode.DEFAULT
@@ -535,10 +535,10 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         val text = context.getString(R.string.player_left_color, clientName, colorName)
         val e = ChatItem.Server(player, text)
 
-        chatHistory.add(e)
-        chatHistoryAsLiveData.postValue(chatHistory.toList())
+        chatHistory.value = chatHistory.value + e
     }
 
+    @UiThread
     override fun hintReceived(turn: Turn) {
         inProgress.postValue(false)
         canRequestHint.postValue(client?.game?.isStarted ?: false)
@@ -549,6 +549,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         analytics.logEvent("game_undo", null)
     }
 
+    @UiThread
     override fun onDisconnected(client: GameClient, error: Throwable?) {
         Log.d(tag, "onDisconneced")
         if (client === this.client) {
@@ -558,8 +559,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
             setSheetPlayer(-1, false)
             chatButtonVisible.postValue(false)
         }
-        chatHistory.clear()
-        chatHistoryAsLiveData.postValue(chatHistory.toList())
+        chatHistory.value = emptyList()
     }
 
     //endregion

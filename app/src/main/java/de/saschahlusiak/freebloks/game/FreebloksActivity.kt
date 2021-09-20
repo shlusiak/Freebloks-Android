@@ -243,8 +243,8 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d(tag, "onSaveInstanceState")
         super.onSaveInstanceState(outState)
+        Log.d(tag, "onSaveInstanceState")
 
         outState.putFloat("view_scale", view.getScale())
         outState.putBoolean("showRateDialog", showRateDialog)

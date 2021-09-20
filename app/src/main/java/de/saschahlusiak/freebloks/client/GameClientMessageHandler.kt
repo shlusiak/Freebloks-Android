@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.client
 import android.util.Log
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageHandler
@@ -49,7 +48,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     }
 
     @AnyThread
-    private fun notifyObservers(block: (GameEventObserver) -> Unit) {
+    private fun notifyObservers(block: GameEventObserver.() -> Unit) {
         synchronized(observer) {
             var i = 0
             // the only concurrent operation on the list we support is add, because removeObserver
@@ -70,7 +69,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     @UiThread
     fun notifyConnected(client: GameClient) {
         Log.d("Network", "onConnected")
-        notifyObservers { it.onConnected(client) }
+        notifyObservers { onConnected(client) }
     }
 
     /**
@@ -82,7 +81,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     @UiThread
     fun notifyConnectionFailed(client: GameClient, error: Exception) {
         Log.d("Network", "onConnectionFailed")
-        notifyObservers { it.onConnectionFailed(client, error) }
+        notifyObservers { onConnectionFailed(client, error) }
     }
 
     /**
@@ -91,14 +90,14 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
     @UiThread
     fun notifyDisconnected(client: GameClient, error: Throwable?) {
         Log.d("Network", "onDisconnected")
-        notifyObservers { it.onDisconnected(client, error) }
+        notifyObservers { onDisconnected(client, error) }
 
         synchronized(observer) {
             observer.forEach { it.clear() }
         }
     }
 
-    @WorkerThread
+    @UiThread
     @Throws(ProtocolException::class, GameStateException::class)
     override fun handleMessage(message: Message) {
         Log.d("Network", "<< $message")
@@ -117,7 +116,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
 
             is MessageCurrentPlayer ->  {
                 game.currentPlayer = message.player
-                notifyObservers { it.newCurrentPlayer(message.player) }
+                notifyObservers { newCurrentPlayer(message.player) }
             }
 
             is MessageSetStone -> {
@@ -129,30 +128,30 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 // inform listeners first, so that effects can be added before the stone
                 // is committed. fixes drawing glitches, where stone is set, but
                 // effect hasn't been added yet.
-                notifyObservers { it.stoneWillBeSet(turn) }
+                notifyObservers { stoneWillBeSet(turn) }
 
                 // also for each player the number of possible turns before setting the stone and after
                 val numberOfPossibleTurns = board.player.map { it.numberOfPossibleTurns }
                 board.setStone(turn)
-                notifyObservers { it.stoneHasBeenSet(turn) }
+                notifyObservers { stoneHasBeenSet(turn) }
 
                 // detect which player is now out of moves, but wasn't before and notify listeners
                 board.player.forEachIndexed { index, player ->
                     if (player.numberOfPossibleTurns <= 0 && numberOfPossibleTurns[index] > 0) {
-                        notifyObservers { it.playerIsOutOfMoves(player) }
+                        notifyObservers { playerIsOutOfMoves(player) }
                     }
                 }
             }
 
             is MessageStoneHint -> {
                 val turn = message.toTurn()
-                notifyObservers { it.hintReceived(turn) }
+                notifyObservers { hintReceived(turn) }
             }
 
             is MessageGameFinish -> {
                 assert(game.isStarted && !game.isFinished) { "Game in invalid state" }
                 game.isFinished = true
-                notifyObservers { it.gameFinished() }
+                notifyObservers { gameFinished() }
             }
 
             is MessageServerStatus -> {
@@ -183,7 +182,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 val prevStatus = lastStatus
                 lastStatus = message
 
-                notifyObservers { it.serverStatus(message) }
+                notifyObservers { serverStatus(message) }
 
                 // compare old and new status to find out who joined and who left
                 if (prevStatus != null) {
@@ -194,11 +193,11 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                         if (wasClient == null && isClient != null) {
                             /* joined */
                             val name = message.getClientName(isClient)
-                            notifyObservers { it.playerJoined(isClient, player, name) }
+                            notifyObservers { playerJoined(isClient, player, name) }
                         } else if (wasClient != null && isClient == null) {
                             /* left */
                             val name = prevStatus.getClientName(wasClient)
-                            notifyObservers { it.playerLeft(wasClient, player, name) }
+                            notifyObservers { playerLeft(wasClient, player, name) }
                         } else continue
                     }
                 }
@@ -212,7 +211,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
 
                     val player = status.clientForPlayer.indexOfFirst { it == message.client }
 
-                    notifyObservers { it.chatReceived(status, message.client, player, message.message) }
+                    notifyObservers { chatReceived(status, message.client, player, message.message) }
                 }
             }
 
@@ -226,7 +225,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
 
                 game.currentPlayer = -1
 
-                notifyObservers { it.gameStarted() }
+                notifyObservers { gameStarted() }
             }
 
             is MessageUndoStone -> {
@@ -234,7 +233,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
                 val turn: Turn = game.history.last
                 board.undo(game.history, game.gameMode)
 
-                notifyObservers { it.stoneUndone(turn) }
+                notifyObservers { stoneUndone(turn) }
             }
 
             else -> throw ProtocolException("don't know how to handle message $message")

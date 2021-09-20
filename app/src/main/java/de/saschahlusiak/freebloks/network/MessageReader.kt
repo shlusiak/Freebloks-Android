@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.utils.read
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.channelFlow
 import java.io.EOFException
 import java.io.IOException
@@ -85,7 +86,7 @@ class MessageReader(private val stream: InputStream): Iterable<Message> {
                 while (true) {
                     readNextIntoBuffer()
                     val message = Message.from(buffer) ?: continue
-                    sendBlocking(message)
+                    trySendBlocking(message)
                 }
             } catch (e: Exception) {
                 close(e)
