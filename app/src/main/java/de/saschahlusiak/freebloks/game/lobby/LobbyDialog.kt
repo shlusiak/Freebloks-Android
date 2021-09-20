@@ -53,6 +53,8 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
             val size = gameMode.defaultBoardSize()
             val stones = gameMode.defaultStoneSet()
 
+            if (gameMode == viewModel.lastStatus?.gameMode) return
+
             client.requestGameMode(size, size, gameMode, stones)
         }
     }
@@ -71,6 +73,8 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
                 else -> GameConfig.DEFAULT_STONE_SET
             }
 
+            if (size == viewModel.lastStatus?.size) return
+
             client.requestGameMode(size, size, gameMode, stones)
         }
     }
@@ -85,15 +89,11 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
-            if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
-            } else {
-                window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
-            }
+            window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
 
             val client = client
             if (client != null && client.game.isStarted) {
-                /* chat */
+                /* in-game chat */
                 setTitle(R.string.chat)
                 setCanceledOnTouchOutside(true)
             } else {
