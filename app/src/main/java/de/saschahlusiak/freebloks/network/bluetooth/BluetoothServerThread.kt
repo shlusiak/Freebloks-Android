@@ -20,7 +20,9 @@ import java.util.*
  *
  * Register this to a [GameClient] to automatically shut it down once the game is started.
  */
-class BluetoothServerThread constructor(private val listener: OnBluetoothConnectedListener) : Thread("BluetoothServerBridge"), GameEventObserver {
+class BluetoothServerThread(
+    private val listener: OnBluetoothConnectedListener
+) : Thread("BluetoothServerBridge"), GameEventObserver {
     private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private var serverSocket: BluetoothServerSocket? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -34,7 +36,6 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
         if (bluetoothAdapter != null) {
             try {
                 Log.i(tag, "name " + bluetoothAdapter.name)
-                Log.i(tag, "address " + bluetoothAdapter.address)
                 Log.i(tag, "enabled " + bluetoothAdapter.isEnabled)
             } catch (e: SecurityException) { // doesn't matter, but is interesting
                 e.printStackTrace()
@@ -109,6 +110,6 @@ class BluetoothServerThread constructor(private val listener: OnBluetoothConnect
     companion object {
         private val tag = BluetoothServerThread::class.java.simpleName
 
-		val SERVICE_UUID: UUID = UUID.fromString("B4C72729-2E7F-48B2-B15C-BDD73CED0D13")
+        val SERVICE_UUID: UUID = UUID.fromString("B4C72729-2E7F-48B2-B15C-BDD73CED0D13")
     }
 }

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.UiThread
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
@@ -25,8 +26,6 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import kotlinx.android.synthetic.main.multiplayer_fragment.*
 import kotlinx.android.synthetic.main.multiplayer_fragment.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
@@ -82,6 +81,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     override fun onStart() {
         super.onStart()
 
+        // FIXME: probably need to ask for runtime permission BLUETOOTH_CONNECT here
         if (bluetoothServer == null) {
             bluetoothServer = startBluetoothServer()
         }
@@ -219,7 +219,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
         val config = GameConfig(server = null, showLobby = true)
 
-        GlobalScope.launch(Dispatchers.Main) {
+        activity?.lifecycleScope?.launch {
             val listener = listener ?: return@launch
             val job = listener.onStartClientGameWithConfig(config, clientName)
             job.join()
