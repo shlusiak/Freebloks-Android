@@ -73,6 +73,7 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialDialog(requireContext(), theme).apply {
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
+            setCanceledOnTouchOutside(false)
         }
     }
 
