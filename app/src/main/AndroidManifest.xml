@@ -49,6 +49,7 @@
             android:name=".game.FreebloksActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:exported="true"
             android:theme="@style/Theme.Freebloks.Game">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
