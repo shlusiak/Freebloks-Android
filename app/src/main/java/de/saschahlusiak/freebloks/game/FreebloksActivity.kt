@@ -556,7 +556,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     //region OnStartCustomGameListener
 
     override fun showMainMenu() {
-        MainMenuFragment().show(supportFragmentManager, "game_menu")
+        lifecycleScope.launchWhenResumed {
+            MainMenuFragment().show(supportFragmentManager, "game_menu")
+        }
     }
 
     override fun onStartClientGameWithConfig(config: GameConfig, localClientName: String?): Job {
