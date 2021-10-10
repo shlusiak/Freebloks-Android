@@ -1,9 +1,12 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
+import android.Manifest
 import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,7 +14,9 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import de.saschahlusiak.freebloks.Global
@@ -98,8 +103,30 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         val adapter = bluetoothAdapter ?: return null
         if (!adapter.isEnabled) return null
 
+        if (Build.VERSION.SDK_INT >= 31) {
+            // Android S introduced permission BLUETOOTH_CONNECT, which is required to connect and listen
+            val granted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+
+            if (!granted) {
+                requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
+                return null
+            }
+        }
+
         return BluetoothServerThread(this).also {
             it.start()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_BLUETOOTH_CONNECT) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (bluetoothServer == null) {
+                    bluetoothServer = startBluetoothServer()
+                }
+            }
         }
     }
 
@@ -231,5 +258,9 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
 
         // dismissing this dialog will stop the listener, which will be started again by the LobbyDialog
         dismiss()
+    }
+
+    companion object {
+        private const val REQUEST_BLUETOOTH_CONNECT = 10004
     }
 }
