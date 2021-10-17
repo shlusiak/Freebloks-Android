@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,6 +31,8 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
     private var menu: Menu? = null
 
     private lateinit var gameHelper: de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+
+    private var googleSignInButton: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +79,14 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
         }
 
         if (gameHelper.isAvailable) {
-            signin_stub.inflate()
-            findViewById<View>(R.id.signin).apply {
-                gameHelper.signedIn.observe(this@StatisticsActivity, Observer { onGoogleAccountChanged(it) })
-                setOnClickListener { gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN) }
+            googleSignInButton = gameHelper.newSignInButton(this)
+            googleSignInButton?.let {
+                signin_stub.addView(it, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
+            googleSignInButton?.setOnClickListener {
+                gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
+            }
+            gameHelper.signedIn.observe(this@StatisticsActivity) { onGoogleAccountChanged(it) }
         }
     }
 
@@ -194,7 +199,7 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
 
     private fun onGoogleAccountChanged(signedIn: Boolean) {
         if (signedIn) {
-            findViewById<View>(R.id.signin).visibility = View.GONE
+            googleSignInButton?.visibility = View.GONE
             invalidateOptionsMenu()
             gameHelper.submitScore(
                 getString(R.string.leaderboard_games_won),
@@ -203,7 +208,7 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
                 getString(R.string.leaderboard_points_total),
                 db.getTotalNumberOfPoints(null).toLong())
         } else {
-            findViewById<View>(R.id.signin).visibility = View.VISIBLE
+            googleSignInButton?.visibility = View.VISIBLE
             invalidateOptionsMenu()
         }
     }

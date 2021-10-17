@@ -20,14 +20,13 @@
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
-        <ViewStub
+        <FrameLayout
             android:id="@+id/signin_stub"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:inflatedId="@+id/signin"
-            android:layout="@layout/google_signin_button"
-            android:visibility="gone"></ViewStub>
+            android:visibility="gone">
+        </FrameLayout>
 
         <Button
             android:id="@+id/ok"

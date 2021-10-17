@@ -5,18 +5,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.analytics
-import kotlinx.android.synthetic.main.rules_activity.*
+import de.saschahlusiak.freebloks.databinding.RulesActivityBinding
+import de.saschahlusiak.freebloks.utils.viewBinding
 
 class RulesActivity : AppCompatActivity() {
     private val youtubeLink = "https://www.youtube.com/watch?v=pc8nmWpcQWs"
 
+    private val binding by viewBinding(RulesActivityBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.rules_activity)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        youtube.setOnClickListener { onYoutubeButtonClick() }
+        binding.youtube.setOnClickListener { onYoutubeButtonClick() }
 
         analytics.logEvent("rules_show", null)
     }

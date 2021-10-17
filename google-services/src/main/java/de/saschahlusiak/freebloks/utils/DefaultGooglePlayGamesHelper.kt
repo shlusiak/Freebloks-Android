@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.view.Window
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.Auth
@@ -14,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtilLight
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
 import java.lang.IllegalStateException
@@ -157,4 +159,6 @@ class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGam
             onError.invoke(message)
         }
     }
+
+    override fun newSignInButton(context: Context) = SignInButton(context)
 }

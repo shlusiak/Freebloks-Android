@@ -1,7 +1,9 @@
 package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -42,4 +44,6 @@ open class GooglePlayGamesHelper {
     open fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) { }
 
     open fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) { }
+
+    open fun newSignInButton(context: Context): View? { return null }
 }
