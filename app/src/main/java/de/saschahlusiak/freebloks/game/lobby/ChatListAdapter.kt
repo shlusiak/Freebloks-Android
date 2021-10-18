@@ -11,19 +11,25 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.databinding.ChatListItemGenericBinding
+import de.saschahlusiak.freebloks.databinding.ChatListItemLocalBinding
+import de.saschahlusiak.freebloks.databinding.ChatListItemRemoteBinding
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.colorOf
-import kotlinx.android.synthetic.main.chat_list_item_remote.view.*
 
-class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 class ChatListAdapter(context: Context, val game: Game) : RecyclerView.Adapter<ViewHolder>() {
     private val inflater = LayoutInflater.from(context)
 
     sealed class CellType(@LayoutRes val layoutResId: Int) {
-        class Generic(val text: String): CellType(R.layout.chat_list_item_generic)
-        class Server(val text: String): CellType(R.layout.chat_list_item_generic)
-        class Message(@LayoutRes layoutResId: Int, val name: String, val text: String, @ColorRes val colorRes: Int): CellType(layoutResId)
+        class Generic(val text: String) : CellType(R.layout.chat_list_item_generic)
+        class Server(val text: String) : CellType(R.layout.chat_list_item_generic)
+        class LocalMessage(val text: String, @ColorRes val colorRes: Int) :
+            CellType(R.layout.chat_list_item_local)
+
+        class RemoteMessage(val name: String, val text: String, @ColorRes val colorRes: Int) :
+            CellType(R.layout.chat_list_item_remote)
     }
 
     private var items: List<CellType> = emptyList()
@@ -32,7 +38,7 @@ class ChatListAdapter(context: Context, val game: Game) : RecyclerView.Adapter<V
         val old = this.items
 
         items = newItems.map {
-            when(it) {
+            when (it) {
                 is ChatItem.Generic -> CellType.Generic(it.text)
                 is ChatItem.Server -> CellType.Server(it.text)
 
@@ -42,9 +48,10 @@ class ChatListAdapter(context: Context, val game: Game) : RecyclerView.Adapter<V
                     else
                         game.gameMode.colorOf(it.player).backgroundColorId
 
-                    val layout = if (it.isLocal) R.layout.chat_list_item_local else R.layout.chat_list_item_remote
-
-                    CellType.Message(layout, it.name, it.text, color)
+                    if (it.isLocal)
+                        CellType.LocalMessage(it.text, color)
+                    else
+                        CellType.RemoteMessage(it.name, it.text, color)
                 }
             }
         }
@@ -78,13 +85,22 @@ class ChatListAdapter(context: Context, val game: Game) : RecyclerView.Adapter<V
         val item = items[position]
         with(holder.itemView) {
             when (item) {
-                is CellType.Generic -> textView.text = item.text
-                is CellType.Server -> textView.text = item.text
+                is CellType.Generic -> with(ChatListItemGenericBinding.bind(holder.itemView)) {
+                    textView.text = item.text
+                }
+                is CellType.Server -> with(ChatListItemGenericBinding.bind(holder.itemView)) {
+                    textView.text = item.text
+                }
 
-                is CellType.Message -> {
+                is CellType.LocalMessage -> with(ChatListItemLocalBinding.bind(holder.itemView)) {
                     bubble.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, item.colorRes))
                     textView.text = item.text
-                    name?.text = item.name
+                }
+
+                is CellType.RemoteMessage -> with(ChatListItemRemoteBinding.bind(holder.itemView)) {
+                    bubble.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, item.colorRes))
+                    textView.text = item.text
+                    name.text = item.name
                 }
             }
         }

@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameEventObserver
+import de.saschahlusiak.freebloks.databinding.EditNameDialogBinding
+import de.saschahlusiak.freebloks.databinding.LobbyDialogFragmentBinding
 import de.saschahlusiak.freebloks.game.ConnectionStatus
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.GameConfig
@@ -30,8 +32,7 @@ import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.edit_name_dialog.view.*
-import kotlinx.android.synthetic.main.lobby_dialog_fragment.*
+import de.saschahlusiak.freebloks.utils.viewBinding
 import kotlinx.coroutines.launch
 
 class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
@@ -42,13 +43,15 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
 
     private var colorAdapter: ColorAdapter? = null
 
+    private val binding by viewBinding(LobbyDialogFragmentBinding::bind)
+
     private val gameModeSelectedListener = object : OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val client = client ?: return
 
-            val gameMode = from(game_mode.selectedItemPosition)
+            val gameMode = from(binding.gameMode.selectedItemPosition)
             val size = gameMode.defaultBoardSize()
             val stones = gameMode.defaultStoneSet()
 
@@ -65,7 +68,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
             val client = client ?: return
             val gameMode = client.game.gameMode
 
-            val size = GameConfig.FIELD_SIZES[field_size.selectedItemPosition]
+            val size = GameConfig.FIELD_SIZES[binding.fieldSize.selectedItemPosition]
 
             val stones = when (gameMode) {
                 GameMode.GAMEMODE_JUNIOR -> GameConfig.JUNIOR_STONE_SET
@@ -103,22 +106,22 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         val client = client ?: return
 
-        colorAdapter = ColorAdapter(this, requireContext(), client.game, null)
-        color_grid.apply {
+        colorAdapter = ColorAdapter(this@LobbyDialog, requireContext(), client.game, null)
+        colorGrid.apply {
             adapter = colorAdapter
             onItemClickListener = this@LobbyDialog
         }
 
-        game_mode.apply {
+        gameMode.apply {
             setSelection(GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal)
             isEnabled = false
             onItemSelectedListener = gameModeSelectedListener
         }
 
-        field_size.apply {
+        fieldSize.apply {
             setSelection(4)
             isEnabled = false
             onItemSelectedListener = sizeSelectedListener
@@ -177,7 +180,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
         }
 
         updateViewsFromStatus()
-        client.addObserver(this)
+        client.addObserver(this@LobbyDialog)
     }
 
     override fun onDestroyView() {
@@ -210,13 +213,13 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
         val client = client ?: return
         val lastStatus = client.lastStatus ?: return
 
-        val dialogView = layoutInflater.inflate(R.layout.edit_name_dialog, null)
-        val edit = dialogView.edit.apply {
+        val dialogBinding = EditNameDialogBinding.inflate(layoutInflater, null, false)
+        val edit = dialogBinding.edit.apply {
             setText(lastStatus.getClientName(lastStatus.getClient(player)))
         }
 
         MaterialAlertDialogBuilder(requireContext()).apply {
-            setView(dialogView)
+            setView(dialogBinding.root)
             setTitle(R.string.prefs_player_name)
             setPositiveButton(android.R.string.ok) { _, _ ->
                 val name = edit.text.toString().trim()
@@ -240,7 +243,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
         }
     }
 
-    private fun updateViewsFromStatus() {
+    private fun updateViewsFromStatus() = with(binding) {
         /* better: dismiss */
         if (!isVisible) return
         val client = client ?: return
@@ -249,19 +252,19 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
         colorAdapter?.setCurrentStatus(status)
 
         if (status == null) {
-            game_mode.isEnabled = false
-            field_size.isEnabled = false
+            gameMode.isEnabled = false
+            fieldSize.isEnabled = false
         } else {
-            game_mode.setSelection(status.gameMode.ordinal)
-            game_mode.isEnabled = !client.game.isStarted
+            gameMode.setSelection(status.gameMode.ordinal)
+            gameMode.isEnabled = !client.game.isStarted
 
             var slider = 3
             for (i in GameConfig.FIELD_SIZES.indices)
                 if (GameConfig.FIELD_SIZES[i] == status.width)
                     slider = i
 
-            field_size.setSelection(slider)
-            field_size.isEnabled = !client.game.isStarted
+            fieldSize.setSelection(slider)
+            fieldSize.isEnabled = !client.game.isStarted
         }
     }
 
@@ -280,13 +283,13 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
      * Send what ever is currently in the chatText view to the server and reset the edit field
      */
     private fun sendChat() {
-        val text = chatText.text.toString()
+        val text = binding.chatText.text.toString()
         if (text.isEmpty()) return
         // FIXME: The server cuts off the last character, so we have to append a new-line
         text.chunked(240).forEach {
             client?.sendChat(it + "\n")
         }
-        chatText.setText("")
+        binding.chatText.setText("")
     }
 
     override fun gameStarted() {

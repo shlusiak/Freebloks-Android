@@ -18,6 +18,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
@@ -280,7 +281,7 @@ class GameClient constructor(val game: Game, val config: GameConfig): Object() {
     @AnyThread
     private fun send(msg: Message) {
         try {
-            sendQueue.sendBlocking(msg)
+            sendQueue.trySendBlocking(msg)
         }
         catch (e: ClosedSendChannelException) {
             // ignore send failures

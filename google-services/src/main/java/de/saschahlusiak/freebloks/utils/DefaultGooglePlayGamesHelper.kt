@@ -100,7 +100,7 @@ class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGam
 
     override fun startSignOut() {
         val onSignOutCompleteListener: OnCompleteListener<Void> = OnCompleteListener { setGoogleAccount(null) }
-        googleSignInClient.signOut()?.addOnCompleteListener(onSignOutCompleteListener)
+        googleSignInClient.signOut().addOnCompleteListener(onSignOutCompleteListener)
     }
 
     override fun unlock(achievement: String) {
@@ -147,6 +147,7 @@ class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGam
      * @return an optional error message, in case of error
      */
     override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) {
+        data ?: return
         val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data) ?: return
         if (result.status.isSuccess) {
             val account = result.signInAccount ?: throw IllegalStateException("account is null")

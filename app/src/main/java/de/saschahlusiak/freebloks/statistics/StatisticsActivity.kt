@@ -18,12 +18,13 @@ import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.DependencyProvider
-import kotlinx.android.synthetic.main.statistics_activity.*
+import de.saschahlusiak.freebloks.databinding.StatisticsActivityBinding
+import de.saschahlusiak.freebloks.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
+class StatisticsActivity : AppCompatActivity() {
     private val db = HighScoreDB(this)
     private var adapter: StatisticsAdapter? = null
     private var gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
@@ -32,61 +33,73 @@ class StatisticsActivity : AppCompatActivity(R.layout.statistics_activity) {
 
     private lateinit var gameHelper: de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 
+    private val binding by viewBinding(StatisticsActivityBinding::inflate)
     private var googleSignInButton: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setContentView(binding.root)
+
         db.open()
 
-        val labels = resources.getStringArray(R.array.statistics_labels)
-        adapter = StatisticsAdapter(this, labels, values)
-        listView.adapter = adapter
-        ok.setOnClickListener { finish() }
+        with(binding) {
 
-        DependencyProvider.initialise(this)
-        gameHelper = DependencyProvider.googlePlayGamesHelper()
+            val labels = resources.getStringArray(R.array.statistics_labels)
+            adapter = StatisticsAdapter(this@StatisticsActivity, labels, values)
+            listView.adapter = adapter
+            ok.setOnClickListener { finish() }
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        gameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
+            DependencyProvider.initialise(this@StatisticsActivity)
+            gameHelper = DependencyProvider.googlePlayGamesHelper()
 
-        refreshData()
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this@StatisticsActivity)
+            this@StatisticsActivity.gameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
 
-        val actionBar = supportActionBar
-        if (actionBar == null) {
-            game_mode.setSelection(gameMode.ordinal)
-            (findViewById<View>(R.id.game_mode) as Spinner).onItemSelectedListener = object : OnItemSelectedListener {
-                override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    gameMode = from(position)
+            refreshData()
+
+            val actionBar = supportActionBar
+            if (actionBar == null) {
+                gameMode.setSelection(this@StatisticsActivity.gameMode.ordinal)
+                (findViewById<View>(R.id.game_mode) as Spinner).onItemSelectedListener =
+                    object : OnItemSelectedListener {
+                        override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            this@StatisticsActivity.gameMode = from(position)
+                            refreshData()
+                        }
+
+                        override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+                    }
+            } else {
+                findViewById<View>(R.id.game_mode).visibility = View.GONE
+                val mSpinnerAdapter: SpinnerAdapter = ArrayAdapter.createFromResource(
+                    this@StatisticsActivity, R.array.game_modes,
+                    android.R.layout.simple_spinner_dropdown_item
+                )
+                actionBar.navigationMode = androidx.appcompat.app.ActionBar.NAVIGATION_MODE_LIST
+                actionBar.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, _ ->
+                    this@StatisticsActivity.gameMode = from(itemPosition)
                     refreshData()
+                    true
                 }
+                actionBar.setSelectedNavigationItem(this@StatisticsActivity.gameMode.ordinal)
+                actionBar.setDisplayShowTitleEnabled(false)
+                actionBar.setDisplayHomeAsUpEnabled(true)
+            }
 
-                override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+            if (gameHelper.isAvailable) {
+                googleSignInButton = gameHelper.newSignInButton(this@StatisticsActivity)
+                googleSignInButton?.let {
+                    signinStub.addView(
+                        it,
+                        ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    )
+                }
+                googleSignInButton?.setOnClickListener {
+                    gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
+                }
+                gameHelper.signedIn.observe(this@StatisticsActivity) { onGoogleAccountChanged(it) }
             }
-        } else {
-            findViewById<View>(R.id.game_mode).visibility = View.GONE
-            val mSpinnerAdapter: SpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.game_modes,
-                android.R.layout.simple_spinner_dropdown_item)
-            actionBar.navigationMode = androidx.appcompat.app.ActionBar.NAVIGATION_MODE_LIST
-            actionBar.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, _ ->
-                gameMode = from(itemPosition)
-                refreshData()
-                true
-            }
-            actionBar.setSelectedNavigationItem(gameMode.ordinal)
-            actionBar.setDisplayShowTitleEnabled(false)
-            actionBar.setDisplayHomeAsUpEnabled(true)
-        }
-
-        if (gameHelper.isAvailable) {
-            googleSignInButton = gameHelper.newSignInButton(this)
-            googleSignInButton?.let {
-                signin_stub.addView(it, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            }
-            googleSignInButton?.setOnClickListener {
-                gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
-            }
-            gameHelper.signedIn.observe(this@StatisticsActivity) { onGoogleAccountChanged(it) }
         }
     }
 

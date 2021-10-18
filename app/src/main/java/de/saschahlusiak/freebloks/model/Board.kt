@@ -154,7 +154,7 @@ class Board(var width: Int, var height: Int) : Serializable {
         var numberOfPossibleTurns = 0
         var bonus = 0
         var isPerfect = false
-        val stonesLeft = player.stones.sumBy { it.available }
+        val stonesLeft = player.stones.sumOf { it.available }
 
         for (x in 0 until width) {
             for (y in 0 until height) {

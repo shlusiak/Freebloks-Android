@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import de.saschahlusiak.freebloks.R
-import kotlinx.android.synthetic.main.statistics_item.view.*
+import de.saschahlusiak.freebloks.databinding.StatisticsItemBinding
 
 class StatisticsAdapter(private val context: Context, private val labels: Array<String>, private val values1: Array<String?>) : BaseAdapter() {
     override fun getCount() = labels.size
@@ -20,17 +20,19 @@ class StatisticsAdapter(private val context: Context, private val labels: Array<
     override fun getItemId(position: Int) = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val v = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.statistics_item, parent, false)
+        val v = convertView ?:
+        LayoutInflater.from(context).inflate(R.layout.statistics_item, parent, false)
 
-        v.text1.apply {
-            isEnabled = isEnabled(position)
-            text = labels[position]
-        }
+        StatisticsItemBinding.bind(v).apply {
+            text1.apply {
+                isEnabled = isEnabled(position)
+                text = labels[position]
+            }
 
-        v.text2.apply {
-            isEnabled = isEnabled(position)
-            text = values1[position] ?: "--"
+            text2.apply {
+                isEnabled = isEnabled(position)
+                text = values1[position] ?: "--"
+            }
         }
 
         return v

@@ -13,7 +13,6 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 // Note: these plugins are NON-FREE, but unfortunately they cannot be moved into the google-services module.
 // Because they have to live in the app module, they will be run even in the F-Droid build flavor, but that shouldn't

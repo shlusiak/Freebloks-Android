@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.bluetooth.BluetoothDevice
 import android.content.DialogInterface
@@ -23,7 +24,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,6 +35,7 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.client.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.client.JNIServer.runServerForNewGame
+import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
 import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment
@@ -54,11 +55,11 @@ import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
+import de.saschahlusiak.freebloks.utils.viewBinding
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
-import kotlinx.android.synthetic.main.freebloks_activity.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
@@ -74,6 +75,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     private val viewModel: FreebloksActivityViewModel by lazy { ViewModelProvider(this).get(FreebloksActivityViewModel::class.java) }
 
+    private val binding by viewBinding(FreebloksActivityBinding::inflate)
+
+    @SuppressLint("ClickableViewAccessibility")
     public override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(tag, "onCreate")
 
@@ -95,9 +99,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.freebloks_activity)
+        setContentView(binding.root)
 
-        view = findViewById(R.id.board)
+        view = binding.board
         scene = Scene(viewModel, viewModel.intro, viewModel.sounds)
         view.setScene(scene)
 
@@ -139,40 +143,43 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             }
         }
 
-        menuOverlayContainer.isVisible = (viewModel.intro == null)
+        with(binding) {
 
-        menuOverlayContainer.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
-            v.setPadding(0, findTopPaddingForView(insets, Gravity.RIGHT), insets.systemWindowInsetRight, 0)
-            insets
-        }
+            menuOverlayContainer.isVisible = (viewModel.intro == null)
 
-        chatButton.setOnClickListener {
-            analytics.logEvent("game_chat_click", null)
-
-            chatButton.clearAnimation()
-            LobbyDialog().show(supportFragmentManager, null)
-        }
-
-        myLocation.setOnClickListener { onResetRotationButtonClick() }
-        menuButton.setOnClickListener { onMenuButtonClick() }
-        soundOnOff.setOnClickListener { onSoundButtonClick() }
-        hintButton.setOnClickListener { onHintButtonClick() }
-        undoButton.setOnClickListener { onUndoButtonClick() }
-        newGameButton.setOnClickListener { onNewGameButtonClick() }
-        preferencesButton.setOnClickListener { onPreferencesButtonClick() }
-        view.setOnTouchListener { _, _ ->
-            if (menuShown) {
-                showMenu(shown = false, animate = true)
+            menuOverlayContainer.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
+                v.setPadding(0, findTopPaddingForView(insets, Gravity.RIGHT), insets.systemWindowInsetRight, 0)
+                insets
             }
-            false
+
+            chatButton.setOnClickListener {
+                analytics.logEvent("game_chat_click", null)
+
+                chatButton.clearAnimation()
+                LobbyDialog().show(supportFragmentManager, null)
+            }
+
+            myLocation.setOnClickListener { onResetRotationButtonClick() }
+            menuButton.setOnClickListener { onMenuButtonClick() }
+            soundOnOff.setOnClickListener { onSoundButtonClick() }
+            hintButton.setOnClickListener { onHintButtonClick() }
+            undoButton.setOnClickListener { onUndoButtonClick() }
+            newGameButton.setOnClickListener { onNewGameButtonClick() }
+            preferencesButton.setOnClickListener { onPreferencesButtonClick() }
+            view.setOnTouchListener { _, _ ->
+                if (menuShown) {
+                    showMenu(shown = false, animate = true)
+                }
+                false
+            }
         }
 
         viewModel.connectionStatus.observe(this) { onConnectionStatusChanged(it) }
         viewModel.playerToShowInSheet.observe(this) { onPlayerSheetChanged(it) }
         viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
-        viewModel.canRequestHint.observe(this) { hintButton.isEnabled = it }
-        viewModel.canRequestUndo.observe(this) { undoButton.isEnabled = it }
-        viewModel.chatButtonVisible.observe(this) { chatButtonContainer.isVisible = it }
+        viewModel.canRequestHint.observe(this) { binding.hintButton.isEnabled = it }
+        viewModel.canRequestUndo.observe(this) { binding.undoButton.isEnabled = it }
+        viewModel.chatButtonVisible.observe(this) { binding.chatButtonContainer.isVisible = it }
         viewModel.googleAccountSignedIn.observe(this) {
             viewModel.gameHelper.setWindowForPopups(window)
             if (Global.IS_VIP) {
@@ -289,7 +296,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     private fun showFloatingMenuLabel(anchor: View, gravity: Int, show: Boolean, label: String) {
         var v = anchor.tag as? FloatingMenuLabel
         if (v == null) {
-            v = FloatingMenuLabel(this, menuOverlayContainer, anchor, gravity)
+            v = FloatingMenuLabel(this, binding.menuOverlayContainer, anchor, gravity)
             anchor.tag = v
         }
         v.setText(label)
@@ -300,7 +307,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
     }
 
-    private fun showMenu(shown: Boolean, animate: Boolean) {
+    private fun showMenu(shown: Boolean, animate: Boolean) = with(binding) {
         if (animate) {
             TransitionManager.beginDelayedTransition(menuOverlayContainer)
         }
@@ -481,7 +488,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     @UiThread
     override fun onIntroCompleted() {
         Log.d(tag, "onIntroCompleted")
-        menuOverlayContainer.isVisible = true
+        binding.menuOverlayContainer.isVisible = true
 
         viewModel.intro = null
         scene.intro = null
@@ -541,14 +548,14 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     private fun onPlayerSheetChanged(data: SheetPlayer) {
         val client = viewModel.client
         if (data.isRotated && (client?.game?.isFinished == false)) {
-            myLocationContainer.visibility = View.VISIBLE
+            binding.myLocationContainer.visibility = View.VISIBLE
         } else {
-            myLocationContainer.visibility = View.INVISIBLE
+            binding.myLocationContainer.visibility = View.INVISIBLE
         }
     }
 
     private fun onSoundEnabledChanged(enabled: Boolean) {
-        soundOnOff.setImageResource(if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off)
+        binding.soundOnOff.setImageResource(if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off)
     }
 
     //endregion
@@ -684,7 +691,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                     repeatCount = Animation.INFINITE
                     repeatMode = Animation.REVERSE
                 }
-                chatButton.startAnimation(animation)
+                binding.chatButton.startAnimation(animation)
             }
         }
     }
