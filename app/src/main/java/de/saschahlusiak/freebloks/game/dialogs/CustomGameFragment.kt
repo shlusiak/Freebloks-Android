@@ -11,13 +11,14 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.databinding.CustomGameFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.GameMode.*
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.custom_game_fragment.view.*
+import de.saschahlusiak.freebloks.utils.viewBinding
 
 class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
@@ -31,24 +32,26 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
 
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
+    private val binding by viewBinding(CustomGameFragmentBinding::bind)
+
     /**
      * Convenient getter/setter for GameMode
      */
     private var gameMode: GameMode
-        get() = from(requireView().game_mode.selectedItemPosition)
-        set(value) = requireView().game_mode.setSelection(value.ordinal)
+        get() = from(binding.gameMode.selectedItemPosition)
+        set(value) = binding.gameMode.setSelection(value.ordinal)
 
     /**
      * Convenient getter/setter for field size
      */
     private var fieldSize: Int
-        get() = GameConfig.FIELD_SIZES[requireView().field_size.selectedItemPosition]
+        get() = GameConfig.FIELD_SIZES[binding.fieldSize.selectedItemPosition]
         set(value) {
             val selection = GameConfig.FIELD_SIZES.indexOfFirst { it == value }
             if (selection >= 0)
-                requireView().field_size.setSelection(selection)
+                binding.fieldSize.setSelection(selection)
             else
-                requireView().field_size.setSelection(4)
+                binding.fieldSize.setSelection(4)
         }
 
     /**
@@ -63,14 +66,14 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
      * Convenient getter for the difficulty slider to value
      */
     private var difficulty: Int
-        get() = difficultyValues[requireView().difficulty_slider.progress]
+        get() = difficultyValues[binding.difficultySlider.progress]
         set(value) {
             val selection = difficultyValues.indexOfFirst { it == value }
             if (selection >= 0)
-                requireView().difficulty_slider.progress = selection
+                binding.difficultySlider.progress = selection
             else
                 // this is really just when the value is not found, which should never happen
-                requireView().difficulty_slider.progress = difficultyValues.size - 1
+                binding.difficultySlider.progress = difficultyValues.size - 1
         }
 
     private val playersAsBooleanArray get() = BooleanArray(4) {
@@ -80,25 +83,23 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        with(view) {
-            difficulty_slider.setOnSeekBarChangeListener(this@CustomGameFragment)
-            difficulty_slider.max = difficultyValues.size - 1
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        difficultySlider.setOnSeekBarChangeListener(this@CustomGameFragment)
+        difficultySlider.max = difficultyValues.size - 1
 
-            players = arrayOf(player1, player2, player3, player4)
-            picker = arrayOf(picker1, picker2, picker3, picker4, picker5)
+        players = arrayOf(player1, player2, player3, player4)
+        picker = arrayOf(picker1, picker2, picker3, picker4, picker5)
 
-            game_mode.onItemSelectedListener = this@CustomGameFragment
-            view.advanced.setOnClickListener(this@CustomGameFragment)
-            player1.setOnClickListener(this@CustomGameFragment)
-            player2.setOnClickListener(this@CustomGameFragment)
-            cancel.setOnClickListener(this@CustomGameFragment)
-            ok.setOnClickListener(this@CustomGameFragment)
-        }
+        gameMode.onItemSelectedListener = this@CustomGameFragment
+        advanced.setOnClickListener(this@CustomGameFragment)
+        player1.setOnClickListener(this@CustomGameFragment)
+        player2.setOnClickListener(this@CustomGameFragment)
+        cancel.setOnClickListener(this@CustomGameFragment)
+        ok.setOnClickListener(this@CustomGameFragment)
 
         difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
-        gameMode = from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
-        fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
+        this@CustomGameFragment.gameMode = from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
+        this@CustomGameFragment.fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
 
         setupDialog()
     }
@@ -123,7 +124,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
         updateDifficultyLabel()
 
         requireView().visibility = View.VISIBLE
-        requireView().custom_stones_layout.visibility = View.GONE
+        binding.customStonesLayout.visibility = View.GONE
     }
 
     private fun buildGameConfig() = GameConfig(
@@ -149,14 +150,14 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
                 R.id.cancel -> {
                     dismiss()
                 }
-                R.id.advanced -> {
+                R.id.advanced -> with(binding) {
                     advanced.visibility = View.GONE
-                    custom_stones_layout.visibility = View.VISIBLE
+                    customStonesLayout.visibility = View.VISIBLE
                 }
-                R.id.player1 -> if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) {
+                R.id.player1 -> if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) with(binding) {
                     player3.isChecked = player1.isChecked
                 }
-                R.id.player2 -> if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) {
+                R.id.player2 -> if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) with(binding) {
                     player4.isChecked = player2.isChecked
                 }
             }
@@ -244,7 +245,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
         if (value >= 40) text = 2
         if (value >= 80) text = 3
         if (value >= 160) text = 4
-        requireView().difficulty_label.text = String.format("%s (%d)", labels[text], requireView().difficulty_slider.progress)
+        binding.difficultyLabel.text = String.format("%s (%d)", labels[text], binding.difficultySlider.progress)
     }
 
     override fun onProgressChanged(seekBar: SeekBar, arg1: Int, arg2: Boolean) {

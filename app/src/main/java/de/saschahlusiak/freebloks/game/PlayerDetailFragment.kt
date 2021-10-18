@@ -4,17 +4,15 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
-import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.databinding.PlayerDetailFragmentBinding
 import de.saschahlusiak.freebloks.model.Game
-import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
-import kotlinx.android.synthetic.main.player_detail_fragment.view.*
+import de.saschahlusiak.freebloks.utils.viewBinding
 
 /**
  * The current player sheet at the bottom of the screen.
@@ -41,6 +39,8 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
+    private val binding by viewBinding(PlayerDetailFragmentBinding::bind)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val cardView = view as CardView
         view.setOnApplyWindowInsetsListener { _: View, insets: WindowInsets ->
@@ -53,24 +53,20 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
     }
 
     private fun inProgressChanged(inProgress: Boolean) {
-        view?.movesLeft?.isVisible = !inProgress
-        view?.progressBar?.isVisible = inProgress
+        binding.movesLeft.isVisible = !inProgress
+        binding.progressBar.isVisible = inProgress
     }
 
-    private fun updateViews(data: SheetPlayer) {
+    private fun updateViews(data: SheetPlayer) = with(binding) {
         val client = viewModel.client
-        val background = view as? CardView ?: return
+        val background = root
 
-        val status: TextView = background.currentPlayer
-        val points = background.points
-        val movesLeft: TextView = background.movesLeft
-
-        status.clearAnimation()
+        currentPlayer.clearAnimation()
 
         // the intro trumps everything
         if (viewModel.intro != null) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
-            status.setText(R.string.touch_to_skip)
+            currentPlayer.setText(R.string.touch_to_skip)
             points.visibility = View.GONE
             movesLeft.text = ""
             return
@@ -79,7 +75,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         // if not connected, show that
         if (client == null || !client.isConnected()) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
-            status.setText(R.string.not_connected)
+            currentPlayer.setText(R.string.not_connected)
             points.visibility = View.GONE
             movesLeft.text = ""
             return
@@ -88,7 +84,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         // no current player
         if (data.player < 0) {
             background.setCardBackgroundColor(Color.rgb(64, 64, 80))
-            status.setText(R.string.no_player)
+            currentPlayer.setText(R.string.no_player)
             points.visibility = View.GONE
             movesLeft.text = ""
             return
@@ -111,7 +107,7 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         points.text = resources.getQuantityString(R.plurals.number_of_points, p.totalPoints, p.totalPoints)
 
         if (client.game.isFinished) {
-            status.text = "[$playerName]"
+            currentPlayer.text = "[$playerName]"
             movesLeft.text = resources.getQuantityString(R.plurals.number_of_stones_left, p.stonesLeft, p.stonesLeft)
             return
         }
@@ -121,13 +117,13 @@ class PlayerDetailFragment : Fragment(R.layout.player_detail_fragment) {
         // we are showing "home"
         if (!data.isRotated) {
             if (isYourTurn) {
-                status.text = getString(R.string.your_turn, playerName)
+                currentPlayer.text = getString(R.string.your_turn, playerName)
             } else {
-                status.text = getString(R.string.waiting_for_color, playerName)
+                currentPlayer.text = getString(R.string.waiting_for_color, playerName)
             }
         } else {
-            if (p.numberOfPossibleTurns <= 0) status.text = "[${getString(R.string.color_is_out_of_moves, playerName)}]" else {
-                status.text = playerName
+            if (p.numberOfPossibleTurns <= 0) currentPlayer.text = "[${getString(R.string.color_is_out_of_moves, playerName)}]" else {
+                currentPlayer.text = playerName
             }
         }
     }

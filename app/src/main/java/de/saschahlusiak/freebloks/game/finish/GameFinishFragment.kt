@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.analytics
+import de.saschahlusiak.freebloks.databinding.GameFinishFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
@@ -22,8 +23,7 @@ import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.game_finish_fragment.*
-import kotlinx.android.synthetic.main.game_finish_player_row.view.*
+import de.saschahlusiak.freebloks.utils.viewBinding
 import java.lang.IllegalStateException
 
 class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment), View.OnClickListener {
@@ -32,6 +32,8 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
     private val gameHelper by lazy { viewModel.gameHelper }
 
     private val listener get() = requireActivity() as OnStartCustomGameListener
+
+    private val binding by viewBinding(GameFinishFragmentBinding::bind)
 
     // TODO: support a light dialog theme variant?
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
@@ -44,7 +46,7 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         val data = viewModel.data
         val gameMode = viewModel.gameMode
 
@@ -54,11 +56,11 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
             throw IllegalStateException("data or mode is null")
         }
 
-        new_game.setOnClickListener(this)
-        show_main_menu.setOnClickListener(this)
-        statistics.setOnClickListener(this)
-        achievements.setOnClickListener(this)
-        leaderboard.setOnClickListener(this)
+        newGame.setOnClickListener(this@GameFinishFragment)
+        showMainMenu.setOnClickListener(this@GameFinishFragment)
+        statistics.setOnClickListener(this@GameFinishFragment)
+        achievements.setOnClickListener(this@GameFinishFragment)
+        leaderboard.setOnClickListener(this@GameFinishFragment)
 
         viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { signedIn ->
             dialog?.window?.let { viewModel.gameHelper.setWindowForPopups(it) }
@@ -105,7 +107,7 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
         }
     }
 
-    private fun updateViews(data: List<PlayerScore>, gameMode: GameMode) {
+    private fun updateViews(data: List<PlayerScore>, gameMode: GameMode) = with(binding) {
         val t = arrayOf(place1, place2, place3, place4)
 
         when (gameMode) {
@@ -113,12 +115,12 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
             GameMode.GAMEMODE_DUO,
             GameMode.GAMEMODE_JUNIOR,
             GameMode.GAMEMODE_4_COLORS_2_PLAYERS -> {
-                t[2].visibility = View.GONE
-                t[3].visibility = View.GONE
+                t[2].root.visibility = View.GONE
+                t[3].root.visibility = View.GONE
             }
             GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> {
-                t[2].visibility = View.VISIBLE
-                t[3].visibility = View.VISIBLE
+                t[2].root.visibility = View.VISIBLE
+                t[3].root.visibility = View.VISIBLE
             }
         }
         place.setText(R.string.game_finished)
@@ -136,7 +138,7 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
 
             s = if (data[i].bonus > 0) " (+" + data[i].bonus + ")" else ""
 
-            row.bonus_points.text = s
+            row.bonusPoints.text = s
             row.stones.text = resources.getQuantityString(R.plurals.number_of_stones_left, data[i].stonesLeft, data[i].stonesLeft)
             row.data.setBackground(getScoreDrawable(data[i], gameMode))
 

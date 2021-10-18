@@ -16,12 +16,11 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.databinding.ColorGridItemBinding
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import kotlinx.android.synthetic.main.color_grid_item.view.*
 import java.lang.IllegalStateException
 
 class ColorAdapter(
@@ -81,6 +80,7 @@ class ColorAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.color_grid_item, parent, false)
+        val binding = ColorGridItemBinding.bind(view)
 
         val lastStatus = lastStatus
 
@@ -105,8 +105,8 @@ class ColorAdapter(
             text.text = "---"
             text.clearAnimation()
 
-            view.progressBar.visibility = View.INVISIBLE
-            view.editButton.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.editButton.visibility = View.INVISIBLE
 
             checkBox.isChecked = false
             return view
@@ -114,30 +114,30 @@ class ColorAdapter(
 
         val player = playerForPosition(position)
 
-        setupView(view, background, player)
+        setupView(binding, background, player)
 
         return view
     }
 
-    private fun setupView(view: View, background: GradientDrawable, player: Int) {
+    private fun setupView(binding: ColorGridItemBinding, background: GradientDrawable, player: Int) = with(binding) {
         val lastStatus = lastStatus ?: throw IllegalStateException("lastStatus is null")
         val playerColor = game.gameMode.colorOf(player)
 
         background.setColor(ContextCompat.getColor(context, playerColor.backgroundColorId))
 
-        view.editButton.setOnClickListener { listener.onEditPlayerName(player) }
+        editButton.setOnClickListener { listener.onEditPlayerName(player) }
 
         if (lastStatus.isClient(player)) {
             /* it is a human player */
             val client = lastStatus.clientForPlayer[player] ?: throw IllegalStateException("Player has no client")
             val name = lastStatus.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
 
-            view.text.text = name
-            view.progressBar.visibility = View.INVISIBLE
+            text.text = name
+            progressBar.visibility = View.INVISIBLE
 
             if (game.isLocalPlayer(player)) {
-                view.text.typeface = Typeface.DEFAULT_BOLD
-                view.editButton.visibility = View.VISIBLE
+                text.typeface = Typeface.DEFAULT_BOLD
+                editButton.visibility = View.VISIBLE
 
                 val a: Animation = TranslateAnimation(
                     TranslateAnimation.RELATIVE_TO_SELF, 0.0f,
@@ -150,37 +150,37 @@ class ColorAdapter(
                     repeatMode = Animation.REVERSE
                     repeatCount = Animation.INFINITE
                 }
-                view.text.startAnimation(a)
+                text.startAnimation(a)
 
-                view.checkBox.isChecked = true
-                view.checkBox.isEnabled = true
-                view.checkBox.visibility = View.VISIBLE
+                checkBox.isChecked = true
+                checkBox.isEnabled = true
+                checkBox.visibility = View.VISIBLE
             } else {
-                view.text.clearAnimation()
-                view.editButton.visibility = View.INVISIBLE
+                text.clearAnimation()
+                editButton.visibility = View.INVISIBLE
 
-                view.checkBox.isChecked = false
-                view.checkBox.isEnabled = false
-                view.checkBox.visibility = View.INVISIBLE
+                checkBox.isChecked = false
+                checkBox.isEnabled = false
+                checkBox.visibility = View.INVISIBLE
             }
         } else {
             /* computer player */
             background.alpha = 96
 
-            view.text.text = "---"
-            view.text.clearAnimation()
+            text.text = "---"
+            text.clearAnimation()
             if (game.isStarted) {
-                view.text.visibility = View.VISIBLE
-                view.progressBar.visibility = View.INVISIBLE
+                text.visibility = View.VISIBLE
+                progressBar.visibility = View.INVISIBLE
             } else {
-                view.text.visibility = View.INVISIBLE
-                view.progressBar.visibility = View.VISIBLE
+                text.visibility = View.INVISIBLE
+                progressBar.visibility = View.VISIBLE
             }
 
-            view.editButton.visibility = View.INVISIBLE
-            view.checkBox.isChecked = false
-            view.checkBox.isEnabled = false
-            view.checkBox.visibility = View.VISIBLE
+            editButton.visibility = View.INVISIBLE
+            checkBox.isChecked = false
+            checkBox.isEnabled = false
+            checkBox.visibility = View.VISIBLE
         }
     }
 }

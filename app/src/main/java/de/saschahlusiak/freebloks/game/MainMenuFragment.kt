@@ -16,6 +16,7 @@ import de.saschahlusiak.freebloks.AboutFragment
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.analytics
+import de.saschahlusiak.freebloks.databinding.MainMenuFragmentBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ColorListFragment
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameFragment
@@ -24,14 +25,14 @@ import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
-import kotlinx.android.synthetic.main.main_menu_fragment.*
-import kotlinx.android.synthetic.main.main_menu_fragment.view.*
+import de.saschahlusiak.freebloks.utils.viewBinding
 
 class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
     private lateinit var appIcon: ImageView
 
+    private val binding by viewBinding(MainMenuFragmentBinding::bind)
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog
@@ -48,23 +49,21 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        new_game.setOnClickListener(this)
-        new_game.setOnLongClickListener(this)
-        resume_game.setOnClickListener(this)
-        settings.setOnClickListener(this)
-        multiplayer.setOnClickListener(this)
-        rules.setOnClickListener(this)
-        new_game_custom.setOnClickListener(this)
-
-        appIcon = view.findViewById(R.id.appIcon)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        newGame.setOnClickListener(this@MainMenuFragment)
+        newGame.setOnLongClickListener(this@MainMenuFragment)
+        resumeGame.setOnClickListener(this@MainMenuFragment)
+        settings.setOnClickListener(this@MainMenuFragment)
+        multiplayer.setOnClickListener(this@MainMenuFragment)
+        rules.setOnClickListener(this@MainMenuFragment)
+        newGameCustom.setOnClickListener(this@MainMenuFragment)
 
         if (appIconIsDonate) {
             appIcon.setImageResource(R.drawable.ic_coffee)
         }
-        appIcon.setOnClickListener(this)
+        appIcon.setOnClickListener(this@MainMenuFragment)
 
-        view.sound_toggle_button.setOnClickListener {
+        soundToggleButton.setOnClickListener {
             analytics.logEvent("menu_sound_click", null)
 
             val soundOn = viewModel.toggleSound()
@@ -73,13 +72,13 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
 
         viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner, Observer { enabled ->
             val res = if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
-            view.sound_toggle_button.setIconResource(res)
+            soundToggleButton.setIconResource(res)
         })
 
         viewModel.connectionStatus.observe(viewLifecycleOwner, Observer {
             val canResume = (it == ConnectionStatus.Connected) && (viewModel.client?.game?.isFinished == false) && (viewModel.client?.game?.isStarted == true)
 
-            view.resume_game.isEnabled = canResume
+            resumeGame.isEnabled = canResume
             dialog?.setCanceledOnTouchOutside(canResume)
         })
     }

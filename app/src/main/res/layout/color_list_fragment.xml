@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/color_list_custom_title" />
+    <include
+        android:id="@+id/title"
+        layout="@layout/color_list_custom_title" />
 
     <GridView
         android:id="@+id/grid"
