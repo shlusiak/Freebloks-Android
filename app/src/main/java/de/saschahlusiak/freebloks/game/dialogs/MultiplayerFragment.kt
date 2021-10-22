@@ -25,6 +25,7 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThrea
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
+import de.saschahlusiak.freebloks.databinding.JoinBluetoothDeviceBinding
 import de.saschahlusiak.freebloks.databinding.MultiplayerFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
@@ -221,25 +222,24 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         Log.d(TAG, "Paired devices: " + pairedDevices.size)
 
         if ((bluetoothAdapter?.isEnabled != true) || pairedDevices.isEmpty()) {
-            val v = layoutInflater.inflate(R.layout.join_bluetooth_device, bluetoothList, false)
-            v.findViewById<View>(R.id.image).visibility = View.GONE
-            v.findViewById<TextView>(android.R.id.text1).apply {
+            val binding = JoinBluetoothDeviceBinding.inflate(layoutInflater, bluetoothList, false)
+            binding.image.visibility = View.GONE
+            binding.text1.apply {
                 setText(R.string.bluetooth_disabled_message)
             }
-            bluetoothList.addView(v, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            bluetoothList.addView(binding.root, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             return
         }
 
         for (device in pairedDevices) {
             Log.d(TAG, String.format("device %s [%s]", device.name, device.address))
-            val v = layoutInflater.inflate(R.layout.join_bluetooth_device, bluetoothList, false).apply {
-                findViewById<TextView>(android.R.id.text1).apply {
-                    text = device.name
-                }
-                tag = device
-                setOnClickListener(deviceSelectedListener)
+
+            with(JoinBluetoothDeviceBinding.inflate(layoutInflater, bluetoothList, false)) {
+                text1.text = device.name
+                root.tag = device
+                root.setOnClickListener(deviceSelectedListener)
+                bluetoothList.addView(root, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
-            bluetoothList.addView(v, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         }
     }
 

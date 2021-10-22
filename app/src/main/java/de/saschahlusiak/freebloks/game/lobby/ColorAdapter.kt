@@ -84,15 +84,12 @@ class ColorAdapter(
 
         val lastStatus = lastStatus
 
-        val text = view.findViewById<TextView>(R.id.text)
-        val checkBox = view.findViewById<CheckBox>(R.id.checkBox)
-
         val layerDrawable = context.resources.getDrawable(R.drawable.bg_card_1, context.theme).mutate() as LayerDrawable
         val background = layerDrawable.findDrawableByLayerId(R.id.color1) as GradientDrawable
 
         view.background = layerDrawable
 
-        text.apply {
+        binding.text.apply {
             setTextColor(Color.WHITE)
             visibility = View.VISIBLE
         }
@@ -102,13 +99,13 @@ class ColorAdapter(
             background.setColor(Color.BLACK)
             background.alpha = 96
 
-            text.text = "---"
-            text.clearAnimation()
+            binding.text.text = "---"
+            binding.text.clearAnimation()
 
             binding.progressBar.visibility = View.INVISIBLE
             binding.editButton.visibility = View.INVISIBLE
 
-            checkBox.isChecked = false
+            binding.checkBox.isChecked = false
             return view
         }
 

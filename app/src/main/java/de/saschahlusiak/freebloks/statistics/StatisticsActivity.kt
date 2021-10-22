@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -61,7 +62,7 @@ class StatisticsActivity : AppCompatActivity() {
             val actionBar = supportActionBar
             if (actionBar == null) {
                 gameMode.setSelection(this@StatisticsActivity.gameMode.ordinal)
-                (findViewById<View>(R.id.game_mode) as Spinner).onItemSelectedListener =
+                gameMode.onItemSelectedListener =
                     object : OnItemSelectedListener {
                         override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
                             this@StatisticsActivity.gameMode = from(position)
@@ -71,7 +72,7 @@ class StatisticsActivity : AppCompatActivity() {
                         override fun onNothingSelected(adapterView: AdapterView<*>?) {}
                     }
             } else {
-                findViewById<View>(R.id.game_mode).visibility = View.GONE
+                gameMode.visibility = View.GONE
                 val mSpinnerAdapter: SpinnerAdapter = ArrayAdapter.createFromResource(
                     this@StatisticsActivity, R.array.game_modes,
                     android.R.layout.simple_spinner_dropdown_item
@@ -92,8 +93,9 @@ class StatisticsActivity : AppCompatActivity() {
                 googleSignInButton?.let {
                     signinStub.addView(
                         it,
-                        ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     )
+                    signinStub.isVisible = true
                 }
                 googleSignInButton?.setOnClickListener {
                     gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
