@@ -70,7 +70,7 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Sign in</string>
     <string name="google_play_games_signin_long">Sign in to Google Play Games</string>
-    <string name="google_play_games_signout">Cerrar sesión</string>
+    <string name="google_play_games_signout">Sign out</string>
     <string name="google_play_games_signout_long">Signed in as %1$s</string>
     <string name="google_play_games_leaderboard">Leaderboard</string>
     <string name="google_play_games_leaderboard_long">Show the global leaderboard</string>
