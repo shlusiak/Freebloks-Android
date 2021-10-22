@@ -20,6 +20,7 @@ import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.databinding.StatisticsActivityBinding
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class StatisticsActivity : AppCompatActivity() {
     private val values: Array<String?> = arrayOfNulls(9)
     private var menu: Menu? = null
 
-    private lateinit var gameHelper: de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+    private lateinit var gameHelper: GooglePlayGamesHelper
 
     private val binding by viewBinding(StatisticsActivityBinding::inflate)
     private var googleSignInButton: View? = null

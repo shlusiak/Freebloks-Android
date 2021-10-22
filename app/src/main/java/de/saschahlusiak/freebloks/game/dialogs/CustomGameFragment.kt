@@ -15,8 +15,6 @@ import de.saschahlusiak.freebloks.databinding.CustomGameFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.GameMode.*
-import de.saschahlusiak.freebloks.model.GameMode.Companion.from
-import de.saschahlusiak.freebloks.model.Shape.Companion.get
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 
@@ -38,20 +36,20 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
      * Convenient getter/setter for GameMode
      */
     private var gameMode: GameMode
-        get() = from(binding.gameMode.selectedItemPosition)
-        set(value) = binding.gameMode.setSelection(value.ordinal)
+        get() = GameMode.from(binding.gameModeSpinner.selectedItemPosition)
+        set(value) = binding.gameModeSpinner.setSelection(value.ordinal)
 
     /**
      * Convenient getter/setter for field size
      */
     private var fieldSize: Int
-        get() = GameConfig.FIELD_SIZES[binding.fieldSize.selectedItemPosition]
+        get() = GameConfig.FIELD_SIZES[binding.fieldSizeSpinner.selectedItemPosition]
         set(value) {
             val selection = GameConfig.FIELD_SIZES.indexOfFirst { it == value }
             if (selection >= 0)
-                binding.fieldSize.setSelection(selection)
+                binding.fieldSizeSpinner.setSelection(selection)
             else
-                binding.fieldSize.setSelection(4)
+                binding.fieldSizeSpinner.setSelection(4)
         }
 
     /**
@@ -59,7 +57,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
      */
     private val stones: IntArray
         get() = IntArray(Shape.COUNT) {
-            picker[get(it).points - 1].value
+            picker[Shape.get(it).points - 1].value
         }
 
     /**
@@ -90,7 +88,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
         players = arrayOf(player1, player2, player3, player4)
         picker = arrayOf(picker1, picker2, picker3, picker4, picker5)
 
-        gameMode.onItemSelectedListener = this@CustomGameFragment
+        gameModeSpinner.onItemSelectedListener = this@CustomGameFragment
         advanced.setOnClickListener(this@CustomGameFragment)
         player1.setOnClickListener(this@CustomGameFragment)
         player2.setOnClickListener(this@CustomGameFragment)
@@ -98,8 +96,8 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
         ok.setOnClickListener(this@CustomGameFragment)
 
         difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
-        this@CustomGameFragment.gameMode = from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
-        this@CustomGameFragment.fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
+        gameMode = GameMode.from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
+        fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
 
         setupDialog()
     }
