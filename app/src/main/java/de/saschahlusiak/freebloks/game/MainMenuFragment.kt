@@ -7,7 +7,6 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.Window
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +29,6 @@ import de.saschahlusiak.freebloks.utils.viewBinding
 class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
-    private lateinit var appIcon: ImageView
 
     private val binding by viewBinding(MainMenuFragmentBinding::bind)
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
@@ -97,7 +95,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
         super.onStart()
 
         if (appIconIsDonate) {
-            appIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.donate_pulse))
+            binding.appIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.donate_pulse))
         }
     }
 
