@@ -1,13 +1,17 @@
 package de.saschahlusiak.freebloks.game
 
+import android.Manifest
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Log
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -288,6 +292,13 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     }
 
     private fun startBluetoothServer(client: GameClient) {
+        if (Build.VERSION.SDK_INT >= 31) {
+            // Android S introduced permission BLUETOOTH_CONNECT, which is required to connect and listen
+            val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+
+            if (!granted) return
+        }
+
         // hosting a game locally, start bluetooth server and bridges.
         // start a new client bridge for every connected bluetooth client
         val connectedListener = object: OnBluetoothConnectedListener {

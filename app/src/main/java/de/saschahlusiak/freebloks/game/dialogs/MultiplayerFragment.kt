@@ -88,7 +88,6 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     override fun onStart() {
         super.onStart()
 
-        // FIXME: probably need to ask for runtime permission BLUETOOTH_CONNECT here
         if (bluetoothServer == null) {
             bluetoothServer = startBluetoothServer()
         }
@@ -101,18 +100,28 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         super.onStop()
     }
 
-    private fun startBluetoothServer(): BluetoothServerThread? {
-        val adapter = bluetoothAdapter ?: return null
-        if (!adapter.isEnabled) return null
+    override fun onResume() {
+        super.onResume()
+        updateBluetoothDeviceList()
+    }
 
+    private fun hasBluetoothPermission(): Boolean {
         if (Build.VERSION.SDK_INT >= 31) {
             // Android S introduced permission BLUETOOTH_CONNECT, which is required to connect and listen
             val granted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
 
-            if (!granted) {
-                requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
-                return null
-            }
+            if (!granted) return false
+        }
+        return true
+    }
+
+    private fun startBluetoothServer(): BluetoothServerThread? {
+        val adapter = bluetoothAdapter ?: return null
+        if (!adapter.isEnabled) return null
+
+        if (!hasBluetoothPermission()) {
+            requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
+            return null
         }
 
         return BluetoothServerThread(this).also {
@@ -194,6 +203,10 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
                 hostGame.visibility = View.VISIBLE
                 bluetoothList.visibility = View.VISIBLE
 
+                if (!hasBluetoothPermission()) {
+                    requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
+                    return@with
+                }
                 if (bluetoothServer == null) {
                     bluetoothServer = startBluetoothServer()
                 }
@@ -204,19 +217,21 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         updateOkButtonEnabled()
     }
 
+    private fun onBluetoothDeviceClick(device: BluetoothDevice) {
+        val config = GameConfig(showLobby = true)
+        saveSettings()
+        Log.i(TAG, "Device selected: " + device.name)
+        analytics.logEvent("multiplayer_bluetooth_click", null)
+        listener?.onConnectToBluetoothDevice(config, clientName, device)
+        dismiss()
+    }
+
     private fun updateBluetoothDeviceList() {
         val bluetoothList = binding.bluetoothList
-        val deviceSelectedListener = View.OnClickListener { v ->
-            val config = GameConfig(showLobby = true)
-            saveSettings()
-            val device = v.tag as BluetoothDevice
-            Log.i(TAG, "Device selected: " + device.name)
-            analytics.logEvent("multiplayer_bluetooth_click", null)
-            listener?.onConnectToBluetoothDevice(config, clientName, device)
-            dismiss()
-        }
 
         bluetoothList.removeAllViews()
+
+        if (!hasBluetoothPermission()) return
 
         val pairedDevices = bluetoothAdapter?.bondedDevices ?: emptySet()
         Log.d(TAG, "Paired devices: " + pairedDevices.size)
@@ -236,8 +251,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
 
             with(JoinBluetoothDeviceBinding.inflate(layoutInflater, bluetoothList, false)) {
                 text1.text = device.name
-                root.tag = device
-                root.setOnClickListener(deviceSelectedListener)
+                root.setOnClickListener { onBluetoothDeviceClick(device) }
                 bluetoothList.addView(root, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
         }
