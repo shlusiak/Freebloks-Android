@@ -14,12 +14,12 @@ object Global {
     const val IS_FDROID = (BuildConfig.FLAVOR_store == "fdroid")
 
     /**
-     * This this the F-Droid build flavor?
+     * This this the Google build flavor?
      */
     const val IS_GOOGLE = (BuildConfig.FLAVOR_store == "google")
 
     /**
-     * This this the F-Droid build flavor?
+     * This this the Amazon build flavor?
      */
     const val IS_AMAZON = (BuildConfig.FLAVOR_store == "amazon")
 

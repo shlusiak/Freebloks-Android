@@ -156,12 +156,12 @@ class DonateActivity : AppCompatActivity() {
         startActivity(paypalIntent)
     }
 
-    private val bitcoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN))
-    private val bitcoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN_EXPLORER))
-    private val litecoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_LITECOIN))
-    private val litecoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_LITECOIN_EXPLORER))
-    private val freebloksVipIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_FREEBLOKS_VIP))
-    private val paypalIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PAYPAL))
+    internal val bitcoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN))
+    internal val bitcoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN_EXPLORER))
+    internal val litecoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_LITECOIN))
+    internal val litecoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_LITECOIN_EXPLORER))
+    internal val freebloksVipIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_FREEBLOKS_VIP))
+    internal val paypalIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PAYPAL))
 
     companion object {
         // F-Droid does not have a Freebloks VIP, so redirect the user to the Google Play Store.
