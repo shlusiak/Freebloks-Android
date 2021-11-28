@@ -21,6 +21,7 @@ import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
+import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.game.lobby.ChatItem
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
@@ -271,11 +272,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
         Log.d(tag, "Connection successful")
 
-        if (config.requestPlayers == null) {
+        val requestPlayers = config.requestPlayers
+        if (requestPlayers == null) {
             client.requestPlayer(-1, clientName)
         } else {
             for (i in 0..3)
-                if (config.requestPlayers[i])
+                if (requestPlayers[i])
                     client.requestPlayer(i, clientName)
         }
 
@@ -308,7 +310,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         }
 
         // the bluetooth server has to be constructed on the main thread
-        val bluetoothServer = BluetoothServerThread(connectedListener)
+        val bluetoothServer = BluetoothServerThread(crashReporter, connectedListener)
         // the server is a thread and will have a strong reference for as long as it lives
         client.addObserver(bluetoothServer)
         bluetoothServer.start()
@@ -342,11 +344,12 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
 
         analytics.logEvent("bluetooth_connected", null)
 
-        if (config.requestPlayers == null) {
+        val requestPlayers = config.requestPlayers
+        if (requestPlayers == null) {
             client.requestPlayer(-1, clientName)
         } else {
             for (i in 0..3)
-                if (config.requestPlayers[i])
+                if (requestPlayers[i])
                     client.requestPlayer(i, clientName)
         }
 

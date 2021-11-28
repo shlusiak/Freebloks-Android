@@ -35,6 +35,7 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.client.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.client.JNIServer.runServerForNewGame
+import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
@@ -374,7 +375,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         game.isStarted = true
 
         // this will start a new GameClient for the saved game state
-        setGameClient(GameClient(game, config))
+        setGameClient(GameClient(game, config, crashReporter))
 
         // even though we don't show the lobby, we also don't want to request game start,
         // because it is already running. Also, because we do not request any players,
@@ -407,7 +408,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val game = Game(board)
         val requestGameStart = !config.showLobby
         board.startNewGame(config.gameMode, config.stones, config.fieldSize, config.fieldSize)
-        setGameClient(GameClient(game, config))
+        setGameClient(GameClient(game, config, crashReporter))
 
         return viewModel.viewModelScope.launch {
             viewModel.connectToHost(config, localClientName, requestGameStart)
@@ -580,7 +581,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val board = Board()
         val game = Game()
         board.startNewGame(config.gameMode, config.stones, config.fieldSize, config.fieldSize)
-        setGameClient(GameClient(game, config))
+        setGameClient(GameClient(game, config, crashReporter))
 
         viewModel.connectToBluetooth(device, localClientName)
     }

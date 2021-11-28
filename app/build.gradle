@@ -101,6 +101,7 @@ dependencies {
 
     implementation project(':common')
     implementation project(':themes')
+    implementation project(':game')
 
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
 

@@ -1,12 +1,12 @@
 package de.saschahlusiak.freebloks.client
 
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.Game.Companion.PLAYER_LOCAL
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.network.message.*
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
@@ -29,7 +29,7 @@ class GameClientTest {
     private val scope = CoroutineScope(Dispatchers.Main)
 
     private val game = Game()
-    private val client = GameClient(game, GameConfig())
+    private val client = GameClient(game, GameConfig(), CrashReporter())
 
     private val toServerStream = PipedOutputStream()
     private val fromServerStream = PipedInputStream()
@@ -162,7 +162,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_notConnected() {
-        val client = GameClient(Game(), GameConfig())
+        val client = GameClient(Game(), GameConfig(), CrashReporter())
         assertFalse(client.isConnected())
     }
 

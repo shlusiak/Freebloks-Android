@@ -5,6 +5,7 @@ import de.saschahlusiak.freebloks.client.GameClientMessageHandler
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Game
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import org.junit.Assert.*
 import org.junit.Test
@@ -347,7 +348,7 @@ class NetworkGameTest {
         val game = Game()
         val processor = GameClientMessageHandler(game)
 
-        val client = GameClient(Game(), GameConfig())
+        val client = GameClient(Game(), GameConfig(), CrashReporter())
         processor.notifyConnected(client)
         for (pkg in packets) {
             processor.handleMessage(pkg)

@@ -28,7 +28,6 @@ object DependencyProvider {
     fun crashReporter() = crashReporter
 }
 
-val gamesHelper get() = DependencyProvider.googlePlayGamesHelper()
 val analytics get() = DependencyProvider.analytics()
 val crashReporter get() = DependencyProvider.crashReporter()
 fun Exception.logException() = crashReporter.logException(this)

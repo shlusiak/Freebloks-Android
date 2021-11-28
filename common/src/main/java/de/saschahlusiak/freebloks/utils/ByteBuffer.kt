@@ -9,10 +9,6 @@ fun byteBufferOf(vararg bytes: Int): ByteBuffer {
     return buffer
 }
 
-fun ByteBuffer.put(vararg bytes: Byte) {
-    bytes.forEach { put(it) }
-}
-
 /**
  * Writes a portion of bytes into the buffer, with optional padding.
  *

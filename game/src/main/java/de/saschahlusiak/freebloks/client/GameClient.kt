@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
-import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Game
@@ -14,10 +13,10 @@ import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.MessageReader
 import de.saschahlusiak.freebloks.network.MessageWriter
 import de.saschahlusiak.freebloks.network.message.*
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
@@ -35,7 +34,11 @@ import java.net.Socket
 
 // Extend Object so we can override finalize()
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-class GameClient constructor(val game: Game, val config: GameConfig): Object() {
+class GameClient constructor(
+    val game: Game,
+    val config: GameConfig,
+    val crashReporter: CrashReporter
+): Object() {
 
     private var clientSocket: Closeable? = null
     private val gameClientMessageHandler = GameClientMessageHandler(game)

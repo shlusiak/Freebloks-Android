@@ -25,6 +25,7 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThrea
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
+import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.databinding.JoinBluetoothDeviceBinding
 import de.saschahlusiak.freebloks.databinding.MultiplayerFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
@@ -124,7 +125,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
             return null
         }
 
-        return BluetoothServerThread(this).also {
+        return BluetoothServerThread(crashReporter, this).also {
             it.start()
         }
     }

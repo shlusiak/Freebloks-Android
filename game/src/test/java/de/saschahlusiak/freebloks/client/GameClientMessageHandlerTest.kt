@@ -7,6 +7,7 @@ import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 import de.saschahlusiak.freebloks.network.Message
 import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.*
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -280,7 +281,7 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfig())
+        val client = GameClient(Game(), GameConfig(), CrashReporter())
         handler.notifyConnected(client)
         assertTrue(connected)
     }
@@ -296,7 +297,7 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfig())
+        val client = GameClient(Game(), GameConfig(), CrashReporter())
         handler.notifyConnectionFailed(client, IOException("Stuff"))
         assertNotNull(receivedError)
         assertTrue(receivedError is IOException)
@@ -316,7 +317,7 @@ class GameClientMessageHandlerTest {
 
         handler.addObserver(observer)
 
-        val client = GameClient(Game(), GameConfig())
+        val client = GameClient(Game(), GameConfig(), CrashReporter())
 
         handler.notifyDisconnected(client, IOException("stuff"))
         assertTrue(disconnected)

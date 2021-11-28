@@ -48,7 +48,7 @@ data class MessageServerStatus(
         buffer.put(width.toByte())
         buffer.put(height.toByte())
         // legacy stone numbers
-        buffer.put(1, 1, 1, 1, 1)
+        buffer.put(byteArrayOf(1, 1, 1, 1, 1))
         buffer.put(gameMode.ordinal.toByte())
         clientForPlayer.forEach { buffer.put(it?.toByte() ?: -1) }
         clientNames.forEach {  name ->
