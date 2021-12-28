@@ -132,9 +132,10 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val result = grantResults.firstOrNull() ?: return
 
         if (requestCode == REQUEST_BLUETOOTH_CONNECT) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (result == PackageManager.PERMISSION_GRANTED) {
                 if (bluetoothServer == null) {
                     bluetoothServer = startBluetoothServer()
                 }
