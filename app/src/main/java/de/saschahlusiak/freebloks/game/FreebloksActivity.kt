@@ -33,8 +33,8 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.client.JNIServer.runServerForExistingGame
-import de.saschahlusiak.freebloks.client.JNIServer.runServerForNewGame
+import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
+import de.saschahlusiak.freebloks.server.JNIServer.runServerForNewGame
 import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity

@@ -8,13 +8,13 @@
 extern "C" {
 #endif
 
-JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServer_get_1number_1of_1processors
+JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_get_1number_1of_1processors
   (JNIEnv *, jobject thiz);
 
-JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServer_native_1run_1server
+JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server
   (JNIEnv *, jobject thiz, jint, jint, jint, jintArray stones, jint, jint);
 
-JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServer_native_1resume_1server
+JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
   (JNIEnv *, jobject thiz, jint, jint, jint, jintArray, jintArray, jintArray, jint, jint, jint);
 
 #ifdef __cplusplus

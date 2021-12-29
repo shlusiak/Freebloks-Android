@@ -23,7 +23,7 @@ static CAndroidLogWriter androidLogWriter;
 static int server_count = 0;
 
 
-extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServer_get_1number_1of_1processors
+extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_get_1number_1of_1processors
   (JNIEnv *je, jobject jc)
 {
 	return sysconf(_SC_NPROCESSORS_CONF);
@@ -97,7 +97,7 @@ static int port = 59995;
 static char* _interface = NULL;
 
 
-extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServer_native_1resume_1server
+extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
   (JNIEnv *je, jobject jc, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
 {
 	int ret;
@@ -148,7 +148,7 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServ
 	return 0;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_client_JNIServer_native_1run_1server
+extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server
   (JNIEnv * je, jobject jc, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
 {
 	int ret;

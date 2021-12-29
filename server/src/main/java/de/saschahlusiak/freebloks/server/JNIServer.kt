@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.client
+package de.saschahlusiak.freebloks.server
 
 import android.util.Log
 import de.saschahlusiak.freebloks.model.Game
@@ -8,8 +8,10 @@ import de.saschahlusiak.freebloks.model.Shape
 object JNIServer {
     private val tag = JNIServer::class.java.simpleName
 
+    @Suppress("FunctionName")
     private external fun get_number_of_processors(): Int
 
+    @Suppress("FunctionName")
     private external fun native_run_server(
         game_mode: Int,
         field_size_x: Int,
