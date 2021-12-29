@@ -1,14 +1,20 @@
 package de.saschahlusiak.freebloks.utils
 
-import android.util.Log
+interface CrashReporter {
+    fun log(message: String) {}
+
+    fun setString(key: String, value: String) {}
+
+    fun logException(e: Exception) {}
+}
 
 /**
  * Dummy class for crash reporting. Does nothing.
  */
-open class CrashReporter {
-    open fun log(message: String) { }
+class EmptyCrashReporter: CrashReporter {
+    override fun log(message: String) { }
 
-    open fun setString(key: String, value: String) { }
+    override fun setString(key: String, value: String) { }
 
-    open fun logException(e: Exception) { }
+    override fun logException(e: Exception) { }
 }

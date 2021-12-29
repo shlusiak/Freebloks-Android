@@ -7,6 +7,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.Window
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -22,7 +23,7 @@ import java.lang.IllegalStateException
  * This is the actual implementation of Google Play provider. The [GooglePlayGamesHelper]
  * implementation is just a dummy that does not require any dependencies.
  */
-class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGamesHelper() {
+class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGamesHelper {
     private val tag = DefaultGooglePlayGamesHelper::class.java.simpleName
 
     private val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
@@ -34,8 +35,13 @@ class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGam
 
     var currentGoogleAccount: GoogleSignInAccount? = null
 
+    override val signedIn = MutableLiveData(false)
+    override val playerName = MutableLiveData<String?>(null)
+
     override val isAvailable: Boolean
         get() = (GooglePlayServicesUtilLight.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
+    override val isSignedIn: Boolean
+        get() = signedIn.value == true
 
     init {
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)

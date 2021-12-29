@@ -8,42 +8,77 @@ import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 
+interface GooglePlayGamesHelper {
+    val signedIn: MutableLiveData<Boolean>
+    val playerName: MutableLiveData<String?>
+
+    val isAvailable: Boolean
+
+    val isSignedIn: Boolean
+
+    fun setWindowForPopups(window: Window) { }
+
+    fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) { }
+
+    fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) { }
+
+    fun startSignOut() { }
+
+    fun unlock(achievement: String) { }
+
+    fun increment(achievement: String, increment: Int) { }
+
+    fun submitScore(leaderboard: String, score: Long) { }
+
+    fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
+
+    fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) { }
+
+    fun startAchievementsIntent(fragment: Fragment, requestCode: Int) { }
+
+    fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) { }
+
+    fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) { }
+
+    fun newSignInButton(context: Context): View? { return null }
+}
+
 /**
  * This is the public facade of the Google Play interface, which is also the dummy implementation that does nothing.
  */
-open class GooglePlayGamesHelper {
-    val signedIn = MutableLiveData(false)
-    val playerName = MutableLiveData<String?>(null)
+class EmptyGooglePlayGamesHelper: GooglePlayGamesHelper {
+    override val signedIn = MutableLiveData(false)
+    override val playerName = MutableLiveData<String?>(null)
 
-    open val isAvailable: Boolean
+    override val isAvailable: Boolean
         get() = false
 
-    val isSignedIn: Boolean
+    override val isSignedIn: Boolean
         get() = (signedIn.value == true)
 
-    open fun setWindowForPopups(window: Window) { }
+    override fun setWindowForPopups(window: Window) { }
 
-    open fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) { }
+    override fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) { }
 
-    open fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) { }
+    override fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) { }
 
-    open fun startSignOut() { }
+    override fun startSignOut() { }
 
-    open fun unlock(achievement: String) { }
+    override fun unlock(achievement: String) { }
 
-    open fun increment(achievement: String, increment: Int) { }
+    override fun increment(achievement: String, increment: Int) { }
 
-    open fun submitScore(leaderboard: String, score: Long) { }
+    override fun submitScore(leaderboard: String, score: Long) { }
 
-    open fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
+    override fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
 
-    open fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) { }
+    override fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) { }
 
-    open fun startAchievementsIntent(fragment: Fragment, requestCode: Int) { }
+    override fun startAchievementsIntent(fragment: Fragment, requestCode: Int) { }
 
-    open fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) { }
+    override fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) { }
 
-    open fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) { }
+    override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) { }
 
-    open fun newSignInButton(context: Context): View? { return null }
+    override fun newSignInButton(context: Context): View? { return null }
 }
