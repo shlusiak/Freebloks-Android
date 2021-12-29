@@ -14,9 +14,10 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import androidx.test.core.app.ApplicationProvider
+import de.saschahlusiak.freebloks.app.App
 
 @RunWith(RobolectricTestRunner::class)
-@Config(application = Application::class)
+@Config(application = App::class)
 class RulesActivityTest {
 
     @Test

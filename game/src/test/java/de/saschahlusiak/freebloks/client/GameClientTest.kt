@@ -6,10 +6,9 @@ import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.Game.Companion.PLAYER_LOCAL
 import de.saschahlusiak.freebloks.network.*
 import de.saschahlusiak.freebloks.network.message.*
-import de.saschahlusiak.freebloks.utils.CrashReporter
+import de.saschahlusiak.freebloks.utils.EmptyCrashReporter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
@@ -21,6 +20,7 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import de.saschahlusiak.freebloks.utils.ubyteArrayOf
 import kotlinx.coroutines.channels.toList
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,7 +29,7 @@ class GameClientTest {
     private val scope = CoroutineScope(Dispatchers.Main)
 
     private val game = Game()
-    private val client = GameClient(game, GameConfig(), CrashReporter())
+    private val client = GameClient(game, GameConfig(), EmptyCrashReporter())
 
     private val toServerStream = PipedOutputStream()
     private val fromServerStream = PipedInputStream()
@@ -49,7 +49,7 @@ class GameClientTest {
      */
     private val serverMessageHandler = object : MessageHandler, Closeable {
         override fun handleMessage(message: Message) {
-            messages.sendBlocking(message)
+            messages.trySendBlocking(message)
         }
 
         override fun close() {
@@ -74,13 +74,13 @@ class GameClientTest {
 
         @UiThread
         override fun serverStatus(status: MessageServerStatus) {
-            events.sendBlocking(Event.Status)
+            events.trySendBlocking(Event.Status)
         }
 
         @UiThread
         override fun onDisconnected(client: GameClient, error: Throwable?) {
             clientDisconnectError = error
-            events.sendBlocking(Event.Disconnected)
+            events.trySendBlocking(Event.Disconnected)
         }
 
         /**
@@ -162,7 +162,7 @@ class GameClientTest {
 
     @Test
     fun test_gameClient_notConnected() {
-        val client = GameClient(Game(), GameConfig(), CrashReporter())
+        val client = GameClient(Game(), GameConfig(), EmptyCrashReporter())
         assertFalse(client.isConnected())
     }
 
