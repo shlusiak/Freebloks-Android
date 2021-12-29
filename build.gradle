@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.6.0'
+    ext.kotlin_version = '1.6.10'
 
     repositories {
         mavenCentral()
@@ -12,6 +12,13 @@ buildscript {
 
         // Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // Hilt
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+
+        // https://developers.google.com/android/guides/releases
+        classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
     }
 }
 

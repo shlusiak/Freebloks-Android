@@ -1,17 +1,7 @@
-repositories {
-    mavenCentral()
-    google()
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
 }
-
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 31

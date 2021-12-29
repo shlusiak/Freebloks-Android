@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.network
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.utils.read
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.channelFlow
 import java.io.EOFException

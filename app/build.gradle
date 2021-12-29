@@ -1,24 +1,15 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 
-    dependencies {
-        // https://developers.google.com/android/guides/releases
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.2'
-    }
+    // Note: these plugins are NON-FREE, but unfortunately they cannot be moved into the google-services module.
+    // Because they have to live in the app module, they will be run even in the F-Droid build flavor, but that shouldn't
+    // make the app non-free.
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-
-// Note: these plugins are NON-FREE, but unfortunately they cannot be moved into the google-services module.
-// Because they have to live in the app module, they will be run even in the F-Droid build flavor, but that shouldn't
-// make the app non-free.
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 31
@@ -105,6 +96,10 @@ dependencies {
 
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
 
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-compiler:2.38.1"
+
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation 'com.google.android.material:material:1.4.0'
@@ -112,11 +107,10 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt'
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    def lifecycle_version = "2.4.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation 'androidx.preference:preference-ktx:1.1.1'
