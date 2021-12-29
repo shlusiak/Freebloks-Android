@@ -5,12 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.annotation.XmlRes
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.*
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SCREEN
@@ -18,6 +18,8 @@ import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SHO
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.SCREEN_INTERFACE
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import javax.inject.Inject
 
 /**
  * Root preferences screen, hosted in [SettingsActivity].
@@ -28,12 +30,16 @@ import de.saschahlusiak.freebloks.statistics.StatisticsActivity
  * - [KEY_SCREEN] which screen to show (e.g. [SCREEN_INTERFACE]. If unset, show all.
  * - [KEY_SHOW_CATEGORY], true or false whether to add the category header
  */
+@AndroidEntryPoint
 class SettingsFragment: PreferenceFragmentCompat() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(SettingsActivityViewModel::class.java) }
 
     private val REQUEST_GOOGLE_SIGN_IN = 1000
     private val REQUEST_GOOGLE_LEADERBOARD = 1001
     private val REQUEST_GOOGLE_ACHIEVEMENTS = 1002
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val ps = preferenceManager.createPreferenceScreen(activity)
@@ -74,13 +80,13 @@ class SettingsFragment: PreferenceFragmentCompat() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { signedIn ->
+        viewModel.isSignedIn.observe(viewLifecycleOwner) { signedIn ->
             findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.google_play_games_signout else R.string.google_play_games_signin)
             findPreference<Preference>("googleplus_leaderboard")?.isEnabled = signedIn
             findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn
-        })
+        }
 
-        viewModel.playerName.observe(viewLifecycleOwner, Observer { player ->
+        viewModel.playerName.observe(viewLifecycleOwner) { player ->
             findPreference<Preference>("googleplus_signin")?.apply {
                 summary = if (player != null) {
                     getString(R.string.google_play_games_signout_long, player)
@@ -88,7 +94,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
                     getString(R.string.google_play_games_signin_long)
                 }
             }
-        })
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

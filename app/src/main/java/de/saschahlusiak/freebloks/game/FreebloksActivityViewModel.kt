@@ -12,16 +12,15 @@ import android.os.Parcel
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import de.saschahlusiak.freebloks.DependencyProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.game.lobby.ChatItem
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
@@ -30,6 +29,8 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBlue
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.theme.BaseSounds
 import de.saschahlusiak.freebloks.theme.DefaultSounds
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
@@ -39,6 +40,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.ByteArrayOutputStream
 import java.net.NetworkInterface
 import java.net.SocketException
+import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 
 enum class ConnectionStatus {
@@ -52,11 +54,16 @@ data class SheetPlayer(
     val isRotated: Boolean
 )
 
-class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), GameEventObserver, SceneDelegate {
+@HiltViewModel
+class FreebloksActivityViewModel @Inject constructor(
+    private val app: Application,
+    private val crashReporter: CrashReporter,
+    private val analytics: AnalyticsProvider,
+    val gameHelper: GooglePlayGamesHelper
+) : ViewModel(), GameEventObserver, SceneDelegate {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(getApplication())
-    private val analytics by lazy { DependencyProvider.analytics() }
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(app)
 
     // services
     private var notificationManager: MultiplayerNotificationManager? = null
@@ -76,10 +83,9 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     // other stuff
     var intro: Intro? = null
     private var connectJob: Job? = null
-    val gameHelper: GooglePlayGamesHelper
 
     // client data
-    var client: GameClient?
+    var client: GameClient? = null
         private set
     val game get() = client?.game
     val board get() = client?.game?.board
@@ -101,8 +107,6 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
     val inProgress = MutableLiveData(false)
 
     init {
-        client = null
-        gameHelper = DependencyProvider.googlePlayGamesHelper()
         googleAccountSignedIn = gameHelper.signedIn
         reloadPreferences()
     }
@@ -257,9 +261,8 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectJob = coroutineContext[Job]
 
         val name = config.server ?: "(null)"
-        val crashReporting = DependencyProvider.crashReporter()
-        crashReporting.log("Connecting to: $name")
-        crashReporting.setString("server", name)
+        crashReporter.log("Connecting to: $name")
+        crashReporter.setString("server", name)
 
         // client will notify observers about connection failed
         if (!client.connect(config.server, GameClient.DEFAULT_PORT)) {
@@ -328,7 +331,7 @@ class FreebloksActivityViewModel(app: Application) : AndroidViewModel(app), Game
         connectionStatus.value = ConnectionStatus.Connecting
         chatButtonVisible.value = false
 
-        DependencyProvider.crashReporter().log("Connecting to bluetooth device")
+        crashReporter.log("Connecting to bluetooth device")
 
         connectJob = coroutineContext[Job]
 

@@ -6,29 +6,35 @@ import android.content.SharedPreferences
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.DependencyProvider
-import de.saschahlusiak.freebloks.logException
 import de.saschahlusiak.freebloks.model.colorOf
+import de.saschahlusiak.freebloks.utils.CrashReporter
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import kotlinx.coroutines.*
+import javax.inject.Inject
 import kotlin.concurrent.thread
 
-class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
-    val gameHelper = DependencyProvider.googlePlayGamesHelper()
+@HiltViewModel
+class GameFinishFragmentViewModel @Inject constructor(
+    private val app: Application,
+    private val crashReporter: CrashReporter,
+    private val gameHelper: GooglePlayGamesHelper
+) : ViewModel() {
     private var unlockAchievementsCalled = false
 
     private val db: Deferred<HighScoreDB>
 
     // prefs
-    val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(getApplication()) }
+    val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(app) }
 
     // game data to display
     var game: Game? = null
@@ -56,7 +62,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
                 db.await().close()
             }
             catch (e: Exception) {
-                e.logException()
+                crashReporter.logException(e)
             }
         }
         super.onCleared()
@@ -87,7 +93,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun assignClientNames(gameMode: GameMode, scores: List<PlayerScore>, lastStatus: MessageServerStatus?) {
-        val context: Context = getApplication()
+        val context: Context = app
 
         scores.forEach { score ->
             val colorName = gameMode.colorOf(score.color1).getName(context.resources)
@@ -121,7 +127,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
                     db.addHighScore(gameMode, score.totalPoints, score.stonesLeft, score.color1, score.place, flags)
                 }
         } catch (e: SQLiteException) {
-            e.logException()
+            crashReporter.logException(e)
             e.printStackTrace()
         }
     }
@@ -134,7 +140,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
             unlockAchievementsCalled = true
         }
 
-        val context: Context = getApplication()
+        val context: Context = app
 
         scores
             .filter { it.isLocal }
@@ -185,7 +191,7 @@ class GameFinishFragmentViewModel(app: Application) : AndroidViewModel(app) {
                 db.getTotalNumberOfPoints(null).toLong()
             )
         } catch (e: SQLiteException) {
-            e.logException()
+            crashReporter.logException(e)
         }
     }
 }

@@ -13,7 +13,7 @@ import de.saschahlusiak.freebloks.utils.MaterialProgressDialog
 /**
  * Simple dialog fragment to show "Connecting to server..." that disconnects the client on cancel.
  */
-class ConnectingDialog : MaterialDialogFragment() {
+class ConnectingDialog : MaterialDialogFragment(null) {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
     override fun onCancel(dialog: DialogInterface) {

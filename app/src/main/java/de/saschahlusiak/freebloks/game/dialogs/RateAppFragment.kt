@@ -7,19 +7,25 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.databinding.RateAppFragmentBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
 import de.saschahlusiak.freebloks.utils.viewBinding
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RateAppFragment : MaterialDialogFragment(R.layout.rate_app_fragment) {
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
 
     private val binding by viewBinding(RateAppFragmentBinding::bind)
 

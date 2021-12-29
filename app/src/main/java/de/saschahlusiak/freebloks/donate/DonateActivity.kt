@@ -8,14 +8,20 @@ import android.view.animation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Global
-import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.databinding.DonateActivityBinding
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.toPixel
 import de.saschahlusiak.freebloks.utils.viewBinding
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DonateActivity : AppCompatActivity() {
     private val binding by viewBinding(DonateActivityBinding::inflate)
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

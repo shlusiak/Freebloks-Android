@@ -5,14 +5,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import de.saschahlusiak.freebloks.analytics
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.databinding.RulesActivityBinding
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.viewBinding
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RulesActivity : AppCompatActivity() {
     private val youtubeLink = "https://www.youtube.com/watch?v=pc8nmWpcQWs"
 
     private val binding by viewBinding(RulesActivityBinding::inflate)
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

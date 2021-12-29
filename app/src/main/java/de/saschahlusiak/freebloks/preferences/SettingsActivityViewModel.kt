@@ -1,12 +1,14 @@
 package de.saschahlusiak.freebloks.preferences
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import de.saschahlusiak.freebloks.DependencyProvider
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import javax.inject.Inject
 
-class SettingsActivityViewModel(val context: Application): AndroidViewModel(context) {
-    val googleHelper = DependencyProvider.googlePlayGamesHelper()
-
+@HiltViewModel
+class SettingsActivityViewModel @Inject constructor(
+    val googleHelper: GooglePlayGamesHelper
+): ViewModel() {
     val isSignedIn = googleHelper.signedIn
     val playerName = googleHelper.playerName
 }

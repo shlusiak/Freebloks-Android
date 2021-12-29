@@ -17,6 +17,7 @@ import android.view.*
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
@@ -27,15 +28,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
-import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForNewGame
-import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
@@ -56,6 +56,8 @@ import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.viewBinding
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
@@ -64,17 +66,24 @@ import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, OnStartCustomGameListener, LobbyDialogDelegate {
     private lateinit var view: Freebloks3DView
     private var showRateDialog = false
-    private val analytics by lazy { DependencyProvider.analytics() }
     private lateinit var scene: Scene
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
+    @Inject
+    lateinit var analytics: AnalyticsProvider
+
+    @Inject
+    lateinit var crashReporter: CrashReporter
+
     private var menuShown = false
 
-    private val viewModel: FreebloksActivityViewModel by lazy { ViewModelProvider(this).get(FreebloksActivityViewModel::class.java) }
+    private val viewModel: FreebloksActivityViewModel by viewModels()
 
     private val binding by viewBinding(FreebloksActivityBinding::inflate)
 
@@ -145,7 +154,6 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         }
 
         with(binding) {
-
             menuOverlayContainer.isVisible = (viewModel.intro == null)
 
             menuOverlayContainer.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
@@ -362,7 +370,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         val previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
         val ret = runServerForExistingGame(game, previousDifficulty)
         if (ret != 0) {
-            DependencyProvider.crashReporter().log("Error starting server: $ret")
+            crashReporter.log("Error starting server: $ret")
         }
         val config = GameConfig(
             null,
@@ -399,7 +407,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 config.difficulty
             )
             if (ret != 0) {
-                DependencyProvider.crashReporter().log("Error starting server: $ret")
+                crashReporter.log("Error starting server: $ret")
             }
         }
 

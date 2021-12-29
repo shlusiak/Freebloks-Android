@@ -5,11 +5,10 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import de.saschahlusiak.freebloks.DependencyProvider
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.preferences.types.ListPreferenceDialogFragment
@@ -21,6 +20,7 @@ import de.saschahlusiak.freebloks.preferences.types.ThemePreferenceDialogFragmen
  *
  * Handles fragments and fragment navigation, in case of multi-pane layout.
  */
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
     private var hasHeaders = false
@@ -33,8 +33,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         } else {
             setContentView(R.layout.settings_activity)
         }
-
-        DependencyProvider.initialise(this)
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)

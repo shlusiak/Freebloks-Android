@@ -18,22 +18,25 @@ import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.client.GameClient
-import de.saschahlusiak.freebloks.crashReporter
 import de.saschahlusiak.freebloks.databinding.JoinBluetoothDeviceBinding
 import de.saschahlusiak.freebloks.databinding.MultiplayerFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
     private val TAG = MultiplayerFragment::class.java.simpleName
 
@@ -43,6 +46,12 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     private val listener get() = activity as? OnStartCustomGameListener
 
     private val binding by viewBinding(MultiplayerFragmentBinding::bind)
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
+
+    @Inject
+    lateinit var crashReporter: CrashReporter
 
     private val clientName: String?
         get() = binding.name.text.toString().trim { it <= ' ' }.ifBlank { null }

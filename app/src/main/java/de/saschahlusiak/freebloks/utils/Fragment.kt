@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.utils
 
+import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import de.saschahlusiak.freebloks.DependencyProvider
 
-val Fragment.prefs get() = PreferenceManager.getDefaultSharedPreferences(context)
+val Fragment.prefs: SharedPreferences get() = PreferenceManager.getDefaultSharedPreferences(context)

@@ -5,13 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.util.Log
-import android.view.View
 import android.view.Window
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtilLight
@@ -27,7 +25,8 @@ import java.lang.IllegalStateException
 class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGamesHelper() {
     private val tag = DefaultGooglePlayGamesHelper::class.java.simpleName
 
-    private var googleSignInClient: GoogleSignInClient
+    private val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
+
     private var gamesClient: GamesClient? = null
     private var leaderboardsClient: LeaderboardsClient? = null
     private var achievementsClient: AchievementsClient? = null
@@ -39,7 +38,6 @@ class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGam
         get() = (GooglePlayServicesUtilLight.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
 
     init {
-        googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)
 
         if (lastAccount == null) {

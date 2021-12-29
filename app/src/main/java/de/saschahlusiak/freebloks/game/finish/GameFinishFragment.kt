@@ -11,25 +11,27 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.animation.*
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.databinding.GameFinishFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment), View.OnClickListener {
 
-    private val viewModel by lazy { ViewModelProvider(this).get(GameFinishFragmentViewModel::class.java) }
-    private val gameHelper by lazy { viewModel.gameHelper }
+    private val viewModel: GameFinishFragmentViewModel by viewModels()
 
     private val listener get() = requireActivity() as OnStartCustomGameListener
 
@@ -37,6 +39,12 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
 
     // TODO: support a light dialog theme variant?
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
+
+    @Inject
+    lateinit var gameHelper: GooglePlayGamesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +70,14 @@ class GameFinishFragment : MaterialDialogFragment(R.layout.game_finish_fragment)
         achievements.setOnClickListener(this@GameFinishFragment)
         leaderboard.setOnClickListener(this@GameFinishFragment)
 
-        viewModel.isSignedIn.observe(viewLifecycleOwner, Observer { signedIn ->
-            dialog?.window?.let { viewModel.gameHelper.setWindowForPopups(it) }
+        viewModel.isSignedIn.observe(viewLifecycleOwner) { signedIn ->
+            dialog?.window?.let { gameHelper.setWindowForPopups(it) }
             if (signedIn) {
                 viewModel.unlockAchievements()
             }
             achievements.visibility = if (signedIn) View.VISIBLE else View.GONE
             leaderboard.visibility = if (signedIn) View.VISIBLE else View.GONE
-        })
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

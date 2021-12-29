@@ -13,19 +13,21 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.Shape
-import de.saschahlusiak.freebloks.DependencyProvider
 import de.saschahlusiak.freebloks.databinding.StatisticsActivityBinding
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatisticsActivity : AppCompatActivity() {
     private val db = HighScoreDB(this)
     private var adapter: StatisticsAdapter? = null
@@ -33,7 +35,8 @@ class StatisticsActivity : AppCompatActivity() {
     private val values: Array<String?> = arrayOfNulls(9)
     private var menu: Menu? = null
 
-    private lateinit var gameHelper: GooglePlayGamesHelper
+    @Inject
+    lateinit var gameHelper: GooglePlayGamesHelper
 
     private val binding by viewBinding(StatisticsActivityBinding::inflate)
     private var googleSignInButton: View? = null
@@ -51,9 +54,6 @@ class StatisticsActivity : AppCompatActivity() {
             adapter = StatisticsAdapter(this@StatisticsActivity, labels, values)
             listView.adapter = adapter
             ok.setOnClickListener { finish() }
-
-            DependencyProvider.initialise(this@StatisticsActivity)
-            gameHelper = DependencyProvider.googlePlayGamesHelper()
 
             val prefs = PreferenceManager.getDefaultSharedPreferences(this@StatisticsActivity)
             this@StatisticsActivity.gameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))

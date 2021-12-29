@@ -1,7 +1,28 @@
 package de.saschahlusiak.freebloks
 
 import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import de.saschahlusiak.freebloks.utils.*
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AnalyticsModule {
+    @Provides
+    @Singleton
+    fun provideAnalytics(): AnalyticsProvider = DependencyProvider.analytics()
+
+    @Provides
+    @Singleton
+    fun provideGamesHelper(): GooglePlayGamesHelper = DependencyProvider.googlePlayGamesHelper()
+
+    @Provides
+    @Singleton
+    fun crashReporter(): CrashReporter = DependencyProvider.crashReporter()
+}
 
 object DependencyProvider {
     // defaults to dummy implementations until initialised
@@ -27,7 +48,3 @@ object DependencyProvider {
 
     fun crashReporter() = crashReporter
 }
-
-val analytics get() = DependencyProvider.analytics()
-val crashReporter get() = DependencyProvider.crashReporter()
-fun Exception.logException() = crashReporter.logException(this)

@@ -8,13 +8,12 @@ import android.view.View.OnLongClickListener
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.AboutFragment
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.analytics
 import de.saschahlusiak.freebloks.databinding.MainMenuFragmentBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ColorListFragment
@@ -22,16 +21,22 @@ import de.saschahlusiak.freebloks.game.dialogs.CustomGameFragment
 import de.saschahlusiak.freebloks.game.dialogs.MultiplayerFragment
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), View.OnClickListener, OnLongClickListener {
     private val activity get() = requireActivity() as FreebloksActivity
     private var appIconIsDonate = false
 
     private val binding by viewBinding(MainMenuFragmentBinding::bind)
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog
 
@@ -68,23 +73,23 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
             Toast.makeText(requireContext(), if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner, Observer { enabled ->
+        viewModel.soundsEnabledLiveData.observe(viewLifecycleOwner) { enabled ->
             val res = if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off
             soundToggleButton.setIconResource(res)
-        })
+        }
 
-        viewModel.connectionStatus.observe(viewLifecycleOwner, Observer {
+        viewModel.connectionStatus.observe(viewLifecycleOwner) {
             val canResume = (it == ConnectionStatus.Connected) && (viewModel.client?.game?.isFinished == false) && (viewModel.client?.game?.isStarted == true)
 
             resumeGame.isEnabled = canResume
             dialog?.setCanceledOnTouchOutside(canResume)
-        })
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object: MaterialDialog(requireContext(), theme) {
             override fun onBackPressed() {
-                ownerActivity?.finish()
+                activity.finish()
             }
         }.apply {
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
