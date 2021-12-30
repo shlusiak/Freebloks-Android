@@ -80,7 +80,7 @@ git submodule update
 
 ## Donate
 
-If you like Freebloks I'd be happy about a donation. You can either purchase Freebloks VIP on Google Play, send bitcoin or donate via Paypal.
+Freebloks is free software. If you like Freebloks why not consider a donation? You can either purchase Freebloks VIP on Google Play, send bitcoin or donate via Paypal.
 
 <table>
   <tr>
@@ -114,7 +114,7 @@ will. Specifically you can redistribute and/or modify it under the terms of the
 published by the Free Software Foundation, either version 2 of the License, or
 (at your option) any later version.
 
-Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2021.
+Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2022.
 
 Email: apps@saschahlusiak.de
 Project homepage: http://www.saschahlusiak.de/freebloks-3d-android/
