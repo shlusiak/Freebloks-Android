@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import de.saschahlusiak.freebloks.databinding.AboutActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
@@ -21,6 +22,7 @@ class AboutFragment : MaterialDialogFragment(R.layout.about_activity) {
             version.text = BuildConfig.VERSION_NAME
             url.text = Global.getMarketURLString(BuildConfig.APPLICATION_ID)
 
+            donate.isVisible = !Global.IS_VIP
             donate.setOnClickListener {
                 startActivity(Intent(requireContext(), DonateActivity::class.java))
             }
