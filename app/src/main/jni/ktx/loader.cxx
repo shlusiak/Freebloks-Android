@@ -474,12 +474,12 @@ ktxLoadTextureS(struct ktxStream* stream, GLenum glTarget,
 			if (errorCode != KTX_SUCCESS) {
 				goto cleanup;
 			}
-			if (!(sizedFormats & _NON_LEGACY_FORMATS)) {
+//			if (!(sizedFormats & _NON_LEGACY_FORMATS)) {
 				if (internalFormat == GL_RGB8)
 					internalFormat = GL_RGB;
 				else if (internalFormat == GL_RGBA8)
 					internalFormat = GL_RGBA;
-			}
+//			}
 			glTexImage2D(glTarget, level - nSkipMipmaps,
 						 internalFormat, pixelWidth, pixelHeight, 0,
 						 format, type, unpacked);

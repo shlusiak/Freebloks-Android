@@ -3,6 +3,6 @@
 
 #include <jni.h>
 
-unsigned int loadKTXFile(JNIEnv *env, jobject assetManager, const char* file, GLenum target, int skipMipmaps);
+int loadKTXFile(JNIEnv *env, jobject assetManager, const char* file, GLenum target, int skipMipmaps);
 
 #endif
