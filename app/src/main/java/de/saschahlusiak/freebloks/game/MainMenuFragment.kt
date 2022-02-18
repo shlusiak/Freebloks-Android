@@ -43,7 +43,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), Vi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val starts = prefs.getLong("rate_number_of_starts", 0)
 
         appIconIsDonate = !Global.IS_VIP && (starts % Global.DONATE_STARTS == 0L)

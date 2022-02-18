@@ -42,7 +42,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
     lateinit var analytics: AnalyticsProvider
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        val ps = preferenceManager.createPreferenceScreen(activity)
+        val ps = preferenceManager.createPreferenceScreen(requireContext())
         preferenceScreen = ps
 
         val screen = arguments?.getString(KEY_SCREEN, null)
@@ -115,7 +115,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
      */
     private fun addCategory(@XmlRes content: Int, @StringRes category: Int? = null, showCategory: Boolean = true) {
         if (category != null && showCategory) {
-            val p = PreferenceCategory(activity).apply {
+            val p = PreferenceCategory(requireContext()).apply {
                 setTitle(category)
                 isIconSpaceReserved = false
             }
