@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.*
 import android.view.inputmethod.EditorInfo
@@ -50,12 +51,15 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val client = client ?: return
+            // do not fire if we haven't received a status yet
+            val lastStatus = viewModel.lastStatus ?: return
 
             val gameMode = from(binding.gameMode.selectedItemPosition)
             val size = gameMode.defaultBoardSize()
             val stones = gameMode.defaultStoneSet()
 
-            if (gameMode == viewModel.lastStatus?.gameMode) return
+            if (gameMode == lastStatus.gameMode) return
+            Log.d(TAG, "New gameMode: $gameMode")
 
             client.requestGameMode(size, size, gameMode, stones)
         }
@@ -66,6 +70,8 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val client = client ?: return
+            // do not fire if we haven't received a status yet
+            val lastStatus = viewModel.lastStatus ?: return
             val gameMode = client.game.gameMode
 
             val size = GameConfig.FIELD_SIZES[binding.fieldSize.selectedItemPosition]
@@ -75,7 +81,9 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
                 else -> GameConfig.DEFAULT_STONE_SET
             }
 
-            if (size == viewModel.lastStatus?.size) return
+            if (size == lastStatus.size) return
+
+            Log.d(TAG, "New size: $size")
 
             client.requestGameMode(size, size, gameMode, stones)
         }
@@ -300,6 +308,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
 
     override fun serverStatus(status: MessageServerStatus) {
         lifecycleScope.launch {
+            Log.d(TAG, "New server status: $status")
             updateViewsFromStatus()
         }
     }
@@ -322,5 +331,9 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
             ConnectionStatus.Failed -> dismiss()
             else -> { }
         }
+    }
+
+    companion object {
+        private val TAG = LobbyDialog::class.simpleName
     }
 }
