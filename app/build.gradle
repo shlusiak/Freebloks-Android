@@ -100,6 +100,8 @@ dependencies {
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.41'
     kapt 'com.google.dagger:hilt-compiler:2.41'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.41'
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.41'
 
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material
