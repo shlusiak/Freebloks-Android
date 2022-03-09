@@ -21,5 +21,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun crashReporter(): CrashReporter = CrashlyticsCrashReporter()
+    fun crashReporter(): CrashReporter = CrashlyticsCrashReporter(isEnabled = !BuildConfig.DEBUG)
 }

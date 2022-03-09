@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks
 
 import android.app.Application
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +21,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun crashReporter(): CrashReporter = CrashlyticsCrashReporter()
+    fun crashReporter(): CrashReporter = CrashlyticsCrashReporter(isEnabled = !BuildConfig.DEBUG)
 }

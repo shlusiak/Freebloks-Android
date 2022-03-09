@@ -22,6 +22,9 @@ android {
             minifyEnabled true
         }
     }
+    buildFeatures {
+        buildConfig false
+    }
 }
 
 dependencies {

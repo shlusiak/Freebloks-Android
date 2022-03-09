@@ -1,11 +1,10 @@
 package de.saschahlusiak.freebloks.utils
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import de.saschahlusiak.freebloks.googleServices.BuildConfig
 
-class CrashlyticsCrashReporter: CrashReporter {
+class CrashlyticsCrashReporter(val isEnabled: Boolean): CrashReporter {
     init {
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(isEnabled)
     }
 
     override fun log(message: String) = FirebaseCrashlytics.getInstance().log(message)
