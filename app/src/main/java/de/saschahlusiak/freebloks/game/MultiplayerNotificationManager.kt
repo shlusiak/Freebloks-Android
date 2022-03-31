@@ -71,6 +71,8 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
     fun startBackgroundNotification() {
         if (!client.isConnected()) return
         val lastStatus = lastStatus ?: return
+        // No need to show the notification if we are the only client connected. May not be a multiplayer
+        // game after all.
         if (game.isStarted && lastStatus.clients == 1) return
 
         isInBackground = true

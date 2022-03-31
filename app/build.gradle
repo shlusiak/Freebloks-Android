@@ -61,12 +61,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
     testOptions {
         unitTests {
             returnDefaultValues = true
@@ -76,6 +70,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
@@ -83,7 +81,7 @@ dependencies {
 
     // for unit tests
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.mockito:mockito-core:4.4.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0-native-mt'
     testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
     testImplementation 'org.robolectric:robolectric:4.7.3'
