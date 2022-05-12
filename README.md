@@ -4,13 +4,13 @@
   
 <p align="center">
     <a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloks" target="_blank">
-        <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/>
+        <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="90"/>
     </a>
     <a href="http://www.amazon.com/Sascha-Hlusiak-Freebloks-3D/dp/B00CY8CLU8" target="_blank">
         <img src="https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-underground-app-us-black.png" alt="Available at Amazon" height="70"/>
     </a>
     <a href="https://f-droid.org/packages/de.saschahlusiak.freebloks/">
-        <img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png" height="70">
+        <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="90">
     </a>
 </p> 
   
