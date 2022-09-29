@@ -14,7 +14,6 @@ plugins {
 android {
     compileSdk 33
     buildToolsVersion '33.0.0'
-    ndkVersion '25.0.8775105'
 
     defaultConfig {
         minSdk 21
@@ -48,11 +47,6 @@ android {
             buildConfigField 'String', 'APP_STORE_NAME', '\"F-Droid\"'
             buildConfigField 'String', 'APP_STORE_LINK', '\"https://f-droid.org/en/packages/%s\"'
         }
-    }
-    externalNativeBuild {
-         ndkBuild {
-            path "src/main/jni/Android.mk"
-         }
     }
     buildTypes {
         release {
@@ -93,6 +87,7 @@ dependencies {
     implementation project(':themes')
     implementation project(':game')
     implementation project(':server')
+    implementation project(':ktx')
 
     implementation 'androidx.fragment:fragment-ktx:1.5.3'
 

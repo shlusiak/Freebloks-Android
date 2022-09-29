@@ -10,7 +10,8 @@
 
 #define LOG_TAG "ktx"
 
-int loadKTXFile(JNIEnv *env, jobject assetManager, const char* file, GLenum target, int skipMipmaps) {
+
+unsigned int loadKTXFile(JNIEnv *env, jobject assetManager, const char* file, GLenum target, int skipMipmaps) {
 	GLboolean isMipmapped;
 	GLenum glerror;
 	KTX_dimensions dimensions;
@@ -42,12 +43,12 @@ int loadKTXFile(JNIEnv *env, jobject assetManager, const char* file, GLenum targ
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_de_saschahlusiak_freebloks_view_KTX_loadKTXTexture(JNIEnv *env, jobject thiz,
-					jobject asset_manager, jstring file,
-					jint target, jint skip_mipmaps) {
-	const char *p = env->GetStringUTFChars(file, NULL);
+Java_de_saschahlusiak_freebloks_ktx_KTX_loadKTXTexture(JNIEnv *env, jobject thiz, jobject assetManager, jstring file,
+													 jint target, jint skipMipmaps) {
+
+	const char *p = env->GetStringUTFChars(file, 0);
 	int ret;
-	ret = loadKTXFile(env, asset_manager, p, target, skip_mipmaps);
+	ret = loadKTXFile(env, assetManager, p, target, skipMipmaps);
 	env->ReleaseStringUTFChars(file, p);
 	return ret;
 }

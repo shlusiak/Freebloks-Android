@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view
 
 import android.content.res.Resources
+import de.saschahlusiak.freebloks.ktx.KTX
 import de.saschahlusiak.freebloks.theme.Theme
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11

@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view
+package de.saschahlusiak.freebloks.ktx
 
 import android.content.res.AssetManager
 import javax.microedition.khronos.opengles.GL10
