@@ -17,7 +17,7 @@ import androidx.test.core.app.ApplicationProvider
 import de.saschahlusiak.freebloks.app.App
 
 @RunWith(RobolectricTestRunner::class)
-@Config(application = App::class)
+@Config(application = App::class, sdk = [21, 32])
 class RulesActivityTest {
 
     @Test
