@@ -20,9 +20,6 @@ android {
             minifyEnabled true
         }
     }
-    buildFeatures {
-        buildConfig false
-    }
     namespace 'de.saschahlusiak.freebloks.game'
 }
 

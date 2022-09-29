@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
 }
 
+android.buildFeatures.buildConfig true
+
 android {
     compileSdk 33
 
@@ -19,9 +21,6 @@ android {
         release {
             minifyEnabled true
         }
-    }
-    buildFeatures {
-        buildConfig true
     }
     namespace 'de.saschahlusiak.freebloks.theme'
 }

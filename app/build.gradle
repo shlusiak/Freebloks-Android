@@ -11,6 +11,8 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+android.buildFeatures.buildConfig true
+
 android {
     compileSdk 33
     buildToolsVersion '33.0.0'
