@@ -5,13 +5,12 @@ plugins {
 
 android {
     compileSdk 33
-//    ndkVersion '23.1.7779620'
     ndkVersion '25.0.8775105'
 
     defaultConfig {
         minSdk 21
-        targetSdk 31
     }
+
     externalNativeBuild {
         ndkBuild {
             path "src/main/jni/Android.mk"
@@ -26,6 +25,7 @@ android {
     buildFeatures {
         buildConfig false
     }
+    namespace 'de.saschahlusiak.freebloks.server'
 }
 
 dependencies {

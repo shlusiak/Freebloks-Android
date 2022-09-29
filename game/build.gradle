@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         minSdk 21
-        targetSdk 31
     }
+
     testOptions {
         unitTests {
             returnDefaultValues = true
@@ -23,6 +23,7 @@ android {
     buildFeatures {
         buildConfig false
     }
+    namespace 'de.saschahlusiak.freebloks.game'
 }
 
 dependencies {
@@ -31,5 +32,5 @@ dependencies {
 
     implementation project(':common')
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
 }

@@ -4,12 +4,10 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "33.0.0"
+    compileSdk 33
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 31
+        minSdk 21
     }
 
     buildTypes {
@@ -20,17 +18,18 @@ android {
     buildFeatures {
         buildConfig false
     }
+    namespace 'de.saschahlusiak.freebloks.googleServices'
 
 }
 
 dependencies {
     implementation project(":common")
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
 
     // For Google+ integration
     // https://developers.google.com/android/guides/releases
-    implementation 'com.google.android.gms:play-services-games:22.0.1'
+    implementation 'com.google.android.gms:play-services-games:23.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
 
     // https://firebase.google.com/support/release-notes/android
