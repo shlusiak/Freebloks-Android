@@ -113,7 +113,7 @@ open class MaterialDialog : AppCompatDialog {
             return materialAlertDialogThemeOverlay.data
         }
 
-        private fun createMaterialThemedContext(context: Context): Context? {
+        private fun createMaterialThemedContext(context: Context): Context {
             val themeOverlayId = getMaterialAlertDialogThemeOverlay(context)
             val themedContext = MaterialThemeOverlay.wrap(context, null, DEF_STYLE_ATTR, DEF_STYLE_RES)
             return if (themeOverlayId == 0) {
