@@ -16,11 +16,12 @@ android {
             path "src/main/jni/Android.mk"
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
     }
     namespace 'de.saschahlusiak.freebloks.server'
 }

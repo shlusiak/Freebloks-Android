@@ -9,25 +9,26 @@ android {
     defaultConfig {
         minSdk 21
     }
-
     testOptions {
         unitTests {
             returnDefaultValues = true
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled true
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
     }
     namespace 'de.saschahlusiak.freebloks.game'
 }
 
 dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.5'
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2'
 
     implementation project(':common')
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
 }
