@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.8.20'
+    ext.kotlin_version = '1.9.0'
 
     repositories {
         mavenCentral()
@@ -8,17 +8,18 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.1.1'
 
         // Kotlin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // Hilt
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44.2'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.48'
 
         // https://developers.google.com/android/guides/releases
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.6'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.0-1.0.12'
     }
 }
 
