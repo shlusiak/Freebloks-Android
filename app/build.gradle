@@ -15,14 +15,14 @@ android {
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         versionCode 122
         versionName "1.4.2"
 
         resourceConfigurations += ["en", "de", "es", "fr", "ja", "pt", "ro", "ru"]
     }
-    flavorDimensions 'app', 'store'
+    flavorDimensions = [ 'app', 'store' ]
     productFlavors {
         standard {
             dimension 'app'
