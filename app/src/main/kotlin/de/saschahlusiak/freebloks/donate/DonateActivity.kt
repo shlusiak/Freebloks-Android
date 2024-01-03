@@ -35,7 +35,6 @@ class DonateActivity : AppCompatActivity() {
         with(binding) {
             donationFreebloksVip.setOnClickListener { onFreebloksVIPClick() }
             donationPaypal.setOnClickListener { onPayPalClick() }
-            donationLitecoin.setOnClickListener { onLitecoinClick() }
 
             if (Global.IS_GOOGLE) {
                 // Google does not allow to pay with any other payment provider, so we fast track to
@@ -43,7 +42,6 @@ class DonateActivity : AppCompatActivity() {
                 donateThankYou.isVisible = true
                 donationsGroup.isVisible = true
                 donationPaypal.isVisible = false
-                donationLitecoin.isVisible = false
 
                 donateButtonGroup.isVisible = false
 
@@ -139,33 +137,11 @@ class DonateActivity : AppCompatActivity() {
         startActivity(freebloksVipIntent)
     }
 
-    private fun onBitcoinClick() {
-        analytics.logEvent("donate_bitcoin", null)
-        try {
-            startActivity(bitcoinIntent)
-        } catch (e: Exception) {
-            startActivity(bitcoinFallbackIntent)
-        }
-    }
-
-    private fun onLitecoinClick() {
-        analytics.logEvent("donate_litecoin", null)
-        try {
-            startActivity(litecoinIntent)
-        } catch (e: Exception) {
-            startActivity(litecoinFallbackIntent)
-        }
-    }
-
     private fun onPayPalClick() {
         analytics.logEvent("donate_paypal", null)
         startActivity(paypalIntent)
     }
 
-    internal val bitcoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN))
-    internal val bitcoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_BITCOIN_EXPLORER))
-    internal val litecoinIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_LITECOIN))
-    internal val litecoinFallbackIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_LITECOIN_EXPLORER))
     internal val freebloksVipIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_FREEBLOKS_VIP))
     internal val paypalIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PAYPAL))
 
@@ -177,11 +153,5 @@ class DonateActivity : AppCompatActivity() {
             Global.getMarketURLString("de.saschahlusiak.freebloksvip")
 
         private const val URL_PAYPAL = "https://paypal.me/saschahlusiak/3eur"
-        private const val BITCOIN_WALLET_ADDRESS = "bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl"
-        private const val LITECOIN_WALLET_ADDRESS = "Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt"
-        private const val URL_BITCOIN = "bitcoin:$BITCOIN_WALLET_ADDRESS?amount=0.0002"
-        private const val URL_BITCOIN_EXPLORER = "https://www.blockchain.com/btc/address/$BITCOIN_WALLET_ADDRESS"
-        private const val URL_LITECOIN = "litecoin:$LITECOIN_WALLET_ADDRESS?amount=0.005"
-        private const val URL_LITECOIN_EXPLORER = "https://www.blockchain.com/ltc/address/$LITECOIN_WALLET_ADDRESS"
     }
 }

@@ -155,7 +155,6 @@
     <string name="donation_yes">Da!</string>
     <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>
     <string name="donation_paypal" translatable="false">PayPal</string>
-    <string name="donation_bitcoin" translatable="false">Bitcoin</string>
     <string name="donate_thank_you">Îţi mulţumim că susţii Freebloks!</string>
 
     <string name="advanced">Avansat</string>

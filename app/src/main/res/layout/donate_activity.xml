@@ -138,24 +138,6 @@
                     android:src="@drawable/logo_paypal" />
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/donationLitecoin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="?colorPrimary"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                app:contentPadding="8dp">
-
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/logo_litecoin" />
-            </com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
 
         <TextView
