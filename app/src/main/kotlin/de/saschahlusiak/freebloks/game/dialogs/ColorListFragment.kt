@@ -127,13 +127,14 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
         val size = GameConfig.FIELD_SIZES[binding.title.fieldSize.selectedItemPosition]
 
         return GameConfig(
-            null,
-            mode,
-            false,
-            players,
-            GameConfig.DEFAULT_DIFFICULTY,
-            defaultStonesForMode(mode),
-            size
+            isLocal = true,
+            server = null,
+            gameMode = mode,
+            showLobby = false,
+            requestPlayers = players,
+            difficulty = GameConfig.DEFAULT_DIFFICULTY,
+            stones = defaultStonesForMode(mode),
+            fieldSize = size
         )
     }
 

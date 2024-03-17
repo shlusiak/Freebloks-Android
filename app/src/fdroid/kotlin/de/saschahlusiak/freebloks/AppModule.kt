@@ -22,4 +22,7 @@ object AppModule {
     @Provides
     @Singleton
     fun crashReporter(): CrashReporter = EmptyCrashReporter()
+
+    @Provides
+    fun instantAppHelper(): InstantAppHelper = DefaultInstantAppHelper()
 }

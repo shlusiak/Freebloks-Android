@@ -7,7 +7,6 @@
 #include <pthread.h>
 #include "github/src/spielserver.h"
 
-
 class CAndroidLogWriter: public CLogWriter {
 public:
 	virtual void log(const char* fmt, va_list va);
@@ -21,7 +20,7 @@ void CAndroidLogWriter::log(const char* fmt, va_list va)
 
 static CAndroidLogWriter androidLogWriter;
 static int server_count = 0;
-
+static CLogger logger(androidLogWriter);
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_get_1number_1of_1processors
   (JNIEnv *je, jobject jc)
@@ -63,7 +62,6 @@ void* gameRunThread(void* param)
 
 	int server_id = server_count++;
 
-	CLogger logger(androidLogWriter);
 	listener->setLogger(&logger);
 	listener->get_game()->setLogger(&logger);
 
@@ -93,22 +91,29 @@ void* gameRunThread(void* param)
 
 static int max_humans = 4;
 static bool force_delay = true;
-//static int port = 59995;
-static char* _interface = NULL;
 
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
-  (JNIEnv *je, jobject jc, jint port, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
+  (JNIEnv *je, jobject jc, jstring interface, jint port, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
 {
 	int ret;
 	pthread_t pt;
 
 	int i,j;
 
+	const char* _interface= nullptr;
+	if (interface != nullptr) {
+		_interface = je->GetStringUTFChars(interface, nullptr);
+	}
+
 	CServerListener* listener=new CServerListener();
 	CSpielServer* game;
 
 	ret=listener->init(_interface, port);
+	if (interface != nullptr) {
+		je->ReleaseStringUTFChars(interface, _interface);
+	}
+
 	if (ret!=0)
 	{
 	    return -1;
@@ -149,17 +154,29 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServ
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server
-  (JNIEnv * je, jobject jc, jint port, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
+  (JNIEnv * je, jobject jc, jstring interface, jint port, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
 {
 	int ret;
 	pthread_t pt;
 
+	const char* _interface= nullptr;
+	if (interface != nullptr) {
+		_interface = je->GetStringUTFChars(interface, nullptr);
+	}
+
 	CServerListener* listener=new CServerListener();
 	ret=listener->init(_interface, port);
+
+	if (interface != nullptr) {
+		je->ReleaseStringUTFChars(interface, _interface);
+	}
 	if (ret!=0)
 	{
+		logger.log("CServerListener::init returned %d", ret);
 	    return ret;
 	}
+
+	logger.log("Server spawned successfully");
 
 	listener->new_game(max_humans, ki_mode, (GAMEMODE)gamemode, ki_threads, force_delay);
 	listener->get_game()->set_field_size(field_size_x, field_size_y);

@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.LocalSocketAddress
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
@@ -27,6 +28,7 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThrea
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.server.JNIServer
 import de.saschahlusiak.freebloks.theme.BaseSounds
 import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
@@ -264,8 +266,13 @@ class FreebloksActivityViewModel @Inject constructor(
         crashReporter.log("Connecting to: $name")
         crashReporter.setString("server", name)
 
+        val success = when {
+            config.isLocal -> client.connect(JNIServer.LOCAL_SOCKET_NAME)
+            else -> client.connect(config.server, GameClient.DEFAULT_PORT)
+        }
+
         // client will notify observers about connection failed
-        if (!client.connect(config.server, GameClient.DEFAULT_PORT)) {
+        if (!success) {
             // connection has failed, observers have been notified
             connectionStatus.value = ConnectionStatus.Failed
             connectJob = null

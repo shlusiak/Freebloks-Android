@@ -126,13 +126,14 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
     }
 
     private fun buildGameConfig() = GameConfig(
-        null,
-        gameMode,
-        false,
-        playersAsBooleanArray,
-        difficulty,
-        stones,
-        fieldSize
+        isLocal = true,
+        server = null,
+        gameMode = gameMode,
+        showLobby = false,
+        requestPlayers = playersAsBooleanArray,
+        difficulty = difficulty,
+        stones = stones,
+        fieldSize = fieldSize
     )
 
     override fun onClick(v: View) {

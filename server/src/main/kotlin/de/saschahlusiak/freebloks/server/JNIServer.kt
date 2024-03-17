@@ -11,11 +11,15 @@ object JNIServer {
 
     private const val DEFAULT_PORT = GameClient.DEFAULT_PORT
 
+    // abstract name of the unix domain socket for local games
+    const val LOCAL_SOCKET_NAME = ""
+
     @Suppress("FunctionName")
     private external fun get_number_of_processors(): Int
 
     @Suppress("FunctionName")
     private external fun native_run_server(
+        interface_: String?,
         port: Int,
         game_mode: Int,
         field_size_x: Int,
@@ -27,6 +31,7 @@ object JNIServer {
 
     @Suppress("FunctionName")
     private external fun native_resume_server(
+        interface_: String?,
         port: Int,
         field_size_x: Int,
         field_size_y: Int,
@@ -39,11 +44,13 @@ object JNIServer {
         ki_threads: Int
     ): Int
 
-    fun runServerForNewGame(gameMode: GameMode, size: Int, stones: IntArray?, kiMode: Int): Int {
+    fun runServerForNewGame(isLocal: Boolean, gameMode: GameMode, size: Int, stones: IntArray?, kiMode: Int): Int {
         val threads = get_number_of_processors()
         Log.d(tag, "spawning server with $threads threads")
+
         return native_run_server(
-            port = DEFAULT_PORT,
+            interface_ = if (isLocal) LOCAL_SOCKET_NAME else null,
+            port = if (isLocal) 0 else DEFAULT_PORT,
             game_mode = gameMode.ordinal,
             field_size_x = size,
             field_size_y = size,
@@ -66,8 +73,10 @@ object JNIServer {
             }
         }
 
+        // always uses unix domain socket
         return native_resume_server(
-            port = DEFAULT_PORT,
+            LOCAL_SOCKET_NAME,
+            port = 0,
             field_size_x = board.width,
             field_size_y = board.height,
             current_player = game.currentPlayer,

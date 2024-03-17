@@ -6,6 +6,13 @@ fun GameMode.defaultBoardSize() = GameConfig.defaultSizeForMode(this)
 fun GameMode.defaultStoneSet() = GameConfig.defaultStonesForMode(this)
 
 class GameConfig(
+    /**
+     * Whether this is a local game. If hosting a game, set to false.
+     */
+    val isLocal: Boolean = true,
+    /**
+     * When connecting, this is the name of the server, null for hosting.
+     */
     val server: String? = null,
     val gameMode: GameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
     val showLobby: Boolean = false,

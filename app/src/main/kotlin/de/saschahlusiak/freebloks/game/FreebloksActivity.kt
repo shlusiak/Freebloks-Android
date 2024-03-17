@@ -23,7 +23,6 @@ import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
@@ -35,7 +34,6 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
-import de.saschahlusiak.freebloks.server.JNIServer.runServerForNewGame
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
@@ -53,6 +51,7 @@ import de.saschahlusiak.freebloks.model.Player
 import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
+import de.saschahlusiak.freebloks.server.JNIServer.runServerForNewGame
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
@@ -69,7 +68,8 @@ import java.io.FileNotFoundException
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, OnStartCustomGameListener, LobbyDialogDelegate {
+class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate, OnStartCustomGameListener,
+    LobbyDialogDelegate {
     private lateinit var view: Freebloks3DView
     private var showRateDialog = false
     private lateinit var scene: Scene
@@ -92,19 +92,23 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         Log.d(tag, "onCreate")
 
         if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(ThreadPolicy.Builder()
-                .detectCustomSlowCalls()
-                .detectNetwork()
-                .penaltyDeath()
-                .build())
+            StrictMode.setThreadPolicy(
+                ThreadPolicy.Builder()
+                    .detectCustomSlowCalls()
+                    .detectNetwork()
+                    .penaltyDeath()
+                    .build()
+            )
 
-            StrictMode.setVmPolicy(VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .detectActivityLeaks()
-                .penaltyLog()
+            StrictMode.setVmPolicy(
+                VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .detectActivityLeaks()
+                    .penaltyLog()
 //			    .penaltyDeath()
-                .build())
+                    .build()
+            )
         }
 
         super.onCreate(savedInstanceState)
@@ -348,7 +352,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 startNewGame(config, viewModel.localClientNameOverride)
             } else {
                 // else start default game
-                startNewGame(GameConfig(), null)
+                startNewGame(GameConfig(isLocal = true), null)
             }
         }
     }
@@ -373,12 +377,13 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
             crashReporter.log("Error starting server: $ret")
         }
         val config = GameConfig(
-            null,
-            gameMode,
-            false, booleanArrayOf(false, false, false, false),
-            previousDifficulty,
-            defaultStonesForMode(gameMode),
-            game.board.width
+            isLocal = true,
+            server = null,
+            gameMode = gameMode,
+            showLobby = false, requestPlayers = booleanArrayOf(false, false, false, false),
+            difficulty = previousDifficulty,
+            stones = defaultStonesForMode(gameMode),
+            fieldSize = game.board.width
         )
         game.isStarted = true
 
@@ -401,11 +406,13 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
     private fun startNewGame(config: GameConfig, localClientName: String?): Job {
         if (config.server == null) {
             val ret = runServerForNewGame(
+                config.isLocal,
                 config.gameMode,
                 config.fieldSize,
                 config.stones,
                 config.difficulty
             )
+
             if (ret != 0) {
                 Log.e(tag, "Failed to start server: $ret")
                 crashReporter.log("Error starting server: $ret")
@@ -446,6 +453,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                     .setNegativeButton(android.R.string.no, null)
                     .create()
             }
+
             DIALOG_NEW_GAME_CONFIRMATION -> {
                 return MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.do_you_want_to_leave_current_game)
@@ -453,6 +461,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                     .setNegativeButton(android.R.string.no, null)
                     .create()
             }
+
             else -> return super.onCreateDialog(id, args)
         }
     }
@@ -477,7 +486,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?: return
+        intent ?: return
 
         val client = viewModel.client
         if ((Intent.ACTION_DELETE == intent.action)) {
@@ -611,7 +620,9 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         showMenu(shown = false, animate = true)
         if (viewModel.intro != null) viewModel.intro?.cancel() else {
             val client = viewModel.client
-            if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(DIALOG_NEW_GAME_CONFIRMATION)
+            if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(
+                DIALOG_NEW_GAME_CONFIRMATION
+            )
         }
     }
 
@@ -656,7 +667,11 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
 
         lifecycleScope.launchWhenStarted {
             val playerName = viewModel.getPlayerName(player.number)
-            Toast.makeText(this@FreebloksActivity, getString(R.string.color_is_out_of_moves, playerName), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@FreebloksActivity,
+                getString(R.string.color_is_out_of_moves, playerName),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -739,7 +754,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
         view.setGameClient(null)
 
         if (error != null) {
-            when(error) {
+            when (error) {
                 // these two are fatal and cause an app crash, so we get reports in Crashlytics
                 is GameStateException, is ProtocolException -> throw RuntimeException(error)
             }

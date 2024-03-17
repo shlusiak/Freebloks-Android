@@ -181,7 +181,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         analytics.logEvent("multiplayer_host_click", null)
 
         saveSettings()
-        val config = GameConfig(server = null, showLobby = true)
+        val config = GameConfig(isLocal = false, server = null, showLobby = true)
         listener?.onStartClientGameWithConfig(config, clientName)
         dismiss()
     }
@@ -190,14 +190,17 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         when (binding.serverType.checkedRadioButtonId) {
             R.id.radioButtonInternet -> {
                 analytics.logEvent("multiplayer_internet_click", null)
-                val config = GameConfig(server = Global.DEFAULT_SERVER_ADDRESS, showLobby = true)
+                val config = GameConfig(
+                    isLocal = false,
+                    server = Global.DEFAULT_SERVER_ADDRESS,
+                    showLobby = true)
                 listener?.onStartClientGameWithConfig(config, clientName)
             }
 
             R.id.radioButtonWifi -> {
                 customServerAddress ?: return
                 analytics.logEvent("multiplayer_wireless_click", null)
-                val config = GameConfig(server = customServerAddress, showLobby = true)
+                val config = GameConfig(isLocal = false, server = customServerAddress, showLobby = true)
                 listener?.onStartClientGameWithConfig(config, clientName)
             }
         }
@@ -255,7 +258,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     }
 
     private fun onBluetoothDeviceClick(device: BluetoothDevice) {
-        val config = GameConfig(showLobby = true)
+        val config = GameConfig(isLocal = false, showLobby = true)
         saveSettings()
         Log.i(TAG, "Device selected: " + device.name)
         analytics.logEvent("multiplayer_bluetooth_click", null)
@@ -303,7 +306,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     @UiThread
     override fun onBluetoothClientConnected(socket: BluetoothSocket) {
         // a client has connected to us. quickly host a game and get the two together by starting the bridge
-        val config = GameConfig(server = null, showLobby = true)
+        val config = GameConfig(isLocal = false, server = null, showLobby = true)
 
         activity?.lifecycleScope?.launch {
             val listener = listener ?: return@launch

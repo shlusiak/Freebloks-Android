@@ -2,6 +2,9 @@ package de.saschahlusiak.freebloks.client
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.net.LocalServerSocket
+import android.net.LocalSocket
+import android.net.LocalSocketAddress
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
@@ -90,6 +93,34 @@ class GameClient constructor(
 
             try {
                 socket.connect(address, CONNECT_TIMEOUT)
+                null
+            } catch (e: IOException) {
+                e.printStackTrace()
+                e
+            }
+        }
+
+        if (error != null) {
+            gameClientMessageHandler.notifyConnectionFailed(this, error)
+            return false
+        }
+
+        val (input, output) = runInterruptible(Dispatchers.IO) {
+            socket.getInputStream() to socket.getOutputStream()
+        }
+
+        connected(socket, input, output)
+        return true
+    }
+
+    @UiThread
+    suspend fun connect(endpoint: String): Boolean {
+        val socket = LocalSocket()
+        val address = LocalSocketAddress(endpoint, LocalSocketAddress.Namespace.ABSTRACT)
+
+        val error = runInterruptible(Dispatchers.IO) {
+            try {
+                socket.connect(address)
                 null
             } catch (e: IOException) {
                 e.printStackTrace()

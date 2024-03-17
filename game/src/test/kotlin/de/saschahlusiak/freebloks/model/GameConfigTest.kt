@@ -9,6 +9,7 @@ class GameConfigTest {
         val config = GameConfig()
 
         assertNotNull(config)
+        assertTrue(config.isLocal)
         assertNull(config.server)
         assertNull(config.requestPlayers)
         assertEquals(GameConfig.DEFAULT_DIFFICULTY, config.difficulty)
