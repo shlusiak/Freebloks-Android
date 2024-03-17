@@ -43,14 +43,12 @@ class DonateActivityTest {
                 assertTrue(it.findViewById<View>(R.id.donateThankYou).isVisible)
                 assertTrue(it.findViewById<View>(R.id.donationsGroup).isVisible)
                 assertTrue(it.findViewById<View>(R.id.donationFreebloksVip).isVisible)
-                assertFalse(it.findViewById<View>(R.id.donationLitecoin).isVisible)
                 assertFalse(it.findViewById<View>(R.id.donationPaypal).isVisible)
                 assertFalse(it.findViewById<View>(R.id.donateButtonGroup).isVisible)
             } else {
                 assertFalse(it.findViewById<View>(R.id.donateThankYou).isVisible)
                 assertFalse(it.findViewById<View>(R.id.donationsGroup).isVisible)
                 assertTrue(it.findViewById<View>(R.id.donationFreebloksVip).isVisible)
-                assertTrue(it.findViewById<View>(R.id.donationLitecoin).isVisible)
                 assertTrue(it.findViewById<View>(R.id.donationPaypal).isVisible)
                 assertTrue(it.findViewById<View>(R.id.donateButtonGroup).isVisible)
             }
@@ -110,18 +108,6 @@ class DonateActivityTest {
 
             val startedActivityIntent = Shadows.shadowOf(app).nextStartedActivity
             assertTrue(startedActivityIntent.filterEquals(it.paypalIntent))
-        }.close()
-    }
-
-    @Test
-    fun onLitecoinClick() {
-        val app = ApplicationProvider.getApplicationContext<Application>()
-
-        ActivityScenario.launch(DonateActivity::class.java).onActivity {
-            it.findViewById<View>(R.id.donationLitecoin).performClick()
-
-            val startedActivityIntent = Shadows.shadowOf(app).nextStartedActivity
-            assertTrue(startedActivityIntent.filterEquals(it.litecoinIntent))
         }.close()
     }
 }
