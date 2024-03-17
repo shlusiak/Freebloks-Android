@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -18,12 +19,17 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
 import java.lang.IllegalStateException
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * This is the actual implementation of Google Play provider. The [GooglePlayGamesHelper]
  * implementation is just a dummy that does not require any dependencies.
  */
-class DefaultGooglePlayGamesHelper(private val context: Context) : GooglePlayGamesHelper {
+@Singleton
+class DefaultGooglePlayGamesHelper @Inject constructor(
+    private val context: Application
+) : GooglePlayGamesHelper {
     private val tag = DefaultGooglePlayGamesHelper::class.java.simpleName
 
     private val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)

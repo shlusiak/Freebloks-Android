@@ -93,12 +93,12 @@ void* gameRunThread(void* param)
 
 static int max_humans = 4;
 static bool force_delay = true;
-static int port = 59995;
+//static int port = 59995;
 static char* _interface = NULL;
 
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
-  (JNIEnv *je, jobject jc, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
+  (JNIEnv *je, jobject jc, jint port, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
 {
 	int ret;
 	pthread_t pt;
@@ -149,7 +149,7 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServ
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server
-  (JNIEnv * je, jobject jc, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
+  (JNIEnv * je, jobject jc, jint port, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
 {
 	int ret;
 	pthread_t pt;

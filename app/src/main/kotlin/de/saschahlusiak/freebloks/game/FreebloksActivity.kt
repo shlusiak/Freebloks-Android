@@ -407,6 +407,7 @@ class FreebloksActivity: AppCompatActivity(), GameEventObserver, IntroDelegate, 
                 config.difficulty
             )
             if (ret != 0) {
+                Log.e(tag, "Failed to start server: $ret")
                 crashReporter.log("Error starting server: $ret")
             }
         }

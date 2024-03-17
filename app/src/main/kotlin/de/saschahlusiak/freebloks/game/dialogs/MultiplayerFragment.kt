@@ -31,13 +31,15 @@ import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
+import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment), RadioGroup.OnCheckedChangeListener, View.OnClickListener, TextWatcher, OnBluetoothConnectedListener {
+class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment), RadioGroup.OnCheckedChangeListener,
+    TextWatcher, OnBluetoothConnectedListener {
     private val TAG = MultiplayerFragment::class.java.simpleName
 
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -53,6 +55,9 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     @Inject
     lateinit var crashReporter: CrashReporter
 
+    @Inject
+    lateinit var instantAppHelper: InstantAppHelper
+
     private val clientName: String?
         get() = binding.name.text.toString().trim { it <= ' ' }.ifBlank { null }
 
@@ -63,16 +68,9 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         closeButton.setOnClickListener { dismiss() }
-        okButton.setOnClickListener(this@MultiplayerFragment)
+        okButton.setOnClickListener(::onOkClicked)
 
-        hostGame.setOnClickListener {
-            analytics.logEvent("multiplayer_host_click", null)
-
-            saveSettings()
-            val config = GameConfig(server = null, showLobby = true)
-            listener?.onStartClientGameWithConfig(config, clientName)
-            dismiss()
-        }
+        hostGame.setOnClickListener(::onHostGameClicked)
         serverAddress.apply {
             setText(prefs.getString("custom_server", ""))
             addTextChangedListener(this@MultiplayerFragment)
@@ -118,7 +116,10 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     private fun hasBluetoothPermission(): Boolean {
         if (Build.VERSION.SDK_INT >= 31) {
             // Android S introduced permission BLUETOOTH_CONNECT, which is required to connect and listen
-            val granted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            val granted = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
 
             if (!granted) return false
         }
@@ -169,17 +170,34 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
         }
     }
 
-    override fun onClick(view: View) {
+    private fun onHostGameClicked(view: View) {
+        if (instantAppHelper.isInstantApp) {
+            // Hosting a game is not supported in instant apps,
+            // because it can not open a socket
+            instantAppHelper.showInstallPrompt(requireActivity())
+            return
+        }
+
+        analytics.logEvent("multiplayer_host_click", null)
+
+        saveSettings()
+        val config = GameConfig(server = null, showLobby = true)
+        listener?.onStartClientGameWithConfig(config, clientName)
+        dismiss()
+    }
+
+    private fun onOkClicked(view: View) {
         when (binding.serverType.checkedRadioButtonId) {
             R.id.radioButtonInternet -> {
                 analytics.logEvent("multiplayer_internet_click", null)
                 val config = GameConfig(server = Global.DEFAULT_SERVER_ADDRESS, showLobby = true)
                 listener?.onStartClientGameWithConfig(config, clientName)
             }
+
             R.id.radioButtonWifi -> {
                 customServerAddress ?: return
                 analytics.logEvent("multiplayer_wireless_click", null)
-                val config = GameConfig(server = customServerAddress, showLobby =  true)
+                val config = GameConfig(server = customServerAddress, showLobby = true)
                 listener?.onStartClientGameWithConfig(config, clientName)
             }
         }
@@ -196,12 +214,13 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
     }
 
     override fun onCheckedChanged(radioGroup: RadioGroup, i: Int) = with(binding) {
-        when(i) {
+        when (i) {
             R.id.radioButtonInternet -> {
                 serverAddress.visibility = View.GONE
                 hostGame.visibility = View.INVISIBLE
                 bluetoothList.visibility = View.GONE
             }
+
             R.id.radioButtonWifi -> {
                 serverAddress.visibility = View.VISIBLE
                 hostGame.visibility = View.VISIBLE
@@ -209,6 +228,7 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
 
                 serverAddress.requestFocus()
             }
+
             R.id.radioButtonBluetooth -> {
                 serverAddress.visibility = View.GONE
                 hostGame.visibility = View.VISIBLE
@@ -216,6 +236,12 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
 
                 if (!hasBluetoothPermission()) {
                     requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
+
+                    if (instantAppHelper.isInstantApp) {
+                        // instant apps do not support Bluetooth at all, so show install prompt
+                        instantAppHelper.showInstallPrompt(requireActivity())
+                        binding.serverType.check(R.id.radioButtonInternet)
+                    }
                     return@with
                 }
                 if (bluetoothServer == null) {
@@ -253,7 +279,10 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
             binding.text1.apply {
                 setText(R.string.bluetooth_disabled_message)
             }
-            bluetoothList.addView(binding.root, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            bluetoothList.addView(
+                binding.root,
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            )
             return
         }
 
@@ -263,7 +292,10 @@ class MultiplayerFragment : MaterialDialogFragment(R.layout.multiplayer_fragment
             with(JoinBluetoothDeviceBinding.inflate(layoutInflater, bluetoothList, false)) {
                 text1.text = device.name
                 root.setOnClickListener { onBluetoothDeviceClick(device) }
-                bluetoothList.addView(root, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                bluetoothList.addView(
+                    root,
+                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                )
             }
         }
     }
