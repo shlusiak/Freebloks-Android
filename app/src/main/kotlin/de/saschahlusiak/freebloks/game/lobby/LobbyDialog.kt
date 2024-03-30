@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -183,7 +184,7 @@ class LobbyDialog: MaterialDialogFragment(R.layout.lobby_dialog_fragment), GameE
             }
         }
 
-        viewModel.connectionStatus.observe(viewLifecycleOwner) { onConnectionStatusChanged(it) }
+        viewModel.connectionStatus.asLiveData().observe(viewLifecycleOwner) { onConnectionStatusChanged(it) }
         if (client.game.isStarted) {
             /* chat */
             startButton.visibility = View.GONE

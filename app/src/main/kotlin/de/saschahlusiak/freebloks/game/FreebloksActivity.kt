@@ -23,6 +23,7 @@ import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
@@ -187,7 +188,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }
         }
 
-        viewModel.connectionStatus.observe(this) { onConnectionStatusChanged(it) }
+        viewModel.connectionStatus.asLiveData().observe(this) { onConnectionStatusChanged(it) }
         viewModel.playerToShowInSheet.observe(this) { onPlayerSheetChanged(it) }
         viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
         viewModel.canRequestHint.observe(this) { binding.hintButton.isEnabled = it }

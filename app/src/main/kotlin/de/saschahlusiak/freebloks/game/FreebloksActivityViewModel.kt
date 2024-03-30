@@ -73,7 +73,6 @@ class FreebloksActivityViewModel @Inject constructor(
     // settings
     private var showNotifications: Boolean = true
     var showIntro = true
-    val soundsEnabled get() = sounds.soundsEnabled
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
         private set
@@ -99,9 +98,10 @@ class FreebloksActivityViewModel @Inject constructor(
 
     // LiveData
     val chatHistoryAsLiveData = chatHistory.asLiveData()
-    val soundsEnabledLiveData = MutableLiveData(sounds.soundsEnabled)
+    val soundsEnabled = MutableStateFlow(sounds.soundsEnabled)
+    val soundsEnabledLiveData = soundsEnabled.asLiveData()
     val chatButtonVisible = MutableLiveData(false)
-    val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
+    val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
     val googleAccountSignedIn: MutableLiveData<Boolean>
     val canRequestUndo = MutableLiveData(false)
@@ -135,7 +135,7 @@ class FreebloksActivityViewModel @Inject constructor(
             showIntro = !getBoolean("skip_intro", false)
         }
 
-        soundsEnabledLiveData.value = sounds.soundsEnabled
+        soundsEnabled.value = sounds.soundsEnabled
 
         if (showNotifications) {
             client?.let {
@@ -155,13 +155,13 @@ class FreebloksActivityViewModel @Inject constructor(
     }
 
     fun toggleSound(): Boolean {
-        val value = !soundsEnabled
+        val value = !sounds.soundsEnabled
         prefs
             .edit()
             .putBoolean("sounds", value)
             .apply()
         sounds.soundsEnabled = value
-        soundsEnabledLiveData.value = value
+        soundsEnabled.value = value
         return value
     }
 
@@ -345,7 +345,7 @@ class FreebloksActivityViewModel @Inject constructor(
         Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
         if (!client.connect(remote)) {
             // connection has failed, observers have been notified
-            connectionStatus.postValue(ConnectionStatus.Failed)
+            connectionStatus.value = ConnectionStatus.Failed
             connectJob = null
             return@launch
         }
@@ -363,7 +363,7 @@ class FreebloksActivityViewModel @Inject constructor(
                     client.requestPlayer(i, clientName)
         }
 
-        connectionStatus.postValue(ConnectionStatus.Connected)
+        connectionStatus.value = ConnectionStatus.Connected
     }
 
     @UiThread
@@ -579,7 +579,7 @@ class FreebloksActivityViewModel @Inject constructor(
         if (client === this.client) {
             // we may already have swapped to another client, which drives the status
             lastStatus = null
-            connectionStatus.postValue(ConnectionStatus.Disconnected)
+            connectionStatus.value = ConnectionStatus.Disconnected
             setSheetPlayer(-1, false)
             chatButtonVisible.postValue(false)
         }
