@@ -33,8 +33,8 @@
         <item quantity="other">%1$d Züge</item>
     </plurals>
     <string name="touch_to_skip">Intro überspringen</string>
-    <string name="no_player">kein Spieler</string>
-    <string name="not_connected">nicht verbunden</string>
+    <string name="no_player">Kein Spieler</string>
+    <string name="not_connected">Nicht verbunden</string>
     <string name="your_turn">Du bist dran, %1$s!</string>
     <string name="difficulty">Schwierigkeitsgrad</string>
     <string name="start">Start</string>
