@@ -88,14 +88,15 @@ internal class InsetDialogOnTouchListener(private val dialog: Dialog, insets: Re
     }
 }
 
-open class MaterialDialog : AppCompatDialog {
-
-    constructor(context: Context, overrideThemeResId: Int) : super(createMaterialThemedContext(context), overrideThemeResId)
+open class MaterialDialog(context: Context, overrideThemeResId: Int, val apply: Boolean = true) :
+    AppCompatDialog(createMaterialThemedContext(context), overrideThemeResId) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        applyMaterialBackground()
+        if (apply) {
+            applyMaterialBackground()
+        }
     }
 
     companion object {

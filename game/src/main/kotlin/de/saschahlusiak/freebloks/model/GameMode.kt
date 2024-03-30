@@ -14,7 +14,7 @@ enum class GameMode {
         val DEFAULT = GAMEMODE_4_COLORS_4_PLAYERS
 
 		fun from(ordinal: Int): GameMode {
-            for (gm in values()) if (gm.ordinal == ordinal) return gm
+            for (gm in entries) if (gm.ordinal == ordinal) return gm
             throw RuntimeException("Unknown game mode: $ordinal")
         }
     }

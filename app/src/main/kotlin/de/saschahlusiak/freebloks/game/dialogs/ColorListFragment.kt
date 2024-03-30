@@ -4,14 +4,20 @@ import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
+import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.databinding.ColorListFragmentBinding
 import de.saschahlusiak.freebloks.databinding.ColorListItemBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
@@ -20,6 +26,7 @@ import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMod
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
@@ -36,39 +43,74 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
     private val listView get() = binding.list ?: binding.grid
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialDialog(requireContext(), theme).apply {
+        return MaterialDialog(requireContext(), theme, !Feature.COMPOSE).apply {
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        title.gameMode.onItemSelectedListener = this@ColorListFragment
-        title.fieldSize.onItemSelectedListener = this@ColorListFragment
-
-        if (savedInstanceState != null) {
-            selection = savedInstanceState.getBooleanArray("color_selection")
-                ?: BooleanArray(4) { false }
-        }
-
-        adapter = ColorListAdapter()
-
-        // Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
-        // with class cast exception
-        listView?.apply {
-            adapter = this@ColorListFragment.adapter
-            onItemClickListener = this@ColorListFragment
-        }
-
-        startButton.setOnClickListener(this@ColorListFragment)
-        title.passAndPlay.setOnCheckedChangeListener(this@ColorListFragment)
-        adapter?.setPassAndPlay(title.passAndPlay.isChecked)
-        val previousGameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
-
-        // TODO: restore the previous field size; the setGameMode will set the default for the given game mode
-//		final int previousFieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE);
-        setGameMode(previousGameMode)
-        Unit
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return if (Feature.COMPOSE)
+            ComposeView(requireContext())
+        else super.onCreateView(inflater, container, savedInstanceState)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val previousGameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
+        val previousSize = prefs.getInt("fieldsize", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.defaultBoardSize())
+
+        if (view is ComposeView) {
+            dialog?.window?.setBackgroundDrawable(null)
+            view.setContent {
+                Content(previousGameMode, previousSize)
+            }
+            return
+        }
+
+        with(binding) {
+            title.gameMode.onItemSelectedListener = this@ColorListFragment
+            title.fieldSize.onItemSelectedListener = this@ColorListFragment
+
+            if (savedInstanceState != null) {
+                selection = savedInstanceState.getBooleanArray("color_selection")
+                    ?: BooleanArray(4) { false }
+            }
+
+            adapter = ColorListAdapter()
+
+            // Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
+            // with class cast exception
+            listView?.apply {
+                adapter = this@ColorListFragment.adapter
+                onItemClickListener = this@ColorListFragment
+            }
+
+            startButton.setOnClickListener(this@ColorListFragment)
+            title.passAndPlay.setOnCheckedChangeListener(this@ColorListFragment)
+            adapter?.setPassAndPlay(title.passAndPlay.isChecked)
+
+            // TODO: restore the previous field size; the setGameMode will set the default for the given game mode
+            //		final int previousFieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE);
+            setGameMode(previousGameMode)
+            Unit
+        }
+    }
+
+    @Composable
+    private fun Content(gameMode: GameMode, size: Int) {
+        AppTheme {
+            ColorListContent(gameMode, size) { gameMode, size, players ->
+                val config = buildConfiguration(players, gameMode, size)
+                listener.onStartClientGameWithConfig(config, null)
+                dismiss()
+
+                prefs.edit()
+                    .putInt("gamemode", config.gameMode.ordinal)
+                    .putInt("fieldsize", config.fieldSize)
+                    .apply()
+            }
+        }
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -105,7 +147,11 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
         } else {
             val players = BooleanArray(4)
             players[id.toInt()] = true
-            val config = buildConfiguration(players)
+            val config = buildConfiguration(
+                players = players,
+                mode = from(binding.title.gameMode.selectedItemPosition),
+                size = GameConfig.FIELD_SIZES[binding.title.fieldSize.selectedItemPosition]
+            )
             listener.onStartClientGameWithConfig(config, null)
             dismiss()
 
@@ -122,10 +168,7 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-    private fun buildConfiguration(players: BooleanArray?): GameConfig {
-        val mode = from(binding.title.gameMode.selectedItemPosition)
-        val size = GameConfig.FIELD_SIZES[binding.title.fieldSize.selectedItemPosition]
-
+    private fun buildConfiguration(players: BooleanArray?, mode: GameMode, size: Int): GameConfig {
         return GameConfig(
             isLocal = true,
             server = null,
@@ -149,7 +192,11 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
 
     override fun onClick(v: View) {
         val players = if (binding.title.passAndPlay.isChecked) selection else null
-        val config = buildConfiguration(players)
+        val config = buildConfiguration(
+            players = players,
+            mode = from(binding.title.gameMode.selectedItemPosition),
+            size = GameConfig.FIELD_SIZES[binding.title.fieldSize.selectedItemPosition]
+        )
         listener.onStartClientGameWithConfig(config, null)
         dismiss()
 

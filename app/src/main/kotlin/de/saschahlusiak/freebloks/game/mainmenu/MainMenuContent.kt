@@ -3,25 +3,19 @@ package de.saschahlusiak.freebloks.game.mainmenu
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.utils.Dialog
 
 @Composable
 fun MainMenuContent(
@@ -49,15 +44,9 @@ fun MainMenuContent(
     onToggleSound: () -> Unit
 ) {
     val buttonSize = dimensionResource(id = R.dimen.main_menu_button_height)
-    Surface(
-        modifier = Modifier.widthIn(300.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.dialog_corner_radius))
-    ) {
+    Dialog {
         Column(
-            Modifier
-                .width(IntrinsicSize.Min)
-                .padding(dimensionResource(id = R.dimen.main_menu_padding)),
+            Modifier.padding(dimensionResource(id = R.dimen.main_menu_padding))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TextButton(
@@ -96,8 +85,8 @@ fun MainMenuContent(
                         onClick = onNewGame,
                         modifier = Modifier
                             .weight(1f)
-                            .height(buttonSize)
-                            .padding(end = 4.dp),
+                            .padding(end = 4.dp)
+                            .heightIn(min = buttonSize),
                         content = { Text(stringResource(id = R.string.new_game)) }
                     )
 
@@ -111,7 +100,7 @@ fun MainMenuContent(
                     enabled = canResume,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(buttonSize),
+                        .heightIn(min = buttonSize),
                     content = { Text(stringResource(id = R.string.resume_game)) }
                 )
 
@@ -119,7 +108,7 @@ fun MainMenuContent(
                     onClick = onMultiplayer,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(buttonSize),
+                        .heightIn(min = buttonSize),
                     content = { Text(stringResource(id = R.string.multiplayer)) }
                 )
 
@@ -127,7 +116,7 @@ fun MainMenuContent(
                     onClick = onSettings,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(buttonSize),
+                        .heightIn(min = buttonSize),
                     content = { Text(stringResource(id = R.string.settings)) }
                 )
             }
@@ -137,7 +126,7 @@ fun MainMenuContent(
 
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, widthDp = 250, locale = "DE")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
 private fun Preview() {
     AppTheme {
         MainMenuContent(

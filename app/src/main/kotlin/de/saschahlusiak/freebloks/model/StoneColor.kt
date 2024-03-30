@@ -3,11 +3,13 @@ package de.saschahlusiak.freebloks.model
 import android.content.res.Resources
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import de.saschahlusiak.freebloks.R
 
 /**
  * The definition of all possible colors for all stones
  */
+@Immutable
 enum class StoneColor(
     @ColorRes val backgroundColorId: Int,
     @ColorRes val foregroundColorId: Int,
