@@ -7,8 +7,6 @@ plugins {
     id 'com.google.devtools.ksp'
 }
 
-android.buildFeatures.buildConfig true
-
 android {
     compileSdk = 34
     buildToolsVersion = '34.0.0'
@@ -62,7 +60,12 @@ android {
         }
     }
     buildFeatures {
+        buildConfig true
         viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.5.8"
     }
     lint {
         abortOnError false
