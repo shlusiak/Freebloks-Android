@@ -1,24 +1,32 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
-import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
+import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.databinding.CustomGameFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.model.GameMode.*
+import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 
-class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment), OnSeekBarChangeListener, View.OnClickListener, OnItemSelectedListener {
+class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment), OnSeekBarChangeListener,
+    View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index
     private val difficultyValues = intArrayOf(
         200, 150, 130, 90, 60, 40, 20, 10, 5, 2, 1
@@ -70,44 +78,87 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
             if (selection >= 0)
                 binding.difficultySlider.progress = selection
             else
-                // this is really just when the value is not found, which should never happen
+            // this is really just when the value is not found, which should never happen
                 binding.difficultySlider.progress = difficultyValues.size - 1
         }
 
-    private val playersAsBooleanArray get() = BooleanArray(4) {
-        /* this would otherwise request players two times, the server would hand out 2x2 = 4 players */
-        players[it].isChecked && (gameMode != GAMEMODE_4_COLORS_2_PLAYERS || it < 2)
-    }
+    private val playersAsBooleanArray
+        get() = BooleanArray(4) {
+            /* this would otherwise request players two times, the server would hand out 2x2 = 4 players */
+            players[it].isChecked && (gameMode != GAMEMODE_4_COLORS_2_PLAYERS || it < 2)
+        }
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        difficultySlider.setOnSeekBarChangeListener(this@CustomGameFragment)
-        difficultySlider.max = difficultyValues.size - 1
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (Feature.COMPOSE) {
+            return ComposeView(requireContext())
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
-        players = arrayOf(player1, player2, player3, player4)
-        picker = arrayOf(picker1, picker2, picker3, picker4, picker5)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (view is ComposeView) {
+            dialog?.window?.setBackgroundDrawable(null)
+            view.setContent {
+                Content()
+            }
+            return
+        }
 
-        gameModeSpinner.onItemSelectedListener = this@CustomGameFragment
-        advanced.setOnClickListener(this@CustomGameFragment)
-        player1.setOnClickListener(this@CustomGameFragment)
-        player2.setOnClickListener(this@CustomGameFragment)
-        cancel.setOnClickListener(this@CustomGameFragment)
-        ok.setOnClickListener(this@CustomGameFragment)
+        with(binding) {
+            difficultySlider.setOnSeekBarChangeListener(this@CustomGameFragment)
+            difficultySlider.max = difficultyValues.size - 1
 
-        difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
-        gameMode = GameMode.from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
-        fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
+            players = arrayOf(player1, player2, player3, player4)
+            picker = arrayOf(picker1, picker2, picker3, picker4, picker5)
 
-        setupDialog()
+            gameModeSpinner.onItemSelectedListener = this@CustomGameFragment
+            advanced.setOnClickListener(this@CustomGameFragment)
+            player1.setOnClickListener(this@CustomGameFragment)
+            player2.setOnClickListener(this@CustomGameFragment)
+            cancel.setOnClickListener(this@CustomGameFragment)
+            ok.setOnClickListener(this@CustomGameFragment)
+
+            difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
+            gameMode = GameMode.from(prefs.getInt("gamemode", GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
+            fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
+
+            setupDialog()
+        }
+    }
+
+    @Composable
+    private fun Content() {
+        AppTheme {
+            CustomGameContent(
+                onCancel = { dismiss() },
+                onStartGame = { gameMode, size, players ->
+                    val config = GameConfig(
+                        isLocal = true,
+                        server = null,
+                        gameMode = gameMode,
+                        showLobby = false,
+                        requestPlayers = players,
+                        difficulty = difficultyValues[5],
+                        stones = IntArray(Shape.COUNT) { 1 },
+                        fieldSize = size
+                    )
+
+                    listener.onStartClientGameWithConfig(config, null)
+                    dismiss()
+                }
+            )
+        }
     }
 
     private fun setupDialog() {
         players.forEach { it.isChecked = false }
-        val p = when(gameMode) {
+        val p = when (gameMode) {
             GAMEMODE_2_COLORS_2_PLAYERS -> (Math.random() * 2.0).toInt() * 2
             GAMEMODE_DUO,
             GAMEMODE_JUNIOR -> (Math.random() * 2.0).toInt() * 2
+
             GAMEMODE_4_COLORS_2_PLAYERS -> (Math.random() * 2.0).toInt()
             GAMEMODE_4_COLORS_4_PLAYERS -> (Math.random() * 4.0).toInt()
         }
@@ -146,16 +197,20 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
                     listener.onStartClientGameWithConfig(buildGameConfig(), null)
                     dismiss()
                 }
+
                 R.id.cancel -> {
                     dismiss()
                 }
+
                 R.id.advanced -> with(binding) {
                     advanced.visibility = View.GONE
                     customStonesLayout.visibility = View.VISIBLE
                 }
+
                 R.id.player1 -> if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) with(binding) {
                     player3.isChecked = player1.isChecked
                 }
+
                 R.id.player2 -> if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) with(binding) {
                     player4.isChecked = player2.isChecked
                 }
@@ -169,7 +224,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (gameMode) {
             GAMEMODE_DUO,
-            GAMEMODE_JUNIOR  -> {
+            GAMEMODE_JUNIOR -> {
                 players[0].isEnabled = true
                 players[1].isEnabled = false
                 players[2].isEnabled = true
@@ -182,6 +237,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
                  * last set size if != 14 */
                 fieldSize = 14
             }
+
             GAMEMODE_2_COLORS_2_PLAYERS -> {
                 players[0].isEnabled = true
                 players[2].isEnabled = true
@@ -195,6 +251,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
                  * last set size if != 15 */
                 fieldSize = 15
             }
+
             GAMEMODE_4_COLORS_2_PLAYERS -> {
                 var e: Boolean
                 players[0].isEnabled = true
@@ -210,6 +267,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
                 players[1].isChecked = e
                 players[3].isChecked = e
             }
+
             GAMEMODE_4_COLORS_4_PLAYERS -> {
                 players[0].isEnabled = true
                 players[1].isEnabled = true
@@ -257,9 +315,12 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState).apply {
+    override fun onCreateDialog(savedInstanceState: Bundle?) =
+        MaterialDialog(requireContext(), theme, !Feature.COMPOSE).apply {
             setTitle(R.string.custom_game)
+        }.apply {
+            if (Feature.COMPOSE) {
+                supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
+            }
         }
-    }
 }

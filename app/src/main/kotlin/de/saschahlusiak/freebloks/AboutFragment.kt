@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import de.saschahlusiak.freebloks.databinding.AboutActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 

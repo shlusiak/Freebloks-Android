@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import de.saschahlusiak.freebloks.R
 
 /**
@@ -89,3 +90,25 @@ enum class StoneColor(
 
 fun GameMode.colorOf(player: Int) = StoneColor.of(player, this)
 fun Game.colorOf(player: Int) = StoneColor.of(player, gameMode)
+
+@Stable
+fun GameMode.stoneColors() = when (this) {
+    GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> listOf(
+        StoneColor.Blue,
+        StoneColor.Red
+    )
+
+    GameMode.GAMEMODE_DUO,
+    GameMode.GAMEMODE_JUNIOR -> listOf(
+        StoneColor.Orange,
+        StoneColor.Purple
+    )
+
+    GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
+    GameMode.GAMEMODE_4_COLORS_4_PLAYERS -> listOf(
+        StoneColor.Blue,
+        StoneColor.Yellow,
+        StoneColor.Red,
+        StoneColor.Green
+    )
+}

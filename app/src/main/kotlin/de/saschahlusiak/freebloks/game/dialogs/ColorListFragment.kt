@@ -42,7 +42,7 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
 
     private val listView get() = binding.list ?: binding.grid
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreateDialog(savedInstanceState: Bundle?): MaterialDialog {
         return MaterialDialog(requireContext(), theme, !Feature.COMPOSE).apply {
             supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         }

@@ -138,7 +138,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), On
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreateDialog(savedInstanceState: Bundle?): MaterialDialog {
         return object : MaterialDialog(requireContext(), theme, apply = !Feature.COMPOSE) {
             override fun onBackPressed() {
                 activity.finish()
