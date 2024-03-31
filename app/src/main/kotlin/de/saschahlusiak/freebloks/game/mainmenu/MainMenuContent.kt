@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,7 +34,9 @@ import de.saschahlusiak.freebloks.utils.Dialog
 fun MainMenuContent(
     soundOn: Boolean,
     canResume: Boolean,
-    onAbout: () -> Unit,
+    title: String,
+    titleOutlined: Boolean,
+    onTitleClick: () -> Unit,
     onNewGame: () -> Unit,
     onCustomGame: () -> Unit,
     onResumeGame: () -> Unit,
@@ -49,11 +51,16 @@ fun MainMenuContent(
             Modifier.padding(dimensionResource(id = R.dimen.main_menu_padding))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(
-                    onClick = onAbout,
-                    modifier = Modifier
-                ) {
-                    Text(stringResource(id = R.string.app_name))
+                if (titleOutlined) {
+                    OutlinedButton(
+                        onClick = onTitleClick,
+                        modifier = Modifier
+                    ) { Text(title) }
+                } else {
+                    TextButton(
+                        onClick = onTitleClick,
+                        modifier = Modifier
+                    ) { Text(title) }
                 }
 
                 Spacer(Modifier.weight(1f))
@@ -132,7 +139,9 @@ private fun Preview() {
         MainMenuContent(
             soundOn = true,
             canResume = true,
-            onAbout = {},
+            title = "Title",
+            titleOutlined = true,
+            onTitleClick = {},
             onNewGame = {},
             onCustomGame = {},
             onResumeGame = {},

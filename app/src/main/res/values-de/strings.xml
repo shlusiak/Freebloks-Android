@@ -176,7 +176,7 @@
     <string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
-    <string name="prefs_donation">Spendiere mir einen Kaffee&#8230;</string>
+    <string name="prefs_donation">Kaffee&#8230;</string>
     <string name="prefs_player_name">Spielername</string>
     <string name="prefs_player_name_default">[nicht gesetzt]</string>
     <string name="prefs_background_theme">Hintergrundfarbe</string>

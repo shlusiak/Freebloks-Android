@@ -199,7 +199,7 @@
     <string name="prefs_rate_review_long">Please rate or leave a comment</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Please support the development with a donation</string>
-    <string name="prefs_donation">Buy me a coffee&#8230;</string>
+    <string name="prefs_donation">Coffee&#8230;</string>
     <string name="prefs_player_name">Player Name</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_background_theme">Background theme</string>

@@ -162,7 +162,7 @@
     <string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
     <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
     <string name="prefs_donation_long">Veuillez soutenir le développement par un don</string>
-    <string name="prefs_donation">Achète-moi un café&#8230;</string>
+    <string name="prefs_donation">Café&#8230;</string>
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_background_theme">Fond d\'écran </string>

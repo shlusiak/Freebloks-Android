@@ -11,14 +11,13 @@ import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -120,11 +119,15 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), On
                 }
             }
 
+            val title = stringResource(id = if (appIconIsDonate) R.string.prefs_donation else R.string.app_name)
+
             MainMenuContent(
                 soundOn = soundOn,
                 canResume = canResume,
+                title = title,
+                titleOutlined = appIconIsDonate,
                 onNewGame = ::onNewGame,
-                onAbout = ::onAbout,
+                onTitleClick = ::onAbout,
                 onCustomGame = ::onCustomGame,
                 onResumeGame = ::onResumeGame,
                 onMultiplayer = ::onMultiplayer,
@@ -148,7 +151,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), On
     override fun onStart() {
         super.onStart()
 
-        if (appIconIsDonate) {
+        if (appIconIsDonate && !Feature.COMPOSE) {
             binding.appIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.donate_pulse))
         }
     }

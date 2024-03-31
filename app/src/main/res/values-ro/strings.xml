@@ -199,7 +199,7 @@
     <string name="prefs_rate_review_long">Te rugăm, evaluează sau lasă un comentariu</string>
     <string name="prefs_rate_review">Freebloks în %1$s&#8230;</string>
     <string name="prefs_donation_long">Te rugăm, susţine creatorii cu o donaţie</string>
-    <string name="prefs_donation">Cumpără-mi o cafea&#8230;</string>
+    <string name="prefs_donation">O cafea&#8230;</string>
     <string name="prefs_player_name">Numele jucătorului</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_background_theme">Fundal</string>

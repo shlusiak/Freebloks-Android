@@ -156,7 +156,7 @@
     <string name="prefs_rate_review_long">評価またはコメントを残してください</string>
     <string name="prefs_rate_review">%1$s の Freebloks&#8230;</string>
     <string name="prefs_donation_long">寄付をして開発をサポートしてください</string>
-    <string name="prefs_donation">Freebloks をサポート&#8230;</string>
+    <string name="prefs_donation">をサポート&#8230;</string>
     <string name="prefs_player_name">プレイヤー名</string>
     <string name="prefs_player_name_default">[デフォルト]</string>
     <string name="prefs_background_theme">背景</string>
