@@ -38,7 +38,6 @@ fun MainMenuContent(
     titleOutlined: Boolean,
     onTitleClick: () -> Unit,
     onNewGame: () -> Unit,
-    onCustomGame: () -> Unit,
     onResumeGame: () -> Unit,
     onMultiplayer: () -> Unit,
     onSettings: () -> Unit,
@@ -87,20 +86,13 @@ fun MainMenuContent(
                 modifier = Modifier.padding(top = 6.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Row {
-                    Button(
-                        onClick = onNewGame,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 4.dp)
-                            .heightIn(min = buttonSize),
-                        content = { Text(stringResource(id = R.string.new_game)) }
-                    )
-
-                    FilledIconButton(onClick = onCustomGame, modifier = Modifier.size(buttonSize)) {
-                        Icon(imageVector = Icons.Filled.Settings, contentDescription = null)
-                    }
-                }
+                Button(
+                    onClick = onNewGame,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = buttonSize),
+                    content = { Text(stringResource(id = R.string.new_game)) }
+                )
 
                 Button(
                     onClick = onResumeGame,
@@ -143,7 +135,6 @@ private fun Preview() {
             titleOutlined = true,
             onTitleClick = {},
             onNewGame = {},
-            onCustomGame = {},
             onResumeGame = {},
             onMultiplayer = {},
             onSettings = {},

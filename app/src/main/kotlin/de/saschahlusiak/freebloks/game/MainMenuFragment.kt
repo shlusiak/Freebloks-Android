@@ -127,7 +127,6 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), On
                 titleOutlined = appIconIsDonate,
                 onNewGame = ::onNewGame,
                 onTitleClick = ::onAbout,
-                onCustomGame = ::onCustomGame,
                 onResumeGame = ::onResumeGame,
                 onMultiplayer = ::onMultiplayer,
                 onSettings = ::onSettings,
