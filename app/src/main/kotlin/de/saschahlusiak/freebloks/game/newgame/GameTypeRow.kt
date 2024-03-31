@@ -1,8 +1,7 @@
-package de.saschahlusiak.freebloks.game.dialogs
+package de.saschahlusiak.freebloks.game.newgame
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row

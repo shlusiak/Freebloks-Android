@@ -1,8 +1,9 @@
-package de.saschahlusiak.freebloks.game.dialogs
+package de.saschahlusiak.freebloks.game.newgame
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
@@ -98,12 +100,6 @@ fun NewGameScreen(
                 checked = multiplePlayers,
             ) { multiplePlayers = it }
 
-            DifficultySlider(difficulty) { difficulty = it }
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
             colors.forEachIndexed { index, stoneColor ->
                 val playerIndex = when (gameMode) {
                     GAMEMODE_2_COLORS_2_PLAYERS,
@@ -149,6 +145,10 @@ fun NewGameScreen(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
+            DifficultySlider(difficulty) { difficulty = it }
+
+            Spacer(Modifier.padding(4.dp))
+
             Row(
                 modifier = Modifier
                     .padding(horizontal = padding)
@@ -158,6 +158,7 @@ fun NewGameScreen(
                     onClick = { showStonesConfig = true },
                     modifier = Modifier
                         .size(buttonSize),
+                    colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = MaterialTheme.colorScheme.primary),
                     enabled = gameMode != GAMEMODE_JUNIOR
                 ) {
                     Icon(Icons.Filled.Settings, null)

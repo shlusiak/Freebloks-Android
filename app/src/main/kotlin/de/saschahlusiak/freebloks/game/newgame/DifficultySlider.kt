@@ -1,10 +1,12 @@
-package de.saschahlusiak.freebloks.game.dialogs
+package de.saschahlusiak.freebloks.game.newgame
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -13,8 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.model.GameMode
 import kotlin.math.roundToInt
 
 // the values of the difficulty slider for each index
@@ -59,6 +64,17 @@ fun DifficultySlider(difficulty: Int, onDifficultyChange: (Int) -> Unit) {
                 modifier = Modifier.padding(top = 4.dp),
                 valueRange = 0f..difficultyValues.size.toFloat() - 1f
             )
+        }
+    }
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+private fun Preview() {
+    AppTheme {
+        Surface {
+            DifficultySlider(4) { }
         }
     }
 }

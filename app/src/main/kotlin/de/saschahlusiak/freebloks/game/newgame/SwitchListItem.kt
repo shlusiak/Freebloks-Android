@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game.dialogs
+package de.saschahlusiak.freebloks.game.newgame
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

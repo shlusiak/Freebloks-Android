@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.game.dialogs
+package de.saschahlusiak.freebloks.game.newgame
 
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable

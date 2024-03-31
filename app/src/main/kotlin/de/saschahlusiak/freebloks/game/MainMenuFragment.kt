@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +27,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.databinding.MainMenuFragmentBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
-import de.saschahlusiak.freebloks.game.dialogs.ColorListFragment
+import de.saschahlusiak.freebloks.game.newgame.ColorListFragment
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameFragment
 import de.saschahlusiak.freebloks.game.dialogs.MultiplayerFragment
 import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent

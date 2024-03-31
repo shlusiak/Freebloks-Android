@@ -1,5 +1,6 @@
-package de.saschahlusiak.freebloks.game.dialogs
+package de.saschahlusiak.freebloks.game.newgame
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -17,8 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.model.StoneColor
 
 @Composable
@@ -60,6 +63,21 @@ internal fun ColorListItem(
             shadowElevation = 8.dp,
         ) {
             Spacer(modifier = Modifier.size(42.dp))
+        }
+    }
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+private fun Preview() {
+    AppTheme {
+        Surface {
+            ColorListItem(
+                color = StoneColor.Blue,
+                checkable = true,
+                checked = true,
+            ) { }
         }
     }
 }
