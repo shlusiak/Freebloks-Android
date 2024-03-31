@@ -8,10 +8,13 @@ import android.os.Bundle
  * A ProgressDialog with material style background
  */
 @Suppress("DEPRECATION")
-class MaterialProgressDialog(context: Context, theme: Int) : ProgressDialog(context, theme) {
+class MaterialProgressDialog(context: Context, theme: Int, val apply: Boolean = true) : ProgressDialog(context, theme) {
+    @Deprecated("Deprecated in Java")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        applyMaterialBackground()
+        if (apply) {
+            applyMaterialBackground()
+        }
     }
 }

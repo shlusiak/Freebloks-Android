@@ -24,7 +24,7 @@ import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent
 fun Dialog(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Surface(
         modifier = modifier
-            .widthIn(330.dp)
+            .widthIn(300.dp)
             .width(IntrinsicSize.Min)
             .height(IntrinsicSize.Min),
         color = MaterialTheme.colorScheme.primaryContainer,
