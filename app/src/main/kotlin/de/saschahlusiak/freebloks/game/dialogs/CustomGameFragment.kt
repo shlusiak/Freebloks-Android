@@ -1,26 +1,29 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
 import androidx.preference.PreferenceManager
 import com.shawnlin.numberpicker.NumberPicker
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.databinding.CustomGameFragmentBinding
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
-import de.saschahlusiak.freebloks.model.*
-import de.saschahlusiak.freebloks.model.GameMode.*
+import de.saschahlusiak.freebloks.model.Board
+import de.saschahlusiak.freebloks.model.GameConfig
+import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_2_COLORS_2_PLAYERS
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_2_PLAYERS
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_DUO
+import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_JUNIOR
+import de.saschahlusiak.freebloks.model.Shape
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
@@ -90,22 +93,7 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
 
     override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (Feature.COMPOSE) {
-            return ComposeView(requireContext())
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (view is ComposeView) {
-            dialog?.window?.setBackgroundDrawable(null)
-            view.setContent {
-                Content()
-            }
-            return
-        }
-
         with(binding) {
             difficultySlider.setOnSeekBarChangeListener(this@CustomGameFragment)
             difficultySlider.max = difficultyValues.size - 1
@@ -125,30 +113,6 @@ class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment)
             fieldSize = prefs.getInt("fieldsize", Board.DEFAULT_BOARD_SIZE)
 
             setupDialog()
-        }
-    }
-
-    @Composable
-    private fun Content() {
-        AppTheme {
-            CustomGameContent(
-                onCancel = { dismiss() },
-                onStartGame = { gameMode, size, players ->
-                    val config = GameConfig(
-                        isLocal = true,
-                        server = null,
-                        gameMode = gameMode,
-                        showLobby = false,
-                        requestPlayers = players,
-                        difficulty = difficultyValues[5],
-                        stones = IntArray(Shape.COUNT) { 1 },
-                        fieldSize = size
-                    )
-
-                    listener.onStartClientGameWithConfig(config, null)
-                    dismiss()
-                }
-            )
         }
     }
 

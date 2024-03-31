@@ -286,6 +286,11 @@ class FreebloksActivityViewModel @Inject constructor(
         if (requestPlayers == null) {
             client.requestPlayer(-1, clientName)
         } else {
+            if (config.gameMode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
+                requestPlayers[2] = false
+                requestPlayers[3] = false
+            }
+
             for (i in 0..3)
                 if (requestPlayers[i])
                     client.requestPlayer(i, clientName)

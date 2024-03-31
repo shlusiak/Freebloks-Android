@@ -202,6 +202,7 @@
 
     <string name="rules_duo_1">Blokus Duo ist eine zwei Spieler Version, die auf einem kleineren Brett gespielt wird. Die beiden Startpositionen befinden sich näher der Mitte des Bretts.</string>
     <string name="rules_junior_1">Blokus Junior ist an jüngere Kinder gerichtet. Wie Blokus Duo ist es eine zwei Spieler Variante auf einem 14x14 Spielbrett, aber nur eine Untermenge der Spielsteine wird verwendet, die eine einfachere Form besitzen. Jeder Spieler erhält zwei der insgesamt 12 verschiedenen Spielsteine. </string>
+    <string name="quantities">Steinanzahl</string>
     <string name="monomino">Monominos</string>
     <string name="domino">Dominos</string>
     <string name="tromino">Trominos</string>

@@ -24,10 +24,11 @@ import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent
 fun Dialog(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Surface(
         modifier = modifier
+            .padding(horizontal = 24.dp)
             .widthIn(300.dp)
             .width(IntrinsicSize.Min)
             .height(IntrinsicSize.Min),
-        color = MaterialTheme.colorScheme.primaryContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.dialog_corner_radius)),
         content = content
     )

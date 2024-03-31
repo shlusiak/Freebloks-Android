@@ -1,23 +1,21 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,111 +26,46 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_2_COLORS_2_PLAYERS
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_2_PLAYERS
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_4_COLORS_4_PLAYERS
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_DUO
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_JUNIOR
-import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.defaultBoardSize
+import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.model.stoneColors
 import de.saschahlusiak.freebloks.utils.Dialog
 
 @Composable
-private fun SwitchListItem(
-    text: String,
-    checked: Boolean,
-    modifier: Modifier = Modifier,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clickable(onClick = { onCheckedChange(!checked) })
-            .heightIn(min = 52.dp)
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.dialog_padding),
-                vertical = 8.dp
-            )
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.weight(1f)
-        )
-
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
-    }
-}
-
-@Composable
-internal fun ColorListItem(
-    color: StoneColor,
-    checkable: Boolean,
-    checked: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: (Boolean) -> Unit
-) {
-    val label = stringResource(id = color.labelResId)
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clickable(onClick = { onClick(!checked) })
-            .heightIn(min = 52.dp)
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.dialog_padding),
-                vertical = 8.dp
-            )
-    ) {
-        AnimatedVisibility(visible = checkable) {
-            Checkbox(
-                checked = checked,
-                modifier = Modifier.padding(end = 8.dp),
-                onCheckedChange = { onClick(!checked) }
-            )
-        }
-
-        Text(
-            text = label,
-            modifier = Modifier.weight(1f)
-        )
-
-        Surface(
-            color = colorResource(id = color.foregroundColorId),
-            shape = CircleShape,
-            shadowElevation = 8.dp,
-        ) {
-            Spacer(modifier = Modifier.size(42.dp))
-        }
-    }
-}
-
-@Composable
-fun ColorListContent(
+fun NewGameScreen(
     defaultMode: GameMode = GAMEMODE_4_COLORS_4_PLAYERS,
     defaultSize: Int = GameMode.DEFAULT.defaultBoardSize(),
-    onStartGame: (GameMode, Int, BooleanArray?) -> Unit
+    defaultDifficulty: Int = 4,
+    onStartGame: (GameConfig) -> Unit
 ) {
-    val buttonSize = dimensionResource(id = R.dimen.main_menu_button_height)
+    val buttonSize = 44.dp
     val padding = dimensionResource(id = R.dimen.dialog_padding)
 
-    Dialog {
-        var multiplePlayers by rememberSaveable { mutableStateOf(false) }
-        var gameMode by rememberSaveable { mutableStateOf(defaultMode) }
-        var players by rememberSaveable { mutableStateOf(BooleanArray(4) { false }) }
-        var size by rememberSaveable { mutableIntStateOf(defaultSize) }
+    var multiplePlayers by rememberSaveable { mutableStateOf(false) }
+    var gameMode by rememberSaveable { mutableStateOf(defaultMode) }
+    var players by rememberSaveable { mutableStateOf(BooleanArray(4) { false }) }
+    var size by rememberSaveable { mutableIntStateOf(defaultSize) }
+    var stones by rememberSaveable { mutableStateOf(GameConfig.defaultStonesForMode(defaultMode)) }
+    var difficulty by remember { mutableIntStateOf(defaultDifficulty) }
 
-        val colors = remember(gameMode) {
-            gameMode.stoneColors()
-        }
+    var showStonesConfig by rememberSaveable { mutableStateOf(false) }
+
+    Dialog {
+        val colors = remember(gameMode) { gameMode.stoneColors() }
 
         val scrollState = rememberScrollState()
 
@@ -154,6 +87,7 @@ fun ColorListContent(
                 onGameMode = {
                     gameMode = it
                     size = gameMode.defaultBoardSize()
+                    stones = gameMode.defaultStoneSet()
                     players = BooleanArray(4) { false }
                 },
                 onSize = { size = it }
@@ -163,6 +97,12 @@ fun ColorListContent(
                 text = stringResource(id = R.string.multiple_players),
                 checked = multiplePlayers,
             ) { multiplePlayers = it }
+
+            DifficultySlider(difficulty) { difficulty = it }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
             colors.forEachIndexed { index, stoneColor ->
                 val playerIndex = when (gameMode) {
@@ -189,26 +129,77 @@ fun ColorListContent(
                     } else {
                         players = BooleanArray(4)
                         players[playerIndex] = true
-                        onStartGame(gameMode, size, players)
+                        onStartGame(
+                            GameConfig(
+                                isLocal = true,
+                                server = null,
+                                gameMode = gameMode,
+                                showLobby = false,
+                                requestPlayers = players,
+                                difficulty = difficulty,
+                                stones = stones,
+                                fieldSize = size
+                            )
+                        )
                     }
                 }
             }
 
-            Button(
-                onClick = {
-                    if (multiplePlayers) {
-                        onStartGame(gameMode, size, players)
-                    } else {
-                        onStartGame(gameMode, size, null)
-                    }
-                },
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(horizontal = padding)
                     .padding(top = 4.dp, bottom = padding)
-                    .heightIn(min = buttonSize)
             ) {
-                Text(stringResource(id = if (multiplePlayers) R.string.start else R.string.random_color))
+                OutlinedIconButton(
+                    onClick = { showStonesConfig = true },
+                    modifier = Modifier
+                        .size(buttonSize),
+                    enabled = gameMode != GAMEMODE_JUNIOR
+                ) {
+                    Icon(Icons.Filled.Settings, null)
+                }
+
+                Button(
+                    onClick = {
+                        onStartGame(
+                            GameConfig(
+                                isLocal = true,
+                                server = null,
+                                gameMode = gameMode,
+                                showLobby = false,
+                                requestPlayers = players.takeIf { multiplePlayers },
+                                difficulty = difficulty,
+                                stones = stones,
+                                fieldSize = size
+                            )
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 6.dp)
+                        .heightIn(min = buttonSize)
+                ) {
+                    Text(stringResource(id = if (multiplePlayers) R.string.start else R.string.random_color))
+                }
+            }
+        }
+    }
+
+    if (showStonesConfig) {
+        Dialog(onDismissRequest = { showStonesConfig = false }) {
+            AppTheme {
+                StonesConfigScreen(
+                    stones,
+                    onCancel = { showStonesConfig = false },
+                    onOk = {
+                        stones = it
+                        showStonesConfig = false
+                    }
+                )
             }
         }
     }
@@ -219,8 +210,6 @@ fun ColorListContent(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
 private fun Preview() {
     AppTheme {
-        ColorListContent { gameMode, size, stoneColors ->
-
-        }
+        NewGameScreen { }
     }
 }

@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
-import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
@@ -14,7 +13,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
@@ -57,11 +55,12 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val previousGameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
         val previousSize = prefs.getInt("fieldsize", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.defaultBoardSize())
+        val difficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
 
         if (view is ComposeView) {
             dialog?.window?.setBackgroundDrawable(null)
             view.setContent {
-                Content(previousGameMode, previousSize)
+                Content(previousGameMode, previousSize, difficulty)
             }
             return
         }
@@ -96,16 +95,16 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
     }
 
     @Composable
-    private fun Content(gameMode: GameMode, size: Int) {
+    private fun Content(gameMode: GameMode, size: Int, difficulty: Int) {
         AppTheme {
-            ColorListContent(gameMode, size) { gameMode, size, players ->
-                val config = buildConfiguration(players, gameMode, size)
+            NewGameScreen(gameMode, size, difficulty) { config ->
                 listener.onStartClientGameWithConfig(config, null)
                 dismiss()
 
                 prefs.edit()
                     .putInt("gamemode", config.gameMode.ordinal)
                     .putInt("fieldsize", config.fieldSize)
+                    .putInt("difficulty", config.difficulty)
                     .apply()
             }
         }

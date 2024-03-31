@@ -1,8 +1,10 @@
 package de.saschahlusiak.freebloks.game.dialogs
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -14,6 +16,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,8 +25,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 
@@ -92,7 +97,8 @@ private fun DropDown(
     ) {
         OutlinedButton(
             onClick = { isExpanded = true },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
             Text(text = labels[selection])
             Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = null)
@@ -108,6 +114,22 @@ private fun DropDown(
                     isExpanded = false
                 })
             }
+        }
+    }
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+private fun Preview() {
+    AppTheme {
+        Surface {
+            GameTypeRow(
+                modifier = Modifier,
+                GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
+                20,
+                {}, {}
+            )
         }
     }
 }

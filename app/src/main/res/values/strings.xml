@@ -30,6 +30,7 @@
     <string name="bluetooth_disabled_message">Bluetooth turned off or no devices paired</string>
     <string name="multiple_players">Multiple players</string>
 
+    <string name="quantities">Quantities</string>
     <string name="monomino">Monominos</string>
     <string name="domino">Dominos</string>
     <string name="tromino">Trominos</string>
