@@ -29,6 +29,7 @@ import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.utils.Dialog
+import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
 private fun SizeSelector(
@@ -136,14 +137,12 @@ fun StonesConfigScreen(
                     Text(stringResource(id = android.R.string.ok))
                 }
             }
-
         }
     }
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+@Previews
 private fun Preview() {
     AppTheme {
         StonesConfigScreen(GameConfig.DEFAULT_STONE_SET, {}, {})

@@ -23,6 +23,7 @@ import com.google.android.material.R
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 
+@Deprecated("Delete")
 fun Dialog.applyMaterialBackground() {
     val context = context
     val decorView = window?.decorView
@@ -55,7 +56,7 @@ fun Dialog.applyMaterialBackground() {
     }
 }
 
-internal class InsetDialogOnTouchListener(private val dialog: Dialog, insets: Rect) : View.OnTouchListener {
+private class InsetDialogOnTouchListener(private val dialog: Dialog, insets: Rect) : View.OnTouchListener {
     private val leftInset: Int
     private val topInset: Int
     private val prePieSlop: Int
@@ -88,6 +89,7 @@ internal class InsetDialogOnTouchListener(private val dialog: Dialog, insets: Re
     }
 }
 
+@Deprecated("Delete")
 open class MaterialDialog(context: Context, overrideThemeResId: Int, val apply: Boolean = true) :
     AppCompatDialog(createMaterialThemedContext(context), overrideThemeResId) {
 

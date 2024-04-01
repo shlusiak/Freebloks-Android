@@ -1,11 +1,10 @@
-package de.saschahlusiak.freebloks.game.newgame
+package de.saschahlusiak.freebloks.game.multiplayer
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Switch
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -16,11 +15,11 @@ import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 
 @Composable
-internal fun SwitchListItem(
+internal fun RadioButtonListItem(
     text: String,
-    checked: Boolean,
+    selected: Boolean,
     modifier: Modifier = Modifier,
-    onCheckedChange: (Boolean) -> Unit
+    onSelected: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -28,25 +27,26 @@ internal fun SwitchListItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clickable(
-                onClick = { onCheckedChange(!checked) },
+                onClick = { onSelected() },
                 interactionSource = interactionSource,
                 indication = null
             )
-            .heightIn(min = 52.dp)
             .padding(
                 horizontal = dimensionResource(id = R.dimen.dialog_padding),
                 vertical = 8.dp
             )
     ) {
-        Text(
-            text = text,
-            modifier = Modifier.weight(1f)
+        RadioButton(
+            selected = selected,
+            onClick = onSelected,
+            interactionSource = interactionSource
         )
 
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            interactionSource = interactionSource
+        Text(
+            text = text,
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp)
         )
     }
 }

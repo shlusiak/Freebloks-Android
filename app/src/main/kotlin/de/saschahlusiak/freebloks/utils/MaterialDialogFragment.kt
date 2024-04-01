@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatDialogFragment
 
+@Deprecated("Delete")
 open class MaterialDialogFragment(@LayoutRes val layoutResId: Int?) : AppCompatDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return if (layoutResId == null) {

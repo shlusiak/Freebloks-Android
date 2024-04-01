@@ -30,6 +30,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
 fun GameTypeRow(
@@ -97,7 +98,7 @@ private fun DropDown(
         OutlinedButton(
             onClick = { isExpanded = true },
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 12.dp)
+            contentPadding = PaddingValues(start = 12.dp, end = 6.dp)
         ) {
             Text(text = labels[selection])
             Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = null)
@@ -118,8 +119,7 @@ private fun DropDown(
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+@Previews
 private fun Preview() {
     AppTheme {
         Surface {

@@ -10,19 +10,19 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object ConfigModule {
     @Provides
     @Singleton
-    fun provideAnalytics(impl: FirebaseAnalyticsProvider): AnalyticsProvider = impl
+    fun provideAnalytics(app: Application): AnalyticsProvider = EmptyAnalyticsProvider()
 
     @Provides
     @Singleton
-    fun provideGamesHelper(impl: DefaultGooglePlayGamesHelper): GooglePlayGamesHelper = impl
+    fun provideGamesHelper(app: Application): GooglePlayGamesHelper = EmptyGooglePlayGamesHelper()
 
     @Provides
     @Singleton
-    fun crashReporter(app: Application): CrashReporter = CrashlyticsCrashReporter(app, isEnabled = !BuildConfig.DEBUG)
+    fun crashReporter(): CrashReporter = EmptyCrashReporter()
 
     @Provides
-    fun instantAppHandler(impl: GooglePlayInstantAppHandler): InstantAppHelper = impl
+    fun instantAppHelper(): InstantAppHelper = DefaultInstantAppHelper()
 }

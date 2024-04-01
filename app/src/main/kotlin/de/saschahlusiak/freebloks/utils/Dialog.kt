@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,9 +26,9 @@ fun Dialog(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Surface(
         modifier = modifier
             .padding(horizontal = 24.dp)
-            .widthIn(300.dp)
-            .width(IntrinsicSize.Min)
-            .height(IntrinsicSize.Min),
+            .widthIn(min = 300.dp)
+//            .width(IntrinsicSize.Min)
+            .wrapContentSize(),
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.dialog_corner_radius)),
         content = content
@@ -35,8 +36,7 @@ fun Dialog(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+@Previews
 private fun Preview() {
     AppTheme {
         Dialog {

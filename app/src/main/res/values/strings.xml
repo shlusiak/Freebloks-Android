@@ -86,6 +86,7 @@
     </plurals>
     <string name="chat">Chat</string>
     <string name="join_player_name">Your name:</string>
+    <string name="player_name_hint">Enter player name</string>
     <string name="client_d">Player %1$d</string>
     <string name="player_joined_color">%1$s is playing %2$s</string>
     <string name="player_left_color">%1$s (%2$s) has left</string>

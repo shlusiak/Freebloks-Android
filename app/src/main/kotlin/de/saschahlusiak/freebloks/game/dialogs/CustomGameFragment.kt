@@ -28,6 +28,7 @@ import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.viewBinding
 
+@Deprecated("Delete")
 class CustomGameFragment : MaterialDialogFragment(R.layout.custom_game_fragment), OnSeekBarChangeListener,
     View.OnClickListener, OnItemSelectedListener {
     // the values of the difficulty slider for each index

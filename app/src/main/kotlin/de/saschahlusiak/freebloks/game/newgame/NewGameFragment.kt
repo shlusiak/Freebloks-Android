@@ -30,7 +30,7 @@ import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.prefs
 import de.saschahlusiak.freebloks.utils.viewBinding
 
-class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class NewGameFragment : MaterialDialogFragment(R.layout.color_list_fragment), OnItemClickListener, OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private var adapter: ColorListAdapter? = null
     private var selection = BooleanArray(4) { false }
     private val listener get() = (requireActivity() as OnStartCustomGameListener)
@@ -66,8 +66,8 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
         }
 
         with(binding) {
-            title.gameMode.onItemSelectedListener = this@ColorListFragment
-            title.fieldSize.onItemSelectedListener = this@ColorListFragment
+            title.gameMode.onItemSelectedListener = this@NewGameFragment
+            title.fieldSize.onItemSelectedListener = this@NewGameFragment
 
             if (savedInstanceState != null) {
                 selection = savedInstanceState.getBooleanArray("color_selection")
@@ -79,12 +79,12 @@ class ColorListFragment : MaterialDialogFragment(R.layout.color_list_fragment), 
             // Can't have the same id for list and grid, otherwise rotate on Android 2.3 crashes
             // with class cast exception
             listView?.apply {
-                adapter = this@ColorListFragment.adapter
-                onItemClickListener = this@ColorListFragment
+                adapter = this@NewGameFragment.adapter
+                onItemClickListener = this@NewGameFragment
             }
 
-            startButton.setOnClickListener(this@ColorListFragment)
-            title.passAndPlay.setOnCheckedChangeListener(this@ColorListFragment)
+            startButton.setOnClickListener(this@NewGameFragment)
+            title.passAndPlay.setOnCheckedChangeListener(this@NewGameFragment)
             adapter?.setPassAndPlay(title.passAndPlay.isChecked)
 
             // TODO: restore the previous field size; the setGameMode will set the default for the given game mode

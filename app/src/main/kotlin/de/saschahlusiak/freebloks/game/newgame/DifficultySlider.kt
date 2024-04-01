@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.utils.Previews
 import kotlin.math.roundToInt
 
 // the values of the difficulty slider for each index
@@ -69,8 +70,7 @@ fun DifficultySlider(difficulty: Int, onDifficultyChange: (Int) -> Unit) {
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+@Previews
 private fun Preview() {
     AppTheme {
         Surface {

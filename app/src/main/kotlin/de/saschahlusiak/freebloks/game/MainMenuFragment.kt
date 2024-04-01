@@ -20,16 +20,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
-import de.saschahlusiak.freebloks.AboutFragment
+import de.saschahlusiak.freebloks.about.AboutFragment
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.databinding.MainMenuFragmentBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
-import de.saschahlusiak.freebloks.game.newgame.ColorListFragment
+import de.saschahlusiak.freebloks.game.newgame.NewGameFragment
 import de.saschahlusiak.freebloks.game.dialogs.CustomGameFragment
-import de.saschahlusiak.freebloks.game.dialogs.MultiplayerFragment
+import de.saschahlusiak.freebloks.game.multiplayer.MultiplayerFragment
 import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
@@ -156,7 +156,7 @@ class MainMenuFragment : MaterialDialogFragment(R.layout.main_menu_fragment), On
 
     private fun onNewGame() {
         analytics.logEvent("menu_new_game_click", null)
-        ColorListFragment().show(parentFragmentManager, null)
+        NewGameFragment().show(parentFragmentManager, null)
     }
 
     private fun onResumeGame() {

@@ -31,6 +31,7 @@ import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.MaterialDialog
 import de.saschahlusiak.freebloks.utils.MaterialDialogFragment
 import de.saschahlusiak.freebloks.utils.MaterialProgressDialog
+import de.saschahlusiak.freebloks.utils.Previews
 
 /**
  * Simple dialog fragment to show "Connecting to server..." that disconnects the client on cancel.
@@ -101,8 +102,7 @@ class ConnectingDialog : MaterialDialogFragment(null) {
     }
 
     @Composable
-    @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-    @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+    @Previews
     private fun Preview() {
         AppTheme {
             DialogContent()

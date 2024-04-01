@@ -46,6 +46,7 @@ import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.model.stoneColors
 import de.saschahlusiak.freebloks.utils.Dialog
+import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
 fun NewGameScreen(
@@ -207,8 +208,7 @@ fun NewGameScreen(
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, locale = "DE")
+@Previews
 private fun Preview() {
     AppTheme {
         NewGameScreen { }
