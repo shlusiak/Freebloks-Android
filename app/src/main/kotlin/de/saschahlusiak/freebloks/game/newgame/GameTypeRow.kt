@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game.newgame
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,12 +36,14 @@ fun GameTypeRow(
     modifier: Modifier,
     gameMode: GameMode,
     size: Int,
+    enabled: Boolean = true,
     onGameMode: (GameMode) -> Unit,
     onSize: (Int) -> Unit
 ) {
     Row(modifier) {
         GameModeDropDown(
             modifier = Modifier.weight(1f),
+            enabled = enabled,
             gameMode = gameMode
         ) {
             onGameMode(it)
@@ -51,7 +52,8 @@ fun GameTypeRow(
         SizesDropDown(
             modifier = Modifier
                 .padding(start = 8.dp),
-            size = size
+            size = size,
+            enabled = enabled
         ) { onSize(it) }
     }
 }
@@ -60,10 +62,15 @@ fun GameTypeRow(
 private fun GameModeDropDown(
     modifier: Modifier,
     gameMode: GameMode,
+    enabled: Boolean = true,
     onGameMode: (GameMode) -> Unit
 ) {
     val labels = stringArrayResource(id = R.array.game_modes)
-    DropDown(labels = labels, selection = gameMode.ordinal, modifier = modifier) {
+    DropDown(
+        labels = labels,
+        selection = gameMode.ordinal,
+        modifier = modifier
+    ) {
         onGameMode(GameMode.from(it))
     }
 }
@@ -72,11 +79,17 @@ private fun GameModeDropDown(
 private fun SizesDropDown(
     modifier: Modifier,
     size: Int,
+    enabled: Boolean = true,
     onSize: (Int) -> Unit
 ) {
     val sizes = GameConfig.FIELD_SIZES
     val labels = stringArrayResource(id = R.array.game_field_sizes)
-    DropDown(labels = labels, selection = sizes.indexOf(size), modifier = modifier) {
+    DropDown(
+        labels = labels,
+        selection = sizes.indexOf(size),
+        enabled = enabled,
+        modifier = modifier
+    ) {
         onSize(sizes[it])
     }
 }
@@ -86,6 +99,7 @@ private fun DropDown(
     labels: Array<String>,
     selection: Int,
     modifier: Modifier,
+    enabled: Boolean = true,
     onSelected: (Int) -> Unit
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -98,6 +112,7 @@ private fun DropDown(
         OutlinedButton(
             onClick = { isExpanded = true },
             modifier = Modifier.fillMaxSize(),
+            enabled = enabled,
             contentPadding = PaddingValues(start = 12.dp, end = 6.dp)
         ) {
             Text(text = labels[selection])
@@ -125,9 +140,11 @@ private fun Preview() {
         Surface {
             GameTypeRow(
                 modifier = Modifier,
-                GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
-                20,
-                {}, {}
+                gameMode = GameMode.GAMEMODE_4_COLORS_2_PLAYERS,
+                size = 20,
+                enabled = true,
+                onGameMode = {},
+                onSize = {}
             )
         }
     }

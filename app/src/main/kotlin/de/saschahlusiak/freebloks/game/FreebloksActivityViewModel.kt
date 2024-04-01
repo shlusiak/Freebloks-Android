@@ -58,7 +58,7 @@ data class SheetPlayer(
 
 @HiltViewModel
 class FreebloksActivityViewModel @Inject constructor(
-    private val app: Application,
+    app: Application,
     private val crashReporter: CrashReporter,
     private val analytics: AnalyticsProvider,
     val gameHelper: GooglePlayGamesHelper
@@ -90,8 +90,7 @@ class FreebloksActivityViewModel @Inject constructor(
         private set
     val game get() = client?.game
     val board get() = client?.game?.board
-    var lastStatus: MessageServerStatus? = null
-        private set
+    val lastStatus = MutableStateFlow<MessageServerStatus?>(null)
 
     private val chatHistory = MutableStateFlow(emptyList<ChatItem>())
     val sounds: BaseSounds = DefaultSounds(app)
@@ -130,7 +129,7 @@ class FreebloksActivityViewModel @Inject constructor(
             showSeeds = getBoolean("show_seeds", true)
             showOpponents = getBoolean("show_opponents", true)
             val animationType = getString("animations", AnimationType.Full.settingsValue.toString())?.toInt() ?: 0
-            showAnimations = AnimationType.values().firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
+            showAnimations = AnimationType.entries.firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
             snapAid = getBoolean("snap_aid", true)
             showIntro = !getBoolean("skip_intro", false)
         }
@@ -435,7 +434,7 @@ class FreebloksActivityViewModel @Inject constructor(
         }
 
         // then either the name of the player, or the name of the color if not
-        return lastStatus?.getPlayerName(player) ?: colorName
+        return lastStatus.value?.getPlayerName(player) ?: colorName
     }
 
     fun requestHint() {
@@ -455,7 +454,7 @@ class FreebloksActivityViewModel @Inject constructor(
     @UiThread
     override fun onConnected(client: GameClient) {
         Log.d(tag, "onConnected")
-        lastStatus = null
+        lastStatus.value = null
         connectionStatus.value = ConnectionStatus.Connected
         playerToShowInSheet.value = SheetPlayer(client.game.currentPlayer, false)
         canRequestHint.value = (client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
@@ -470,7 +469,7 @@ class FreebloksActivityViewModel @Inject constructor(
         reloadPreferences()
 
         // Send analytics event
-        val lastStatus = lastStatus ?: return
+        val lastStatus = lastStatus.value ?: return
 
         val client = client ?: return
         val game = client.game
@@ -492,7 +491,7 @@ class FreebloksActivityViewModel @Inject constructor(
 
     @UiThread
     override fun serverStatus(status: MessageServerStatus) {
-        this.lastStatus = status
+        lastStatus.value = status
 
         if (status.clients > 1) {
             chatButtonVisible.postValue(true)
@@ -525,7 +524,7 @@ class FreebloksActivityViewModel @Inject constructor(
             client.game.isLocalPlayer() &&
             client.game.isStarted &&
             !client.game.isFinished &&
-            (lastStatus?.clients == 1) &&
+            (lastStatus.value?.clients == 1) &&
             !client.game.history.isEmpty()
         )
     }
@@ -536,7 +535,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val isLocal = game?.isLocalPlayer(player) ?: false
         val e = ChatItem.Message(client, if (player < 0) null else player, isLocal, name, message)
 
-        chatHistory.value = chatHistory.value + e
+        chatHistory.value += e
     }
 
     @UiThread
@@ -550,7 +549,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
         val e = ChatItem.Server(player, text)
 
-        chatHistory.value = chatHistory.value + e
+        chatHistory.value += e
     }
 
     @UiThread
@@ -564,7 +563,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val text = context.getString(R.string.player_left_color, clientName, colorName)
         val e = ChatItem.Server(player, text)
 
-        chatHistory.value = chatHistory.value + e
+        chatHistory.value += e
     }
 
     @UiThread
@@ -583,7 +582,7 @@ class FreebloksActivityViewModel @Inject constructor(
         Log.d(tag, "onDisconneced")
         if (client === this.client) {
             // we may already have swapped to another client, which drives the status
-            lastStatus = null
+            lastStatus.value = null
             connectionStatus.value = ConnectionStatus.Disconnected
             setSheetPlayer(-1, false)
             chatButtonVisible.postValue(false)

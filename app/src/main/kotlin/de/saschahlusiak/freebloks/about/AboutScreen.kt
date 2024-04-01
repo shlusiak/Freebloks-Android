@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -103,7 +105,7 @@ fun AboutScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (!Global.IS_VIP) {
-                    TextButton(onClick = onDonate) {
+                    OutlinedButton(onClick = onDonate) {
                         Text(stringResource(id = R.string.prefs_donation))
                     }
                 }
@@ -117,7 +119,7 @@ fun AboutScreen(
                     color = MaterialTheme.colorScheme.tertiary
                 )
 
-                TextButton(onClick = onDismiss) {
+                Button(onClick = onDismiss) {
                     Text(stringResource(id = android.R.string.ok))
                 }
 

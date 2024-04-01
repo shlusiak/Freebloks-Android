@@ -41,6 +41,7 @@ import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.game.rate.RateAppFragment.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
+import de.saschahlusiak.freebloks.game.lobby.LobbyDialogOld
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
@@ -470,7 +471,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
     override fun onBackPressed() {
         val client = viewModel.client
-        val lastStatus = viewModel.lastStatus
+        val lastStatus = viewModel.lastStatus.value
 
         if (menuShown) {
             showMenu(shown = false, animate = true)
@@ -680,7 +681,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     @WorkerThread
     override fun gameFinished() {
         val client = viewModel.client ?: return
-        val lastStatus = viewModel.lastStatus ?: return
+        val lastStatus = viewModel.lastStatus.value ?: return
 
         val b = Bundle().apply {
             putString("server", client.config.server)

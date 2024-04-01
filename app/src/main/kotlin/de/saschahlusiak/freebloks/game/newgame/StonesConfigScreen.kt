@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -124,7 +125,7 @@ fun StonesConfigScreen(
 
                 Spacer(Modifier.padding(4.dp))
 
-                OutlinedButton(onClick = {
+                Button(onClick = {
                     onOk(
                         IntArray(Shape.COUNT) {
                             selections[Shape.get(it).points - 1]
