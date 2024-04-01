@@ -37,7 +37,6 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
-import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
 import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.game.rate.RateAppFragment.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
