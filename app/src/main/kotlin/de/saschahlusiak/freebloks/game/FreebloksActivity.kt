@@ -41,7 +41,6 @@ import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.game.rate.RateAppFragment.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
-import de.saschahlusiak.freebloks.game.lobby.LobbyDialogOld
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game

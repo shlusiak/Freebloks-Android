@@ -5,10 +5,27 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.sharp.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -71,17 +88,29 @@ fun PlayersRow(
                             elevation = ButtonDefaults.buttonElevation(4.dp),
                             modifier = Modifier.weight(1f)
                         ) {
+                            if (player.isLocal) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Person,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 6.dp)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.Lock,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 6.dp)
+                                )
+                            }
                             Text(
                                 text = player.name ?: stringResource(id = R.string.client_d, player.client + 1),
                                 maxLines = 1,
-                                style = MaterialTheme.typography.labelMedium,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
                     } else {
                         OutlinedButton(
                             onClick = { onTogglePlayer(player.player) },
-                            enabled = isAvailable && !isRunning,
+                            enabled = !isRunning,
                             border = BorderStroke(2.dp, color = background),
                             modifier = Modifier.weight(1f)
                         ) {

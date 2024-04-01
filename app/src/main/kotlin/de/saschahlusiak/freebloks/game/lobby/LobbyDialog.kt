@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
-import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import androidx.compose.runtime.Composable
@@ -21,13 +18,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.databinding.EditNameDialogBinding
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.colorOf
@@ -35,7 +29,7 @@ import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 
-class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
+class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
 
     private val viewModel: FreebloksActivityViewModel by viewModels(ownerProducer = { requireActivity() })
     private val client get() = viewModel.client
@@ -188,41 +182,6 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener, Co
 
     override fun onCancel(dialog: DialogInterface) {
         listener.onLobbyDialogCancelled()
-    }
-
-    override fun onEditPlayerName(player: Int) {
-        val client = client ?: return
-        val lastStatus = client.lastStatus ?: return
-
-        val dialogBinding = EditNameDialogBinding.inflate(layoutInflater, null, false)
-        val edit = dialogBinding.edit.apply {
-            setText(lastStatus.getClientName(lastStatus.getClient(player)))
-        }
-
-        // FIXME
-        MaterialAlertDialogBuilder(requireContext()).apply {
-            setView(dialogBinding.root)
-            setTitle(R.string.prefs_player_name)
-            setPositiveButton(android.R.string.ok) { _, _ ->
-                val name = edit.text.toString().trim()
-                PreferenceManager.getDefaultSharedPreferences(context)
-                    .edit()
-                    .putString("player_name", name)
-                    .apply()
-
-                viewModel.reloadPreferences()
-
-                client.revokePlayer(player)
-                client.requestPlayer(player, name)
-            }
-            setNegativeButton(android.R.string.cancel) { _, _ -> }
-        }.show().apply {
-            edit.selectAll()
-            edit.requestFocus()
-
-            window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
-            window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-        }
     }
 
     override fun onItemClick(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
