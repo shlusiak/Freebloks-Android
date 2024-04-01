@@ -25,7 +25,7 @@ class MultiplayerViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val prefs: SharedPreferences
 ) : ViewModel() {
-    private var bluetoothAdapter: BluetoothAdapter? = null
+    val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
     val bluetoothDevices = MutableStateFlow(emptyList<BluetoothDevice>())
     val type = MutableStateFlow(NetworkType.Internet)
@@ -34,8 +34,6 @@ class MultiplayerViewModel @Inject constructor(
     val server = MutableStateFlow(prefs.getString("custom_server", "") ?: "")
 
     init {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-
         type.onEach {
             if (it == NetworkType.Bluetooth) {
                 updateBluetoothDevices()

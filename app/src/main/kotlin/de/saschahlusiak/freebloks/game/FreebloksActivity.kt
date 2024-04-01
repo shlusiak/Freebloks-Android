@@ -38,8 +38,8 @@ import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateActivity
 import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
-import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment
-import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment.Companion.shouldShowRateDialog
+import de.saschahlusiak.freebloks.game.rate.RateAppFragment
+import de.saschahlusiak.freebloks.game.rate.RateAppFragment.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -130,8 +130,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         } else {
             view.setScale(prefs.getFloat("view_scale", 1.0f))
             showRateDialog = shouldShowRateDialog(this)
+
             val starts = prefs.getLong("rate_number_of_starts", 0)
 
+            // At exactly this many starts, show the DonateActivity once
             if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {
                 val intent = Intent(this, DonateActivity::class.java)
                 startActivity(intent)

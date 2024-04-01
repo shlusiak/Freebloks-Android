@@ -1,7 +1,5 @@
 package de.saschahlusiak.freebloks.game.newgame
 
-import android.content.res.Configuration
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
@@ -93,7 +90,7 @@ fun StonesConfigScreen(
     var selections by rememberSaveable(stones) {
         val s = IntArray(Shape.SIZE_MAX)
         stones.forEachIndexed { index, count ->
-            s[Shape.get(index).size - 1] = count
+            s[Shape.get(index).points - 1] = count
         }
         mutableStateOf(s)
     }
@@ -130,7 +127,7 @@ fun StonesConfigScreen(
                 OutlinedButton(onClick = {
                     onOk(
                         IntArray(Shape.COUNT) {
-                            selections[Shape.get(it).size - 1]
+                            selections[Shape.get(it).points - 1]
                         }
                     )
                 }) {

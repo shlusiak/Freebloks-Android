@@ -82,9 +82,8 @@
     <string name="rate_later">Später</string>
     <string name="rate_never">Nein</string>
     <string name="rate_freebloks_title">Freebloks bewerten</string>
-    <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, nimm dir doch bitte eine Minute Zeit, es zu bewerten.</string>
-    <string name="rate_freebloks_donate_link">Oder Freebloks unterstützen</string>
-
+    <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, magst du eine Bewertung abgeben?</string>
+    <string name="rate_freebloks_donate_link">Oder mir einen Kaffee spendieren?</string>
 
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d Stein übrig</item>
