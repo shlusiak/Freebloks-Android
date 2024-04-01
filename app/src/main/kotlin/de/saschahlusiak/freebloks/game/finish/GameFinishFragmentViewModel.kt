@@ -31,30 +31,26 @@ class GameFinishFragmentViewModel @Inject constructor(
 ) : ViewModel() {
     private var unlockAchievementsCalled = false
 
-    private val db: Deferred<HighScoreDB>
+    private val db: Deferred<HighScoreDB> = viewModelScope.async(Dispatchers.IO) {
+        HighScoreDB(app).also {
+            it.open()
+        }
+    }
 
     // prefs
     val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(app) }
 
     // game data to display
     var game: Game? = null
-    var lastStatus: MessageServerStatus? = null
+    private var lastStatus: MessageServerStatus? = null
     var data: List<PlayerScore>? = null
-    var localClientName: String? = null
+    private var localClientName: String? = null
     val gameMode get() = game?.gameMode
 
     // LiveData
     val isSignedIn = gameHelper.signedIn
 
     fun isInitialised() = (game != null)
-
-    init {
-        db = viewModelScope.async(Dispatchers.IO) {
-            HighScoreDB(app).also {
-                it.open()
-            }
-        }
-    }
 
     override fun onCleared() {
         GlobalScope.launch {
