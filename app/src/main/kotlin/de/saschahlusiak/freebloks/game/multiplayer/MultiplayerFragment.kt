@@ -86,7 +86,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
                 bluetoothDevices = devices,
                 type = viewModel.type.collectAsState().value,
                 setType = {
-                    if (instantAppHelper.isInstantApp) {
+                    if (it == NetworkType.Bluetooth && instantAppHelper.isInstantApp) {
                         // instant apps do not support Bluetooth at all, so show install prompt
                         instantAppHelper.showInstallPrompt(requireActivity())
                         return@MultiplayerScreen

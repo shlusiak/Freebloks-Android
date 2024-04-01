@@ -22,7 +22,6 @@ fun GameFinishScreen() {
                 stringResource(id = R.string.game_finished),
                 style = MaterialTheme.typography.titleMedium
             )
-
         }
     }
 }
