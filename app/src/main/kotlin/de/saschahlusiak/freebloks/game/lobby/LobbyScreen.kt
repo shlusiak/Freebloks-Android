@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.game.lobby
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,22 +15,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.game.newgame.GameTypeRow
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
 fun LobbyScreen(
-    @StringRes title: Int,
+    isRunning: Boolean,
     status: MessageServerStatus?,
+    players: List<PlayerColor>,
     chatHistory: List<ChatItem>,
     onGameMode: (GameMode) -> Unit,
     onSize: (Int) -> Unit,
+    onTogglePlayer: (Int) -> Unit,
     onChat: (String) -> Unit,
     onStart: () -> Unit
 ) {
@@ -43,7 +46,7 @@ fun LobbyScreen(
             verticalArrangement = spacedBy(8.dp)
         ) {
             Text(
-                text = stringResource(id = title),
+                text = stringResource(id = if (isRunning) R.string.chat else R.string.waiting_for_players),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -52,52 +55,67 @@ fun LobbyScreen(
                 modifier = Modifier.padding(top = 8.dp),
                 gameMode = status?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 size = status?.width ?: Board.DEFAULT_BOARD_SIZE,
-                enabled = (status != null),
+                enabled = (status != null) && !isRunning,
                 onGameMode = onGameMode,
                 onSize = onSize
             )
+
+            if (status != null) {
+                PlayersRow(isRunning, players, onTogglePlayer)
+            }
 
             ChatList(
                 chatHistory,
                 mode = status?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 modifier = Modifier
-                    .heightIn(max = 260.dp)
+                    .heightIn(max = 240.dp)
                     .fillMaxHeight()
                     .fillMaxWidth()
             )
 
             ChatTextField(onChat = onChat)
 
-            Button(
-                onClick = onStart,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = status != null && status.clients > 1
-            ) {
-                Text(stringResource(id = R.string.start))
+            if (!isRunning) {
+                Button(
+                    onClick = onStart,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = (status != null && status.clients > 1) || BuildConfig.DEBUG
+                ) {
+                    Text(stringResource(id = R.string.start))
+                }
             }
         }
     }
 }
+
+internal val previewStatus = MessageServerStatus(
+    player = 0,
+    computer = 1,
+    clients = 3,
+    width = 20,
+    height = 20,
+    gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
+    clientForPlayer = arrayOf(1, 0, 0, 0),
+    clientNames = arrayOf("Client 1", "Client 2", null, null, null, null, null, null)
+)
 
 @Composable
 @Previews
 private fun Preview() {
     AppTheme {
         LobbyScreen(
-            title = R.string.chat,
+            isRunning = false,
             chatHistory = chatHistory,
-            status = MessageServerStatus(
-                player = 0,
-                computer = 1,
-                clients = 3,
-                width = 20,
-                height = 20,
-                gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
-                clientForPlayer = arrayOf(1, 0, 0, 0),
-                clientNames = Array(8) { null }
+            status = previewStatus,
+            players = listOf(
+                PlayerColor(0, StoneColor.Blue, 1, "Sascha", true),
+                PlayerColor(1, StoneColor.Yellow, 2, "Paul", false),
+                PlayerColor(2, StoneColor.Red, 3, null, false),
+                PlayerColor(3, StoneColor.Green, null, null, false),
             ),
             onGameMode = {},
             onSize = {},
+            onTogglePlayer = {},
             onChat = {},
             onStart = {}
         )

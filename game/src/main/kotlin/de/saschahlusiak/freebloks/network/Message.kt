@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.network
 
 import android.util.Log
 import androidx.annotation.CallSuper
+import androidx.compose.runtime.Immutable
 import de.saschahlusiak.freebloks.network.message.*
 import de.saschahlusiak.freebloks.utils.hexString
 import java.io.Serializable
@@ -13,6 +14,7 @@ import java.nio.ByteBuffer
  * @param rawType the [MessageType]]
  * @param size size of the payload in bytes (excluding header)
  */
+@Immutable
 abstract class Message(rawType: Int, val size: Int = 0): Serializable {
 
     constructor(type: MessageType, size: Int = 0): this(type.rawValue, size)

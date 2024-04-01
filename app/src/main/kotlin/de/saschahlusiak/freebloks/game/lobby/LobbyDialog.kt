@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -30,8 +30,10 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.databinding.EditNameDialogBinding
 import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 
 class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener, ColorAdapter.EditPlayerNameListener {
 
@@ -59,8 +61,6 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener, Co
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
-            window?.setSoftInputMode(SOFT_INPUT_ADJUST_PAN or SOFT_INPUT_STATE_HIDDEN)
-
             val client = client
             if (client != null && client.game.isStarted) {
                 /* in-game chat */
@@ -96,14 +96,48 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener, Co
             val lastStatus = viewModel.lastStatus.collectAsState()
             val chatHistory = viewModel.chatHistoryAsLiveData.asFlow().collectAsState(initial = emptyList())
 
+            val players = remember(lastStatus) {
+                derivedStateOf { getPlayerColors(lastStatus.value) }
+            }
+
             LobbyScreen(
-                title = if (client != null && client.game.isStarted) R.string.chat else R.string.waiting_for_players,
+                isRunning = client != null && client.game.isStarted,
                 status = lastStatus.value,
                 chatHistory = chatHistory.value,
+                players = players.value,
                 onGameMode = { requestMode(gameMode = it) },
                 onSize = { requestMode(size = it) },
+                onTogglePlayer = ::onTogglePlayer,
                 onChat = { sendChat(it) },
                 onStart = { client?.requestGameStart() }
+            )
+        }
+    }
+
+    private fun onTogglePlayer(player: Int) {
+        val client = client ?: return
+        if (client.game.isLocalPlayer(player)) {
+            client.revokePlayer(player)
+        } else {
+            client.requestPlayer(player, null)
+        }
+    }
+
+    private fun getPlayerColors(status: MessageServerStatus?): List<PlayerColor> {
+        status ?: return emptyList()
+        val game = viewModel.game ?: return emptyList()
+
+        val mode = status.gameMode
+        val colors = mode.colors
+
+        return (0 until colors).map { index ->
+            val player = if (colors == 2) index * 2 else index
+            PlayerColor(
+                player = player,
+                color = mode.colorOf(player),
+                client = status.clientForPlayer[player],
+                name = status.getPlayerName(player),
+                isLocal = game.isLocalPlayer(player)
             )
         }
     }

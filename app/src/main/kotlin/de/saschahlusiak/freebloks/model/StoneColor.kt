@@ -91,6 +91,7 @@ enum class StoneColor(
 fun GameMode.colorOf(player: Int) = StoneColor.of(player, this)
 fun Game.colorOf(player: Int) = StoneColor.of(player, gameMode)
 
+
 @Stable
 fun GameMode.stoneColors() = when (this) {
     GameMode.GAMEMODE_2_COLORS_2_PLAYERS -> listOf(

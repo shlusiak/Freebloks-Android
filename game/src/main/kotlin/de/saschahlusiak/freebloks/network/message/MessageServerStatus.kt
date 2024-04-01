@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.network.message
 
+import androidx.compose.runtime.Immutable
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.network.Message
@@ -9,6 +10,7 @@ import de.saschahlusiak.freebloks.utils.put
 import java.io.Serializable
 import java.nio.ByteBuffer
 
+@Immutable
 data class MessageServerStatus(
     val player: Int,                // int8
     val computer: Int,              // int8
@@ -76,7 +78,7 @@ data class MessageServerStatus(
     fun isComputer(player: Int) = !isClient(player)
 
     /**
-     * @return the name of the client of null if unset
+     * @return the name of the client or null if unset
      */
     fun getClientName(client: Int): String? {
         if (client < 0) return null

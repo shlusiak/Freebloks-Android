@@ -69,6 +69,7 @@ private fun GameModeDropDown(
     DropDown(
         labels = labels,
         selection = gameMode.ordinal,
+        enabled = enabled,
         modifier = modifier
     ) {
         onGameMode(GameMode.from(it))
