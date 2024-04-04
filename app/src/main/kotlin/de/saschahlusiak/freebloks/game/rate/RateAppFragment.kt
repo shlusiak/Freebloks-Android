@@ -15,11 +15,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,7 +35,7 @@ import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
-import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
@@ -103,7 +100,8 @@ class RateAppFragment : DialogFragment() {
 
                         TextButton(onClick = {
                             analytics.logEvent("rate_donate_click", null)
-                            startActivity(Intent(context, DonateActivity::class.java))
+
+                            DonateFragment().show(parentFragmentManager, null)
                         }, Modifier.fillMaxWidth()) {
                             Text(stringResource(id = R.string.rate_freebloks_donate_link))
                         }

@@ -71,16 +71,6 @@
             android:label="@string/statistics"
             android:theme="@style/Theme.Freebloks.Auto" />
         <activity
-            android:name=".donate.DonateActivity"
-            android:exported="false"
-            android:label="@string/donation_title"
-            android:theme="@style/Theme.Freebloks.DayNight">
-            <intent-filter>
-                <action android:name="de.saschahlusiak.freebloks.SHOW_DONATE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".rules.RulesActivity"
             android:exported="false"
             android:label="@string/rules_title"

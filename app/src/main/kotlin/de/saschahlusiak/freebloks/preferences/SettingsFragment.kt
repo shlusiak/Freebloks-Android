@@ -13,7 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.*
 import de.saschahlusiak.freebloks.about.AboutFragment
-import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SCREEN
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SHOW_CATEGORY
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.SCREEN_INTERFACE
@@ -194,8 +194,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         findPreference<Preference>("donate")?.setOnPreferenceClickListener {
             analytics.logEvent("settings_donate_click")
 
-            val intent = Intent(requireContext(), DonateActivity::class.java)
-            startActivity(intent)
+            DonateFragment().show(parentFragmentManager, null)
             true
         }
 

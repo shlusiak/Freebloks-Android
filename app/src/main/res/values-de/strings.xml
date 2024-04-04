@@ -138,7 +138,7 @@
     <string name="donation_text_line1">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!</string>
     <string name="donation_text_line2">Aber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wie du die Entwickler bei ihrer Arbeit unterstützen möchtest.</string>
     <string name="donation_text_short">Möchtest du die Entwickler mit einer kleinen Spende unterstützen?</string>
-    <string name="donation_skip">Später</string>
+    <string name="donation_skip">Vielleicht später</string>
     <string name="donation_yes">Ja!</string>
 
     <string name="advanced">Erweitert</string>

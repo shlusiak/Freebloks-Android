@@ -24,7 +24,7 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.about.AboutFragment
 import de.saschahlusiak.freebloks.app.AppTheme
-import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent
 import de.saschahlusiak.freebloks.game.multiplayer.MultiplayerFragment
 import de.saschahlusiak.freebloks.game.newgame.NewGameFragment
@@ -129,8 +129,7 @@ class MainMenuFragment : DialogFragment() {
         if (appIconIsDonate) {
             analytics.logEvent("menu_donate_click", null)
 
-            val intent = Intent(context, DonateActivity::class.java)
-            requireContext().startActivity(intent)
+            DonateFragment().show(parentFragmentManager, null)
         } else {
             analytics.logEvent("menu_about_click", null)
 
