@@ -84,7 +84,7 @@
             android:name=".rules.RulesActivity"
             android:exported="false"
             android:label="@string/rules_title"
-            android:theme="@style/Theme.Freebloks.DayNight" />
+            android:theme="@style/Theme.Freebloks.Game" />
     </application>
 
 </manifest>
