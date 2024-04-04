@@ -408,11 +408,12 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private fun startNewGame(config: GameConfig, localClientName: String?): Job {
         if (config.server == null) {
             val ret = runServerForNewGame(
-                config.isLocal,
-                config.gameMode,
-                config.fieldSize,
-                config.stones,
-                config.difficulty
+                isLocal = config.isLocal,
+                gameMode = config.gameMode,
+                size = config.fieldSize,
+                stones = config.stones,
+                kiMode = config.difficulty,
+                forceDelay = !BuildConfig.DEBUG // in debug builds, CPU is as fast as it can
             )
 
             if (ret != 0) {
