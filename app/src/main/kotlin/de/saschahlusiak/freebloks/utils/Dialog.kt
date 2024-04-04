@@ -11,15 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 
 @Composable
-fun Dialog(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun Dialog(
+    modifier: Modifier = Modifier,
+    horizontalPadding: Dp = 24.dp,
+    content: @Composable () -> Unit
+) {
     Surface(
         modifier = modifier
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = horizontalPadding)
             .widthIn(min = 300.dp)
             .wrapContentSize(),
         color = MaterialTheme.colorScheme.surfaceContainer,

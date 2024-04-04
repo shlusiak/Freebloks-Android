@@ -88,10 +88,8 @@ void* gameRunThread(void* param)
 	return NULL;
 }
 
-
 static int max_humans = 4;
 static bool force_delay = true;
-
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
   (JNIEnv *je, jobject jc, jstring interface, jint port, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)

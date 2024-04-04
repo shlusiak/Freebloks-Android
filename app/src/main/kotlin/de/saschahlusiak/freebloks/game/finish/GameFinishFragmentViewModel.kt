@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
@@ -25,6 +26,7 @@ import kotlin.concurrent.thread
 
 @HiltViewModel
 class GameFinishFragmentViewModel @Inject constructor(
+    args: SavedStateHandle,
     private val app: Application,
     private val crashReporter: CrashReporter,
     private val gameHelper: GooglePlayGamesHelper
@@ -41,35 +43,19 @@ class GameFinishFragmentViewModel @Inject constructor(
     val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(app) }
 
     // game data to display
-    var game: Game? = null
+    val game: Game
     private var lastStatus: MessageServerStatus? = null
-    var data: List<PlayerScore>? = null
+    val data: List<PlayerScore>
     private var localClientName: String? = null
-    val gameMode get() = game?.gameMode
+    val gameMode get() = game.gameMode
 
     // LiveData
     val isSignedIn = gameHelper.signedIn
 
-    fun isInitialised() = (game != null)
-
-    override fun onCleared() {
-        GlobalScope.launch {
-            try {
-                db.await().close()
-            }
-            catch (e: Exception) {
-                crashReporter.logException(e)
-            }
-        }
-        super.onCleared()
-    }
-
-    fun setDataFromBundle(bundle: Bundle) {
-        if (this.game != null) throw IllegalStateException("Already initialised")
-
-        val game = bundle.getSerializable("game") as? Game
+    init {
+        val game = args.get("game") as? Game
         this.game = game ?: throw IllegalArgumentException("game must not be null")
-        this.lastStatus = bundle.getSerializable("lastStatus") as MessageServerStatus?
+        this.lastStatus = args.get("lastStatus") as MessageServerStatus?
         this.localClientName = prefs.getString("player_name", null)?.ifBlank { null }
 
         this.data = game.getPlayerScores().also { data ->
@@ -82,10 +68,22 @@ class GameFinishFragmentViewModel @Inject constructor(
             }
 
             // and unlock achievements if we are logged in
-            if (gameHelper.signedIn.value == true && !unlockAchievementsCalled) {
-                thread { unlockAchievements(data, game.gameMode) }
+            if (gameHelper.signedIn.value == true) {
+                unlockAchievements()
             }
         }
+    }
+
+    override fun onCleared() {
+        GlobalScope.launch {
+            try {
+                db.await().close()
+            }
+            catch (e: Exception) {
+                crashReporter.logException(e)
+            }
+        }
+        super.onCleared()
     }
 
     private fun assignClientNames(gameMode: GameMode, scores: List<PlayerScore>, lastStatus: MessageServerStatus?) {
@@ -102,9 +100,7 @@ class GameFinishFragmentViewModel @Inject constructor(
         }
     }
 
-    fun unlockAchievements() {
-        val data = data ?: return
-        val game = game ?: return
+    private fun unlockAchievements() {
         if (!unlockAchievementsCalled) {
             thread { unlockAchievements(data, game.gameMode) }
         }

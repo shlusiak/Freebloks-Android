@@ -5,6 +5,7 @@
     <string name="github_link" translatable="false">https://github.com/shlusiak/Freebloks-Android</string>
     <string name="notification_channel_default" translatable="false">General</string>
 
+    <string name="play_again">Play again</string>
     <string name="new_game">New Game</string>
     <string name="resume_game">Resume</string>
     <string name="host_game">Host</string>

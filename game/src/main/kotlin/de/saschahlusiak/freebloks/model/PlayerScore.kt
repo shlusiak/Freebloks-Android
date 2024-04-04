@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.model
 
+import androidx.compose.runtime.Immutable
 import java.io.Serializable
 
 /**
@@ -7,6 +8,7 @@ import java.io.Serializable
  *
  * This may be a combined score of two colors
  */
+@Immutable
 data class PlayerScore(
     val color1: Int,
     val color2: Int = -1,
@@ -15,13 +17,11 @@ data class PlayerScore(
     val turnsLeft: Int,
     val bonus: Int,
     val isPerfect: Boolean,
-    var clientName: String? = null
-) : Serializable, Comparable<PlayerScore> {
-
+    var clientName: String? = null,
     // the place and local player information will be set afterwards, when all points of all players are known
-    var place = -1
-    var isLocal = false
-
+    var place: Int = -1,
+    var isLocal: Boolean = false
+) : Serializable, Comparable<PlayerScore> {
     /**
      * Combine the scores of two colors into one
      */
