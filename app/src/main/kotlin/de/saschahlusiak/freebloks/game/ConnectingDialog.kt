@@ -44,7 +44,9 @@ class ConnectingDialog : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(null)
         view as ComposeView
         view.setContent {
-            DialogContent()
+            AppTheme {
+                DialogContent()
+            }
         }
     }
 
