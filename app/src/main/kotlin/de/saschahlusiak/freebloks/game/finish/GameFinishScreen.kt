@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
@@ -45,6 +48,7 @@ fun GameFinishScreen(
     gameMode: GameMode,
     data: List<PlayerScore>,
     isSignedIn: Boolean,
+    onClose: () -> Unit,
     onNewGame: () -> Unit,
     onMainMenu: () -> Unit,
     onAchievements: () -> Unit,
@@ -77,6 +81,13 @@ fun GameFinishScreen(
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
+
+                IconButton(
+                    onClick = onClose,
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = null)
+                }
             }
 
             data.forEach {
@@ -158,6 +169,7 @@ private fun Preview() {
             gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
             data = previewScores,
             isSignedIn = false,
+            onClose = {},
             onNewGame = {},
             onMainMenu = {},
             onAchievements = {},
