@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Freebloks.Dark" parent="Theme.MaterialComponents">
+    <style name="Theme.Freebloks.Dark" parent="Theme.Material3.Dark">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
@@ -39,7 +39,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="Theme.Freebloks.Light" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="Theme.Freebloks.Light" parent="Theme.Material3.Light">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
@@ -65,21 +65,17 @@
 
     <style name="Theme.Freebloks.DayNight" parent="Theme.Freebloks.Light" />
 
-    <style name="Theme.Freebloks.Auto" parent="Theme.Freebloks.DayNight" />
-
-    <style name="Theme.Freebloks.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog">
-        <item name="android:windowMinWidthMajor">10%</item>
-        <item name="android:windowMinWidthMinor">10%</item>
+    <style name="Theme.Freebloks.Dialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="windowMinWidthMajor">10%</item>
+        <item name="windowMinWidthMinor">10%</item>
     </style>
 
-    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.MaterialComponents.DayNight.Dialog.MinWidth" />
+    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Material3.DayNight.Dialog.MinWidth" />
 
-    <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+    <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
     </style>
 
-    <style name="Theme.Freebloks.Light.Dialog.MinWidth" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
+    <style name="Theme.Freebloks.Light.Dialog.MinWidth" parent="Theme.Material3.Light.Dialog.MinWidth">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
@@ -87,7 +83,6 @@
         <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
         <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
         <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorPrimary">@color/primaryColor</item>

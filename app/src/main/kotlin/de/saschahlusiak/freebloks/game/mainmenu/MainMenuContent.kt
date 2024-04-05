@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -46,7 +48,7 @@ fun MainMenuContent(
     onToggleSound: () -> Unit
 ) {
     val buttonSize = dimensionResource(id = R.dimen.main_menu_button_height)
-    Dialog {
+    Dialog(horizontalPadding = 24.dp) {
         Column(
             Modifier.padding(dimensionResource(id = R.dimen.main_menu_padding))
         ) {

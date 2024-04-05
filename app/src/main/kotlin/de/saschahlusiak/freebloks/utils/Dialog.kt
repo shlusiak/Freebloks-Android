@@ -19,7 +19,7 @@ import de.saschahlusiak.freebloks.app.AppTheme
 @Composable
 fun Dialog(
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = 24.dp,
+    horizontalPadding: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
     Surface(

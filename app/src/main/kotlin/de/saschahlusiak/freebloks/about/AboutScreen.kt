@@ -75,7 +75,8 @@ fun AboutScreen(
 
             Text(
                 stringResource(id = R.string.copyright_string),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
+                textAlign = TextAlign.Center
             )
 
             val email = "apps@saschahlusiak.de"
