@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="play_again">新しいゲーム</string>
     <string name="new_game">新しいゲーム</string>
     <string name="resume_game">再開</string>
     <string name="host_game">ホスト</string>

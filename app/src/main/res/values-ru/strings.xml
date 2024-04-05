@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="play_again">Новая игра</string>
     <string name="new_game">Новая игра</string>
     <string name="resume_game">Продолжить</string>
     <string name="host_game">Хост&#8230;</string>

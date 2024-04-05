@@ -17,9 +17,9 @@
         <item name="android:textSize">@dimen/textSizeSmall</item>
     </style>
 
-    <style name="Widget.ActionBar.Surface.Elevated" parent="@style/Widget.MaterialComponents.ActionBar.Surface">
+    <style name="Widget.ActionBar.Surface.Elevated" parent="@style/Widget.Material3.ActionBar.Solid">
         <item name="background">?colorSurface</item>
-        <item name="elevation">4dp</item>
+        <item name="elevation">0dp</item>
     </style>
 
     <style name="PillButton" parent="">

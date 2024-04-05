@@ -106,7 +106,6 @@ private fun HowToPlay() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.rules_2), contentDescription = null,
-                modifier = Modifier.padding(4.dp)
             )
 
             Text(
@@ -125,8 +124,7 @@ private fun HowToPlay() {
             )
 
             Image(
-                painter = painterResource(id = R.drawable.rules_1), contentDescription = null,
-                modifier = Modifier.padding(4.dp)
+                painter = painterResource(id = R.drawable.rules_1), contentDescription = null
             )
         }
     }
@@ -217,7 +215,6 @@ private fun BlokusDuo() {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.rules_4), contentDescription = null,
-                modifier = Modifier.padding(4.dp)
             )
 
             Text(

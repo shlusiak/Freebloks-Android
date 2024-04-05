@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game.newgame
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
@@ -44,7 +45,7 @@ internal fun ColorListItem(
             .clickable(
                 onClick = { onClick(!checked) },
                 interactionSource = interactionSource,
-                indication = null
+                indication = LocalIndication.current.takeUnless { checkable }
             )
             .heightIn(min = 48.dp)
             .padding(

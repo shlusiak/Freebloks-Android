@@ -25,7 +25,6 @@ fun Dialog(
     Surface(
         modifier = modifier
             .padding(horizontal = horizontalPadding)
-            .widthIn(min = 300.dp)
             .wrapContentSize(),
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.dialog_corner_radius)),

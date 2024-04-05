@@ -42,6 +42,8 @@
         <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
+        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
+
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
 
