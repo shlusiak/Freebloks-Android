@@ -20,7 +20,7 @@ import de.saschahlusiak.freebloks.utils.prefs
 class NewGameFragment : DialogFragment() {
     private val listener get() = (requireActivity() as OnStartCustomGameListener)
 
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         ComposeView(requireContext())

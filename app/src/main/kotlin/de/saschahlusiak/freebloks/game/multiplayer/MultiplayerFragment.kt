@@ -64,7 +64,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
     private val viewModel: MultiplayerViewModel by viewModels()
 
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         ComposeView(requireContext())

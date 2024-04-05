@@ -27,7 +27,7 @@ class DonateFragment : DialogFragment() {
     @Inject
     lateinit var analytics: AnalyticsProvider
 
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

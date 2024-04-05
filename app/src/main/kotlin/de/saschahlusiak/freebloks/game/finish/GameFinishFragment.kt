@@ -28,7 +28,7 @@ class GameFinishFragment : DialogFragment() {
 
     private val listener get() = requireActivity() as OnStartCustomGameListener
 
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     @Inject
     lateinit var analytics: AnalyticsProvider

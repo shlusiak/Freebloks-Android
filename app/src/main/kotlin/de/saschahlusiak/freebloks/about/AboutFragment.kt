@@ -13,7 +13,7 @@ import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.donate.DonateFragment
 
 class AboutFragment : DialogFragment() {
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         ComposeView(requireContext())

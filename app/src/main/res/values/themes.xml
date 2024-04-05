@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Freebloks.Dark" parent="Theme.Material3.Dark">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+    <style name="Theme.Freebloks.Base" parent="Theme.Material3.DayNight" >
+        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
 
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
 
-        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">?colorSecondaryContainer</item>
 
-        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
-    <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.DayNight">
+    <style name="Theme.Freebloks" parent="Theme.Freebloks.Base">
+
+    </style>
+
+    <style name="Theme.Freebloks.Game">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -32,47 +27,27 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="Theme.Freebloks.Light" parent="Theme.Material3.Light">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-
-        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
-
-        <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
-        <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
-
-        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-    </style>
-
-    <style name="Theme.Freebloks.DayNight" parent="Theme.Freebloks.Light" />
-
-    <style name="Theme.Freebloks.DayNight.NoActionBar" parent="Theme.Freebloks.DayNight" >
+    <style name="Theme.Freebloks.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Freebloks.Dialog" parent="Theme.Material3.DayNight.Dialog">
+
+    <style name="Theme.Freebloks.Dialog" parent="ThemeOverlay.Material3.Dialog">
+        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
+
         <item name="windowMinWidthMajor">10%</item>
         <item name="windowMinWidthMinor">10%</item>
-        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
-        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
     </style>
 
-    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Material3.DayNight.Dialog.MinWidth">
-        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
-        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
+    <style name="Theme.Freebloks.Dialog.MinWidth">
+        <item name="windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
     </style>
 
     <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
         <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
     </style>
-
 </resources>

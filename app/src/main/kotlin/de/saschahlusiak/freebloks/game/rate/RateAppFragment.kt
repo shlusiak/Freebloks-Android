@@ -47,7 +47,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RateAppFragment : DialogFragment() {
 
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     @Inject
     lateinit var analytics: AnalyticsProvider

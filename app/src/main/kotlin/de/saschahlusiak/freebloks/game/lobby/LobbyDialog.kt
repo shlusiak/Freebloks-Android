@@ -35,7 +35,7 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     private val client get() = viewModel.client
     private val listener get() = activity as LobbyDialogDelegate
 
-    override fun getTheme() = R.style.Theme_Freebloks_DayNight_Dialog_MinWidth
+    override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
