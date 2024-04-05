@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
-    val colorScheme = if (VERSION.SDK_INT >= 31) {
+    val colorScheme = if (VERSION.SDK_INT >= 31 && false) {
         if (isSystemInDarkTheme()) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else {
         if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
