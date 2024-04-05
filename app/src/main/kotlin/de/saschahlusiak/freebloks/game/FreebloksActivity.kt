@@ -522,7 +522,11 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         val client = viewModel.client
         val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
         if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
-        if (showRateDialog) RateAppFragment().show(supportFragmentManager, null)
+        if (showRateDialog) {
+            lifecycleScope.launchWhenResumed {
+                RateAppFragment().show(supportFragmentManager, null)
+            }
+        }
         view.requestRender()
     }
 

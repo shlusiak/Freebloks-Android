@@ -69,33 +69,36 @@ class StatisticsViewModel @Inject constructor(
             buildList {
                 val labels = context.resources.getStringArray(R.array.statistics_labels)
 
-                val games = db.getTotalNumberOfGames(gameMode).coerceAtLeast(1)
+                val games = db.getTotalNumberOfGames(gameMode)
                 val points = db.getTotalNumberOfPoints(gameMode)
                 val perfect = db.getNumberOfPerfectGames(gameMode)
                 val good = db.getNumberOfGoodGames(gameMode) - perfect
                 val stonesLeft = db.getTotalNumberOfStonesLeft(gameMode)
 
-                val stonesUsed = if (games == 0) 0 else (games * Shape.COUNT - stonesLeft)
+                val stonesUsed = games * Shape.COUNT - stonesLeft
 
                 add(labels[0] to String.format("%d", games))
 
-                add(labels[1] to String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat()))
+                if (games > 0) {
+                    add(labels[1] to String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat()))
 
-                add(labels[2] to String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat()))
+                    add(labels[2] to String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat()))
 
-                var i = 0
-                while (i < gameMode.colors) {
-                    val n = db.getNumberOfPlace(gameMode, i + 1)
-                    add(labels[3 + i] to String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat()))
-                    i++
+                    var i = 0
+                    while (i < gameMode.colors) {
+                        val n = db.getNumberOfPlace(gameMode, i + 1)
+                        add(labels[3 + i] to String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat()))
+                        i++
+                    }
+
+                    add(
+                        labels[7] to String.format(
+                            "%.1f%%",
+                            100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat()
+                        )
+                    )
                 }
 
-                add(
-                    labels[7] to String.format(
-                        "%.1f%%",
-                        100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat()
-                    )
-                )
 
                 add(labels[8] to String.format("%d", points))
             }

@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -95,23 +97,28 @@ class RateAppFragment : DialogFragment() {
 
                     ButtonRow()
 
+                    Spacer(Modifier.padding(8.dp))
+
+                    Text(
+                        stringResource(id = R.string.donation_text_line1),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        textAlign = TextAlign.Center,
+                    )
+
                     if (!Global.IS_VIP) {
-                        Spacer(Modifier.padding(4.dp))
+                        HorizontalDivider(
+                            Modifier.padding(top = 8.dp)
+                        )
+                        TextButton(
+                            onClick = {
+                                analytics.logEvent("rate_donate_click", null)
 
-                        TextButton(onClick = {
-                            analytics.logEvent("rate_donate_click", null)
-
-                            DonateFragment().show(parentFragmentManager, null)
-                        }, Modifier.fillMaxWidth()) {
+                                DonateFragment().show(parentFragmentManager, null)
+                            },
+                        ) {
                             Text(stringResource(id = R.string.rate_freebloks_donate_link))
                         }
-
-                        Text(
-                            stringResource(id = R.string.donation_text_line1),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            textAlign = TextAlign.Center
-                        )
                     }
                 }
             }
