@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Freebloks.Dark" parent="Theme.Material3.Dark">
         <item name="android:textAppearance">@style/TextAppearance.Medium</item>
@@ -68,11 +68,18 @@
     <style name="Theme.Freebloks.Dialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="windowMinWidthMajor">10%</item>
         <item name="windowMinWidthMinor">10%</item>
+        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
     </style>
 
-    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Material3.DayNight.Dialog.MinWidth" />
+    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Material3.DayNight.Dialog.MinWidth">
+        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
+    </style>
 
     <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
+        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
     </style>
 
     <style name="Theme.Freebloks.Light.Dialog.MinWidth" parent="Theme.Material3.Light.Dialog.MinWidth">
