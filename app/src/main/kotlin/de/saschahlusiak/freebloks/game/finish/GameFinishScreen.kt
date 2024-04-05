@@ -12,29 +12,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
@@ -98,10 +90,19 @@ fun GameFinishScreen(
                 )
             }
 
+            HorizontalDivider(
+                Modifier.padding(top = 16.dp)
+            )
+
             Row(
                 Modifier.padding(top = 12.dp),
                 horizontalArrangement = spacedBy(6.dp)
             ) {
+
+                FilledTonalIconButton(onClick = onStatistics) {
+                    Icon(painter = painterResource(id = R.drawable.ic_chart), contentDescription = null)
+                }
+
                 if (isSignedIn) {
                     FilledTonalIconButton(onClick = onAchievements) {
                         Icon(
@@ -114,13 +115,6 @@ fun GameFinishScreen(
                             painter = painterResource(id = R.drawable.ic_play_games_badge_leaderboards_white),
                             contentDescription = null
                         )
-                    }
-                    FilledTonalIconButton(onClick = onStatistics) {
-                        Icon(painter = painterResource(id = R.drawable.ic_preferences_stats), contentDescription = null)
-                    }
-                } else {
-                    TextButton(onClick = onMainMenu) {
-                        Text(stringResource(id = R.string.main_menu))
                     }
                 }
 
@@ -168,7 +162,7 @@ private fun Preview() {
         GameFinishScreen(
             gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
             data = previewScores,
-            isSignedIn = false,
+            isSignedIn = true,
             onClose = {},
             onNewGame = {},
             onMainMenu = {},

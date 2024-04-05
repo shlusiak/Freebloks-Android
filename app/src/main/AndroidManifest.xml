@@ -69,7 +69,7 @@
             android:name=".statistics.StatisticsActivity"
             android:exported="false"
             android:label="@string/statistics"
-            android:theme="@style/Theme.Freebloks.DayNight" />
+            android:theme="@style/Theme.Freebloks.DayNight.NoActionBar" />
         <activity
             android:name=".rules.RulesActivity"
             android:exported="false"

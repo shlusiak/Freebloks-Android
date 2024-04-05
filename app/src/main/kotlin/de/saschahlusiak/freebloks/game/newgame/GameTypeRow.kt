@@ -59,7 +59,7 @@ fun GameTypeRow(
 }
 
 @Composable
-private fun GameModeDropDown(
+fun GameModeDropDown(
     modifier: Modifier,
     gameMode: GameMode,
     enabled: Boolean = true,

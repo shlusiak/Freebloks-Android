@@ -2,230 +2,132 @@ package de.saschahlusiak.freebloks.statistics
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.database.HighScoreDB
-import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.GameMode.Companion.from
-import de.saschahlusiak.freebloks.model.Shape
-import de.saschahlusiak.freebloks.databinding.StatisticsActivityBinding
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import de.saschahlusiak.freebloks.utils.viewBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import de.saschahlusiak.freebloks.app.AppTheme
 
 @AndroidEntryPoint
 class StatisticsActivity : AppCompatActivity() {
-    private val db = HighScoreDB(this)
-    private var adapter: StatisticsAdapter? = null
-    private var gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS
-    private val values: Array<String?> = arrayOfNulls(9)
-    private var menu: Menu? = null
-
-    @Inject
-    lateinit var gameHelper: GooglePlayGamesHelper
-
-    private val binding by viewBinding(StatisticsActivityBinding::inflate)
-    private var googleSignInButton: View? = null
+    private val viewModel: StatisticsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(binding.root)
+        setContent {
+            Content()
+        }
+    }
 
-        db.open()
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun Content() {
+        val data by viewModel.data.collectAsState()
+        val gameMode by viewModel.gameMode.collectAsState()
+        val signedIn by viewModel.signedIn.collectAsState(initial = null)
 
-        with(binding) {
+        AppTheme {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(stringResource(id = R.string.statistics)) },
+                        navigationIcon = {
+                            IconButton(onClick = { finish() }) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            }
+                        },
+                        actions = {
+                            if (signedIn == true) {
+                                IconButton(
+                                    onClick = ::onAchievements,
+                                    modifier = Modifier.size(48.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_play_games_badge_achievements_white),
+                                        contentDescription = null,
+                                    )
+                                }
 
-            val labels = resources.getStringArray(R.array.statistics_labels)
-            adapter = StatisticsAdapter(this@StatisticsActivity, labels, values)
-            listView.adapter = adapter
-            ok.setOnClickListener { finish() }
+                                IconButton(
+                                    onClick = ::onLeaderboards,
+                                    modifier = Modifier.size(48.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_play_games_badge_leaderboards_white),
+                                        contentDescription = null
+                                    )
+                                }
+                            }
 
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this@StatisticsActivity)
-            this@StatisticsActivity.gameMode = from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
-
-            refreshData()
-
-            val actionBar = supportActionBar
-            if (actionBar == null) {
-                gameMode.setSelection(this@StatisticsActivity.gameMode.ordinal)
-                gameMode.onItemSelectedListener =
-                    object : OnItemSelectedListener {
-                        override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            this@StatisticsActivity.gameMode = from(position)
-                            refreshData()
+                            if (signedIn == false) {
+                                TextButton(onClick = { onSignIn() }) {
+                                    Text(text = stringResource(id = R.string.common_signin_button_text))
+                                }
+                            }
                         }
-
-                        override fun onNothingSelected(adapterView: AdapterView<*>?) {}
-                    }
-            } else {
-                gameMode.visibility = View.GONE
-                val mSpinnerAdapter: SpinnerAdapter = ArrayAdapter.createFromResource(
-                    this@StatisticsActivity, R.array.game_modes,
-                    android.R.layout.simple_spinner_dropdown_item
-                )
-                actionBar.navigationMode = androidx.appcompat.app.ActionBar.NAVIGATION_MODE_LIST
-                actionBar.setListNavigationCallbacks(mSpinnerAdapter) { itemPosition, _ ->
-                    this@StatisticsActivity.gameMode = from(itemPosition)
-                    refreshData()
-                    true
-                }
-                actionBar.setSelectedNavigationItem(this@StatisticsActivity.gameMode.ordinal)
-                actionBar.setDisplayShowTitleEnabled(false)
-                actionBar.setDisplayHomeAsUpEnabled(true)
-            }
-
-            if (gameHelper.isAvailable) {
-                googleSignInButton = gameHelper.newSignInButton(this@StatisticsActivity)
-                googleSignInButton?.let {
-                    signinStub.addView(
-                        it,
-                        ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     )
-                    signinStub.isVisible = true
                 }
-                googleSignInButton?.setOnClickListener {
-                    gameHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
-                }
-                gameHelper.signedIn.observe(this@StatisticsActivity) { onGoogleAccountChanged(it) }
+            ) { padding ->
+                StatisticsContent(
+                    modifier = Modifier.padding(padding),
+                    gameMode = gameMode,
+                    data = data
+                ) { viewModel.gameMode.value = it }
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        db.close()
+    private fun onSignIn() {
+        viewModel.gamesHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.stats_optionsmenu, menu)
-        return super.onCreateOptionsMenu(menu)
+    private fun onAchievements() {
+        viewModel.gamesHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val isSignedIn = gameHelper.isSignedIn
-        this.menu = menu
-        menu.findItem(R.id.signout).isVisible = isSignedIn
-        menu.findItem(R.id.achievements).isVisible = isSignedIn
-        menu.findItem(R.id.leaderboard).isVisible = isSignedIn
-        return super.onPrepareOptionsMenu(menu)
+    private fun onLeaderboards() {
+        viewModel.gamesHelper.startLeaderboardIntent(
+            this,
+            getString(R.string.leaderboard_points_total),
+            REQUEST_LEADERBOARD
+        )
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-            R.id.clear -> {
-                db.clearHighScores()
-                refreshData()
-                return true
-            }
-            R.id.signout -> {
-                gameHelper.startSignOut()
-                invalidateOptionsMenu()
-                return true
-            }
-            R.id.achievements -> {
-                if (gameHelper.isSignedIn) gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
-                return true
-            }
-            R.id.leaderboard -> {
-                if (gameHelper.isSignedIn) gameHelper.startLeaderboardIntent(this, getString(R.string.leaderboard_points_total), REQUEST_LEADERBOARD)
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            REQUEST_SIGN_IN -> gameHelper.onActivityResult(resultCode, data) { error ->
+            REQUEST_SIGN_IN -> viewModel.gamesHelper.onActivityResult(resultCode, data) { error ->
                 MaterialAlertDialogBuilder(this).apply {
                     setMessage(error ?: getString(R.string.google_play_games_signin_failed))
-                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
+                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss() }
                     show()
                 }
             }
+
             else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun refreshData() = lifecycleScope.launch {
-        withContext(Dispatchers.IO) {
-            var games = db.getTotalNumberOfGames(gameMode)
-            val points = db.getTotalNumberOfPoints(gameMode)
-            val perfect = db.getNumberOfPerfectGames(gameMode)
-            var good = db.getNumberOfGoodGames(gameMode)
-            val stonesLeft = db.getTotalNumberOfStonesLeft(gameMode)
-
-            var stonesUsed = games * Shape.COUNT - stonesLeft
-
-            var i = 0
-            while (i < values.size) {
-                values[i] = ""
-                i++
-            }
-            values[0] = String.format("%d", games)
-            values[8] = String.format("%d", points)
-            if (games == 0) /* avoid divide by zero */ {
-                games = 1
-                stonesUsed = 0
-            }
-            good -= perfect
-            values[1] = String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat())
-            values[2] = String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat())
-            i = 0
-            while (i < 4) {
-                val n = db.getNumberOfPlace(gameMode, i + 1)
-                values[3 + i] = String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat())
-                i++
-            }
-            when (gameMode) {
-                GameMode.GAMEMODE_2_COLORS_2_PLAYERS,
-                GameMode.GAMEMODE_DUO,
-                GameMode.GAMEMODE_JUNIOR -> {
-                    values[6] = null
-                    values[5] = values[6]
-                }
-
-                else -> {
-                }
-            }
-            values[7] = String.format("%.1f%%", 100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat())
-        }
-
-        adapter?.notifyDataSetChanged()
-    }
-
-    private fun onGoogleAccountChanged(signedIn: Boolean) {
-        if (signedIn) {
-            googleSignInButton?.visibility = View.GONE
-            invalidateOptionsMenu()
-            gameHelper.submitScore(
-                getString(R.string.leaderboard_games_won),
-                db.getNumberOfPlace(null, 1).toLong())
-            gameHelper.submitScore(
-                getString(R.string.leaderboard_points_total),
-                db.getTotalNumberOfPoints(null).toLong())
-        } else {
-            googleSignInButton?.visibility = View.VISIBLE
-            invalidateOptionsMenu()
         }
     }
 
