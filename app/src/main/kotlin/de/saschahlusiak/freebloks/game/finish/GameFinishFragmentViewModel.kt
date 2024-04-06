@@ -2,25 +2,27 @@ package de.saschahlusiak.freebloks.game.finish
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.database.sqlite.SQLiteException
-import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
-import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.model.colorOf
+import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
@@ -28,6 +30,7 @@ import kotlin.concurrent.thread
 class GameFinishFragmentViewModel @Inject constructor(
     args: SavedStateHandle,
     private val app: Application,
+    private val prefs: Preferences,
     private val crashReporter: CrashReporter,
     private val gameHelper: GooglePlayGamesHelper
 ) : ViewModel() {
@@ -39,14 +42,11 @@ class GameFinishFragmentViewModel @Inject constructor(
         }
     }
 
-    // prefs
-    val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(app) }
-
     // game data to display
     val game: Game
     private var lastStatus: MessageServerStatus? = null
     val data: List<PlayerScore>
-    private var localClientName: String? = null
+    private var localClientName: String
     val gameMode get() = game.gameMode
 
     // LiveData
@@ -56,7 +56,7 @@ class GameFinishFragmentViewModel @Inject constructor(
         val game = args.get("game") as? Game
         this.game = game ?: throw IllegalArgumentException("game must not be null")
         this.lastStatus = args.get("lastStatus") as MessageServerStatus?
-        this.localClientName = prefs.getString("player_name", null)?.ifBlank { null }
+        this.localClientName = prefs.playerName
 
         this.data = game.getPlayerScores().also { data ->
             // assign names to the scores based on lastStatus and clientName
@@ -92,7 +92,7 @@ class GameFinishFragmentViewModel @Inject constructor(
         scores.forEach { score ->
             val colorName = gameMode.colorOf(score.color1).getName(context.resources)
 
-            if (score.isLocal && localClientName != null) {
+            if (score.isLocal && localClientName.isNotBlank()) {
                 score.clientName = localClientName
             } else {
                 score.clientName = lastStatus?.getPlayerName(score.color1) ?: colorName

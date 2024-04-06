@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothClass.Device.Major
 import android.bluetooth.BluetoothDevice
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
@@ -15,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import de.saschahlusiak.freebloks.app.Preferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,15 +23,15 @@ import javax.inject.Inject
 @HiltViewModel
 class MultiplayerViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val prefs: SharedPreferences
+    private val prefs: Preferences
 ) : ViewModel() {
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
     val bluetoothDevices = MutableStateFlow(emptyList<BluetoothDevice>())
     val type = MutableStateFlow(NetworkType.Internet)
 
-    val name = MutableStateFlow(prefs.getString("player_name", "") ?: "")
-    val server = MutableStateFlow(prefs.getString("custom_server", "") ?: "")
+    val name = MutableStateFlow(prefs.playerName)
+    val server = MutableStateFlow(prefs.serverAddress)
 
     init {
         type.onEach {
@@ -41,20 +41,12 @@ class MultiplayerViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun saveName() {
-        prefs.edit()
-            .putString("player_name", name.value)
-            .apply()
-
+    fun save() {
+        prefs.playerName = name.value
+        prefs.serverAddress = server.value
     }
 
-    fun saveServer() {
-        prefs.edit()
-            .putString("custom_server", server.value)
-            .apply()
-    }
-
-    fun hasBluetoothPermission(): Boolean {
+    private fun hasBluetoothPermission(): Boolean {
         if (Build.VERSION.SDK_INT >= 31) {
             // Android S introduced permission BLUETOOTH_CONNECT, which is required to connect and listen
             val granted = ContextCompat.checkSelfPermission(
@@ -74,7 +66,7 @@ class MultiplayerViewModel @Inject constructor(
             return
         }
 
-        val pairedDevices = bluetoothAdapter?.bondedDevices ?: emptySet()
+        val pairedDevices = bluetoothAdapter.bondedDevices ?: emptySet()
         Log.d(tag, "Paired devices: " + pairedDevices.size)
 
         bluetoothDevices.value = pairedDevices

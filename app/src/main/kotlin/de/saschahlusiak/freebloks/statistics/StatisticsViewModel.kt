@@ -1,13 +1,13 @@
 package de.saschahlusiak.freebloks.statistics
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.database.HighScoreDB
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
@@ -27,14 +27,12 @@ typealias RowData = Pair<String, String?>
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
-    prefs: SharedPreferences,
+    prefs: Preferences,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val db = HighScoreDB(context)
 
-    internal val gameMode = MutableStateFlow(
-        GameMode.from(prefs.getInt("gamemode", GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal))
-    )
+    internal val gameMode = MutableStateFlow(prefs.gameMode)
 
     val signedIn = gamesHelper.signedIn.asFlow()
 

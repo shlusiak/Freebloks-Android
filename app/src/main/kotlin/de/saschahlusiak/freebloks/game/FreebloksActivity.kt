@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.bluetooth.BluetoothDevice
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -33,6 +32,7 @@ import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
@@ -76,7 +76,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private lateinit var scene: Scene
 
     @Inject
-    lateinit var prefs : SharedPreferences
+    lateinit var prefs : Preferences
 
     @Inject
     lateinit var analytics: AnalyticsProvider
@@ -130,10 +130,16 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             view.setScale(savedInstanceState.getFloat("view_scale", 1.0f))
             showRateDialog = savedInstanceState.getBoolean("showRateDialog", false)
         } else {
-            view.setScale(prefs.getFloat("view_scale", 1.0f))
-            showRateDialog = shouldShowRateDialog(this)
+            view.setScale(prefs.viewScale)
 
-            val starts = prefs.getLong("rate_number_of_starts", 0)
+            prefs.numberOfStarts += 1
+            if (prefs.firstStarted <= 0) {
+                prefs.firstStarted = System.currentTimeMillis()
+            }
+
+            showRateDialog = shouldShowRateDialog(prefs)
+
+            val starts = prefs.numberOfStarts
 
             // At exactly this many starts, show the DonateActivity once
             if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {
@@ -236,9 +242,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     override fun onStop() {
         viewModel.onStop()
         view.onPause()
-        prefs.edit()
-            .putFloat("view_scale", view.getScale())
-            .apply()
+        prefs.viewScale = view.getScale()
 
         Log.d(tag, "onStop")
         super.onStop()
@@ -256,8 +260,8 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         scene.snapAid = viewModel.snapAid
 
         val tm = ThemeManager.get(this)
-        val background = tm.getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.Blue)
-        val board = tm.getTheme(prefs.getString("board_theme", "field_wood"), ColorThemes.White)
+        val background = tm.getTheme(prefs.theme, ColorThemes.Blue)
+        val board = tm.getTheme(prefs.boardTheme, ColorThemes.White)
         view.setTheme(background, board)
 
         viewModel.onStart()
@@ -375,7 +379,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         // Unfortunately the JNI portion does not recognise the turn history, even though we have persisted it in the
         // bundle. As such, to avoid minor inconsistencies, we clear the history to be in sync with the JNI portion.
         game.history.clear()
-        val previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
+        val previousDifficulty = prefs.difficulty
         val ret = runServerForExistingGame(game, previousDifficulty)
         if (ret != 0) {
             crashReporter.log("Error starting server: $ret")
@@ -524,7 +528,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
         val client = viewModel.client
         val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
-        if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
+        if (!canResume || !prefs.autoResume) showMainMenu()
         if (showRateDialog) {
             lifecycleScope.launchWhenResumed {
                 RateAppFragment().show(supportFragmentManager, null)

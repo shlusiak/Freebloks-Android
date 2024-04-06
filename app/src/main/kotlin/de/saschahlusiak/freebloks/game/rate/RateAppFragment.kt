@@ -1,8 +1,6 @@
 package de.saschahlusiak.freebloks.game.rate
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -13,13 +11,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,12 +28,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.DialogFragment
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
@@ -50,7 +46,7 @@ class RateAppFragment : DialogFragment() {
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     @Inject
-    lateinit var prefs: SharedPreferences
+    lateinit var prefs: Preferences
 
     @Inject
     lateinit var analytics: AnalyticsProvider
@@ -133,9 +129,7 @@ class RateAppFragment : DialogFragment() {
         Row {
             FilledTonalButton(onClick = {
                 analytics.logEvent("rate_no_click", null)
-                prefs.edit()
-                    .putBoolean("rate_show_again", false)
-                    .apply()
+                prefs.rateShowAgain = false
 
                 dismiss()
             }, Modifier.weight(1f)) {
@@ -155,9 +149,7 @@ class RateAppFragment : DialogFragment() {
                     "android.intent.action.VIEW",
                     Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
                 )
-                prefs.edit()
-                    .putBoolean("rate_show_again", false)
-                    .apply()
+                prefs.rateShowAgain = false
 
                 dismiss()
                 startActivity(intent)
@@ -170,31 +162,26 @@ class RateAppFragment : DialogFragment() {
     companion object {
         private val tag = RateAppFragment::class.java.simpleName
 
-        fun shouldShowRateDialog(context: Context): Boolean {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val editor = prefs.edit()
-
-            var starts = prefs.getLong("rate_number_of_starts", 0) + 1
-            var firstStarted = prefs.getLong("rate_first_started", 0)
+        fun shouldShowRateDialog(prefs: Preferences): Boolean {
+            var starts = prefs.numberOfStarts + 1
 
             var show = false
-            if (prefs.getBoolean("rate_show_again", true)) {
+            if (prefs.rateShowAgain) {
+                val firstStarted = prefs.firstStarted
                 if (firstStarted <= 0) {
-                    firstStarted = System.currentTimeMillis()
+                    prefs.firstStarted = System.currentTimeMillis()
                 }
                 Log.d(tag, "started $starts times")
                 Log.d(tag, "elapsed time since first start: " + (System.currentTimeMillis() - firstStarted))
+
                 if (starts >= Global.RATE_MIN_STARTS) starts = Global.RATE_MIN_STARTS.toLong()
+
                 if (starts >= Global.RATE_MIN_STARTS && System.currentTimeMillis() - firstStarted >= Global.RATE_MIN_ELAPSED) {
-                    starts = 0
-                    firstStarted = System.currentTimeMillis()
+                    prefs.numberOfStarts = 0
+                    prefs.firstStarted = System.currentTimeMillis()
                     show = true
                 }
-                editor.putLong("rate_first_started", firstStarted)
             }
-
-            editor.putLong("rate_number_of_starts", starts)
-            editor.apply()
 
             return show
         }

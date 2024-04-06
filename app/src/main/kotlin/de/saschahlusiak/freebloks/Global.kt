@@ -29,7 +29,7 @@ object Global {
     const val RATE_MIN_STARTS = 8
 
     /**
-     * Minimum elapsed time after first start, before rating dialog appears
+     * Minimum elapsed time after first start, before rating dialog appears (4 days)
      */
     const val RATE_MIN_ELAPSED = 4 * (24 * 60 * 60 * 1000).toLong()
 

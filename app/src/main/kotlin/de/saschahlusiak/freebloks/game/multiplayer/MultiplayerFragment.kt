@@ -2,21 +2,15 @@ package de.saschahlusiak.freebloks.game.multiplayer
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.*
 import androidx.annotation.UiThread
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,11 +19,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
-import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
@@ -183,7 +174,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
         analytics.logEvent("multiplayer_host_click", null)
 
         viewModel.name.value = name
-        viewModel.saveName()
+        viewModel.save()
 
         val config = GameConfig(isLocal = false, server = null, showLobby = true)
         listener?.onStartClientGameWithConfig(config, name)
@@ -192,7 +183,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
     private fun joinInternet(name: String) {
         viewModel.name.value = name
-        viewModel.saveName()
+        viewModel.save()
 
         analytics.logEvent("multiplayer_internet_click", null)
         val config = GameConfig(
@@ -210,8 +201,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
         viewModel.name.value = name
         viewModel.server.value = server
-        viewModel.saveName()
-        viewModel.saveServer()
+        viewModel.save()
 
         analytics.logEvent("multiplayer_wireless_click", null)
         val config = GameConfig(isLocal = false, server = server, showLobby = true)
@@ -225,7 +215,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
         val config = GameConfig(isLocal = false, showLobby = true)
 
         viewModel.name.value = name
-        viewModel.saveName()
+        viewModel.save()
 
         Log.i(TAG, "Device selected: " + device.name)
         analytics.logEvent("multiplayer_bluetooth_click", null)

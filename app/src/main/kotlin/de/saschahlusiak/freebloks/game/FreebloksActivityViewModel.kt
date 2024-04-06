@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.LocalSocketAddress
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
@@ -17,9 +16,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatItem
@@ -61,11 +60,11 @@ class FreebloksActivityViewModel @Inject constructor(
     app: Application,
     private val crashReporter: CrashReporter,
     private val analytics: AnalyticsProvider,
+    private val prefs: Preferences,
     val gameHelper: GooglePlayGamesHelper
 ) : ViewModel(), GameEventObserver, SceneDelegate {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(app)
 
     // services
     private var notificationManager: MultiplayerNotificationManager? = null
@@ -97,7 +96,7 @@ class FreebloksActivityViewModel @Inject constructor(
 
     // LiveData
     val chatHistoryAsLiveData = chatHistory.asLiveData()
-    val soundsEnabled = MutableStateFlow(sounds.soundsEnabled)
+    val soundsEnabled = MutableStateFlow(prefs.sounds)
     val soundsEnabledLiveData = soundsEnabled.asLiveData()
     val chatButtonVisible = MutableLiveData(false)
     val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
@@ -121,18 +120,15 @@ class FreebloksActivityViewModel @Inject constructor(
 
     @UiThread
     fun reloadPreferences() {
-        with(prefs) {
-            sounds.vibrationEnabled = getBoolean("vibrate", true)
-            sounds.soundsEnabled = getBoolean("sounds", true)
-            showNotifications = getBoolean("notifications", true)
-            localClientNameOverride = getString("player_name", null)?.ifBlank { null }
-            showSeeds = getBoolean("show_seeds", true)
-            showOpponents = getBoolean("show_opponents", true)
-            val animationType = getString("animations", AnimationType.Full.settingsValue.toString())?.toInt() ?: 0
-            showAnimations = AnimationType.entries.firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
-            snapAid = getBoolean("snap_aid", true)
-            showIntro = !getBoolean("skip_intro", false)
-        }
+        sounds.vibrationEnabled = prefs.vibrationEnabled
+        sounds.soundsEnabled = prefs.sounds
+        showNotifications = prefs.notifications
+        localClientNameOverride = prefs.playerName.takeIf { it.isNotBlank() }
+        showSeeds = prefs.showSeeds
+        showOpponents = prefs.showOpponents
+        snapAid = prefs.snapAid
+        showIntro = !prefs.skipIntro
+        showAnimations = prefs.showAnimations
 
         soundsEnabled.value = sounds.soundsEnabled
 
@@ -154,11 +150,8 @@ class FreebloksActivityViewModel @Inject constructor(
     }
 
     fun toggleSound(): Boolean {
-        val value = !sounds.soundsEnabled
-        prefs
-            .edit()
-            .putBoolean("sounds", value)
-            .apply()
+        val value = !prefs.sounds
+        prefs.sounds = value
         sounds.soundsEnabled = value
         soundsEnabled.value = value
         return value

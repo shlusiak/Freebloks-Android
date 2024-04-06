@@ -18,12 +18,12 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.about.AboutFragment
 import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent
 import de.saschahlusiak.freebloks.game.multiplayer.MultiplayerFragment
@@ -44,14 +44,16 @@ class MainMenuFragment : DialogFragment() {
     @Inject
     lateinit var analytics: AnalyticsProvider
 
+    @Inject
+    lateinit var prefs: Preferences
+
     override fun getTheme() = R.style.Theme_Freebloks_Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        // The FreebloksActivity/RateDialog gets to increment this before this is created
-        val starts = prefs.getLong("rate_number_of_starts", 0)
+        // The FreebloksActivity/RateDialog gets to increment it before this is created
+        val starts = prefs.numberOfStarts
 
         appIconIsDonate = !Global.IS_VIP && (starts % Global.DONATE_STARTS == 0L)
         if (appIconIsDonate) {
