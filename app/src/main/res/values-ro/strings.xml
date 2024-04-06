@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Freebloks</string>
-    <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2020.</string>
-    <string name="github_link" translatable="false">https://github.com/shlusiak/Freebloks-Android</string>
-    <string name="notification_channel_default" translatable="false">General</string>
 
     <string name="play_again">Joc nou</string>
     <string name="new_game">Joc nou</string>
@@ -86,6 +82,7 @@
     </plurals>
     <string name="chat">Chat</string>
     <string name="join_player_name">Numele tău:</string>
+    <string name="player_name_hint">Numele tău</string>
     <string name="client_d">Jucătorul %1$d</string>
     <string name="player_joined_color">%1$s joacă %2$s</string>
     <string name="player_left_color">%1$s (%2$s) a părăsit conversaţia</string>
@@ -154,8 +151,6 @@
     <string name="donation_text_short">Ai vrea să susţii creatorii cu o donaţie la alegere?</string>
     <string name="donation_skip">Poate mai târziu</string>
     <string name="donation_yes">Da!</string>
-    <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>
-    <string name="donation_paypal" translatable="false">PayPal</string>
     <string name="donate_thank_you">Îţi mulţumim că susţii Freebloks!</string>
 
     <string name="advanced">Avansat</string>
@@ -207,9 +202,6 @@
     <string name="prefs_board_theme">Tabla de joc</string>
     <string name="prefs_statistics">Statistici</string>
     <string name="prefs_statistics_long">Afişează statisticile jocului</string>
-
-    <string name="blokus_duo" translatable="false">Blokus Duo</string>
-    <string name="blokus_junior" translatable="false">Blokus Junior</string>
 
     <string name="rules_title">Reguli Blokus</string>
     <string name="rules_youtube">Urmăreşte video de îndrumare</string>

@@ -62,6 +62,7 @@
     </plurals>
     <string name="chat">チャット</string>
     <string name="join_player_name">あなたの名前:</string>
+    <string name="player_name_hint">あなたの名前</string>
     <string name="client_d">プレイヤー %1$d</string>
     <string name="player_joined_color">%1$s は %2$s をプレイ中</string>
     <string name="player_left_color">%1$s (%2$s) 残り</string>

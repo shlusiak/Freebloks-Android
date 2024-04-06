@@ -65,6 +65,7 @@
     </plurals>
     <string name="chat">Chat</string>
     <string name="join_player_name">Seu nome:</string>
+    <string name="player_name_hint">Seu nome</string>
     <string name="client_d">Jogador %1$d</string>
     <string name="player_joined_color">%1$s está jogando %2$s</string>
     <string name="player_left_color">%1$s (%2$s) saiu</string>
