@@ -27,6 +27,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
 
+    api 'androidx.compose.runtime:runtime-android:1.6.4'
+
+
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
 }

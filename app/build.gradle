@@ -87,8 +87,6 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.7.0'
-
     // for unit tests
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.11.0'
@@ -116,11 +114,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation 'com.google.android.material:material:1.11.0'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
-
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.7.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
 
@@ -133,9 +128,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation 'androidx.preference:preference-ktx:1.2.1'
-
-    // https://github.com/ShawnLin013/NumberPicker
-    implementation 'io.github.ShawnLin013:number-picker:2.4.13'
 
     /// NON-FREE DEPENDENCIES, only included in "google" and "amazon" store flavours, excluded in "fdroid"
     /// =====================

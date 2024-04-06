@@ -20,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -151,7 +152,7 @@ private fun ImageButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    OutlinedButton(
+    ElevatedButton(
         modifier = modifier,
         contentPadding = PaddingValues(20.dp),
         onClick = onClick
@@ -160,7 +161,7 @@ private fun ImageButton(
             painter = painterResource(id = image),
             contentDescription = null,
             modifier = Modifier
-                .size(40.dp)
+                .size(32.dp)
         )
     }
 }
