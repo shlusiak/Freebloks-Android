@@ -44,7 +44,7 @@ class DonateFragment : DialogFragment() {
         view.setContent {
             AppTheme {
                 DonateScreen(
-                    showPaypal = !Global.IS_GOOGLE,
+                    showPaypal = true, // !Global.IS_GOOGLE,
                     onDismiss = ::onSkipButtonPress,
                     onFreebloksVIP = ::onFreebloksVIPClick,
                     onPaypal = ::onPayPalClick,

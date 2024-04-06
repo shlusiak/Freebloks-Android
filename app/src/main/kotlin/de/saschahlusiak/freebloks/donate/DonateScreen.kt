@@ -1,9 +1,5 @@
 package de.saschahlusiak.freebloks.donate
 
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -13,16 +9,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -81,7 +74,7 @@ fun DonateScreen(
             )
 
             Row(
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = 12.dp),
                 horizontalArrangement = spacedBy(16.dp)
             ) {
                 ImageButton(image = R.drawable.logo_freebloks_vip, onClick = onFreebloksVIP)
@@ -113,9 +106,9 @@ private fun ImageButton(
     onClick: () -> Unit
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.primary,
-        shape = RoundedCornerShape(4.dp),
-        shadowElevation = 2.dp,
+        color = MaterialTheme.colorScheme.primaryContainer,
+        shape = RoundedCornerShape(8.dp),
+        shadowElevation = 3.dp,
         modifier = modifier,
         onClick = onClick
     ) {
@@ -124,7 +117,7 @@ private fun ImageButton(
             contentDescription = null,
             modifier = Modifier
                 .padding(8.dp)
-                .size(56.dp)
+                .size(64.dp)
         )
     }
 }

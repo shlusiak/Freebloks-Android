@@ -153,7 +153,7 @@
     <string name="donation_title">Buy me a coffee</string>
     <string name="donation_text_line1">Freebloks is free software. You can use and modify it completely free of charge!</string>
     <string name="donation_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
-    <string name="donation_text_short">Would you like to support the developers with a small donation?</string>
+    <string name="donation_text_short">Would you like to contribute to the development of this game?</string>
     <string name="donation_skip">Maybe later</string>
     <string name="donation_yes">Yes!</string>
     <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>
@@ -201,7 +201,7 @@
     <string name="prefs_rules">Show rules&#8230;</string>
     <string name="prefs_rate_review_long">Please rate or leave a comment</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
-    <string name="prefs_donation_long">Please support the development with a donation</string>
+    <string name="prefs_donation_long">Please support the development of this game</string>
     <string name="prefs_donation">Coffee&#8230;</string>
     <string name="prefs_player_name">Player Name</string>
     <string name="prefs_player_name_default">[default]</string>
