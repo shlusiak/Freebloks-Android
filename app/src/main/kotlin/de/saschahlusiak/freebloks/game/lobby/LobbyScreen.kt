@@ -90,7 +90,7 @@ fun LobbyScreen(
                     Button(
                         onClick = onStart,
                         modifier = Modifier.weight(1f),
-                        enabled = (status != null && status.clients > 1) || BuildConfig.DEBUG
+                        enabled = (status != null && status.player > 1 && status.clients > 1) || BuildConfig.DEBUG
                     ) {
                         Text(stringResource(id = R.string.start))
                     }
