@@ -6,8 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -17,6 +23,9 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
+import de.saschahlusiak.freebloks.statistics.StatisticsBottomSheet
+import de.saschahlusiak.freebloks.statistics.StatisticsContent
+import de.saschahlusiak.freebloks.statistics.StatisticsViewModel
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import javax.inject.Inject
@@ -55,6 +64,7 @@ class GameFinishFragment : DialogFragment() {
     private fun Content() {
         val gameMode = viewModel.gameMode
         val isSignedIn = viewModel.isSignedIn.asFlow().collectAsState(initial = false)
+        var showStatistics by remember { mutableStateOf(false) }
 
         GameFinishScreen(
             gameMode = gameMode,
@@ -67,6 +77,26 @@ class GameFinishFragment : DialogFragment() {
             onLeaderboards = ::onLeaderboard,
             onStatistics = ::onStatistics
         )
+
+        if (showStatistics) {
+            StatisticsSheet { showStatistics = false }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun StatisticsSheet(onDismiss: () -> Unit) {
+        val viewModel: StatisticsViewModel by viewModels()
+
+        ModalBottomSheet(onDismissRequest = onDismiss) {
+
+            StatisticsContent(
+                gameMode = viewModel.gameMode.collectAsState().value,
+                data = viewModel.data.collectAsState().value,
+                onGameMode = { viewModel.gameMode.value = it }
+            )
+
+        }
     }
 
     private fun onNewGame() {
@@ -91,8 +121,15 @@ class GameFinishFragment : DialogFragment() {
 
     private fun onStatistics() {
         analytics.logEvent("finish_statistics_click")
-        val intent = Intent(requireContext(), StatisticsActivity::class.java)
-        startActivity(intent)
+
+
+        if (true) {
+            StatisticsBottomSheet().show(parentFragmentManager, null)
+
+        } else {
+            val intent = Intent(requireContext(), StatisticsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun onMainMenu() {

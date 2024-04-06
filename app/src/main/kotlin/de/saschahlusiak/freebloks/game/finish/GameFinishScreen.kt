@@ -98,7 +98,6 @@ fun GameFinishScreen(
                 Modifier.padding(top = 12.dp),
                 horizontalArrangement = spacedBy(6.dp)
             ) {
-
                 FilledTonalIconButton(onClick = onStatistics) {
                     Icon(painter = painterResource(id = R.drawable.ic_chart), contentDescription = null)
                 }
