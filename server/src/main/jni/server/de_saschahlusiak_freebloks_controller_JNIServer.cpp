@@ -88,14 +88,24 @@ void* gameRunThread(void* param)
 	return NULL;
 }
 
-
 static int max_humans = 4;
-static bool force_delay = true;
 
-
-extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
-  (JNIEnv *je, jobject jc, jstring interface, jint port, jint field_size_x, jint field_size_y, jint current_player, jintArray spieler, jintArray field_data, jintArray player_data, jint gamemode, jint ki_mode, jint ki_threads)
-{
+extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server(
+		JNIEnv *je,
+		jobject jc,
+		jstring interface,
+		jint port,
+		jint field_size_x,
+		jint field_size_y,
+		jint current_player,
+		jintArray spieler,
+		jintArray field_data,
+		jintArray player_data,
+		jint gamemode,
+		jint ki_mode,
+		jint ki_threads,
+		jboolean force_delay
+) {
 	int ret;
 	pthread_t pt;
 
@@ -153,9 +163,19 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServ
 	return 0;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server
-  (JNIEnv * je, jobject jc, jstring interface, jint port, jint gamemode, jint field_size_x, jint field_size_y, jintArray stones, jint ki_mode, jint ki_threads)
-{
+extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server(
+		JNIEnv * je,
+		jobject jc,
+		jstring interface,
+		jint port,
+		jint gamemode,
+		jint field_size_x,
+		jint field_size_y,
+		jintArray stones,
+		jint ki_mode,
+		jint ki_threads,
+		jboolean force_delay
+) {
 	int ret;
 	pthread_t pt;
 

@@ -1,13 +1,16 @@
 package de.saschahlusiak.freebloks.game.lobby
 
-sealed class ChatItem {
+import androidx.compose.runtime.Immutable
+
+@Immutable
+sealed interface ChatItem {
     /**
      * Server message about a player (joined / left)
      *
      * @param player the player number, may not have a client associated
      * @param text the content of the message
      */
-    data class Server(val player: Int, val text: String): ChatItem()
+    data class Server(val player: Int, val text: String): ChatItem
 
     /**
      * Chat message from a client
@@ -18,10 +21,10 @@ sealed class ChatItem {
      * @param name the name of the player
      * @param text the content of the message
      */
-    data class Message(val client: Int, val player: Int?, val isLocal: Boolean, val name: String, val text: String): ChatItem()
+    data class Message(val client: Int, val player: Int?, val isLocal: Boolean, val name: String, val text: String): ChatItem
 
     /**
      * Generic message
      */
-    data class Generic(val text: String): ChatItem()
+    data class Generic(val text: String): ChatItem
 }

@@ -7,7 +7,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.TwoStatePreference
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.donate.DonateActivity
+import de.saschahlusiak.freebloks.donate.DonateFragment
 
 /**
  * The headers for [SettingsActivity] if in multi pane mode
@@ -36,8 +36,7 @@ class HeadersFragment : PreferenceFragmentCompat() {
                 isVisible = false
             } else {
                 setOnPreferenceClickListener {
-                    val intent = Intent(requireContext(), DonateActivity::class.java)
-                    startActivity(intent)
+                    DonateFragment().show(parentFragmentManager, null)
                     true
                 }
             }

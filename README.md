@@ -80,7 +80,7 @@ git submodule update
 
 ## Donate
 
-Freebloks is free software. If you like Freebloks why not consider a donation? You can either purchase Freebloks VIP on Google Play, send bitcoin or donate via Paypal.
+Freebloks is free software. If you like Freebloks why not consider a donation? You can either purchase Freebloks VIP on Google Play, or donate via Paypal.
 
 <table>
   <tr>
@@ -88,16 +88,6 @@ Freebloks is free software. If you like Freebloks why not consider a donation? Y
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip"><img src="stuff/freebloks_vip_qr_code.png" alt="Freebloks VIP URL QR code" width="130px"></a></td>
     <td><a href="https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip">https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip</a></td>
   </tr> 
-  <tr>
-    <td><a href="litecoin:Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt?amount=0.001"><img src="https://cryptologos.cc/logos/versions/litecoin-ltc-logo-full.svg?v=010" alt="Litecoin" width="80px"></a></td>
-    <td><a href="litecoin:Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt?amount=0.001"><img src="stuff/litecoin_qr_code.png" alt="Bitcoin QR code" width="130px"></a></td>
-    <td><samp><a href="https://www.blockchain.com/ltc/address/Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt">Lh3YTC7Tv4edEe48kHMbyhgE6BNH22bqBt</a></samp></td>
-  </tr>
-  <tr>
-    <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="https://bitcoin.org/img/icons/logotop.svg" alt="Bitcoin" width="80px"></a></td>
-    <td><a href="bitcoin:bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl?amount=0.0002"><img src="stuff/bitcoin_qr_code.png" alt="Bitcoin QR code" width="130px"></a></td>
-    <td><samp><a href="https://www.blockchain.com/btc/address/bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl">bc1qdgm2zvlc6qzqh8qs44wv8l622tfrhvkjqn0fkl</a></samp></td>
-  </tr>
   <tr>
     <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_74x46.jpg" alt="Paypal" width="80px" ></a></td>
     <td><a href="https://paypal.me/saschahlusiak/3eur"><img src="stuff/paypal_qr_code.png" alt="Paypal QR code" width="130px"></a></td>
@@ -116,7 +106,9 @@ published by the Free Software Foundation, either version 2 of the License, or
 
 Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2024.
 
-Email: apps@saschahlusiak.de
+Email: apps@saschahlusiak.de<br/>
+<br/>
 Project homepage: http://www.saschahlusiak.de/freebloks-3d-android/
+<br/>
 GitHub: https://github.com/shlusiak/Freebloks-Android
 

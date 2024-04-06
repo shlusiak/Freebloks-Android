@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditTextPreference
-        android:inputType="textCapWords"
+        android:inputType="textCapWords|textPersonName"
         android:key="player_name"
         android:persistent="true"
         android:singleLine="true"

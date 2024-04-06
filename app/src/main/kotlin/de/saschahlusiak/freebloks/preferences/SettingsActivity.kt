@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.preferences
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.Window
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

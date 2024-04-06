@@ -26,7 +26,8 @@ object JNIServer {
         field_size_y: Int,
         stones: IntArray?,
         ki_mode: Int,
-        ki_threads: Int
+        ki_threads: Int,
+        force_delay: Boolean
     ): Int
 
     @Suppress("FunctionName")
@@ -41,10 +42,26 @@ object JNIServer {
         player_stone_data: IntArray,
         game_mode: Int,
         ki_mode: Int,
-        ki_threads: Int
+        ki_threads: Int,
+        force_delay: Boolean
     ): Int
 
-    fun runServerForNewGame(isLocal: Boolean, gameMode: GameMode, size: Int, stones: IntArray?, kiMode: Int): Int {
+    /**
+     * @param isLocal whether local unix domain sockets should be used
+     * @param gameMode GameMode
+     * @param size board size
+     * @param stones the stones to use, or null for default
+     * @param kiMode KI Strength (higher values means more random; easier)
+     * @param forceDelay whether the spawned server should insert delays between CPU players
+     */
+    fun runServerForNewGame(
+        isLocal: Boolean,
+        gameMode: GameMode,
+        size: Int,
+        stones: IntArray?,
+        kiMode: Int,
+        forceDelay: Boolean
+    ): Int {
         val threads = get_number_of_processors()
         Log.d(tag, "spawning server with $threads threads")
 
@@ -56,7 +73,8 @@ object JNIServer {
             field_size_y = size,
             stones = stones,
             ki_mode = kiMode,
-            ki_threads = threads
+            ki_threads = threads,
+            force_delay = forceDelay
         )
     }
 
@@ -85,7 +103,8 @@ object JNIServer {
             player_stone_data = playerStonesAvailable,
             game_mode = game.gameMode.ordinal,
             ki_mode = kiMode,
-            ki_threads = threads
+            ki_threads = threads,
+            force_delay = true
         )
     }
 

@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Freebloks.Dark" parent="Theme.MaterialComponents">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+    <style name="Theme.Freebloks.Theme" parent="Theme.Material3.DayNight" />
+
+    <style name="Theme.Freebloks.AppBase" parent="Theme.Freebloks.Theme">
+        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
 
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
 
-        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">@android:color/black</item>
 
-        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
     </style>
 
-    <style name="Theme.Freebloks.Game" parent="Theme.Freebloks.DayNight">
+    <style name="Theme.Freebloks" parent="Theme.Freebloks.AppBase">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+
+    </style>
+
+    <style name="Theme.Freebloks.Game">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -39,96 +55,24 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="Theme.Freebloks.Light" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-
-        <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
-        <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
-
-        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.Small</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+    <style name="Theme.Freebloks.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Freebloks.DayNight" parent="Theme.Freebloks.Light" />
 
-    <style name="Theme.Freebloks.Auto" parent="Theme.Freebloks.DayNight" />
+    <style name="Theme.Freebloks.Dialog" parent="ThemeOverlay.Material3.Dialog">
+        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
 
-    <style name="Theme.Freebloks.Dialog" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-
-        <item name="android:windowMinWidthMajor">10%</item>
-        <item name="android:windowMinWidthMinor">10%</item>
-
-
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+        <item name="windowMinWidthMajor">10%</item>
+        <item name="windowMinWidthMinor">10%</item>
     </style>
 
-    <style name="Theme.Freebloks.Dialog.MinWidth" parent="Theme.MaterialComponents.Dialog.MinWidth">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+    <style name="Theme.Freebloks.Dialog.MinWidth" parent="Theme.Material3.DayNight.Dialog.MinWidth" />
 
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+    <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
+        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+        <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>
     </style>
-
-    <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-    </style>
-
-    <style name="Theme.Freebloks.Light.Dialog.MinWidth" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
-        <item name="android:textAppearance">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
-        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Small</item>
-        <item name="android:textAppearanceListItem">@style/TextAppearance.Medium</item>
-        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Small</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
-    </style>
-
-    <style name="Theme.Freebloks.DayNight.Dialog.MinWidth" parent="Theme.Freebloks.Light.Dialog.MinWidth" />
 </resources>

@@ -1,12 +1,12 @@
 package de.saschahlusiak.freebloks.game
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.LocalSocketAddress
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
@@ -17,9 +17,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatItem
@@ -58,14 +58,14 @@ data class SheetPlayer(
 
 @HiltViewModel
 class FreebloksActivityViewModel @Inject constructor(
-    private val app: Application,
+    app: Application,
     private val crashReporter: CrashReporter,
     private val analytics: AnalyticsProvider,
+    private val prefs: Preferences,
     val gameHelper: GooglePlayGamesHelper
 ) : ViewModel(), GameEventObserver, SceneDelegate {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(app)
 
     // services
     private var notificationManager: MultiplayerNotificationManager? = null
@@ -73,7 +73,6 @@ class FreebloksActivityViewModel @Inject constructor(
     // settings
     private var showNotifications: Boolean = true
     var showIntro = true
-    val soundsEnabled get() = sounds.soundsEnabled
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
         private set
@@ -91,17 +90,17 @@ class FreebloksActivityViewModel @Inject constructor(
         private set
     val game get() = client?.game
     val board get() = client?.game?.board
-    var lastStatus: MessageServerStatus? = null
-        private set
+    val lastStatus = MutableStateFlow<MessageServerStatus?>(null)
 
     private val chatHistory = MutableStateFlow(emptyList<ChatItem>())
     val sounds: BaseSounds = DefaultSounds(app)
 
     // LiveData
     val chatHistoryAsLiveData = chatHistory.asLiveData()
-    val soundsEnabledLiveData = MutableLiveData(sounds.soundsEnabled)
+    val soundsEnabled = MutableStateFlow(prefs.sounds)
+    val soundsEnabledLiveData = soundsEnabled.asLiveData()
     val chatButtonVisible = MutableLiveData(false)
-    val connectionStatus = MutableLiveData(ConnectionStatus.Disconnected)
+    val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
     val playerToShowInSheet = MutableLiveData(SheetPlayer(-1, false))
     val googleAccountSignedIn: MutableLiveData<Boolean>
     val canRequestUndo = MutableLiveData(false)
@@ -122,20 +121,17 @@ class FreebloksActivityViewModel @Inject constructor(
 
     @UiThread
     fun reloadPreferences() {
-        with(prefs) {
-            sounds.vibrationEnabled = getBoolean("vibrate", true)
-            sounds.soundsEnabled = getBoolean("sounds", true)
-            showNotifications = getBoolean("notifications", true)
-            localClientNameOverride = getString("player_name", null)?.ifBlank { null }
-            showSeeds = getBoolean("show_seeds", true)
-            showOpponents = getBoolean("show_opponents", true)
-            val animationType = getString("animations", AnimationType.Full.settingsValue.toString())?.toInt() ?: 0
-            showAnimations = AnimationType.values().firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
-            snapAid = getBoolean("snap_aid", true)
-            showIntro = !getBoolean("skip_intro", false)
-        }
+        sounds.vibrationEnabled = prefs.vibrationEnabled
+        sounds.soundsEnabled = prefs.sounds
+        showNotifications = prefs.notifications
+        localClientNameOverride = prefs.playerName.takeIf { it.isNotBlank() }
+        showSeeds = prefs.showSeeds
+        showOpponents = prefs.showOpponents
+        snapAid = prefs.snapAid
+        showIntro = !prefs.skipIntro
+        showAnimations = prefs.showAnimations
 
-        soundsEnabledLiveData.value = sounds.soundsEnabled
+        soundsEnabled.value = sounds.soundsEnabled
 
         if (showNotifications) {
             client?.let {
@@ -155,13 +151,10 @@ class FreebloksActivityViewModel @Inject constructor(
     }
 
     fun toggleSound(): Boolean {
-        val value = !soundsEnabled
-        prefs
-            .edit()
-            .putBoolean("sounds", value)
-            .apply()
+        val value = !prefs.sounds
+        prefs.sounds = value
         sounds.soundsEnabled = value
-        soundsEnabledLiveData.value = value
+        soundsEnabled.value = value
         return value
     }
 
@@ -286,6 +279,11 @@ class FreebloksActivityViewModel @Inject constructor(
         if (requestPlayers == null) {
             client.requestPlayer(-1, clientName)
         } else {
+            if (config.gameMode == GameMode.GAMEMODE_4_COLORS_2_PLAYERS) {
+                requestPlayers[2] = false
+                requestPlayers[3] = false
+            }
+
             for (i in 0..3)
                 if (requestPlayers[i])
                     client.requestPlayer(i, clientName)
@@ -326,6 +324,7 @@ class FreebloksActivityViewModel @Inject constructor(
         bluetoothServer.start()
     }
 
+    @SuppressLint("MissingPermission")
     @UiThread
     fun connectToBluetooth(remote: BluetoothDevice, clientName: String?) = viewModelScope.launch {
         val client = client ?: return@launch
@@ -345,7 +344,7 @@ class FreebloksActivityViewModel @Inject constructor(
         Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
         if (!client.connect(remote)) {
             // connection has failed, observers have been notified
-            connectionStatus.postValue(ConnectionStatus.Failed)
+            connectionStatus.value = ConnectionStatus.Failed
             connectJob = null
             return@launch
         }
@@ -363,7 +362,7 @@ class FreebloksActivityViewModel @Inject constructor(
                     client.requestPlayer(i, clientName)
         }
 
-        connectionStatus.postValue(ConnectionStatus.Connected)
+        connectionStatus.value = ConnectionStatus.Connected
     }
 
     @UiThread
@@ -430,7 +429,7 @@ class FreebloksActivityViewModel @Inject constructor(
         }
 
         // then either the name of the player, or the name of the color if not
-        return lastStatus?.getPlayerName(player) ?: colorName
+        return lastStatus.value?.getPlayerName(player) ?: colorName
     }
 
     fun requestHint() {
@@ -450,7 +449,7 @@ class FreebloksActivityViewModel @Inject constructor(
     @UiThread
     override fun onConnected(client: GameClient) {
         Log.d(tag, "onConnected")
-        lastStatus = null
+        lastStatus.value = null
         connectionStatus.value = ConnectionStatus.Connected
         playerToShowInSheet.value = SheetPlayer(client.game.currentPlayer, false)
         canRequestHint.value = (client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
@@ -465,7 +464,7 @@ class FreebloksActivityViewModel @Inject constructor(
         reloadPreferences()
 
         // Send analytics event
-        val lastStatus = lastStatus ?: return
+        val lastStatus = lastStatus.value ?: return
 
         val client = client ?: return
         val game = client.game
@@ -487,7 +486,7 @@ class FreebloksActivityViewModel @Inject constructor(
 
     @UiThread
     override fun serverStatus(status: MessageServerStatus) {
-        this.lastStatus = status
+        lastStatus.value = status
 
         if (status.clients > 1) {
             chatButtonVisible.postValue(true)
@@ -520,7 +519,7 @@ class FreebloksActivityViewModel @Inject constructor(
             client.game.isLocalPlayer() &&
             client.game.isStarted &&
             !client.game.isFinished &&
-            (lastStatus?.clients == 1) &&
+            (lastStatus.value?.clients == 1) &&
             !client.game.history.isEmpty()
         )
     }
@@ -531,7 +530,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val isLocal = game?.isLocalPlayer(player) ?: false
         val e = ChatItem.Message(client, if (player < 0) null else player, isLocal, name, message)
 
-        chatHistory.value = chatHistory.value + e
+        chatHistory.value += e
     }
 
     @UiThread
@@ -545,7 +544,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
         val e = ChatItem.Server(player, text)
 
-        chatHistory.value = chatHistory.value + e
+        chatHistory.value += e
     }
 
     @UiThread
@@ -559,7 +558,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val text = context.getString(R.string.player_left_color, clientName, colorName)
         val e = ChatItem.Server(player, text)
 
-        chatHistory.value = chatHistory.value + e
+        chatHistory.value += e
     }
 
     @UiThread
@@ -569,17 +568,12 @@ class FreebloksActivityViewModel @Inject constructor(
     }
 
     @UiThread
-    override fun stoneUndone(t: Turn) {
-        analytics.logEvent("game_undo", null)
-    }
-
-    @UiThread
     override fun onDisconnected(client: GameClient, error: Throwable?) {
         Log.d(tag, "onDisconneced")
         if (client === this.client) {
             // we may already have swapped to another client, which drives the status
-            lastStatus = null
-            connectionStatus.postValue(ConnectionStatus.Disconnected)
+            lastStatus.value = null
+            connectionStatus.value = ConnectionStatus.Disconnected
             setSheetPlayer(-1, false)
             chatButtonVisible.postValue(false)
         }

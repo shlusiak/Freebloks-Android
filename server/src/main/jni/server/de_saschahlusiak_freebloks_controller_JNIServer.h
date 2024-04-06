@@ -12,10 +12,10 @@ JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_get_1num
   (JNIEnv *, jobject thiz);
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server
-  (JNIEnv *, jobject thiz, jstring, jint, jint, jint, jint, jintArray stones, jint, jint);
+  (JNIEnv *, jobject thiz, jstring, jint, jint, jint, jint, jintArray stones, jint, jint, jboolean);
 
 JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1resume_1server
-  (JNIEnv *, jobject thiz, jstring, jint, jint, jint, jint, jintArray, jintArray, jintArray, jint, jint, jint);
+  (JNIEnv *, jobject thiz, jstring, jint, jint, jint, jint, jintArray, jintArray, jintArray, jint, jint, jint, jboolean);
 
 #ifdef __cplusplus
 }

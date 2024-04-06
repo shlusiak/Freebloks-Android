@@ -13,8 +13,8 @@
     <RelativeLayout
         android:id="@+id/menuOverlayContainer"
         android:layout_width="match_parent"
-        android:layout_above="@id/bottomSheet"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomSheet">
 
         <FrameLayout
             android:id="@+id/chatButtonContainer"
@@ -92,9 +92,9 @@
             android:id="@+id/myLocationContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:layout_margin="12dp"
             android:alpha="0.75"
             android:background="@drawable/pill_background">
 

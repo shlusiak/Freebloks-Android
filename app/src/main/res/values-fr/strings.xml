@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="play_again">Nouvelle partie</string>
     <string name="new_game">Nouvelle partie</string>
     <string name="resume_game">Reprendre</string>
     <string name="host_game">Hôte&#8230;</string>
@@ -64,6 +65,7 @@
     </plurals>
     <string name="chat">Chat</string>
     <string name="join_player_name">Votre nom&#160;:</string>
+    <string name="player_name_hint">Votre nom</string>
     <string name="client_d">Joueur %1$d</string>
     <string name="player_joined_color">%1$s joue %2$s</string>
     <string name="player_left_color">%1$s (%2$s) a abandonné</string>
@@ -162,7 +164,7 @@
     <string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
     <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
     <string name="prefs_donation_long">Veuillez soutenir le développement par un don</string>
-    <string name="prefs_donation">Achète-moi un café&#8230;</string>
+    <string name="prefs_donation">Café&#8230;</string>
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_background_theme">Fond d\'écran </string>

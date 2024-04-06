@@ -23,22 +23,22 @@ import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
+import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
-import de.saschahlusiak.freebloks.donate.DonateActivity
-import de.saschahlusiak.freebloks.game.dialogs.ConnectingDialog
-import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment
-import de.saschahlusiak.freebloks.game.dialogs.RateAppFragment.Companion.shouldShowRateDialog
+import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -73,7 +73,9 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private lateinit var view: Freebloks3DView
     private var showRateDialog = false
     private lateinit var scene: Scene
-    private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
+
+    @Inject
+    lateinit var prefs: Preferences
 
     @Inject
     lateinit var analytics: AnalyticsProvider
@@ -127,13 +129,21 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             view.setScale(savedInstanceState.getFloat("view_scale", 1.0f))
             showRateDialog = savedInstanceState.getBoolean("showRateDialog", false)
         } else {
-            view.setScale(prefs.getFloat("view_scale", 1.0f))
-            showRateDialog = shouldShowRateDialog(this)
-            val starts = prefs.getLong("rate_number_of_starts", 0)
+            view.setScale(prefs.viewScale)
 
+            // Increase the number of starts and store first launch time
+            prefs.numberOfStarts += 1
+            if (prefs.firstStarted <= 0) {
+                prefs.firstStarted = System.currentTimeMillis()
+            }
+
+            showRateDialog = shouldShowRateDialog()
+
+            val starts = prefs.numberOfStarts
+
+            // At exactly this many starts, show the DonateActivity once
             if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {
-                val intent = Intent(this, DonateActivity::class.java)
-                startActivity(intent)
+                DonateFragment().show(supportFragmentManager, null)
             }
 
             supportFragmentManager
@@ -187,7 +197,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }
         }
 
-        viewModel.connectionStatus.observe(this) { onConnectionStatusChanged(it) }
+        viewModel.connectionStatus.asLiveData().observe(this) { onConnectionStatusChanged(it) }
         viewModel.playerToShowInSheet.observe(this) { onPlayerSheetChanged(it) }
         viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
         viewModel.canRequestHint.observe(this) { binding.hintButton.isEnabled = it }
@@ -201,6 +211,27 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
 
         showMenu(shown = false, animate = false)
+    }
+
+    private fun shouldShowRateDialog(): Boolean {
+        // User has seen this before and does not want to see it again
+        if (!prefs.rateShowAgain) return false
+
+        val starts = prefs.numberOfStarts
+        val firstStarted = prefs.firstStarted
+
+        Log.d(tag, "started $starts times")
+        Log.d(tag, "elapsed time since first start: " + (System.currentTimeMillis() - firstStarted))
+
+        // Not started often enough
+        if (starts < Global.RATE_MIN_STARTS) return false
+
+        // Not enough time elapsed since first start
+        if (System.currentTimeMillis() - firstStarted < Global.RATE_MIN_ELAPSED) return false
+
+        return true
+        // Otherwise we want to show.
+        // Note that when we do shoe, we are resetting all the counts, so the same logic applies again
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -232,9 +263,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     override fun onStop() {
         viewModel.onStop()
         view.onPause()
-        prefs.edit()
-            .putFloat("view_scale", view.getScale())
-            .apply()
+        prefs.viewScale = view.getScale()
 
         Log.d(tag, "onStop")
         super.onStop()
@@ -252,8 +281,8 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         scene.snapAid = viewModel.snapAid
 
         val tm = ThemeManager.get(this)
-        val background = tm.getTheme(prefs.getString("theme", "texture_wood"), ColorThemes.Blue)
-        val board = tm.getTheme(prefs.getString("board_theme", "field_wood"), ColorThemes.White)
+        val background = tm.getTheme(prefs.theme, ColorThemes.Blue)
+        val board = tm.getTheme(prefs.boardTheme, ColorThemes.White)
         view.setTheme(background, board)
 
         viewModel.onStart()
@@ -371,7 +400,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         // Unfortunately the JNI portion does not recognise the turn history, even though we have persisted it in the
         // bundle. As such, to avoid minor inconsistencies, we clear the history to be in sync with the JNI portion.
         game.history.clear()
-        val previousDifficulty = prefs.getInt("difficulty", GameConfig.DEFAULT_DIFFICULTY)
+        val previousDifficulty = prefs.difficulty
         val ret = runServerForExistingGame(game, previousDifficulty)
         if (ret != 0) {
             crashReporter.log("Error starting server: $ret")
@@ -406,11 +435,12 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private fun startNewGame(config: GameConfig, localClientName: String?): Job {
         if (config.server == null) {
             val ret = runServerForNewGame(
-                config.isLocal,
-                config.gameMode,
-                config.fieldSize,
-                config.stones,
-                config.difficulty
+                isLocal = config.isLocal,
+                gameMode = config.gameMode,
+                size = config.fieldSize,
+                stones = config.stones,
+                kiMode = config.difficulty,
+                forceDelay = !Feature.FAST_GAME
             )
 
             if (ret != 0) {
@@ -468,7 +498,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
     override fun onBackPressed() {
         val client = viewModel.client
-        val lastStatus = viewModel.lastStatus
+        val lastStatus = viewModel.lastStatus.value
 
         if (menuShown) {
             showMenu(shown = false, animate = true)
@@ -518,9 +548,19 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             Toast.makeText(this@FreebloksActivity, R.string.could_not_restore_game, Toast.LENGTH_LONG).show()
         }
         val client = viewModel.client
+
         val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
-        if (!canResume || !prefs.getBoolean("auto_resume", false)) showMainMenu()
-        if (showRateDialog) RateAppFragment().show(supportFragmentManager, null)
+        if (!canResume || !prefs.autoResume) showMainMenu()
+
+        if (showRateDialog) {
+            lifecycleScope.launchWhenResumed {
+                RateAppFragment().show(supportFragmentManager, null)
+
+                // Reset the counts, so that the logic starts over, in case the user wants to see this again
+                prefs.numberOfStarts = 0
+                prefs.firstStarted = System.currentTimeMillis()
+            }
+        }
         view.requestRender()
     }
 
@@ -678,7 +718,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     @WorkerThread
     override fun gameFinished() {
         val client = viewModel.client ?: return
-        val lastStatus = viewModel.lastStatus ?: return
+        val lastStatus = viewModel.lastStatus.value ?: return
 
         val b = Bundle().apply {
             putString("server", client.config.server)

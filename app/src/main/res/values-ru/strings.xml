@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="play_again">Новая игра</string>
     <string name="new_game">Новая игра</string>
     <string name="resume_game">Продолжить</string>
     <string name="host_game">Хост&#8230;</string>
@@ -61,6 +62,7 @@
     </plurals>
     <string name="chat">Чат</string>
     <string name="join_player_name">Ваше имя:</string>
+    <string name="player_name_hint">Ваше имя</string>
     <string name="client_d">Игрок %1$d</string>
     <string name="player_joined_color">%1$s выбрал %2$s цвет</string>
     <string name="player_left_color">%1$s (%2$s) вышел из игры</string>
