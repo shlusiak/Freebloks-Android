@@ -162,7 +162,7 @@ private fun Preview() {
         GameFinishScreen(
             gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
             data = previewScores,
-            isSignedIn = true,
+            isSignedIn = false,
             onClose = {},
             onNewGame = {},
             onMainMenu = {},

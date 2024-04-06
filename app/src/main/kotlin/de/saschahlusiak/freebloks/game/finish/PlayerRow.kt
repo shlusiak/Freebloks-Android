@@ -7,8 +7,10 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,12 +39,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.isPopupLayout
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.model.GameMode
@@ -120,61 +124,70 @@ fun PlayerRow(
                 color = colorResource(id = color.backgroundColorId),
                 contentColor = Color.White
             ) {
-                Row(
+                Box(
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 8.dp)
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = score.clientName ?: stringResource(id = color.labelResId),
-                        modifier = Modifier
-                            .weight(0.35f)
-                            .graphicsLayer {
-                                if (isLocal) {
-                                    translationX = translation
-                                }
-                            },
-                        style = MaterialTheme.typography.bodyMedium.merge(shadow),
-                        fontWeight = if (isLocal) FontWeight.Bold else FontWeight.Normal
-                    )
-
                     Row(
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
+                        Modifier.align(Alignment.CenterStart)
                     ) {
-                        Text(
-                            text = pluralStringResource(
-                                id = R.plurals.number_of_points,
-                                count = score.totalPoints,
-                                score.totalPoints
-                            ),
-                            style = MaterialTheme.typography.bodyLarge.merge(shadow)
-                        )
-
                         if (score.isPerfect) {
-                            Text(
-                                "(+${score.bonus})",
-                                modifier = Modifier.padding(start = 4.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xaf, 0xf7, 0xaf),
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
+                                modifier = Modifier.padding(end = 4.dp)
                             )
                         }
+
+                        Text(
+                            text = score.clientName ?: stringResource(id = color.labelResId),
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    if (isLocal) {
+                                        translationX = translation
+                                    }
+                                },
+                            style = MaterialTheme.typography.bodyMedium.merge(shadow),
+                            fontWeight = if (isLocal) FontWeight.Bold else FontWeight.Normal
+                        )
                     }
 
-                    Text(
-                        pluralStringResource(
-                            id = R.plurals.number_of_stones_left,
-                            count = score.stonesLeft,
-                            score.stonesLeft
-                        ),
-                        modifier = Modifier.weight(0.4f),
-                        textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.labelSmall.merge(shadow)
-                    )
+                    Column(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (score.isPerfect) {
+                                Text(
+                                    "(+${score.bonus})",
+                                    modifier = Modifier
+                                        .padding(end = 4.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xaf, 0xf7, 0xaf),
+                                )
+                            }
+
+                            Text(
+                                text = pluralStringResource(
+                                    id = R.plurals.number_of_points,
+                                    count = score.totalPoints,
+                                    score.totalPoints
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.bodyLarge.merge(shadow)
+                            )
+                        }
+
+                        Text(
+                            pluralStringResource(
+                                id = R.plurals.number_of_stones_left,
+                                count = score.stonesLeft,
+                                score.stonesLeft
+                            ),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.LightGray
+                        )
+                    }
                 }
             }
         }
