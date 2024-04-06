@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -13,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
@@ -35,6 +37,7 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
  *
  * TODO: make notifications prettier
  */
+@SuppressLint("MissingPermission")
 class MultiplayerNotificationManager(val context: Context, val client: GameClient) : GameEventObserver {
     private val notificationManager = NotificationManagerCompat.from(context)
 
@@ -141,7 +144,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             priority = NotificationCompat.PRIORITY_DEFAULT
             setOngoing(!client.game.isFinished && client.isConnected())
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
-            color = context.resources.getColor(R.color.primaryColor)
+            color = ContextCompat.getColor(context, R.color.md_theme_light_primary)
 
             if (!client.game.isStarted) {
                 // we are in lobby
@@ -196,7 +199,8 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             setSmallIcon(R.drawable.notification_icon)
             setContentText(text)
             setTicker(text)
-            color = context.resources.getColor(R.color.primaryColor)
+            color = ContextCompat.getColor(context, R.color.md_theme_light_primary)
+
             priority = NotificationCompat.PRIORITY_HIGH
             setDefaults(NotificationCompat.DEFAULT_VIBRATE or NotificationCompat.DEFAULT_LIGHTS)
             setSound(soundUri)

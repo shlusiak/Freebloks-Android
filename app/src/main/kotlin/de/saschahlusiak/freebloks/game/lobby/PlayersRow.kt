@@ -72,59 +72,69 @@ fun PlayersRow(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 row.forEach { player ->
-                    val isAvailable = player.client == null || player.isLocal
-                    val background = colorResource(id = player.color.backgroundColorId)
-
-                    if (player.client != null) {
-                        Button(
-                            onClick = { onTogglePlayer(player.player) },
-                            enabled = isAvailable,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = background,
-                                contentColor = Color.White,
-                                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            ),
-                            border = BorderStroke(2.dp, color = background),
-                            elevation = ButtonDefaults.buttonElevation(4.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            if (player.isLocal) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Person,
-                                    contentDescription = null,
-                                    modifier = Modifier.padding(end = 6.dp)
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.Lock,
-                                    contentDescription = null,
-                                    modifier = Modifier.padding(end = 6.dp)
-                                )
-                            }
-                            Text(
-                                text = player.name ?: stringResource(id = R.string.client_d, player.client + 1),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    } else {
-                        OutlinedButton(
-                            onClick = { onTogglePlayer(player.player) },
-                            enabled = !isRunning,
-                            border = BorderStroke(2.dp, color = background),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            if (isRunning) {
-                                Text(text = "---")
-                            } else {
-                                CircularProgressIndicator(
-                                    color = colorResource(id = player.color.backgroundColorId),
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
-                    }
+                    PlayerItem(
+                        modifier = Modifier.weight(1f),
+                        player = player,
+                        gameRunning = isRunning,
+                        onTogglePlayer = onTogglePlayer
+                    )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlayerItem(
+    modifier: Modifier,
+    player: PlayerColor,
+    gameRunning: Boolean,
+    onTogglePlayer: (Int) -> Unit
+) {
+    val isAvailable = player.client == null || player.isLocal
+    val background = colorResource(id = player.color.backgroundColorId)
+
+    if (player.client != null) {
+        Button(
+            onClick = { onTogglePlayer(player.player) },
+            enabled = isAvailable,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = background,
+                contentColor = Color.White,
+                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            border = BorderStroke(1.5.dp, color = background),
+            elevation = ButtonDefaults.buttonElevation(4.dp),
+            modifier = modifier
+        ) {
+            if (!player.isLocal) {
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 6.dp)
+                )
+            }
+
+            Text(
+                text = player.name ?: stringResource(id = R.string.client_d, player.client + 1),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    } else {
+        OutlinedButton(
+            onClick = { onTogglePlayer(player.player) },
+            enabled = !gameRunning,
+            border = BorderStroke(5.dp, color = background),
+            modifier = modifier
+        ) {
+            if (gameRunning) {
+                Text(text = "---")
+            } else {
+                CircularProgressIndicator(
+                    color = colorResource(id = player.color.backgroundColorId),
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
     }
