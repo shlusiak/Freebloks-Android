@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,11 +85,11 @@ fun PlayerRow(
             .fillMaxWidth()
     ) {
         Surface(
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary).takeIf { isLocal },
-            color = if (isLocal) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary).takeIf { isLocal },
+            color = if (isLocal) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
             shape = CircleShape,
             modifier = Modifier
-                .fillMaxHeight(0.7f)
+                .size(40.dp, 40.dp)
                 .aspectRatio(1f)
         ) {
             Box {
@@ -96,7 +98,7 @@ fun PlayerRow(
                     color = if (isLocal) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = if (isLocal) FontWeight.Bold else FontWeight.Normal,
                     modifier = Modifier.align(Alignment.Center),
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
         }
@@ -168,12 +170,11 @@ fun PlayerRow(
                                     "+${score.bonus}",
                                     modifier = Modifier
                                         .padding(end = 4.dp),
-                                    style = MaterialTheme.typography.labelSmall,
+                                    style = MaterialTheme.typography.labelMedium,
                                     color = Color(0xaf, 0xf7, 0xaf),
                                 )
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
-                                    modifier = Modifier.padding(end = 4.dp)
                                 )
                             }
                         } else {
@@ -183,7 +184,7 @@ fun PlayerRow(
                                     count = score.stonesLeft,
                                     score.stonesLeft
                                 ),
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MaterialTheme.typography.labelMedium,
                                 color = Color.LightGray
                             )
                         }
