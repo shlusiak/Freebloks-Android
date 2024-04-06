@@ -132,13 +132,6 @@ fun PlayerRow(
                     Row(
                         Modifier.align(Alignment.CenterStart)
                     ) {
-                        if (score.isPerfect) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                        }
-
                         Text(
                             text = score.clientName ?: stringResource(id = color.labelResId),
                             modifier = Modifier
@@ -157,15 +150,6 @@ fun PlayerRow(
                         horizontalAlignment = Alignment.End
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (score.isPerfect) {
-                                Text(
-                                    "(+${score.bonus})",
-                                    modifier = Modifier
-                                        .padding(end = 4.dp),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xaf, 0xf7, 0xaf),
-                                )
-                            }
 
                             Text(
                                 text = pluralStringResource(
@@ -178,15 +162,31 @@ fun PlayerRow(
                             )
                         }
 
-                        Text(
-                            pluralStringResource(
-                                id = R.plurals.number_of_stones_left,
-                                count = score.stonesLeft,
-                                score.stonesLeft
-                            ),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.LightGray
-                        )
+                        if (score.isPerfect) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    "+${score.bonus}",
+                                    modifier = Modifier
+                                        .padding(end = 4.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xaf, 0xf7, 0xaf),
+                                )
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                            }
+                        } else {
+                            Text(
+                                pluralStringResource(
+                                    id = R.plurals.number_of_stones_left,
+                                    count = score.stonesLeft,
+                                    score.stonesLeft
+                                ),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.LightGray
+                            )
+                        }
                     }
                 }
             }
@@ -214,8 +214,8 @@ private fun Preview() {
                     color1 = 0,
                     color2 = -1,
                     totalPoints = 19,
-                    stonesLeft = 3,
-                    turnsLeft = 1,
+                    stonesLeft = 0,
+                    turnsLeft = 0,
                     bonus = 15,
                     isPerfect = true,
                     clientName = "Sascha",
