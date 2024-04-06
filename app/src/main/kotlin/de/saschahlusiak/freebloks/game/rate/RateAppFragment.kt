@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.game.rate
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -41,13 +42,15 @@ import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
-import de.saschahlusiak.freebloks.utils.prefs
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class RateAppFragment : DialogFragment() {
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
+
+    @Inject
+    lateinit var prefs: SharedPreferences
 
     @Inject
     lateinit var analytics: AnalyticsProvider

@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game.newgame
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.AdapterView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
@@ -15,10 +17,14 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.Companion.from
 import de.saschahlusiak.freebloks.model.defaultBoardSize
-import de.saschahlusiak.freebloks.utils.prefs
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class NewGameFragment : DialogFragment() {
     private val listener get() = (requireActivity() as OnStartCustomGameListener)
+
+    @Inject
+    lateinit var prefs: SharedPreferences
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 

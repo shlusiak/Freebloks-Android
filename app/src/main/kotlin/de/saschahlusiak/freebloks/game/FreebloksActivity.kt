@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.bluetooth.BluetoothDevice
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -26,7 +27,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
@@ -74,7 +74,9 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private lateinit var view: Freebloks3DView
     private var showRateDialog = false
     private lateinit var scene: Scene
-    private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
+
+    @Inject
+    lateinit var prefs : SharedPreferences
 
     @Inject
     lateinit var analytics: AnalyticsProvider
