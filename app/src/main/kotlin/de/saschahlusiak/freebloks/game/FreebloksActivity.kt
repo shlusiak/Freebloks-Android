@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
+import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
@@ -412,7 +413,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 size = config.fieldSize,
                 stones = config.stones,
                 kiMode = config.difficulty,
-                forceDelay = !BuildConfig.DEBUG // in debug builds, CPU is as fast as it can
+                forceDelay = !Feature.FAST_GAME
             )
 
             if (ret != 0) {

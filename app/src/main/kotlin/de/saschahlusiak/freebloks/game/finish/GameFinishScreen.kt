@@ -59,7 +59,7 @@ fun GameFinishScreen(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
-                Image(painterResource(id = R.drawable.award_ribbon), null)
+                Image(painterResource(id = R.drawable.image_ribbon), null)
 
                 val place = remember(data) {
                     data.firstOrNull { it.isLocal }?.place
@@ -104,15 +104,15 @@ fun GameFinishScreen(
                 }
 
                 if (isSignedIn) {
-                    FilledTonalIconButton(onClick = onAchievements) {
+                    FilledTonalIconButton(onClick = onLeaderboards) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_play_games_badge_achievements_white),
+                            painter = painterResource(id = R.drawable.ic_leaderboard),
                             contentDescription = null
                         )
                     }
-                    FilledTonalIconButton(onClick = onLeaderboards) {
+                    FilledTonalIconButton(onClick = onAchievements) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_play_games_badge_leaderboards_white),
+                            painter = painterResource(id = R.drawable.ic_achievements),
                             contentDescription = null
                         )
                     }

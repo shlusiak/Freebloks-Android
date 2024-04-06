@@ -27,6 +27,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.utils.Previews
 
 @AndroidEntryPoint
 class StatisticsActivity : AppCompatActivity() {
@@ -36,65 +38,18 @@ class StatisticsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Content()
-        }
-    }
+            val data by viewModel.data.collectAsState()
+            val gameMode by viewModel.gameMode.collectAsState()
+            val signedIn by viewModel.signedIn.collectAsState(initial = null)
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun Content() {
-        val data by viewModel.data.collectAsState()
-        val gameMode by viewModel.gameMode.collectAsState()
-        val signedIn by viewModel.signedIn.collectAsState(initial = null)
-
-        AppTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text(stringResource(id = R.string.statistics)) },
-                        navigationIcon = {
-                            IconButton(onClick = { finish() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                            }
-                        },
-                        actions = {
-                            if (signedIn == true) {
-                                IconButton(
-                                    onClick = ::onAchievements,
-                                    modifier = Modifier.size(48.dp)
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_play_games_badge_achievements_white),
-                                        contentDescription = null,
-                                    )
-                                }
-
-                                IconButton(
-                                    onClick = ::onLeaderboards,
-                                    modifier = Modifier.size(48.dp)
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_play_games_badge_leaderboards_white),
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-
-                            if (signedIn == false) {
-                                TextButton(onClick = { onSignIn() }) {
-                                    Text(text = stringResource(id = R.string.google_play_games_signin))
-                                }
-                            }
-                        }
-                    )
-                }
-            ) { padding ->
-                StatisticsContent(
-                    modifier = Modifier.padding(padding),
-                    gameMode = gameMode,
-                    data = data
-                ) { viewModel.gameMode.value = it }
-            }
+            StatisticsScreen(
+                data = data, gameMode = gameMode,
+                signedIn = signedIn,
+                onBack = { finish() },
+                onSignIn = ::onSignIn,
+                onLeaderboards = ::onLeaderboards,
+                onAchievements = ::onAchievements,
+            ) { viewModel.gameMode.value = it }
         }
     }
 
