@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.game
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
@@ -323,6 +324,7 @@ class FreebloksActivityViewModel @Inject constructor(
         bluetoothServer.start()
     }
 
+    @SuppressLint("MissingPermission")
     @UiThread
     fun connectToBluetooth(remote: BluetoothDevice, clientName: String?) = viewModelScope.launch {
         val client = client ?: return@launch
