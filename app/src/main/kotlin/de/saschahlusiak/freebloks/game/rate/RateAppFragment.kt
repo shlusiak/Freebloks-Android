@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.game.rate
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -156,34 +155,6 @@ class RateAppFragment : DialogFragment() {
             }, Modifier.weight(1f)) {
                 Text(stringResource(id = R.string.rate_now))
             }
-        }
-    }
-
-    companion object {
-        private val tag = RateAppFragment::class.java.simpleName
-
-        fun shouldShowRateDialog(prefs: Preferences): Boolean {
-            var starts = prefs.numberOfStarts + 1
-
-            var show = false
-            if (prefs.rateShowAgain) {
-                val firstStarted = prefs.firstStarted
-                if (firstStarted <= 0) {
-                    prefs.firstStarted = System.currentTimeMillis()
-                }
-                Log.d(tag, "started $starts times")
-                Log.d(tag, "elapsed time since first start: " + (System.currentTimeMillis() - firstStarted))
-
-                if (starts >= Global.RATE_MIN_STARTS) starts = Global.RATE_MIN_STARTS.toLong()
-
-                if (starts >= Global.RATE_MIN_STARTS && System.currentTimeMillis() - firstStarted >= Global.RATE_MIN_ELAPSED) {
-                    prefs.numberOfStarts = 0
-                    prefs.firstStarted = System.currentTimeMillis()
-                    show = true
-                }
-            }
-
-            return show
         }
     }
 }

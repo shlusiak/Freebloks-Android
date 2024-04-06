@@ -111,16 +111,16 @@ fun PlayerRow(
                     modifier = Modifier
                         .fillMaxSize()
                         .offset(x = 8.dp, y = 5.dp),
-                    shadowElevation = 5.dp,
-                    shape = RoundedCornerShape(4.dp),
+                    shadowElevation = 2.dp,
+                    shape = RoundedCornerShape(8.dp),
                     color = colorResource(id = color2.backgroundColorId),
                     contentColor = Color.White
                 ) { }
             }
 
             Surface(
-                shadowElevation = 3.dp,
-                shape = RoundedCornerShape(4.dp),
+                shadowElevation = 2.dp,
+                shape = RoundedCornerShape(8.dp),
                 color = colorResource(id = color.backgroundColorId),
                 contentColor = Color.White
             ) {

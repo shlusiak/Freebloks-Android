@@ -39,7 +39,6 @@ import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.game.rate.RateAppFragment
-import de.saschahlusiak.freebloks.game.rate.RateAppFragment.Companion.shouldShowRateDialog
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -76,7 +75,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private lateinit var scene: Scene
 
     @Inject
-    lateinit var prefs : Preferences
+    lateinit var prefs: Preferences
 
     @Inject
     lateinit var analytics: AnalyticsProvider
@@ -132,12 +131,13 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         } else {
             view.setScale(prefs.viewScale)
 
+            // Increase the number of starts and store first launch time
             prefs.numberOfStarts += 1
             if (prefs.firstStarted <= 0) {
                 prefs.firstStarted = System.currentTimeMillis()
             }
 
-            showRateDialog = shouldShowRateDialog(prefs)
+            showRateDialog = shouldShowRateDialog()
 
             val starts = prefs.numberOfStarts
 
@@ -211,6 +211,27 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
 
         showMenu(shown = false, animate = false)
+    }
+
+    private fun shouldShowRateDialog(): Boolean {
+        // User has seen this before and does not want to see it again
+        if (!prefs.rateShowAgain) return false
+
+        val starts = prefs.numberOfStarts
+        val firstStarted = prefs.firstStarted
+
+        Log.d(tag, "started $starts times")
+        Log.d(tag, "elapsed time since first start: " + (System.currentTimeMillis() - firstStarted))
+
+        // Not started often enough
+        if (starts < Global.RATE_MIN_STARTS) return false
+
+        // Not enough time elapsed since first start
+        if (System.currentTimeMillis() - firstStarted < Global.RATE_MIN_ELAPSED) return false
+
+        return true
+        // Otherwise we want to show.
+        // Note that when we do shoe, we are resetting all the counts, so the same logic applies again
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -527,11 +548,17 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             Toast.makeText(this@FreebloksActivity, R.string.could_not_restore_game, Toast.LENGTH_LONG).show()
         }
         val client = viewModel.client
+
         val canResume = ((client != null) && client.game.isStarted && !client.game.isFinished)
         if (!canResume || !prefs.autoResume) showMainMenu()
+
         if (showRateDialog) {
             lifecycleScope.launchWhenResumed {
                 RateAppFragment().show(supportFragmentManager, null)
+
+                // Reset the counts, so that the logic starts over, in case the user wants to see this again
+                prefs.numberOfStarts = 0
+                prefs.firstStarted = System.currentTimeMillis()
             }
         }
         view.requestRender()

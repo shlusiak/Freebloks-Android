@@ -82,11 +82,11 @@ fun GameFinishScreen(
                 }
             }
 
-            data.forEach {
+            data.forEach { player ->
                 PlayerRow(
                     modifier = Modifier.padding(vertical = 4.dp),
-                    gameMode,
-                    it
+                    gameMode = gameMode,
+                    score = player
                 )
             }
 
