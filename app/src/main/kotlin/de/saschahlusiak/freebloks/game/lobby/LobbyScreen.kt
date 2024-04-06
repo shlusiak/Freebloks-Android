@@ -2,12 +2,14 @@ package de.saschahlusiak.freebloks.game.lobby
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,7 +38,8 @@ fun LobbyScreen(
     onSize: (Int) -> Unit,
     onTogglePlayer: (Int) -> Unit,
     onChat: (String) -> Unit,
-    onStart: () -> Unit
+    onStart: () -> Unit,
+    onDisconnect: () -> Unit
 ) {
     Dialog {
         Column(
@@ -76,12 +79,21 @@ fun LobbyScreen(
             ChatTextField(onChat = onChat)
 
             if (!isRunning) {
-                Button(
-                    onClick = onStart,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = (status != null && status.clients > 1) || BuildConfig.DEBUG
-                ) {
-                    Text(stringResource(id = R.string.start))
+                Row(horizontalArrangement = spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = onDisconnect,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = stringResource(id = android.R.string.cancel))
+                    }
+
+                    Button(
+                        onClick = onStart,
+                        modifier = Modifier.weight(1f),
+                        enabled = (status != null && status.clients > 1) || BuildConfig.DEBUG
+                    ) {
+                        Text(stringResource(id = R.string.start))
+                    }
                 }
             }
         }
@@ -117,7 +129,8 @@ private fun Preview() {
             onSize = {},
             onTogglePlayer = {},
             onChat = {},
-            onStart = {}
+            onStart = {},
+            onDisconnect = {}
         )
     }
 }

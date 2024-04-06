@@ -1,10 +1,14 @@
 package de.saschahlusiak.freebloks.about
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -53,8 +57,16 @@ fun AboutScreen(
 
             Image(
                 painter = painterResource(id = R.drawable.appicon_big),
-                modifier = Modifier.size(140.dp),
+                modifier = Modifier.size(100.dp),
                 contentDescription = null
+            )
+
+            Text(
+                "v" + BuildConfig.VERSION_NAME,
+                textAlign = TextAlign.Left,
+                fontStyle = FontStyle.Italic,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.tertiary
             )
 
             TextButton(onClick = { onLink(marketUrl) }) {
@@ -102,25 +114,25 @@ fun AboutScreen(
             )
 
             Row(
-                modifier = Modifier.padding(top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.End)
+                    .width(intrinsicSize = IntrinsicSize.Min),
+                horizontalArrangement = spacedBy(8.dp)
             ) {
                 if (!Global.IS_VIP) {
-                    OutlinedButton(onClick = onDonate) {
+                    OutlinedButton(
+                        onClick = onDonate,
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(stringResource(id = R.string.prefs_donation))
                     }
                 }
 
-                Text(
-                    "v" + BuildConfig.VERSION_NAME,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center,
-                    fontStyle = FontStyle.Italic,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-
-                Button(onClick = onDismiss) {
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(stringResource(id = android.R.string.ok))
                 }
 

@@ -103,7 +103,10 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
                 onSize = { requestMode(size = it) },
                 onTogglePlayer = ::onTogglePlayer,
                 onChat = { sendChat(it) },
-                onStart = { client?.requestGameStart() }
+                onStart = { client?.requestGameStart() },
+                onDisconnect = {
+                    dialog?.cancel()
+                }
             )
         }
     }

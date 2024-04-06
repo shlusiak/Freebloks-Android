@@ -4,22 +4,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.*
-import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
-import de.saschahlusiak.freebloks.utils.toPixel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,11 +33,14 @@ class DonateFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view as ComposeView
+
         dialog?.window?.setBackgroundDrawable(null)
+        dialog?.setCanceledOnTouchOutside(false)
+
         view.setContent {
             AppTheme {
                 DonateScreen(
-                    showPaypal = true, // !Global.IS_GOOGLE,
+                    showExtra = true, // !Global.IS_GOOGLE,
                     onDismiss = ::onSkipButtonPress,
                     onFreebloksVIP = ::onFreebloksVIPClick,
                     onPaypal = ::onPayPalClick,
