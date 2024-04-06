@@ -51,6 +51,8 @@ class DonateFragment : DialogFragment() {
     }
 
     private fun onLink(link: String) {
+        analytics.logEvent("donate_github", null)
+
         startActivity(
             Intent(Intent.ACTION_VIEW, Uri.parse(link))
         )

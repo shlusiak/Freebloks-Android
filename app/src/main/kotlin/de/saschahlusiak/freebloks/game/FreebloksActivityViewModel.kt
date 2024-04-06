@@ -568,11 +568,6 @@ class FreebloksActivityViewModel @Inject constructor(
     }
 
     @UiThread
-    override fun stoneUndone(t: Turn) {
-        analytics.logEvent("game_undo", null)
-    }
-
-    @UiThread
     override fun onDisconnected(client: GameClient, error: Throwable?) {
         Log.d(tag, "onDisconneced")
         if (client === this.client) {
