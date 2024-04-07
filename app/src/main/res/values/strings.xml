@@ -175,7 +175,7 @@
     <string name="prefs_notifications_long">Show notifications in multiplayer games</string>
     <string name="prefs_notifications">Notifications</string>
     <string name="prefs_snap_to_corners_long">Help by snapping pieces to close valid positions</string>
-    <string name="prefs_snap_to_corners">Snap to Corners</string>
+    <string name="prefs_snap_to_corners">Snap to corners</string>
     <string name="prefs_show_corners_long">Show possible corners of your stones</string>
     <string name="prefs_show_corners">Corners</string>
     <string name="prefs_show_opponents_long">Show opponents’ stones</string>
@@ -194,16 +194,16 @@
     </string-array> 
     
     <string name="prefs_skip_intro_long">Skip intro animation on app start</string>
-    <string name="prefs_skip_intro">Skip Intro</string>
+    <string name="prefs_skip_intro">Skip intro</string>
     <string name="prefs_auto_resume_long">Automatically resume last game</string>
-    <string name="prefs_auto_resume">Auto-resume</string>
+    <string name="prefs_auto_resume">Auto resume</string>
     <string name="prefs_rules_long">Show the rules of the game</string>
     <string name="prefs_rules">Show rules&#8230;</string>
     <string name="prefs_rate_review_long">Please rate or leave a comment</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
     <string name="prefs_donation_long">Please support the development of this game</string>
     <string name="prefs_donation">Coffee&#8230;</string>
-    <string name="prefs_player_name">Player Name</string>
+    <string name="prefs_player_name">Player name</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_background_theme">Background theme</string>
     <string name="prefs_board_theme">Board theme</string>
