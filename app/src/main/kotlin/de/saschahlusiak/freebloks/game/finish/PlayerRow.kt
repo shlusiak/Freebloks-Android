@@ -151,30 +151,28 @@ fun PlayerRow(
                         modifier = Modifier.align(Alignment.CenterEnd),
                         horizontalAlignment = Alignment.End
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-
-                            Text(
-                                text = pluralStringResource(
-                                    id = R.plurals.number_of_points,
-                                    count = score.totalPoints,
-                                    score.totalPoints
-                                ),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.bodyLarge.merge(shadow)
-                            )
-                        }
+                        Text(
+                            text = pluralStringResource(
+                                id = R.plurals.number_of_points,
+                                count = score.totalPoints,
+                                score.totalPoints
+                            ),
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.bodyLarge.merge(shadow)
+                        )
 
                         if (score.isPerfect) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    "+${score.bonus}",
-                                    modifier = Modifier
-                                        .padding(end = 4.dp),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color(0xaf, 0xf7, 0xaf),
-                                )
+                            Row(verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
+                                )
+                                Text(
+                                    "(+${score.bonus})",
+                                    modifier = Modifier
+                                        .padding(start = 4.dp),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color(0xaf, 0xf7, 0xaf),
                                 )
                             }
                         } else {
