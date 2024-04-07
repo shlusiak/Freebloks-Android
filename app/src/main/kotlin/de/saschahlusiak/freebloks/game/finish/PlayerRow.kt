@@ -207,7 +207,7 @@ private fun Preview() {
     AppTheme {
         Surface {
             PlayerRow(
-                modifier = Modifier,
+                modifier = Modifier.padding(16.dp),
                 gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 score = PlayerScore(
                     color1 = 0,
@@ -232,7 +232,7 @@ private fun PreviewMultiple() {
     AppTheme {
         Surface {
             PlayerRow(
-                modifier = Modifier,
+                modifier = Modifier.padding(16.dp),
                 gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 score = PlayerScore(
                     color1 = 1,
