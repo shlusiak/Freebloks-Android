@@ -23,14 +23,15 @@ FUNKTIONEN:
 - Unterstützung für 2 Spieler: entweder mit nur 2 Farben (Blokus Duo), oder mit 4 Farben und pro Spieler 2
 - Unterschiedliche Feldgrößen
 - Spiele gegen Computergegner oder mit bis zu 4 lokalen Spielern an einem Gerät
-- Onlinemodus (beta)
+- Onlinemodus über Internet
+- Spiel mit Freunden via Bluetooth
 - Hinweise und Rückgängig-Funktion
 - Macht auch auf Tablets Spass!
 
-Das Spiel ist netzwerkkompatibel mit "Freebloks 3D" für Windows und Linux: http://www.saschahlusiak.de/freebloks-3d/
+Das Spiel ist kompatibel mit "Freebloks 3D" für Windows und Linux: http://www.saschahlusiak.de/freebloks-3d/
 
 SPENDEN:
-Freebloks 3D is kostenlos, werbefrei und Open Source. Aber nicht alles, was nichts kostet, hat auch keinen Wert. Du kannst selber entscheiden, wieviel Freebloks dir wert ist und die Entwickler durch Kauf einer In-App Spende deiner Wahl unterstützen, oder Freebloks VIP kaufen: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
+Freebloks 3D is kostenlos, werbefrei und Open Source. Aber nicht alles, was nichts kostet, hat auch keinen Wert. Du kannst selber entscheiden, wieviel Freebloks dir wert ist und die Entwickler durch eine Spende, oder Freebloks VIP kaufen: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
 
 Der vollständige Quelltext ist auf GitHub verfügbar: https://github.com/shlusiak/Freebloks-Android
 

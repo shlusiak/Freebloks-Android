@@ -17,17 +17,18 @@ HOW TO PLAY
 Quit the app at any time, your current game will be saved and restored on next start. 
 
 FEATURES
-- Supports 2-player modes, with 2 colors (Original and Blokus Duo), 4 colors (2 each).
-- Customizable board sizes other than 20x20.
-- Play against the computer or humans on the same device. 
-- Play online against your friends
-- Hint and undo options.
+- Supports 2-player modes, with 2 colors (Original, Blokus Duo and Blokus Junior), 4 colors (2 each),
+- Customizable board sizes other than 20x20,
+- Play against the computer or humans on the same device,
+- Play online against your friends,
+- Play with friends via Bluetooth,
+- Hint and undo options,
 - Looks great on tablets, too!
 
 The game is network-compatible with Freebloks 3D for Windows and Linux: http://www.saschahlusiak.de/freebloks-3d/ 
 
 PLEASE DONATE
-Freebloks 3D is absolutely free, open source and without advertisement! But things for free still have a value. You can decide how much Freebloks is worth to you by purchasing an in-app donation of your choice or by buying Freebloks VIP: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
+Freebloks 3D is absolutely free, open source and without advertisement! But free things are not worthless. You can decide how much Freebloks means to you by donating, or buying Freebloks VIP: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
 
 The complete source code is available on GitHub: https://github.com/shlusiak/Freebloks-Android 
 
