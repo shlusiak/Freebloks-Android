@@ -68,7 +68,7 @@ class GameFinishFragment : DialogFragment() {
 
         GameFinishScreen(
             gameMode = gameMode,
-            data = viewModel.data,
+            data = viewModel.playerScores,
             isSignedIn = isSignedIn.value,
             onClose = { dismiss() },
             onNewGame = ::onNewGame,

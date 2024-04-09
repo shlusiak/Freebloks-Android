@@ -3,12 +3,14 @@ package de.saschahlusiak.freebloks.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import androidx.annotation.WorkerThread
 
 abstract class FreebloksDB(private val context: Context) {
 	protected var db: SQLiteDatabase? = null
     private var dbHelper: FreebloksDBOpenHandler? = null
 
     @Throws(SQLiteException::class)
+    @WorkerThread
     fun open() {
         dbHelper = FreebloksDBOpenHandler(context)
         db = dbHelper?.writableDatabase

@@ -2,9 +2,13 @@ package de.saschahlusiak.freebloks.database
 
 import android.content.ContentValues
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import de.saschahlusiak.freebloks.model.GameMode
+import javax.inject.Inject
 
-class HighScoreDB(context: Context) : FreebloksDB(context) {
+class HighScoreDB @Inject constructor(
+    @ApplicationContext context: Context
+) : FreebloksDB(context) {
     fun addHighScore(
         gameMode: GameMode,
         points: Int,

@@ -29,23 +29,20 @@ import kotlin.concurrent.thread
 @HiltViewModel
 class GameFinishFragmentViewModel @Inject constructor(
     args: SavedStateHandle,
+    prefs: Preferences,
+    db: HighScoreDB,
     private val app: Application,
-    private val prefs: Preferences,
     private val crashReporter: CrashReporter,
     private val gameHelper: GooglePlayGamesHelper
 ) : ViewModel() {
-    private var unlockAchievementsCalled = false
-
     private val db: Deferred<HighScoreDB> = viewModelScope.async(Dispatchers.IO) {
-        HighScoreDB(app).also {
-            it.open()
-        }
+        db.apply { open() }
     }
 
     // game data to display
     val game: Game
     private var lastStatus: MessageServerStatus? = null
-    val data: List<PlayerScore>
+    val playerScores: List<PlayerScore>
     private var localClientName: String
     val gameMode get() = game.gameMode
 
@@ -58,18 +55,18 @@ class GameFinishFragmentViewModel @Inject constructor(
         this.lastStatus = args.get("lastStatus") as MessageServerStatus?
         this.localClientName = prefs.playerName
 
-        this.data = game.getPlayerScores().also { data ->
+        this.playerScores = game.getPlayerScores().also { data ->
             // assign names to the scores based on lastStatus and clientName
             assignClientNames(game.gameMode, data, lastStatus)
+        }
 
-            // the first time we set data and calculate it, we add it to the database
-            viewModelScope.launch {
-                addScores(data, game.gameMode)
-            }
+        // the first time we set data and calculate it, we add it to the database
+        viewModelScope.launch {
+            addScores(playerScores, game.gameMode)
 
             // and unlock achievements if we are logged in
             if (gameHelper.signedIn.value == true) {
-                unlockAchievements()
+                unlockAchievements(playerScores, game.gameMode)
             }
         }
     }
@@ -78,8 +75,7 @@ class GameFinishFragmentViewModel @Inject constructor(
         GlobalScope.launch {
             try {
                 db.await().close()
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 crashReporter.logException(e)
             }
         }
@@ -97,12 +93,6 @@ class GameFinishFragmentViewModel @Inject constructor(
             } else {
                 score.clientName = lastStatus?.getPlayerName(score.color1) ?: colorName
             }
-        }
-    }
-
-    private fun unlockAchievements() {
-        if (!unlockAchievementsCalled) {
-            thread { unlockAchievements(data, game.gameMode) }
         }
     }
 
@@ -124,14 +114,7 @@ class GameFinishFragmentViewModel @Inject constructor(
         }
     }
 
-    @WorkerThread
-    private fun unlockAchievements(scores: List<PlayerScore>, gameMode: GameMode) = viewModelScope.launch {
-        // ensure we are only calling this once during the lifetime of the view model
-        synchronized(this) {
-            if (unlockAchievementsCalled) return@launch
-            unlockAchievementsCalled = true
-        }
-
+    private suspend fun unlockAchievements(scores: List<PlayerScore>, gameMode: GameMode) {
         val context: Context = app
 
         scores
