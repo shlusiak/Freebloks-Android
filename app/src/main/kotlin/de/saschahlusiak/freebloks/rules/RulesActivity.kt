@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.app.AppTheme
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import de.saschahlusiak.freebloks.utils.CrashReporter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -16,6 +17,9 @@ class RulesActivity : AppCompatActivity() {
 
     @Inject
     lateinit var analytics: AnalyticsProvider
+
+    @Inject
+    lateinit var crashReporter: CrashReporter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +36,12 @@ class RulesActivity : AppCompatActivity() {
     }
 
     private fun onYoutubeButtonClick() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
-        startActivity(intent)
-        analytics.logEvent("rules_video_click")
+        runCatching {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+            startActivity(intent)
+            analytics.logEvent("rules_video_click")
+        }.onFailure {
+            crashReporter.logException(it)
+        }
     }
 }

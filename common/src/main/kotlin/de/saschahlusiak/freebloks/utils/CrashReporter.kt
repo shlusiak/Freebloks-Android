@@ -5,7 +5,7 @@ interface CrashReporter {
 
     fun setString(key: String, value: String) {}
 
-    fun logException(e: Exception) {}
+    fun logException(t: Throwable) {}
 }
 
 /**
@@ -16,5 +16,5 @@ class EmptyCrashReporter: CrashReporter {
 
     override fun setString(key: String, value: String) { }
 
-    override fun logException(e: Exception) { }
+    override fun logException(t: Throwable) { }
 }
