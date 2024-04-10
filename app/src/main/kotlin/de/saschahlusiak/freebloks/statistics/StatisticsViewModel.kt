@@ -28,10 +28,9 @@ typealias RowData = Pair<String, String?>
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
     prefs: Preferences,
+    private val db: HighScoreDB,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
-    private val db = HighScoreDB(context)
-
     internal val gameMode = MutableStateFlow(prefs.gameMode)
 
     val signedIn = gamesHelper.signedIn.asFlow()

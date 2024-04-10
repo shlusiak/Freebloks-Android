@@ -2,10 +2,14 @@ package de.saschahlusiak.freebloks.game.mainmenu
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -48,9 +52,11 @@ fun MainMenuContent(
     onToggleSound: () -> Unit
 ) {
     val buttonSize = dimensionResource(id = R.dimen.main_menu_button_height)
+    val innerPadding = dimensionResource(id = R.dimen.main_menu_padding)
     Dialog(horizontalPadding = 24.dp) {
         Column(
-            Modifier.padding(dimensionResource(id = R.dimen.main_menu_padding))
+            Modifier.padding(innerPadding),
+            verticalArrangement = spacedBy(dimensionResource(id = R.dimen.main_menu_button_margin))
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (titleOutlined) {
@@ -80,48 +86,47 @@ fun MainMenuContent(
                     )
                 }
 
-                FilledIconButton(onClick = onHelp, modifier = Modifier.size(buttonSize)) {
+                FilledIconButton(
+                    onClick = onHelp,
+                    modifier = Modifier
+                        .size(buttonSize)
+                ) {
                     Icon(painterResource(id = R.drawable.ic_questionmark), contentDescription = null)
                 }
             }
 
-            Column(
-                modifier = Modifier.padding(top = 6.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Button(
-                    onClick = onNewGame,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = buttonSize),
-                    content = { Text(stringResource(id = R.string.new_game)) }
-                )
+            Button(
+                onClick = onNewGame,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = buttonSize),
+                content = { Text(stringResource(id = R.string.new_game)) }
+            )
 
-                Button(
-                    onClick = onResumeGame,
-                    enabled = canResume,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = buttonSize),
-                    content = { Text(stringResource(id = R.string.resume_game)) }
-                )
+            Button(
+                onClick = onResumeGame,
+                enabled = canResume,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = buttonSize),
+                content = { Text(stringResource(id = R.string.resume_game)) }
+            )
 
-                Button(
-                    onClick = onMultiplayer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = buttonSize),
-                    content = { Text(stringResource(id = R.string.multiplayer)) }
-                )
+            Button(
+                onClick = onMultiplayer,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = buttonSize),
+                content = { Text(stringResource(id = R.string.multiplayer)) }
+            )
 
-                Button(
-                    onClick = onSettings,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = buttonSize),
-                    content = { Text(stringResource(id = R.string.settings)) }
-                )
-            }
+            Button(
+                onClick = onSettings,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = buttonSize),
+                content = { Text(stringResource(id = R.string.settings)) }
+            )
         }
     }
 }

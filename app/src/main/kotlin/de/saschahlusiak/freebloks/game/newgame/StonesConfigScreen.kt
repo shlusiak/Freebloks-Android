@@ -1,11 +1,15 @@
 package de.saschahlusiak.freebloks.game.newgame
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.End
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.MaterialTheme
@@ -98,7 +102,6 @@ fun StonesConfigScreen(
 
     Dialog {
         Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.dialog_padding))) {
-
             Text(
                 stringResource(id = R.string.quantities),
                 modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -114,24 +117,28 @@ fun StonesConfigScreen(
             }
 
             Row(
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = spacedBy(8.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(IntrinsicSize.Min)
+                    .align(alignment = Alignment.End)
                     .padding(top = 16.dp)
             ) {
-                OutlinedButton(onClick = onCancel) {
+                OutlinedButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = onCancel
+                ) {
                     Text(stringResource(id = android.R.string.cancel))
                 }
 
-                Spacer(Modifier.padding(4.dp))
-
-                Button(onClick = {
-                    onOk(
-                        IntArray(Shape.COUNT) {
-                            selections[Shape.get(it).points - 1]
-                        }
-                    )
-                }) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        onOk(
+                            IntArray(Shape.COUNT) {
+                                selections[Shape.get(it).points - 1]
+                            }
+                        )
+                    }) {
                     Text(stringResource(id = android.R.string.ok))
                 }
             }
