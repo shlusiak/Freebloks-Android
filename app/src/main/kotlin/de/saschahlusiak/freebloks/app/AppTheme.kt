@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -12,6 +13,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import de.saschahlusiak.freebloks.Feature
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -78,14 +80,20 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+val defaultTypography = Typography()
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTheme(content: @Composable () -> Unit) {
+fun AppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     val context = LocalContext.current
-    val colorScheme = if (VERSION.SDK_INT >= 31 && false) {
-        if (isSystemInDarkTheme()) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+
+    val colorScheme = if (VERSION.SDK_INT >= 31 && Feature.DYNAMIC_COLORS) {
+        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else {
-        if (isSystemInDarkTheme()) DarkColors else LightColors
+        if (darkTheme) DarkColors else LightColors
     }
 
     CompositionLocalProvider(
@@ -93,6 +101,7 @@ fun AppTheme(content: @Composable () -> Unit) {
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
+            typography = defaultTypography,
             content = content
         )
     }

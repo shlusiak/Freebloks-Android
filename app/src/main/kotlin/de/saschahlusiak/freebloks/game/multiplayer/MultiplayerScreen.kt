@@ -143,23 +143,32 @@ fun MultiplayerScreen(
 
                 Spacer(Modifier.weight(1f))
 
-                OutlinedButton(onClick = onCancel) {
-                    Text(stringResource(id = android.R.string.cancel))
-                }
-
-                Spacer(Modifier.padding(4.dp))
-
-                Button(
-                    onClick = {
-                        when (type) {
-                            Internet -> onJoinInternet(name)
-                            Wifi -> onJoinWifi(name, server)
-                            Bluetooth -> Unit
-                        }
-                    },
-                    enabled = (type == Internet || (type == Wifi && server.isNotBlank()))
+                Row(
+                    modifier = Modifier
+                        .width(IntrinsicSize.Min),
+                    horizontalArrangement = spacedBy(8.dp)
                 ) {
-                    Text(stringResource(id = android.R.string.ok))
+                    OutlinedButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = onCancel
+                    ) {
+                        Text(stringResource(id = android.R.string.cancel))
+                    }
+
+
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            when (type) {
+                                Internet -> onJoinInternet(name)
+                                Wifi -> onJoinWifi(name, server)
+                                Bluetooth -> Unit
+                            }
+                        },
+                        enabled = (type == Internet || (type == Wifi && server.isNotBlank()))
+                    ) {
+                        Text(stringResource(id = android.R.string.ok))
+                    }
                 }
             }
         }
