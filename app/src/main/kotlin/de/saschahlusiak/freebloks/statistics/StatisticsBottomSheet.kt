@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +18,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 
 @AndroidEntryPoint
 class StatisticsBottomSheet : BottomSheetDialogFragment() {
@@ -35,7 +37,7 @@ class StatisticsBottomSheet : BottomSheetDialogFragment() {
     @Composable
     private fun Content() {
         AppTheme {
-            val cornerRadius = dimensionResource(id = R.dimen.dialog_corner_radius)
+            val cornerRadius = MaterialTheme.dimensions.dialogCornerRadius
             Surface(
                 shape = RoundedCornerShape(topStart = cornerRadius, topEnd = cornerRadius)
             ) {

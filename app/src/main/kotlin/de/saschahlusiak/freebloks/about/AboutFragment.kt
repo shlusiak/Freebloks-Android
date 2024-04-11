@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.donate.DonateFragment
 
 class AboutFragment : DialogFragment() {

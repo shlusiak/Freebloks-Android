@@ -1,16 +1,7 @@
 package de.saschahlusiak.freebloks.game.multiplayer
 
-import android.bluetooth.BluetoothClass
-import android.bluetooth.BluetoothDevice
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -23,7 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
@@ -33,7 +25,7 @@ fun BluetoothListItem(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = Modifier.padding(horizontal = 2.dp)
+        modifier = Modifier.padding(horizontal = MaterialTheme.dimensions.innerPaddingSmall)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally

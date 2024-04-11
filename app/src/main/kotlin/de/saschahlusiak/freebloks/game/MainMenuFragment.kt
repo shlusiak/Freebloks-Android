@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.about.AboutFragment
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent

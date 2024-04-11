@@ -14,12 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.game.newgame.GameTypeRow
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.GameMode
@@ -44,9 +44,9 @@ fun LobbyScreen(
     Dialog {
         Column(
             Modifier
-                .padding(dimensionResource(id = R.dimen.dialog_padding))
+                .padding(MaterialTheme.dimensions.dialogPadding)
                 .fillMaxWidth(),
-            verticalArrangement = spacedBy(8.dp)
+            verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
         ) {
             Text(
                 text = stringResource(id = if (isRunning) R.string.chat else R.string.waiting_for_players),
@@ -55,7 +55,7 @@ fun LobbyScreen(
             )
 
             GameTypeRow(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier,
                 gameMode = status?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 size = status?.width ?: Board.DEFAULT_BOARD_SIZE,
                 enabled = (status != null) && !isRunning,
@@ -79,17 +79,21 @@ fun LobbyScreen(
             ChatTextField(onChat = onChat)
 
             if (!isRunning) {
-                Row(horizontalArrangement = spacedBy(8.dp)) {
+                Row(horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)) {
                     OutlinedButton(
                         onClick = onDisconnect,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
                     ) {
                         Text(text = stringResource(id = android.R.string.cancel))
                     }
 
                     Button(
                         onClick = onStart,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
                         enabled = (status != null && status.player >= 1 && status.clients > 1) || BuildConfig.DEBUG
                     ) {
                         Text(stringResource(id = R.string.start))

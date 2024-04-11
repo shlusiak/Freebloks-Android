@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game.newgame
 
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.GameMode.GAMEMODE_2_COLORS_2_PLAYERS
@@ -53,8 +55,7 @@ fun NewGameScreen(
     defaultDifficulty: Int = 4,
     onStartGame: (GameConfig) -> Unit
 ) {
-    val buttonSize = 44.dp
-    val padding = dimensionResource(id = R.dimen.dialog_padding)
+    val padding = MaterialTheme.dimensions.dialogPadding
 
     var multiplePlayers by rememberSaveable { mutableStateOf(false) }
     var gameMode by rememberSaveable { mutableStateOf(defaultMode) }
@@ -70,10 +71,13 @@ fun NewGameScreen(
 
         val scrollState = rememberScrollState()
 
-        Column(modifier = Modifier.verticalScroll(scrollState)) {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState),
+            verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingSmall)
+        ) {
             Text(
                 modifier = Modifier
-                    .padding(all = padding)
+                    .padding(top = padding)
                     .align(Alignment.CenterHorizontally),
                 text = stringResource(id = R.string.new_game),
                 style = MaterialTheme.typography.titleMedium
@@ -99,64 +103,67 @@ fun NewGameScreen(
                 checked = multiplePlayers,
             ) { multiplePlayers = it }
 
-            colors.forEachIndexed { index, stoneColor ->
-                val playerIndex = when (gameMode) {
-                    GAMEMODE_2_COLORS_2_PLAYERS,
-                    GAMEMODE_DUO,
-                    GAMEMODE_JUNIOR -> index * 2
+            Column {
+                colors.forEachIndexed { index, stoneColor ->
+                    val playerIndex = when (gameMode) {
+                        GAMEMODE_2_COLORS_2_PLAYERS,
+                        GAMEMODE_DUO,
+                        GAMEMODE_JUNIOR -> index * 2
 
-                    else -> index
-                }
+                        else -> index
+                    }
 
-                ColorListItem(
-                    stoneColor,
-                    checkable = multiplePlayers,
-                    players[playerIndex]
-                ) {
-                    if (multiplePlayers) {
-                        players = players.clone().apply {
-                            this[playerIndex] = it
+                    ColorListItem(
+                        stoneColor,
+                        checkable = multiplePlayers,
+                        players[playerIndex]
+                    ) {
+                        if (multiplePlayers) {
+                            players = players.clone().apply {
+                                this[playerIndex] = it
 
-                            if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) {
-                                this[(playerIndex + 2) % 4] = it
+                                if (gameMode == GAMEMODE_4_COLORS_2_PLAYERS) {
+                                    this[(playerIndex + 2) % 4] = it
+                                }
                             }
-                        }
-                    } else {
-                        players = BooleanArray(4)
-                        players[playerIndex] = true
-                        onStartGame(
-                            GameConfig(
-                                isLocal = true,
-                                server = null,
-                                gameMode = gameMode,
-                                showLobby = false,
-                                requestPlayers = players,
-                                difficulty = difficulty,
-                                stones = stones,
-                                fieldSize = size
+                        } else {
+                            players = BooleanArray(4)
+                            players[playerIndex] = true
+                            onStartGame(
+                                GameConfig(
+                                    isLocal = true,
+                                    server = null,
+                                    gameMode = gameMode,
+                                    showLobby = false,
+                                    requestPlayers = players,
+                                    difficulty = difficulty,
+                                    stones = stones,
+                                    fieldSize = size
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingSmall)
             )
 
             DifficultySlider(difficulty) { difficulty = it }
 
-            Spacer(Modifier.padding(4.dp))
+            Spacer(Modifier.padding(bottom = MaterialTheme.dimensions.innerPaddingSmall))
 
             Row(
                 modifier = Modifier
                     .padding(horizontal = padding)
-                    .padding(top = 4.dp, bottom = padding)
+                    .padding(bottom = padding),
+                horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 OutlinedIconButton(
                     onClick = { showStonesConfig = true },
                     modifier = Modifier
-                        .size(buttonSize),
+                        .size(MaterialTheme.dimensions.buttonSize),
                     colors = IconButtonDefaults.outlinedIconButtonColors(contentColor = MaterialTheme.colorScheme.primary),
                     enabled = gameMode != GAMEMODE_JUNIOR
                 ) {
@@ -180,8 +187,7 @@ fun NewGameScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 6.dp)
-                        .heightIn(min = buttonSize)
+                        .heightIn(min = MaterialTheme.dimensions.buttonSize)
                 ) {
                     Text(stringResource(id = if (multiplePlayers) R.string.start else R.string.random_color))
                 }

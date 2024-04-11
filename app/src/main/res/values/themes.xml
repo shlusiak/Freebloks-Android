@@ -60,7 +60,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-
     <style name="Theme.Freebloks.Dialog" parent="ThemeOverlay.Material3.Dialog">
         <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
         <item name="android:dialogCornerRadius" tools:targetApi="p">@dimen/dialog_corner_radius</item>

@@ -1,23 +1,10 @@
-package de.saschahlusiak.freebloks.app
+package de.saschahlusiak.freebloks.app.theme
 
-import android.content.res.Configuration
-import android.os.Build.VERSION
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import de.saschahlusiak.freebloks.Feature
 
-private val LightColors = lightColorScheme(
+
+internal val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -49,8 +36,7 @@ private val LightColors = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-
-private val DarkColors = darkColorScheme(
+internal val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -81,36 +67,3 @@ private val DarkColors = darkColorScheme(
     outlineVariant = md_theme_dark_outlineVariant,
     scrim = md_theme_dark_scrim,
 )
-
-@Composable
-fun isTablet(): Boolean {
-    val configuration = LocalConfiguration.current
-    return configuration.smallestScreenWidthDp >= 600
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val context = LocalContext.current
-
-    val colorScheme = if (VERSION.SDK_INT >= 31 && Feature.DYNAMIC_COLORS) {
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        if (darkTheme) DarkColors else LightColors
-    }
-
-    val typography = if (isTablet()) tabletTypography else defaultTypography
-
-    CompositionLocalProvider(
-        LocalMinimumInteractiveComponentEnforcement provides false,
-    ) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = typography,
-            content = content
-        )
-    }
-}

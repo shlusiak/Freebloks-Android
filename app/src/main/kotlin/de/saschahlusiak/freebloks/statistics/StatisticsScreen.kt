@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.game.newgame.GameModeDropDown
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.utils.Previews

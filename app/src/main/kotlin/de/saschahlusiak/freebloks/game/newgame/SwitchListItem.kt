@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.theme.dimensions
 
 @Composable
 internal fun SwitchListItem(
@@ -34,7 +36,7 @@ internal fun SwitchListItem(
             )
             .heightIn(min = 52.dp)
             .padding(
-                horizontal = dimensionResource(id = R.dimen.dialog_padding),
+                horizontal = MaterialTheme.dimensions.dialogPadding,
                 vertical = 8.dp
             )
     ) {

@@ -31,8 +31,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.Preferences
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
@@ -68,7 +69,7 @@ class RateAppFragment : DialogFragment() {
         AppTheme {
             Dialog {
                 Column(
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.dialog_padding)),
+                    modifier = Modifier.padding(MaterialTheme.dimensions.dialogPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(

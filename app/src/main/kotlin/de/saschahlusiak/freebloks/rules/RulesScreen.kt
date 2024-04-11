@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,10 +29,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.Previews
 
-private val paragraphPadding = 2.dp
+private val paragraphPadding
+    @Composable get() = MaterialTheme.dimensions.innerPaddingSmall
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +53,8 @@ fun RulesScreen(onBack: () -> Unit, onWatchVideo: () -> Unit) {
     ) {
         LazyColumn(
             modifier = Modifier.padding(it),
-            verticalArrangement = spacedBy(8.dp),
-            contentPadding = PaddingValues(16.dp)
+            verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
+            contentPadding = PaddingValues(MaterialTheme.dimensions.activityPadding)
         ) {
             item { Introduction(onWatchVideo) }
             item { HowToPlay() }
@@ -71,7 +74,10 @@ private fun Introduction(onWatchVideo: () -> Unit = {}) {
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedButton(onClick = onWatchVideo) {
+        OutlinedButton(
+            onClick = onWatchVideo,
+            modifier = Modifier.heightIn(min = MaterialTheme.dimensions.buttonSize)
+        ) {
             Text(text = stringResource(id = R.string.rules_youtube))
         }
 
@@ -116,7 +122,7 @@ private fun HowToPlay() {
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium)
         ) {
             Text(
                 text = stringResource(id = R.string.rules_how_to_play_2),
@@ -152,7 +158,6 @@ private fun BlokusClassic() {
         Image(
             painter = painterResource(id = R.drawable.rules_3), contentDescription = null,
             modifier = Modifier
-                .padding(4.dp)
                 .align(Alignment.CenterHorizontally)
         )
 
@@ -211,7 +216,7 @@ private fun BlokusDuo() {
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.rules_4), contentDescription = null,

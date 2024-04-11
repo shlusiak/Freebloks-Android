@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,7 +29,8 @@ import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
 
@@ -47,7 +48,7 @@ fun AboutScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(state)
-                .padding(dimensionResource(id = R.dimen.dialog_padding)),
+                .padding(MaterialTheme.dimensions.dialogPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -118,12 +119,13 @@ fun AboutScreen(
                     .padding(top = 16.dp)
                     .align(Alignment.End)
                     .width(intrinsicSize = IntrinsicSize.Min),
-                horizontalArrangement = spacedBy(8.dp)
+                horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 if (!Global.IS_VIP) {
                     OutlinedButton(
                         onClick = onDonate,
                         modifier = Modifier.weight(1f)
+                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
                     ) {
                         Text(stringResource(id = R.string.prefs_donation))
                     }
@@ -132,6 +134,7 @@ fun AboutScreen(
                 Button(
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f)
+                        .heightIn(min = MaterialTheme.dimensions.buttonSize),
                 ) {
                     Text(stringResource(id = android.R.string.ok))
                 }

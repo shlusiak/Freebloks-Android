@@ -1,6 +1,8 @@
 package de.saschahlusiak.freebloks.app
 
-import android.content.SharedPreferences
+import android.content.Context
+import androidx.preference.PreferenceManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.defaultBoardSize
@@ -9,8 +11,10 @@ import de.saschahlusiak.freebloks.view.scene.AnimationType
 import javax.inject.Inject
 
 class Preferences @Inject constructor(
-    internal val prefs: SharedPreferences
+    @ApplicationContext private val context: Context
 ) {
+    internal val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+
     var gameMode: GameMode
         get() = GameMode.from(
             prefs.getInt(
@@ -46,7 +50,7 @@ class Preferences @Inject constructor(
 
     val vibrationEnabled by booleanPreference("vibrate", default = true)
 
-    val notifications  by booleanPreference("notifications", true)
+    val notifications by booleanPreference("notifications", true)
 
     val showSeeds by booleanPreference("show_seeds", default = true)
 
@@ -54,7 +58,8 @@ class Preferences @Inject constructor(
 
     private val animationType by stringPreference("animations", AnimationType.Full.settingsValue)
 
-    val showAnimations get() = AnimationType.entries.firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
+    val showAnimations
+        get() = AnimationType.entries.firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
 
     val snapAid by booleanPreference("snap_aid", default = true)
 
@@ -65,4 +70,5 @@ private fun Preferences.stringPreference(name: String, default: String = "") = P
 private fun Preferences.intPreference(name: String, default: Int = 0) = PreferenceDelegate(prefs, name, default)
 private fun Preferences.longPreference(name: String, default: Long = 0L) = PreferenceDelegate(prefs, name, default)
 private fun Preferences.floatPreference(name: String, default: Float = 0f) = PreferenceDelegate(prefs, name, default)
-private fun Preferences.booleanPreference(name: String, default: Boolean = false) = PreferenceDelegate(prefs, name, default)
+private fun Preferences.booleanPreference(name: String, default: Boolean = false) =
+    PreferenceDelegate(prefs, name, default)

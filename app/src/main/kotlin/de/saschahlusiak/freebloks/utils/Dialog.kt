@@ -13,7 +13,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 
 @Composable
 fun Dialog(
@@ -26,7 +27,7 @@ fun Dialog(
             .padding(horizontal = horizontalPadding)
             .wrapContentSize(),
         color = MaterialTheme.colorScheme.surfaceContainer,
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.dialog_corner_radius)),
+        shape = RoundedCornerShape(MaterialTheme.dimensions.dialogCornerRadius),
         content = content
     )
 }

@@ -1,14 +1,12 @@
 package de.saschahlusiak.freebloks.game.newgame
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
@@ -27,7 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.utils.Dialog
@@ -50,7 +49,7 @@ private fun SizeSelector(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium)
     ) {
         Text(
             size.toString(),
@@ -63,11 +62,12 @@ private fun SizeSelector(
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .weight(1f)
-                .padding(8.dp)
+                .padding(MaterialTheme.dimensions.innerPaddingMedium)
         )
 
         FilledTonalIconButton(
             onClick = { onUpdateCount(count - 1) },
+            modifier = Modifier.size(MaterialTheme.dimensions.buttonSize),
             enabled = count > 0
         ) { Text("-") }
 
@@ -81,6 +81,7 @@ private fun SizeSelector(
 
         FilledTonalIconButton(
             onClick = { onUpdateCount(count + 1) },
+            modifier = Modifier.size(MaterialTheme.dimensions.buttonSize),
             enabled = count < 5
         ) { Text("+") }
     }
@@ -101,7 +102,7 @@ fun StonesConfigScreen(
     }
 
     Dialog {
-        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.dialog_padding))) {
+        Column(modifier = Modifier.padding(MaterialTheme.dimensions.dialogPadding)) {
             Text(
                 stringResource(id = R.string.quantities),
                 modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
@@ -117,21 +118,25 @@ fun StonesConfigScreen(
             }
 
             Row(
-                horizontalArrangement = spacedBy(8.dp),
+                horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
                 modifier = Modifier
                     .width(IntrinsicSize.Min)
                     .align(alignment = Alignment.End)
-                    .padding(top = 16.dp)
+                    .padding(top = MaterialTheme.dimensions.innerPaddingLarge)
             ) {
                 OutlinedButton(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = MaterialTheme.dimensions.buttonSize),
                     onClick = onCancel
                 ) {
                     Text(stringResource(id = android.R.string.cancel))
                 }
 
                 Button(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = MaterialTheme.dimensions.buttonSize),
                     onClick = {
                         onOk(
                             IntArray(Shape.COUNT) {

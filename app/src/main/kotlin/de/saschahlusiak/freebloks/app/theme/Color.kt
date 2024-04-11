@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.app
+package de.saschahlusiak.freebloks.app.theme
 
 import androidx.compose.ui.graphics.Color
 

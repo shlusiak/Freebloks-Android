@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="activity_padding">16dp</dimen>
-
     <dimen name="dialog_corner_radius">12dp</dimen>
-    <dimen name="dialog_padding">12dp</dimen>
-    <dimen name="dialog_button_margin">4dp</dimen>
-    <dimen name="game_finish_social_button_size">48dp</dimen>
-
-    <dimen name="main_menu_padding">12dp</dimen>
-    <dimen name="main_menu_button_margin">10dp</dimen>
-    <dimen name="main_menu_button_height">52dp</dimen>
-    <dimen name="main_menu_width">240dp</dimen>
-    <dimen name="main_menu_app_icon_size">40dp</dimen>
-
-    <dimen name="textSizeSmall">14sp</dimen>
-    <dimen name="textSizeMedium">18sp</dimen>
-    <dimen name="textSizeLarge">21sp</dimen>
 
     <dimen name="pill_button_size">44dp</dimen>
     <dimen name="pill_button_size_large">56dp</dimen>
-
 </resources>

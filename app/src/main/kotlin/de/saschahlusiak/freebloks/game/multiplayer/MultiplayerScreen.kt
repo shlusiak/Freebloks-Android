@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.game.multiplayer
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -10,16 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,20 +25,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.game.multiplayer.NetworkType.*
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
@@ -68,8 +59,8 @@ fun MultiplayerScreen(
 ) {
     Dialog {
         Column(
-            Modifier.padding(dimensionResource(id = R.dimen.dialog_padding)),
-            verticalArrangement = spacedBy(8.dp)
+            Modifier.padding(MaterialTheme.dimensions.dialogPadding),
+            verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
         ) {
             Text(
                 text = stringResource(id = R.string.join_multiplayer_game),
@@ -136,7 +127,9 @@ fun MultiplayerScreen(
                     .padding(top = 16.dp)
             ) {
                 AnimatedVisibility(visible = type != Internet) {
-                    OutlinedButton(onClick = { onHost(name) }) {
+                    OutlinedButton(
+                        modifier = Modifier.heightIn(min = MaterialTheme.dimensions.buttonSize),
+                        onClick = { onHost(name) }) {
                         Text(stringResource(id = R.string.host_game))
                     }
                 }
@@ -146,10 +139,12 @@ fun MultiplayerScreen(
                 Row(
                     modifier = Modifier
                         .width(IntrinsicSize.Min),
-                    horizontalArrangement = spacedBy(8.dp)
+                    horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
                 ) {
                     OutlinedButton(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
                         onClick = onCancel
                     ) {
                         Text(stringResource(id = android.R.string.cancel))
@@ -157,7 +152,9 @@ fun MultiplayerScreen(
 
 
                     Button(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
                         onClick = {
                             when (type) {
                                 Internet -> onJoinInternet(name)

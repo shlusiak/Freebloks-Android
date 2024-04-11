@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,7 +31,8 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
 import de.saschahlusiak.freebloks.utils.Dialog
@@ -51,13 +54,13 @@ fun GameFinishScreen(
         Column(
             Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(dimensionResource(id = R.dimen.dialog_padding)),
+                .padding(MaterialTheme.dimensions.dialogPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 Image(painterResource(id = R.drawable.image_ribbon), null)
 
@@ -84,32 +87,41 @@ fun GameFinishScreen(
 
             data.forEach { player ->
                 PlayerRow(
-                    modifier = Modifier.padding(vertical = 4.dp),
+                    modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingSmall),
                     gameMode = gameMode,
                     score = player
                 )
             }
 
             HorizontalDivider(
-                Modifier.padding(top = 16.dp)
+                Modifier.padding(top = MaterialTheme.dimensions.innerPaddingLarge)
             )
 
             Row(
-                Modifier.padding(top = 12.dp),
-                horizontalArrangement = spacedBy(6.dp)
+                Modifier.padding(top = MaterialTheme.dimensions.innerPaddingLarge),
+                horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
-                FilledTonalIconButton(onClick = onStatistics) {
+                FilledTonalIconButton(
+                    onClick = onStatistics,
+                    modifier = Modifier.size(MaterialTheme.dimensions.buttonSize)
+                ) {
                     Icon(painter = painterResource(id = R.drawable.ic_chart), contentDescription = null)
                 }
 
                 if (isSignedIn) {
-                    FilledTonalIconButton(onClick = onLeaderboards) {
+                    FilledTonalIconButton(
+                        onClick = onLeaderboards,
+                        modifier = Modifier.size(MaterialTheme.dimensions.buttonSize)
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_leaderboard),
                             contentDescription = null
                         )
                     }
-                    FilledTonalIconButton(onClick = onAchievements) {
+                    FilledTonalIconButton(
+                        onClick = onAchievements,
+                        modifier = Modifier.size(MaterialTheme.dimensions.buttonSize)
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_achievements),
                             contentDescription = null
@@ -119,7 +131,11 @@ fun GameFinishScreen(
 
                 Spacer(Modifier.weight(1f))
 
-                OutlinedButton(onClick = onNewGame) {
+                OutlinedButton(
+                    onClick = onNewGame,
+                    modifier = Modifier
+                        .heightIn(min = MaterialTheme.dimensions.buttonSize)
+                ) {
                     Text(stringResource(id = R.string.play_again))
                 }
             }
@@ -172,7 +188,7 @@ private fun Preview() {
         GameFinishScreen(
             gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
             data = previewScores,
-            isSignedIn = false,
+            isSignedIn = true,
             onClose = {},
             onNewGame = {},
             onMainMenu = {},

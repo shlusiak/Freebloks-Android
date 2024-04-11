@@ -21,7 +21,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.AppTheme
+import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.utils.Previews
@@ -99,7 +100,10 @@ private fun Message(
             shape = if (isLocal) localShape else remoteShape
         ) {
             Column(
-                Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                Modifier.padding(
+                    horizontal = MaterialTheme.dimensions.innerPaddingLarge,
+                    vertical = MaterialTheme.dimensions.innerPaddingSmall
+                )
             ) {
                 if (!isLocal && message.name.isNotBlank()) {
                     Text(
