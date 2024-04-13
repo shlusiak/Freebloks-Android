@@ -28,10 +28,12 @@ FEATURES
 The game is network-compatible with Freebloks 3D for Windows and Linux: http://www.saschahlusiak.de/freebloks-3d/ 
 
 PLEASE DONATE
-Freebloks 3D is absolutely free, open source and without advertisement! But free things are not worthless. You can decide how much Freebloks means to you by donating, or buying Freebloks VIP: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
+Freebloks 3D is absolutely free, open source and without advertisement! But free things are not worthless. You can decide how much Freebloks means to you by donating, or buying Freebloks VIP:
 
-The complete source code is available on GitHub: https://github.com/shlusiak/Freebloks-Android 
+https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
 
-If you have any idea, feature request or wish concerning the game, just drop us an email: apps@saschahlusiak.de 
+The complete source code is available on GitHub:
 
-Similar: Blokish and Blokr!
+https://github.com/shlusiak/Freebloks-Android
+
+If you have any idea, feature request or wish concerning the game, just drop me an email: apps@saschahlusiak.de

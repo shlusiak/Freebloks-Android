@@ -1,1 +1,1 @@
-Strategy board game similar to the famous board game Blokus.
+Strategy board game similar to the famous board game Blokus

@@ -20,9 +20,9 @@ BEDIENUNG:
 Das Spiel kann jederzeit beendet werden, der aktuelle Spielstand wird beim nächsten Start fortgesetzt.
 
 FUNKTIONEN:
-- Unterstützung für 2 Spieler: entweder mit nur 2 Farben (Blokus Duo), oder mit 4 Farben und pro Spieler 2
+- Unterstützung für Zweis Spieler: entweder mit nur zwei Farben (Blokus Duo, Blokus Junior), oder mit vier Farben, wobei jeder Spieler zwei übernimmt.
 - Unterschiedliche Feldgrößen
-- Spiele gegen Computergegner oder mit bis zu 4 lokalen Spielern an einem Gerät
+- Spiele gegen Computergegner oder mit bis zu vier lokalen Spielern an einem Gerät
 - Onlinemodus über Internet
 - Spiel mit Freunden via Bluetooth
 - Hinweise und Rückgängig-Funktion
@@ -31,11 +31,12 @@ FUNKTIONEN:
 Das Spiel ist kompatibel mit "Freebloks 3D" für Windows und Linux: http://www.saschahlusiak.de/freebloks-3d/
 
 SPENDEN:
-Freebloks 3D is kostenlos, werbefrei und Open Source. Aber nicht alles, was nichts kostet, hat auch keinen Wert. Du kannst selber entscheiden, wieviel Freebloks dir wert ist und die Entwickler durch eine Spende, oder Freebloks VIP kaufen: https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
+Freebloks 3D is kostenlos, werbefrei und Open Source. Aber nicht alles, was nichts kostet, hat auch keinen Wert. Du kannst selber entscheiden, wieviel Freebloks dir wert ist und die Entwickler durch eine Spende unterstützen, oder Freebloks VIP kaufen:
 
-Der vollständige Quelltext ist auf GitHub verfügbar: https://github.com/shlusiak/Freebloks-Android
+https://play.google.com/store/apps/details?id=de.saschahlusiak.freebloksvip
+
+Der vollständige Quelltext ist auf GitHub verfügbar:
+
+https://github.com/shlusiak/Freebloks-Android
 
 Wenn du eine Idee oder einen Wunsch hast, schreib mir einfach eine E-Mail: apps@saschahlusiak.de
-
-
-Ähnlich Blokish und Blokr!
