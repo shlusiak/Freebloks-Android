@@ -10,6 +10,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledTonalButton
@@ -75,20 +77,20 @@ class RateAppFragment : DialogFragment() {
                     Text(
                         stringResource(id = R.string.rate_freebloks_title),
                         style = MaterialTheme.typography.titleMedium
-                    )
+                    )”
 
                     Image(
                         painter = painterResource(id = R.drawable.appicon_big), contentDescription = null,
-                        Modifier.size(100.dp)
+                        Modifier.size(120.dp)
                     )
 
                     Text(
                         stringResource(id = R.string.rate_freebloks_text),
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = MaterialTheme.dimensions.innerPaddingMedium),
                         textAlign = TextAlign.Center
                     )
 
-                    Row(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Row(modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium)) {
                         for (i in 1..5) {
                             Image(painter = painterResource(id = R.drawable.ic_star), contentDescription = null)
                         }
@@ -96,7 +98,7 @@ class RateAppFragment : DialogFragment() {
 
                     ButtonRow()
 
-                    Spacer(Modifier.padding(8.dp))
+                    Spacer(Modifier.height(MaterialTheme.dimensions.innerPaddingMedium))
 
                     Text(
                         stringResource(id = R.string.donation_text_line1),
@@ -107,7 +109,7 @@ class RateAppFragment : DialogFragment() {
 
                     if (!Global.IS_VIP) {
                         HorizontalDivider(
-                            Modifier.padding(top = 8.dp)
+                            Modifier.padding(top = MaterialTheme.dimensions.innerPaddingMedium)
                         )
                         TextButton(
                             onClick = {
@@ -127,33 +129,48 @@ class RateAppFragment : DialogFragment() {
     @Composable
     private fun ButtonRow() {
         Row {
-            FilledTonalButton(onClick = {
-                analytics.logEvent("rate_no_click", null)
-                prefs.rateShowAgain = false
+            FilledTonalButton(
+                onClick = {
+                    analytics.logEvent("rate_no_click", null)
+                    prefs.rateShowAgain = false
 
-                dismiss()
-            }, Modifier.weight(1f)) {
+                    dismiss()
+                },
+                Modifier
+                    .weight(1f)
+                    .heightIn(MaterialTheme.dimensions.buttonSize)
+            ) {
                 Text(stringResource(id = R.string.rate_never))
             }
 
-            TextButton(onClick = {
-                analytics.logEvent("rate_later_click", null)
-                dismiss()
-            }, Modifier.weight(1f)) {
+            TextButton(
+                onClick = {
+                    analytics.logEvent("rate_later_click", null)
+                    dismiss()
+                },
+                Modifier
+                    .weight(1f)
+                    .heightIn(MaterialTheme.dimensions.buttonSize)
+            ) {
                 Text(stringResource(id = R.string.rate_later))
             }
 
-            FilledTonalButton(onClick = {
-                analytics.logEvent("rate_yes_click", null)
-                val intent = Intent(
-                    "android.intent.action.VIEW",
-                    Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
-                )
-                prefs.rateShowAgain = false
+            FilledTonalButton(
+                onClick = {
+                    analytics.logEvent("rate_yes_click", null)
+                    val intent = Intent(
+                        "android.intent.action.VIEW",
+                        Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
+                    )
+                    prefs.rateShowAgain = false
 
-                dismiss()
-                startActivity(intent)
-            }, Modifier.weight(1f)) {
+                    dismiss()
+                    startActivity(intent)
+                },
+                Modifier
+                    .weight(1f)
+                    .heightIn(MaterialTheme.dimensions.buttonSize)
+            ) {
                 Text(stringResource(id = R.string.rate_now))
             }
         }
