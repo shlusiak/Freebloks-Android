@@ -21,21 +21,25 @@
 
 
 ## Screenshots
-
+### Phone
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_10.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_10.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_20.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_20.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_30.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_30.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_40.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_40.jpg)
-[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_50.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_50.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_60.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_60.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_70.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_70.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_80.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_80.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_90.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_90.jpg)
 
-[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_06.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_06.png)
-[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_07.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_07.png)
-[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_08.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_08.png)
-[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_09.png" width=405>](fastlane/metadata/android/en-US/images/tenInchScreenshots/shot_09.png)
+### Tablet
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_10.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_10.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_20.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_20.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_30.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_30.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_40.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_40.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_50.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_50.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_60.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_60.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_70.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_70.jpg)
+[<img src="fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_80.jpg" width=380>](fastlane/metadata/android/en-US/images/tenInchScreenshots/tablet_80.jpg)
 
 ## Description
 
