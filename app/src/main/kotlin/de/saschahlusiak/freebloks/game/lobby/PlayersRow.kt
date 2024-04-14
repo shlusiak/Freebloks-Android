@@ -79,7 +79,7 @@ private fun PlayerItem(
     onTogglePlayer: (Int) -> Unit
 ) {
     val isAvailable = player.client == null || player.isLocal
-    val background = colorResource(id = player.color.backgroundColorId)
+    val background = player.color.backgroundColor
 
     if (player.client != null) {
         Button(
@@ -119,7 +119,7 @@ private fun PlayerItem(
                 Text(text = "---")
             } else {
                 CircularProgressIndicator(
-                    color = colorResource(id = player.color.backgroundColorId),
+                    color = player.color.backgroundColor,
                     modifier = Modifier.size(20.dp)
                 )
             }

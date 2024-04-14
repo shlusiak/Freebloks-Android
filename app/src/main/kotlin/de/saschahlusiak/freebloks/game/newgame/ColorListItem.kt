@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
@@ -66,7 +67,7 @@ internal fun ColorListItem(
         )
 
         Surface(
-            color = colorResource(id = color.foregroundColorId),
+            color = if (isSystemInDarkTheme()) color.backgroundColor else color.foregroundColor,
             shape = CircleShape,
             shadowElevation = 8.dp,
         ) {

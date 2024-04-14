@@ -24,6 +24,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.utils.Previews
 
@@ -90,12 +91,12 @@ private fun Message(
         horizontalArrangement = if (isLocal) Arrangement.End else Arrangement.Start
     ) {
         val color = if (message.player == null)
-            R.color.player_foreground_servermessage
+            StoneColor.White.backgroundColor
         else
-            mode.colorOf(message.player).backgroundColorId
+            mode.colorOf(message.player).backgroundColor
 
         Surface(
-            color = colorResource(id = color),
+            color = color,
             shadowElevation = 2.dp,
             shape = if (isLocal) localShape else remoteShape
         ) {
@@ -144,6 +145,7 @@ internal val chatHistory = listOf(
     ChatItem.Message(0, 3, true, "Name 1", "This is the response"),
     ChatItem.Message(1, 2, false, "Name 1", "This is the message"),
     ChatItem.Message(1, 2, false, "Name 1", "This is the message"),
+    ChatItem.Message(1, -1, false, "Name 1", "Unspecified"),
 )
 
 @Composable

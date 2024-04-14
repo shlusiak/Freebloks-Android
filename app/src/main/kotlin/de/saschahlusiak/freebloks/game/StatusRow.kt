@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
+import de.saschahlusiak.freebloks.app.theme.playerColorOnBackground
+import de.saschahlusiak.freebloks.app.theme.playerColorOnForeground
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.utils.Previews
@@ -154,15 +156,15 @@ fun revealBrush(color: Color): Brush {
 fun StatusRow(data: StatusData) {
     val shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
 
-    val color = when (data) {
-        is StatusData.Player -> colorResource(data.currentPlayer.backgroundColorId)
+    val (color, contentColor) = when (data) {
+        is StatusData.Player -> if (!data.isRotated && data.isYourTurn)
+            data.currentPlayer.backgroundColor to Color.White
+            else data.currentPlayer.backgroundColor to Color.White
 
-        else -> neutralBackground
+        else -> neutralBackground to Color.White
     }
 
     val brush = revealBrush(color = color)
-
-    val contentColor = Color.White
 
     Box(
         modifier = Modifier

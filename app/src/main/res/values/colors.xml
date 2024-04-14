@@ -3,28 +3,6 @@
 
     <color name="launcherIconBackground">#EFEFEF</color>
 
-    <!-- Background color for player status / lobby -->
-    <color name="player_background_white">#5C5C5C</color>
-    <color name="player_background_blue">#00009F</color>
-    <color name="player_background_yellow">#8C8C00</color>
-    <color name="player_background_red">#600000</color>
-    <color name="player_background_green">#006000</color>
-    <color name="player_background_orange">#AA6018</color>
-    <color name="player_background_purple">#60008C</color>
-
-    <!-- Foreground color for player text in lobby chat -->
-    <color name="lobby_background_border">#6f6f7f</color>
-    <color name="lobby_background_color">#3f000000</color>
-
-    <color name="player_foreground_servermessage">#A0AAAAAA</color>
-    <color name="player_foreground_white">#FFFFFF</color>
-    <color name="player_foreground_blue">#2050ff</color>
-    <color name="player_foreground_yellow">#e6e600</color>
-    <color name="player_foreground_red">#ff0000</color>
-    <color name="player_foreground_green">#00e600</color>
-    <color name="player_foreground_orange">#ff8c5c</color>
-    <color name="player_foreground_purple">#b440ff</color>
-
     <color name="pill_button_background">#1F1F1F</color>
     <color name="pill_button_stroke_color">#070707</color>
     <color name="pill_button_ripple_color">#FFFFFF</color>

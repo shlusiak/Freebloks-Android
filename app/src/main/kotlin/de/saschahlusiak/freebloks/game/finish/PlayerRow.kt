@@ -107,7 +107,7 @@ fun PlayerRow(
                         .offset(x = 8.dp, y = 5.dp),
                     shadowElevation = 2.dp,
                     shape = RoundedCornerShape(8.dp),
-                    color = colorResource(id = color2.backgroundColorId),
+                    color = color2.backgroundColor,
                     contentColor = Color.White
                 ) { }
             }
@@ -115,7 +115,7 @@ fun PlayerRow(
             Surface(
                 shadowElevation = 2.dp,
                 shape = RoundedCornerShape(8.dp),
-                color = colorResource(id = color.backgroundColorId),
+                color = color.backgroundColor,
                 contentColor = Color.White
             ) {
                 Box(

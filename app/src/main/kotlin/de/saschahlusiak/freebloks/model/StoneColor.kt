@@ -1,68 +1,69 @@
 package de.saschahlusiak.freebloks.model
 
 import android.content.res.Resources
-import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.Color
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.theme.*
 
 /**
  * The definition of all possible colors for all stones
  */
 @Immutable
 enum class StoneColor(
-    @ColorRes val backgroundColorId: Int,
-    @ColorRes val foregroundColorId: Int,
+    val backgroundColor: Color,
+    val foregroundColor: Color,
     val stoneColor: FloatArray,
     val shadowColor: FloatArray,
     @StringRes val labelResId: Int
 ) {
     White(
-        R.color.player_background_white,
-        R.color.player_foreground_white,
+        playerBackgroundWhite,
+        playerForegroundWhite,
         floatArrayOf(0.75f, 0.75f, 0.75f, 0f),
         floatArrayOf(0.04f, 0.04f, 0.04f, 0f),
         R.string.white
     ),
     Blue(
-        R.color.player_background_blue,
-        R.color.player_foreground_blue,
+        playerBackgroundBlue,
+        playerForegroundBlue,
         floatArrayOf(0.0f, 0.22f, 1.0f, 0f),
         floatArrayOf(0.0f, 0.004f, 0.035f, 0f),
         R.string.blue
     ),
     Yellow(
-        R.color.player_background_yellow,
-        R.color.player_foreground_yellow,
+        playerBackgroundYellow,
+        playerForegroundYellow,
         floatArrayOf(0.95f, 0.95f, 0.0f, 0f),
         floatArrayOf(0.025f, 0.025f, 0f, 0f),
         R.string.yellow
     ),
     Red(
-        R.color.player_background_red,
-        R.color.player_foreground_red,
+        playerBackgroundRed,
+        playerForegroundRed,
         floatArrayOf(0.80f, 0f, 0f, 0f),
         floatArrayOf(0.035f, 0f, 0f, 0f),
         R.string.red
     ),
     Green(
-        R.color.player_background_green,
-        R.color.player_foreground_green,
+        playerBackgroundGreen,
+        playerForegroundGreen,
         floatArrayOf(0.0f, 0.75f, 0.0f, 0f),
         floatArrayOf(0.0f, 0.035f, 0f, 0f),
         R.string.green
     ),
     Orange(
-        R.color.player_background_orange,
-        R.color.player_foreground_orange,
+        playerBackgroundOrange,
+        playerForegroundOrange,
         floatArrayOf(0.95f, 0.45f, 0.0f, 0f),
         floatArrayOf(0.040f, 0.020f, 0f, 0f),
         R.string.orange
     ),
     Purple(
-        R.color.player_background_purple,
-        R.color.player_foreground_purple,
+        playerBackgroundPurple,
+        playerForegroundPurple,
         floatArrayOf(0.45f, 0.0f, 0.90f, 0f),
         floatArrayOf(0.020f, 0.000f, 0.040f, 0f),
         R.string.purple
@@ -77,7 +78,7 @@ enum class StoneColor(
                 if (player == 2) return Purple
             }
 
-            return when(player) {
+            return when (player) {
                 0 -> Blue
                 1 -> Yellow
                 2 -> Red
