@@ -33,6 +33,7 @@ import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.Preferences
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
@@ -145,11 +146,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {
                 DonateFragment().show(supportFragmentManager, null)
             }
-
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.bottomSheet, PlayerDetailFragment())
-                .commit()
         }
 
         val client = viewModel.client
@@ -195,10 +191,16 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 }
                 false
             }
+
+            statusRow.setContent {
+                AppTheme {
+                    StatusRow(viewModel)
+                }
+            }
         }
 
         viewModel.connectionStatus.asLiveData().observe(this) { onConnectionStatusChanged(it) }
-        viewModel.playerToShowInSheet.observe(this) { onPlayerSheetChanged(it) }
+        viewModel.playerToShowInSheet.asLiveData().observe(this) { onPlayerSheetChanged(it) }
         viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
         viewModel.canRequestHint.observe(this) { binding.hintButton.isEnabled = it }
         viewModel.canRequestUndo.observe(this) { binding.undoButton.isEnabled = it }
@@ -541,7 +543,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
         viewModel.intro = null
         scene.intro = null
-        viewModel.setSheetPlayer(-1, false)
+        viewModel.setSheetPlayer(-1)
         try {
             restoreOldGame()
         } catch (e: Exception) {

@@ -14,7 +14,7 @@
         android:id="@+id/menuOverlayContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomSheet">
+        android:layout_above="@id/statusRow">
 
         <FrameLayout
             android:id="@+id/chatButtonContainer"
@@ -107,13 +107,10 @@
 
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/bottomSheet"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/statusRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:clipChildren="false"
-        android:clipToPadding="false" />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

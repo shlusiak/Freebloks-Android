@@ -48,6 +48,7 @@
     <style name="Theme.Freebloks.Game">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
 
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
         <item name="android:windowTranslucentStatus">true</item>

@@ -21,11 +21,8 @@ import kotlin.random.Random
 interface SceneDelegate {
     /**
      * Set the override of the player to show, when rotating the board.
-     *
-     * @param player the new player to show
-     * @param isRotated whether the board is rotated or not
      */
-    fun setSheetPlayer(player: Int, isRotated: Boolean)
+    fun setSheetPlayer(showPlayer: Int)
 
     /**
      * The [CurrentStone] would like to commit this stone
@@ -196,7 +193,7 @@ class Scene(
 
     fun playSound(sound: FeedbackType, volume: Float = 1.0f, speed: Float = 1.0f) = sounds?.play(sound, volume, speed)
 
-    fun setShowPlayerOverride(player: Int, isRotated: Boolean) = delegate?.setSheetPlayer(player, isRotated)
+    fun setShowPlayerOverride(player: Int, isRotated: Boolean) = delegate?.setSheetPlayer(player)
 
     /**
      * In model coordinates, the center of the board is (0/0).
