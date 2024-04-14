@@ -77,7 +77,7 @@ class RateAppFragment : DialogFragment() {
                     Text(
                         stringResource(id = R.string.rate_freebloks_title),
                         style = MaterialTheme.typography.titleMedium
-                    )”
+                    )
 
                     Image(
                         painter = painterResource(id = R.drawable.appicon_big), contentDescription = null,
