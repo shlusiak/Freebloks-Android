@@ -2,6 +2,9 @@ package de.saschahlusiak.freebloks.game
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationEndReason
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -21,8 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterStart
@@ -117,8 +122,8 @@ fun StatusRow(vm: FreebloksActivityViewModel) {
 private val shadow = TextStyle(
     shadow = Shadow(
         color = Color.Black,
-        offset = Offset(0.6f, 1.5f),
-        blurRadius = 4f
+        offset = Offset(0.6f, 1.3f),
+        blurRadius = 5f
     )
 )
 
@@ -127,25 +132,27 @@ fun revealBrush(color: Color): Brush {
     val screenWidth = with(LocalDensity.current) {
         LocalConfiguration.current.screenWidthDp.dp.toPx()
     }
-    val previous = remember { mutableStateOf(color) }
+    var previous by remember { mutableStateOf(color) }
+    var current by remember { mutableStateOf(color) }
     val radius = remember { Animatable(1f) }
 
     LaunchedEffect(key1 = color) {
         radius.snapTo(1f)
+        current = color
         radius.animateTo(
-            screenWidth / 1.9f,
+            screenWidth,
             tween(
-                durationMillis = 240,
+                durationMillis = 400,
                 easing = LinearEasing
             )
         )
-        previous.value = color
+        previous = color
     }
 
     return Brush.radialGradient(
-        0f to color,
-        0.98f to color,
-        1f to previous.value,
+        0f to current,
+        0.98f to current,
+        1f to previous,
         radius = radius.value,
         center = Offset(x = screenWidth / 2f, y = Float.POSITIVE_INFINITY)
     )
@@ -159,7 +166,7 @@ fun StatusRow(data: StatusData) {
     val (color, contentColor) = when (data) {
         is StatusData.Player -> if (!data.isRotated && data.isYourTurn)
             data.currentPlayer.backgroundColor to Color.White
-            else data.currentPlayer.backgroundColor to Color.White
+        else data.currentPlayer.backgroundColor to Color.White
 
         else -> neutralBackground to Color.White
     }
@@ -238,7 +245,7 @@ fun StatusRow(data: StatusData) {
                         ),
                         modifier = Modifier.align(alignment = CenterEnd),
                         color = contentColor,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall
                             .merge(shadow)
                     )
                 } else if (data.inProgress) {
