@@ -31,9 +31,9 @@ val TabletDimensions = Dimensions(
     mainMenuPadding = 20.dp,
     mainMenuButtonMargin = 12.dp,
     mainMenuButtonHeight = 64.dp,
-    innerPaddingSmall = 8.dp,
-    innerPaddingMedium = 12.dp,
-    innerPaddingLarge = 16.dp
+    innerPaddingSmall = 6.dp,
+    innerPaddingMedium = 10.dp,
+    innerPaddingLarge = 14.dp
 )
 
 internal val LocalDimensions = staticCompositionLocalOf { Dimensions() }

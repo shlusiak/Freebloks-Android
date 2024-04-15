@@ -96,18 +96,17 @@ fun GameFinishScreen(
             }
 
             HorizontalDivider(
-                Modifier.padding(top = MaterialTheme.dimensions.innerPaddingLarge)
+                Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingLarge)
             )
 
             if (onChat != null) {
                 ChatTextField(
-                    modifier = Modifier.padding(top = MaterialTheme.dimensions.innerPaddingMedium),
+                    modifier = Modifier.padding(bottom = MaterialTheme.dimensions.innerPaddingLarge),
                     onChat = onChat
                 )
             }
 
             Row(
-                Modifier.padding(top = MaterialTheme.dimensions.innerPaddingLarge),
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 FilledTonalIconButton(

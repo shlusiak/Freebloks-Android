@@ -184,7 +184,7 @@ fun StatusRow(data: StatusData) {
                     .calculateBottomPadding()
             )
             .padding(
-                vertical = MaterialTheme.dimensions.innerPaddingMedium,
+                vertical = 8.dp,
                 horizontal = MaterialTheme.dimensions.innerPaddingSmall
             )
     ) {
@@ -193,7 +193,7 @@ fun StatusRow(data: StatusData) {
                 Text(
                     text = stringResource(id = data.res),
                     modifier = Modifier.align(alignment = Center),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleMedium
                         .merge(shadow),
                     color = contentColor,
                     fontWeight = FontWeight.Bold
