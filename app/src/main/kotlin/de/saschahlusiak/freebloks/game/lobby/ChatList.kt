@@ -46,7 +46,7 @@ fun ChatList(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceDim,
         border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
-        shape = RoundedCornerShape(4.dp)
+        shape = RoundedCornerShape(MaterialTheme.dimensions.dialogCornerRadius)
     ) {
         LazyColumn(
             state = state,

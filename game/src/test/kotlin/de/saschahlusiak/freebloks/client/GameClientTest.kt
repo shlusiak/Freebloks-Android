@@ -230,6 +230,10 @@ class GameClientTest {
         client.sendChat("Hey hey")
 
         assertEquals(MessageChat(0, "Hey hey"), messages.receive())
+
+        client.sendChat("a".repeat(250))
+        assertEquals(MessageChat(0, "a".repeat(240)), messages.receive())
+        assertEquals(MessageChat(0, "a".repeat(10)), messages.receive())
     }
 
     @Test

@@ -31,6 +31,7 @@ data class MessageChat(val client: Int, val message: String): Message(MessageTyp
                 if (it.toInt() != 0) println("Ignore excess byte ${it.toUnsignedByte()}")
             }
 
+            // cut off trailing new lines or spaces; the server may send them back
             return MessageChat(client, String(bytes, Charsets.UTF_8).trimEnd())
         }
     }

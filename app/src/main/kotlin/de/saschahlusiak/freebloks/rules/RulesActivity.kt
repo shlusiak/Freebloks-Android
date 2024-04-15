@@ -32,7 +32,7 @@ class RulesActivity : AppCompatActivity() {
             }
         }
 
-        analytics.logEvent("rules_show", null)
+        analytics.logEvent("rules_show")
     }
 
     private fun onYoutubeButtonClick() {

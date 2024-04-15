@@ -122,7 +122,7 @@ fun PlayerRow(
                     modifier = Modifier
                         .padding(
                             horizontal = MaterialTheme.dimensions.innerPaddingLarge,
-                            vertical = MaterialTheme.dimensions.innerPaddingMedium
+                            vertical = MaterialTheme.dimensions.innerPaddingSmall
                         )
                         .fillMaxWidth(),
                 ) {

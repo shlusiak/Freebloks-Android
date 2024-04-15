@@ -34,8 +34,6 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
  * - A chat is received and the game is started or in the background
  *
  * The notification is ongoing while the game is in the background.
- *
- * TODO: make notifications prettier
  */
 @SuppressLint("MissingPermission")
 class MultiplayerNotificationManager(val context: Context, val client: GameClient) : GameEventObserver {

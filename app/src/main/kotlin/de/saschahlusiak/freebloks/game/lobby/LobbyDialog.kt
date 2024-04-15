@@ -140,10 +140,7 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     }
 
     private fun sendChat(message: String) {
-        // FIXME: The server cuts off the last character, so we have to append a new-line
-        message.chunked(240).forEach {
-            client?.sendChat(it + "\n")
-        }
+        client?.sendChat(message)
     }
 
     private fun requestMode(gameMode: GameMode? = null, size: Int? = null) {

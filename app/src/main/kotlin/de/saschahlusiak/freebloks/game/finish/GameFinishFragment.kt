@@ -21,7 +21,9 @@ import androidx.lifecycle.asFlow
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
+import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.statistics.StatisticsBottomSheet
 import de.saschahlusiak.freebloks.statistics.StatisticsContent
@@ -34,6 +36,8 @@ import javax.inject.Inject
 class GameFinishFragment : DialogFragment() {
 
     private val viewModel: GameFinishFragmentViewModel by viewModels()
+
+    private val activityViewModel: FreebloksActivityViewModel by viewModels(ownerProducer = { requireActivity() })
 
     private val listener get() = requireActivity() as OnStartCustomGameListener
 
@@ -75,12 +79,21 @@ class GameFinishFragment : DialogFragment() {
             onMainMenu = ::onMainMenu,
             onAchievements = ::onAchievements,
             onLeaderboards = ::onLeaderboard,
-            onStatistics = ::onStatistics
+            onStatistics = ::onStatistics,
+            onChat = ::onChat.takeIf { viewModel.canChat }
         )
 
         if (showStatistics) {
             StatisticsSheet { showStatistics = false }
         }
+    }
+
+    private fun onChat(message: String) {
+        analytics.logEvent("finish_chat")
+
+        activityViewModel.client?.sendChat(message)
+
+        LobbyDialog().show(parentFragmentManager, null)
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

@@ -41,7 +41,7 @@ class GameClient constructor(
     val game: Game,
     val config: GameConfig,
     val crashReporter: CrashReporter
-): Object() {
+) : Object() {
 
     private var clientSocket: Closeable? = null
     private val gameClientMessageHandler = GameClientMessageHandler(game)
@@ -273,8 +273,12 @@ class GameClient constructor(
      * Send a chat message to the server, which will relay it back
      * @param message the message
      */
-    fun sendChat(message: String) { // the client does not matter, it will be filled in by the server then broadcasted to all clients
-        send(MessageChat(0, message))
+    fun sendChat(message: String) {
+        // FIXME: The server cuts off the last character, so we have to append a new-line
+        message.chunked(240).forEach {
+            // the client does not matter, it will be filled in by the server then broadcasted to all clients
+            send(MessageChat(0, it + "\n"))
+        }
     }
 
     /**
@@ -316,8 +320,7 @@ class GameClient constructor(
     private fun send(msg: Message) {
         try {
             sendQueue.trySendBlocking(msg)
-        }
-        catch (e: ClosedSendChannelException) {
+        } catch (e: ClosedSendChannelException) {
             // ignore send failures
         }
     }

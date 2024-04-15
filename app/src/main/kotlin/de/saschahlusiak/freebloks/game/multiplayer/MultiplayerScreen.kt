@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -73,6 +74,7 @@ fun MultiplayerScreen(
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
                 singleLine = true,
+                shape = CircleShape,
                 onValueChange = { setName(it) },
                 placeholder = { Text(stringResource(id = R.string.player_name_hint)) }
             )
@@ -85,6 +87,7 @@ fun MultiplayerScreen(
                     value = server,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = { setServer(it) },
+                    shape = CircleShape,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
                     keyboardActions = KeyboardActions(onGo = {
                         if (server.isNotBlank()) onJoinWifi(name, server)

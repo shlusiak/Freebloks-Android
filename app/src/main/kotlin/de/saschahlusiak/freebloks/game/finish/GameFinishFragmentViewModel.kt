@@ -45,6 +45,7 @@ class GameFinishFragmentViewModel @Inject constructor(
     val playerScores: List<PlayerScore>
     private var localClientName: String
     val gameMode get() = game.gameMode
+    val canChat: Boolean
 
     // LiveData
     val isSignedIn = gameHelper.signedIn
@@ -54,6 +55,7 @@ class GameFinishFragmentViewModel @Inject constructor(
         this.game = game ?: throw IllegalArgumentException("game must not be null")
         this.lastStatus = args.get("lastStatus") as MessageServerStatus?
         this.localClientName = prefs.playerName
+        canChat = (lastStatus?.clients ?: 0) > 1
 
         this.playerScores = game.getPlayerScores().also { data ->
             // assign names to the scores based on lastStatus and clientName
