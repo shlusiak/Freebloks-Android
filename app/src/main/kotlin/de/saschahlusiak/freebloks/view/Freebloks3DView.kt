@@ -29,6 +29,10 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
 
     private var oldDist = 0f
 
+    init {
+        keepScreenOn = true
+    }
+
     fun setScene(scene: Scene) {
         setEGLConfigChooser(GLConfigChooser(2))
         this.scene = scene
