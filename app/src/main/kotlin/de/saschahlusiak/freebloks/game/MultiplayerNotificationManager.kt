@@ -15,6 +15,7 @@ import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
+import androidx.compose.material3.contentColorFor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringArrayResource
 import androidx.core.app.NotificationCompat
@@ -45,6 +46,8 @@ import kotlin.time.Duration.Companion.minutes
 @SuppressLint("MissingPermission")
 class MultiplayerNotificationManager(val context: Context, val client: GameClient) : GameEventObserver {
     private val notificationManager = NotificationManagerCompat.from(context)
+
+    private val serviceIntent = Intent(context, MultiplayerForegroundService::class.java)
 
     private val FLAG_UPDATE_IMMUTABLE = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -90,7 +93,6 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         if (game.isStarted && lastStatus.clients == 1) return
 
         isInBackground = true
-        notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
 
         Log.d(tag, "Acquiring wakeLock")
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -98,6 +100,15 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         wakeLock = pm.newWakeLock(PARTIAL_WAKE_LOCK, "freebloks:ongoing-notification").also {
             // 15 minutes should be plenty for the user to return to the app
             it.acquire(15.minutes.inWholeMilliseconds)
+        }
+
+        val notification = buildOngoingNotification(false)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            serviceIntent.putExtra("notification", notification)
+            context.startForegroundService(serviceIntent)
+        } else {
+            notificationManager.notify(ONGOING_NOTIFICATION_ID, notification)
         }
     }
 
@@ -109,6 +120,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         Log.d(tag, "Releasing wakeLock")
         wakeLock?.release()
         wakeLock = null
+        context.stopService(serviceIntent)
         isInBackground = false
     }
 
@@ -117,6 +129,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
      */
     fun shutdown() {
         client.removeObserver(this)
+        stopBackgroundNotification()
         cancel()
     }
 
@@ -335,7 +348,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
     }
 
     companion object {
-        private const val ONGOING_NOTIFICATION_ID = 2
+        const val ONGOING_NOTIFICATION_ID = 2
         private const val CHAT_NOTIFICATION_ID = 3
 
         private const val CHANNEL_DEFAULT = "default"
