@@ -10,6 +10,9 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
+import android.os.PowerManager.PARTIAL_WAKE_LOCK
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.core.app.NotificationCompat
@@ -21,6 +24,7 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * Class to manage the multi player Android notification.
@@ -53,6 +57,12 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
     private var isInBackground = false
 
     /**
+     * While the ongoing notification is running, we need a wakelock so we don't lose
+     * connection with the server
+     */
+    private var wakeLock: PowerManager.WakeLock? = null
+
+    /**
      * We need to hold on to the last server status for player names
      */
     private var lastStatus: MessageServerStatus? = null
@@ -78,6 +88,14 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         isInBackground = true
         notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
+
+        Log.d(tag, "Acquiring wakeLock")
+        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock?.release()
+        wakeLock = pm.newWakeLock(PARTIAL_WAKE_LOCK, "freebloks:ongoing-notification").also {
+            // 15 minutes should be plenty for the user to return to the app
+            it.acquire(15.minutes.inWholeMilliseconds)
+        }
     }
 
     /**
@@ -85,6 +103,9 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
      */
     fun stopBackgroundNotification() {
         cancel()
+        Log.d(tag, "Releasing wakeLock")
+        wakeLock?.release()
+        wakeLock = null
         isInBackground = false
     }
 
@@ -287,6 +308,8 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         private const val CHANNEL_DEFAULT = "default"
         private const val CHANNEL_CHAT = "chat"
+
+        private val tag = MultiplayerNotificationManager::class.simpleName
 
         private val soundUri = Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/${R.raw.chat}")
     }

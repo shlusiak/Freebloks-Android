@@ -11,10 +11,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.os.PowerManager
-import android.os.PowerManager.WakeLock
 import android.util.Log
 import androidx.annotation.UiThread
-import androidx.compose.runtime.currentCompositeKeyHash
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -114,8 +112,6 @@ class FreebloksActivityViewModel @Inject constructor(
     val canRequestUndo = MutableLiveData(false)
     val canRequestHint = MutableLiveData(false)
     val inProgress = MutableStateFlow(false)
-
-    private var wakeLock: PowerManager.WakeLock? = null
 
     init {
         reloadPreferences()
@@ -489,12 +485,6 @@ class FreebloksActivityViewModel @Inject constructor(
         analytics.logEvent("game_started", b)
         if (lastStatus.clients >= 2) {
             analytics.logEvent("game_start_multiplayer", b)
-
-            wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager)
-                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "freebloks:networkgame")
-
-            // Make sure we release the wakelock eventually
-            wakeLock?.acquire(15.minutes.inWholeMilliseconds)
         }
     }
 
@@ -584,8 +574,6 @@ class FreebloksActivityViewModel @Inject constructor(
     @UiThread
     override fun onDisconnected(client: GameClient, error: Throwable?) {
         Log.d(tag, "onDisconneced")
-        wakeLock?.release()
-        wakeLock = null
         if (client === this.client) {
             // we may already have swapped to another client, which drives the status
             lastStatus.value = null
