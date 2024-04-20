@@ -56,11 +56,10 @@ data class SheetPlayer(
     // the actual current player
     val currentPlayer: Int,
     // the player to show on the board or -1
-    val showPlayer: Int
-) {
-    // whether the board is currently rotated or in its "home" position.
-    val isRotated = (currentPlayer != showPlayer)
-}
+    val showPlayer: Int,
+    // whether the actual board is rotated in the view
+    val isRotated: Boolean
+)
 
 @HiltViewModel
 class FreebloksActivityViewModel @Inject constructor(
@@ -107,7 +106,7 @@ class FreebloksActivityViewModel @Inject constructor(
     val soundsEnabledLiveData = soundsEnabled.asLiveData()
     val chatButtonVisible = MutableLiveData(false)
     val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
-    val playerToShowInSheet = MutableStateFlow(SheetPlayer(-1, -1))
+    val playerToShowInSheet = MutableStateFlow(SheetPlayer(-1, -1, false))
     val googleAccountSignedIn = gameHelper.signedIn
     val canRequestUndo = MutableLiveData(false)
     val canRequestHint = MutableLiveData(false)
@@ -255,7 +254,7 @@ class FreebloksActivityViewModel @Inject constructor(
         }
 
         connectionStatus.value = ConnectionStatus.Connecting
-        setSheetPlayer(-1)
+        setSheetPlayer(showPlayer = -1, isRotated = false)
         chatButtonVisible.value = false
 
         connectJob = coroutineContext[Job]
@@ -378,7 +377,7 @@ class FreebloksActivityViewModel @Inject constructor(
         this.client = null
         c?.disconnect()
 
-        setSheetPlayer(-1)
+        setSheetPlayer(-1, false)
         connectionStatus.value = ConnectionStatus.Disconnected
     }
 
@@ -405,9 +404,9 @@ class FreebloksActivityViewModel @Inject constructor(
     /**
      * Set the override of the player to show, when rotating the board.
      */
-    override fun setSheetPlayer(showPlayer: Int) {
+    override fun setSheetPlayer(showPlayer: Int, isRotated: Boolean) {
         playerToShowInSheet.update {
-            it.copy(showPlayer = showPlayer)
+            it.copy(showPlayer = showPlayer, isRotated = isRotated)
         }
     }
 
@@ -455,7 +454,7 @@ class FreebloksActivityViewModel @Inject constructor(
         Log.d(tag, "onConnected")
         lastStatus.value = null
         connectionStatus.value = ConnectionStatus.Connected
-        playerToShowInSheet.value = SheetPlayer(client.game.currentPlayer, client.game.currentPlayer)
+        playerToShowInSheet.value = SheetPlayer(client.game.currentPlayer, client.game.currentPlayer, false)
         canRequestHint.value = (client.game.isLocalPlayer() && client.game.isStarted && !client.game.isFinished)
         canRequestUndo.value = false
     }
@@ -578,7 +577,7 @@ class FreebloksActivityViewModel @Inject constructor(
             // we may already have swapped to another client, which drives the status
             lastStatus.value = null
             connectionStatus.value = ConnectionStatus.Disconnected
-            playerToShowInSheet.value = SheetPlayer(-1, -1)
+            playerToShowInSheet.update { it.copy(currentPlayer = -1, showPlayer = -1) }
             chatButtonVisible.postValue(false)
         }
         chatHistory.value = emptyList()

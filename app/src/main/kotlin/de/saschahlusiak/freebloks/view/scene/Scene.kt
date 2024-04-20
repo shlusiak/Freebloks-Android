@@ -22,7 +22,7 @@ interface SceneDelegate {
     /**
      * Set the override of the player to show, when rotating the board.
      */
-    fun setSheetPlayer(showPlayer: Int)
+    fun setSheetPlayer(showPlayer: Int, isRotated: Boolean)
 
     /**
      * The [CurrentStone] would like to commit this stone
@@ -193,7 +193,7 @@ class Scene(
 
     fun playSound(sound: FeedbackType, volume: Float = 1.0f, speed: Float = 1.0f) = sounds?.play(sound, volume, speed)
 
-    fun setShowPlayerOverride(player: Int, isRotated: Boolean) = delegate?.setSheetPlayer(player)
+    fun setShowPlayerOverride(player: Int, isRotated: Boolean) = delegate?.setSheetPlayer(player, isRotated)
 
     /**
      * In model coordinates, the center of the board is (0/0).

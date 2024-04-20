@@ -502,6 +502,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val client = viewModel.client
         val lastStatus = viewModel.lastStatus.value
@@ -547,7 +548,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
         viewModel.intro = null
         scene.intro = null
-        viewModel.setSheetPlayer(-1)
+        viewModel.setSheetPlayer(-1, false)
         try {
             restoreOldGame()
         } catch (e: Exception) {
