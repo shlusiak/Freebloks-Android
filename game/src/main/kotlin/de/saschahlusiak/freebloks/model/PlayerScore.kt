@@ -16,6 +16,7 @@ data class PlayerScore(
     val stonesLeft: Int,
     val turnsLeft: Int,
     val bonus: Int,
+    // true, if the last one was the monomino
     val isPerfect: Boolean,
     var clientName: String? = null,
     // the place and local player information will be set afterwards, when all points of all players are known

@@ -155,7 +155,7 @@ private val previewScores = listOf(
     PlayerScore(
         color1 = 0,
         color2 = 2,
-        totalPoints = 19,
+        totalPoints = 120,
         stonesLeft = 0,
         turnsLeft = 1,
         bonus = 20,
@@ -167,10 +167,10 @@ private val previewScores = listOf(
     PlayerScore(
         color1 = 1,
         color2 = 3,
-        totalPoints = 14,
-        stonesLeft = 4,
-        turnsLeft = 2,
-        bonus = 0,
+        totalPoints = 100,
+        stonesLeft = 0,
+        turnsLeft = 0,
+        bonus = 15,
         isPerfect = false,
         clientName = null,
         place = 2,

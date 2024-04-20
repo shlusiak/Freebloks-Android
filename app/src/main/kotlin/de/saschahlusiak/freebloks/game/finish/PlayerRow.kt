@@ -156,14 +156,16 @@ fun PlayerRow(
                             style = MaterialTheme.typography.bodyLarge.merge(shadow)
                         )
 
-                        if (score.isPerfect) {
+                        if (score.bonus > 0) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
-                                )
+                                if (score.isPerfect) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_star), contentDescription = null,
+                                    )
+                                }
                                 Text(
                                     "(+${score.bonus})",
                                     modifier = Modifier
@@ -235,8 +237,8 @@ private fun PreviewMultiple() {
                     color1 = 1,
                     color2 = 3,
                     totalPoints = 19,
-                    stonesLeft = 3,
-                    turnsLeft = 1,
+                    stonesLeft = 0,
+                    turnsLeft = 0,
                     bonus = 15,
                     isPerfect = false,
                     clientName = null,
