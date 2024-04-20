@@ -256,7 +256,7 @@ fun StatusRow(data: StatusData) {
                             .padding(end = 8.dp)
                             .size(20.dp)
                             .align(CenterEnd)
-                            .alpha(0.7f)
+                            .alpha(0.85f)
                     )
                 } else {
                     Text(

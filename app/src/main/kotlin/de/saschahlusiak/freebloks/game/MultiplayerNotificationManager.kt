@@ -15,6 +15,7 @@ import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
+import androidx.compose.ui.res.stringArrayResource
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -122,12 +123,17 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun createNotificationChannels() {
-        val defaultChannel = NotificationChannel(CHANNEL_DEFAULT, context.getString(R.string.notification_channel_default), NotificationManager.IMPORTANCE_LOW)
+        val defaultChannel = NotificationChannel(
+            CHANNEL_DEFAULT,
+            context.getString(R.string.notification_channel_default),
+            NotificationManager.IMPORTANCE_LOW
+        )
         defaultChannel.enableVibration(false)
         defaultChannel.enableLights(false)
         notificationManager.createNotificationChannel(defaultChannel)
 
-        val chatChannel = NotificationChannel(CHANNEL_CHAT, context.getString(R.string.chat), NotificationManager.IMPORTANCE_HIGH)
+        val chatChannel =
+            NotificationChannel(CHANNEL_CHAT, context.getString(R.string.chat), NotificationManager.IMPORTANCE_HIGH)
         chatChannel.enableVibration(true)
         chatChannel.enableLights(true)
         notificationManager.createNotificationChannel(chatChannel)
@@ -142,9 +148,6 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         val pendingContentIntent = PendingIntent.getActivity(context, 1, contentIntent, FLAG_UPDATE_IMMUTABLE)
 
-        builder.setContentIntent(pendingContentIntent)
-        builder.addAction(android.R.drawable.ic_media_play, context.getString(R.string.action_continue), pendingContentIntent)
-
         val disconnectIntent = Intent(context, FreebloksActivity::class.java).apply {
             action = Intent.ACTION_DELETE
             addCategory(Intent.CATEGORY_DEFAULT)
@@ -152,25 +155,48 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         }
 
         val pendingDisconnectIntent = PendingIntent.getActivity(context, 1, disconnectIntent, FLAG_UPDATE_IMMUTABLE)
-        builder.addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.disconnect), pendingDisconnectIntent)
 
         builder.apply {
             setContentTitle(context.getString(R.string.app_name))
+            setContentIntent(pendingContentIntent)
+            addAction(
+                android.R.drawable.ic_media_play,
+                context.getString(R.string.action_continue),
+                pendingContentIntent
+            )
+            addAction(
+                android.R.drawable.ic_menu_close_clear_cancel,
+                context.getString(R.string.disconnect),
+                pendingDisconnectIntent
+            )
+
             setDefaults(0)
             setTicker(null)
             setAutoCancel(true)
             setSound(null)
             priority = NotificationCompat.PRIORITY_DEFAULT
-            setOngoing(!client.game.isFinished && client.isConnected())
+            setOngoing(!game.isFinished && client.isConnected())
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
+
             color = ContextCompat.getColor(context, R.color.md_theme_light_primary)
 
-            if (!client.game.isStarted) {
+            if (!game.isStarted) {
+                val labels = context.resources.getStringArray(R.array.game_modes)
+
                 // we are in lobby
                 setSmallIcon(R.drawable.notification_icon)
-                setContentText(context.getString(R.string.waiting_for_players))
+                setContentTitle(context.getString(R.string.waiting_for_players))
+                lastStatus?.let { status ->
+                    setContentText(
+                        labels[game.gameMode.ordinal] + " (" + String.format(
+                            "%d/%d",
+                            status.player,
+                            status.gameMode.colors
+                        ) + ")"
+                    )
+                }
                 setTicker(context.getString(R.string.waiting_for_players))
-            } else if (client.game.isFinished) {
+            } else if (game.isFinished) {
                 // game is over notification
                 setSmallIcon(R.drawable.notification_icon)
                 setContentText(context.getString(R.string.game_finished))
@@ -215,7 +241,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             setContentIntent(pendingContentIntent)
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
 
-            setSmallIcon(R.drawable.notification_icon)
+            setSmallIcon(R.drawable.notification_icon_message)
             setContentText(text)
             setTicker(text)
             color = ContextCompat.getColor(context, R.color.md_theme_light_primary)
@@ -237,11 +263,12 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         val text = context.getString(R.string.player_joined_color, clientName, colorName)
 
-        if (game.isStarted) {
-            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = null, text = text))
-        } else {
-            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, title = null, text = text))
-        }
+        notificationManager.notify(
+            CHAT_NOTIFICATION_ID,
+            buildChatNotification(ongoing = false, title = null, text = text)
+        )
+
+        notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
     }
 
     override fun playerLeft(client: Int, player: Int, name: String?) {
@@ -253,15 +280,16 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         val text = context.getString(R.string.player_left_color, clientName, colorName)
 
-        if (game.isStarted) {
-            if (isInBackground && lastStatus?.clients == 1) {
-                stopBackgroundNotification()
-            }
-
-            notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = null, text = text))
-        } else {
-            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildChatNotification(ongoing = true, title = null, text = text))
+        if (game.isStarted && isInBackground && lastStatus?.clients == 1) {
+            stopBackgroundNotification()
         }
+
+        notificationManager.notify(
+            CHAT_NOTIFICATION_ID,
+            buildChatNotification(ongoing = false, title = null, text = text)
+        )
+
+        notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
     }
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
@@ -275,7 +303,10 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
 
         val title = context.getString(R.string.message_notification_title, name)
-        notificationManager.notify(CHAT_NOTIFICATION_ID, buildChatNotification(ongoing = false, title = title, text = message))
+        notificationManager.notify(
+            CHAT_NOTIFICATION_ID,
+            buildChatNotification(ongoing = false, title = title, text = message)
+        )
     }
 
     override fun newCurrentPlayer(player: Int) {

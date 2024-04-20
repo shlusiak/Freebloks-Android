@@ -64,6 +64,7 @@ import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 import javax.inject.Inject
@@ -142,9 +143,12 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
             val starts = prefs.numberOfStarts
 
-            // At exactly this many starts, show the DonateActivity once
+            // At exactly this many starts, show the DonateFragment once
             if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {
-                DonateFragment().show(supportFragmentManager, null)
+                lifecycleScope.launchWhenResumed {
+                    delay(500)
+                    DonateFragment().show(supportFragmentManager, null)
+                }
             }
         }
 
