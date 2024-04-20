@@ -15,6 +15,7 @@ import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringArrayResource
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -23,6 +24,7 @@ import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
+import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import kotlin.time.Duration.Companion.minutes
@@ -226,7 +228,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         return builder.build()
     }
 
-    private fun buildChatNotification(ongoing: Boolean = false, title: String?, text: String): Notification {
+    private fun buildChatNotification(title: String?, text: String, stoneColor: StoneColor?): Notification {
         val builder = NotificationCompat.Builder(context, CHANNEL_CHAT)
 
         val contentIntent = Intent(Intent.ACTION_MAIN, null, context, FreebloksActivity::class.java).apply {
@@ -244,12 +246,11 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             setSmallIcon(R.drawable.notification_icon_message)
             setContentText(text)
             setTicker(text)
-            color = ContextCompat.getColor(context, R.color.md_theme_light_primary)
+            color = stoneColor?.foregroundColor?.toArgb() ?: ContextCompat.getColor(context, R.color.md_theme_light_tertiary)
 
             priority = NotificationCompat.PRIORITY_HIGH
             setDefaults(NotificationCompat.DEFAULT_VIBRATE or NotificationCompat.DEFAULT_LIGHTS)
             setSound(soundUri)
-            setOngoing(ongoing)
         }
 
         return builder.build()
@@ -265,7 +266,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         notificationManager.notify(
             CHAT_NOTIFICATION_ID,
-            buildChatNotification(ongoing = false, title = null, text = text)
+            buildChatNotification(title = null, text = text, game.colorOf(player))
         )
 
         notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
@@ -286,7 +287,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         notificationManager.notify(
             CHAT_NOTIFICATION_ID,
-            buildChatNotification(ongoing = false, title = null, text = text)
+            buildChatNotification(title = null, text = text, game.colorOf(player))
         )
 
         notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
@@ -302,10 +303,10 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         else
             status.getClientName(client) ?: context.getString(R.string.client_d, client + 1)
 
-        val title = context.getString(R.string.message_notification_title, name)
+//        val title = context.getString(R.string.message_notification_title, name)
         notificationManager.notify(
             CHAT_NOTIFICATION_ID,
-            buildChatNotification(ongoing = false, title = title, text = message)
+            buildChatNotification(title = name, text = message, game.colorOf(player))
         )
     }
 
