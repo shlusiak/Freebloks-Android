@@ -12,8 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.BuildConfig
@@ -41,6 +45,11 @@ fun LobbyScreen(
     onStart: () -> Unit,
     onDisconnect: () -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        if (isRunning) focusRequester.requestFocus()
+    }
+
     Dialog {
         Column(
             Modifier
@@ -71,12 +80,15 @@ fun LobbyScreen(
                 chatHistory,
                 mode = status?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 modifier = Modifier
-                    .heightIn(max = 240.dp)
+                    .heightIn(max = 200.dp)
                     .fillMaxHeight()
                     .fillMaxWidth()
             )
 
-            ChatTextField(onChat = onChat)
+            ChatTextField(
+                modifier = Modifier.focusRequester(focusRequester),
+                onChat = onChat
+            )
 
             if (!isRunning) {
                 Row(horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)) {

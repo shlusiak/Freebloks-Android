@@ -47,8 +47,6 @@ import kotlin.time.Duration.Companion.minutes
 class MultiplayerNotificationManager(val context: Context, val client: GameClient) : GameEventObserver {
     private val notificationManager = NotificationManagerCompat.from(context)
 
-    private val serviceIntent = Intent(context, MultiplayerForegroundService::class.java)
-
     private val FLAG_UPDATE_IMMUTABLE = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     } else {
@@ -104,12 +102,7 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
 
         val notification = buildOngoingNotification(false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            serviceIntent.putExtra("notification", notification)
-            context.startForegroundService(serviceIntent)
-        } else {
-            notificationManager.notify(ONGOING_NOTIFICATION_ID, notification)
-        }
+        notificationManager.notify(ONGOING_NOTIFICATION_ID, notification)
     }
 
     /**
@@ -120,7 +113,6 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
         Log.d(tag, "Releasing wakeLock")
         wakeLock?.release()
         wakeLock = null
-        context.stopService(serviceIntent)
         isInBackground = false
     }
 

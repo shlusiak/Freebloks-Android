@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -60,7 +62,9 @@ fun MultiplayerScreen(
 ) {
     Dialog {
         Column(
-            Modifier.padding(MaterialTheme.dimensions.dialogPadding),
+            Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(MaterialTheme.dimensions.dialogPadding),
             verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
         ) {
             Text(
