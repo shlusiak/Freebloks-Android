@@ -121,19 +121,19 @@ fun AboutScreen(
                     .width(intrinsicSize = IntrinsicSize.Min),
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
-                if (!Global.IS_VIP) {
-                    OutlinedButton(
-                        onClick = onDonate,
-                        modifier = Modifier.weight(1f)
-                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
-                    ) {
-                        Text(stringResource(id = R.string.prefs_donation))
-                    }
+                OutlinedButton(
+                    onClick = onDonate,
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = MaterialTheme.dimensions.buttonSize),
+                ) {
+                    Text(stringResource(id = R.string.prefs_donation))
                 }
 
                 Button(
                     onClick = onDismiss,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .heightIn(min = MaterialTheme.dimensions.buttonSize),
                 ) {
                     Text(stringResource(id = android.R.string.ok))
