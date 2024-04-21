@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.client.GameClient
@@ -28,12 +29,18 @@ import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
 
     private val viewModel: FreebloksActivityViewModel by viewModels(ownerProducer = { requireActivity() })
     private val client get() = viewModel.client
     private val listener get() = activity as LobbyDialogDelegate
+
+    @Inject
+    lateinit var analytics: AnalyticsProvider
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
@@ -140,6 +147,7 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     }
 
     private fun sendChat(message: String) {
+        analytics.logEvent("lobby_chat")
         client?.sendChat(message)
     }
 
