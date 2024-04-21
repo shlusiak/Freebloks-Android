@@ -33,7 +33,12 @@ interface OnStartCustomGameListener {
     /**
      * Start a new game with the last config or a default config
      */
-    fun startNewDefaultGame()
+    fun restartGameWithLastConfiguration()
+
+    /**
+     * Show the new game screen
+     */
+    fun showNewGameDialog()
 }
 
 

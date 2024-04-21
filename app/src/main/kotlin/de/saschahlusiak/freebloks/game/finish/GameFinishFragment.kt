@@ -115,7 +115,11 @@ class GameFinishFragment : DialogFragment() {
     private fun onNewGame() {
         analytics.logEvent("finish_new_game_click")
         dismiss()
-        listener.startNewDefaultGame()
+        if (activityViewModel.client?.config?.showLobby == true) {
+            listener.restartGameWithLastConfiguration()
+        } else {
+            listener.showNewGameDialog()
+        }
     }
 
     private fun onAchievements() {

@@ -7,7 +7,6 @@ import android.os.IBinder
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MultiplayerForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()

@@ -43,6 +43,7 @@ import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
+import de.saschahlusiak.freebloks.game.newgame.NewGameFragment
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameConfig
@@ -379,7 +380,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
      *
      * Called e.g. during long-press, "start new game" in the finish dialog, or on initial startup.
      */
-    override fun startNewDefaultGame() {
+    override fun restartGameWithLastConfiguration() {
         viewModel.viewModelScope.launch {
             val config = viewModel.client?.config
             if (config != null) {
@@ -390,6 +391,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 startNewGame(GameConfig(isLocal = true), null)
             }
         }
+    }
+
+    override fun showNewGameDialog() {
+        NewGameFragment().show(supportFragmentManager, null)
     }
 
     private fun setGameClient(client: GameClient) {
@@ -493,7 +498,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             DIALOG_NEW_GAME_CONFIRMATION -> {
                 return MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.do_you_want_to_leave_current_game)
-                    .setPositiveButton(android.R.string.yes) { _, _ -> startNewDefaultGame() }
+                    .setPositiveButton(android.R.string.yes) { _, _ -> restartGameWithLastConfiguration() }
                     .setNegativeButton(android.R.string.no, null)
                     .create()
             }
@@ -667,7 +672,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         showMenu(shown = false, animate = true)
         if (viewModel.intro != null) viewModel.intro?.cancel() else {
             val client = viewModel.client
-            if (client == null || client.game.isFinished) startNewDefaultGame() else showDialog(
+            if (client == null || client.game.isFinished) restartGameWithLastConfiguration() else showDialog(
                 DIALOG_NEW_GAME_CONFIRMATION
             )
         }
