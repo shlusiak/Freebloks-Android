@@ -15,8 +15,8 @@ android {
         minSdk 21
         targetSdk 34
 
-        versionCode 156
-        versionName "1.5.4"
+        versionCode 157
+        versionName "1.5.5"
 
         resourceConfigurations += ["en", "de", "es", "fr", "ja", "pt", "ro", "ru"]
     }
