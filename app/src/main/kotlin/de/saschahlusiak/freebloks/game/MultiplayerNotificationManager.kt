@@ -28,6 +28,9 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.utils.GooglePlayInstantAppHandler
+import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import kotlin.time.Duration.Companion.minutes
 
 /**
@@ -42,9 +45,14 @@ import kotlin.time.Duration.Companion.minutes
  * - A chat is received and the game is started or in the background
  *
  * The notification is ongoing while the game is in the background.
+ *
+ * Instant Apps do not support notifications!
  */
 @SuppressLint("MissingPermission")
-class MultiplayerNotificationManager(val context: Context, val client: GameClient) : GameEventObserver {
+class MultiplayerNotificationManager(
+    val context: Context,
+    val client: GameClient
+) : GameEventObserver {
     private val notificationManager = NotificationManagerCompat.from(context)
 
     private val FLAG_UPDATE_IMMUTABLE = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -251,7 +259,10 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             setSmallIcon(R.drawable.notification_icon_message)
             setContentText(text)
             setTicker(text)
-            color = stoneColor?.foregroundColor?.toArgb() ?: ContextCompat.getColor(context, R.color.md_theme_light_tertiary)
+            color = stoneColor?.foregroundColor?.toArgb() ?: ContextCompat.getColor(
+                context,
+                R.color.md_theme_light_tertiary
+            )
 
             priority = NotificationCompat.PRIORITY_HIGH
             setDefaults(NotificationCompat.DEFAULT_VIBRATE or NotificationCompat.DEFAULT_LIGHTS)
@@ -274,7 +285,10 @@ class MultiplayerNotificationManager(val context: Context, val client: GameClien
             buildChatNotification(title = null, text = text, game.colorOf(player))
         )
 
-        notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
+        notificationManager.notify(
+            ONGOING_NOTIFICATION_ID,
+            buildOngoingNotification(false)
+        )
     }
 
     override fun playerLeft(client: Int, player: Int, name: String?) {

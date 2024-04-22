@@ -35,6 +35,7 @@ import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
@@ -67,7 +68,8 @@ class FreebloksActivityViewModel @Inject constructor(
     private val crashReporter: CrashReporter,
     private val analytics: AnalyticsProvider,
     private val prefs: Preferences,
-    val gameHelper: GooglePlayGamesHelper
+    val gameHelper: GooglePlayGamesHelper,
+    private val instantAppHelper: InstantAppHelper
 ) : ViewModel(), GameEventObserver, SceneDelegate {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
@@ -127,7 +129,8 @@ class FreebloksActivityViewModel @Inject constructor(
     fun reloadPreferences() {
         sounds.vibrationEnabled = prefs.vibrationEnabled
         sounds.soundsEnabled = prefs.sounds
-        showNotifications = prefs.notifications
+        // Instant apps do not support notifications
+        showNotifications = prefs.notifications && !instantAppHelper.isInstantApp
         localClientNameOverride = prefs.playerName.takeIf { it.isNotBlank() }
         showSeeds = prefs.showSeeds
         showOpponents = prefs.showOpponents
