@@ -92,7 +92,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0'
     testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
-    testImplementation 'org.robolectric:robolectric:4.12'
+    testImplementation 'org.robolectric:robolectric:4.12.1'
     testImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     testImplementation 'androidx.test.ext:junit:1.1.5'
 
@@ -120,10 +120,10 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
 
     // Compose
-    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.activity:activity-compose:1.9.0'
     implementation 'androidx.compose.material3:material3:1.2.1'
-    implementation 'androidx.compose.animation:animation:1.6.5'
-    implementation 'androidx.compose.ui:ui-tooling:1.6.5'
+    implementation 'androidx.compose.animation:animation:1.6.6'
+    implementation 'androidx.compose.ui:ui-tooling:1.6.6'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
 
     // https://mvnrepository.com/artifact/androidx.preference/preference

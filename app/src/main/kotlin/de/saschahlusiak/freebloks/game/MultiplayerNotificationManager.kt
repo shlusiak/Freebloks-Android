@@ -15,9 +15,7 @@ import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
-import androidx.compose.material3.contentColorFor
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.stringArrayResource
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -28,9 +26,6 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import de.saschahlusiak.freebloks.utils.GooglePlayInstantAppHandler
-import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import kotlin.time.Duration.Companion.minutes
 
 /**

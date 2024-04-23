@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view.scene
 
 import android.os.Handler
+import android.os.Looper
 import androidx.annotation.UiThread
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
@@ -45,7 +46,7 @@ class Wheel(private val scene: Scene) : SceneElement {
      * Last model coordinates of touch down event
      */
     private var lastPointerLocation = PointF()
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     private val hapticTimerRunnable = object : Runnable {
         override fun run() {

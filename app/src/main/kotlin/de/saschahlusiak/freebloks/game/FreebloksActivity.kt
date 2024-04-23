@@ -526,9 +526,8 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent ?: return
 
         val client = viewModel.client
         if ((Intent.ACTION_DELETE == intent.action)) {

@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Window
 import androidx.fragment.app.Fragment
@@ -56,7 +57,7 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
             googleSignInClient.silentSignIn().addOnSuccessListener { setGoogleAccount(it) }
         } else {
             // make sure we are not immediately calling the listener in the constructor
-            Handler().post {
+            Handler(Looper.getMainLooper()).post {
                 setGoogleAccount(lastAccount)
             }
         }

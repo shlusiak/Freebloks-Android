@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.view.scene.intro
 import android.content.Context
 import android.opengl.GLU
 import android.os.Handler
+import android.os.Looper
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.Board
@@ -27,7 +28,7 @@ class Intro(context: Context, private val scene: Scene, var listener: IntroDeleg
         private const val MATRIX_STOP_RIGHT = MATRIX_STOP_LEFT + 0.25f
     }
 
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private val backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
     private val board = Board(20)
     internal val effects = Effects(scene)

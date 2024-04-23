@@ -27,12 +27,12 @@ dependencies {
     // For Google+ integration
     // https://developers.google.com/android/guides/releases
     implementation 'com.google.android.gms:play-services-games:23.1.0'
-    implementation 'com.google.android.gms:play-services-auth:21.0.0'
+    implementation 'com.google.android.gms:play-services-auth:21.1.0'
 
     implementation "com.google.android.gms:play-services-instantapps:18.0.1"
 
 
     // https://firebase.google.com/support/release-notes/android
-    implementation 'com.google.firebase:firebase-analytics:21.6.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.6.3'
+    implementation 'com.google.firebase:firebase-analytics:21.6.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.6.4'
 }
