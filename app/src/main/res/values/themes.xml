@@ -69,7 +69,10 @@
         <item name="windowMinWidthMinor">10%</item>
     </style>
 
-    <style name="Theme.Freebloks.Dialog.MinWidth" parent="Theme.Material3.DayNight.Dialog.MinWidth" />
+    <style name="Theme.Freebloks.Dialog.MinWidth" parent="ThemeOverlay.Material3.Dialog" >
+        <item name="windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+    </style>
 
     <style name="Theme.Freebloks.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
