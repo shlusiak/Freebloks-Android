@@ -24,10 +24,10 @@ android {
 dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.5'
 
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.fragment:fragment-ktx:1.7.0'
 
-    api 'androidx.compose.runtime:runtime-android:1.6.6'
+    api 'androidx.compose.runtime:runtime-android:1.6.7'
 
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
