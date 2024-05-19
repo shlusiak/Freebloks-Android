@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package de.saschahlusiak.freebloks.game
 
 import android.annotation.SuppressLint
@@ -14,6 +12,7 @@ import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -37,11 +36,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,9 +45,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -67,7 +63,6 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.pillButtonBackground
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateFragment
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
@@ -80,7 +75,6 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
 import de.saschahlusiak.freebloks.model.GameStateException
 import de.saschahlusiak.freebloks.model.Player
-import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
@@ -90,7 +84,6 @@ import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
-import de.saschahlusiak.freebloks.utils.viewBinding
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
@@ -121,8 +114,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
     private val viewModel: FreebloksActivityViewModel by viewModels()
 
-    private val binding by viewBinding(FreebloksActivityBinding::inflate)
-
     @SuppressLint("ClickableViewAccessibility")
     public override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(tag, "onCreate")
@@ -149,9 +140,14 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
         super.onCreate(savedInstanceState)
 
-        setContentView(binding.root)
+        view = Freebloks3DView(this, null)
 
-        view = binding.board
+        setContent {
+            AppTheme {
+                Content()
+            }
+        }
+
         scene = Scene(viewModel, viewModel.intro.value, viewModel.sounds)
         view.setScene(scene)
 
@@ -199,13 +195,11 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }
         }
 
-        with(binding) {
-            view.setOnTouchListener { _, _ ->
-                if (menuShown) {
-                    hideMenu()
-                }
-                false
+        view.setOnTouchListener { _, _ ->
+            if (menuShown) {
+                hideMenu()
             }
+            false
         }
 
         viewModel.connectionStatus.asLiveData().observe(this) { onConnectionStatusChanged(it) }
@@ -217,12 +211,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
 
         hideMenu()
-
-        binding.composeView.setContent {
-            AppTheme {
-                Content()
-            }
-        }
     }
 
     private fun shouldShowRateDialog(): Boolean {
@@ -326,33 +314,39 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
     @Composable
     private fun Content() {
-        Column(Modifier.fillMaxSize()) {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                if (viewModel.intro.collectAsState().value == null) {
-                    Row(
-                        Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                            .windowInsetsPadding(WindowInsets.statusBars)
-                    ) {
-                        TopButtonBar(Modifier)
+        val intro = (viewModel.intro.collectAsState().value != null)
+        Box(Modifier.fillMaxSize()) {
+            AndroidView(factory = { view }, modifier = Modifier.fillMaxSize())
 
-                        MenuButtonBar(Modifier.padding(start = 8.dp))
-                    }
 
-                    BottomButtonBar(
-                        Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(8.dp)
-                    )
+            if (!intro) {
+                Row(
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                ) {
+                    TopButtonBar(Modifier)
+
+                    MenuButtonBar(Modifier.padding(start = 8.dp))
                 }
             }
 
-            StatusRow(viewModel)
+            Column(
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .fillMaxWidth()
+            ) {
+                if (!intro) {
+                    BottomButtonBar(
+                        Modifier
+                            .align(alignment = Alignment.End)
+                            .padding(8.dp)
+                    )
+                }
+
+                StatusRow(viewModel)
+            }
         }
     }
 
