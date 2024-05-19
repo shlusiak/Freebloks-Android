@@ -26,7 +26,7 @@ android {
 
 dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.5'
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1'
 
     implementation project(':common')
 

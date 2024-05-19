@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.app.theme
 
 import androidx.compose.ui.graphics.Color
 
+val pillButtonBackground = Color(0xBF1F1F1F)
+
 // dim background colors
 val playerColorOnBackground = Color.White
 val playerBackgroundWhite = Color(0xFF5C5C5C)

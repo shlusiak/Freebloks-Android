@@ -6,29 +6,4 @@
         <item name="elevation">0dp</item>
     </style>
 
-    <style name="PillButton" parent="">
-        <item name="android:layout_width">@dimen/pill_button_size</item>
-        <item name="android:layout_height">@dimen/pill_button_size</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/pill_button_background</item>
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:padding">8dp</item>
-    </style>
-
-    <style name="PillButton.Large">
-        <item name="android:layout_width">@dimen/pill_button_size_large</item>
-        <item name="android:layout_height">@dimen/pill_button_size_large</item>
-        <item name="android:padding">14dp</item>
-    </style>
-
-    <style name="IconButton" parent="@style/Widget.MaterialComponents.Button">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetLeft">6dp</item>
-        <item name="android:padding">0dp</item>
-        <item name="iconGravity">textStart</item>
-        <item name="iconTint">@null</item>
-
-    </style>
-
 </resources>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="pill_button_size">52dp</dimen>
-    <dimen name="pill_button_size_large">64dp</dimen>
-</resources>

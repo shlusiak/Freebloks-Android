@@ -25,11 +25,11 @@ dependencies {
     testImplementation 'androidx.test.ext:junit:1.1.5'
 
     implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.fragment:fragment-ktx:1.7.0'
+    implementation 'androidx.fragment:fragment-ktx:1.7.1'
 
     api 'androidx.compose.runtime:runtime-android:1.6.7'
 
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    api "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.0'
 }

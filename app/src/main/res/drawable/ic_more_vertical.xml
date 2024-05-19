@@ -2,9 +2,8 @@
     android:width="28dp"
     android:height="28dp"
     android:viewportWidth="24"
-    android:viewportHeight="24"
-    android:tint="@color/pill_button_image_color">
+    android:viewportHeight="24">
   <path
-      android:fillColor="@color/pill_button_image_color"
+      android:fillColor="#ffffff"
       android:pathData="M12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,10c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM12,16c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2z"/>
 </vector>

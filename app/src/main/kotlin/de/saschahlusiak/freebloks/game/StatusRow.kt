@@ -2,9 +2,6 @@ package de.saschahlusiak.freebloks.game
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationEndReason
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -40,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -50,8 +46,6 @@ import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
-import de.saschahlusiak.freebloks.app.theme.playerColorOnBackground
-import de.saschahlusiak.freebloks.app.theme.playerColorOnForeground
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.utils.Previews
@@ -78,12 +72,13 @@ sealed interface StatusData {
 fun StatusRow(vm: FreebloksActivityViewModel) {
     val sheetPlayer = vm.playerToShowInSheet.collectAsState().value
     val inProgress = vm.inProgress.collectAsState().value
+    val intro by vm.intro.collectAsState()
 
     val client = vm.client
 
     val data = when {
         // the intro trumps everything
-        vm.intro != null -> StatusData.Text(R.string.touch_to_skip)
+        intro != null -> StatusData.Text(R.string.touch_to_skip)
 
         // if not connected, show that
         client == null || !client.isConnected() -> StatusData.Text(R.string.not_connected)

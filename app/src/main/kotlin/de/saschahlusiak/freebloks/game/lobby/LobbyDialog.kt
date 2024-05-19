@@ -95,7 +95,7 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
         val client = client
         AppTheme {
             val lastStatus = viewModel.lastStatus.collectAsState()
-            val chatHistory = viewModel.chatHistoryAsLiveData.asFlow().collectAsState(initial = emptyList())
+            val chatHistory = viewModel.chatHistoryAsLiveData.collectAsState(initial = emptyList())
 
             val players = remember(lastStatus) {
                 derivedStateOf { getPlayerColors(lastStatus.value) }

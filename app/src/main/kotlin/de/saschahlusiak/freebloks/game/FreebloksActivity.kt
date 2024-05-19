@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package de.saschahlusiak.freebloks.game
 
 import android.annotation.SuppressLint
@@ -6,22 +8,50 @@ import android.bluetooth.BluetoothDevice
 import android.content.DialogInterface
 import android.content.Intent
 import android.media.AudioManager
-import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
-import android.transition.TransitionManager
 import android.util.Log
-import android.view.*
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -34,25 +64,26 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.pillButtonBackground
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.databinding.FreebloksActivityBinding
 import de.saschahlusiak.freebloks.donate.DonateFragment
-import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
 import de.saschahlusiak.freebloks.game.newgame.NewGameFragment
+import de.saschahlusiak.freebloks.game.rate.RateAppFragment
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameConfig.Companion.defaultStonesForMode
 import de.saschahlusiak.freebloks.model.GameStateException
 import de.saschahlusiak.freebloks.model.Player
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.ProtocolException
-import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
+import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForNewGame
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
@@ -86,7 +117,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     @Inject
     lateinit var crashReporter: CrashReporter
 
-    private var menuShown = false
+    private var menuShown by mutableStateOf(false)
 
     private val viewModel: FreebloksActivityViewModel by viewModels()
 
@@ -121,12 +152,12 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         setContentView(binding.root)
 
         view = binding.board
-        scene = Scene(viewModel, viewModel.intro, viewModel.sounds)
+        scene = Scene(viewModel, viewModel.intro.value, viewModel.sounds)
         view.setScene(scene)
 
         volumeControlStream = AudioManager.STREAM_MUSIC
 
-        viewModel.intro?.listener = this
+        viewModel.intro.value?.listener = this
 
         if (savedInstanceState != null) {
             view.setScale(savedInstanceState.getFloat("view_scale", 1.0f))
@@ -161,55 +192,23 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             view.setGameClient(client)
         } else if (savedInstanceState == null) {
             if (viewModel.showIntro) {
-                viewModel.intro = Intro(applicationContext, scene, this)
-                scene.intro = viewModel.intro
+                viewModel.intro.value = Intro(applicationContext, scene, this)
+                scene.intro = viewModel.intro.value
             } else {
                 onIntroCompleted()
             }
         }
 
         with(binding) {
-            menuOverlayContainer.isVisible = (viewModel.intro == null)
-
-            menuOverlayContainer.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
-                v.setPadding(0, findTopPaddingForView(insets, Gravity.RIGHT), insets.systemWindowInsetRight, 0)
-                insets
-            }
-
-            chatButton.setOnClickListener {
-                analytics.logEvent("game_chat_click", null)
-
-                chatButton.clearAnimation()
-                LobbyDialog().show(supportFragmentManager, null)
-            }
-
-            myLocation.setOnClickListener { onResetRotationButtonClick() }
-            menuButton.setOnClickListener { onMenuButtonClick() }
-            soundOnOff.setOnClickListener { onSoundButtonClick() }
-            hintButton.setOnClickListener { onHintButtonClick() }
-            undoButton.setOnClickListener { onUndoButtonClick() }
-            newGameButton.setOnClickListener { onNewGameButtonClick() }
-            preferencesButton.setOnClickListener { onPreferencesButtonClick() }
             view.setOnTouchListener { _, _ ->
                 if (menuShown) {
-                    showMenu(shown = false, animate = true)
+                    hideMenu()
                 }
                 false
-            }
-
-            statusRow.setContent {
-                AppTheme {
-                    StatusRow(viewModel)
-                }
             }
         }
 
         viewModel.connectionStatus.asLiveData().observe(this) { onConnectionStatusChanged(it) }
-        viewModel.playerToShowInSheet.asLiveData().observe(this) { onPlayerSheetChanged(it) }
-        viewModel.soundsEnabledLiveData.observe(this) { onSoundEnabledChanged(it) }
-        viewModel.canRequestHint.observe(this) { binding.hintButton.isEnabled = it }
-        viewModel.canRequestUndo.observe(this) { binding.undoButton.isEnabled = it }
-        viewModel.chatButtonVisible.observe(this) { binding.chatButtonContainer.isVisible = it }
         viewModel.googleAccountSignedIn.observe(this) {
             viewModel.gameHelper.setWindowForPopups(window)
             if (Global.IS_VIP) {
@@ -217,7 +216,13 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }
         }
 
-        showMenu(shown = false, animate = false)
+        hideMenu()
+
+        binding.composeView.setContent {
+            AppTheme {
+                Content()
+            }
+        }
     }
 
     private fun shouldShowRateDialog(): Boolean {
@@ -316,63 +321,148 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
-    private fun findTopPaddingForView(insets: WindowInsets, gravity: Int): Int {
-        val padding = insets.systemWindowInsetTop
+    private fun getContainerColor() = pillButtonBackground
+    private fun getContentColor() = Color.White
 
-        // unfortunately we use full screen everywhere, which would make the top padding 0
-        // so on devices with a display cutout with API level < 28, we unfortunately overlap the cutout
-        // FIXME: behaviour on Android 8 on a device with cutout?
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            return padding
+    @Composable
+    private fun Content() {
+        Column(Modifier.fillMaxSize()) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                if (viewModel.intro.collectAsState().value == null) {
+                    Row(
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .windowInsetsPadding(WindowInsets.statusBars)
+                    ) {
+                        TopButtonBar(Modifier)
+
+                        MenuButtonBar(Modifier.padding(start = 8.dp))
+                    }
+
+                    BottomButtonBar(
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp)
+                    )
+                }
+            }
+
+            StatusRow(viewModel)
         }
-        val cutout = insets.displayCutout ?: return padding
-        val rects = cutout.boundingRects
-        val displaySize = resources.displayMetrics.widthPixels
-        for (rect in rects) {
-            if (rect.top == 0) {
-                // only interested in top cutouts
-                when (gravity) {
-                    Gravity.LEFT -> if (rect.left == 0 && insets.systemWindowInsetLeft == 0) return rect.bottom
-                    Gravity.CENTER_HORIZONTAL -> if (rect.left != 0 && rect.right != displaySize) return rect.bottom
-                    Gravity.RIGHT -> if (rect.right == displaySize && insets.systemWindowInsetRight == 0) return rect.bottom
+    }
+
+    @Composable
+    private fun TopButtonBar(modifier: Modifier) {
+        Surface(
+            modifier = modifier,
+            shape = FloatingActionButtonDefaults.shape,
+            color = getContainerColor(),
+            contentColor = getContentColor()
+        ) {
+            val soundsEnabled by viewModel.soundsEnabled.collectAsState()
+            val canRequestHint by viewModel.canRequestHint.collectAsState()
+            val canUndo by viewModel.canRequestUndo.collectAsState()
+
+            Row(modifier = Modifier.padding(2.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                IconButton(onClick = ::onSoundButtonClick) {
+                    Icon(
+                        painter = painterResource(id = if (soundsEnabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off),
+                        contentDescription = ""
+                    )
+                }
+
+                IconButton(onClick = ::onHintButtonClick, enabled = canRequestHint) {
+                    Icon(painter = painterResource(id = R.drawable.ic_info), contentDescription = "")
+                }
+
+                IconButton(onClick = ::onUndoButtonClick, enabled = canUndo) {
+                    Icon(painter = painterResource(id = R.drawable.ic_undo), contentDescription = "")
                 }
             }
         }
-        return 0
     }
 
-    @Suppress("SameParameterValue")
-    private fun showFloatingMenuLabel(anchor: View, gravity: Int, show: Boolean, label: String) {
-        var v = anchor.tag as? FloatingMenuLabel
-        if (v == null) {
-            v = FloatingMenuLabel(this, binding.menuOverlayContainer, anchor, gravity)
-            anchor.tag = v
-        }
-        v.setText(label)
-        if (show) {
-            v.show()
-        } else {
-            v.hide()
+    @Composable
+    private fun MenuButtonBar(modifier: Modifier) {
+        Surface(
+            modifier = modifier,
+            shape = FloatingActionButtonDefaults.shape,
+            color = getContainerColor(),
+            contentColor = getContentColor()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .animateContentSize(),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                IconButton(onClick = { menuShown = !menuShown }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_more_vertical),
+                        contentDescription = ""
+                    )
+                }
+
+                AnimatedVisibility(visible = menuShown) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        IconButton(onClick = ::onNewGameButtonClick) {
+                            Icon(painter = painterResource(id = R.drawable.ic_new_game), contentDescription = "")
+                        }
+
+                        IconButton(onClick = ::onPreferencesButtonClick) {
+                            Icon(painter = painterResource(id = R.drawable.ic_settings), contentDescription = "")
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun showMenu(shown: Boolean, animate: Boolean) = with(binding) {
-        if (animate) {
-            TransitionManager.beginDelayedTransition(menuOverlayContainer)
+    @Composable
+    private fun BottomButtonBar(modifier: Modifier) {
+        Column(modifier) {
+            val sheetPlayer by viewModel.playerToShowInSheet.collectAsState()
+            // Reset location button
+            AnimatedVisibility(
+                visible = sheetPlayer.showLocationButton,
+                modifier = Modifier.padding(bottom = 8.dp),
+                enter = scaleIn(), exit = scaleOut()
+            ) {
+                FloatingActionButton(
+                    onClick = ::onResetRotationButtonClick,
+                    containerColor = getContainerColor(),
+                    contentColor = getContentColor(),
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                ) {
+                    Icon(painter = painterResource(id = R.drawable.ic_my_location), contentDescription = "")
+                }
+            }
+
+            val chatButton by viewModel.chatButtonVisible.collectAsState()
+            // Chat button always bottom
+            AnimatedVisibility(
+                visible = chatButton,
+                enter = scaleIn(), exit = scaleOut()
+            ) {
+                FloatingActionButton(
+                    onClick = ::onChatButtonClick,
+                    containerColor = getContainerColor(),
+                    contentColor = getContentColor(),
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                ) {
+                    Icon(painter = painterResource(id = R.drawable.ic_chat), contentDescription = "")
+                }
+            }
         }
-        val visible = if (shown) View.VISIBLE else View.GONE
-
-        preferencesButton.visibility = visible
-        newGameButton.visibility = visible
-
-        showFloatingMenuLabel(preferencesButton, Gravity.LEFT, shown, getString(R.string.settings))
-        showFloatingMenuLabel(newGameButton, Gravity.LEFT, shown, getString(R.string.new_game))
-
-        menuShown = shown
     }
 
-    private fun onMenuButtonClick() {
-        showMenu(!menuShown, true)
+    private fun hideMenu() {
+        menuShown = false
     }
 
     /**
@@ -485,6 +575,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateDialog(id: Int, args: Bundle?): Dialog? {
         when (id) {
             DIALOG_QUIT -> {
@@ -507,19 +598,25 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
+    private fun onChatButtonClick() {
+        analytics.logEvent("game_chat_click", null)
+        LobbyDialog().show(supportFragmentManager, null)
+    }
+
+    @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val client = viewModel.client
         val lastStatus = viewModel.lastStatus.value
 
         if (menuShown) {
-            showMenu(shown = false, animate = true)
+            hideMenu()
             return
         } else if ((client != null) && client.game.isStarted && !client.game.isFinished && (lastStatus != null) && (lastStatus.clients > 1)) {
             showDialog(DIALOG_QUIT)
         } else {
-            if (viewModel.intro != null) {
-                viewModel.intro?.cancel()
+            if (viewModel.intro.value != null) {
+                viewModel.intro.value?.cancel()
             } else {
                 showMainMenu()
             }
@@ -548,10 +645,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     @UiThread
     override fun onIntroCompleted() {
         Log.d(tag, "onIntroCompleted")
-        binding.menuOverlayContainer.isVisible = true
 
-        viewModel.intro = null
+        viewModel.intro.value = null
         scene.intro = null
+
         viewModel.setSheetPlayer(-1, false)
         try {
             restoreOldGame()
@@ -585,7 +682,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
-    //region LiveData Observers
+//region LiveData Observers
 
     private fun onConnectionStatusChanged(status: ConnectionStatus) {
         Log.d(tag, "Connection status: $status")
@@ -610,27 +707,9 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
-    /**
-     * The player to show in the bottom sheet has changed
-     * @param data the new data to show
-     */
-    @UiThread
-    private fun onPlayerSheetChanged(data: SheetPlayer) {
-        val client = viewModel.client
-        if (data.isRotated && (client?.game?.isFinished == false)) {
-            binding.myLocationContainer.visibility = View.VISIBLE
-        } else {
-            binding.myLocationContainer.visibility = View.INVISIBLE
-        }
-    }
+//endregion
 
-    private fun onSoundEnabledChanged(enabled: Boolean) {
-        binding.soundOnOff.setImageResource(if (enabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off)
-    }
-
-    //endregion
-
-    //region OnStartCustomGameListener
+//region OnStartCustomGameListener
 
     override fun showMainMenu() {
         lifecycleScope.launchWhenResumed {
@@ -655,9 +734,9 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         viewModel.connectToBluetooth(device, localClientName)
     }
 
-    //endregion
+//endregion
 
-    //region Menu handling
+//region Menu handling
 
     private fun onResetRotationButtonClick() {
         analytics.logEvent("game_reset_rotation_click")
@@ -668,8 +747,9 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private fun onNewGameButtonClick() {
         analytics.logEvent("game_new_game_click")
 
-        showMenu(shown = false, animate = true)
-        if (viewModel.intro != null) viewModel.intro?.cancel() else {
+        hideMenu()
+
+        if (viewModel.intro.value != null) viewModel.intro.value?.cancel() else {
             val client = viewModel.client
             if (client == null || client.game.isFinished) restartGameWithLastConfiguration() else showDialog(
                 DIALOG_NEW_GAME_CONFIRMATION
@@ -680,7 +760,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private fun onHintButtonClick() {
         analytics.logEvent("game_hint_click")
 
-        showMenu(shown = false, animate = true)
+        hideMenu()
         scene.currentStone.stopDragging()
         viewModel.requestHint()
     }
@@ -695,7 +775,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private fun onUndoButtonClick() {
         analytics.logEvent("game_undo_click")
 
-        showMenu(shown = false, animate = true)
+        hideMenu()
         viewModel.requestUndo()
         scene.playSound(FeedbackType.UndoStone)
     }
@@ -703,14 +783,14 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     private fun onPreferencesButtonClick() {
         analytics.logEvent("game_settings_click")
 
-        showMenu(shown = false, animate = true)
+        hideMenu()
         intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
 
-    //endregion
+//endregion
 
-    //region GameEventObserver callbacks
+//region GameEventObserver callbacks
 
     @WorkerThread
     override fun playerIsOutOfMoves(player: Player) {
@@ -754,21 +834,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 .beginTransaction()
                 .add(dialog, null)
                 .commitAllowingStateLoss()
-        }
-    }
-
-    @UiThread
-    override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
-        lifecycleScope.launch {
-            if (hasWindowFocus()) {
-                /* only animate chatButton, if no dialog has focus */
-                val animation = AlphaAnimation(0.4f, 1.0f).apply {
-                    duration = 350
-                    repeatCount = Animation.INFINITE
-                    repeatMode = Animation.REVERSE
-                }
-                binding.chatButton.startAnimation(animation)
-            }
         }
     }
 
@@ -829,10 +894,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }
         }
     }
-    //endregion
+//endregion
 
     companion object {
-        val tag = FreebloksActivity::class.java.simpleName
+        private val tag: String = FreebloksActivity::class.java.simpleName
 
         private const val DIALOG_QUIT = 3
         private const val DIALOG_NEW_GAME_CONFIRMATION = 8
