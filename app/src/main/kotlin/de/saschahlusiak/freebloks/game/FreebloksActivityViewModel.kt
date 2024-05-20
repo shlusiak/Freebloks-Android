@@ -10,13 +10,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
-import android.os.PowerManager
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
@@ -24,7 +21,11 @@ import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.game.lobby.ChatItem
-import de.saschahlusiak.freebloks.model.*
+import de.saschahlusiak.freebloks.model.Game
+import de.saschahlusiak.freebloks.model.GameConfig
+import de.saschahlusiak.freebloks.model.GameMode
+import de.saschahlusiak.freebloks.model.Turn
+import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
@@ -39,15 +40,21 @@ import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.ByteArrayOutputStream
 import java.net.NetworkInterface
 import java.net.SocketException
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
-import kotlin.time.Duration.Companion.minutes
 
 enum class ConnectionStatus {
     Disconnected, Connecting, Connected, Failed
@@ -82,6 +89,7 @@ class FreebloksActivityViewModel @Inject constructor(
     // settings
     private var showNotifications: Boolean = true
     var showIntro = true
+
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
     var localClientNameOverride: String? = null
         private set
@@ -101,11 +109,14 @@ class FreebloksActivityViewModel @Inject constructor(
     val board get() = client?.game?.board
     val lastStatus = MutableStateFlow<MessageServerStatus?>(null)
 
-    private val chatHistory = MutableStateFlow(emptyList<ChatItem>())
     val sounds: BaseSounds = DefaultSounds(app)
 
-    // LiveData
-    val chatHistoryAsLiveData = chatHistory
+    // Flows
+    val chatHistory = MutableStateFlow(emptyList<ChatItem>())
+    private val seenChatHistory = MutableStateFlow(0)
+    val chatButtonBadge = chatHistory.combine(seenChatHistory) { history, seen ->
+        history.size - seen
+    }.debounce(200)
     val soundsEnabled = MutableStateFlow(prefs.sounds)
     val chatButtonVisible = MutableStateFlow(false)
     val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
@@ -312,14 +323,17 @@ class FreebloksActivityViewModel @Inject constructor(
     private fun startBluetoothServer(client: GameClient) {
         if (Build.VERSION.SDK_INT >= 31) {
             // Android S introduced permission BLUETOOTH_CONNECT, which is required to connect and listen
-            val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            val granted = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
 
             if (!granted) return
         }
 
         // hosting a game locally, start bluetooth server and bridges.
         // start a new client bridge for every connected bluetooth client
-        val connectedListener = object: OnBluetoothConnectedListener {
+        val connectedListener = object : OnBluetoothConnectedListener {
             override fun onBluetoothClientConnected(socket: BluetoothSocket) {
                 BluetoothClientToSocketThread(socket, "localhost", GameClient.DEFAULT_PORT).start()
             }
@@ -533,11 +547,11 @@ class FreebloksActivityViewModel @Inject constructor(
         canRequestHint.value = client.game.isLocalPlayer() && client.game.isStarted
         canRequestUndo.value = (
             client.game.isLocalPlayer() &&
-            client.game.isStarted &&
-            !client.game.isFinished &&
-            (lastStatus.value?.clients == 1) &&
-            !client.game.history.isEmpty()
-        )
+                client.game.isStarted &&
+                !client.game.isFinished &&
+                (lastStatus.value?.clients == 1) &&
+                !client.game.history.isEmpty()
+            )
     }
 
     @UiThread
@@ -594,6 +608,11 @@ class FreebloksActivityViewModel @Inject constructor(
             chatButtonVisible.value = false
         }
         chatHistory.value = emptyList()
+        seenChatHistory.value = 0
+    }
+
+    fun markChatsAsSeen(seen: Int) {
+        seenChatHistory.value = seen
     }
 
     //endregion

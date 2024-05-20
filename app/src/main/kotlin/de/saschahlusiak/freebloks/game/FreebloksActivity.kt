@@ -24,19 +24,29 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,8 +54,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.DialogFragment
@@ -84,6 +98,7 @@ import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
+import de.saschahlusiak.freebloks.utils.Previews
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
@@ -437,21 +452,66 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 }
             }
 
-            val chatButton by viewModel.chatButtonVisible.collectAsState()
             // Chat button always bottom
+            val chatButton by viewModel.chatButtonVisible.collectAsState()
             AnimatedVisibility(
                 visible = chatButton,
                 enter = scaleIn(), exit = scaleOut()
             ) {
-                FloatingActionButton(
-                    onClick = ::onChatButtonClick,
-                    containerColor = getContainerColor(),
-                    contentColor = getContentColor(),
-                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                val unread by viewModel.chatButtonBadge.collectAsState(initial = 0)
+                ChatButton(Modifier, unread = unread)
+            }
+        }
+    }
+
+    @Composable
+    private fun ChatButton(modifier: Modifier, unread: Int = 5) {
+        val containerColor = if (unread > 0) MaterialTheme.colorScheme.primaryContainer else getContainerColor()
+        val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor).takeOrElse { getContentColor() }
+
+        Box(
+            modifier = modifier
+                .wrapContentSize()
+                .height(IntrinsicSize.Min)
+                .width(IntrinsicSize.Min)
+        ) {
+            FloatingActionButton(
+                onClick = ::onChatButtonClick,
+                containerColor = containerColor,
+                contentColor = contentColor,
+                elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+            ) {
+                Icon(painter = painterResource(id = R.drawable.ic_chat), contentDescription = "")
+            }
+
+            AnimatedVisibility(
+                visible = unread > 0,
+                enter = scaleIn(),
+                exit = scaleOut(),
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Surface(
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .offset(x = 5.dp, y = 5.dp)
+                        .sizeIn(22.dp, 22.dp),
+                    shape = CircleShape
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.ic_chat), contentDescription = "")
+                    Text(
+                        text = unread.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.wrapContentSize()
+                    )
                 }
             }
+        }
+    }
+
+    @Previews
+    @Composable
+    private fun ChatButtonPreview() {
+        AppTheme {
+            ChatButton(modifier = Modifier.padding(8.dp), unread = 5)
         }
     }
 

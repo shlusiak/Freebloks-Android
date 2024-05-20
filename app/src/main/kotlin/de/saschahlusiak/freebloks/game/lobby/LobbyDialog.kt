@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -16,7 +17,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
@@ -64,10 +64,10 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
         return super.onCreateDialog(savedInstanceState).apply {
             val client = client
             if (client != null && client.game.isStarted) {
-                /* in-game chat */
+                /* in-game chat can dismiss outside */
                 setCanceledOnTouchOutside(true)
             } else {
-                /* lobby */
+                /* lobby can not */
                 setCanceledOnTouchOutside(false)
             }
         }
@@ -95,10 +95,14 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
         val client = client
         AppTheme {
             val lastStatus = viewModel.lastStatus.collectAsState()
-            val chatHistory = viewModel.chatHistoryAsLiveData.collectAsState(initial = emptyList())
+            val chatHistory = viewModel.chatHistory.collectAsState(initial = emptyList())
 
             val players = remember(lastStatus) {
                 derivedStateOf { getPlayerColors(lastStatus.value) }
+            }
+            
+            LaunchedEffect(key1 = chatHistory.value.size) {
+                viewModel.markChatsAsSeen(chatHistory.value.size)
             }
 
             LobbyScreen(
