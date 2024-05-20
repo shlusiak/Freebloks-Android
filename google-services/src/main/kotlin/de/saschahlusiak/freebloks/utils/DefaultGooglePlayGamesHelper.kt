@@ -9,7 +9,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.Window
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -19,6 +18,7 @@ import com.google.android.gms.common.GooglePlayServicesUtilLight
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.games.*
 import com.google.android.gms.tasks.OnCompleteListener
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,15 +40,15 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
     private var achievementsClient: AchievementsClient? = null
     private var playersClient: PlayersClient? = null
 
-    var currentGoogleAccount: GoogleSignInAccount? = null
+    private var currentGoogleAccount: GoogleSignInAccount? = null
 
-    override val signedIn = MutableLiveData(false)
-    override val playerName = MutableLiveData<String?>(null)
+    override val signedIn = MutableStateFlow(false)
+    override val playerName = MutableStateFlow<String?>(null)
 
     override val isAvailable: Boolean
         get() = (GooglePlayServicesUtilLight.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
     override val isSignedIn: Boolean
-        get() = signedIn.value == true
+        get() = signedIn.value
 
     init {
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)

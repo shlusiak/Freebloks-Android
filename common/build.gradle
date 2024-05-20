@@ -28,8 +28,4 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.7.1'
 
     api 'androidx.compose.runtime:runtime-android:1.6.7'
-
-
-    // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.0'
 }

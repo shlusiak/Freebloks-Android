@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asFlow
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
@@ -67,7 +66,7 @@ class GameFinishFragment : DialogFragment() {
     @Composable
     private fun Content() {
         val gameMode = viewModel.gameMode
-        val isSignedIn = viewModel.isSignedIn.asFlow().collectAsState(initial = false)
+        val isSignedIn = viewModel.isSignedIn.collectAsState(initial = false)
         var showStatistics by remember { mutableStateOf(false) }
 
         GameFinishScreen(

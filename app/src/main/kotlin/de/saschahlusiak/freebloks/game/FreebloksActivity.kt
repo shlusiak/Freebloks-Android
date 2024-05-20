@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,16 +53,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -105,6 +101,8 @@ import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 import javax.inject.Inject
@@ -217,13 +215,20 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             false
         }
 
-        viewModel.connectionStatus.asLiveData().observe(this) { onConnectionStatusChanged(it) }
-        viewModel.googleAccountSignedIn.observe(this) {
-            viewModel.gameHelper.setWindowForPopups(window)
-            if (Global.IS_VIP) {
-                viewModel.gameHelper.unlock(getString(R.string.achievement_vip))
-            }
-        }
+        viewModel.connectionStatus
+            .flowWithLifecycle(lifecycle)
+            .onEach { onConnectionStatusChanged(it) }
+            .launchIn(lifecycleScope)
+
+        viewModel.googleAccountSignedIn
+            .onEach { signedIn ->
+                if (signedIn) {
+                    viewModel.gameHelper.setWindowForPopups(window)
+                    if (Global.IS_VIP) {
+                        viewModel.gameHelper.unlock(getString(R.string.achievement_vip))
+                    }
+                }
+            }.launchIn(lifecycleScope)
 
         hideMenu()
     }

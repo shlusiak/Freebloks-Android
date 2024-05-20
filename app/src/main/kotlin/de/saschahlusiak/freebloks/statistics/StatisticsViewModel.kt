@@ -2,7 +2,6 @@ package de.saschahlusiak.freebloks.statistics
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,7 +32,7 @@ class StatisticsViewModel @Inject constructor(
 ) : ViewModel() {
     internal val gameMode = MutableStateFlow(prefs.gameMode)
 
-    val signedIn = gamesHelper.signedIn.asFlow()
+    val signedIn = gamesHelper.signedIn
 
     init {
         db.open()

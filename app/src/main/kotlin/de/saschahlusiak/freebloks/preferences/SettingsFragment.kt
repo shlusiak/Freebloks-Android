@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
@@ -20,6 +22,8 @@ import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.SCREEN_
 import de.saschahlusiak.freebloks.rules.RulesActivity
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 /**
@@ -78,26 +82,32 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.isSignedIn.observe(viewLifecycleOwner) { signedIn ->
-            findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.google_play_games_signout else R.string.google_play_games_signin)
-            findPreference<Preference>("googleplus_leaderboard")?.isEnabled = signedIn
-            findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn
-        }
+        viewModel.isSignedIn
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { signedIn ->
+                findPreference<Preference>("googleplus_signin")?.setTitle(if (signedIn) R.string.google_play_games_signout else R.string.google_play_games_signin)
+                findPreference<Preference>("googleplus_leaderboard")?.isEnabled = signedIn
+                findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.playerName.observe(viewLifecycleOwner) { player ->
-            findPreference<Preference>("googleplus_signin")?.apply {
-                summary = if (player != null) {
-                    getString(R.string.google_play_games_signout_long, player)
-                } else {
-                    getString(R.string.google_play_games_signin_long)
+        viewModel.playerName
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { player ->
+                findPreference<Preference>("googleplus_signin")?.apply {
+                    summary = if (player != null) {
+                        getString(R.string.google_play_games_signout_long, player)
+                    } else {
+                        getString(R.string.google_play_games_signin_long)
+                    }
                 }
-            }
-        }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {

@@ -6,11 +6,11 @@ import android.content.Intent
 import android.view.View
 import android.view.Window
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface GooglePlayGamesHelper {
-    val signedIn: MutableLiveData<Boolean>
-    val playerName: MutableLiveData<String?>
+    val signedIn: MutableStateFlow<Boolean>
+    val playerName: MutableStateFlow<String?>
 
     val isAvailable: Boolean
 
@@ -47,8 +47,8 @@ interface GooglePlayGamesHelper {
  * This is the public facade of the Google Play interface, which is also the dummy implementation that does nothing.
  */
 class EmptyGooglePlayGamesHelper: GooglePlayGamesHelper {
-    override val signedIn = MutableLiveData(false)
-    override val playerName = MutableLiveData<String?>(null)
+    override val signedIn = MutableStateFlow(false)
+    override val playerName = MutableStateFlow<String?>(null)
 
     override val isAvailable: Boolean
         get() = false
