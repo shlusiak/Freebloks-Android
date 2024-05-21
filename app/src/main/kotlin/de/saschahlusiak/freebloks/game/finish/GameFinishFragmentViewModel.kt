@@ -3,7 +3,6 @@ package de.saschahlusiak.freebloks.game.finish
 import android.app.Application
 import android.content.Context
 import android.database.sqlite.SQLiteException
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,7 +23,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
 @HiltViewModel
 class GameFinishFragmentViewModel @Inject constructor(
@@ -117,35 +115,33 @@ class GameFinishFragmentViewModel @Inject constructor(
     }
 
     private suspend fun unlockAchievements(scores: List<PlayerScore>, gameMode: GameMode) {
-        val context: Context = app
-
         scores
             .filter { it.isLocal }
             .forEach { d ->
                 if (gameMode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS && d.place == 1)
-                    gameHelper.unlock(context.getString(R.string.achievement_blokus_classic))
+                    gameHelper.unlock(R.string.achievement_blokus_classic)
 
                 if (gameMode == GameMode.GAMEMODE_4_COLORS_4_PLAYERS && d.isPerfect)
-                    gameHelper.unlock(context.getString(R.string.achievement_perfect))
+                    gameHelper.unlock(R.string.achievement_perfect)
 
                 if (gameMode == GameMode.GAMEMODE_DUO && d.place == 1)
-                    gameHelper.unlock(context.getString(R.string.achievement_blokus_duo))
+                    gameHelper.unlock(R.string.achievement_blokus_duo)
 
-                gameHelper.increment(context.getString(R.string.achievement_1000_points), d.totalPoints)
+                gameHelper.increment(R.string.achievement_1000_points, d.totalPoints)
 
                 if (d.place == 1)
-                    gameHelper.increment(context.getString(R.string.achievement_winner), 1)
+                    gameHelper.increment(R.string.achievement_winner, 1)
 
                 if (gameMode === GameMode.GAMEMODE_4_COLORS_4_PLAYERS && d.place == 4)
-                    gameHelper.increment(context.getString(R.string.achievement_loser), 1)
+                    gameHelper.increment(R.string.achievement_loser, 1)
 
                 lastStatus?.let { lastStatus ->
                     if (lastStatus.clients >= 4 && d.place == 1)
-                        gameHelper.unlock(context.getString(R.string.achievement_multiplayer))
+                        gameHelper.unlock(R.string.achievement_multiplayer)
                 }
             }
 
-        gameHelper.increment(context.getString(R.string.achievement_addicted), 1)
+        gameHelper.increment(R.string.achievement_addicted, 1)
 
         try {
             val db = db.await()
@@ -156,15 +152,15 @@ class GameFinishFragmentViewModel @Inject constructor(
             if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 0) > 0) n++
             if (db.getNumberOfPlace(GameMode.GAMEMODE_DUO, 1, 2) > 0) n++
 
-            if (n == 6) gameHelper.unlock(context.getString(R.string.achievement_all_colors))
+            if (n == 6) gameHelper.unlock(R.string.achievement_all_colors)
 
             gameHelper.submitScore(
-                context.getString(R.string.leaderboard_games_won),
+                R.string.leaderboard_games_won,
                 db.getNumberOfPlace(null, 1).toLong()
             )
 
             gameHelper.submitScore(
-                context.getString(R.string.leaderboard_points_total),
+                R.string.leaderboard_points_total,
                 db.getTotalNumberOfPoints(null).toLong()
             )
         } catch (e: SQLiteException) {

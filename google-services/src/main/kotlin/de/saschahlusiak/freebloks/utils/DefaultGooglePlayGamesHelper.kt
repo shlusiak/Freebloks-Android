@@ -114,16 +114,16 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
         googleSignInClient.signOut().addOnCompleteListener(onSignOutCompleteListener)
     }
 
-    override fun unlock(achievement: String) {
-        achievementsClient?.unlock(achievement)
+    override fun unlock(achievement: Int) {
+        achievementsClient?.unlock(context.getString(achievement))
     }
 
-    override fun increment(achievement: String, increment: Int) {
-        achievementsClient?.increment(achievement, increment)
+    override fun increment(achievement: Int, increment: Int) {
+        achievementsClient?.increment(context.getString(achievement), increment)
     }
 
-    override fun submitScore(leaderboard: String, score: Long) {
-        leaderboardsClient?.submitScore(leaderboard, score)
+    override fun submitScore(leaderboard: Int, score: Long) {
+        leaderboardsClient?.submitScore(context.getString(leaderboard), score)
     }
 
     override fun startAchievementsIntent(activity: Activity, requestCode: Int) {

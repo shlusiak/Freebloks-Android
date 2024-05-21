@@ -225,7 +225,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 if (signedIn) {
                     viewModel.gameHelper.setWindowForPopups(window)
                     if (Global.IS_VIP) {
-                        viewModel.gameHelper.unlock(getString(R.string.achievement_vip))
+                        viewModel.gameHelper.unlock(R.string.achievement_vip)
                     }
                 }
             }.launchIn(lifecycleScope)

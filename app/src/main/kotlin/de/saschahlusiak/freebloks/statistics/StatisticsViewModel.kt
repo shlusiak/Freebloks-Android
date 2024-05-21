@@ -1,10 +1,8 @@
 package de.saschahlusiak.freebloks.statistics
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.database.HighScoreDB
@@ -27,8 +25,7 @@ typealias RowData = Pair<Int, String>
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
     prefs: Preferences,
-    private val db: HighScoreDB,
-    @ApplicationContext private val context: Context
+    private val db: HighScoreDB
 ) : ViewModel() {
     internal val gameMode = MutableStateFlow(prefs.gameMode)
 
@@ -41,11 +38,11 @@ class StatisticsViewModel @Inject constructor(
             .onEach { signedIn ->
                 if (signedIn) {
                     gamesHelper.submitScore(
-                        context.getString(R.string.leaderboard_games_won),
+                        R.string.leaderboard_games_won,
                         db.getNumberOfPlace(null, 1).toLong()
                     )
                     gamesHelper.submitScore(
-                        context.getString(R.string.leaderboard_points_total),
+                        R.string.leaderboard_points_total,
                         db.getTotalNumberOfPoints(null).toLong()
                     )
                 }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.view.Window
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -24,11 +25,11 @@ interface GooglePlayGamesHelper {
 
     fun startSignOut() { }
 
-    fun unlock(achievement: String) { }
+    fun unlock(@StringRes achievement: Int) { }
 
-    fun increment(achievement: String, increment: Int) { }
+    fun increment(@StringRes achievement: Int, increment: Int) { }
 
-    fun submitScore(leaderboard: String, score: Long) { }
+    fun submitScore(@StringRes leaderboard: Int, score: Long) { }
 
     fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
 
@@ -64,11 +65,11 @@ class EmptyGooglePlayGamesHelper: GooglePlayGamesHelper {
 
     override fun startSignOut() { }
 
-    override fun unlock(achievement: String) { }
+    override fun unlock(achievement: Int) { }
 
-    override fun increment(achievement: String, increment: Int) { }
+    override fun increment(achievement: Int, increment: Int) { }
 
-    override fun submitScore(leaderboard: String, score: Long) { }
+    override fun submitScore(leaderboard: Int, score: Long) { }
 
     override fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
 
