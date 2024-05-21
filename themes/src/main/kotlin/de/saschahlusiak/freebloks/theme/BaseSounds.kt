@@ -18,7 +18,7 @@ abstract class BaseSounds(context: Context) : FeedbackProvider {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val soundPool = SoundPool.Builder()
-        .setMaxStreams(10)
+        .setMaxStreams(15)
         .setAudioAttributes(AudioAttributes.Builder()
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build())

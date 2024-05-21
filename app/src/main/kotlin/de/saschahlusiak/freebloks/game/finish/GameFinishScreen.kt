@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,13 +45,12 @@ fun GameFinishScreen(
     isSignedIn: Boolean,
     onClose: () -> Unit,
     onNewGame: () -> Unit,
-    onMainMenu: () -> Unit,
     onAchievements: () -> Unit,
     onLeaderboards: () -> Unit,
     onStatistics: () -> Unit,
     onChat: ((String) -> Unit)?
 ) {
-    Dialog(horizontalPadding = 0.dp) {
+    Dialog {
         Column(
             Modifier
                 .verticalScroll(rememberScrollState())
@@ -199,7 +197,6 @@ private fun Preview() {
             isSignedIn = true,
             onClose = {},
             onNewGame = {},
-            onMainMenu = {},
             onAchievements = {},
             onLeaderboards = {},
             onStatistics = {},

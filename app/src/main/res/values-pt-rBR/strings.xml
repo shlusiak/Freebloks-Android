@@ -36,17 +36,16 @@
 
     <string name="statistics">Estatísticas</string>
     <string name="clear_statistics">Restaurar Tudo</string>
-    <string-array name="statistics_labels">
-        <item>Partidas jogadas</item>
-        <item>Boas partidas (+15)</item>
-        <item>Partidas perfeitas (+20)</item>
-        <item>1o lugar</item>
-        <item>2o lugar</item>
-        <item>3o lugar</item>
-        <item>4o lugar</item>
-        <item>Pedras usadas</item>
-        <item>Total de Pontos</item>
-    </string-array>
+
+    <string name="statistics_label_games_played">Partidas jogadas</string>
+    <string name="statistics_label_good_games">Boas partidas (+15)</string>
+    <string name="statistics_label_perfect_games">Partidas perfeitas (+20)</string>
+    <string name="statistics_label_1st">1o lugar</string>
+    <string name="statistics_label_2nd">2o lugar</string>
+    <string name="statistics_label_3rd">3o lugar</string>
+    <string name="statistics_label_4th">4o lugar</string>
+    <string name="statistics_label_stones_used">Pedras usadas</string>
+    <string name="statistics_label_points_total">Total de Pontos</string>
 
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Entrar</string>

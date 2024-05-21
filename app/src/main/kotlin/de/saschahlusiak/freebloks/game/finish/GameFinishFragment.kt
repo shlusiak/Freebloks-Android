@@ -75,7 +75,6 @@ class GameFinishFragment : DialogFragment() {
             isSignedIn = isSignedIn.value,
             onClose = { dismiss() },
             onNewGame = ::onNewGame,
-            onMainMenu = ::onMainMenu,
             onAchievements = ::onAchievements,
             onLeaderboards = ::onLeaderboard,
             onStatistics = ::onStatistics,

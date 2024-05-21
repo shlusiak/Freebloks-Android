@@ -7,7 +7,8 @@ enum class FeedbackType {
     StoneHasBeenSet,
     Hint,
     StartDragging,
-    Snap
+    Snap,
+    GameOver
 }
 
 interface FeedbackProvider {

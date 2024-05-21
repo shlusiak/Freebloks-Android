@@ -34,17 +34,16 @@
 
     <string name="statistics">状態</string>
     <string name="clear_statistics">すべてリセット</string>
-    <string-array name="statistics_labels">
-        <item>プレイしたゲーム</item>
-        <item>グッド ゲーム (+15)</item>
-        <item>パーフェクト ゲーム (+20)</item>
-        <item>最初の場所</item>
-        <item>二番目の場所</item>
-        <item>三番目の場所</item>
-        <item>四番目の場所</item>
-        <item>使用ストーン</item>
-        <item>ポイント合計</item>
-    </string-array>
+
+    <string name="statistics_label_games_played">プレイしたゲーム</string>
+    <string name="statistics_label_good_games">グッド ゲーム (+15)</string>
+    <string name="statistics_label_perfect_games">パーフェクト ゲーム (+20)</string>
+    <string name="statistics_label_1st">最初の場所</string>
+    <string name="statistics_label_2nd">二番目の場所</string>
+    <string name="statistics_label_3rd">三番目の場所</string>
+    <string name="statistics_label_4th">四番目の場所</string>
+    <string name="statistics_label_stones_used">使用ストーン</string>
+    <string name="statistics_label_points_total">ポイント合計</string>
 
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">サインイン</string>

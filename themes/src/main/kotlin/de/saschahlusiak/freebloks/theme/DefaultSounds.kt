@@ -12,7 +12,8 @@ class DefaultSounds(context: Context): BaseSounds(context) {
             R.raw.hint,
             R.raw.drip1,
             R.raw.playerout,
-            R.raw.chat
+            R.raw.chat,
+            R.raw.bell
         )
 
     override fun play(type: FeedbackType, volume: Float, speed: Float) {
@@ -28,6 +29,7 @@ class DefaultSounds(context: Context): BaseSounds(context) {
             OutOfMoves -> play(R.raw.playerout, volume, 1.0f)
             Hint -> play(R.raw.hint, volume, 1.0f)
             StartDragging -> play(R.raw.click2, volume, 1.0f)
+            GameOver -> play(R.raw.bell, volume, 1.0f)
 
             Snap -> {
                 play(R.raw.click3, volume, 1.0f)

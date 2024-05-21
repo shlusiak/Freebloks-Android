@@ -880,7 +880,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
         analytics.logEvent("game_finished", b)
 
-        /* TODO: play sound on game finish? */
+//        viewModel.sounds.play(FeedbackType.GameOver)
         lifecycleScope.launchWhenStarted {
             val dialog = GameFinishFragment().apply {
                 arguments = Bundle().apply {

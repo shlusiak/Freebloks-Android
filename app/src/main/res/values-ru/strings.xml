@@ -34,17 +34,16 @@
 
     <string name="statistics">Статистика</string>
     <string name="clear_statistics">Сбросить все</string>
-    <string-array name="statistics_labels">
-        <item>Игр сыграно</item>
-        <item>Хороших игр (+15)</item>
-        <item>Идеальных игр (+20)</item>
-        <item>1х мест</item>
-        <item>2х мест</item>
-        <item>3х мест</item>
-        <item>4х мест</item>
-        <item>Фигурок использовано</item>
-        <item>Всего очков</item>
-    </string-array>
+
+    <string name="statistics_label_games_played">Игр сыграно</string>
+    <string name="statistics_label_good_games">Хороших игр (+15)</string>
+    <string name="statistics_label_perfect_games">Идеальных игр (+20)</string>
+    <string name="statistics_label_1st">1х мест</string>
+    <string name="statistics_label_2nd">2х мест</string>
+    <string name="statistics_label_3rd">3х мест</string>
+    <string name="statistics_label_4th">4х мест</string>
+    <string name="statistics_label_stones_used">Фигурок использовано</string>
+    <string name="statistics_label_points_total">Всего очков</string>
 
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Войти</string>

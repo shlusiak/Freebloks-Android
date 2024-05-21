@@ -52,17 +52,15 @@
     <string name="statistics">Statistici</string>
     <string name="clear_statistics">Resetează tot</string>
 
-    <string-array name="statistics_labels">
-        <item>Jocuri finalizate</item>
-        <item>Jocuri bune (+15)</item>
-        <item>Jocuri perfecte (+20)</item>
-        <item>Locul 1</item>
-        <item>Locul 2</item>
-        <item>Locul 3</item>
-        <item>Locul 4</item>
-        <item>Piese utilizate</item>
-        <item>Total puncte</item>
-    </string-array>
+    <string name="statistics_label_games_played">Jocuri finalizate</string>
+    <string name="statistics_label_good_games">Jocuri bune (+15)</string>
+    <string name="statistics_label_perfect_games">Jocuri perfecte (+20)</string>
+    <string name="statistics_label_1st">Locul 1</string>
+    <string name="statistics_label_2nd">Locul 2</string>
+    <string name="statistics_label_3rd">Locul 3</string>
+    <string name="statistics_label_4th">Locul 4</string>
+    <string name="statistics_label_stones_used">Piese utilizate</string>
+    <string name="statistics_label_points_total">Total puncte</string>
 
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Înregistrare</string>

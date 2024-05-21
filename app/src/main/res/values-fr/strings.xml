@@ -36,17 +36,16 @@
 
     <string name="statistics">Statistiques</string>
     <string name="clear_statistics">Rémettre à zéro</string>
-    <string-array name="statistics_labels">
-        <item>Parties jouées</item>
-        <item>Bonnes parties (+15)</item>
-        <item>Parties parfaites (+20)</item>
-        <item>1re place</item>
-        <item>2e place</item>
-        <item>3e place</item>
-        <item>4e place</item>
-        <item>Pièces jouées</item>
-        <item>Total des points</item>
-    </string-array>
+
+    <string name="statistics_label_games_played">Parties jouées</string>
+    <string name="statistics_label_good_games">Bonnes parties (+15)</string>
+    <string name="statistics_label_perfect_games">Parties parfaites (+20)</string>
+    <string name="statistics_label_1st">1re place</string>
+    <string name="statistics_label_2nd">2e place</string>
+    <string name="statistics_label_3rd">3e place</string>
+    <string name="statistics_label_4th">4e place</string>
+    <string name="statistics_label_stones_used">Pièces jouées</string>
+    <string name="statistics_label_points_total">Total des points</string>
 
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Se connecter</string>

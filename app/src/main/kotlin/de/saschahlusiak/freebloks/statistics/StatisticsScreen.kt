@@ -132,15 +132,15 @@ internal fun StatisticsContent(
                         .animateItemPlacement()
                 ) {
                     Text(
-                        text = label,
+                        text = stringResource(label),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = if (value != null) Color.Unspecified else MaterialTheme.colorScheme.outlineVariant
+                        color = Color.Unspecified
                     )
 
                     Spacer(Modifier.weight(1f))
 
                     Text(
-                        text = value ?: "",
+                        text = value,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -169,13 +169,12 @@ internal fun StatisticsContent(
 
 internal val previewData: List<RowData>
     @Composable get() {
-        val labels = stringArrayResource(id = R.array.statistics_labels)
         return listOf(
-            RowData(labels[0], "123"),
-            RowData(labels[1], "5.0%"),
-            RowData(labels[2], "6.0%"),
-            RowData(labels[3], "96"),
-            RowData(labels[4], null)
+            RowData(R.string.statistics_label_games_played, "123"),
+            RowData(R.string.statistics_label_1st, "5.0%"),
+            RowData(R.string.statistics_label_2nd, "5.0%"),
+            RowData(R.string.statistics_label_3rd, "6.0%"),
+            RowData(R.string.statistics_label_points_total, "96"),
         )
     }
 

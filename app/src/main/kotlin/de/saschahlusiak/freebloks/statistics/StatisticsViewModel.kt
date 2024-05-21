@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-typealias RowData = Pair<String, String?>
+typealias RowData = Pair<Int, String>
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
@@ -63,8 +63,6 @@ class StatisticsViewModel @Inject constructor(
     private suspend fun dataForMode(gameMode: GameMode): List<RowData> =
         withContext(Dispatchers.IO) {
             buildList {
-                val labels = context.resources.getStringArray(R.array.statistics_labels)
-
                 val games = db.getTotalNumberOfGames(gameMode)
                 val points = db.getTotalNumberOfPoints(gameMode)
                 val perfect = db.getNumberOfPerfectGames(gameMode)
@@ -73,30 +71,35 @@ class StatisticsViewModel @Inject constructor(
 
                 val stonesUsed = games * Shape.COUNT - stonesLeft
 
-                add(labels[0] to String.format("%d", games))
+                add(R.string.statistics_label_games_played to games.toString())
 
                 if (games > 0) {
-                    add(labels[1] to String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat()))
+                    add(R.string.statistics_label_good_games to String.format("%.1f%%", 100.0f * good.toFloat() / games.toFloat()))
 
-                    add(labels[2] to String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat()))
+                    add(R.string.statistics_label_perfect_games to String.format("%.1f%%", 100.0f * perfect.toFloat() / games.toFloat()))
 
                     var i = 0
                     while (i < gameMode.colors) {
+                        val label = when(i) {
+                            0 -> R.string.statistics_label_1st
+                            1 -> R.string.statistics_label_2nd
+                            2 -> R.string.statistics_label_3rd
+                            else -> R.string.statistics_label_4th
+                        }
                         val n = db.getNumberOfPlace(gameMode, i + 1)
-                        add(labels[3 + i] to String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat()))
+                        add(label to String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat()))
                         i++
                     }
 
                     add(
-                        labels[7] to String.format(
+                        R.string.statistics_label_stones_used to String.format(
                             "%.1f%%",
                             100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat()
                         )
                     )
                 }
 
-
-                add(labels[8] to String.format("%d", points))
+                add(R.string.statistics_label_points_total to String.format("%d", points))
             }
         }
 }
