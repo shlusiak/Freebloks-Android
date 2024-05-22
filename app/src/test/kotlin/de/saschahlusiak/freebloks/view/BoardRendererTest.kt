@@ -8,8 +8,6 @@ import de.saschahlusiak.freebloks.util.MockGL11
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.MockitoAnnotations.openMocks
 import javax.microedition.khronos.opengles.GL11
 
