@@ -5,10 +5,14 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.os.Parcel
 import android.util.Log
 import androidx.annotation.UiThread
@@ -36,7 +40,6 @@ import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import de.saschahlusiak.freebloks.view.scene.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
@@ -77,17 +80,12 @@ class FreebloksActivityViewModel @Inject constructor(
     private val crashReporter: CrashReporter,
     private val analytics: AnalyticsProvider,
     private val prefs: Preferences,
-    val gameHelper: GooglePlayGamesHelper,
-    private val instantAppHelper: InstantAppHelper
+    val gameHelper: GooglePlayGamesHelper
 ) : ViewModel(), GameEventObserver, SceneDelegate {
     private val tag = FreebloksActivityViewModel::class.java.simpleName
     private val context = app
 
-    // services
-    private var notificationManager: MultiplayerNotificationManager? = null
-
     // settings
-    private var showNotifications: Boolean = true
     var showIntro = true
 
     // TODO: I think we should ditch this override completely and only support what was set during game start. What do you think?
@@ -120,20 +118,38 @@ class FreebloksActivityViewModel @Inject constructor(
     val soundsEnabled = MutableStateFlow(prefs.sounds)
     val chatButtonVisible = MutableStateFlow(false)
     val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
-    val playerToShowInSheet = MutableStateFlow(SheetPlayer(-1, -1, false, false))
+    val playerToShowInSheet = MutableStateFlow(SheetPlayer(-1, -1, isRotated = false, showLocationButton = false))
     val googleAccountSignedIn = gameHelper.signedIn
     val canRequestUndo = MutableStateFlow(false)
     val canRequestHint = MutableStateFlow(false)
     val inProgress = MutableStateFlow(false)
 
+    private val serviceIntent = Intent(context, MultiplayerNotificationService::class.java)
+
+    @SuppressLint("StaticFieldLeak")
+    private var multiplayerNotificationService: MultiplayerNotificationService? = null
+
+    private val serviceConnection = object: ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            multiplayerNotificationService = (service as MultiplayerNotificationService.LocalBinder).getService()
+            multiplayerNotificationService?.setClient(client)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            multiplayerNotificationService = null
+        }
+    }
+
     init {
         reloadPreferences()
+
+        context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onCleared() {
+        multiplayerNotificationService = null
         disconnectClient()
-        notificationManager?.shutdown()
-        notificationManager = null
+        context.unbindService(serviceConnection)
         sounds.shutdown()
     }
 
@@ -142,7 +158,6 @@ class FreebloksActivityViewModel @Inject constructor(
         sounds.vibrationEnabled = prefs.vibrationEnabled
         sounds.soundsEnabled = prefs.sounds
         // Instant apps do not support notifications
-        showNotifications = prefs.notifications && !instantAppHelper.isInstantApp
         localClientNameOverride = prefs.playerName.takeIf { it.isNotBlank() }
         showSeeds = prefs.showSeeds
         showOpponents = prefs.showOpponents
@@ -151,18 +166,6 @@ class FreebloksActivityViewModel @Inject constructor(
         showAnimations = prefs.showAnimations
 
         soundsEnabled.value = sounds.soundsEnabled
-
-        if (showNotifications) {
-            client?.let {
-                if (notificationManager == null) {
-                    notificationManager = MultiplayerNotificationManager(context, it)
-                    it.addObserver(this)
-                }
-            }
-        } else {
-            notificationManager?.shutdown()
-            notificationManager = null
-        }
 
         // this is so that updates to the localClientNameOverride are reflected in the bottom sheet
 
@@ -181,29 +184,20 @@ class FreebloksActivityViewModel @Inject constructor(
     fun setClient(client: GameClient) {
         if (client === this.client) return
 
-        notificationManager?.shutdown()
-        notificationManager = null
+        multiplayerNotificationService?.setClient(client)
 
         this.client?.removeObserver(this)
         this.client = client
         client.addObserver(this)
-
-        if (showNotifications) {
-            // registers itself to the game and listens for events
-            notificationManager = MultiplayerNotificationManager(context, client).apply {
-                client.addObserver(this)
-            }
-        }
-
         connectionStatus.value = if (client.isConnected()) ConnectionStatus.Connected else ConnectionStatus.Disconnected
     }
 
     fun onStart() {
-        notificationManager?.stopBackgroundNotification()
+        multiplayerNotificationService?.onActivityStart()
     }
 
     fun onStop() {
-        notificationManager?.startBackgroundNotification()
+        multiplayerNotificationService?.onActivityStop()
         saveGameState()
     }
 
@@ -393,6 +387,7 @@ class FreebloksActivityViewModel @Inject constructor(
         connectJob?.cancel()
         val c = this.client
         this.client = null
+        multiplayerNotificationService?.setClient(null)
         c?.disconnect()
 
         setSheetPlayer(-1, false)

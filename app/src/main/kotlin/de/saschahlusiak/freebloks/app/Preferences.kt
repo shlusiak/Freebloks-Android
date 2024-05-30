@@ -50,8 +50,6 @@ class Preferences @Inject constructor(
 
     val vibrationEnabled by booleanPreference("vibrate", default = true)
 
-    val notifications by booleanPreference("notifications", true)
-
     val showSeeds by booleanPreference("show_seeds", default = true)
 
     val showOpponents by booleanPreference("show_opponents", default = true)

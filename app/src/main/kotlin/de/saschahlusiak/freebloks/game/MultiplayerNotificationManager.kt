@@ -10,9 +10,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import android.os.PowerManager
-import android.os.PowerManager.PARTIAL_WAKE_LOCK
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.compose.ui.graphics.toArgb
@@ -26,7 +23,7 @@ import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import kotlin.time.Duration.Companion.minutes
+import java.util.Locale
 
 /**
  * Class to manage the multi player Android notification.
@@ -56,18 +53,12 @@ class MultiplayerNotificationManager(
         PendingIntent.FLAG_UPDATE_CURRENT
     }
 
-    private val game get() = client.game
+    private val game = client.game
 
     /**
      * Used to track whether we are currently showing a notification because we are in the background
      */
     private var isInBackground = false
-
-    /**
-     * While the ongoing notification is running, we need a wakelock so we don't lose
-     * connection with the server
-     */
-    private var wakeLock: PowerManager.WakeLock? = null
 
     /**
      * We need to hold on to the last server status for player names
@@ -81,31 +72,24 @@ class MultiplayerNotificationManager(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannels()
         }
+        client.addObserver(this)
     }
 
     /**
      * Indicate that we are in the background and should show a long-running notification
      */
-    fun startBackgroundNotification() {
-        if (!client.isConnected()) return
-        val lastStatus = lastStatus ?: return
+    fun getBackgroundNotification(): Notification? {
+        if (!client.isConnected()) return null
+        val lastStatus = lastStatus ?: return null
         // No need to show the notification if we are the only client connected. May not be a multiplayer
         // game after all.
-        if (game.isStarted && lastStatus.clients == 1) return
+        if (game.isStarted && lastStatus.clients == 1) return null
 
         isInBackground = true
 
-        Log.d(tag, "Acquiring wakeLock")
-        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock?.release()
-        wakeLock = pm.newWakeLock(PARTIAL_WAKE_LOCK, "freebloks:ongoing-notification").also {
-            // 15 minutes should be plenty for the user to return to the app
-            it.acquire(15.minutes.inWholeMilliseconds)
-        }
-
         val notification = buildOngoingNotification(false)
 
-        notificationManager.notify(ONGOING_NOTIFICATION_ID, notification)
+        return notification
     }
 
     /**
@@ -113,9 +97,6 @@ class MultiplayerNotificationManager(
      */
     fun stopBackgroundNotification() {
         cancel()
-        Log.d(tag, "Releasing wakeLock")
-        wakeLock?.release()
-        wakeLock = null
         isInBackground = false
     }
 
@@ -187,6 +168,7 @@ class MultiplayerNotificationManager(
             priority = NotificationCompat.PRIORITY_DEFAULT
             setOngoing(!game.isFinished && client.isConnected())
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.appicon_small))
+            setColorized(true)
 
             color = ContextCompat.getColor(context, R.color.md_theme_light_primary)
 
@@ -199,6 +181,7 @@ class MultiplayerNotificationManager(
                 lastStatus?.let { status ->
                     setContentText(
                         labels[game.gameMode.ordinal] + " (" + String.format(
+                            Locale.getDefault(),
                             "%d/%d",
                             status.player,
                             status.gameMode.colors
@@ -280,6 +263,7 @@ class MultiplayerNotificationManager(
             buildChatNotification(title = null, text = text, game.colorOf(player))
         )
 
+        // Update ongoing notification with new player details
         notificationManager.notify(
             ONGOING_NOTIFICATION_ID,
             buildOngoingNotification(false)
@@ -304,7 +288,9 @@ class MultiplayerNotificationManager(
             buildChatNotification(title = null, text = text, game.colorOf(player))
         )
 
-        notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
+        if (isInBackground) {
+            notificationManager.notify(ONGOING_NOTIFICATION_ID, buildOngoingNotification(false))
+        }
     }
 
     override fun chatReceived(status: MessageServerStatus, client: Int, player: Int, message: String) {
@@ -343,7 +329,6 @@ class MultiplayerNotificationManager(
      * Cancel any currently shown notifications
      */
     private fun cancel() {
-        notificationManager.cancel(ONGOING_NOTIFICATION_ID)
         notificationManager.cancel(CHAT_NOTIFICATION_ID)
         isInBackground = false
     }
@@ -354,8 +339,6 @@ class MultiplayerNotificationManager(
 
         private const val CHANNEL_DEFAULT = "default"
         private const val CHANNEL_CHAT = "chat"
-
-        private val tag = MultiplayerNotificationManager::class.simpleName
 
         private val soundUri = Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/${R.raw.chat}")
     }
