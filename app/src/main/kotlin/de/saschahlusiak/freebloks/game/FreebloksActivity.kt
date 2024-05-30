@@ -12,6 +12,8 @@ import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.UiThread
@@ -58,6 +60,7 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -231,6 +234,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }.launchIn(lifecycleScope)
 
         hideMenu()
+
+        onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
     }
 
     private fun shouldShowRateDialog(): Boolean {
@@ -662,9 +669,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         LobbyDialog().show(supportFragmentManager, null)
     }
 
-    @Deprecated("Deprecated in Java")
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
+    private fun handleBackPressed() {
         val client = viewModel.client
         val lastStatus = viewModel.lastStatus.value
 
