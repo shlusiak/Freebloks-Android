@@ -7,6 +7,7 @@ import java.nio.ByteBuffer
 class MessageUndoStone: Message(MessageType.UndoStone, 6) {
     override fun equals(other: Any?) = other is MessageUndoStone
     override fun hashCode() = 0
+    override fun toString() = "MessageUndoStone"
 
     override fun write(buffer: ByteBuffer) {
         super.write(buffer)
