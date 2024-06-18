@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.statistics
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -93,4 +95,9 @@ class StatisticsViewModel @Inject constructor(
                 add(R.string.statistics_label_points_total to String.format("%d", points))
             }
         }
+
+
+    companion object {
+        private val TAG = StatisticsViewModel::class.simpleName
+    }
 }

@@ -14,6 +14,9 @@ interface HighScoreDao {
     @Query("DELETE FROM highscores")
     suspend fun clearAll()
 
+    @Query("SELECT * from highscores WHERE (:gameMode IS NULL OR gamemode = :gameMode)")
+    suspend fun getAll(gameMode: Int): List<HighScoreEntry>
+
     @Query("SELECT COUNT(1) FROM highscores WHERE gamemode = :gameMode")
     suspend fun getTotalNumberOfGames(gameMode: Int): Int
 

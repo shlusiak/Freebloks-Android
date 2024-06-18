@@ -28,6 +28,8 @@ class HighScoreDatabase @Inject constructor(
         )
     }
 
+    suspend fun getAll(gameMode: GameMode) = dao.getAll(gameMode.ordinal)
+
     suspend fun getTotalNumberOfGames(gameMode: GameMode) =
         dao.getTotalNumberOfGames(gameMode.ordinal)
 

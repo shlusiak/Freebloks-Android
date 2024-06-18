@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.database
 
 import android.app.Application
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -16,10 +17,10 @@ import javax.inject.Singleton
     entities = [
         HighScoreEntry::class
     ],
-    version = 1,
-//    autoMigrations = [
-//        AutoMigration(from = 1, to = 2)
-//    ],
+    version = 2,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ],
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
