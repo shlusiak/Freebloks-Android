@@ -28,19 +28,9 @@ class HighScoreDatabase @Inject constructor(
         )
     }
 
-    suspend fun getAll(gameMode: GameMode) = dao.getAll(gameMode.ordinal)
+    fun getAllAsFlow(gameMode: GameMode) = dao.getAllAsFlow(gameMode.ordinal)
 
-    suspend fun getTotalNumberOfGames(gameMode: GameMode) =
-        dao.getTotalNumberOfGames(gameMode.ordinal)
-
-    suspend fun getNumberOfGoodGames(gameMode: GameMode) =
-        dao.getNumberOfGoodGames(gameMode.ordinal)
-
-    suspend fun getNumberOfPerfectGames(gameMode: GameMode) =
-        dao.getNumberOfPerfectGames(gameMode.ordinal)
-
-    suspend fun getTotalNumberOfStonesLeft(gameMode: GameMode) =
-        dao.getTotalNumberOfStonesLeft(gameMode.ordinal)
+    suspend fun clear() = dao.clearAll()
 
     suspend fun getTotalNumberOfPoints(gameMode: GameMode?) =
         dao.getTotalNumberOfPoints(gameMode?.ordinal)

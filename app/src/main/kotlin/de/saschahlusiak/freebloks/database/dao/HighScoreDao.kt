@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import de.saschahlusiak.freebloks.database.entity.HighScoreEntry
 import de.saschahlusiak.freebloks.database.entity.HighScoreEntry.Companion.FLAG_PERFECT
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HighScoreDao {
@@ -14,8 +15,8 @@ interface HighScoreDao {
     @Query("DELETE FROM highscores")
     suspend fun clearAll()
 
-    @Query("SELECT * from highscores WHERE (:gameMode IS NULL OR gamemode = :gameMode)")
-    suspend fun getAll(gameMode: Int): List<HighScoreEntry>
+    @Query("SELECT * from highscores WHERE gamemode = :gameMode")
+    fun getAllAsFlow(gameMode: Int): Flow<List<HighScoreEntry>>
 
     @Query("SELECT COUNT(1) FROM highscores WHERE gamemode = :gameMode")
     suspend fun getTotalNumberOfGames(gameMode: Int): Int

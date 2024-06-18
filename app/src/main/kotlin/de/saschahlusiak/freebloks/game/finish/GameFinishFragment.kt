@@ -100,13 +100,11 @@ class GameFinishFragment : DialogFragment() {
         val viewModel: StatisticsViewModel by viewModels()
 
         ModalBottomSheet(onDismissRequest = onDismiss) {
-
             StatisticsContent(
                 gameMode = viewModel.gameMode.collectAsState().value,
                 data = viewModel.data.collectAsState().value,
                 onGameMode = { viewModel.gameMode.value = it }
             )
-
         }
     }
 

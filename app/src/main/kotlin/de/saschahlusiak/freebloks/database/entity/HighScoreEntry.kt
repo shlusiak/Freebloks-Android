@@ -36,6 +36,8 @@ data class HighScoreEntry(
 ) {
     val createdAt: Date get() = Date(timestamp * 1000L)
 
+    val isPerfect: Boolean get() = (flags and FLAG_PERFECT) == FLAG_PERFECT
+
     companion object {
         const val FLAG_PERFECT = 0x01
     }
