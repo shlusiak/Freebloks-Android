@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.Preferences
-import de.saschahlusiak.freebloks.database.HighScoreDB
+import de.saschahlusiak.freebloks.database.HighScoreDatabase
 import de.saschahlusiak.freebloks.model.Game
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.PlayerScore
@@ -17,10 +17,6 @@ import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,15 +24,11 @@ import javax.inject.Inject
 class GameFinishFragmentViewModel @Inject constructor(
     args: SavedStateHandle,
     prefs: Preferences,
-    db: HighScoreDB,
+    private val db: HighScoreDatabase,
     private val app: Application,
     private val crashReporter: CrashReporter,
     private val gameHelper: GooglePlayGamesHelper
 ) : ViewModel() {
-    private val db: Deferred<HighScoreDB> = viewModelScope.async(Dispatchers.IO) {
-        db.apply { open() }
-    }
-
     // game data to display
     val game: Game
     private var lastStatus: MessageServerStatus? = null
@@ -71,17 +63,6 @@ class GameFinishFragmentViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        GlobalScope.launch {
-            try {
-                db.await().close()
-            } catch (e: Exception) {
-                crashReporter.logException(e)
-            }
-        }
-        super.onCleared()
-    }
-
     private fun assignClientNames(gameMode: GameMode, scores: List<PlayerScore>, lastStatus: MessageServerStatus?) {
         val context: Context = app
 
@@ -98,15 +79,13 @@ class GameFinishFragmentViewModel @Inject constructor(
 
     private suspend fun addScores(scores: List<PlayerScore>, gameMode: GameMode) {
         try {
-            val db = db.await()
-
             scores
                 .filter { it.isLocal }
                 .forEach { score ->
-                    var flags = 0
-                    if (score.isPerfect) flags = flags or HighScoreDB.FLAG_IS_PERFECT
-
-                    db.addHighScore(gameMode, score.totalPoints, score.stonesLeft, score.color1, score.place, flags)
+                    db.add(
+                        gameMode = gameMode,
+                        score = score
+                    )
                 }
         } catch (e: SQLiteException) {
             crashReporter.logException(e)
@@ -144,8 +123,6 @@ class GameFinishFragmentViewModel @Inject constructor(
         gameHelper.increment(R.string.achievement_addicted, 1)
 
         try {
-            val db = db.await()
-
             var n = 0
             for (i in 0..3) if (db.getNumberOfPlace(GameMode.GAMEMODE_4_COLORS_4_PLAYERS, 1, i) > 0) n++
 
@@ -156,7 +133,7 @@ class GameFinishFragmentViewModel @Inject constructor(
 
             gameHelper.submitScore(
                 R.string.leaderboard_games_won,
-                db.getNumberOfPlace(null, 1).toLong()
+                db.getNumberOfPlace(gameMode = null, place = 1, color = null).toLong()
             )
 
             gameHelper.submitScore(

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.Preferences
-import de.saschahlusiak.freebloks.database.HighScoreDB
+import de.saschahlusiak.freebloks.database.HighScoreDatabase
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
@@ -25,21 +25,19 @@ typealias RowData = Pair<Int, String>
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
     prefs: Preferences,
-    private val db: HighScoreDB
+    private val db: HighScoreDatabase
 ) : ViewModel() {
     internal val gameMode = MutableStateFlow(prefs.gameMode)
 
     val signedIn = gamesHelper.signedIn
 
     init {
-        db.open()
-
         signedIn
             .onEach { signedIn ->
                 if (signedIn) {
                     gamesHelper.submitScore(
                         R.string.leaderboard_games_won,
-                        db.getNumberOfPlace(null, 1).toLong()
+                        db.getNumberOfPlace(null, 1, null).toLong()
                     )
                     gamesHelper.submitScore(
                         R.string.leaderboard_points_total,
@@ -47,10 +45,6 @@ class StatisticsViewModel @Inject constructor(
                     )
                 }
             }
-    }
-
-    override fun onCleared() {
-        db.close()
     }
 
     internal val data: StateFlow<List<RowData>> = gameMode
@@ -83,7 +77,7 @@ class StatisticsViewModel @Inject constructor(
                             2 -> R.string.statistics_label_3rd
                             else -> R.string.statistics_label_4th
                         }
-                        val n = db.getNumberOfPlace(gameMode, i + 1)
+                        val n = db.getNumberOfPlace(gameMode, i + 1, null)
                         add(label to String.format("%.1f%%", 100.0f * n.toFloat() / games.toFloat()))
                         i++
                     }
