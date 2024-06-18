@@ -17,7 +17,10 @@ import javax.inject.Singleton
         HighScoreEntry::class
     ],
     version = 1,
-    exportSchema = false
+//    autoMigrations = [
+//        AutoMigration(from = 1, to = 2)
+//    ],
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun highScoreDao(): HighScoreDao

@@ -6,6 +6,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.plugin.compose'
+    id 'androidx.room'
 }
 
 android {
@@ -59,6 +60,9 @@ android {
             returnDefaultValues = true
             includeAndroidResources = true
         }
+    }
+    room {
+        schemaDirectory "$projectDir/schemas"
     }
     buildFeatures {
         buildConfig true
