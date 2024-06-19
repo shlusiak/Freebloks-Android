@@ -37,7 +37,7 @@
     <string name="statistics">Statistiques</string>
     <string name="prefs_clear_statistics">Rémettre à zéro</string>
 
-    <string name="statistics_label_games_played">Parties jouées</string>
+    <string name="statistics_label_games_played">Parties</string>
     <string name="statistics_label_good_games">Bonnes parties (+15)</string>
     <string name="statistics_label_perfect_games">Parties parfaites (+20)</string>
     <string name="statistics_label_1st">1re place</string>

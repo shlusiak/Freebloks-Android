@@ -44,7 +44,7 @@ class StatisticsBottomSheet : BottomSheetDialogFragment() {
                 StatisticsContent(
                     modifier = Modifier.padding(top = 16.dp),
                     gameMode = viewModel.gameMode.collectAsState().value,
-                    data = viewModel.data.collectAsState().value,
+                    data = viewModel.data.collectAsState(null).value,
                     onGameMode = { viewModel.gameMode.value = it }
                 )
             }

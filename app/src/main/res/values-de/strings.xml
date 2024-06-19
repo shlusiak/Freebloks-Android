@@ -45,15 +45,15 @@
     <string name="prefs_clear_statistics">Zurücksetzen</string>
     <string name="prefs_clear_statistics_long">Alle Statistiken zurücksetzen</string>
 
-    <string name="statistics_label_games_played">Spiele insgesamt</string>
-    <string name="statistics_label_good_games">Gute Spiele (+15)</string>
-    <string name="statistics_label_perfect_games">Perfekte Spiele (+20)</string>
-    <string name="statistics_label_1st">Erster Platz</string>
-    <string name="statistics_label_2nd">Zweiter Platz</string>
-    <string name="statistics_label_3rd">Dritter Platz</string>
-    <string name="statistics_label_4th">Vierter Platz</string>
+    <string name="statistics_label_games_played">Spiele</string>
+    <string name="statistics_label_good_games">Gute (+15)</string>
+    <string name="statistics_label_perfect_games">Perfekt (+20)</string>
+    <string name="statistics_label_1st">Siege</string>
+    <string name="statistics_label_2nd">Zweiter</string>
+    <string name="statistics_label_3rd">Dritter</string>
+    <string name="statistics_label_4th">Vierter</string>
     <string name="statistics_label_stones_used">Verwendete Steine</string>
-    <string name="statistics_label_points_total">Punkte insgesamt</string>
+    <string name="statistics_label_points_total">Punkte</string>
 
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Anmelden</string>

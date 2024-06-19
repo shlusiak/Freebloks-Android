@@ -19,12 +19,13 @@ class StatisticsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val data by viewModel.data.collectAsState()
+            val data by viewModel.data.collectAsState(null)
             val gameMode by viewModel.gameMode.collectAsState()
             val signedIn by viewModel.signedIn.collectAsState(initial = null)
 
             StatisticsScreen(
-                data = data, gameMode = gameMode,
+                data = data,
+                gameMode = gameMode,
                 signedIn = signedIn,
                 onBack = { finish() },
                 onSignIn = ::onSignIn,

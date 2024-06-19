@@ -60,9 +60,9 @@
     <string name="clear_statistics_question">Are you sure you want to clear all statistics?</string>
 
     <string name="statistics_label_games_played">Games played</string>
-    <string name="statistics_label_good_games">Good games (+15)</string>
-    <string name="statistics_label_perfect_games">Perfect games (+20)</string>
-    <string name="statistics_label_1st">1st place</string>
+    <string name="statistics_label_good_games">Good (+15)</string>
+    <string name="statistics_label_perfect_games">Perfect (+20)</string>
+    <string name="statistics_label_1st">Wins</string>
     <string name="statistics_label_2nd">2nd place</string>
     <string name="statistics_label_3rd">3rd place</string>
     <string name="statistics_label_4th">4th place</string>

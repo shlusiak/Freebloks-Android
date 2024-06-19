@@ -9,8 +9,12 @@ import de.saschahlusiak.freebloks.database.HighScoreDatabase
 import de.saschahlusiak.freebloks.database.entity.HighScoreEntry
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.Shape
+import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.model.colorOf
+import de.saschahlusiak.freebloks.model.stoneColors
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +29,21 @@ import javax.inject.Inject
 
 typealias RowData = Pair<Int, String>
 
+typealias Percent = Int
+
+data class StatisticsData(
+    val gameMode: GameMode,
+    val totalGames: Int,
+    val totalPoints: Int,
+    val places: List<Int>,
+    val perfectGames: Int,
+    val goodGames: Int,
+    val winsByColor: List<Pair<StoneColor, Percent>>
+) {
+    val perfectGamesPercent = (perfectGames * 100) / totalGames.coerceAtLeast(1)
+    val goodGamesPercent = (goodGames * 100) / totalGames.coerceAtLeast(1)
+}
+
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
@@ -33,7 +52,7 @@ class StatisticsViewModel @Inject constructor(
 ) : ViewModel() {
     internal val gameMode = MutableStateFlow(prefs.gameMode)
 
-    val signedIn = gamesHelper.signedIn
+    internal val signedIn = gamesHelper.signedIn
 
     init {
         signedIn
@@ -57,16 +76,14 @@ class StatisticsViewModel @Inject constructor(
         }
     }
 
-    internal val data: StateFlow<List<RowData>> = gameMode
+    internal val data: Flow<StatisticsData> = gameMode
         .flatMapLatest { mode ->
             db.getAllAsFlow(mode)
                 .map { list -> dataForMode(mode, list) }
         }
         .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-
-    private fun dataForMode(gameMode: GameMode, entries: List<HighScoreEntry>): List<RowData> = buildList {
+    private fun dataForMode(gameMode: GameMode, entries: List<HighScoreEntry>): StatisticsData {
         val games = entries.size
         val points = entries.sumOf { it.points }
         val perfect = entries.count { it.isPerfect }
@@ -75,55 +92,25 @@ class StatisticsViewModel @Inject constructor(
 
         val stonesUsed = games * Shape.COUNT - stonesLeft
 
-        add(R.string.statistics_label_games_played to games.toString())
-
-        if (games > 0) {
-            add(
-                R.string.statistics_label_good_games to String.format(
-                    Locale.ROOT,
-                    "%.1f%%",
-                    100.0f * good.toFloat() / games.toFloat()
-                )
-            )
-
-            add(
-                R.string.statistics_label_perfect_games to String.format(
-                    Locale.ROOT,
-                    "%.1f%%",
-                    100.0f * perfect.toFloat() / games.toFloat()
-                )
-            )
-
-            var i = 0
-            while (i < gameMode.colors) {
-                val label = when (i) {
-                    0 -> R.string.statistics_label_1st
-                    1 -> R.string.statistics_label_2nd
-                    2 -> R.string.statistics_label_3rd
-                    else -> R.string.statistics_label_4th
-                }
-                val n = entries.count {
-                    it.place == i + 1
-                }
-                add(
-                    label to String.format(
-                        Locale.ROOT,
-                        "%.1f%%", 100.0f * n.toFloat() / games.toFloat()
-                    )
-                )
-                i++
-            }
-
-            add(
-                R.string.statistics_label_stones_used to String.format(
-                    Locale.ROOT,
-                    "%.1f%%",
-                    100.0f * stonesUsed.toFloat() / games.toFloat() / Shape.COUNT.toFloat()
-                )
-            )
+        val places = (1..gameMode.colors).map { place ->
+            entries.count { it.place == place }
         }
 
-        add(R.string.statistics_label_points_total to String.format("%d", points))
+        val winsByColor = entries.groupBy { it.playerColor }
+            .map { (player, list) ->
+                val wins = list.count { it.place == 1 }
+                gameMode.colorOf(player) to (wins * 100 / list.size.coerceAtLeast(1))
+            }.sortedByDescending { it.second }
+
+        return StatisticsData(
+            gameMode = gameMode,
+            totalGames = games,
+            totalPoints = points,
+            places = places,
+            perfectGames = perfect,
+            goodGames = good,
+            winsByColor = winsByColor
+        )
     }
 
     companion object {

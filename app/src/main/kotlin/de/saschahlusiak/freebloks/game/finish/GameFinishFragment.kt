@@ -102,7 +102,7 @@ class GameFinishFragment : DialogFragment() {
         ModalBottomSheet(onDismissRequest = onDismiss) {
             StatisticsContent(
                 gameMode = viewModel.gameMode.collectAsState().value,
-                data = viewModel.data.collectAsState().value,
+                data = viewModel.data.collectAsState(null).value,
                 onGameMode = { viewModel.gameMode.value = it }
             )
         }
