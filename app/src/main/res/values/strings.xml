@@ -55,7 +55,9 @@
     <string name="sound_off">Sound Off</string>
 
     <string name="statistics">Statistics</string>
-    <string name="clear_statistics">Reset All</string>
+    <string name="prefs_clear_statistics">Reset</string>
+    <string name="prefs_clear_statistics_long">Reset all statistics</string>
+    <string name="clear_statistics_question">Are you sure you want to clear all statistics?</string>
 
     <string name="statistics_label_games_played">Games played</string>
     <string name="statistics_label_good_games">Good games (+15)</string>

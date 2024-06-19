@@ -15,11 +15,11 @@ interface HighScoreDao {
     @Query("DELETE FROM highscores")
     suspend fun clearAll()
 
-    @Query("SELECT * from highscores WHERE gamemode = :gameMode")
-    fun getAllAsFlow(gameMode: Int): Flow<List<HighScoreEntry>>
+    @Query("SELECT * from highscores WHERE (:gameMode IS NULL OR gamemode = :gameMode)")
+    fun getAllAsFlow(gameMode: Int?): Flow<List<HighScoreEntry>>
 
-    @Query("SELECT COUNT(1) FROM highscores WHERE gamemode = :gameMode")
-    suspend fun getTotalNumberOfGames(gameMode: Int): Int
+    @Query("SELECT COUNT(1) FROM highscores WHERE (:gameMode IS NULL OR gamemode = :gameMode)")
+    suspend fun getTotalNumberOfGames(gameMode: Int?): Int
 
     @Query("SELECT COUNT(1) FROM highscores WHERE (:gameMode IS NULL OR gamemode = :gameMode) AND :place = place AND (:color IS NULL OR playercolor = :color)")
     suspend fun getTotalNumberOfPlace(gameMode: Int?, place: Int, color: Int?): Int

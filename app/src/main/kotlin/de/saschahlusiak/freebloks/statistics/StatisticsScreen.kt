@@ -177,13 +177,14 @@ internal val previewData: List<RowData>
         )
     }
 
-
 @Composable
 @Previews
 private fun Preview() {
-    AppTheme {
+    MaterialTheme {
         StatisticsScreen(
-            data = previewData, gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS, signedIn = true,
+            data = previewData,
+            gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
+            signedIn = true,
             onBack = { },
             onSignIn = { },
             onLeaderboards = { },

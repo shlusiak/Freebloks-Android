@@ -35,7 +35,7 @@
     <string name="sound_off">Som Desligado</string>
 
     <string name="statistics">Estatísticas</string>
-    <string name="clear_statistics">Restaurar Tudo</string>
+    <string name="prefs_clear_statistics">Restaurar Tudo</string>
 
     <string name="statistics_label_games_played">Partidas jogadas</string>
     <string name="statistics_label_good_games">Boas partidas (+15)</string>

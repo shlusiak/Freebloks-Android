@@ -28,7 +28,7 @@ class HighScoreDatabase @Inject constructor(
         )
     }
 
-    fun getAllAsFlow(gameMode: GameMode) = dao.getAllAsFlow(gameMode.ordinal)
+    fun getAllAsFlow(gameMode: GameMode?) = dao.getAllAsFlow(gameMode?.ordinal)
 
     suspend fun clear() = dao.clearAll()
 

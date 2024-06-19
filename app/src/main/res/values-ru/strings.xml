@@ -33,7 +33,7 @@
     <string name="sound_off">Звук выкл.</string>
 
     <string name="statistics">Статистика</string>
-    <string name="clear_statistics">Сбросить все</string>
+    <string name="prefs_clear_statistics">Сбросить все</string>
 
     <string name="statistics_label_games_played">Игр сыграно</string>
     <string name="statistics_label_good_games">Хороших игр (+15)</string>

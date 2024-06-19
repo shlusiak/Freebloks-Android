@@ -5,9 +5,11 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.annotation.XmlRes
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
@@ -24,6 +26,7 @@ import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -36,7 +39,7 @@ import javax.inject.Inject
  * - [KEY_SHOW_CATEGORY], true or false whether to add the category header
  */
 @AndroidEntryPoint
-class SettingsFragment: PreferenceFragmentCompat() {
+class SettingsFragment : PreferenceFragmentCompat() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(SettingsActivityViewModel::class.java) }
 
     private val REQUEST_GOOGLE_SIGN_IN = 1000
@@ -110,11 +113,11 @@ class SettingsFragment: PreferenceFragmentCompat() {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_GOOGLE_SIGN_IN -> viewModel.googleHelper.onActivityResult(resultCode, data) { error ->
                 MaterialAlertDialogBuilder(requireContext()).apply {
                     setMessage(error ?: getString(R.string.google_play_games_signin_failed))
-                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss()}
+                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss() }
                     show()
                 }
             }
@@ -159,6 +162,22 @@ class SettingsFragment: PreferenceFragmentCompat() {
             true
         }
 
+        lifecycleScope.launch {
+            viewModel.canClearStatistics.collect {
+                findPreference<Preference>("reset_statistics")?.isEnabled = it
+            }
+        }
+        findPreference<Preference>("reset_statistics")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_statistics_clear", null)
+            MaterialAlertDialogBuilder(requireContext()).apply {
+                setMessage(R.string.clear_statistics_question)
+                setPositiveButton(android.R.string.ok) { d, _ -> viewModel.clearStatistics() }
+                setNegativeButton(android.R.string.cancel, null)
+                show()
+            }
+            true
+        }
+
         findPreference<Preference>("googleplus_signin")?.setOnPreferenceClickListener {
             if (helper.isSignedIn) {
                 helper.startSignOut()
@@ -170,7 +189,11 @@ class SettingsFragment: PreferenceFragmentCompat() {
         findPreference<Preference>("googleplus_leaderboard")?.setOnPreferenceClickListener {
             if (!helper.isSignedIn) return@setOnPreferenceClickListener false
             analytics.logEvent("settings_leaderboard_click", null)
-            helper.startLeaderboardIntent(this@SettingsFragment, getString(R.string.leaderboard_points_total), REQUEST_GOOGLE_LEADERBOARD)
+            helper.startLeaderboardIntent(
+                this@SettingsFragment,
+                getString(R.string.leaderboard_points_total),
+                REQUEST_GOOGLE_LEADERBOARD
+            )
             true
         }
 

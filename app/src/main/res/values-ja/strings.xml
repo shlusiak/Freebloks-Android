@@ -33,7 +33,7 @@
     <string name="sound_off">サウンド オフ</string>
 
     <string name="statistics">状態</string>
-    <string name="clear_statistics">すべてリセット</string>
+    <string name="prefs_clear_statistics">すべてリセット</string>
 
     <string name="statistics_label_games_played">プレイしたゲーム</string>
     <string name="statistics_label_good_games">グッド ゲーム (+15)</string>

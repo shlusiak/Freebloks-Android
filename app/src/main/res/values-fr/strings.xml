@@ -35,7 +35,7 @@
     <string name="sound_off">Effets sonores désactivés</string>
 
     <string name="statistics">Statistiques</string>
-    <string name="clear_statistics">Rémettre à zéro</string>
+    <string name="prefs_clear_statistics">Rémettre à zéro</string>
 
     <string name="statistics_label_games_played">Parties jouées</string>
     <string name="statistics_label_good_games">Bonnes parties (+15)</string>

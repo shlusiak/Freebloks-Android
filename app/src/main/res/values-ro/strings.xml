@@ -50,7 +50,7 @@
     <string name="sound_off">Sunet oprit</string>
 
     <string name="statistics">Statistici</string>
-    <string name="clear_statistics">Resetează tot</string>
+    <string name="prefs_clear_statistics">Resetează tot</string>
 
     <string name="statistics_label_games_played">Jocuri finalizate</string>
     <string name="statistics_label_good_games">Jocuri bune (+15)</string>

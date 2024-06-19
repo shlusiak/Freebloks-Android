@@ -42,7 +42,8 @@
     <string name="custom_game">Benutzerdefiniertes Spiel</string>
 
     <string name="statistics">Statistiken</string>
-    <string name="clear_statistics">Zurücksetzen</string>
+    <string name="prefs_clear_statistics">Zurücksetzen</string>
+    <string name="prefs_clear_statistics_long">Alle Statistiken zurücksetzen</string>
 
     <string name="statistics_label_games_played">Spiele insgesamt</string>
     <string name="statistics_label_good_games">Gute Spiele (+15)</string>

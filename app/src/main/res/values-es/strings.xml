@@ -139,7 +139,7 @@
     <string name="bluetooth_disabled_message">Bluetooth desactivado o ningún dispositivo emparejado</string>
     <string name="multiple_players">Múltiples jugadores</string>
     <string name="statistics">Estadísticas</string>
-    <string name="clear_statistics">Eliminar todo</string>
+    <string name="prefs_clear_statistics">Eliminar todo</string>
     <string name="google_play_games">Google Play Juegos</string>
     <string name="google_play_games_signin">Iniciar sesión</string>
     <string name="google_play_games_signin_long">Iniciar sesión en Google Play Juegos</string>
