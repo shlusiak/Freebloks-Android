@@ -30,10 +30,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,7 +58,8 @@ internal fun StatisticsScreen(
     onSignIn: () -> Unit,
     onLeaderboards: () -> Unit,
     onAchievements: () -> Unit,
-    setGameMode: (GameMode) -> Unit
+    setGameMode: (GameMode) -> Unit,
+    onReset: () -> Unit
 ) {
     AppTheme {
         Scaffold(
@@ -104,7 +107,8 @@ internal fun StatisticsScreen(
                 modifier = Modifier.padding(padding),
                 gameMode = gameMode,
                 data = data,
-                onGameMode = setGameMode
+                onGameMode = setGameMode,
+                onReset = onReset
             )
         }
     }
@@ -115,7 +119,8 @@ internal fun StatisticsContent(
     modifier: Modifier = Modifier,
     gameMode: GameMode,
     data: StatisticsData?,
-    onGameMode: (GameMode) -> Unit
+    onGameMode: (GameMode) -> Unit,
+    onReset: () -> Unit
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Box(
@@ -133,6 +138,13 @@ internal fun StatisticsContent(
 
         if (data != null) {
             StatisticsTable(data)
+
+            TextButton(
+                onClick = onReset,
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+            ) {
+                Text(text = stringResource(id = R.string.prefs_clear_statistics))
+            }
         } else {
             Row(
                 modifier = Modifier
@@ -178,42 +190,13 @@ private fun LazyListScope.StatisticsTable(data: List<RowData>) {
 }
 
 @Composable
-private fun ColumnScope.ColorRow(modifier: Modifier, data: List<Pair<StoneColor, Percent>>) {
-    if (data.isEmpty()) return
-    val res = LocalContext.current.resources
-
-    Text(
-        text = "Wins by colour",
-        modifier = Modifier.align(Alignment.CenterHorizontally),
-        style = MaterialTheme.typography.titleMedium
-    )
-
-    Row(
-        modifier,
-        horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingSmall),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        data.forEachIndexed { index, (color, percent) ->
-            if (index > 0) {
-                Text(
-                    ">",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Card(
-                label = color.getName(res),
-                value = "$percent%",
-                color = color.backgroundColor,
-                contentColor = Color.White
-            )
-        }
-    }
-}
-
-@Composable
-private fun ColumnScope.PlacesRow(modifier: Modifier, totalGames: Int, places: List<Int>) {
+private fun ColumnScope.PlacesRow(
+    modifier: Modifier,
+    totalGames: Int,
+    places: List<Int>,
+    firstColor: Color,
+    firstContentColor: Color = MaterialTheme.colorScheme.contentColorFor(firstColor)
+) {
     Row(
         modifier,
         horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingSmall),
@@ -241,7 +224,8 @@ private fun ColumnScope.PlacesRow(modifier: Modifier, totalGames: Int, places: L
                 label = stringResource(id = label),
                 value = times.toString(),
                 percent = "$percent%",
-                color = if (index == 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer
+                color = if (index == 0) firstColor else MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = if (index == 0) firstContentColor else MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
     }
@@ -254,7 +238,7 @@ private fun StatisticsTable(data: StatisticsData) {
         modifier = Modifier
             .padding(MaterialTheme.dimensions.dialogPadding)
             .fillMaxWidth(),
-        verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingLarge)
+        verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
     ) {
         Row(
             modifier = Modifier
@@ -286,7 +270,8 @@ private fun StatisticsTable(data: StatisticsData) {
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min),
             totalGames = data.totalGames,
-            places = data.places
+            places = data.places,
+            firstColor = MaterialTheme.colorScheme.primary
         )
 
         Row(
@@ -310,18 +295,31 @@ private fun StatisticsTable(data: StatisticsData) {
             )
         }
 
-        ColorRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            data.winsByColor
-        )
+        HorizontalDivider()
+
+        data.placesByColor.forEach { (color, places) ->
+            Text(
+                text = stringResource(id = color.labelResId),
+                style = MaterialTheme.typography.labelMedium
+            )
+
+            PlacesRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
+                totalGames = places.sum(),
+                places = places,
+                firstColor = color.foregroundColor.copy(alpha = 0.35f)
+                    .compositeOver(MaterialTheme.colorScheme.inverseSurface),
+                firstContentColor = MaterialTheme.colorScheme.inverseOnSurface
+            )
+        }
     }
 }
 
 @Composable
 @Previews
-private fun Preview1() {
+private fun Preview() {
     AppTheme {
         val data = StatisticsData(
             gameMode = GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
@@ -330,11 +328,11 @@ private fun Preview1() {
             places = listOf(2, 51, 63, 0),
             perfectGames = 17,
             goodGames = 5,
-            winsByColor = listOf(
-                StoneColor.Blue to 40,
-                StoneColor.Red to 30,
-                StoneColor.Green to 20,
-                StoneColor.Yellow to 10,
+            placesByColor = listOf(
+                StoneColor.Blue to listOf(40, 0, 0, 0),
+                StoneColor.Red to listOf(30, 5, 5, 3),
+                StoneColor.Green to listOf(20, 7),
+                StoneColor.Yellow to listOf(1, 2, 3, 4),
             )
         )
 
@@ -343,7 +341,8 @@ private fun Preview1() {
                 modifier = Modifier,
                 data = data,
                 gameMode = data.gameMode,
-                onGameMode = {}
+                onGameMode = {},
+                onReset = {}
             )
         }
     }

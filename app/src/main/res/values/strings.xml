@@ -62,10 +62,10 @@
     <string name="statistics_label_games_played">Games played</string>
     <string name="statistics_label_good_games">Good (+15)</string>
     <string name="statistics_label_perfect_games">Perfect (+20)</string>
-    <string name="statistics_label_1st">Wins</string>
-    <string name="statistics_label_2nd">2nd place</string>
-    <string name="statistics_label_3rd">3rd place</string>
-    <string name="statistics_label_4th">4th place</string>
+    <string name="statistics_label_1st">1st</string>
+    <string name="statistics_label_2nd">2nd</string>
+    <string name="statistics_label_3rd">3rd</string>
+    <string name="statistics_label_4th">4th</string>
     <string name="statistics_label_stones_used">Stones used</string>
     <string name="statistics_label_points_total">Points total</string>
 

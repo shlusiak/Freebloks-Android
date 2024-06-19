@@ -31,7 +31,9 @@ class StatisticsActivity : AppCompatActivity() {
                 onSignIn = ::onSignIn,
                 onLeaderboards = ::onLeaderboards,
                 onAchievements = ::onAchievements,
-            ) { viewModel.gameMode.value = it }
+                setGameMode = { viewModel.gameMode.value = it },
+                onReset = ::onResetStatistics
+            )
         }
     }
 
@@ -41,6 +43,15 @@ class StatisticsActivity : AppCompatActivity() {
 
     private fun onAchievements() {
         viewModel.gamesHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
+    }
+
+    private fun onResetStatistics() {
+        MaterialAlertDialogBuilder(this).apply {
+            setMessage(R.string.clear_statistics_question)
+            setPositiveButton(android.R.string.ok) { d, _ -> viewModel.clear() }
+            setNegativeButton(android.R.string.cancel, null)
+            show()
+        }
     }
 
     private fun onLeaderboards() {

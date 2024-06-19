@@ -38,7 +38,7 @@ data class StatisticsData(
     val places: List<Int>,
     val perfectGames: Int,
     val goodGames: Int,
-    val winsByColor: List<Pair<StoneColor, Percent>>
+    val placesByColor: List<Pair<StoneColor, List<Int>>>
 ) {
     val perfectGamesPercent = (perfectGames * 100) / totalGames.coerceAtLeast(1)
     val goodGamesPercent = (goodGames * 100) / totalGames.coerceAtLeast(1)
@@ -88,19 +88,18 @@ class StatisticsViewModel @Inject constructor(
         val points = entries.sumOf { it.points }
         val perfect = entries.count { it.isPerfect }
         val good = entries.count { it.stonesLeft == 0 } - perfect
-        val stonesLeft = entries.sumOf { it.stonesLeft }
-
-        val stonesUsed = games * Shape.COUNT - stonesLeft
+        
+        val placesByColor = entries.groupBy { it.playerColor }
+            .map { (player, list) ->
+                val places = (1..gameMode.colors).map { place ->
+                    list.count { it.place == place }
+                }
+                gameMode.colorOf(player) to places
+            }.sortedByDescending { 100f * it.second[0] / it.second.sum().coerceAtLeast(1) }
 
         val places = (1..gameMode.colors).map { place ->
             entries.count { it.place == place }
         }
-
-        val winsByColor = entries.groupBy { it.playerColor }
-            .map { (player, list) ->
-                val wins = list.count { it.place == 1 }
-                gameMode.colorOf(player) to (wins * 100 / list.size.coerceAtLeast(1))
-            }.sortedByDescending { it.second }
 
         return StatisticsData(
             gameMode = gameMode,
@@ -109,7 +108,7 @@ class StatisticsViewModel @Inject constructor(
             places = places,
             perfectGames = perfect,
             goodGames = good,
-            winsByColor = winsByColor
+            placesByColor = placesByColor
         )
     }
 

@@ -36,7 +36,10 @@ internal fun RowScope.Card(
         modifier = modifier
             .weight(1f)
             .fillMaxHeight(),
-        colors = CardDefaults.cardColors(containerColor = color, contentColor = contentColor)
+        colors = CardDefaults.cardColors(
+            containerColor = color,
+            contentColor = contentColor
+        )
     ) {
         Box(
             modifier = Modifier
@@ -63,7 +66,7 @@ internal fun RowScope.Card(
                 if (percent != null) {
                     Text(
                         percent,
-                        color = LocalContentColor.current.copy(alpha = 0.6f),
+                        color = LocalContentColor.current.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelSmall
                     )
@@ -73,15 +76,16 @@ internal fun RowScope.Card(
     }
 }
 
-
 @Composable
 @Previews
 private fun Preview() {
     AppTheme {
         Row {
             Card(
-                "Games total",
-                "17"
+                label = "Games total",
+                value = "17",
+                modifier = Modifier,
+                percent = "99%"
             )
         }
     }

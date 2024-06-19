@@ -16,6 +16,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
@@ -45,9 +46,19 @@ class StatisticsBottomSheet : BottomSheetDialogFragment() {
                     modifier = Modifier.padding(top = 16.dp),
                     gameMode = viewModel.gameMode.collectAsState().value,
                     data = viewModel.data.collectAsState(null).value,
-                    onGameMode = { viewModel.gameMode.value = it }
+                    onGameMode = { viewModel.gameMode.value = it },
+                    onReset = ::onResetStatistic
                 )
             }
+        }
+    }
+
+    private fun onResetStatistic() {
+        MaterialAlertDialogBuilder(requireContext()).apply {
+            setMessage(R.string.clear_statistics_question)
+            setPositiveButton(android.R.string.ok) { d, _ -> viewModel.clear() }
+            setNegativeButton(android.R.string.cancel, null)
+            show()
         }
     }
 }
