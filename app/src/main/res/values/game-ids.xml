@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievement_blokus_classic" translatable="false">CgkIuJHVzfEWEAIQAw</string>
+    <string name="achievement_blokus_duo" translatable="false">CgkIuJHVzfEWEAIQBA</string>
+    <string name="achievement_perfect" translatable="false">CgkIuJHVzfEWEAIQBQ</string>
+    <string name="achievement_1000_points" translatable="false">CgkIuJHVzfEWEAIQBg</string>
+    <string name="achievement_addicted" translatable="false">CgkIuJHVzfEWEAIQDA</string>
+    <string name="achievement_all_colors" translatable="false">CgkIuJHVzfEWEAIQDQ</string>
+    <string name="achievement_winner" translatable="false">CgkIuJHVzfEWEAIQCg</string>
+    <string name="achievement_loser" translatable="false">CgkIuJHVzfEWEAIQDg</string>
+    <string name="achievement_multiplayer" translatable="false">CgkIuJHVzfEWEAIQCw</string>
+    <string name="achievement_vip" translatable="false">CgkIuJHVzfEWEAIQCQ</string>
+    <string name="leaderboard_points_total" translatable="false">CgkIuJHVzfEWEAIQAg</string>
+    <string name="leaderboard_games_won" translatable="false">CgkIuJHVzfEWEAIQAQ</string>
+</resources>

@@ -18,7 +18,6 @@ import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
-import de.saschahlusiak.freebloks.statistics.StatisticsBottomSheet
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import javax.inject.Inject
@@ -108,14 +107,8 @@ class GameFinishFragment : DialogFragment() {
     private fun onStatistics() {
         analytics.logEvent("finish_statistics_click")
 
-
-        if (true) {
-            StatisticsBottomSheet().show(parentFragmentManager, null)
-
-        } else {
-            val intent = Intent(requireContext(), StatisticsActivity::class.java)
-            startActivity(intent)
-        }
+        val intent = Intent(requireContext(), StatisticsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onMainMenu() {

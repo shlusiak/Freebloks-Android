@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -16,12 +18,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtilLight
 import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.images.ImageManager
 import com.google.android.gms.games.*
+import com.google.android.gms.games.LeaderboardsClient.LeaderboardScores
+import com.google.android.gms.games.leaderboard.LeaderboardVariant
 import com.google.android.gms.tasks.OnCompleteListener
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.lang.IllegalStateException
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * This is the actual implementation of Google Play provider. The [GooglePlayGamesHelper]
@@ -39,12 +46,12 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
     private var leaderboardsClient: LeaderboardsClient? = null
     private var achievementsClient: AchievementsClient? = null
     private var playersClient: PlayersClient? = null
+    private val imageManager = ImageManager.create(context)
 
     private var currentGoogleAccount: GoogleSignInAccount? = null
 
     override val signedIn = MutableStateFlow(false)
     override val playerName = MutableStateFlow<String?>(null)
-
     override val isAvailable: Boolean
         get() = (GooglePlayServicesUtilLight.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
     override val isSignedIn: Boolean
@@ -173,4 +180,46 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
     }
 
     override fun newSignInButton(context: Context) = SignInButton(context)
+
+    private suspend fun ImageManager.loadImage(uri: Uri): Drawable? {
+        return suspendCoroutine { cont ->
+            loadImage({ _, drawable, _ ->
+                cont.resume(drawable)
+            }, uri)
+        }
+    }
+
+    override suspend fun getLeaderboard(): List<LeaderboardEntry> {
+        val client = leaderboardsClient ?: return emptyList()
+
+        val scores: LeaderboardScores = client.loadPlayerCenteredScores(
+            LEADERBOARD_POINTS_TOTAL,
+            LeaderboardVariant.TIME_SPAN_WEEKLY,
+            LeaderboardVariant.COLLECTION_PUBLIC,
+            3,
+            true
+        ).await().get() ?: return emptyList()
+
+        val playerId = playersClient?.currentPlayerId?.await()
+
+        val result = scores.scores.map { score ->
+            LeaderboardEntry(
+                rank = score.rank,
+                icon = imageManager.loadImage(score.scoreHolderIconImageUri),
+                name = score.scoreHolderDisplayName,
+                points = score.rawScore.toInt(),
+                isLocal = score.scoreHolder?.playerId == playerId
+            )
+        }
+
+        playersClient?.currentPlayer?.await()
+        scores.release()
+        Log.d(tag, "result = $result")
+
+        return result
+    }
+
+    companion object {
+        private const val LEADERBOARD_POINTS_TOTAL = "CgkIuJHVzfEWEAIQAg"
+    }
 }

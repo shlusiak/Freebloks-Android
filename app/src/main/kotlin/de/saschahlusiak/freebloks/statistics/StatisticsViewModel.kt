@@ -8,23 +8,21 @@ import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.database.HighScoreDatabase
 import de.saschahlusiak.freebloks.database.entity.HighScoreEntry
 import de.saschahlusiak.freebloks.model.GameMode
-import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
-import de.saschahlusiak.freebloks.model.stoneColors
+import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 typealias RowData = Pair<Int, String>
@@ -44,10 +42,17 @@ data class StatisticsData(
     val goodGamesPercent = (goodGames * 100) / totalGames.coerceAtLeast(1)
 }
 
+data class GooglePlayGamesData(
+    val isAvailable: Boolean,
+    val isSignedIn: Boolean,
+    val leaderboardData: List<LeaderboardEntry>
+)
+
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
     prefs: Preferences,
+    private val analytics: AnalyticsProvider,
     private val db: HighScoreDatabase
 ) : ViewModel() {
     internal val gameMode = MutableStateFlow(prefs.gameMode)
@@ -70,8 +75,18 @@ class StatisticsViewModel @Inject constructor(
             }
     }
 
-    fun clear() {
+    val gamesData = gamesHelper.signedIn
+        .map {
+            GooglePlayGamesData(
+                isAvailable = gamesHelper.isAvailable,
+                isSignedIn = it,
+                leaderboardData = gamesHelper.getLeaderboard()
+            )
+        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+
+    fun resetStatistics() {
         viewModelScope.launch {
+            analytics.logEvent("clear_statistics")
             db.clear()
         }
     }
@@ -88,7 +103,7 @@ class StatisticsViewModel @Inject constructor(
         val points = entries.sumOf { it.points }
         val perfect = entries.count { it.isPerfect }
         val good = entries.count { it.stonesLeft == 0 } - perfect
-        
+
         val placesByColor = entries.groupBy { it.playerColor }
             .map { (player, list) ->
                 val places = (1..gameMode.colors).map { place ->

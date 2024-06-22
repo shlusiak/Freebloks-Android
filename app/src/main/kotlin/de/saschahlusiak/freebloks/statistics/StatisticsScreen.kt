@@ -1,5 +1,8 @@
 package de.saschahlusiak.freebloks.statistics
 
+import android.net.Uri
+import android.widget.Space
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -14,30 +17,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
@@ -46,81 +40,20 @@ import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.game.newgame.GameModeDropDown
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.StoneColor
+import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import de.saschahlusiak.freebloks.utils.Previews
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun StatisticsScreen(
-    data: StatisticsData?,
-    gameMode: GameMode,
-    signedIn: Boolean?,
-    onBack: () -> Unit,
-    onSignIn: () -> Unit,
-    onLeaderboards: () -> Unit,
-    onAchievements: () -> Unit,
-    setGameMode: (GameMode) -> Unit,
-    onReset: () -> Unit
-) {
-    AppTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(id = R.string.statistics)) },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                        }
-                    },
-                    actions = {
-                        if (signedIn == true) {
-                            IconButton(
-                                onClick = onLeaderboards,
-                                modifier = Modifier.size(48.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_leaderboard),
-                                    contentDescription = null
-                                )
-                            }
-
-                            IconButton(
-                                onClick = onAchievements,
-                                modifier = Modifier.size(48.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_achievements),
-                                    contentDescription = null,
-                                )
-                            }
-                        }
-
-                        if (signedIn == false) {
-                            TextButton(onClick = { onSignIn() }) {
-                                Text(text = stringResource(id = R.string.google_play_games_signin))
-                            }
-                        }
-                    }
-                )
-            }
-        ) { padding ->
-            StatisticsContent(
-                modifier = Modifier.padding(padding),
-                gameMode = gameMode,
-                data = data,
-                onGameMode = setGameMode,
-                onReset = onReset
-            )
-        }
-    }
-}
 
 @Composable
 internal fun StatisticsContent(
     modifier: Modifier = Modifier,
     gameMode: GameMode,
     data: StatisticsData?,
+    gamesData: GooglePlayGamesData?,
     onGameMode: (GameMode) -> Unit,
-    onReset: () -> Unit
+    onSignIn: () -> Unit,
+    onSignOut: () -> Unit,
+    onLeaderboards: () -> Unit,
+    onAchievements: () -> Unit
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Box(
@@ -137,14 +70,7 @@ internal fun StatisticsContent(
         }
 
         if (data != null) {
-            StatisticsTable(data)
-
-            TextButton(
-                onClick = onReset,
-                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
-            ) {
-                Text(text = stringResource(id = R.string.prefs_clear_statistics))
-            }
+            StatisticsTable(data, gamesData, onSignIn, onSignOut, onLeaderboards, onAchievements)
         } else {
             Row(
                 modifier = Modifier
@@ -154,37 +80,6 @@ internal fun StatisticsContent(
             ) {
                 CircularProgressIndicator()
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-private fun LazyListScope.StatisticsTable(data: List<RowData>) {
-    data.forEachIndexed { index, (label, value) ->
-        item(key = label) {
-            Row(
-                modifier = Modifier
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
-                    .animateItemPlacement()
-            ) {
-                Text(
-                    text = stringResource(label),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Unspecified
-                )
-
-                Spacer(Modifier.weight(1f))
-
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-
-        if (index != data.lastIndex) {
-            item { HorizontalDivider() }
         }
     }
 }
@@ -232,13 +127,59 @@ private fun ColumnScope.PlacesRow(
 }
 
 @Composable
-private fun StatisticsTable(data: StatisticsData) {
+private fun ColumnScope.ColorsRow(
+    modifier: Modifier,
+    placesByColor: List<Pair<StoneColor, List<Int>>>
+) {
+    Row(
+        modifier,
+        horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingSmall),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        placesByColor.forEachIndexed { index, (stoneColor, places) ->
+            if (index > 0) {
+                Text(
+                    ">",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            val won = (places.firstOrNull() ?: 0)
+            val total = places.sum()
+            val percent = ((100 * won) / total.coerceAtLeast(1))
+
+            val color = stoneColor.foregroundColor.copy(alpha = 0.4f)
+                .compositeOver(MaterialTheme.colorScheme.inverseSurface)
+            val contentColor = MaterialTheme.colorScheme.inverseOnSurface
+
+            Card(
+                label = stringResource(id = stoneColor.labelResId),
+                value = "$percent%",
+                percent = pluralStringResource(id = R.plurals.games, count = won, won),
+                color = color,
+                contentColor = contentColor
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatisticsTable(
+    data: StatisticsData,
+    gamesData: GooglePlayGamesData?,
+    onSignIn: () -> Unit,
+    onSignOut: () -> Unit,
+    onLeaderboards: () -> Unit,
+    onAchievements: () -> Unit
+) {
     val margin = MaterialTheme.dimensions.innerPaddingMedium
     Column(
         modifier = Modifier
             .padding(MaterialTheme.dimensions.dialogPadding)
             .fillMaxWidth(),
-        verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
+        verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
+        horizontalAlignment = Alignment.Start
     ) {
         Row(
             modifier = Modifier
@@ -295,25 +236,81 @@ private fun StatisticsTable(data: StatisticsData) {
             )
         }
 
-        HorizontalDivider()
+        if (data.placesByColor.isNotEmpty()) {
+            HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium))
 
-        data.placesByColor.forEach { (color, places) ->
-            Text(
-                text = stringResource(id = color.labelResId),
-                style = MaterialTheme.typography.labelMedium
-            )
-
-            PlacesRow(
+            ColorsRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min),
-                totalGames = places.sum(),
-                places = places,
-                firstColor = color.foregroundColor.copy(alpha = 0.35f)
-                    .compositeOver(MaterialTheme.colorScheme.inverseSurface),
-                firstContentColor = MaterialTheme.colorScheme.inverseOnSurface
+                data.placesByColor
             )
         }
+
+        if (gamesData == null) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = MaterialTheme.dimensions.innerPaddingLarge)
+            )
+        }
+
+        AnimatedVisibility(visible = gamesData != null && gamesData.isAvailable) {
+            gamesData ?: return@AnimatedVisibility
+            Column(
+                verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
+            ) {
+                GooglePlayData(gamesData, onSignIn, onSignOut, onLeaderboards, onAchievements)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.GooglePlayData(
+    data: GooglePlayGamesData,
+    onSignIn: () -> Unit,
+    onSignOut: () -> Unit,
+    onLeaderboards: () -> Unit,
+    onAchievements: () -> Unit
+) {
+    HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium))
+
+    if (!data.isSignedIn) {
+        TextButton(onClick = { onSignIn() }, modifier = Modifier.fillMaxWidth()) {
+            Text(text = stringResource(id = R.string.google_play_games_signin))
+        }
+        return
+    }
+
+    data.leaderboardData.forEach {
+        LeaderboardCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            entry = it
+        )
+    }
+
+    Row(
+        modifier = Modifier.padding(top = MaterialTheme.dimensions.innerPaddingMedium),
+        horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
+    ) {
+        OutlinedButton(
+            onClick = onLeaderboards,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(text = stringResource(id = R.string.google_play_games_leaderboard))
+        }
+        OutlinedButton(
+            onClick = onAchievements,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(text = stringResource(id = R.string.google_play_games_achievements))
+        }
+    }
+
+    TextButton(onClick = { onSignOut() }, modifier = Modifier.fillMaxWidth()) {
+        Text(text = stringResource(id = R.string.google_play_games_signout))
     }
 }
 
@@ -336,13 +333,27 @@ private fun Preview() {
             )
         )
 
+        val gamesData = GooglePlayGamesData(
+            isAvailable = true,
+            isSignedIn = true,
+            leaderboardData = listOf(
+                LeaderboardEntry(4, null, "Name 1", 123, false),
+                LeaderboardEntry(5, null, "Name 2", 100, true),
+                LeaderboardEntry(6, null, "Name 3", 96, false),
+            )
+        )
+
         Surface {
             StatisticsContent(
                 modifier = Modifier,
                 data = data,
+                gamesData = gamesData,
                 gameMode = data.gameMode,
                 onGameMode = {},
-                onReset = {}
+                onSignIn = {},
+                onSignOut = {},
+                onLeaderboards = {},
+                onAchievements = {}
             )
         }
     }

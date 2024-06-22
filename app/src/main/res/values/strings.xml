@@ -69,6 +69,11 @@
     <string name="statistics_label_stones_used">Stones used</string>
     <string name="statistics_label_points_total">Points total</string>
 
+    <plurals name="games">
+        <item quantity="one">%1$d game</item>
+        <item quantity="other">%1$d games</item>
+    </plurals>
+
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Sign in</string>
     <string name="google_play_games_signin_long">Sign in to Google Play Games</string>

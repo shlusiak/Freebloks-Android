@@ -11,7 +11,7 @@ import android.graphics.drawable.Drawable
 interface Theme {
 
     /**
-     * @return true if this is an asset, false if this is a colour
+     * @return true if this is an asset, false if this is a color
      */
     val isResource: Boolean
 

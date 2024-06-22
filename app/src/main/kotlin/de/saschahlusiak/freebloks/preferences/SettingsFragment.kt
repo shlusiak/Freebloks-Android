@@ -162,22 +162,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        lifecycleScope.launch {
-            viewModel.canClearStatistics.collect {
-                findPreference<Preference>("reset_statistics")?.isEnabled = it
-            }
-        }
-        findPreference<Preference>("reset_statistics")?.setOnPreferenceClickListener {
-            analytics.logEvent("settings_statistics_clear", null)
-            MaterialAlertDialogBuilder(requireContext()).apply {
-                setMessage(R.string.clear_statistics_question)
-                setPositiveButton(android.R.string.ok) { d, _ -> viewModel.clearStatistics() }
-                setNegativeButton(android.R.string.cancel, null)
-                show()
-            }
-            true
-        }
-
         findPreference<Preference>("googleplus_signin")?.setOnPreferenceClickListener {
             if (helper.isSignedIn) {
                 helper.startSignOut()

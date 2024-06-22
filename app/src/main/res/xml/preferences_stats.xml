@@ -8,10 +8,4 @@
         android:title="@string/prefs_statistics"
         app:iconSpaceReserved="false" />
 
-    <PreferenceScreen
-        android:key="reset_statistics"
-        android:summary="@string/prefs_clear_statistics_long"
-        android:title="@string/prefs_clear_statistics"
-        app:iconSpaceReserved="false" />
-
 </PreferenceScreen>
