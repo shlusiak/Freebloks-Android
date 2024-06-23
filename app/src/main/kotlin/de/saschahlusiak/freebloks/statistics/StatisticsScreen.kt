@@ -3,6 +3,7 @@ package de.saschahlusiak.freebloks.statistics
 import android.net.Uri
 import android.widget.Space
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -156,7 +157,7 @@ private fun ColumnScope.ColorsRow(
             Card(
                 label = stringResource(id = stoneColor.labelResId),
                 value = "$percent%",
-                percent = pluralStringResource(id = R.plurals.games, count = won, won),
+                percent = pluralStringResource(id = R.plurals.games, count = total, total),
                 color = color,
                 contentColor = contentColor
             )
@@ -255,7 +256,7 @@ private fun StatisticsTable(
             )
         }
 
-        AnimatedVisibility(visible = gamesData != null && gamesData.isAvailable) {
+        AnimatedVisibility(visible = gamesData != null && gamesData.isAvailable, enter = fadeIn()) {
             gamesData ?: return@AnimatedVisibility
             Column(
                 verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
@@ -309,7 +310,7 @@ private fun ColumnScope.GooglePlayData(
         }
     }
 
-    TextButton(onClick = { onSignOut() }, modifier = Modifier.fillMaxWidth()) {
+    TextButton(onClick = { onSignOut() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
         Text(text = stringResource(id = R.string.google_play_games_signout))
     }
 }
@@ -337,9 +338,9 @@ private fun Preview() {
             isAvailable = true,
             isSignedIn = true,
             leaderboardData = listOf(
-                LeaderboardEntry(4, null, "Name 1", 123, false),
-                LeaderboardEntry(5, null, "Name 2", 100, true),
-                LeaderboardEntry(6, null, "Name 3", 96, false),
+                LeaderboardEntry(4, null, "Name 1", 123, false, { null }),
+                LeaderboardEntry(5, null, "Name 2", 100, true, { null }),
+                LeaderboardEntry(6, null, "Name 3", 96, false, { null }),
             )
         )
 

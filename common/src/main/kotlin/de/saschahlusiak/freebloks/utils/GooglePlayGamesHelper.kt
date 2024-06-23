@@ -8,58 +8,67 @@ import android.net.Uri
 import android.view.View
 import android.view.Window
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 
+@Immutable
 data class LeaderboardEntry(
     val rank: Long,
-    val icon: Drawable?,
+    val iconUri: Uri?,
     val name: String,
     val points: Int,
-    val isLocal: Boolean
+    val isLocal: Boolean,
+    val fetchImage: suspend (Uri?) -> Drawable?
 )
 
 interface GooglePlayGamesHelper {
     val signedIn: MutableStateFlow<Boolean>
     val playerName: MutableStateFlow<String?>
+    val leaderboardFlow: Flow<List<LeaderboardEntry>>
 
     val isAvailable: Boolean
 
     val isSignedIn: Boolean
 
-    fun setWindowForPopups(window: Window) { }
+    fun setWindowForPopups(window: Window) {}
 
-    fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) { }
+    fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) {}
 
-    fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) { }
+    fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) {}
 
-    fun startSignOut() { }
+    fun startSignOut() {}
 
-    fun unlock(@StringRes achievement: Int) { }
+    fun unlock(@StringRes achievement: Int) {}
 
-    fun increment(@StringRes achievement: Int, increment: Int) { }
+    fun increment(@StringRes achievement: Int, increment: Int) {}
 
-    fun submitScore(@StringRes leaderboard: Int, score: Long) { }
+    fun submitScore(@StringRes leaderboard: Int, score: Long) {}
 
-    fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
+    fun startAchievementsIntent(activity: Activity, requestCode: Int) {}
 
-    fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) { }
+    fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) {}
 
-    fun startAchievementsIntent(fragment: Fragment, requestCode: Int) { }
+    fun startAchievementsIntent(fragment: Fragment, requestCode: Int) {}
 
-    fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) { }
+    fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) {}
 
-    fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) { }
+    fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) {}
 
-    fun newSignInButton(context: Context): View? { return null }
+    fun newSignInButton(context: Context): View? {
+        return null
+    }
 
-    suspend fun getLeaderboard(): List<LeaderboardEntry>
+    suspend fun fetchPlayerImage(uri: Uri?): Drawable?
 }
 
 /**
  * This is the public facade of the Google Play interface, which is also the dummy implementation that does nothing.
  */
-class EmptyGooglePlayGamesHelper: GooglePlayGamesHelper {
+class EmptyGooglePlayGamesHelper : GooglePlayGamesHelper {
     override val signedIn = MutableStateFlow(false)
     override val playerName = MutableStateFlow<String?>(null)
 
@@ -69,31 +78,35 @@ class EmptyGooglePlayGamesHelper: GooglePlayGamesHelper {
     override val isSignedIn: Boolean
         get() = (signedIn.value == true)
 
-    override fun setWindowForPopups(window: Window) { }
+    override val leaderboardFlow = flowOf(emptyList<LeaderboardEntry>())
 
-    override fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) { }
+    override fun setWindowForPopups(window: Window) {}
 
-    override fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) { }
+    override fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) {}
 
-    override fun startSignOut() { }
+    override fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) {}
 
-    override fun unlock(achievement: Int) { }
+    override fun startSignOut() {}
 
-    override fun increment(achievement: Int, increment: Int) { }
+    override fun unlock(achievement: Int) {}
 
-    override fun submitScore(leaderboard: Int, score: Long) { }
+    override fun increment(achievement: Int, increment: Int) {}
 
-    override fun startAchievementsIntent(activity: Activity, requestCode: Int) { }
+    override fun submitScore(leaderboard: Int, score: Long) {}
 
-    override fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) { }
+    override fun startAchievementsIntent(activity: Activity, requestCode: Int) {}
 
-    override fun startAchievementsIntent(fragment: Fragment, requestCode: Int) { }
+    override fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) {}
 
-    override fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) { }
+    override fun startAchievementsIntent(fragment: Fragment, requestCode: Int) {}
 
-    override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) { }
+    override fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) {}
 
-    override fun newSignInButton(context: Context): View? { return null }
+    override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) {}
 
-    override suspend fun getLeaderboard() = emptyList<LeaderboardEntry>()
+    override fun newSignInButton(context: Context): View? {
+        return null
+    }
+
+    override suspend fun fetchPlayerImage(uri: Uri?) = null
 }

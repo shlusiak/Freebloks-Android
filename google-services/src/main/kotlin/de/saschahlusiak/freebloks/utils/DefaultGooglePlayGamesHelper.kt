@@ -20,10 +20,15 @@ import com.google.android.gms.common.GooglePlayServicesUtilLight
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.images.ImageManager
 import com.google.android.gms.games.*
-import com.google.android.gms.games.LeaderboardsClient.LeaderboardScores
 import com.google.android.gms.games.leaderboard.LeaderboardVariant
 import com.google.android.gms.tasks.OnCompleteListener
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,6 +61,12 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
         get() = (GooglePlayServicesUtilLight.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
     override val isSignedIn: Boolean
         get() = signedIn.value
+
+    private val scope = MainScope()
+
+    override val leaderboardFlow = signedIn
+        .map { getLeaderboard() }
+        .shareIn(scope, SharingStarted.WhileSubscribed(), replay = 1)
 
     init {
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)
@@ -189,34 +200,43 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
         }
     }
 
-    override suspend fun getLeaderboard(): List<LeaderboardEntry> {
-        val client = leaderboardsClient ?: return emptyList()
+    override suspend fun fetchPlayerImage(uri: Uri?) = uri?.let { imageManager.loadImage(uri) }
 
-        val scores: LeaderboardScores = client.loadPlayerCenteredScores(
+    private suspend fun getLeaderboard(): List<LeaderboardEntry> {
+        val client = leaderboardsClient ?: return emptyList()
+        val playersClient = playersClient ?: return emptyList()
+
+        val scoresTask = client.loadPlayerCenteredScores(
             LEADERBOARD_POINTS_TOTAL,
             LeaderboardVariant.TIME_SPAN_WEEKLY,
             LeaderboardVariant.COLLECTION_PUBLIC,
             3,
             true
-        ).await().get() ?: return emptyList()
+        )
 
-        val playerId = playersClient?.currentPlayerId?.await()
+        val playerIdTask = playersClient.currentPlayerId
 
-        val result = scores.scores.map { score ->
-            LeaderboardEntry(
-                rank = score.rank,
-                icon = imageManager.loadImage(score.scoreHolderIconImageUri),
-                name = score.scoreHolderDisplayName,
-                points = score.rawScore.toInt(),
-                isLocal = score.scoreHolder?.playerId == playerId
-            )
+        val scores = scoresTask.await().get()
+
+        val playerId = playerIdTask.await()
+
+        val result = coroutineScope {
+            scores?.scores?.map { score ->
+                LeaderboardEntry(
+                    rank = score.rank,
+                    iconUri = score.scoreHolderIconImageUri,
+                    name = score.scoreHolderDisplayName,
+                    points = score.rawScore.toInt(),
+                    isLocal = score.scoreHolder?.playerId == playerId,
+                    fetchImage = ::fetchPlayerImage
+                )
+            }
         }
 
-        playersClient?.currentPlayer?.await()
-        scores.release()
+        scores?.release()
         Log.d(tag, "result = $result")
 
-        return result
+        return result ?: emptyList()
     }
 
     companion object {

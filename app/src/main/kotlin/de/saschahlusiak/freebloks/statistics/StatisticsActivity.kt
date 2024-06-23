@@ -37,7 +37,7 @@ class StatisticsActivity : AppCompatActivity() {
 
         setContent {
             val data by viewModel.data.collectAsState(null)
-            val gamesData by viewModel.gamesData.collectAsState()
+            val gamesData by viewModel.gamesData.collectAsState(null)
             val gameMode by viewModel.gameMode.collectAsState()
 
             AppTheme {

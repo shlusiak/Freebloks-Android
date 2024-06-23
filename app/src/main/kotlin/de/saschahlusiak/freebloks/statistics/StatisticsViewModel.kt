@@ -75,14 +75,14 @@ class StatisticsViewModel @Inject constructor(
             }
     }
 
-    val gamesData = gamesHelper.signedIn
+    val gamesData = gamesHelper.leaderboardFlow
         .map {
             GooglePlayGamesData(
                 isAvailable = gamesHelper.isAvailable,
-                isSignedIn = it,
-                leaderboardData = gamesHelper.getLeaderboard()
+                isSignedIn = gamesHelper.isSignedIn,
+                leaderboardData = it
             )
-        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+        }
 
     fun resetStatistics() {
         viewModelScope.launch {
