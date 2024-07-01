@@ -56,7 +56,9 @@ class MultiplayerNotificationService : Service() {
         Log.d(tag, "onDestroy")
         notificationManager?.shutdown()
         notificationManager = null
-        wakeLock?.release()
+        if (wakeLock?.isHeld == true) {
+            wakeLock?.release()
+        }
         wakeLock = null
         super.onDestroy()
     }
@@ -65,7 +67,9 @@ class MultiplayerNotificationService : Service() {
         notificationManager?.stopBackgroundNotification()
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         Log.d(tag, "Releasing wakeLock")
-        wakeLock?.release()
+        if (wakeLock?.isHeld == true) {
+            wakeLock?.release()
+        }
         wakeLock = null
     }
 
@@ -73,10 +77,12 @@ class MultiplayerNotificationService : Service() {
     fun onActivityStop() {
         Log.d(tag, "Acquiring wakeLock")
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock?.release()
+        if (wakeLock?.isHeld == true) {
+            wakeLock?.release()
+        }
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "freebloks:ongoing-notification").also {
-            // 15 minutes should be plenty for the user to return to the app
-            it.acquire(15.minutes.inWholeMilliseconds)
+            // 10 minutes should be plenty for the user to return to the app
+            it.acquire(10.minutes.inWholeMilliseconds)
         }
 
         if (instantAppHelper.isInstantApp) return
@@ -89,8 +95,6 @@ class MultiplayerNotificationService : Service() {
             notification,
             FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
         )
-
-
     }
 
     fun setClient(client: GameClient?) {

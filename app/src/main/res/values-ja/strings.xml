@@ -45,6 +45,10 @@
     <string name="statistics_label_stones_used">使用ストーン</string>
     <string name="statistics_label_points_total">ポイント合計</string>
 
+    <plurals name="games">
+        <item quantity="other">%1$d ゲーム</item>
+    </plurals>
+
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">サインイン</string>
     <string name="google_play_games_signin_long">Google+ でサインイン</string>
