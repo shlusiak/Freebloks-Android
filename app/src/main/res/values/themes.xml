@@ -16,6 +16,8 @@
     </style>
 
     <style name="Theme.Freebloks" parent="Theme.Freebloks.AppBase">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
