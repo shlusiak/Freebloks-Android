@@ -90,10 +90,10 @@ android {
 dependencies {
     // for unit tests
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.12.0'
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1'
+    testImplementation 'org.mockito:mockito-core:5.14.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0'
     testImplementation 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
-    testImplementation 'org.robolectric:robolectric:4.12.2'
+    testImplementation 'org.robolectric:robolectric:4.13'
     testImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     testImplementation 'androidx.test.ext:junit:1.2.1'
 
@@ -103,22 +103,22 @@ dependencies {
     implementation project(':server')
     implementation project(':ktx')
 
-    implementation 'androidx.fragment:fragment-ktx:1.8.1'
+    implementation 'androidx.fragment:fragment-ktx:1.8.3'
 
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.51.1'
-    ksp 'com.google.dagger:hilt-compiler:2.51.1'
-    testImplementation 'com.google.dagger:hilt-android-testing:2.51.1'
-    kspTest 'com.google.dagger:hilt-android-compiler:2.51.1'
+    implementation 'com.google.dagger:hilt-android:2.52'
+    ksp 'com.google.dagger:hilt-compiler:2.52'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.52'
+    kspTest 'com.google.dagger:hilt-android-compiler:2.52'
 
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation 'com.google.android.material:material:1.12.0'
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.2'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.6'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6'
 
     // Room for data persisting
     implementation 'androidx.room:room-runtime:2.6.1'
@@ -126,12 +126,12 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.6.1'
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
-    implementation 'androidx.activity:activity-compose:1.9.0'
+    implementation(platform('androidx.compose:compose-bom:2024.09.02'))
+    implementation 'androidx.activity:activity-compose:1.9.2'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.animation:animation'
     implementation 'androidx.compose.ui:ui-tooling'
-    implementation 'io.coil-kt:coil-compose:2.6.0'
+    implementation 'io.coil-kt:coil-compose:2.7.0'
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation 'androidx.preference:preference-ktx:1.2.1'

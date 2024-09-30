@@ -25,7 +25,7 @@ dependencies {
     testImplementation 'androidx.test.ext:junit:1.2.1'
 
     implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.fragment:fragment-ktx:1.8.1'
+    implementation 'androidx.fragment:fragment-ktx:1.8.3'
 
-    api 'androidx.compose.runtime:runtime-android:1.6.8'
+    api 'androidx.compose.runtime:runtime-android:1.7.2'
 }
