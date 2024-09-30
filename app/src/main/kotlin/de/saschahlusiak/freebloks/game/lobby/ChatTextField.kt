@@ -1,12 +1,13 @@
 package de.saschahlusiak.freebloks.game.lobby
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -47,13 +48,14 @@ internal fun ChatTextField(modifier: Modifier = Modifier, onChat: (String) -> Un
         shape = CircleShape,
         trailingIcon = {
             FilledIconButton(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(end = 6.dp),
                 enabled = message.isNotBlank(),
                 onClick = {
                     onChat(message)
                     message = ""
-                }) {
-                Icon(Icons.Filled.Send, contentDescription = "")
+                }
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "")
             }
         },
         onValueChange = { message = it },
@@ -65,8 +67,8 @@ internal fun ChatTextField(modifier: Modifier = Modifier, onChat: (String) -> Un
 private fun Preview() {
     AppTheme {
         Surface {
-            ChatTextField {
-
+            Box {
+                ChatTextField { _ -> }
             }
         }
     }

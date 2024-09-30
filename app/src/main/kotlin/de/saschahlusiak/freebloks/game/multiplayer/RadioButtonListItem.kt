@@ -33,10 +33,6 @@ internal fun RadioButtonListItem(
                 interactionSource = interactionSource,
                 indication = null
             )
-            .padding(
-                horizontal = MaterialTheme.dimensions.dialogPadding,
-                vertical = 8.dp
-            )
     ) {
         RadioButton(
             selected = selected,

@@ -131,7 +131,7 @@ fun MultiplayerScreen(
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 8.dp)
             ) {
                 AnimatedVisibility(visible = type != Internet) {
                     OutlinedButton(
