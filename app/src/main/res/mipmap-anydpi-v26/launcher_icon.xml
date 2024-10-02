@@ -3,7 +3,7 @@
     <background android:drawable="@color/launcherIconBackground" />
 
     <foreground>
-        <inset android:inset="25%">
+        <inset android:inset="24%">
             <bitmap android:src="@drawable/appicon_big" />
         </inset>
     </foreground>
