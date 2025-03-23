@@ -25,6 +25,9 @@ import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import java.util.Locale
 
+import de.saschahlusiak.freebloks.theme.R as themeRes
+import androidx.core.net.toUri
+
 /**
  * Class to manage the multi player Android notification.
  *
@@ -340,6 +343,6 @@ class MultiplayerNotificationManager(
         private const val CHANNEL_DEFAULT = "default"
         private const val CHANNEL_CHAT = "chat"
 
-        private val soundUri = Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/${R.raw.chat}")
+        private val soundUri = "android.resource://${BuildConfig.APPLICATION_ID}/${themeRes.raw.chat}".toUri()
     }
 }
