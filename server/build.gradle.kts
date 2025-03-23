@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    compileSdk = 35
-    ndkVersion = "27.1.12297006"
+    compileSdk = 36
+    ndkVersion = "28.0.13004108"
 
     defaultConfig {
         minSdk = 21
