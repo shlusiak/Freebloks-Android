@@ -113,7 +113,7 @@ will. Specifically you can redistribute and/or modify it under the terms of the
 published by the Free Software Foundation, either version 2 of the License, or
 (at your option) any later version.
 
-Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2024.
+Freebloks for Android is Copyright (c) by Sascha Hlusiak, 2012-2025.
 
 Email: apps@saschahlusiak.de<br/>
 <br/>
