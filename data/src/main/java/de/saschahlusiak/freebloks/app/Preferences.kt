@@ -1,13 +1,14 @@
 package de.saschahlusiak.freebloks.app
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.defaultBoardSize
-import de.saschahlusiak.freebloks.utils.PreferenceDelegate
-import de.saschahlusiak.freebloks.view.scene.AnimationType
+import de.saschahlusiak.freebloks.util.AnimationType
+import de.saschahlusiak.freebloks.util.PreferenceDelegate
 import javax.inject.Inject
 
 class Preferences @Inject constructor(
@@ -16,17 +17,17 @@ class Preferences @Inject constructor(
     internal val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     var gameMode: GameMode
-        get() = GameMode.from(
+        get() = GameMode.Companion.from(
             prefs.getInt(
                 "gamemode",
                 GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal
             )
         )
-        set(value) = prefs.edit().putInt("gamemode", value.ordinal).apply()
+        set(value) = prefs.edit { putInt("gamemode", value.ordinal) }
 
     var fieldSize by intPreference("fieldsize", default = GameMode.GAMEMODE_4_COLORS_4_PLAYERS.defaultBoardSize())
 
-    var difficulty by intPreference("difficulty", default = GameConfig.DEFAULT_DIFFICULTY)
+    var difficulty by intPreference("difficulty", default = GameConfig.Companion.DEFAULT_DIFFICULTY)
 
     var playerName by stringPreference("player_name")
 

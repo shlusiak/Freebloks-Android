@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.utils
+package de.saschahlusiak.freebloks.util
 
 import android.content.SharedPreferences
 import kotlin.properties.ReadWriteProperty

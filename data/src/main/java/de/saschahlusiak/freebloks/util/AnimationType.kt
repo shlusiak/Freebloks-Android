@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.view.scene
+package de.saschahlusiak.freebloks.util
 
 enum class AnimationType(val settingsValue: String) {
     Full("0"),

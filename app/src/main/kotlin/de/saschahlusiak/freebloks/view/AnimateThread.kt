@@ -1,7 +1,7 @@
 package de.saschahlusiak.freebloks.view
 
 import android.util.Log
-import de.saschahlusiak.freebloks.view.scene.AnimationType
+import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene
 
 class AnimateThread(private val scene: Scene, private val execute: (Float, Float) -> Boolean) : Thread("AnimateThread") {

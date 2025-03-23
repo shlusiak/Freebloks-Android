@@ -6,6 +6,7 @@ import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackProvider
 import de.saschahlusiak.freebloks.theme.FeedbackType
+import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.Freebloks3DView

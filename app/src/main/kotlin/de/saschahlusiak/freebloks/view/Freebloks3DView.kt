@@ -15,7 +15,7 @@ import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.effects.*
-import de.saschahlusiak.freebloks.view.scene.AnimationType
+import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.view.scene.Scene
 import kotlin.math.sqrt
 import kotlin.random.Random

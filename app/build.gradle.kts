@@ -6,7 +6,6 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("androidx.room")
 }
 
 android {
@@ -59,9 +58,6 @@ android {
             isIncludeAndroidResources = true
         }
     }
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -98,6 +94,7 @@ dependencies {
     implementation(project(":game"))
     implementation(project(":server"))
     implementation(project(":ktx"))
+    implementation(project(":data"))
 
     implementation("androidx.fragment:fragment-ktx:1.8.6")
 
@@ -115,11 +112,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-
-    // Room for data persisting
-    implementation("androidx.room:room-runtime:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
 
     // Compose
     implementation(platform("androidx.compose:compose-bom:2025.03.00"))

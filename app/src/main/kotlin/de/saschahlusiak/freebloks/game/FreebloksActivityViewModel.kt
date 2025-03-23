@@ -40,7 +40,7 @@ import de.saschahlusiak.freebloks.theme.DefaultSounds
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import de.saschahlusiak.freebloks.view.scene.AnimationType
+import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.Dispatchers
