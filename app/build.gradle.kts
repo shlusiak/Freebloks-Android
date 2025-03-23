@@ -78,11 +78,6 @@ android {
         jvmToolchain(17)
     }
     namespace = "de.saschahlusiak.freebloks"
-    packaging {
-        jniLibs {
-            useLegacyPackaging = true
-        }
-    }
 }
 
 val googleImplementation by configurations
