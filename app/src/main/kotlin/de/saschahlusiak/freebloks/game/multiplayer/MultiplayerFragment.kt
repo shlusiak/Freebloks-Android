@@ -150,6 +150,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         val result = grantResults.firstOrNull() ?: return

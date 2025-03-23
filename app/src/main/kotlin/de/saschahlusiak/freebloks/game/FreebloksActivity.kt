@@ -12,7 +12,6 @@ import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -60,7 +59,7 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.app.ActivityCompat
+import androidx.core.os.BundleCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -266,7 +265,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         super.onRestoreInstanceState(savedInstanceState)
 
         if (viewModel.client == null) {
-            val game = savedInstanceState.getSerializable("game") as? Game
+            val game = BundleCompat.getSerializable(savedInstanceState, "game", Game::class.java)
             if (game != null) {
                 resumeGame(game)
             }
@@ -633,7 +632,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         try {
             val game = viewModel.loadGameState() ?: return
             resumeGame(game)
-        } catch (fe: FileNotFoundException) {
+        } catch (_: FileNotFoundException) {
             /* signal non-failure if game state file is missing */
         } catch (e: Exception) {
             e.printStackTrace()

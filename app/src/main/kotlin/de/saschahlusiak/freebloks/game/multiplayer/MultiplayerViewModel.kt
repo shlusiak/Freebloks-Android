@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothClass.Device.Major
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -25,7 +26,8 @@ class MultiplayerViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val prefs: Preferences
 ) : ViewModel() {
-    val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+    val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
 
     val bluetoothDevices = MutableStateFlow(emptyList<BluetoothDevice>())
     val type = MutableStateFlow(NetworkType.Internet)
