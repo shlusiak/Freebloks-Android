@@ -13,7 +13,7 @@ android {
     defaultConfig {
         compileSdk = 36
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
 
         versionCode = 162
         versionName = "1.6.2"

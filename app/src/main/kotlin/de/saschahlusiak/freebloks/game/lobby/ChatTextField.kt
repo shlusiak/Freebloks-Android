@@ -39,6 +39,7 @@ internal fun ChatTextField(modifier: Modifier = Modifier, onChat: (String) -> Un
             capitalization = KeyboardCapitalization.Sentences,
             imeAction = ImeAction.Send
         ),
+        singleLine = true,
         keyboardActions = KeyboardActions {
             if (message.isNotBlank()) {
                 onChat(message)
