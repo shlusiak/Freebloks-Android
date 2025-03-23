@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 /**
  * Root preferences screen, hosted in [SettingsActivity].
@@ -38,6 +39,7 @@ import javax.inject.Inject
  * - [KEY_SCREEN] which screen to show (e.g. [SCREEN_INTERFACE]. If unset, show all.
  * - [KEY_SHOW_CATEGORY], true or false whether to add the category header
  */
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(SettingsActivityViewModel::class.java) }
@@ -201,7 +203,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             setOnPreferenceClickListener {
                 analytics.logEvent("settings_show_store_click")
 
-                val uri = Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
+                val uri = Global.getMarketURLString(BuildConfig.APPLICATION_ID).toUri()
                 startActivity(Intent("android.intent.action.VIEW", uri))
 
                 true

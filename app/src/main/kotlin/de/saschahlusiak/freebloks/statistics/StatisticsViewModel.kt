@@ -14,20 +14,15 @@ import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-typealias RowData = Pair<Int, String>
-
-typealias Percent = Int
 
 data class StatisticsData(
     val gameMode: GameMode,
@@ -91,6 +86,7 @@ class StatisticsViewModel @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     internal val data: Flow<StatisticsData> = gameMode
         .flatMapLatest { mode ->
             db.getAllAsFlow(mode)
@@ -125,9 +121,5 @@ class StatisticsViewModel @Inject constructor(
             goodGames = good,
             placesByColor = placesByColor
         )
-    }
-
-    companion object {
-        private val TAG = StatisticsViewModel::class.simpleName
     }
 }
