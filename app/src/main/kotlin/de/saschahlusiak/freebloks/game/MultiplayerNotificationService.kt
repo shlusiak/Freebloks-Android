@@ -3,7 +3,7 @@ package de.saschahlusiak.freebloks.game
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -73,7 +73,6 @@ class MultiplayerNotificationService : Service() {
         wakeLock = null
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun onActivityStop() {
         Log.d(tag, "Acquiring wakeLock")
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -93,7 +92,7 @@ class MultiplayerNotificationService : Service() {
             this,
             ONGOING_NOTIFICATION_ID,
             notification,
-            FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+            FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
         )
     }
 
