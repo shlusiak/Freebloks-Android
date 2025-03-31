@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_REMOTE_MESSAGING
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.ServiceCompat
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.client.GameClient
