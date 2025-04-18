@@ -11,13 +11,13 @@ buildscript {
         // Kotlin
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20")
         classpath("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.1.20")
-        classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.20-1.0.31")
+        classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.20-2.0.0")
 
         // Hilt
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.53")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.56.1")
 
         // Room
-        classpath("androidx.room:androidx.room.gradle.plugin:2.6.1")
+        classpath("androidx.room:androidx.room.gradle.plugin:2.7.0")
 
         // https://developers.google.com/android/guides/releases
         classpath("com.google.gms:google-services:4.4.2")

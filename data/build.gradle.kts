@@ -15,6 +15,7 @@ android {
     }
     room {
         schemaDirectory("$projectDir/schemas")
+        generateKotlin = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -23,23 +24,20 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    ksp {
-        arg("room.generateKotlin", "true")
-    }
 }
 
 dependencies {
     implementation(project(":game"))
 
     // Room for data persisting
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-runtime:2.7.0")
+    implementation("androidx.room:room-ktx:2.7.0")
+    ksp("androidx.room:room-compiler:2.7.0")
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation("androidx.preference:preference-ktx:1.2.1")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.53")
-    ksp("com.google.dagger:hilt-compiler:2.53")
+    implementation("com.google.dagger:hilt-android:2.56.1")
+    ksp("com.google.dagger:hilt-compiler:2.56.1")
 }
