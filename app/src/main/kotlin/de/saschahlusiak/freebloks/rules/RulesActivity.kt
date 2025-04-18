@@ -25,6 +25,7 @@ class RulesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
         setContent {
             AppTheme {
                 RulesScreen(

@@ -52,9 +52,9 @@ fun RulesScreen(onBack: () -> Unit, onWatchVideo: () -> Unit) {
         }
     ) {
         LazyColumn(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimensions.activityPadding),
             verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
-            contentPadding = PaddingValues(MaterialTheme.dimensions.activityPadding)
+            contentPadding = it
         ) {
             item { Introduction(onWatchVideo) }
             item { HowToPlay() }

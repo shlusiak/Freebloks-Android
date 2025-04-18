@@ -3,8 +3,10 @@ package de.saschahlusiak.freebloks.preferences
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.StringRes
 import androidx.annotation.XmlRes
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
+import androidx.core.view.updatePadding
 
 /**
  * Root preferences screen, hosted in [SettingsActivity].
@@ -50,6 +53,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
     lateinit var analytics: AnalyticsProvider
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        listView.setOnApplyWindowInsetsListener { view, insets ->
+            listView.updatePadding(
+                bottom = insets.systemWindowInsetBottom
+            )
+
+            insets
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val ps = preferenceManager.createPreferenceScreen(requireContext())
