@@ -82,8 +82,8 @@ val amazonImplementation by configurations
 dependencies {
     // for unit tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.14.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation("org.mockito:mockito-core:5.17.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
     testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -99,10 +99,10 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.6")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.56.1")
-    ksp("com.google.dagger:hilt-compiler:2.56.1")
-    testImplementation("com.google.dagger:hilt-android-testing:2.56.1")
-    kspTest("com.google.dagger:hilt-android-compiler:2.56.1")
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    ksp("com.google.dagger:hilt-compiler:2.56.2")
+    testImplementation("com.google.dagger:hilt-android-testing:2.56.2")
+    kspTest("com.google.dagger:hilt-android-compiler:2.56.2")
 
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material

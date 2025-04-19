@@ -22,7 +22,7 @@ android {
 dependencies {
     implementation(project(":common"))
 
-    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.core:core-ktx:1.16.0")
 
     // For Google+ integration
     // https://developers.google.com/android/guides/releases
