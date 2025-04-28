@@ -26,6 +26,7 @@
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_20.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_20.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_30.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_30.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_40.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_40.jpg)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_50.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_50.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_60.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_60.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_70.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_70.jpg)
 [<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_80.jpg" width=180>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_80.jpg)
