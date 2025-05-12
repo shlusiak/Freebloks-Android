@@ -1,11 +1,17 @@
 package de.saschahlusiak.freebloks.preferences
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.MenuItem
 import android.view.Window
 import android.widget.FrameLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -36,6 +42,22 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             setContentView(R.layout.settings_activity_twopane)
         } else {
             setContentView(R.layout.settings_activity)
+        }
+
+        val toolbar = findViewById<Toolbar>(R.id.toolBar)
+        setSupportActionBar(toolbar)
+
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
+            val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val toolBarHeight = TypedValue()
+            view.context.theme.resolveAttribute(androidx.appcompat.R.attr.actionBarSize, toolBarHeight, true)
+
+            view.updateLayoutParams {
+                height = systemBarInsets.top + toolBarHeight.getDimension(view.resources.displayMetrics).toInt()
+            }
+            view.setPadding(0, systemBarInsets.top, 0, 0)
+
+            insets
         }
 
         supportActionBar?.apply {

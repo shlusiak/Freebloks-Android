@@ -82,7 +82,7 @@
             android:name=".preferences.SettingsActivity"
             android:exported="false"
             android:label="@string/settings"
-            android:theme="@style/Theme.Freebloks" />
+            android:theme="@style/Theme.Freebloks.NoActionBar" />
 
         <activity
             android:name=".statistics.StatisticsActivity"
