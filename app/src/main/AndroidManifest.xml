@@ -82,19 +82,19 @@
             android:name=".preferences.SettingsActivity"
             android:exported="false"
             android:label="@string/settings"
-            android:theme="@style/Theme.Freebloks.NoActionBar" />
+            android:theme="@style/Theme.Freebloks" />
 
         <activity
             android:name=".statistics.StatisticsActivity"
             android:exported="false"
             android:label="@string/statistics"
-            android:theme="@style/Theme.Freebloks.NoActionBar" />
+            android:theme="@style/Theme.Freebloks" />
 
         <activity
             android:name=".rules.RulesActivity"
             android:exported="false"
             android:label="@string/rules_title"
-            android:theme="@style/Theme.Freebloks.NoActionBar" />
+            android:theme="@style/Theme.Freebloks" />
 
         <service
             android:name=".game.MultiplayerNotificationService"

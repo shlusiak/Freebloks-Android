@@ -4,12 +4,16 @@
     <style name="Theme.Freebloks.Theme" parent="Theme.Material3.DayNight" />
 
     <style name="Theme.Freebloks.AppBase" parent="Theme.Freebloks.Theme">
-        <item name="actionBarStyle">@style/Widget.ActionBar.Surface.Elevated</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
 
         <item name="android:alertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
         <item name="materialAlertDialogTheme">@style/Theme.Freebloks.Dialog.Alert</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+        <item name="colorAccent">?colorPrimary</item>
+        <item name="colorControlActivated">?colorAccent</item>
     </style>
 
     <style name="Theme.Freebloks" parent="Theme.Freebloks.AppBase">
@@ -44,19 +48,11 @@
     </style>
 
     <style name="Theme.Freebloks.Game">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-    </style>
-
-    <style name="Theme.Freebloks.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Freebloks.Dialog" parent="ThemeOverlay.Material3.Dialog">
