@@ -25,5 +25,5 @@ dependencies {
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.fragment:fragment-ktx:1.8.6")
 
-    api("androidx.compose.runtime:runtime-android:1.7.8")
+    api("androidx.compose.runtime:runtime-android:1.8.1")
 }

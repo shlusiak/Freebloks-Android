@@ -33,5 +33,5 @@ dependencies {
 
     // https://firebase.google.com/support/release-notes/android
     implementation("com.google.firebase:firebase-analytics:22.4.0")
-    implementation("com.google.firebase:firebase-crashlytics:19.4.2")
+    implementation("com.google.firebase:firebase-crashlytics:19.4.3")
 }
