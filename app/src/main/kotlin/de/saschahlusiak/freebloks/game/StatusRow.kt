@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -173,11 +174,7 @@ fun StatusRow(data: StatusData) {
             .fillMaxWidth()
             .clip(shape)
             .background(brush)
-            .padding(
-                bottom = WindowInsets.navigationBars
-                    .asPaddingValues()
-                    .calculateBottomPadding()
-            )
+            .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(
                 vertical = 8.dp,
                 horizontal = MaterialTheme.dimensions.innerPaddingSmall

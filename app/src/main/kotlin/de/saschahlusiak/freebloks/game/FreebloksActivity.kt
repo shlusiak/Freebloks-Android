@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -350,7 +351,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                     Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
-                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .windowInsetsPadding(WindowInsets.systemBars)
                 ) {
                     TopButtonBar(Modifier)
 
