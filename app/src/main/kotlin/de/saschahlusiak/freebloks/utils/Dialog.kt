@@ -1,7 +1,10 @@
 package de.saschahlusiak.freebloks.utils
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +25,8 @@ fun Dialog(
 ) {
     Surface(
         modifier = modifier
-            .padding(horizontal = horizontalPadding)
+            .padding(horizontal = horizontalPadding, vertical = 8.dp)
+            .windowInsetsPadding(WindowInsets.ime)
             .wrapContentSize(),
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = RoundedCornerShape(MaterialTheme.dimensions.dialogCornerRadius),

@@ -58,7 +58,7 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        ComposeView(requireContext())
+        ComposeView(inflater.context)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {

@@ -2,11 +2,14 @@ package de.saschahlusiak.freebloks.game.lobby
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -80,9 +83,9 @@ fun LobbyScreen(
                 chatHistory,
                 mode = status?.gameMode ?: GameMode.GAMEMODE_4_COLORS_4_PLAYERS,
                 modifier = Modifier
-                    .heightIn(max = 200.dp)
-                    .fillMaxHeight()
                     .fillMaxWidth()
+                    .heightIn(min = 100.dp, max = 250.dp)
+                    .weight(1f, false)
             )
 
             ChatTextField(

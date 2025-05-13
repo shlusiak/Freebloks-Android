@@ -58,7 +58,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        ComposeView(requireContext())
+        ComposeView(inflater.context)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog?.window?.setBackgroundDrawable(null)
