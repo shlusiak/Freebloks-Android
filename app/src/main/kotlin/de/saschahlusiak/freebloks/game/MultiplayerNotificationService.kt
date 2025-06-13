@@ -12,7 +12,6 @@ import androidx.core.app.ServiceCompat
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.game.MultiplayerNotificationManager.Companion.ONGOING_NOTIFICATION_ID
-import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
@@ -33,9 +32,6 @@ import kotlin.time.Duration.Companion.minutes
  */
 @AndroidEntryPoint
 class MultiplayerNotificationService : Service() {
-    @Inject
-    lateinit var instantAppHelper: InstantAppHelper
-
     private var client: GameClient? = null
     private var notificationManager: MultiplayerNotificationManager? = null
 
@@ -82,7 +78,6 @@ class MultiplayerNotificationService : Service() {
             it.acquire(10.minutes.inWholeMilliseconds)
         }
 
-        if (instantAppHelper.isInstantApp) return
         val notification = notificationManager?.getBackgroundNotification() ?: return
 
         Log.d(tag, "Starting foreground service")
@@ -99,7 +94,7 @@ class MultiplayerNotificationService : Service() {
         this.client = client
         notificationManager?.shutdown()
         notificationManager = null
-        if (client != null && !instantAppHelper.isInstantApp) {
+        if (client != null) {
             notificationManager = MultiplayerNotificationManager(this, client)
         }
     }

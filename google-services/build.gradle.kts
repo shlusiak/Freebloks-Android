@@ -29,9 +29,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-games:23.2.0")
     implementation("com.google.android.gms:play-services-auth:21.3.0")
 
-    implementation("com.google.android.gms:play-services-instantapps:18.1.0")
-
     // https://firebase.google.com/support/release-notes/android
     implementation("com.google.firebase:firebase-analytics:22.4.0")
-    implementation("com.google.firebase:firebase-crashlytics:19.4.3")
+    implementation("com.google.firebase:firebase-crashlytics:19.4.4")
 }

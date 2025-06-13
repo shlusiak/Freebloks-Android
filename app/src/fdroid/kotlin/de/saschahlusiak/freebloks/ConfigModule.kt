@@ -22,7 +22,4 @@ object ConfigModule {
     @Provides
     @Singleton
     fun crashReporter(): CrashReporter = EmptyCrashReporter()
-
-    @Provides
-    fun instantAppHelper(): InstantAppHelper = DefaultInstantAppHelper()
 }

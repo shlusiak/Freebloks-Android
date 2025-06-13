@@ -23,7 +23,7 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.2.1")
 
     implementation("androidx.core:core-ktx:1.16.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.6")
+    implementation("androidx.fragment:fragment-ktx:1.8.8")
 
-    api("androidx.compose.runtime:runtime-android:1.8.1")
+    api("androidx.compose.runtime:runtime-android:1.8.2")
 }

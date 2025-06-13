@@ -40,8 +40,6 @@ import androidx.core.net.toUri
  * - A chat is received and the game is started or in the background
  *
  * The notification is ongoing while the game is in the background.
- *
- * Instant Apps do not support notifications!
  */
 @SuppressLint("MissingPermission")
 class MultiplayerNotificationManager(

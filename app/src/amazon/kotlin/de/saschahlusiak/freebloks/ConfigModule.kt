@@ -22,7 +22,4 @@ object ConfigModule {
     @Provides
     @Singleton
     fun crashReporter(app: Application): CrashReporter = CrashlyticsCrashReporter(app, isEnabled = !BuildConfig.DEBUG)
-
-    @Provides
-    fun instantAppHandler(impl: GooglePlayInstantAppHandler): InstantAppHelper = impl
 }

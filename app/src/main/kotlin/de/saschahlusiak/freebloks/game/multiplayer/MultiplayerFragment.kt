@@ -32,7 +32,6 @@ import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
-import de.saschahlusiak.freebloks.utils.InstantAppHelper
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,9 +48,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
     @Inject
     lateinit var crashReporter: CrashReporter
-
-    @Inject
-    lateinit var instantAppHelper: InstantAppHelper
 
     private val viewModel: MultiplayerViewModel by viewModels()
 
@@ -77,12 +73,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
                 bluetoothDevices = devices,
                 type = viewModel.type.collectAsState().value,
                 setType = {
-                    if (it == NetworkType.Bluetooth && instantAppHelper.isInstantApp) {
-                        // instant apps do not support Bluetooth at all, so show install prompt
-                        instantAppHelper.showInstallPrompt(requireActivity())
-                        return@MultiplayerScreen
-                    }
-
                     if (bluetoothServer == null) {
                         bluetoothServer = startBluetoothServer()
                     }
@@ -165,13 +155,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
     }
 
     private fun onHostGameClicked(name: String) {
-        if (instantAppHelper.isInstantApp) {
-            // Hosting a game is not supported in instant apps,
-            // because it can not open a socket
-            instantAppHelper.showInstallPrompt(requireActivity())
-            return
-        }
-
         analytics.logEvent("multiplayer_host_click", null)
 
         viewModel.name.value = name

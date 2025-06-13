@@ -157,7 +157,6 @@ class FreebloksActivityViewModel @Inject constructor(
     fun reloadPreferences() {
         sounds.vibrationEnabled = prefs.vibrationEnabled
         sounds.soundsEnabled = prefs.sounds
-        // Instant apps do not support notifications
         localClientNameOverride = prefs.playerName.takeIf { it.isNotBlank() }
         showSeeds = prefs.showSeeds
         showOpponents = prefs.showOpponents
