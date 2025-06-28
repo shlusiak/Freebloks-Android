@@ -167,6 +167,7 @@
     <string name="prefs_background_theme">背景</string>
     <string name="prefs_statistics">状態</string>
     <string name="prefs_statistics_long">ゲームの状態を表示します</string>
+    <string name="prefs_board_theme">ボードのテーマ</string>
     <string name="multiplayer">マルチプレイヤー</string>
     <string name="join_multiplayer_game">マルチプレイヤーゲームに参加する</string>
     <string name="server_address_hint">サーバー名またはアドレス</string>
@@ -182,4 +183,23 @@
     <string name="prefs_rules">ルールを表示&#8230;</string>
     <string name="prefs_rules_long">ゲームのルールを見せる</string>
     <string name="donation_yes">はい!</string>
+
+    <string name="rules_title">Freebloksのルール</string>
+    <string name="rules_youtube">遊び方ビデオを見る</string>
+    <string name="rules_how_to_play">遊び方</string>
+    <string name="rules_how_to_play_1">ピースのリストをスワイプして使いたいピースを見つけて選び、ボード上にドラッグします。</string>
+    <string name="rules_how_to_play_2">ピースの側面にあるハンドルを使って移動・回転・反転し、位置を調整します。タップするとボードに配置されます。</string>
+    <string name="rules_blokus_classic">Freebloksクラシック</string>
+    <string name="rules_classic_1">各プレイヤーは自分の色の21種類のピースを持ってスタートします。順番にボード上にピースを配置していきます。最も多くのピースを置いたプレイヤーが勝者です。</string>
+    <string name="rules_classic_2">最初のピースは自分の色のいずれかの角に置かなければなりません。</string>
+    <string name="rules_classic_3">新しく配置するピースは、同じ色のピースと角で接するように置く必要があります。辺での接触はできません。ただし、異なる色のピースとは辺での接触が可能です。</string>
+    <string name="rules_classic_4">置けるピースがない場合、そのプレイヤーはパスし、ゲームは続行されます。全員が置けなくなったらゲーム終了です。</string>
+    <string name="rules_variants">2人用バリエーション</string>
+    <string name="rules_variants_1">2人でプレイする場合は、通常それぞれが2色ずつ担当するか、2色を使わずにプレイします。</string>
+    <string name="rules_scoring">スコア計算</string>
+    <string name="rules_scoring_1">ゲーム終了時に、各プレイヤーがボード上に配置したピースのマスの数を合計します（例：「ペントミノ」は5ポイント）。すべてのピースを使い切った場合、最後のピースが1マスのピースなら+20点、それ以外なら+15点のボーナスが加算されます。</string>
+    <string name="rules_scoring_2">したがって、1ゲームで獲得できる最大得点は89+20=109点です。最も得点が高いプレイヤーが勝者です。</string>
+
+    <string name="rules_duo_1">Freebloksデュオは2人専用で、より小さなボードを使用しますが、使用するピースはクラシックと同じです。開始地点は中央寄りに配置されます。</string>
+    <string name="rules_junior_1">Freebloksジュニアは小さな子ども向けです。デュオと同様、14×14のボードで2人用ですが、より簡単な形状のピースを一部だけ使用します。全部で12種類のピースがあり、各プレイヤーはそれぞれ2つずつ持ちます。</string>
 </resources>
