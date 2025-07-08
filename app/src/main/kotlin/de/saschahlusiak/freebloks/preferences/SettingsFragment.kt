@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 
 /**
@@ -57,11 +59,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listView.setOnApplyWindowInsetsListener { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(listView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             listView.updatePadding(
-                bottom = insets.systemWindowInsetBottom
+                left = systemBars.left,
+                right = systemBars.right,
+                bottom = systemBars.bottom
             )
-
             insets
         }
     }

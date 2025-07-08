@@ -97,6 +97,7 @@ dependencies {
     implementation(project(":data"))
 
     implementation("androidx.fragment:fragment-ktx:1.8.8")
+    implementation("androidx.core:core-ktx:1.17.0-alpha01")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.56.2")

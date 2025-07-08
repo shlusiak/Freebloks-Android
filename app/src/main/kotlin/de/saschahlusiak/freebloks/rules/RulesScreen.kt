@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.rules
 
+import android.text.Layout
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,10 +8,15 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
@@ -31,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
@@ -60,7 +67,11 @@ fun RulesScreen(onBack: () -> Unit, onWatchVideo: () -> Unit) {
                 .padding(horizontal = MaterialTheme.dimensions.activityPadding)
                 .padding(top = contentPadding.calculateTopPadding()),
             verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
-            contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding())
+            contentPadding = PaddingValues(
+                start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
+                end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
+                bottom = contentPadding.calculateBottomPadding()
+            )
         ) {
             item { Introduction(onWatchVideo) }
 

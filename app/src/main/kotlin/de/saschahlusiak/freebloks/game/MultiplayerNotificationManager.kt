@@ -10,6 +10,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.compose.ui.graphics.toArgb
@@ -124,8 +125,7 @@ class MultiplayerNotificationManager(
         defaultChannel.enableLights(false)
         notificationManager.createNotificationChannel(defaultChannel)
 
-        val chatChannel =
-            NotificationChannel(CHANNEL_CHAT, context.getString(R.string.chat), NotificationManager.IMPORTANCE_HIGH)
+        val chatChannel = NotificationChannel(CHANNEL_CHAT, context.getString(R.string.chat), NotificationManager.IMPORTANCE_HIGH)
         chatChannel.enableVibration(true)
         chatChannel.enableLights(true)
         notificationManager.createNotificationChannel(chatChannel)
