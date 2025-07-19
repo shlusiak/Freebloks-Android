@@ -82,10 +82,10 @@ val amazonImplementation by configurations
 dependencies {
     // for unit tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.17.0")
+    testImplementation("org.mockito:mockito-core:5.18.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
-    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("org.robolectric:robolectric:4.15.1")
     testImplementation("androidx.test.espresso:espresso-core:3.6.1")
     testImplementation("androidx.test.ext:junit:1.2.1")
 
@@ -97,11 +97,11 @@ dependencies {
     implementation(project(":data"))
 
     implementation("androidx.fragment:fragment-ktx:1.8.8")
-    implementation("androidx.core:core-ktx:1.17.0-alpha01")
+    implementation("androidx.core:core-ktx:1.17.0-beta01")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.56.2")
-    ksp("com.google.dagger:hilt-compiler:2.56.2")
+    implementation("com.google.dagger:hilt-android:2.57")
+    ksp("com.google.dagger:hilt-compiler:2.57")
     testImplementation("com.google.dagger:hilt-android-testing:2.56.2")
     kspTest("com.google.dagger:hilt-android-compiler:2.56.2")
 
@@ -110,12 +110,12 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.06.01"))
+    implementation(platform("androidx.compose:compose-bom:2025.07.00"))
     implementation("androidx.activity:activity-compose:1.10.1")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.animation:animation")

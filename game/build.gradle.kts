@@ -29,5 +29,5 @@ dependencies {
 
     implementation(project(":common"))
 
-    implementation("androidx.core:core-ktx:1.17.0-alpha01")
+    implementation("androidx.core:core-ktx:1.17.0-beta01")
 }
