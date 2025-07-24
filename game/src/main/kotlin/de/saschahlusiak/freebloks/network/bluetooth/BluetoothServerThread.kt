@@ -1,6 +1,6 @@
 package de.saschahlusiak.freebloks.network.bluetooth
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
@@ -46,6 +46,7 @@ class BluetoothServerThread(
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun run() {
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
             Log.w(tag, "Bluetooth disabled, not starting bridge")

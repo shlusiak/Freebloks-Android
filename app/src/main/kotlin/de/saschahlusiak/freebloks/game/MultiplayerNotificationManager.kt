@@ -49,7 +49,7 @@ class MultiplayerNotificationManager(
 ) : GameEventObserver {
     private val notificationManager = NotificationManagerCompat.from(context)
 
-    private val FLAG_UPDATE_IMMUTABLE = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    private val FLAG_UPDATE_IMMUTABLE = if (Build.VERSION.SDK_INT >= 23) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     } else {
         PendingIntent.FLAG_UPDATE_CURRENT
@@ -71,7 +71,7 @@ class MultiplayerNotificationManager(
      * Immediately start observing game events.
      */
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannels()
         }
         client.addObserver(this)

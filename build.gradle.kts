@@ -21,7 +21,7 @@ buildscript {
 
         // https://developers.google.com/android/guides/releases
         classpath("com.google.gms:google-services:4.4.3")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.4")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.5")
     }
 }
 

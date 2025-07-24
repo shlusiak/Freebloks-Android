@@ -11,7 +11,7 @@ plugins {
 android {
     defaultConfig {
         compileSdk = 36
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
 
         versionCode = 165
@@ -102,8 +102,8 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.57")
     ksp("com.google.dagger:hilt-compiler:2.57")
-    testImplementation("com.google.dagger:hilt-android-testing:2.56.2")
-    kspTest("com.google.dagger:hilt-android-compiler:2.56.2")
+    testImplementation("com.google.dagger:hilt-android-testing:2.57")
+    kspTest("com.google.dagger:hilt-android-compiler:2.57")
 
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material

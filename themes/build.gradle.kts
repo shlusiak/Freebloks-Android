@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
     }
 
     testOptions {
@@ -28,10 +28,10 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.17.0-alpha01")
+    implementation("androidx.core:core-ktx:1.17.0-beta01")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test.ext:junit:1.2.1")
-    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("org.robolectric:robolectric:4.15.1")
 }

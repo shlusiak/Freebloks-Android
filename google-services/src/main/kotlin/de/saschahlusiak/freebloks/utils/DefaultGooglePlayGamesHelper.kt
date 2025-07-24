@@ -23,7 +23,6 @@ import com.google.android.gms.games.*
 import com.google.android.gms.games.leaderboard.LeaderboardVariant
 import com.google.android.gms.tasks.OnCompleteListener
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
