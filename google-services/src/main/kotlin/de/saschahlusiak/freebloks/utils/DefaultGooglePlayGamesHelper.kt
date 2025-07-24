@@ -40,7 +40,8 @@ import kotlin.coroutines.suspendCoroutine
  */
 @Singleton
 class DefaultGooglePlayGamesHelper @Inject constructor(
-    private val context: Application
+    private val context: Application,
+    private val crashReporter: CrashReporter
 ) : GooglePlayGamesHelper {
     private val tag = DefaultGooglePlayGamesHelper::class.java.simpleName
 
@@ -71,7 +72,9 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
         val lastAccount = GoogleSignIn.getLastSignedInAccount(context)
 
         if (lastAccount == null) {
-            googleSignInClient.silentSignIn().addOnSuccessListener { setGoogleAccount(it) }
+            googleSignInClient.silentSignIn()
+                .addOnSuccessListener { setGoogleAccount(it) }
+                .addOnFailureListener { crashReporter.logException(it) }
         } else {
             // make sure we are not immediately calling the listener in the constructor
             Handler(Looper.getMainLooper()).post {
@@ -146,25 +149,25 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
     override fun startAchievementsIntent(activity: Activity, requestCode: Int) {
         achievementsClient?.achievementsIntent?.addOnSuccessListener { intent ->
             activity.startActivityForResult(intent, requestCode)
-        }
+        }?.addOnFailureListener { crashReporter.logException(it) }
     }
 
     override fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) {
         leaderboardsClient?.getLeaderboardIntent(leaderboard)?.addOnSuccessListener { intent ->
             activity.startActivityForResult(intent, requestCode)
-        }
+        }?.addOnFailureListener { crashReporter.logException(it) }
     }
 
     override fun startAchievementsIntent(fragment: Fragment, requestCode: Int) {
         achievementsClient?.achievementsIntent?.addOnSuccessListener { intent ->
             fragment.startActivityForResult(intent, requestCode)
-        }
+        }?.addOnFailureListener { crashReporter.logException(it) }
     }
 
     override fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) {
         leaderboardsClient?.getLeaderboardIntent(leaderboard)?.addOnSuccessListener { intent ->
             fragment.startActivityForResult(intent, requestCode)
-        }
+        }?.addOnFailureListener { crashReporter.logException(it) }
     }
 
     /**
