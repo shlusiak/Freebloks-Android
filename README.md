@@ -88,7 +88,7 @@ git submodule init
 git submodule update
 ```
 
-## Suppoer
+## Support
 
 Freebloks is free software. If you like Freebloks why not consider supporting the development? You can either purchase Freebloks VIP on Google Play, or support via Paypal.
 
