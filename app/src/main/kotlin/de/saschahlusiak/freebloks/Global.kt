@@ -36,7 +36,7 @@ object Global {
     /**
      * Number of starts before the donate dialog appears / the donate symbol replaces the app icon in the menu
      */
-    const val DONATE_STARTS = 25
+    const val SUPPORT_STARTS = 25
 
     /**
      * The default server address for Internet play

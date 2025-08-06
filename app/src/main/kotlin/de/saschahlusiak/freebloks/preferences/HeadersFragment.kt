@@ -1,13 +1,12 @@
 package de.saschahlusiak.freebloks.preferences
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.TwoStatePreference
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.support.SupportFragment
 
 /**
  * The headers for [SettingsActivity] if in multi pane mode
@@ -31,12 +30,12 @@ class HeadersFragment : PreferenceFragmentCompat() {
         }
 
         // donate is not a TwoStatePreference
-        findPreference<Preference>(SettingsFragment.SCREEN_DONATE)?.apply {
+        findPreference<Preference>(SettingsFragment.SCREEN_SUPPORT)?.apply {
             if (Global.IS_VIP) {
                 isVisible = false
             } else {
                 setOnPreferenceClickListener {
-                    DonateFragment().show(parentFragmentManager, null)
+                    SupportFragment().show(parentFragmentManager, null)
                     true
                 }
             }

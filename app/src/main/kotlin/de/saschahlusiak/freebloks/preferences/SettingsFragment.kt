@@ -1,17 +1,13 @@
 package de.saschahlusiak.freebloks.preferences
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.annotation.XmlRes
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
@@ -19,7 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.*
 import de.saschahlusiak.freebloks.about.AboutFragment
-import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SCREEN
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.KEY_SHOW_CATEGORY
 import de.saschahlusiak.freebloks.preferences.SettingsFragment.Companion.SCREEN_INTERFACE
@@ -28,7 +24,6 @@ import de.saschahlusiak.freebloks.statistics.StatisticsActivity
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -229,10 +224,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        findPreference<Preference>("donate")?.setOnPreferenceClickListener {
-            analytics.logEvent("settings_donate_click")
+        findPreference<Preference>("support")?.setOnPreferenceClickListener {
+            analytics.logEvent("settings_support_click")
 
-            DonateFragment().show(parentFragmentManager, null)
+            SupportFragment().show(parentFragmentManager, null)
             true
         }
 
@@ -253,6 +248,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         const val SCREEN_MISC = "MISC"
         const val SCREEN_STATISTICS = "STATISTICS"
         const val SCREEN_ABOUT = "ABOUT"
-        const val SCREEN_DONATE = "DONATE"
+        const val SCREEN_SUPPORT = "SUPPORT"
     }
 }

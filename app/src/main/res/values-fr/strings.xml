@@ -75,7 +75,7 @@
     <string name="rate_never">Non</string>
     <string name="rate_freebloks_title">Évaluez Freebloks</string>
     <string name="rate_freebloks_text">Si vous aimez Freebloks, voudriez-vous prendre une minute pour le noter&#160;?</string>
-    <string name="rate_freebloks_donate_link">Ou achète-moi un café</string>
+    <string name="rate_freebloks_support_link">Ou achète-moi un café</string>
 
 
     <plurals name="number_of_stones_left">
@@ -124,11 +124,10 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">Soutenez les développeurs</string>
-    <string name="donation_text_line1">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!</string>
-    <string name="donation_text_line2">Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
-    <string name="donation_text_short">Soutiendriez-vous le développement avec un don de votre choix?&#160;?</string>
-    <string name="donation_yes">Suivant</string>
+    <string name="support_title">Soutenez les développeurs</string>
+    <string name="support_text_line1">Freebloks est un logiciel libre. Vous pouvez l\'utiliser et le modifier complètement gratuitement&#160;!</string>
+    <string name="support_text_line2">Mais cela ne signifie pas qu\'il n\'a pas de valeur. Donc vous pouvez décider quelle valeur le jeu a pour vous et soutenir le développement de logiciels libres.</string>
+    <string name="support_text_short">Soutiendriez-vous le développement avec un don de votre choix?&#160;?</string>
 
     <string name="action_continue">Continuer</string>
     <string name="disconnect">Déconnecter</string>
@@ -162,8 +161,8 @@
     <string name="prefs_auto_resume">Reprise automatique</string>
     <string name="prefs_rate_review_long">Veuillez évaluer ou laisser un commentaire</string>
     <string name="prefs_rate_review">Freebloks dans %1$s&#8230;</string>
-    <string name="prefs_donation_long">Veuillez soutenir le développement par un don</string>
-    <string name="prefs_donation">Café&#8230;</string>
+    <string name="prefs_support_long">Veuillez soutenir le développement par un don</string>
+    <string name="prefs_support">Café&#8230;</string>
     <string name="prefs_player_name">Nom du joueur</string>
     <string name="prefs_player_name_default">[par défaut]</string>
     <string name="prefs_background_theme">Fond d\'écran </string>
@@ -179,8 +178,8 @@
     <string name="multiple_players">Plusieurs joueurs</string>
     <string name="google_play_games_signin_failed">La connexion a échoué. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="message_notification_title">Message de %1$s</string>
-    <string name="donation_skip">Plus tard</string>
-    <string name="donate_thank_you">Merci d\'avoir amélioré Freebloks!</string>
+    <string name="support_skip">Plus tard</string>
+    <string name="support_thank_you">Merci d\'avoir amélioré Freebloks!</string>
     <string name="advanced">Avancé</string>
     <string name="prefs_rules">Afficher les règles&#8230;</string>
     <string name="prefs_rules_long">Montrez les règles du jeu</string>

@@ -15,7 +15,7 @@
 </p> 
   
 <hr>
-<p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#getting-started">Getting Started</a> &bull; <a href="#donate">Donate</a> &bull; <a href="#license">License</a></p>
+<p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#getting-started">Getting Started</a> &bull; <a href="#support">Support</a> &bull; <a href="#license">License</a></p>
 <p align="center"><a href="http://www.saschahlusiak.de/Freebloks-Android">Website</a> &bull; <a href="http://www.saschahlusiak.de/category/general/">Blog</a></p>
 <hr>
 
@@ -88,9 +88,9 @@ git submodule init
 git submodule update
 ```
 
-## Donate
+## Suppoer
 
-Freebloks is free software. If you like Freebloks why not consider a donation? You can either purchase Freebloks VIP on Google Play, or donate via Paypal.
+Freebloks is free software. If you like Freebloks why not consider supporting the development? You can either purchase Freebloks VIP on Google Play, or support via Paypal.
 
 <table>
   <tr>

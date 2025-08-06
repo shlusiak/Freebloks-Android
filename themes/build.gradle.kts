@@ -28,10 +28,10 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.17.0-beta01")
+    implementation("androidx.core:core-ktx:1.17.0-rc01")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.test.ext:junit:1.2.1")
+    testImplementation("androidx.test.ext:junit:1.3.0")
     testImplementation("org.robolectric:robolectric:4.15.1")
 }

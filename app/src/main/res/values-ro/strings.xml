@@ -89,7 +89,7 @@
 
     <string name="rate_freebloks_title">Evaluează Freebloks</string>
     <string name="rate_freebloks_text">Dacă îţi place Freebloks, ai vrea să-l evaluezi?</string>
-    <string name="rate_freebloks_donate_link">Sau cumpără-mi o cafea</string>
+    <string name="rate_freebloks_support_link">Sau cumpără-mi o cafea</string>
     <string name="rate_now">Da</string>
     <string name="rate_later">Mai târziu</string>
     <string name="rate_never">Nu</string>
@@ -143,13 +143,12 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">Cumpără-le o cafea creatorilor</string>
-    <string name="donation_text_line1">Freebloks este software gratuit. Îl poţi utiliza şi modifica fără niciun fel de costuri!</string>
-    <string name="donation_text_line2">Dar asta nu înseamnă că nu are valoare. De aceea, poţi decide cât valorează jocul pentru tine şi poţi susţine crearea de software gratuit.</string>
-    <string name="donation_text_short">Ai vrea să susţii creatorii cu o donaţie la alegere?</string>
-    <string name="donation_skip">Poate mai târziu</string>
-    <string name="donation_yes">Da!</string>
-    <string name="donate_thank_you">Îţi mulţumim că susţii Freebloks!</string>
+    <string name="support_title">Cumpără-le o cafea creatorilor</string>
+    <string name="support_text_line1">Freebloks este software gratuit. Îl poţi utiliza şi modifica fără niciun fel de costuri!</string>
+    <string name="support_text_line2">Dar asta nu înseamnă că nu are valoare. De aceea, poţi decide cât valorează jocul pentru tine şi poţi susţine crearea de software gratuit.</string>
+    <string name="support_text_short">Ai vrea să susţii creatorii cu o donaţie la alegere?</string>
+    <string name="support_skip">Poate mai târziu</string>
+    <string name="support_thank_you">Îţi mulţumim că susţii Freebloks!</string>
 
     <string name="advanced">Avansat</string>
 
@@ -192,8 +191,8 @@
     <string name="prefs_rules">Afişează regulile&#8230;</string>
     <string name="prefs_rate_review_long">Te rugăm, evaluează sau lasă un comentariu</string>
     <string name="prefs_rate_review">Freebloks în %1$s&#8230;</string>
-    <string name="prefs_donation_long">Te rugăm, susţine creatorii cu o donaţie</string>
-    <string name="prefs_donation">O cafea&#8230;</string>
+    <string name="prefs_support_long">Te rugăm, susţine creatorii cu o donaţie</string>
+    <string name="prefs_support">O cafea&#8230;</string>
     <string name="prefs_player_name">Numele jucătorului</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_background_theme">Fundal</string>

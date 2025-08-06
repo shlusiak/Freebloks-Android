@@ -86,8 +86,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
     testImplementation("org.robolectric:robolectric:4.15.1")
-    testImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    testImplementation("androidx.test.ext:junit:1.2.1")
+    testImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    testImplementation("androidx.test.ext:junit:1.3.0")
 
     implementation(project(":common"))
     implementation(project(":themes"))
@@ -97,7 +97,7 @@ dependencies {
     implementation(project(":data"))
 
     implementation("androidx.fragment:fragment-ktx:1.8.8")
-    implementation("androidx.core:core-ktx:1.17.0-beta01")
+    implementation("androidx.core:core-ktx:1.17.0-rc01")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.57")

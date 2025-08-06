@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.donate
+package de.saschahlusiak.freebloks.support
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -44,7 +44,7 @@ import de.saschahlusiak.freebloks.utils.Previews
 private const val githubSponsor = "https://github.com/sponsors/shlusiak"
 
 @Composable
-fun DonateScreen(
+fun SupportScreen(
     showExtra: Boolean, // Show non-google play links
     onDismiss: () -> Unit,
     onLink: (String) -> Unit,
@@ -62,7 +62,7 @@ fun DonateScreen(
             Box(Modifier.fillMaxWidth()) {
 
                 Text(
-                    text = stringResource(id = R.string.donation_title),
+                    text = stringResource(id = R.string.support_title),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -76,7 +76,7 @@ fun DonateScreen(
             }
 
             Text(
-                stringResource(id = R.string.donation_text_line1),
+                stringResource(id = R.string.support_text_line1),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -87,7 +87,7 @@ fun DonateScreen(
             }
 
             Text(
-                stringResource(id = R.string.donation_text_line2),
+                stringResource(id = R.string.support_text_line2),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -101,13 +101,13 @@ fun DonateScreen(
                 ), label = ""
             )
             Icon(
-                painterResource(id = R.drawable.ic_donate), null,
+                painterResource(id = R.drawable.ic_support), null,
                 tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.scale(scale)
             )
 
             Text(
-                stringResource(id = R.string.donation_text_short),
+                stringResource(id = R.string.support_text_short),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -129,7 +129,7 @@ fun DonateScreen(
             }
 
             Text(
-                stringResource(id = R.string.donate_thank_you),
+                stringResource(id = R.string.support_thank_you),
                 style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center
             )
@@ -138,7 +138,7 @@ fun DonateScreen(
                 onClick = onDismiss,
                 modifier = Modifier.align(alignment = Alignment.End)
             ) {
-                Text(stringResource(id = R.string.donation_skip))
+                Text(stringResource(id = R.string.support_skip))
             }
         }
     }
@@ -168,6 +168,6 @@ private fun ImageButton(
 @Composable
 private fun Preview() {
     AppTheme {
-        DonateScreen(true, {}, {}, {}, {})
+        SupportScreen(true, {}, {}, {}, {})
     }
 }

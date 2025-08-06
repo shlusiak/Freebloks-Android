@@ -10,7 +10,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
-import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.support.SupportFragment
+import androidx.core.net.toUri
 
 class AboutFragment : DialogFragment() {
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
@@ -25,8 +26,8 @@ class AboutFragment : DialogFragment() {
         view.setContent {
             AppTheme {
                 AboutScreen(
-                    onLink = { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it))) },
-                    onDonate = { DonateFragment().show(parentFragmentManager, null) },
+                    onLink = { startActivity(Intent(Intent.ACTION_VIEW, it.toUri())) },
+                    onSupport = { SupportFragment().show(parentFragmentManager, null) },
                     onDismiss = { dismiss() }
                 )
             }

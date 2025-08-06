@@ -101,7 +101,7 @@
 
     <string name="rate_freebloks_title">Rate Freebloks</string>
     <string name="rate_freebloks_text">If you enjoy Freebloks, would you like to take a minute and rate it?</string>
-    <string name="rate_freebloks_donate_link">Or buy me a coffee?</string>
+    <string name="rate_freebloks_support_link">Or buy me a coffee?</string>
     <string name="rate_now">Yes</string>
     <string name="rate_later">Later</string>
     <string name="rate_never">No</string>
@@ -155,15 +155,12 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">Buy me a coffee</string>
-    <string name="donation_text_line1">Freebloks is free software. You can use and modify it completely free of charge!</string>
-    <string name="donation_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
-    <string name="donation_text_short">Would you like to contribute to the development of this game?</string>
-    <string name="donation_skip">Maybe later</string>
-    <string name="donation_yes">Yes!</string>
-    <string name="donation_freebloksvip" translatable="false">Freebloks VIP</string>
-    <string name="donation_paypal" translatable="false">PayPal</string>
-    <string name="donate_thank_you">Thank you for making Freebloks better!</string>
+    <string name="support_skip">Maybe later</string>
+    <string name="support_title">Buy me a coffee</string>
+    <string name="support_text_line1">Freebloks is free software. You can use and modify it completely free of charge!</string>
+    <string name="support_text_line2">But that does not mean it has no value. That’s why you can decide how much the game is worth to you and support the development of free software.</string>
+    <string name="support_text_short">Would you like to contribute to the development of this game?</string>
+    <string name="support_thank_you">Thank you for making Freebloks better!</string>
 
     <string name="advanced">Advanced</string>
 
@@ -206,8 +203,8 @@
     <string name="prefs_rules">Show rules&#8230;</string>
     <string name="prefs_rate_review_long">Please rate or leave a comment</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
-    <string name="prefs_donation_long">Please support the development of this game</string>
-    <string name="prefs_donation">Coffee&#8230;</string>
+    <string name="prefs_support_long">Please support the development of this game</string>
+    <string name="prefs_support">Coffee&#8230;</string>
     <string name="prefs_player_name">Player name</string>
     <string name="prefs_player_name_default">[default]</string>
     <string name="prefs_background_theme">Background theme</string>

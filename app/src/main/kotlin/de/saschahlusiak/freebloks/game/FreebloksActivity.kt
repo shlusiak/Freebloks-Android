@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -76,7 +75,7 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.pillButtonBackground
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -188,10 +187,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             val starts = prefs.numberOfStarts
 
             // At exactly this many starts, show the DonateFragment once
-            if (!Global.IS_VIP && starts == Global.DONATE_STARTS.toLong()) {
+            if (!Global.IS_VIP && starts == Global.SUPPORT_STARTS.toLong()) {
                 lifecycleScope.launchWhenResumed {
                     delay(500)
-                    DonateFragment().show(supportFragmentManager, null)
+                    SupportFragment().show(supportFragmentManager, null)
                 }
             }
         }

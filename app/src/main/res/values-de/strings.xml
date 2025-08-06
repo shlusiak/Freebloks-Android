@@ -91,7 +91,7 @@
     <string name="rate_never">Nein</string>
     <string name="rate_freebloks_title">Freebloks bewerten</string>
     <string name="rate_freebloks_text">Wenn dir Freebloks gefällt, magst du eine Bewertung abgeben?</string>
-    <string name="rate_freebloks_donate_link">Mir einen Kaffee spendieren?</string>
+    <string name="rate_freebloks_support_link">Mir einen Kaffee spendieren?</string>
 
     <plurals name="number_of_stones_left">
         <item quantity="one">%1$d Stein übrig</item>
@@ -141,12 +141,11 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">Spendiere mir einen Kaffee</string>
-    <string name="donation_text_line1">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!</string>
-    <string name="donation_text_line2">Aber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wie du die Entwickler bei ihrer Arbeit unterstützen möchtest.</string>
-    <string name="donation_text_short">Möchtest du die Entwicklung des Spiels unterstützen?</string>
-    <string name="donation_skip">Vielleicht später</string>
-    <string name="donation_yes">Ja!</string>
+    <string name="support_skip">Vielleicht später</string>
+    <string name="support_title">Spendiere mir einen Kaffee</string>
+    <string name="support_text_line1">Freebloks ist freie Software. Du kannst sie verwenden und verändern wie du möchtest, völlig umsonst!</string>
+    <string name="support_text_line2">Aber auch gratis Software hat einen Wert! Deshalb kannst du selber entscheiden, wie du die Entwickler bei ihrer Arbeit unterstützen möchtest.</string>
+    <string name="support_text_short">Möchtest du die Entwicklung des Spiels unterstützen?</string>
 
     <string name="advanced">Erweitert</string>
 
@@ -182,8 +181,8 @@
     <string name="prefs_rules">Spielregeln&#8230;</string>
     <string name="prefs_rate_review_long">Bitte bewerte oder hinterlasse einen Kommentar</string>
     <string name="prefs_rate_review">Freebloks in %1$s&#8230;</string>
-    <string name="prefs_donation_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
-    <string name="prefs_donation">Kaffee&#8230;</string>
+    <string name="prefs_support_long">Unterstütze die Entwicklung durch eine freiwillige Spende</string>
+    <string name="prefs_support">Kaffee&#8230;</string>
     <string name="prefs_player_name">Spielername</string>
     <string name="prefs_player_name_default">[nicht gesetzt]</string>
     <string name="prefs_background_theme">Hintergrundfarbe</string>
@@ -215,6 +214,6 @@
     <string name="tromino">Trominos</string>
     <string name="tetromino">Tetrominos</string>
     <string name="pentomino">Pentominos</string>
-    <string name="donate_thank_you">Danke für deine Hilfe!</string>
+    <string name="support_thank_you">Danke für deine Hilfe!</string>
 </resources>
 

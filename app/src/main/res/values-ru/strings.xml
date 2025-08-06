@@ -72,7 +72,7 @@
     <string name="rate_never">Нет, спасибо</string>
     <string name="rate_freebloks_title">Оцените Freebloks</string>
     <string name="rate_freebloks_text">Если вам понравилась игра Freebloks, не могли бы вы потратить минутку и оценить её?</string>
-    <string name="rate_freebloks_donate_link">Пожалуйста, поддержите игру Freebloks</string>
+    <string name="rate_freebloks_support_link">Пожалуйста, поддержите игру Freebloks</string>
 
 
     <plurals name="number_of_stones_left" tools:ignore="MissingQuantity">
@@ -120,11 +120,10 @@
         <item>23x23</item>
     </string-array>
 
-    <string name="donation_title">Помогите разработчикам</string>
-    <string name="donation_text_line1">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!</string>
-    <string name="donation_text_line2">Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.</string>
-    <string name="donation_text_short">Вы бы поддержали разработку любым пожертвованием?</string>
-    <string name="donation_yes">Да!</string>
+    <string name="support_title">Помогите разработчикам</string>
+    <string name="support_text_line1">Freebloks - бесплатная игра. Вы можете изменять и модифицировать её как угодно!</string>
+    <string name="support_text_line2">Но это не значит, что эта игра ничего не стоит. Почему бы вам, если понравилась эта игра, не вложить немного денег в наш проект.</string>
+    <string name="support_text_short">Вы бы поддержали разработку любым пожертвованием?</string>
 
     <string name="prefs_interface">Интерфейс</string>
     <string name="prefs_display">Показывать</string>
@@ -148,8 +147,8 @@
     <string name="prefs_auto_resume">Авто-продолжение</string>
     <string name="prefs_rate_review_long">Пожалуйста, оцените нас или напишите комментарий</string>
     <string name="prefs_rate_review">Freebloks в %1$s&#8230;</string>
-    <string name="prefs_donation_long">Пожалуйста, помогите разработчикам</string>
-    <string name="prefs_donation">Помогите Freebloks&#8230;</string>
+    <string name="prefs_support_long">Пожалуйста, помогите разработчикам</string>
+    <string name="prefs_support">Помогите Freebloks&#8230;</string>
     <string name="prefs_player_name">Имя игрока</string>
     <string name="prefs_player_name_default">[стандартное]</string>
     <string name="prefs_background_theme">Задний фон</string>
@@ -165,8 +164,8 @@
     <string name="multiple_players">Несколько игроков</string>
     <string name="message_notification_title">Сообщение от %1$s</string>
     <string name="random_color">Случайный цвет</string>
-    <string name="donation_skip">Потом</string>
-    <string name="donate_thank_you">Спасибо, что сделали Freebloks лучше!</string>
+    <string name="support_skip">Потом</string>
+    <string name="support_thank_you">Спасибо, что сделали Freebloks лучше!</string>
     <string name="advanced">Продвинутый</string>
     <string name="action_continue">Продолжать</string>
     <string name="disconnect">Отключить</string>

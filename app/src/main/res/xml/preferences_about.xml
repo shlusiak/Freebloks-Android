@@ -16,9 +16,9 @@
     </PreferenceScreen>
 
     <PreferenceScreen
-        android:summary="@string/prefs_donation_long"
-        android:title="@string/prefs_donation"
-        android:key="donate"
+        android:summary="@string/prefs_support_long"
+        android:title="@string/prefs_support"
+        android:key="support"
         app:iconSpaceReserved="false" >
     </PreferenceScreen>
 

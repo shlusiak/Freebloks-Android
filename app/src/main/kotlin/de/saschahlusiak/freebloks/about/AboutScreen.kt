@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -33,12 +32,11 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.Dialog
-import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
 fun AboutScreen(
     onLink: (String) -> Unit,
-    onDonate: () -> Unit,
+    onSupport: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val marketUrl = remember { Global.getMarketURLString(BuildConfig.APPLICATION_ID) }
@@ -123,12 +121,12 @@ fun AboutScreen(
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 OutlinedButton(
-                    onClick = onDonate,
+                    onClick = onSupport,
                     modifier = Modifier
                         .weight(1f)
                         .heightIn(min = MaterialTheme.dimensions.buttonSize),
                 ) {
-                    Text(stringResource(id = R.string.prefs_donation))
+                    Text(stringResource(id = R.string.prefs_support))
                 }
 
                 Button(

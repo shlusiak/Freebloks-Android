@@ -35,7 +35,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.app.theme.dimensions
-import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
@@ -100,7 +100,7 @@ class RateAppFragment : DialogFragment() {
                     Spacer(Modifier.height(MaterialTheme.dimensions.innerPaddingMedium))
 
                     Text(
-                        stringResource(id = R.string.donation_text_line1),
+                        stringResource(id = R.string.support_text_line1),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Center,
@@ -112,12 +112,12 @@ class RateAppFragment : DialogFragment() {
                         )
                         TextButton(
                             onClick = {
-                                analytics.logEvent("rate_donate_click", null)
+                                analytics.logEvent("rate_support_click", null)
 
-                                DonateFragment().show(parentFragmentManager, null)
+                                SupportFragment().show(parentFragmentManager, null)
                             },
                         ) {
-                            Text(stringResource(id = R.string.rate_freebloks_donate_link))
+                            Text(stringResource(id = R.string.rate_freebloks_support_link))
                         }
                     }
                 }

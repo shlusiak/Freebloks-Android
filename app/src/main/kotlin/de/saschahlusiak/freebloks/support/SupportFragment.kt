@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.donate
+package de.saschahlusiak.freebloks.support
 
 import android.content.Intent
 import android.net.Uri
@@ -16,7 +16,7 @@ import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DonateFragment : DialogFragment() {
+class SupportFragment : DialogFragment() {
     @Inject
     lateinit var analytics: AnalyticsProvider
 
@@ -25,7 +25,7 @@ class DonateFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        analytics.logEvent("donate_show", null)
+        analytics.logEvent("support_show", null)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -39,7 +39,7 @@ class DonateFragment : DialogFragment() {
 
         view.setContent {
             AppTheme {
-                DonateScreen(
+                SupportScreen(
                     showExtra = true, // !Global.IS_GOOGLE,
                     onDismiss = ::onSkipButtonPress,
                     onFreebloksVIP = ::onFreebloksVIPClick,
@@ -51,7 +51,7 @@ class DonateFragment : DialogFragment() {
     }
 
     private fun onLink(link: String) {
-        analytics.logEvent("donate_github", null)
+        analytics.logEvent("support_github", null)
 
         startActivity(
             Intent(Intent.ACTION_VIEW, Uri.parse(link))
@@ -59,18 +59,18 @@ class DonateFragment : DialogFragment() {
     }
 
     private fun onSkipButtonPress() {
-        analytics.logEvent("donate_skip", null)
+        analytics.logEvent("support_skip", null)
 
         dismiss()
     }
 
     private fun onFreebloksVIPClick() {
-        analytics.logEvent("donate_freebloksvip", null)
+        analytics.logEvent("support_freebloksvip", null)
         startActivity(freebloksVipIntent)
     }
 
     private fun onPayPalClick() {
-        analytics.logEvent("donate_paypal", null)
+        analytics.logEvent("support_paypal", null)
         startActivity(paypalIntent)
     }
 

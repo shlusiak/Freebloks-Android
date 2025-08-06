@@ -24,7 +24,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.about.AboutFragment
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.Preferences
-import de.saschahlusiak.freebloks.donate.DonateFragment
+import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.game.mainmenu.MainMenuContent
 import de.saschahlusiak.freebloks.game.multiplayer.MultiplayerFragment
 import de.saschahlusiak.freebloks.game.newgame.NewGameFragment
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class MainMenuFragment : DialogFragment() {
     private val activity get() = requireActivity() as FreebloksActivity
 
-    private var appIconIsDonate = false
+    private var appIconIsSupport = false
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
 
@@ -55,9 +55,9 @@ class MainMenuFragment : DialogFragment() {
         // The FreebloksActivity/RateDialog gets to increment it before this is created
         val starts = prefs.numberOfStarts
 
-        appIconIsDonate = !Global.IS_VIP && (starts % Global.DONATE_STARTS == 0L)
-        if (appIconIsDonate) {
-            analytics.logEvent("menu_show_donate", null)
+        appIconIsSupport = !Global.IS_VIP && (starts % Global.SUPPORT_STARTS == 0L)
+        if (appIconIsSupport) {
+            analytics.logEvent("menu_show_support", null)
         }
     }
 
@@ -83,13 +83,13 @@ class MainMenuFragment : DialogFragment() {
                 }
             }
 
-            val title = stringResource(id = if (appIconIsDonate) R.string.prefs_donation else R.string.app_name)
+            val title = stringResource(id = if (appIconIsSupport) R.string.prefs_support else R.string.app_name)
 
             MainMenuContent(
                 soundOn = soundOn,
                 canResume = canResume,
                 title = title,
-                titleOutlined = appIconIsDonate,
+                titleOutlined = appIconIsSupport,
                 onNewGame = ::onNewGame,
                 onTitleClick = ::onAbout,
                 onResumeGame = ::onResumeGame,
@@ -128,10 +128,10 @@ class MainMenuFragment : DialogFragment() {
     }
 
     private fun onAbout() {
-        if (appIconIsDonate) {
-            analytics.logEvent("menu_donate_click", null)
+        if (appIconIsSupport) {
+            analytics.logEvent("menu_support_click", null)
 
-            DonateFragment().show(parentFragmentManager, null)
+            SupportFragment().show(parentFragmentManager, null)
         } else {
             analytics.logEvent("menu_about_click", null)
 
