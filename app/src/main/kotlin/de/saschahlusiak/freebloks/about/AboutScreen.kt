@@ -120,13 +120,15 @@ fun AboutScreen(
                     .width(intrinsicSize = IntrinsicSize.Min),
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
-                OutlinedButton(
-                    onClick = onSupport,
-                    modifier = Modifier
-                        .weight(1f)
-                        .heightIn(min = MaterialTheme.dimensions.buttonSize),
-                ) {
-                    Text(stringResource(id = R.string.prefs_support))
+                if (!Global.IS_VIP) {
+                    OutlinedButton(
+                        onClick = onSupport,
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = MaterialTheme.dimensions.buttonSize),
+                    ) {
+                        Text(stringResource(id = R.string.prefs_support))
+                    }
                 }
 
                 Button(

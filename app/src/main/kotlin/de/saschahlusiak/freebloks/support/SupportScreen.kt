@@ -116,7 +116,6 @@ fun SupportScreen(
                 modifier = Modifier.padding(vertical = 12.dp),
                 horizontalArrangement = spacedBy(16.dp)
             ) {
-
                 if (showExtra) {
                     ImageButton(image = R.drawable.logo_github_sponsor, onClick = {
                         onLink(githubSponsor)

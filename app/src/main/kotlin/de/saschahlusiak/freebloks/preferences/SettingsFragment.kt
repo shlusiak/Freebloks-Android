@@ -230,6 +230,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             SupportFragment().show(parentFragmentManager, null)
             true
         }
+        if (Global.IS_VIP) {
+            findPreference<Preference>("support")?.isVisible = false
+        }
 
         findPreference<Preference>("about")?.setOnPreferenceClickListener {
             analytics.logEvent("settings_about_click")

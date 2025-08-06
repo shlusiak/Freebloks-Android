@@ -40,7 +40,7 @@ class SupportFragment : DialogFragment() {
         view.setContent {
             AppTheme {
                 SupportScreen(
-                    showExtra = true, // !Global.IS_GOOGLE,
+                    showExtra = !Global.IS_GOOGLE,
                     onDismiss = ::onSkipButtonPress,
                     onFreebloksVIP = ::onFreebloksVIPClick,
                     onPaypal = ::onPayPalClick,
