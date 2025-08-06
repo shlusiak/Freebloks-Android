@@ -37,7 +37,6 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import de.saschahlusiak.freebloks.utils.Previews
-import kotlin.enums.enumEntries
 
 
 @Composable
