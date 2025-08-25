@@ -145,7 +145,7 @@ fun MultiplayerScreen(
 
                 Row(
                     modifier = Modifier
-                        .width(IntrinsicSize.Min),
+                        .width(IntrinsicSize.Max),
                     horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
                 ) {
                     OutlinedButton(

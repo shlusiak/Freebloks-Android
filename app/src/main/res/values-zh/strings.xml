@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Freebloks</string>
+    <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2025.</string>
+    <string name="github_link" translatable="false">https://github.com/shlusiak/Freebloks-Android</string>
+    <string name="notification_channel_default" translatable="false">General</string>
+
+    <string name="play_again">再玩一次</string>
+    <string name="new_game">新遊戲</string>
+    <string name="resume_game">繼續</string>
+    <string name="host_game">建立房間</string>
+    <string name="multiplayer">多人遊戲</string>
+    <string name="join_multiplayer_game">加入房間</string>
+    <string name="settings">設定</string>
+    <string name="hint">提示</string>
+    <string name="undo">復原</string>
+    <string name="main_menu">主選單</string>
+    <string name="about">關於</string>
+    <string name="about_freebloks">關於Freebloks&#8230;</string>
+    <string name="special_thanks_to">特別感謝：）</string>
+    <string name="connecting_to_server">連線到伺服器中……&#8230;</string>
+    <string name="connection_refused">連線被拒絕！</string>
+    <string name="could_not_restore_game">無法還原遊戲</string>
+    <string name="do_you_want_to_leave_current_game">你確定要離開這場遊戲嗎？</string>
+    <string name="disconnect_error">連線斷開: %1$s. 您目前離線！請檢查網路狀態。</string>
+
+    <string name="server_address_hint">輸入伺服器名稱或地址</string>
+    <string name="internet">網際網路</string>
+    <string name="wireless_lan">無線區域網路</string>
+    <string name="bluetooth">藍牙</string>
+    <string name="bluetooth_disabled_message">藍牙已斷開/關閉/尚未配對任何裝置，請檢查藍牙狀態！</string>
+    <string name="multiple_players">多人玩家</string>
+
+    <string name="quantities">數量</string>
+    <string name="monomino">單方塊</string>
+    <string name="domino">雙方塊</string>
+    <string name="tromino">三方塊</string>
+    <string name="tetromino">四方塊</string>
+    <string name="pentomino">五方塊</string>
+
+    <string name="waiting_for_color">正在等待%1$s</string>
+    <string name="color_is_out_of_moves">%1$s 無可下步數</string>
+    <plurals name="player_status_moves">
+        <item quantity="one">%1$d 步</item>
+        <item quantity="other">%1$d 步</item>
+    </plurals>
+    <string name="touch_to_skip">點擊跳過</string>
+    <string name="no_player">暫無玩家</string>
+    <string name="not_connected">尚未連線</string>
+    <string name="your_turn">嘿，該輪到你了：%1$s!</string>
+    <string name="difficulty">困難程度</string>
+    <string name="start">開始吧</string>
+    <string name="custom_game">自訂遊戲</string>
+    <string name="sound_on">音效開啟</string>
+    <string name="sound_off">音效關閉</string>
+
+    <string name="statistics">統計</string>
+    <string name="prefs_clear_statistics">重置</string>
+    <string name="prefs_clear_statistics_long">重置所有統計資料</string>
+    <string name="clear_statistics_question">確定要刪掉所有統計資料嗎？</string>
+
+    <string name="statistics_label_games_played">已玩遊戲數</string>
+    <string name="statistics_label_good_games">良好局數 (+15)</string>
+    <string name="statistics_label_perfect_games">完美局數 (+20)</string>
+    <string name="statistics_label_1st">第一名</string>
+    <string name="statistics_label_2nd">第二名</string>
+    <string name="statistics_label_3rd">第三名</string>
+    <string name="statistics_label_4th">第四名</string>
+    <string name="statistics_label_stones_used">使用的方塊</string>
+    <string name="statistics_label_points_total">總得分</string>
+
+    <plurals name="games">
+        <item quantity="one">%1$d 局遊戲</item>
+        <item quantity="other">%1$d 局遊戲</item>
+    </plurals>
+
+    <string name="google_play_games">Google Play 遊戲</string>
+    <string name="google_play_games_signin">登入</string>
+    <string name="google_play_games_signin_long">登入 Google Play 遊戲</string>
+    <string name="google_play_games_signout">登出</string>
+    <string name="google_play_games_signout_long">已登入 %1$s</string>
+    <string name="google_play_games_leaderboard">排行榜</string>
+    <string name="google_play_games_leaderboard_long">查看全球排行榜</string>
+    <string name="google_play_games_achievements">成就</string>
+    <string name="google_play_games_achievements_long">查看已獲得的成就</string>
+    <string name="google_play_games_signin_failed">登入失敗，請檢查網路連線，然後再試一次！</string>
+
+    <string name="waiting_for_players">正在等待玩家加入……</string>
+    <plurals name="connected_clients">
+        <item quantity="one">%1$d 客戶端</item>
+        <item quantity="other">%1$d 客戶端</item>
+    </plurals>
+    <string name="chat">聊天</string>
+    <string name="join_player_name">你的暱稱</string>
+    <string name="player_name_hint">請輸入玩家暱稱！</string>
+    <string name="client_d">玩家 %1$d</string>
+    <string name="player_joined_color">%1$s 正在使用 %2$s 遊玩</string>
+    <string name="player_left_color">%1$s (%2$s) 已離開！</string>
+    <string name="lobby_message_hint">想聊什麼呢？</string>
+    <string name="message_notification_title">來自 %1$s的訊息</string>
+
+    <string name="rate_freebloks_title">請給 Freebloks評分吧！</string>
+    <string name="rate_freebloks_text">如果你喜歡 Freebloks，可以花一分鐘的時間幫忙評分嗎，萬分感謝（YA）</string>
+    <string name="rate_freebloks_support_link">或者也可以請我喝一杯非常美味的咖啡！</string>
+    <string name="rate_now">立刻評分</string>
+    <string name="rate_later">先不要</string>
+    <string name="rate_never">不用了謝謝</string>
+
+    <plurals name="number_of_stones_left">
+        <item quantity="one">剩下 %1$d 個方塊</item>
+        <item quantity="other">剩下 %1$d 個方塊</item>
+    </plurals>
+    <plurals name="number_of_points">
+        <item quantity="one">%1$d 分</item>
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <string-array name="places">
+        <item>第一名</item>
+        <item>第二名</item>
+        <item>第三名</item>
+        <item>第四名</item>
+    </string-array>
+
+    <string name="game_finished">遊戲結束</string>
+    <string name="random_color">隨機的顏色</string>
+
+    <string name="white">白色</string>
+    <string name="blue">藍色</string>
+    <string name="yellow">黃色</string>
+    <string name="red">紅色</string>
+    <string name="green">綠色</string>
+    <string name="orange">橘色</string>
+    <string name="purple">紫色</string>
+
+    <string-array name="difficulties">
+        <item>超級瘋狂</item>
+        <item>困難</item>
+        <item>中等</item>
+        <item>簡單</item>
+        <item>超級簡單</item>
+    </string-array>
+    <string-array name="game_modes">
+        <item>2 位玩家，2 種顏色</item>
+        <item>2 位玩家，4 種顏色</item>
+        <item>Blokus Classic</item>
+        <item>Blokus Duo</item>
+        <item>Blokus Junior</item>
+    </string-array>
+    <string-array name="game_field_sizes">
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>17x17</item>
+        <item>20x20</item>
+        <item>23x23</item>
+    </string-array>
+
+    <string name="support_skip">稍後再說</string>
+    <string name="support_title">請我喝杯咖啡吧！</string>
+    <string name="support_text_line1">Freebloks 是一款免費且開源的遊戲軟體，你可以自行決定這款遊戲對你的價值，並繼續支持免費開源的遊戲軟體開發。</string>
+    <string name="support_text_line2">但這不代表它沒有價值。你可以支持免費開源遊戲軟體的開發。</string>
+    <string name="support_text_short">你想支持這款免費且開源無廣告的遊戲開發嗎？</string>
+    <string name="support_thank_you">謝謝你讓 Freebloks 變更棒^_^！</string>
+
+    <string name="advanced">進階</string>
+
+    <string name="action_continue">繼續</string>
+    <string name="disconnect">斷開連線</string>
+    
+    <string name="prefs_interface">介面</string>
+    <string name="prefs_display">顯示</string>
+    <string name="prefs_misc">其他</string>
+    <string name="prefs_sounds_long">播放音效</string>
+    <string name="prefs_sounds">音效</string>
+    <string name="prefs_vibrate_long">移動方塊時會產生震動</string>
+    <string name="prefs_vibrate">震動</string>
+    <string name="prefs_notifications_long">當遊戲處於多人遊戲時通知您</string>
+    <string name="prefs_notifications">通知</string>
+    <string name="prefs_snap_to_corners_long">幫助方塊吸附到可放的位置</string>
+    <string name="prefs_snap_to_corners">吸附輔助</string>
+    <string name="prefs_show_corners_long">顯示可以放置方塊的角落</string>
+    <string name="prefs_show_corners">角落提示</string>
+    <string name="prefs_show_opponents_long">顯示對手的方塊</string>
+    <string name="prefs_show_opponents">對手</string>
+    <string name="prefs_show_animations">動畫</string>
+    
+    <string-array name="prefs_animations_labels">
+        <item>關閉動畫</item>
+        <item>降低動畫 (30 fps)</item>
+        <item>完整動畫 (60 fps)</item>
+    </string-array> 
+    <string-array name="prefs_animations_values" translatable="false" >
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array> 
+    
+    <string name="prefs_skip_intro_long">啟動應用程式時跳過開場動畫</string>
+    <string name="prefs_skip_intro">跳過開場</string>
+    <string name="prefs_auto_resume_long">自動繼續上一次的遊戲</string>
+    <string name="prefs_auto_resume">自動繼續</string>
+    <string name="prefs_rules_long">顯示遊戲規則</string>
+    <string name="prefs_rules">顯示規則&#8230;</string>
+    <string name="prefs_rate_review_long">請給 Freebloks 評分或留言</string>
+    <string name="prefs_rate_review">在 %1$s  評分 Freebloks&#8230;</string>
+    <string name="prefs_support_long">懇請繼續支持遊戲的開發，謝謝！</string>
+    <string name="prefs_support">請我喝杯咖啡吧！&#8230;</string>
+    <string name="prefs_player_name">玩家暱稱</string>
+    <string name="prefs_player_name_default">[預設]</string>
+    <string name="prefs_background_theme">背景主題</string>
+    <string name="prefs_board_theme">棋盤主題</string>
+    <string name="prefs_statistics">統計資料</string>
+    <string name="prefs_statistics_long">顯示遊戲的統計資料</string>
+
+    <string name="blokus_duo" translatable="false">Blokus Duo</string>
+    <string name="blokus_junior" translatable="false">Blokus Junior</string>
+
+    <string name="rules_title">Blokus 遊戲規則</string>
+    <string name="rules_youtube">看教學影片</string>
+    <string name="rules_how_to_play">怎麼玩</string>
+    <string name="rules_how_to_play_1">滑動方塊列表找到你想要使用的方塊，然後將它拖到棋盤上。</string>
+    <string name="rules_how_to_play_2">點擊方塊側邊的控制點來移動、旋轉或翻轉方塊。輕觸方塊即可將它放置到棋盤上。</string>
+    <string name="rules_blokus_classic">Blokus Classic</string>
+    <string name="rules_classic_1">每位玩家有 21 個自己顏色的獨特方塊。輪流下方塊到棋盤上，棋盤上方塊最多的玩家獲勝。</string>
+    <string name="rules_classic_2">每種顏色的第一個方塊必須放在棋盤的其中一個角落。</string>
+    <string name="rules_classic_3">新下的方塊必須至少與同色方塊角對角相接，邊緣不可接觸。同時，不同顏色的方塊邊對邊是允許的。</string>
+    <string name="rules_classic_4">當玩家無法放置方塊時，該玩家跳過回合，遊戲繼續。當所有玩家都無法放置方塊時，遊戲結束。</string>
+    <string name="rules_variants">雙人遊戲變體</string>
+    <string name="rules_variants_1">兩名玩家通常每人使用兩種顏色，或者去掉兩種顏色進行遊戲。</string>
+    <string name="rules_scoring">計分規則</string>
+    <string name="rules_scoring_1">遊戲結束時，將棋盤上每位玩家的所有方塊數加總（例如，「五方塊」可得5分）。如果玩家下完了所有方塊，最後一塊是單方塊時可獲得額外20分，否則可獲得額外15分。</string>
+    <string name="rules_scoring_2">因此，玩家在一局遊戲中能獲得的最高分為89+20=109分。分數最高的玩家獲勝！</string>
+
+    <string name="rules_duo_1">Blokus Duo 僅限兩位玩家對戰，棋盤比經典版小，但使用的方塊與 Blokus Classic 相同。兩個起始方塊位置靠近棋盤中心。</string>
+    <string name="rules_junior_1">Blokus Junior 專為年幼玩家設計。像 Blokus Duo 一樣，由兩位玩家在 14 X 14 的棋盤上進行，但僅使用形狀較簡單的部分方塊。共有12 種不同方塊，每位玩家各得到兩塊。</string>
+</resources>

@@ -120,7 +120,7 @@ fun StonesConfigScreen(
             Row(
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
                 modifier = Modifier
-                    .width(IntrinsicSize.Min)
+                    .width(IntrinsicSize.Max)
                     .align(alignment = Alignment.End)
                     .padding(top = MaterialTheme.dimensions.innerPaddingLarge)
             ) {

@@ -117,7 +117,7 @@ fun AboutScreen(
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .align(Alignment.End)
-                    .width(intrinsicSize = IntrinsicSize.Min),
+                    .width(intrinsicSize = IntrinsicSize.Max),
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 if (!Global.IS_VIP) {
