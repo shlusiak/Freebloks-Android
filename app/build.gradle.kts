@@ -34,11 +34,11 @@ android {
             buildConfigField("String", "APP_STORE_NAME", "\"Google Play Store\"")
             buildConfigField("String", "APP_STORE_LINK", "\"https://play.google.com/store/apps/details?id=%s\"")
         }
-        create("amazon") {
-            dimension = "store"
-            buildConfigField("String", "APP_STORE_NAME", "\"Amazon App Store\"")
-            buildConfigField("String", "APP_STORE_LINK", "\"http://www.amazon.com/gp/mas/dl/android?p=%s\"")
-        }
+//        create("amazon") {
+//            dimension = "store"
+//            buildConfigField("String", "APP_STORE_NAME", "\"Amazon App Store\"")
+//            buildConfigField("String", "APP_STORE_LINK", "\"http://www.amazon.com/gp/mas/dl/android?p=%s\"")
+//        }
         create("fdroid") {
             dimension = "store"
             buildConfigField("String", "APP_STORE_NAME", "\"F-Droid\"")
@@ -77,12 +77,12 @@ android {
 }
 
 val googleImplementation by configurations
-val amazonImplementation by configurations
+//val amazonImplementation by configurations
 
 dependencies {
     // for unit tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.18.0")
+    testImplementation("org.mockito:mockito-core:5.19.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
     testImplementation("org.robolectric:robolectric:4.15.1")
@@ -96,12 +96,12 @@ dependencies {
     implementation(project(":ktx"))
     implementation(project(":data"))
 
-    implementation("androidx.fragment:fragment-ktx:1.8.8")
-    implementation("androidx.core:core-ktx:1.17.0-rc01")
+    implementation("androidx.fragment:fragment-ktx:1.8.9")
+    implementation("androidx.core:core-ktx:1.17.0")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.57")
-    ksp("com.google.dagger:hilt-compiler:2.57")
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    ksp("com.google.dagger:hilt-compiler:2.57.1")
     testImplementation("com.google.dagger:hilt-android-testing:2.57")
     kspTest("com.google.dagger:hilt-android-compiler:2.57")
 
@@ -115,7 +115,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.07.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.08.00"))
     implementation("androidx.activity:activity-compose:1.10.1")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.animation:animation")
@@ -129,5 +129,5 @@ dependencies {
     /// =====================
 
     googleImplementation(project(":google-services"))
-    amazonImplementation(project(":google-services"))
+//    amazonImplementation(project(":google-services"))
 }

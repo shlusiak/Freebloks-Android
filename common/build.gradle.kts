@@ -22,8 +22,8 @@ android {
 dependencies {
     testImplementation("androidx.test.ext:junit:1.3.0")
 
-    implementation("androidx.core:core-ktx:1.17.0-rc01")
-    implementation("androidx.fragment:fragment-ktx:1.8.8")
+    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.fragment:fragment-ktx:1.8.9")
 
-    api("androidx.compose.runtime:runtime-android:1.8.3")
+    api("androidx.compose.runtime:runtime-android:1.9.0")
 }

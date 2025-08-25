@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath ("com.android.tools.build:gradle:8.12.0")
+        classpath ("com.android.tools.build:gradle:8.12.1")
 
         // Kotlin
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0")
@@ -21,7 +21,7 @@ buildscript {
 
         // https://developers.google.com/android/guides/releases
         classpath("com.google.gms:google-services:4.4.3")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.5")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.6")
     }
 }
 

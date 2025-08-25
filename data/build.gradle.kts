@@ -38,6 +38,6 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.2.1")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.57")
-    ksp("com.google.dagger:hilt-compiler:2.57")
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    ksp("com.google.dagger:hilt-compiler:2.57.1")
 }

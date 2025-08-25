@@ -23,7 +23,7 @@ dependencies {
     implementation(project(":common"))
 
     implementation("javax.inject:javax.inject:1")
-    implementation("androidx.core:core-ktx:1.17.0-rc01")
+    implementation("androidx.core:core-ktx:1.17.0")
 
     // For Google+ integration
     // https://developers.google.com/android/guides/releases
