@@ -16,7 +16,6 @@ import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -75,7 +74,6 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.pillButtonBackground
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
-import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.game.finish.GameFinishFragment
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialogDelegate
@@ -91,6 +89,7 @@ import de.saschahlusiak.freebloks.network.ProtocolException
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForExistingGame
 import de.saschahlusiak.freebloks.server.JNIServer.runServerForNewGame
+import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
@@ -646,16 +645,16 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             DIALOG_QUIT -> {
                 return MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.do_you_want_to_leave_current_game)
-                    .setPositiveButton(android.R.string.yes) { _, _ -> showMainMenu() }
-                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.ok) { _, _ -> showMainMenu() }
+                    .setNegativeButton(android.R.string.cancel, null)
                     .create()
             }
 
             DIALOG_NEW_GAME_CONFIRMATION -> {
                 return MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.do_you_want_to_leave_current_game)
-                    .setPositiveButton(android.R.string.yes) { _, _ -> restartGameWithLastConfiguration() }
-                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.ok) { _, _ -> restartGameWithLastConfiguration() }
+                    .setNegativeButton(android.R.string.cancel, null)
                     .create()
             }
 
@@ -847,7 +846,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         analytics.logEvent("game_settings_click")
 
         hideMenu()
-        intent = Intent(this, SettingsActivity::class.java)
+        val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
 
@@ -855,7 +854,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
 //region GameEventObserver callbacks
 
-    @WorkerThread
+    @UiThread
     override fun playerIsOutOfMoves(player: Player) {
         scene.playSound(FeedbackType.OutOfMoves, volume = 0.8f)
 
@@ -869,7 +868,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun gameFinished() {
         val client = viewModel.client ?: return
         val lastStatus = viewModel.lastStatus.value ?: return
