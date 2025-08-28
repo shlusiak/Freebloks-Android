@@ -17,7 +17,7 @@ android {
         versionCode = 168
         versionName = "1.6.8"
 
-        androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt", "ro", "ru", "zh")
+        androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt-rBR", "ro", "ru", "zh")
     }
     setFlavorDimensions(listOf("app", "store"))
     productFlavors {
