@@ -102,20 +102,20 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.57.1")
     ksp("com.google.dagger:hilt-compiler:2.57.1")
-    testImplementation("com.google.dagger:hilt-android-testing:2.57")
-    kspTest("com.google.dagger:hilt-android-compiler:2.57")
+    testImplementation("com.google.dagger:hilt-android-testing:2.57.1")
+    kspTest("com.google.dagger:hilt-android-compiler:2.57.1")
 
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation("com.google.android.material:material:1.12.0")
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.3")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.08.01"))
     implementation("androidx.activity:activity-compose:1.10.1")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.animation:animation")

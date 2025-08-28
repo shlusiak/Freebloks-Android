@@ -14,7 +14,7 @@ buildscript {
         classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.2.0-2.0.2")
 
         // Hilt
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.57")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.57.1")
 
         // Room
         classpath("androidx.room:androidx.room.gradle.plugin:2.7.2")
