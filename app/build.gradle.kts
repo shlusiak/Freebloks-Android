@@ -14,8 +14,8 @@ android {
         minSdk = 23
         targetSdk = 36
 
-        versionCode = 168
-        versionName = "1.6.8"
+        versionCode = 169
+        versionName = "1.6.9"
 
         androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt", "ro", "ru", "zh")
     }
