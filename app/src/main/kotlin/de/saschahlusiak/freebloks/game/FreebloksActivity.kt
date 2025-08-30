@@ -570,11 +570,14 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         if (ret != 0) {
             crashReporter.log("Error starting server: $ret")
         }
+        val requestPlayers = game.playerTypes.map { it == Game.PLAYER_LOCAL }.toBooleanArray()
+
         val config = GameConfig(
             isLocal = true,
             server = null,
             gameMode = gameMode,
-            showLobby = false, requestPlayers = booleanArrayOf(false, false, false, false),
+            showLobby = false,
+            requestPlayers = requestPlayers,
             difficulty = previousDifficulty,
             stones = defaultStonesForMode(gameMode),
             fieldSize = game.board.width
