@@ -107,7 +107,7 @@ fun AboutScreen(
             )
 
             Text(
-                "Alina Bilciurescu\nMartin Hollingsworth\nEgor Ponomarev",
+                "Alina Bilciurescu\nEgor Ponomarev\nEnzo (zh-tw)",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center
