@@ -1,2 +1,2 @@
-APP_PLATFORM := android-21
+APP_PLATFORM := android-23
 APP_OPTIM := release
