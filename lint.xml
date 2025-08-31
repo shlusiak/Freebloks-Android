@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="MissingTranslation" severity="ignore" />
+    <issue id="UnusedResources" severity="error" />
+    <issue id="OldTargetApi" severity="error" />
+    <issue id="UseKtx" severity="error" />
+
+    <issue id="MissingQuantity" severity="ignore" />
+    <issue id="UnusedQuantity" severity="ignore" />
+    <issue id="IconMissingDensityFolder" severity="ignore" />
+    <issue id="UnusedResources" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+
 </lint>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -69,6 +70,10 @@ class MainMenuFragment : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(null)
         view.setContent {
             Content()
+
+            BackHandler {
+                activity.finish()
+            }
         }
     }
 
@@ -98,16 +103,6 @@ class MainMenuFragment : DialogFragment() {
                 onHelp = ::onHelp,
                 onToggleSound = ::onToggleSound
             )
-        }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object : AppCompatDialog(requireContext(), theme) {
-            @Deprecated("Deprecated in Java")
-            @SuppressLint("MissingSuperCall")
-            override fun onBackPressed() {
-                activity.finish()
-            }
         }
     }
 

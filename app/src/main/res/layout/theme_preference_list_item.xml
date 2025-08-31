@@ -8,7 +8,7 @@
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="right|center_vertical"
+        android:layout_gravity="end|center_vertical"
         android:background="?attr/selectableItemBackground"
         android:checkMark="?android:attr/listChoiceIndicatorSingle"
         android:duplicateParentState="true"

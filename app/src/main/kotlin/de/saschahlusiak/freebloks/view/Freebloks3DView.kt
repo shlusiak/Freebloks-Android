@@ -177,7 +177,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         }
     }
 
-    @WorkerThread
+    @UiThread
     override fun hintReceived(turn: Turn) {
         queueEvent {
             if (turn.player != scene.game.currentPlayer) return@queueEvent
@@ -252,6 +252,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
      * @param lastRendered how long ago we last rendered the scene
      * @return true if the scene has been rendered, false otherwise
      */
+    @SuppressLint("WrongThread")
     @WorkerThread
     fun execute(elapsed: Float, lastRendered: Float): Boolean {
         val currentRenderMode = renderMode

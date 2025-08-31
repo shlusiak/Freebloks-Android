@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.2)" variant="all" version="8.12.2">
+
+    <issue
+        id="RestrictedApi"
+        message="TypedArrayUtils.getAttr can only be called from within the same library group prefix (referenced groupId=`androidx.core` with prefix androidx from groupId=`Freebloks-Android`)"
+        errorLine1="    @Keep constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, TypedArrayUtils.getAttr(context, androidx.preference.R.attr.checkBoxPreferenceStyle, android.R.attr.checkBoxPreferenceStyle))"
+        errorLine2="                                                                                                     ~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/preferences/types/SelectablePreference.kt"
+            line="13"
+            column="102"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;Quizas&quot; is a common misspelling; did you mean &quot;Quizás&quot;?"
+        errorLine1="    &lt;string name=&quot;support_skip&quot;>Quizas mas tarde&lt;/string>"
+        errorLine2="                                ~~~~~~">
+        <location
+            file="src/main/res/values-es/strings.xml"
+            line="149"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-hdpi`: ic_preferences_about.webp, ic_preferences_coffee.webp, ic_preferences_display.webp, ic_preferences_interface.webp, ic_preferences_misc.webp... (4 more)">
+        <location
+            file="src/main/res/drawable-hdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xhdpi`: ic_star.webp, logo_paypal.webp">
+        <location
+            file="src/main/res/drawable-xhdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xxhdpi`: ic_preferences_about.webp, ic_preferences_coffee.webp, ic_preferences_display.webp, ic_preferences_interface.webp, ic_preferences_misc.webp... (6 more)">
+        <location
+            file="src/main/res/drawable-xxhdpi"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: appicon_small.webp, launcher_icon.webp">
+        <location
+            file="src/standard/res/mipmap-xhdpi/launcher_icon.webp"/>
+        <location
+            file="src/standard/res/drawable-xxhdpi/appicon_small.webp"/>
+    </issue>
+
+</issues>

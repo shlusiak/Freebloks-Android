@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.game
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -81,6 +82,8 @@ class MultiplayerNotificationService : Service() {
         val notification = notificationManager?.getBackgroundNotification() ?: return
 
         Log.d(tag, "Starting foreground service")
+
+        @SuppressLint("InlinedApi")
         ServiceCompat.startForeground(
             this,
             ONGOING_NOTIFICATION_ID,

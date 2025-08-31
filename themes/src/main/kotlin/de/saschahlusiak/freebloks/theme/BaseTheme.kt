@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.graphics.drawable.toDrawable
 
 /**
  * Abstract base class for a theme with default implementations for most methods
@@ -32,7 +32,6 @@ abstract class BaseTheme(@StringRes val label: Int, @DrawableRes val preview: In
 
     override fun getLabel(context: Context): String = context.getString(label)
 
-    @Suppress("DEPRECATION")
     override fun getPreview(resources: Resources): Drawable {
         if (isResource) {
             val background = resources.getDrawable(preview) as BitmapDrawable
@@ -42,7 +41,7 @@ abstract class BaseTheme(@StringRes val label: Int, @DrawableRes val preview: In
 
             return background
         } else {
-            return ColorDrawable(getColor(resources))
+            return getColor(resources).toDrawable()
         }
     }
 

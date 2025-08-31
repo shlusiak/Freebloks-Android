@@ -11,6 +11,7 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class RulesActivity : AppCompatActivity() {
@@ -40,7 +41,7 @@ class RulesActivity : AppCompatActivity() {
 
     private fun onYoutubeButtonClick() {
         runCatching {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+            val intent = Intent(Intent.ACTION_VIEW, youtubeLink.toUri())
             startActivity(intent)
             analytics.logEvent("rules_video_click")
         }.onFailure {

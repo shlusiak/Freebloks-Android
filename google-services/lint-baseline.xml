@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.2)" variant="all" version="8.12.2">
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="            leaderboardsClient = Games.getLeaderboardsClient(context, account)"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="102"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="            achievementsClient = Games.getAchievementsClient(context, account)"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="103"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="            gamesClient = Games.getGamesClient(context, account)"
+        errorLine2="                                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="104"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="            playersClient = Games.getPlayersClient(context, account).also {"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="105"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This declaration implicitly references Player, which should only be accessed from tests or within private scope"
+        errorLine1="                        val player = task.result ?: return@addOnCompleteListener"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="108"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This declaration implicitly references Player, which should only be accessed from tests or within private scope"
+        errorLine1="                        val player = task.result ?: return@addOnCompleteListener"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="108"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                        this.playerName.value = player.displayName"
+        errorLine2="                                                       ~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="109"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                        this.playerName.value = player.displayName"
+        errorLine2="                                                       ~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="109"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="            LeaderboardVariant.TIME_SPAN_WEEKLY,"
+        errorLine2="                               ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="213"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="            LeaderboardVariant.COLLECTION_PUBLIC,"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="214"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This declaration implicitly references LeaderboardScore, which should only be accessed from tests or within private scope"
+        errorLine1="            scores?.scores?.map { score ->"
+        errorLine2="                                  ~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="226"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    rank = score.rank,"
+        errorLine2="                                 ~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="228"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    rank = score.rank,"
+        errorLine2="                                 ~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="228"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    iconUri = score.scoreHolderIconImageUri,"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="229"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    iconUri = score.scoreHolderIconImageUri,"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="229"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    name = score.scoreHolderDisplayName,"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="230"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    name = score.scoreHolderDisplayName,"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="230"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    points = score.rawScore.toInt(),"
+        errorLine2="                                   ~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="231"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    points = score.rawScore.toInt(),"
+        errorLine2="                                   ~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="231"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    isLocal = score.scoreHolder?.playerId == playerId,"
+        errorLine2="                                    ~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="232"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    isLocal = score.scoreHolder?.playerId == playerId,"
+        errorLine2="                                    ~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="232"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    isLocal = score.scoreHolder?.playerId == playerId,"
+        errorLine2="                                                 ~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="232"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        message="This method should only be accessed from tests or within private scope"
+        errorLine1="                    isLocal = score.scoreHolder?.playerId == playerId,"
+        errorLine2="                                                 ~~~~~~~~">
+        <location
+            file="src/main/kotlin/de/saschahlusiak/freebloks/utils/DefaultGooglePlayGamesHelper.kt"
+            line="232"
+            column="50"/>
+    </issue>
+
+</issues>

@@ -51,7 +51,7 @@ class BoardRenderer(private val resources: Resources) {
     private val tmp = FloatArray(4)
     private var valid = false
     private var hasTexture = false
-    private val rgba = FloatArray(4) { 0.0f }
+    private val rgba = FloatArray(4)
 
     init {
         field = buildSingleBoardFieldModel()

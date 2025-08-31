@@ -14,6 +14,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class SupportFragment : DialogFragment() {
@@ -54,7 +55,7 @@ class SupportFragment : DialogFragment() {
         analytics.logEvent("support_github", null)
 
         startActivity(
-            Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            Intent(Intent.ACTION_VIEW, link.toUri())
         )
     }
 
@@ -74,8 +75,8 @@ class SupportFragment : DialogFragment() {
         startActivity(paypalIntent)
     }
 
-    private val freebloksVipIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_FREEBLOKS_VIP))
-    private val paypalIntent get() = Intent(Intent.ACTION_VIEW, Uri.parse(URL_PAYPAL))
+    private val freebloksVipIntent get() = Intent(Intent.ACTION_VIEW, URL_FREEBLOKS_VIP.toUri())
+    private val paypalIntent get() = Intent(Intent.ACTION_VIEW, URL_PAYPAL.toUri())
 
     companion object {
         // F-Droid does not have a Freebloks VIP, so redirect the user to the Google Play Store.

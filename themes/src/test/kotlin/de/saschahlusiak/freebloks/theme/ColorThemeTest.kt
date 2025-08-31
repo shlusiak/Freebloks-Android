@@ -15,7 +15,6 @@ import org.robolectric.annotation.Config
 @Config(application = Application::class)
 class ColorThemeTest {
     @Test
-    @Ignore
     fun testColorWithValue() {
         val app = ApplicationProvider.getApplicationContext<Context>()
 
@@ -31,7 +30,6 @@ class ColorThemeTest {
     }
 
     @Test
-    @Ignore
     fun testColorWithResource() {
         val app = ApplicationProvider.getApplicationContext<Context>()
 

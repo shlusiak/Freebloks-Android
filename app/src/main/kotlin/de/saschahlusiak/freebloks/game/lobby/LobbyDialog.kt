@@ -2,12 +2,15 @@ package de.saschahlusiak.freebloks.game.lobby
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,18 +45,29 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     @Inject
     lateinit var analytics: AnalyticsProvider
 
+    private val permissionRequester = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        // ignore result
+    }
+
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = true
 
+        if (Build.VERSION.SDK_INT >= 33) {
+            requestNotificationPermission()
+        }
+    }
+
+    @RequiresApi(33)
+    private fun requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 android.Manifest.permission.POST_NOTIFICATIONS
             ) != android.content.pm.PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 0)
+            permissionRequester.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -100,7 +114,7 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
             val players = remember(lastStatus) {
                 derivedStateOf { getPlayerColors(lastStatus.value) }
             }
-            
+
             LaunchedEffect(key1 = chatHistory.value.size) {
                 viewModel.markChatsAsSeen(chatHistory.value.size)
             }

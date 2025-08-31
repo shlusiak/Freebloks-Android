@@ -9,6 +9,10 @@ android {
     defaultConfig {
         minSdk = 23
     }
+    lint {
+        abortOnError = true
+        baseline = file("lint-baseline.xml")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -32,5 +36,5 @@ dependencies {
 
     // https://firebase.google.com/support/release-notes/android
     implementation("com.google.firebase:firebase-analytics:23.0.0")
-    implementation("com.google.firebase:firebase-crashlytics:20.0.0")
+    implementation("com.google.firebase:firebase-crashlytics:20.0.1")
 }

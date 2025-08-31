@@ -40,6 +40,7 @@ import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class RateAppFragment : DialogFragment() {
@@ -90,7 +91,7 @@ class RateAppFragment : DialogFragment() {
                     )
 
                     Row(modifier = Modifier.padding(vertical = MaterialTheme.dimensions.innerPaddingMedium)) {
-                        for (i in 1..5) {
+                        repeat(5) {
                             Image(painter = painterResource(id = R.drawable.ic_star), contentDescription = null)
                         }
                     }
@@ -159,7 +160,7 @@ class RateAppFragment : DialogFragment() {
                     analytics.logEvent("rate_yes_click", null)
                     val intent = Intent(
                         "android.intent.action.VIEW",
-                        Uri.parse(Global.getMarketURLString(BuildConfig.APPLICATION_ID))
+                        Global.getMarketURLString(BuildConfig.APPLICATION_ID).toUri()
                     )
                     prefs.rateShowAgain = false
 

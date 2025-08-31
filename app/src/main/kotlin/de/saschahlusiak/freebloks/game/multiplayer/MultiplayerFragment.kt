@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +51,13 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
     lateinit var crashReporter: CrashReporter
 
     private val viewModel: MultiplayerViewModel by viewModels()
+
+    private val requestBluetoothPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted && bluetoothServer == null) {
+                bluetoothServer = startBluetoothServer()
+            }
+        }
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
@@ -128,8 +136,8 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
     private fun startBluetoothServer(): BluetoothServerThread? {
         val adapter = viewModel.bluetoothAdapter ?: return null
 
-        if (!hasBluetoothPermission()) {
-            requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), REQUEST_BLUETOOTH_CONNECT)
+        if (!hasBluetoothPermission() && Build.VERSION.SDK_INT >= 31) {
+            requestBluetoothPermission.launch(Manifest.permission.BLUETOOTH_CONNECT)
             return null
         }
 
@@ -137,20 +145,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
         return BluetoothServerThread(crashReporter, this).also {
             it.start()
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        val result = grantResults.firstOrNull() ?: return
-
-        if (requestCode == REQUEST_BLUETOOTH_CONNECT) {
-            if (result == PackageManager.PERMISSION_GRANTED) {
-                if (bluetoothServer == null) {
-                    bluetoothServer = startBluetoothServer()
-                }
-            }
         }
     }
 
@@ -224,9 +218,5 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
         // dismissing this dialog will stop the listener, which will be started again by the LobbyDialog
         dismiss()
-    }
-
-    companion object {
-        private const val REQUEST_BLUETOOTH_CONNECT = 10004
     }
 }
