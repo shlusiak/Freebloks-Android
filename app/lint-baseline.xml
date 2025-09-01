@@ -13,6 +13,413 @@
     </issue>
 
     <issue
+        id="MissingTranslation"
+        message="&quot;quantities&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;quantities&quot;>Quantities&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;monomino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;monomino&quot;>Monominos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;domino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;domino&quot;>Dominos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tromino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;tromino&quot;>Trominos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tetromino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;tetromino&quot;>Tetrominos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pentomino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;pentomino&quot;>Pentominos&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;prefs_clear_statistics_long&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;prefs_clear_statistics_long&quot;>Reset all statistics&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;clear_statistics_question&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;clear_statistics_question&quot;>Are you sure you want to clear all statistics?&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="60"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_games_played&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_games_played&quot;>Games played&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_good_games&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_good_games&quot;>Good (+15)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_perfect_games&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_perfect_games&quot;>Perfect (+20)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_1st&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_1st&quot;>1st&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_2nd&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_2nd&quot;>2nd&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="66"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_3rd&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_3rd&quot;>3rd&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_4th&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_4th&quot;>4th&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_stones_used&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_stones_used&quot;>Stones used&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;statistics_label_points_total&quot; is not translated in &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;statistics_label_points_total&quot;>Points total&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;games&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;plurals name=&quot;games&quot;>"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="72"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;google_play_games_signin_failed&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;google_play_games_signin_failed&quot;>Failed to sign in. Please check your network connection and try again.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="86"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;prefs_board_theme&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;prefs_board_theme&quot;>Board theme&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="211"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_title&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_title&quot;>Blokus rules&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="218"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_youtube&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_youtube&quot;>Watch How-To Video&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="219"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_how_to_play&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_how_to_play&quot;>How to play&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="220"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_how_to_play_1&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_how_to_play_1&quot;>Swipe the list of pieces to find and select the piece you want to play, then drag it onto the board.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="221"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_how_to_play_2&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_how_to_play_2&quot;>Touch the handles on the side of the piece to move, rotate and flip it into position. Tap the piece to place it onto the board.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="222"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_blokus_classic&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_blokus_classic&quot;>Blokus Classic&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="223"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_classic_1&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_classic_1&quot;>Each player starts with 21 unique pieces in his color. Turn by turn every player tries to place a piece onto the board. The player with the most pieces on the board wins the game.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="224"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_classic_2&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_classic_2&quot;>The first piece of each color must be placed in one of the corners of the board.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="225"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_classic_3&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_classic_3&quot;>Each new piece played must be placed so that it touches at least one piece of the same color, with only corner-to-corner contact allowed. Edges cannot touch. However, edge-to-edge contact is allowed with pieces of different colors.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="226"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_classic_4&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_classic_4&quot;>When a player cannot place a piece, he or she passes, and play continues as normal. The game ends when no one can place a piece.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="227"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_variants&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_variants&quot;>Two player variants&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="228"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_variants_1&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_variants_1&quot;>Two players usually play with either two colors each, or by leaving out two colors.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="229"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_scoring&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_scoring&quot;>Scoring&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="230"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_scoring_1&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_scoring_1&quot;>At the end, all squares of each player’s pieces on the board are added up (e.g. a “pentomino” is worth 5 points). If a player played all of their pieces, he gets a bonus score of +20 points if the last piece played was the single-square piece, +15 points otherwise.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="231"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_scoring_2&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_scoring_2&quot;>The maximum points a player can get in a game is therefore 89+20=109. The player with the highest score wins.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="232"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_duo_1&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_duo_1&quot;>Blokus Duo is played by two players only on a much smaller board but with the same pieces as in Blokus Classic. The two starting squares are placed nearer to the centre.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="234"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;rules_junior_1&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
+        errorLine1="    &lt;string name=&quot;rules_junior_1&quot;>Blokus Junior is targeted at younger children. Like Blokus Duo, it is played by two players on a 14×14 board but it uses only a subset of the pieces that have a simpler shape. There are 12 unique pieces, each player will get two of each kind.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="235"
+            column="13"/>
+    </issue>
+
+    <issue
         id="Typos"
         message="&quot;Quizas&quot; is a common misspelling; did you mean &quot;Quizás&quot;?"
         errorLine1="    &lt;string name=&quot;support_skip&quot;>Quizas mas tarde&lt;/string>"
@@ -21,6 +428,270 @@
             file="src/main/res/values-es/strings.xml"
             line="149"
             column="33"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.seed` appears to be unused"
+        errorLine1="    &lt;color name=&quot;seed&quot;>#425686&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_shadow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_shadow&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="30"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_surfaceTint` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_surfaceTint&quot;>#375CA9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="31"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_outlineVariant` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_outlineVariant&quot;>#C5C6D0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="32"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_scrim` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_scrim&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="33"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_shadow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_shadow&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="60"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_surfaceTint` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_surfaceTint&quot;>#B0C6FF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="61"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_outlineVariant` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_outlineVariant&quot;>#44464F&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="62"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_scrim` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_scrim&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors-theme.xml"
+            line="63"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_menu` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_menu.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_send` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:autoMirrored=&quot;true&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_send.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.hint` appears to be unused"
+        errorLine1="    &lt;string name=&quot;hint&quot;>Hint&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.undo` appears to be unused"
+        errorLine1="    &lt;string name=&quot;undo&quot;>Undo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.main_menu` appears to be unused"
+        errorLine1="    &lt;string name=&quot;main_menu&quot;>Main menu&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.custom_game` appears to be unused"
+        errorLine1="    &lt;string name=&quot;custom_game&quot;>Custom Game&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_clear_statistics_long` appears to be unused"
+        errorLine1="    &lt;string name=&quot;prefs_clear_statistics_long&quot;>Reset all statistics&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.statistics_label_stones_used` appears to be unused"
+        errorLine1="    &lt;string name=&quot;statistics_label_stones_used&quot;>Stones used&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.plurals.connected_clients` appears to be unused"
+        errorLine1="    &lt;plurals name=&quot;connected_clients&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="89"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.join_player_name` appears to be unused"
+        errorLine1="    &lt;string name=&quot;join_player_name&quot;>Your name:&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="94"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.message_notification_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;message_notification_title&quot;>Message from %1$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="100"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.advanced` appears to be unused"
+        errorLine1="    &lt;string name=&quot;advanced&quot;>Advanced&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_notifications_long` appears to be unused"
+        errorLine1="    &lt;string name=&quot;prefs_notifications_long&quot;>Show notifications in multiplayer games&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="177"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.prefs_notifications` appears to be unused"
+        errorLine1="    &lt;string name=&quot;prefs_notifications&quot;>Notifications&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="178"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Widget_ActionBar_Surface_Elevated` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.ActionBar.Surface.Elevated&quot; parent=&quot;@style/Widget.Material3.ActionBar.Solid&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="4"
+            column="12"/>
     </issue>
 
     <issue
