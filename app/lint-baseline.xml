@@ -531,28 +531,6 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.drawable.ic_menu` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="src/main/res/drawable/ic_menu.xml"
-            line="1"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.drawable.ic_send` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:autoMirrored=&quot;true&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
-        errorLine2="^">
-        <location
-            file="src/main/res/drawable/ic_send.xml"
-            line="1"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
         message="The resource `R.string.hint` appears to be unused"
         errorLine1="    &lt;string name=&quot;hint&quot;>Hint&lt;/string>"
         errorLine2="            ~~~~~~~~~~~">
@@ -681,17 +659,6 @@
             file="src/main/res/values/strings.xml"
             line="178"
             column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.style.Widget_ActionBar_Surface_Elevated` appears to be unused"
-        errorLine1="    &lt;style name=&quot;Widget.ActionBar.Surface.Elevated&quot; parent=&quot;@style/Widget.Material3.ActionBar.Solid&quot;>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/styles.xml"
-            line="4"
-            column="12"/>
     </issue>
 
     <issue

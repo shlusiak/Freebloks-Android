@@ -63,6 +63,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.whenResumed
+import androidx.lifecycle.withResumed
+import androidx.lifecycle.withStarted
+import androidx.lifecycle.withStateAtLeast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
@@ -187,9 +191,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
             // At exactly this many starts, show the DonateFragment once
             if (!Global.IS_VIP && starts == Global.SUPPORT_STARTS.toLong()) {
-                lifecycleScope.launchWhenResumed {
-                    delay(500)
-                    SupportFragment().show(supportFragmentManager, null)
+                lifecycleScope.launch {
+                    withResumed {
+                        SupportFragment().show(supportFragmentManager, null)
+                    }
                 }
             }
         }
@@ -469,59 +474,8 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 enter = scaleIn(), exit = scaleOut()
             ) {
                 val unread by viewModel.chatButtonBadge.collectAsState(initial = 0)
-                ChatButton(Modifier, unread = unread)
+                ChatButton(unread = unread, onClick = ::onChatButtonClick)
             }
-        }
-    }
-
-    @Composable
-    private fun ChatButton(modifier: Modifier, unread: Int = 5) {
-        val containerColor = if (unread > 0) MaterialTheme.colorScheme.primaryContainer else getContainerColor()
-        val contentColor = MaterialTheme.colorScheme.contentColorFor(containerColor).takeOrElse { getContentColor() }
-
-        Box(
-            modifier = modifier
-                .wrapContentSize()
-                .height(IntrinsicSize.Min)
-                .width(IntrinsicSize.Min)
-        ) {
-            FloatingActionButton(
-                onClick = ::onChatButtonClick,
-                containerColor = containerColor,
-                contentColor = contentColor,
-                elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
-            ) {
-                Icon(painter = painterResource(id = R.drawable.ic_chat), contentDescription = "")
-            }
-
-            AnimatedVisibility(
-                visible = unread > 0,
-                enter = scaleIn(),
-                exit = scaleOut(),
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier
-                        .offset(x = 5.dp, y = 5.dp)
-                        .sizeIn(22.dp, 22.dp),
-                    shape = CircleShape
-                ) {
-                    Text(
-                        text = unread.toString(),
-                        style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.wrapContentSize()
-                    )
-                }
-            }
-        }
-    }
-
-    @Previews
-    @Composable
-    private fun ChatButtonPreview() {
-        AppTheme {
-            ChatButton(modifier = Modifier.padding(8.dp), unread = 5)
         }
     }
 
@@ -642,6 +596,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
+    @Suppress("DEPRECATION")
     @Deprecated("Deprecated in Java")
     override fun onCreateDialog(id: Int, args: Bundle?): Dialog? {
         when (id) {
@@ -678,6 +633,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             hideMenu()
             return
         } else if ((client != null) && client.game.isStarted && !client.game.isFinished && (lastStatus != null) && (lastStatus.clients > 1)) {
+            @Suppress("DEPRECATION")
             showDialog(DIALOG_QUIT)
         } else {
             if (viewModel.intro.value != null) {
@@ -718,6 +674,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         try {
             restoreOldGame()
         } catch (e: Exception) {
+            crashReporter.logException(e)
             Toast.makeText(this@FreebloksActivity, R.string.could_not_restore_game, Toast.LENGTH_LONG).show()
         }
         val client = viewModel.client
@@ -726,12 +683,14 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         if (!canResume || !prefs.autoResume) showMainMenu()
 
         if (showRateDialog) {
-            lifecycleScope.launchWhenResumed {
-                RateAppFragment().show(supportFragmentManager, null)
+            lifecycleScope.launch {
+                withResumed {
+                    RateAppFragment().show(supportFragmentManager, null)
 
-                // Reset the counts, so that the logic starts over, in case the user wants to see this again
-                prefs.numberOfStarts = 0
-                prefs.firstStarted = System.currentTimeMillis()
+                    // Reset the counts, so that the logic starts over, in case the user wants to see this again
+                    prefs.numberOfStarts = 0
+                    prefs.firstStarted = System.currentTimeMillis()
+                }
             }
         }
         view.requestRender()
@@ -777,8 +736,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 //region OnStartCustomGameListener
 
     override fun showMainMenu() {
-        lifecycleScope.launchWhenResumed {
-            MainMenuFragment().show(supportFragmentManager, "game_menu")
+        lifecycleScope.launch {
+            withStarted {
+                MainMenuFragment().show(supportFragmentManager, "game_menu")
+            }
         }
     }
 
@@ -816,9 +777,12 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
         if (viewModel.intro.value != null) viewModel.intro.value?.cancel() else {
             val client = viewModel.client
-            if (client == null || client.game.isFinished) restartGameWithLastConfiguration() else showDialog(
-                DIALOG_NEW_GAME_CONFIRMATION
-            )
+            if (client == null || client.game.isFinished) {
+                restartGameWithLastConfiguration()
+            } else {
+                @Suppress("DEPRECATION")
+                showDialog(DIALOG_NEW_GAME_CONFIRMATION)
+            }
         }
     }
 
@@ -861,13 +825,15 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     override fun playerIsOutOfMoves(player: Player) {
         scene.playSound(FeedbackType.OutOfMoves, volume = 0.8f)
 
-        lifecycleScope.launchWhenStarted {
-            val playerName = viewModel.getPlayerName(player.number)
-            Toast.makeText(
-                this@FreebloksActivity,
-                getString(R.string.color_is_out_of_moves, playerName),
-                Toast.LENGTH_SHORT
-            ).show()
+        lifecycleScope.launch {
+            withResumed {
+                val playerName = viewModel.getPlayerName(player.number)
+                Toast.makeText(
+                    this@FreebloksActivity,
+                    getString(R.string.color_is_out_of_moves, playerName),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -887,18 +853,20 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         analytics.logEvent("game_finished", b)
 
 //        viewModel.sounds.play(FeedbackType.GameOver)
-        lifecycleScope.launchWhenStarted {
-            val dialog = GameFinishFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable("game", client.game)
-                    putSerializable("lastStatus", lastStatus)
+        lifecycleScope.launch {
+            withStarted {
+                val dialog = GameFinishFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable("game", client.game)
+                        putSerializable("lastStatus", lastStatus)
+                    }
                 }
-            }
 
-            supportFragmentManager
-                .beginTransaction()
-                .add(dialog, null)
-                .commitAllowingStateLoss()
+                supportFragmentManager
+                    .beginTransaction()
+                    .add(dialog, null)
+                    .commitAllowingStateLoss()
+            }
         }
     }
 
@@ -911,21 +879,25 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             }
             analytics.logEvent("lobby_show", bundle)
 
-            lifecycleScope.launchWhenStarted {
-                LobbyDialog().show(supportFragmentManager, null)
+            lifecycleScope.launch {
+                withStarted {
+                    LobbyDialog().show(supportFragmentManager, null)
+                }
             }
         }
     }
 
     @UiThread
     override fun onConnectionFailed(client: GameClient, error: Exception) {
-        lifecycleScope.launchWhenStarted {
-            MaterialAlertDialogBuilder(this@FreebloksActivity)
-                .setTitle(R.string.connection_refused)
-                .setMessage("${error.javaClass.simpleName}: ${error.message}")
-                .setOnDismissListener { showMainMenu() }
-                .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
-                .show()
+        lifecycleScope.launch {
+            withStarted {
+                MaterialAlertDialogBuilder(this@FreebloksActivity)
+                    .setTitle(R.string.connection_refused)
+                    .setMessage("${error.javaClass.simpleName}: ${error.message}")
+                    .setOnDismissListener { showMainMenu() }
+                    .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+                    .show()
+            }
         }
     }
 
@@ -943,19 +915,21 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             /* TODO: add sound on disconnect on error */
             viewModel.saveGameState()
 
-            lifecycleScope.launchWhenStarted {
-                MaterialAlertDialogBuilder(this@FreebloksActivity)
-                    .setTitle(android.R.string.dialog_alert_title)
-                    .setMessage(getString(R.string.disconnect_error, error.message))
-                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                        dialog.dismiss()
-                        try {
-                            restoreOldGame()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+            lifecycleScope.launch {
+                withStarted {
+                    MaterialAlertDialogBuilder(this@FreebloksActivity)
+                        .setTitle(android.R.string.dialog_alert_title)
+                        .setMessage(getString(R.string.disconnect_error, error.message))
+                        .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                            dialog.dismiss()
+                            try {
+                                restoreOldGame()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
-                    }
-                    .create().show()
+                        .create().show()
+                }
             }
         }
     }

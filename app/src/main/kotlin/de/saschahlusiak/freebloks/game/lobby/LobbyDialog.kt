@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withStarted
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
@@ -33,6 +34,7 @@ import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -222,14 +224,14 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     }
 
     override fun gameStarted() {
-        lifecycleScope.launchWhenStarted {
-            dismiss()
+        lifecycleScope.launch {
+            withStarted { dismiss() }
         }
     }
 
     override fun onDisconnected(client: GameClient, error: Throwable?) {
-        lifecycleScope.launchWhenStarted {
-            dismiss()
+        lifecycleScope.launch {
+            withStarted { dismiss() }
         }
     }
 }
