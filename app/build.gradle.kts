@@ -86,7 +86,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.19.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
-    testImplementation("org.robolectric:robolectric:4.15.1")
+    testImplementation("org.robolectric:robolectric:4.16")
     testImplementation("androidx.test.espresso:espresso-core:3.7.0")
     testImplementation("androidx.test.ext:junit:1.3.0")
 
@@ -108,7 +108,7 @@ dependencies {
 
     // https://github.com/material-components/material-components-android
     // https://mvnrepository.com/artifact/com.google.android.material/material
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.material:material:1.13.0")
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.3")
