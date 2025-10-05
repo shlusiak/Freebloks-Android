@@ -1,10 +1,7 @@
 package de.saschahlusiak.freebloks.statistics
 
-import android.net.Uri
-import android.widget.Space
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -12,15 +9,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -95,15 +94,14 @@ private fun ColumnScope.PlacesRow(
 ) {
     Row(
         modifier,
-        horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingSmall),
         verticalAlignment = Alignment.CenterVertically
     ) {
         places.forEachIndexed { index, times ->
             if (index > 0) {
-                Text(
-                    ">",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                Icon(
+                    Icons.Rounded.ChevronRight, "",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
                 )
             }
 
@@ -134,15 +132,14 @@ private fun ColumnScope.ColorsRow(
 ) {
     Row(
         modifier,
-        horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingSmall),
         verticalAlignment = Alignment.CenterVertically
     ) {
         placesByColor.forEachIndexed { index, (stoneColor, places) ->
             if (index > 0) {
-                Text(
-                    ">",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                Icon(
+                    Icons.Rounded.ChevronRight, "",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
                 )
             }
 

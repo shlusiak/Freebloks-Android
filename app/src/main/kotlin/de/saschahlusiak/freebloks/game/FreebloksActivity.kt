@@ -24,28 +24,28 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.automirrored.rounded.VolumeOff
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.rounded.Autorenew
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.MyLocation
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -54,7 +54,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -63,10 +62,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.whenResumed
 import androidx.lifecycle.withResumed
 import androidx.lifecycle.withStarted
-import androidx.lifecycle.withStateAtLeast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
@@ -99,13 +96,11 @@ import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
 import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
-import de.saschahlusiak.freebloks.utils.Previews
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import de.saschahlusiak.freebloks.view.scene.intro.IntroDelegate
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -395,17 +390,18 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             Row(modifier = Modifier.padding(2.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                 IconButton(onClick = ::onSoundButtonClick) {
                     Icon(
-                        painter = painterResource(id = if (soundsEnabled) R.drawable.ic_volume_up else R.drawable.ic_volume_off),
-                        contentDescription = ""
+                        if (soundsEnabled) Icons.AutoMirrored.Rounded.VolumeUp else Icons.AutoMirrored.Rounded.VolumeOff,
+                        contentDescription = null,
+                        tint = if (soundsEnabled) LocalContentColor.current else LocalContentColor.current.copy(alpha = 0.75f)
                     )
                 }
 
                 IconButton(onClick = ::onHintButtonClick, enabled = canRequestHint) {
-                    Icon(painter = painterResource(id = R.drawable.ic_info), contentDescription = "")
+                    Icon(Icons.Outlined.Info, contentDescription = "")
                 }
 
                 IconButton(onClick = ::onUndoButtonClick, enabled = canUndo) {
-                    Icon(painter = painterResource(id = R.drawable.ic_undo), contentDescription = "")
+                    Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = "")
                 }
             }
         }
@@ -427,7 +423,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             ) {
                 IconButton(onClick = { menuShown = !menuShown }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_more_vertical),
+                        Icons.Rounded.MoreVert,
                         contentDescription = ""
                     )
                 }
@@ -435,11 +431,11 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                 AnimatedVisibility(visible = menuShown) {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         IconButton(onClick = ::onNewGameButtonClick) {
-                            Icon(painter = painterResource(id = R.drawable.ic_new_game), contentDescription = "")
+                            Icon(Icons.Rounded.Autorenew, contentDescription = "")
                         }
 
                         IconButton(onClick = ::onPreferencesButtonClick) {
-                            Icon(painter = painterResource(id = R.drawable.ic_settings), contentDescription = "")
+                            Icon(Icons.Rounded.Settings, contentDescription = "")
                         }
                     }
                 }
@@ -463,7 +459,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                     contentColor = getContentColor(),
                     elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.ic_my_location), contentDescription = "")
+                    Icon(Icons.Rounded.MyLocation, contentDescription = "")
                 }
             }
 

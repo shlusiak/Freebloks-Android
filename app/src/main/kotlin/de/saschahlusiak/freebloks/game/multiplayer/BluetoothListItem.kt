@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.game.multiplayer
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bluetooth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -31,7 +33,7 @@ fun BluetoothListItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                painterResource(id = R.drawable.ic_bluetooth),
+                Icons.Rounded.Bluetooth,
                 contentDescription = null
             )
 
