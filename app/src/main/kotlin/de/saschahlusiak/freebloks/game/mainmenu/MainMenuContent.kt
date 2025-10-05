@@ -8,18 +8,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.VolumeOff
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.rounded.QuestionMark
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
@@ -67,13 +73,18 @@ fun MainMenuContent(
                 FilledIconToggleButton(
                     checked = soundOn,
                     onCheckedChange = { onToggleSound() },
+                    colors = IconButtonDefaults.filledIconToggleButtonColors(
+                        checkedContainerColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
                     modifier = Modifier
                         .padding(end = MaterialTheme.dimensions.mainMenuButtonMargin)
                         .size(buttonSize)
                 ) {
                     Icon(
-                        painter = painterResource(id = if (soundOn) R.drawable.ic_volume_up else R.drawable.ic_volume_off),
-                        contentDescription = null
+                        if (soundOn) Icons.AutoMirrored.Rounded.VolumeUp else Icons.AutoMirrored.Rounded.VolumeOff,
+                        contentDescription = null,
+                        tint = if (soundOn) LocalContentColor.current else LocalContentColor.current.copy(alpha = 0.75f)
                     )
                 }
 
@@ -82,7 +93,7 @@ fun MainMenuContent(
                     modifier = Modifier
                         .size(buttonSize)
                 ) {
-                    Icon(painterResource(id = R.drawable.ic_questionmark), contentDescription = null)
+                    Icon(Icons.Rounded.QuestionMark, contentDescription = null)
                 }
             }
 

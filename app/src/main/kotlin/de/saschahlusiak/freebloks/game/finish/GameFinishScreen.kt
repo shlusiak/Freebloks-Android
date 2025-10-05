@@ -14,13 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Leaderboard
+import androidx.compose.material.icons.rounded.SsidChart
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -29,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
@@ -112,7 +112,7 @@ fun GameFinishScreen(
                     onClick = onStatistics,
                     modifier = Modifier.size(MaterialTheme.dimensions.buttonSize)
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.ic_chart), contentDescription = null)
+                    Icon(Icons.Rounded.SsidChart, contentDescription = null)
                 }
 
                 if (isSignedIn) {
@@ -121,7 +121,7 @@ fun GameFinishScreen(
                         modifier = Modifier.size(MaterialTheme.dimensions.buttonSize)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_leaderboard),
+                            Icons.Outlined.Leaderboard,
                             contentDescription = null
                         )
                     }

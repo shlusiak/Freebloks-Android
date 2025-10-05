@@ -12,6 +12,11 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Chat
+import androidx.compose.material.icons.rounded.Chat
+import androidx.compose.material.icons.rounded.ChatBubble
+import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -48,7 +53,7 @@ fun ChatButton(unread: Int, modifier: Modifier = Modifier, onClick: () -> Unit) 
             contentColor = contentColor,
             elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
         ) {
-            Icon(painter = painterResource(id = R.drawable.ic_chat), contentDescription = "")
+            Icon(Icons.Rounded.ChatBubbleOutline, contentDescription = "")
         }
 
         AnimatedVisibility(
