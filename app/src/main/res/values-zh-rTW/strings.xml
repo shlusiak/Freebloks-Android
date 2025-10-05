@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Freebloks</string>
-    <string name="copyright_string" translatable="false">Copyright (c) Sascha Hlusiak, 2012-2025.</string>
-    <string name="github_link" translatable="false">https://github.com/shlusiak/Freebloks-Android</string>
-    <string name="notification_channel_default" translatable="false">General</string>
-
     <string name="play_again">再来一局</string>
     <string name="new_game">開始新局</string>
     <string name="resume_game">繼續上局</string>
@@ -189,12 +184,7 @@
         <item>精简（30 fps）</item>
         <item>完整版（60 fps）</item>
     </string-array> 
-    <string-array name="prefs_animations_values" translatable="false" >
-        <item>2</item>
-        <item>1</item>
-        <item>0</item>
-    </string-array> 
-    
+
     <string name="prefs_skip_intro_long">启动时跳過開場動畫</string>
     <string name="prefs_skip_intro">跳過開場</string>
     <string name="prefs_auto_resume_long">自动恢复上次的游戏</string>
@@ -211,9 +201,6 @@
     <string name="prefs_board_theme">棋盤主題</string>
     <string name="prefs_statistics">Statistics</string>
     <string name="prefs_statistics_long">顯示游戏統計</string>
-
-    <string name="blokus_duo" translatable="false">Blokus Duo</string>
-    <string name="blokus_junior" translatable="false">Blokus Junior</string>
 
     <string name="rules_title">Blokus 玩法說明</string>
     <string name="rules_youtube">觀看教學影片</string>
