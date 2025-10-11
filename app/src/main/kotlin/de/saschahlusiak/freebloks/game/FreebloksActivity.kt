@@ -44,6 +44,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -389,10 +390,11 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
             Row(modifier = Modifier.padding(2.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                 IconButton(onClick = ::onSoundButtonClick) {
+                    val colors = IconButtonDefaults.iconButtonColors()
                     Icon(
                         if (soundsEnabled) Icons.AutoMirrored.Rounded.VolumeUp else Icons.AutoMirrored.Rounded.VolumeOff,
                         contentDescription = null,
-                        tint = if (soundsEnabled) LocalContentColor.current else LocalContentColor.current.copy(alpha = 0.75f)
+                        tint = if (soundsEnabled) colors.contentColor else colors.disabledContentColor
                     )
                 }
 
