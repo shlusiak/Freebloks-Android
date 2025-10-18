@@ -34,9 +34,9 @@ dependencies {
     implementation(project(":game"))
 
     // Room for data persisting
-    implementation("androidx.room:room-runtime:2.8.1")
-    implementation("androidx.room:room-ktx:2.8.1")
-    ksp("androidx.room:room-compiler:2.8.1")
+    implementation("androidx.room:room-runtime:2.8.2")
+    implementation("androidx.room:room-ktx:2.8.2")
+    ksp("androidx.room:room-compiler:2.8.2")
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation("androidx.preference:preference-ktx:1.2.1")

@@ -49,7 +49,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     testOptions {
@@ -83,7 +83,7 @@ val googleImplementation by configurations
 dependencies {
     // for unit tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.19.0")
+    testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
     testImplementation("org.robolectric:robolectric:4.16")
@@ -116,7 +116,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.09.01"))
+    implementation(platform("androidx.compose:compose-bom:2025.10.00"))
     implementation("androidx.activity:activity-compose:1.11.0")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
