@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity

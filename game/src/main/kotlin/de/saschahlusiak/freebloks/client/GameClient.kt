@@ -50,11 +50,6 @@ class GameClient(
     private val supervisorJob = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Main) + supervisorJob
 
-    /**
-     * The last status message received by our handler
-     */
-    val lastStatus get() = gameClientMessageHandler.lastStatus
-
     @Throws(Throwable::class)
     override fun finalize() {
         disconnect()

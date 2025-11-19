@@ -111,7 +111,10 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
     }
 
     override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
-        val fragment = Class.forName(pref.fragment).newInstance() as Fragment
+        val fragment = Class.forName(requireNotNull(pref.fragment))
+            .getDeclaredConstructor()
+            .newInstance() as Fragment
+
         fragment.arguments = pref.extras
 
         return when (caller) {
@@ -148,6 +151,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             is ThemePreference -> {
                 ThemePreferenceDialogFragment().apply {
                     setKey(pref.key)
+                    @Suppress("DEPRECATION")
                     setTargetFragment(caller, 0)
                     show(supportFragmentManager, null)
                 }
@@ -156,6 +160,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             is ListPreference -> {
                 ListPreferenceDialogFragment().apply {
                     setKey(pref.key)
+                    @Suppress("DEPRECATION")
                     setTargetFragment(caller, 0)
                     show(supportFragmentManager, null)
                 }

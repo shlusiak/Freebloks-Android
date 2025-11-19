@@ -35,6 +35,6 @@ enum class Rotation(val value: Int) {
     }
 
     companion object {
-        fun from(rotation: Int) = values()[rotation]
+        fun from(rotation: Int) = entries[rotation]
     }
 }

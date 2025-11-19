@@ -7,7 +7,6 @@ android {
     defaultConfig {
         compileSdk = 36
         minSdk = 23
-        consumerProguardFiles("consumer-rules.pro")
     }
     lint {
         abortOnError = true
@@ -29,5 +28,5 @@ dependencies {
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.fragment:fragment-ktx:1.8.9")
 
-    api("androidx.compose.runtime:runtime-android:1.9.3")
+    api("androidx.compose.runtime:runtime-android:1.9.4")
 }

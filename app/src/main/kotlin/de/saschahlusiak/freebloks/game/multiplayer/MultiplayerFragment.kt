@@ -143,7 +143,7 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
         if (!adapter.isEnabled) return null
 
-        return BluetoothServerThread(crashReporter, this).also {
+        return BluetoothServerThread(adapter, crashReporter, this).also {
             it.start()
         }
     }

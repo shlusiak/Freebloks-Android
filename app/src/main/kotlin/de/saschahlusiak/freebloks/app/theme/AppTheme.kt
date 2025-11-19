@@ -2,8 +2,7 @@ package de.saschahlusiak.freebloks.app.theme
 
 import android.os.Build.VERSION
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -11,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.Feature.FORCE_TABLET_DIMENSIONS
 
@@ -20,7 +20,6 @@ fun isTablet(): Boolean {
     return configuration.smallestScreenWidthDp >= 600 || FORCE_TABLET_DIMENSIONS
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -40,7 +39,7 @@ fun AppTheme(
     val dimensions = if (isTablet) TabletDimensions else DefaultDimensions
 
     CompositionLocalProvider(
-        LocalMinimumInteractiveComponentEnforcement provides false,
+        LocalMinimumInteractiveComponentSize provides 0.dp,
         LocalDimensions provides dimensions
     ) {
         MaterialTheme(

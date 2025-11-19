@@ -11,7 +11,7 @@ internal enum class Phase(val duration: Float) {
     Hlusiak(3.5f),
     HlusiakWipe(2.5f);
 
-    fun next(): Phase? = if (ordinal >= values().size - 1) null else values()[ordinal + 1]
+    fun next(): Phase? = if (ordinal >= entries.size - 1) null else entries[ordinal + 1]
 
     fun enter(intro: Intro) = with(intro.effects) {
         when (this@Phase) {

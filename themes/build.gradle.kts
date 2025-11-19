@@ -3,13 +3,15 @@ plugins {
     id("kotlin-android")
 }
 
-android.buildFeatures.buildConfig = true
-
 android {
     compileSdk = 36
 
     defaultConfig {
         minSdk = 23
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     testOptions {
@@ -29,6 +31,11 @@ android {
         jvmToolchain(17)
     }
     namespace = "de.saschahlusiak.freebloks.theme"
+    kotlin {
+        compilerOptions {
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        }
+    }
 }
 
 dependencies {

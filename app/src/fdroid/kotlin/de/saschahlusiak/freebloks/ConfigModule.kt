@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks
 
-import android.app.Application
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,11 +12,11 @@ import javax.inject.Singleton
 object ConfigModule {
     @Provides
     @Singleton
-    fun provideAnalytics(app: Application): AnalyticsProvider = EmptyAnalyticsProvider()
+    fun provideAnalytics(): AnalyticsProvider = EmptyAnalyticsProvider()
 
     @Provides
     @Singleton
-    fun provideGamesHelper(app: Application): GooglePlayGamesHelper = EmptyGooglePlayGamesHelper()
+    fun provideGamesHelper(): GooglePlayGamesHelper = EmptyGooglePlayGamesHelper()
 
     @Provides
     @Singleton

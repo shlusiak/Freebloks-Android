@@ -81,7 +81,7 @@ class MultiplayerNotificationManager(
         val lastStatus = lastStatus ?: return null
         // No need to show the notification if we are the only client connected. May not be a multiplayer
         // game after all.
-        if (game.isStarted && lastStatus.clients == 1) return null
+        if (game.isStarted && lastStatus.clients == 1 && !BuildConfig.DEBUG) return null
 
         isInBackground = true
 

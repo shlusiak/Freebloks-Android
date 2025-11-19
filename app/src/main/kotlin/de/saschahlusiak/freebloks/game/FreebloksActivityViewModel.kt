@@ -3,7 +3,9 @@ package de.saschahlusiak.freebloks.game
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.ComponentName
 import android.content.Context
@@ -44,9 +46,11 @@ import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.view.scene.SceneDelegate
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -57,7 +61,6 @@ import java.io.ByteArrayOutputStream
 import java.net.NetworkInterface
 import java.net.SocketException
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 enum class ConnectionStatus {
     Disconnected, Connecting, Connected, Failed
@@ -112,9 +115,12 @@ class FreebloksActivityViewModel @Inject constructor(
     // Flows
     val chatHistory = MutableStateFlow(emptyList<ChatItem>())
     private val seenChatHistory = MutableStateFlow(0)
+
+    @OptIn(FlowPreview::class)
     val chatButtonBadge = chatHistory.combine(seenChatHistory) { history, seen ->
         history.size - seen
     }.debounce(200)
+
     val soundsEnabled = MutableStateFlow(prefs.sounds)
     val chatButtonVisible = MutableStateFlow(false)
     val connectionStatus = MutableStateFlow(ConnectionStatus.Disconnected)
@@ -206,7 +212,7 @@ class FreebloksActivityViewModel @Inject constructor(
 
         if (!game.isStarted || game.isFinished) return
 
-        GlobalScope.launch(Dispatchers.IO) {
+        MainScope().launch(Dispatchers.IO) {
             val p = Parcel.obtain()
 
             try {
@@ -242,7 +248,9 @@ class FreebloksActivityViewModel @Inject constructor(
         val bundle = p.readBundle(javaClass.classLoader)
         p.recycle()
 
+        @Suppress("DEPRECATION")
         val game = bundle?.getSerializable("game") as Game? ?: return null
+
         if (game.isFinished) return null
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -265,7 +273,7 @@ class FreebloksActivityViewModel @Inject constructor(
         setSheetPlayer(showPlayer = -1, isRotated = false)
         chatButtonVisible.value = false
 
-        connectJob = coroutineContext[Job]
+        connectJob = currentCoroutineContext()[Job]
 
         val name = config.server ?: "(null)"
         crashReporter.log("Connecting to: $name")
@@ -333,7 +341,10 @@ class FreebloksActivityViewModel @Inject constructor(
         }
 
         // the bluetooth server has to be constructed on the main thread
-        val bluetoothServer = BluetoothServerThread(crashReporter, connectedListener)
+        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
+
+        val bluetoothServer = BluetoothServerThread(bluetoothAdapter, crashReporter, connectedListener)
         // the server is a thread and will have a strong reference for as long as it lives
         client.addObserver(bluetoothServer)
         bluetoothServer.start()
@@ -354,7 +365,7 @@ class FreebloksActivityViewModel @Inject constructor(
 
         crashReporter.log("Connecting to bluetooth device")
 
-        connectJob = coroutineContext[Job]
+        connectJob = currentCoroutineContext()[Job]
 
         Log.i(tag, "Connecting to " + remote.name + "/" + remote.address)
         if (!client.connect(remote)) {

@@ -55,7 +55,7 @@ class ThemeManager private constructor(context: Context) {
     private fun loadThemesFromPackage(context: Context, className: String): Collection<Theme> {
         try {
             val c = Class.forName(className)
-            val provider = c.newInstance()
+            val provider = c.getDeclaredConstructor().newInstance()
 
             provider as? ThemeProvider ?: throw IllegalArgumentException("ThemeProvider expected, ${provider.javaClass.name} found")
 

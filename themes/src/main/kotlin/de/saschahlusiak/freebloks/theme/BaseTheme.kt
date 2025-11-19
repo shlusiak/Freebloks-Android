@@ -34,7 +34,7 @@ abstract class BaseTheme(@StringRes val label: Int, @DrawableRes val preview: In
 
     override fun getPreview(resources: Resources): Drawable {
         if (isResource) {
-            val background = resources.getDrawable(preview) as BitmapDrawable
+            val background = resources.getDrawable(preview, null) as BitmapDrawable
 
             background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.MIRROR)
             background.isFilterBitmap = true

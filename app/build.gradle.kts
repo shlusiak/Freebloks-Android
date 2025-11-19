@@ -13,6 +13,7 @@ android {
         compileSdk = 36
         minSdk = 23
         targetSdk = 36
+        ndkVersion = "28.2.13676358"
 
         versionCode = 171
         versionName = "1.7.1"
@@ -74,6 +75,11 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+    kotlin {
+        compilerOptions {
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        }
+    }
     namespace = "de.saschahlusiak.freebloks"
 }
 
@@ -116,13 +122,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.10.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.11.00"))
     implementation("androidx.activity:activity-compose:1.11.0")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     implementation("androidx.compose.animation:animation")
-    implementation("androidx.compose.ui:ui-tooling")
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    debugCompileOnly("androidx.compose.ui:ui-tooling")
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation("androidx.preference:preference-ktx:1.2.1")

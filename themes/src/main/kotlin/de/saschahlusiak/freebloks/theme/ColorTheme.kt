@@ -14,8 +14,12 @@ import androidx.annotation.StringRes
  * @param colorRes color resource, or 0
  * @param color color value, if [colorRes] is 0
  */
-class ColorTheme(override val name: String, @StringRes label: Int, @ColorRes val colorRes: Int = 0, @ColorInt val color: Int = 0)
-    : BaseTheme(label = label) {
+class ColorTheme(
+    override val name: String,
+    @StringRes label: Int,
+    @ColorRes val colorRes: Int = 0,
+    @ColorInt val color: Int = 0
+) : BaseTheme(label = label) {
 
     constructor(name: String, @StringRes label: Int, r: Int, g: Int, b: Int): this(
         name = name,
@@ -25,7 +29,7 @@ class ColorTheme(override val name: String, @StringRes label: Int, @ColorRes val
 
     override fun getColor(resources: Resources): Int {
         return if (colorRes != 0) {
-            resources.getColor(colorRes)
+            resources.getColor(colorRes, null)
         } else {
             color
         }

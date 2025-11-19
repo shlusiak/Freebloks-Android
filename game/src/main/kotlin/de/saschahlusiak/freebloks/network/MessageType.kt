@@ -19,7 +19,7 @@ enum class MessageType(val rawValue: Int) {
 
     companion object {
         fun from(type: Int): MessageType {
-            return values().firstOrNull { it.rawValue == type } ?: Unknown
+            return entries.firstOrNull { it.rawValue == type } ?: Unknown
         }
     }
 }
