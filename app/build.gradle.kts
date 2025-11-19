@@ -18,6 +18,7 @@ android {
         versionCode = 171
         versionName = "1.7.1"
 
+        @Suppress("UnstableApiUsage")
         androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt", "ro", "ru", "zh-rHK")
     }
     setFlavorDimensions(listOf("app", "store"))
@@ -116,11 +117,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation("com.google.android.material:material:1.13.0")
 
-    // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
-
     // Compose
     implementation(platform("androidx.compose:compose-bom:2025.11.00"))
     implementation("androidx.activity:activity-compose:1.11.0")
@@ -129,7 +125,7 @@ dependencies {
     implementation("androidx.compose.animation:animation")
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-    debugCompileOnly("androidx.compose.ui:ui-tooling")
+    compileOnly("androidx.compose.ui:ui-tooling")
 
     // https://mvnrepository.com/artifact/androidx.preference/preference
     implementation("androidx.preference:preference-ktx:1.2.1")
