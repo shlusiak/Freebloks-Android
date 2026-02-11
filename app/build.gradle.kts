@@ -90,7 +90,7 @@ val googleImplementation by configurations
 dependencies {
     // for unit tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.20.0")
+    testImplementation("org.mockito:mockito-core:5.21.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
     testImplementation("org.robolectric:robolectric:4.16")
@@ -108,8 +108,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.17.0")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.57.2")
-    ksp("com.google.dagger:hilt-compiler:2.57.2")
+    implementation("com.google.dagger:hilt-android:2.59.1")
+    ksp("com.google.dagger:hilt-compiler:2.59.1")
     testImplementation("com.google.dagger:hilt-android-testing:2.57.2")
     kspTest("com.google.dagger:hilt-android-compiler:2.57.2")
 
@@ -118,8 +118,8 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.11.00"))
-    implementation("androidx.activity:activity-compose:1.11.0")
+    implementation(platform("androidx.compose:compose-bom:2026.01.01"))
+    implementation("androidx.activity:activity-compose:1.12.3")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     implementation("androidx.compose.animation:animation")
