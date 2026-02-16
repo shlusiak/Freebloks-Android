@@ -118,8 +118,8 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2026.01.01"))
-    implementation("androidx.activity:activity-compose:1.12.3")
+    implementation(platform("androidx.compose:compose-bom:2026.02.00"))
+    implementation("androidx.activity:activity-compose:1.12.4")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
     implementation("androidx.compose.animation:animation")
