@@ -6,22 +6,22 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath ("com.android.tools.build:gradle:9.1.0")
+        classpath(libs.gradle)
 
         // Kotlin
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20")
-        classpath("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.2.20")
-        classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.3.2")
+        classpath(libs.kotlin.gradle.plugin)
+        classpath(libs.compose.compiler.gradle.plugin)
+        classpath(libs.com.google.devtools.ksp.gradle.plugin)
 
         // Hilt
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.59.2")
+        classpath(libs.hilt.android.gradle.plugin)
 
         // Room
-        classpath("androidx.room:androidx.room.gradle.plugin:2.8.4")
+        classpath(libs.androidx.room.gradle.plugin)
 
         // https://developers.google.com/android/guides/releases
-        classpath("com.google.gms:google-services:4.4.4")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.6")
+        classpath(libs.google.services)
+        classpath(libs.firebase.crashlytics.gradle)
     }
 }
 
