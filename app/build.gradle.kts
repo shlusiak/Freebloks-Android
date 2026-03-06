@@ -117,8 +117,7 @@ dependencies {
     implementation(libs.compose.material.icons)
     implementation(libs.compose.animation)
     implementation(libs.coil.compose)
-
-    compileOnly(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.tooling)
 
     implementation(libs.preference.ktx)
 

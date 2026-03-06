@@ -3,10 +3,12 @@ package de.saschahlusiak.freebloks.game.multiplayer
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ internal fun RadioButtonListItem(
                 interactionSource = interactionSource,
                 indication = null
             )
+            .heightIn(36.dp)
     ) {
         RadioButton(
             selected = selected,
