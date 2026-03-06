@@ -88,14 +88,13 @@ val googleImplementation by configurations
 //val amazonImplementation by configurations
 
 dependencies {
-    // for unit tests
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.21.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    testImplementation("org.khronos:opengl-api:gl1.1-android-2.1_r1")
-    testImplementation("org.robolectric:robolectric:4.16")
-    testImplementation("androidx.test.espresso:espresso-core:3.7.0")
-    testImplementation("androidx.test.ext:junit:1.3.0")
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.opengl.api)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.junit.ext)
 
     implementation(project(":common"))
     implementation(project(":themes"))
@@ -104,35 +103,25 @@ dependencies {
     implementation(project(":ktx"))
     implementation(project(":data"))
 
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
-    implementation("androidx.core:core-ktx:1.17.0")
+    implementation(libs.fragment.ktx)
+    implementation(libs.core.ktx)
 
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.59.2")
-    ksp("com.google.dagger:hilt-compiler:2.59.2")
-    testImplementation("com.google.dagger:hilt-android-testing:2.57.2")
-    kspTest("com.google.dagger:hilt-android-compiler:2.57.2")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
-    // https://github.com/material-components/material-components-android
-    // https://mvnrepository.com/artifact/com.google.android.material/material
-    implementation("com.google.android.material:material:1.13.0")
+    implementation(libs.material)
 
-    // Compose
-    implementation(platform("androidx.compose:compose-bom:2026.02.01"))
-    implementation("androidx.activity:activity-compose:1.12.4")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
-    implementation("androidx.compose.animation:animation")
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(platform(libs.compose.bom))
+    implementation(libs.activity.compose)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons)
+    implementation(libs.compose.animation)
+    implementation(libs.coil.compose)
 
-    compileOnly("androidx.compose.ui:ui-tooling")
+    compileOnly(libs.compose.ui.tooling)
 
-    // https://mvnrepository.com/artifact/androidx.preference/preference
-    implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation(libs.preference.ktx)
 
-    /// NON-FREE DEPENDENCIES, only included in "google" and "amazon" store flavours, excluded in "fdroid"
-    /// =====================
-
+    /// NON-FREE DEPENDENCIES, only included in "google" store flavor, excluded in "fdroid"
     googleImplementation(project(":google-services"))
-//    amazonImplementation(project(":google-services"))
 }

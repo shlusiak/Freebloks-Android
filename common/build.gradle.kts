@@ -23,10 +23,10 @@ android {
 }
 
 dependencies {
-    testImplementation("androidx.test.ext:junit:1.3.0")
+    testImplementation(libs.junit.ext)
 
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
+    implementation(libs.core.ktx)
+    implementation(libs.fragment.ktx)
 
-    api("androidx.compose.runtime:runtime-android:1.10.4")
+    api(libs.compose.runtime)
 }
