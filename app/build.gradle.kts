@@ -108,8 +108,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.17.0")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.59.1")
-    ksp("com.google.dagger:hilt-compiler:2.59.1")
+    implementation("com.google.dagger:hilt-android:2.59.2")
+    ksp("com.google.dagger:hilt-compiler:2.59.2")
     testImplementation("com.google.dagger:hilt-android-testing:2.57.2")
     kspTest("com.google.dagger:hilt-android-compiler:2.57.2")
 
@@ -118,7 +118,7 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2026.02.00"))
+    implementation(platform("androidx.compose:compose-bom:2026.02.01"))
     implementation("androidx.activity:activity-compose:1.12.4")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")

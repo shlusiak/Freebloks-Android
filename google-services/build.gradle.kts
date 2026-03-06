@@ -32,7 +32,7 @@ dependencies {
     // For Google+ integration
     // https://developers.google.com/android/guides/releases
     implementation("com.google.android.gms:play-services-games:24.0.0")
-    implementation("com.google.android.gms:play-services-auth:21.5.0")
+    implementation("com.google.android.gms:play-services-auth:21.5.1")
 
     // https://firebase.google.com/support/release-notes/android
     implementation("com.google.firebase:firebase-analytics:23.0.0")

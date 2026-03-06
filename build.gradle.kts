@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin
-        classpath ("com.android.tools.build:gradle:9.0.0")
+        classpath ("com.android.tools.build:gradle:9.1.0")
 
         // Kotlin
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20")
@@ -14,7 +14,7 @@ buildscript {
         classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.3.2")
 
         // Hilt
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.59.1")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.59.2")
 
         // Room
         classpath("androidx.room:androidx.room.gradle.plugin:2.8.4")
