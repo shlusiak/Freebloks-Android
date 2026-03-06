@@ -1,6 +1,5 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     id("androidx.room")
@@ -25,13 +24,6 @@ android {
         compilerOptions {
             freeCompilerArgs.add("-Xannotation-default-target=param-property")
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        jvmToolchain(17)
     }
 }
 

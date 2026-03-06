@@ -1,11 +1,16 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.compose")
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
+    }
 }
 
 android {
@@ -21,7 +26,7 @@ android {
         @Suppress("UnstableApiUsage")
         androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt", "ro", "ru", "zh-rHK")
     }
-    setFlavorDimensions(listOf("app", "store"))
+    flavorDimensions += listOf("app", "store")
     productFlavors {
         create("standard") {
             dimension = "app"
@@ -68,18 +73,6 @@ android {
         abortOnError = true
         warningsAsErrors = true
         baseline = file("lint-baseline.xml")
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        jvmToolchain(17)
-    }
-    kotlin {
-        compilerOptions {
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
-        }
     }
     namespace = "de.saschahlusiak.freebloks"
 }
