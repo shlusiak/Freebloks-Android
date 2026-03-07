@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("dagger.hilt.android.plugin")
-    id("com.google.devtools.ksp")
-    id("androidx.room")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
