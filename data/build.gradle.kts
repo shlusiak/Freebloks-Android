@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "de.saschahlusiak.freebloks.data"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 23

@@ -4,7 +4,7 @@ plugins {
 
 android {
     defaultConfig {
-        compileSdk = 36
+        compileSdk = 37
         minSdk = 23
     }
     testOptions {
