@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.util
 
 import android.content.SharedPreferences
+import androidx.compose.runtime.State
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

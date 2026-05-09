@@ -2,13 +2,19 @@ package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
 import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Manages available [Theme] definitions. Get the singleton instance using [.get].
  *
  * @see [getTheme]
  */
-class ThemeManager private constructor(context: Context) {
+@Singleton
+class ThemeManager @Inject constructor(
+    @ApplicationContext context: Context
+) {
     private val tag = ThemeManager::class.java.simpleName
 
     val backgroundThemes: List<Theme>
@@ -94,6 +100,7 @@ class ThemeManager private constructor(context: Context) {
          * @param context Context
          * @return the singleton instance
          */
+        @Deprecated("Replace with injection")
         fun get(context: Context): ThemeManager {
             return singleton ?: ThemeManager(context).also { singleton = it }
         }

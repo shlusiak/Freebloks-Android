@@ -17,7 +17,7 @@ class Preferences @Inject constructor(
     internal val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     var gameMode: GameMode
-        get() = GameMode.Companion.from(
+        get() = GameMode.from(
             prefs.getInt(
                 "gamemode",
                 GameMode.GAMEMODE_4_COLORS_4_PLAYERS.ordinal
@@ -27,7 +27,7 @@ class Preferences @Inject constructor(
 
     var fieldSize by intPreference("fieldsize", default = GameMode.GAMEMODE_4_COLORS_4_PLAYERS.defaultBoardSize())
 
-    var difficulty by intPreference("difficulty", default = GameConfig.Companion.DEFAULT_DIFFICULTY)
+    var difficulty by intPreference("difficulty", default = GameConfig.DEFAULT_DIFFICULTY)
 
     var playerName by stringPreference("player_name")
 
@@ -41,28 +41,29 @@ class Preferences @Inject constructor(
 
     var viewScale by floatPreference("view_scale", default = 1f)
 
-    val theme by stringPreference("theme", default = "texture_wood")
+    var theme by stringPreference("theme", default = "texture_wood")
 
-    val boardTheme by stringPreference("board_theme", default = "field_wood")
+    var boardTheme by stringPreference("board_theme", default = "field_wood")
 
-    val autoResume by booleanPreference("auto_resume")
+    var autoResume by booleanPreference("auto_resume")
 
     var sounds by booleanPreference("sounds", default = true)
 
-    val vibrationEnabled by booleanPreference("vibrate", default = true)
+    var vibrationEnabled by booleanPreference("vibrate", default = true)
 
-    val showSeeds by booleanPreference("show_seeds", default = true)
+    var showSeeds by booleanPreference("show_seeds", default = true)
 
-    val showOpponents by booleanPreference("show_opponents", default = true)
+    var showOpponents by booleanPreference("show_opponents", default = true)
 
-    private val animationType by stringPreference("animations", AnimationType.Full.settingsValue)
+    private var animationType by stringPreference("animations", AnimationType.Full.settingsValue)
 
-    val showAnimations
+    var showAnimations
         get() = AnimationType.entries.firstOrNull { it.settingsValue == animationType } ?: AnimationType.Full
+        set(value) { animationType = value.settingsValue }
 
-    val snapAid by booleanPreference("snap_aid", default = true)
+    var snapAid by booleanPreference("snap_aid", default = true)
 
-    val skipIntro by booleanPreference("skip_intro")
+    var skipIntro by booleanPreference("skip_intro")
 }
 
 private fun Preferences.stringPreference(name: String, default: String = "") = PreferenceDelegate(prefs, name, default)

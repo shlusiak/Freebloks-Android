@@ -124,6 +124,9 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     @Inject
     lateinit var crashReporter: CrashReporter
 
+    @Inject
+    lateinit var themeManager: ThemeManager
+
     private var menuShown by mutableStateOf(false)
 
     private val viewModel: FreebloksActivityViewModel by viewModels()
@@ -306,9 +309,8 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         scene.showAnimations = viewModel.showAnimations
         scene.snapAid = viewModel.snapAid
 
-        val tm = ThemeManager.get(this)
-        val background = tm.getTheme(prefs.theme, ColorThemes.Blue)
-        val board = tm.getTheme(prefs.boardTheme, ColorThemes.White)
+        val background = themeManager.getTheme(prefs.theme, ColorThemes.Blue)
+        val board = themeManager.getTheme(prefs.boardTheme, ColorThemes.White)
         view.setTheme(background, board)
 
         viewModel.onStart()

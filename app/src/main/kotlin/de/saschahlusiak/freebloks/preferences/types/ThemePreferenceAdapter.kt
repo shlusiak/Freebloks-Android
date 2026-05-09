@@ -10,9 +10,12 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.ThemeManager
 
-class ThemePreferenceAdapter(context: Context, private val checkedPosition: Int) : ArrayAdapter<CharSequence>(context, 0) {
+class ThemePreferenceAdapter(
+    context: Context,
+    private val themeManager: ThemeManager,
+    private val checkedPosition: Int
+) : ArrayAdapter<CharSequence>(context, 0) {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val themeManager = ThemeManager.get(context)
 
     override fun hasStableIds() = true
 

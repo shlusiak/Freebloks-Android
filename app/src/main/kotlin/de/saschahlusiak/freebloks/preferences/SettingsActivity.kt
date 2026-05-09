@@ -3,15 +3,16 @@ package de.saschahlusiak.freebloks.preferences
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.MenuItem
-import android.view.Window
 import android.widget.FrameLayout
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.runtime.Composable
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -19,6 +20,7 @@ import androidx.preference.PreferenceFragmentCompat
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.preferences.types.ListPreferenceDialogFragment
 import de.saschahlusiak.freebloks.preferences.types.ThemePreference
 import de.saschahlusiak.freebloks.preferences.types.ThemePreferenceDialogFragment
@@ -31,12 +33,23 @@ import de.saschahlusiak.freebloks.preferences.types.ThemePreferenceDialogFragmen
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
+    private val viewModel: SettingsActivityViewModel by viewModels()
+
     private var hasHeaders = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
+
+        if (Feature.COMPOSE_SETTINGS) {
+            setContent {
+                AppTheme {
+                    Content()
+                }
+            }
+            return
+        }
 
         if (resources.configuration.smallestScreenWidthDp >= 600 || Feature.FORCE_TWO_PANES) {
             setContentView(R.layout.settings_activity_twopane)
@@ -94,6 +107,14 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 .replace(R.id.content, f)
                 .commit()
         }
+    }
+
+    @Composable
+    private fun Content() {
+        SettingsScreen(
+            viewModel = viewModel,
+            onBack = ::finish
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -15,6 +16,9 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
         generateKotlin = true
+    }
+    buildFeatures {
+        compose = true
     }
     lint {
         abortOnError = true
@@ -33,6 +37,10 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui.tooling)
 
     implementation(libs.preference.ktx)
 

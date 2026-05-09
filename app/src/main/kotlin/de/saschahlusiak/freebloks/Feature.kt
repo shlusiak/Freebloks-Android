@@ -6,7 +6,9 @@ object Feature {
     // if fast, no delay in server between CPU moves
     val FAST_GAME = BuildConfig.DEBUG
 
-    const val DYNAMIC_COLORS = false
+    val DYNAMIC_COLORS = BuildConfig.DEBUG
+
+    val COMPOSE_SETTINGS = false // BuildConfig.DEBUG
 
     const val FORCE_TABLET_DIMENSIONS = false
 }
