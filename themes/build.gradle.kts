@@ -15,11 +15,6 @@ android {
         buildConfig = true
     }
 
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
     lint {
         abortOnError = true
         warningsAsErrors = true
@@ -41,5 +36,4 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.ext)
-    testImplementation(libs.robolectric)
 }
