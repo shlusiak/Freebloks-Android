@@ -2,19 +2,21 @@ package de.saschahlusiak.freebloks.preferences.sections
 
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.preferences.SettingsActivityViewModel
+import de.saschahlusiak.freebloks.preferences.dialogs.ThemePreferenceDialog
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 import de.saschahlusiak.freebloks.ui.preferences.Preference
 
 internal fun LazyListScope.displaySection(
-    viewModel: SettingsActivityViewModel,
-    onTheme: () -> Unit,
-    onBoardTheme: () -> Unit
+    viewModel: SettingsActivityViewModel
 ) {
     item {
         val seeds by viewModel.seeds.collectAsStateWithLifecycle()
@@ -49,19 +51,39 @@ internal fun LazyListScope.displaySection(
 
     item {
         val theme by viewModel.theme.collectAsStateWithLifecycle()
+        var visible by remember { mutableStateOf(false) }
         Preference(
             title = stringResource(R.string.prefs_board_theme),
             summary = theme.getLabel(LocalContext.current),
-            onClick = onTheme
+            onClick = { visible = true }
         )
+        if (visible) {
+            ThemePreferenceDialog(
+                title = stringResource(R.string.prefs_background_theme),
+                initialValue = theme,
+                themes = viewModel.themes,
+                onChange = { viewModel.setTheme(it) },
+                onDismiss = { visible = false }
+            )
+        }
     }
 
     item {
         val theme by viewModel.boardTheme.collectAsStateWithLifecycle()
+        var visible by remember { mutableStateOf(false) }
         Preference(
             title = stringResource(R.string.prefs_board_theme),
             summary = theme.getLabel(LocalContext.current),
-            onClick = onBoardTheme
+            onClick = { visible = true }
         )
+        if (visible) {
+            ThemePreferenceDialog(
+                title = stringResource(R.string.prefs_board_theme),
+                initialValue = theme,
+                themes = viewModel.boardThemes,
+                onChange = { viewModel.setBoardTheme(it) },
+                onDismiss = { visible = false }
+            )
+        }
     }
 }

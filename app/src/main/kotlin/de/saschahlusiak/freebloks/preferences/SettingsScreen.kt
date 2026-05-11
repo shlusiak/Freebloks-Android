@@ -38,9 +38,7 @@ fun SettingsScreen(
     onAbout: () -> Unit,
     onSupport: () -> Unit,
     onRate: () -> Unit,
-    onStatistics: () -> Unit,
-    onTheme: () -> Unit,
-    onBoardTheme: () -> Unit
+    onStatistics: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -66,7 +64,7 @@ fun SettingsScreen(
             item { HorizontalDivider() }
 
             heading(R.string.prefs_display)
-            displaySection(viewModel, onTheme = onTheme, onBoardTheme = onBoardTheme)
+            displaySection(viewModel)
             item { HorizontalDivider() }
 
             heading(R.string.prefs_misc)

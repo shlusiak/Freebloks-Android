@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.theme.ColorThemes
+import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.theme.ThemeManager
 import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
@@ -77,5 +78,15 @@ class SettingsActivityViewModel @Inject constructor(
     fun setName(name: String) {
         playerName.value = name
         prefs.playerName = name
+    }
+
+    fun setTheme(value: Theme) {
+        theme.value = value
+        prefs.theme = value.name
+    }
+
+    fun setBoardTheme(value: Theme) {
+        boardTheme.value = value
+        prefs.boardTheme = value.name
     }
 }

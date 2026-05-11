@@ -4,6 +4,11 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.Dp
 
 /**
  * Interface definition of a theme
@@ -47,6 +52,10 @@ interface Theme {
      * @return a drawable for the preview to show in the theme selector
      */
     fun getPreview(resources: Resources): Drawable
+
+    @Composable
+    @Stable
+    fun brush(): Brush
 
     /**
      * Returns the solid color in float, if resource is false

@@ -133,9 +133,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             onAbout = ::onAbout,
             onRate = ::onRate,
             onSupport = ::onSupport,
-            onStatistics = ::onStatistics,
-            onTheme = ::onTheme,
-            onBoardTheme = ::onBoardTheme
+            onStatistics = ::onStatistics
         )
     }
 
@@ -177,18 +175,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
     private fun onStatistics() {
         val intent = Intent(this, StatisticsActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun onTheme() {
-        ThemePreferenceDialogFragment().apply {
-            setKey("theme")
-        }.show(supportFragmentManager, null)
-    }
-
-    private fun onBoardTheme() {
-        ThemePreferenceDialogFragment().apply {
-            setKey("board_theme")
-        }.show(supportFragmentManager, null)
     }
 
     @Deprecated("Deprecated in Java")
