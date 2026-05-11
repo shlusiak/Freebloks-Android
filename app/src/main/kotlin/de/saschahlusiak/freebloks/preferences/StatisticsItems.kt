@@ -9,14 +9,13 @@ import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 import de.saschahlusiak.freebloks.ui.preferences.Preference
 
 internal fun LazyListScope.statisticsItems(
-    viewModel: SettingsActivityViewModel
+    onStatistics: () -> Unit
 ) {
     item {
         Preference(
-            stringResource(R.string.prefs_statistics),
-            summary = stringResource(R.string.prefs_statistics_long)
-        ) {
-            // TODO
-        }
+            title = stringResource(R.string.prefs_statistics),
+            summary = stringResource(R.string.prefs_statistics_long),
+            onClick = onStatistics
+        )
     }
 }

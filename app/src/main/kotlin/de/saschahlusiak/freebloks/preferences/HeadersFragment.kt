@@ -11,6 +11,7 @@ import de.saschahlusiak.freebloks.support.SupportFragment
 /**
  * The headers for [SettingsActivity] if in multi pane mode
  */
+@Deprecated("Replace with Compose")
 class HeadersFragment : PreferenceFragmentCompat() {
     private lateinit var headers: List<TwoStatePreference?>
 

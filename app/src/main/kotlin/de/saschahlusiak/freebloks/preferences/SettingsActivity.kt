@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.preferences
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.compose.runtime.Composable
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
@@ -17,13 +19,19 @@ import androidx.fragment.app.Fragment
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Feature
+import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.about.AboutFragment
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.preferences.types.ListPreferenceDialogFragment
 import de.saschahlusiak.freebloks.preferences.types.ThemePreference
 import de.saschahlusiak.freebloks.preferences.types.ThemePreferenceDialogFragment
+import de.saschahlusiak.freebloks.statistics.StatisticsActivity
+import de.saschahlusiak.freebloks.support.SupportFragment
 
 /**
  * Activity to host and manage the new [SettingsFragment]
@@ -31,9 +39,14 @@ import de.saschahlusiak.freebloks.preferences.types.ThemePreferenceDialogFragmen
  * Handles fragments and fragment navigation, in case of multi-pane layout.
  */
 @AndroidEntryPoint
-class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
+class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback,
+    PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
     private val viewModel: SettingsActivityViewModel by viewModels()
+
+    private val REQUEST_GOOGLE_SIGN_IN = 1000
+    private val REQUEST_GOOGLE_LEADERBOARD = 1001
+    private val REQUEST_GOOGLE_ACHIEVEMENTS = 1002
 
     private var hasHeaders = false
 
@@ -113,8 +126,69 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
     private fun Content() {
         SettingsScreen(
             viewModel = viewModel,
-            onBack = ::finish
+            onBack = ::finish,
+            onSignIn = ::onSignIn,
+            onAchievements = ::onAchievements,
+            onLeaderboard = ::onLeaderboard,
+            onAbout = ::onAbout,
+            onRate = ::onRate,
+            onSupport = ::onSupport,
+            onStatistics = ::onStatistics
         )
+    }
+
+    private fun onSignIn() {
+        viewModel.googleHelper.beginUserInitiatedSignIn(
+            activity = this,
+            requestCode = REQUEST_GOOGLE_SIGN_IN
+        )
+    }
+
+    private fun onAchievements() {
+        viewModel.googleHelper.startAchievementsIntent(
+            activity = this,
+            requestCode = REQUEST_GOOGLE_ACHIEVEMENTS
+        )
+    }
+
+    private fun onLeaderboard() {
+        viewModel.googleHelper.startLeaderboardIntent(
+            this,
+            getString(R.string.leaderboard_points_total),
+            REQUEST_GOOGLE_LEADERBOARD
+        )
+    }
+
+    private fun onAbout() {
+        AboutFragment().show(supportFragmentManager, null)
+    }
+
+    private fun onSupport() {
+        SupportFragment().show(supportFragmentManager, null)
+    }
+
+    private fun onRate() {
+        val uri = Global.getMarketURLString(BuildConfig.APPLICATION_ID).toUri()
+        startActivity(Intent("android.intent.action.VIEW", uri))
+    }
+
+    private fun onStatistics() {
+        val intent = Intent(this, StatisticsActivity::class.java)
+        startActivity(intent)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_GOOGLE_SIGN_IN -> viewModel.googleHelper.onActivityResult(resultCode, data) { error ->
+                MaterialAlertDialogBuilder(this).apply {
+                    setMessage(error ?: getString(R.string.google_play_games_signin_failed))
+                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss() }
+                    show()
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -178,6 +252,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 }
                 return true
             }
+
             is ListPreference -> {
                 ListPreferenceDialogFragment().apply {
                     setKey(pref.key)

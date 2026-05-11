@@ -26,7 +26,14 @@ import de.saschahlusiak.freebloks.utils.Previews
 @Composable
 fun SettingsScreen(
     viewModel: SettingsActivityViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSignIn: () -> Unit,
+    onAchievements: () -> Unit,
+    onLeaderboard: () -> Unit,
+    onAbout: () -> Unit,
+    onSupport: () -> Unit,
+    onRate: () -> Unit,
+    onStatistics: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -40,7 +47,6 @@ fun SettingsScreen(
             )
         }
     ) { contentPadding ->
-
         LazyColumn(
             modifier = Modifier
                 .padding(top = contentPadding.calculateTopPadding()),
@@ -61,22 +67,33 @@ fun SettingsScreen(
             item { HorizontalDivider() }
 
             heading(R.string.prefs_statistics)
-            statisticsItems(viewModel)
+            statisticsItems(onStatistics = onStatistics)
             item { HorizontalDivider() }
 
             heading(R.string.google_play_games)
-            googlePlayGamesItems(viewModel)
+            googlePlayGamesItems(
+                bridge = viewModel.googleHelper,
+                onSignIn = onSignIn,
+                onAchievements = onAchievements,
+                onLeaderboard = onLeaderboard
+            )
             item { HorizontalDivider() }
 
             heading(R.string.about)
-            aboutItems()
+            aboutItems(
+                onRate = onRate,
+                onAbout = onAbout,
+                onSupport = onSupport
+            )
         }
     }
 }
 
 internal fun LazyListScope.heading(
     @StringRes title: Int
-) { item { PreferenceHeading(stringResource(title)) } }
+) {
+    item { PreferenceHeading(stringResource(title)) }
+}
 
 @Previews
 @Composable

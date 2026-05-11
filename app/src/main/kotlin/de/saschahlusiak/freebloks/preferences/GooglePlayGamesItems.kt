@@ -6,38 +6,53 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
+import de.saschahlusiak.freebloks.ui.preferences.Preference
+import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
+import kotlin.math.sign
 
 internal fun LazyListScope.googlePlayGamesItems(
-    viewModel: SettingsActivityViewModel
+    bridge: GooglePlayGamesHelper,
+    onSignIn: () -> Unit,
+    onAchievements: () -> Unit,
+    onLeaderboard: () -> Unit
 ) {
     item {
-        val sounds by viewModel.sounds.collectAsStateWithLifecycle()
-        CheckboxPreference(
-            stringResource(R.string.prefs_sounds),
-            summary = stringResource(R.string.prefs_sounds_long),
-            checked = sounds,
-            onCheckedChange = viewModel::setSounds
+        val name by bridge.playerName.collectAsStateWithLifecycle()
+        if (name != null) {
+            Preference(
+                title = stringResource(R.string.google_play_games_signout),
+                summary = stringResource(R.string.google_play_games_signout_long, name ?: ""),
+            ) {
+                bridge.startSignOut()
+            }
+        } else {
+            Preference(
+                title = stringResource(R.string.google_play_games_signin),
+                summary = stringResource(R.string.google_play_games_signin_long),
+                onClick = onSignIn
+            )
+        }
+    }
+
+    item {
+        val signedIn by bridge.signedIn.collectAsStateWithLifecycle()
+
+        Preference(
+            title = stringResource(R.string.google_play_games_achievements),
+            summary = stringResource(R.string.google_play_games_achievements_long),
+            enabled = signedIn,
+            onClick = onAchievements
         )
     }
 
     item {
-        val vibrate by viewModel.vibrate.collectAsStateWithLifecycle()
+        val signedIn by bridge.signedIn.collectAsStateWithLifecycle()
 
-        CheckboxPreference(
-            stringResource(R.string.prefs_vibrate),
-            summary = stringResource(R.string.prefs_vibrate_long),
-            checked = vibrate,
-            onCheckedChange = viewModel::setVibrate
-        )
-    }
-
-    item {
-        val snap by viewModel.snap.collectAsStateWithLifecycle()
-        CheckboxPreference(
-            stringResource(R.string.prefs_snap_to_corners),
-            summary = stringResource(R.string.prefs_snap_to_corners_long),
-            checked = snap,
-            onCheckedChange = viewModel::setSnap
+        Preference(
+            title = stringResource(R.string.google_play_games_leaderboard),
+            summary = stringResource(R.string.google_play_games_leaderboard_long),
+            enabled = signedIn,
+            onClick = onLeaderboard
         )
     }
 }

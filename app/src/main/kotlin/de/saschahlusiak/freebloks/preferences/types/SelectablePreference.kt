@@ -8,6 +8,7 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.PreferenceViewHolder
 import de.saschahlusiak.freebloks.R
 
+@Deprecated("Replace with compose")
 class SelectablePreference: CheckBoxPreference {
     @Keep constructor(context: Context) : this(context, null)
     @Keep constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, TypedArrayUtils.getAttr(context, androidx.preference.R.attr.checkBoxPreferenceStyle, android.R.attr.checkBoxPreferenceStyle))

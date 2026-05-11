@@ -39,7 +39,7 @@ import androidx.core.view.updatePadding
  * - [KEY_SCREEN] which screen to show (e.g. [SCREEN_INTERFACE]. If unset, show all.
  * - [KEY_SHOW_CATEGORY], true or false whether to add the category header
  */
-@Suppress("DEPRECATION")
+@Deprecated("Replace with compose")
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(SettingsActivityViewModel::class.java) }
@@ -113,7 +113,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 findPreference<Preference>("googleplus_achievements")?.isEnabled = signedIn
             }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.playerName
+        viewModel.googlePlayName
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { player ->
                 findPreference<Preference>("googleplus_signin")?.apply {
