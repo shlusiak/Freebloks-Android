@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -149,7 +150,7 @@ private fun ImageButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    ElevatedButton(
+    FilledTonalButton(
         modifier = modifier,
         contentPadding = PaddingValues(20.dp),
         onClick = onClick

@@ -29,7 +29,7 @@ import de.saschahlusiak.freebloks.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThemePreferenceDialog(
+internal fun ThemePreferenceDialog(
     title: String,
     initialValue: Theme,
     themes: List<Theme>,

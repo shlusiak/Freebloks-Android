@@ -11,13 +11,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.preferences.SettingsActivityViewModel
+import de.saschahlusiak.freebloks.preferences.dialogs.MultipleChoiceDialog
 import de.saschahlusiak.freebloks.preferences.dialogs.ThemePreferenceDialog
+import de.saschahlusiak.freebloks.preferences.heading
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 import de.saschahlusiak.freebloks.ui.preferences.Preference
+import de.saschahlusiak.freebloks.util.AnimationType
 
 internal fun LazyListScope.displaySection(
     viewModel: SettingsActivityViewModel
 ) {
+    heading(R.string.prefs_display)
+
     item {
         val seeds by viewModel.seeds.collectAsStateWithLifecycle()
         CheckboxPreference(
@@ -41,11 +46,19 @@ internal fun LazyListScope.displaySection(
 
     item {
         val animations by viewModel.animations.collectAsStateWithLifecycle()
+        var visible by remember { mutableStateOf(false) }
         Preference(
             title = stringResource(R.string.prefs_show_animations),
             summary = stringArrayResource(R.array.prefs_animations_labels)[animations.ordinal]
-        ) {
-            // TODO
+        ) { visible = true }
+        if (visible) {
+            MultipleChoiceDialog(
+                title = stringResource(R.string.prefs_show_animations),
+                options = stringArrayResource(R.array.prefs_animations_labels),
+                selected = AnimationType.entries.indexOfFirst { it == animations },
+                onApply = { viewModel.setAnimations(AnimationType.entries[it]) },
+                onDismiss = { visible = false }
+            )
         }
     }
 

@@ -8,16 +8,21 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 
 @Composable
-fun SimpleTextDialog(
+internal fun SimpleTextDialog(
     initialValue: String,
     title: String,
     hint: String,
@@ -25,6 +30,11 @@ fun SimpleTextDialog(
     onDismiss: () -> Unit
 ) {
     var value by rememberSaveable { mutableStateOf(initialValue) }
+    val requester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        requester.requestFocus()
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -37,6 +47,7 @@ fun SimpleTextDialog(
                     capitalization = KeyboardCapitalization.Words,
                     imeAction = ImeAction.Done
                 ),
+                modifier = Modifier.focusRequester(requester),
                 shape = CircleShape,
                 singleLine = true,
                 placeholder = { Text(hint) }

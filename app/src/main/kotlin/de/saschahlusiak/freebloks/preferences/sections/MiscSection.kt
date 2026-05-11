@@ -10,18 +10,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.preferences.SettingsActivityViewModel
 import de.saschahlusiak.freebloks.preferences.dialogs.SimpleTextDialog
+import de.saschahlusiak.freebloks.preferences.heading
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 import de.saschahlusiak.freebloks.ui.preferences.Preference
 
 internal fun LazyListScope.miscSection(
     viewModel: SettingsActivityViewModel
 ) {
+    heading(R.string.prefs_misc)
+
     item {
         val name by viewModel.playerName.collectAsStateWithLifecycle()
         var nameVisible by remember { mutableStateOf(false) }
         Preference(
             title = stringResource(R.string.prefs_player_name),
-            summary = name,
+            summary = name.ifBlank { stringResource(R.string.prefs_player_name_default) },
             onClick = { nameVisible = true }
         )
         if (nameVisible) {

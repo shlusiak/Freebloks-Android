@@ -16,6 +16,8 @@ internal fun LazyListScope.googlePlayGamesItems(
     onAchievements: () -> Unit,
     onLeaderboard: () -> Unit
 ) {
+    heading(R.string.google_play_games)
+
     item {
         val name by bridge.playerName.collectAsStateWithLifecycle()
         if (name != null) {

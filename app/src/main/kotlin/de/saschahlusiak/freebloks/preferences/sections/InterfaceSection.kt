@@ -6,11 +6,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.preferences.SettingsActivityViewModel
+import de.saschahlusiak.freebloks.preferences.heading
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 
 internal fun LazyListScope.interfaceSection(
     viewModel: SettingsActivityViewModel
 ) {
+    heading(R.string.prefs_interface)
+
     item {
         val sounds by viewModel.sounds.collectAsStateWithLifecycle()
         CheckboxPreference(

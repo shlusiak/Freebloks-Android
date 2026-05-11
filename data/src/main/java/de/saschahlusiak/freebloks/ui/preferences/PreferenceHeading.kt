@@ -1,5 +1,6 @@
 package de.saschahlusiak.freebloks.ui.preferences
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,7 +15,7 @@ fun PreferenceHeading(
 ) {
     Text(
         text = title,
-        modifier = modifier.padding(start = 16.dp, bottom = 8.dp, top = 32.dp),
+        modifier = modifier.fillMaxWidth().padding(start = 16.dp, bottom = 8.dp, top = 8.dp),
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary
     )
