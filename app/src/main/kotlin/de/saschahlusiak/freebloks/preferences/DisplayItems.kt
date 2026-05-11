@@ -58,7 +58,7 @@ internal fun LazyListScope.displayItems(
     item {
         val theme by viewModel.boardTheme.collectAsStateWithLifecycle()
         Preference(
-            title = stringResource(R.string.prefs_show_animations),
+            title = stringResource(R.string.prefs_board_theme),
             summary = theme.getLabel(LocalContext.current)
         ) {
             // TODO

@@ -29,6 +29,8 @@ class SettingsActivityViewModel @Inject constructor(
 
     val sounds = MutableStateFlow(prefs.sounds)
     val vibrate = MutableStateFlow(prefs.vibrationEnabled)
+    val autoResume = MutableStateFlow(prefs.autoResume)
+    val skipIntro = MutableStateFlow(prefs.skipIntro)
     val snap = MutableStateFlow(prefs.snapAid)
     val seeds = MutableStateFlow(prefs.showSeeds)
     val opponents = MutableStateFlow(prefs.showOpponents)
@@ -64,5 +66,15 @@ class SettingsActivityViewModel @Inject constructor(
     fun setAnimations(value: AnimationType) {
         prefs.showAnimations = value
         animations.value = value
+    }
+
+    fun setSkipIntro(enabled: Boolean) {
+        prefs.skipIntro = enabled
+        skipIntro.value = enabled
+    }
+
+    fun setAutoResume(enabled: Boolean) {
+        prefs.autoResume = enabled
+        autoResume.value = enabled
     }
 }

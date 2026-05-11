@@ -8,7 +8,7 @@ object Feature {
 
     val DYNAMIC_COLORS = BuildConfig.DEBUG
 
-    val COMPOSE_SETTINGS = false // BuildConfig.DEBUG
+    val COMPOSE_SETTINGS = BuildConfig.DEBUG
 
     const val FORCE_TABLET_DIMENSIONS = false
 }

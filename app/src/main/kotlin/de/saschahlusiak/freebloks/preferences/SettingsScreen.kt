@@ -69,7 +69,7 @@ fun SettingsScreen(
             item { HorizontalDivider() }
 
             heading(R.string.about)
-            aboutItems(viewModel)
+            aboutItems()
         }
     }
 }

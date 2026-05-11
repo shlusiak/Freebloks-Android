@@ -4,40 +4,45 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
+import de.saschahlusiak.freebloks.ui.preferences.Preference
 
-internal fun LazyListScope.aboutItems(
-    viewModel: SettingsActivityViewModel
-) {
+internal fun LazyListScope.aboutItems() {
     item {
-        val sounds by viewModel.sounds.collectAsStateWithLifecycle()
-        CheckboxPreference(
-            stringResource(R.string.prefs_sounds),
-            summary = stringResource(R.string.prefs_sounds_long),
-            checked = sounds,
-            onCheckedChange = viewModel::setSounds
-        )
+        Preference(
+            stringResource(R.string.prefs_rules),
+            summary = stringResource(R.string.prefs_rules_long),
+        ) {
+            // TODO
+        }
     }
 
     item {
-        val vibrate by viewModel.vibrate.collectAsStateWithLifecycle()
-
-        CheckboxPreference(
-            stringResource(R.string.prefs_vibrate),
-            summary = stringResource(R.string.prefs_vibrate_long),
-            checked = vibrate,
-            onCheckedChange = viewModel::setVibrate
-        )
+        Preference(
+            stringResource(R.string.prefs_rate_review, BuildConfig.APP_STORE_NAME),
+            summary = stringResource(R.string.prefs_rate_review_long),
+        ) {
+            // TODO
+        }
     }
 
     item {
-        val snap by viewModel.snap.collectAsStateWithLifecycle()
-        CheckboxPreference(
-            stringResource(R.string.prefs_snap_to_corners),
-            summary = stringResource(R.string.prefs_snap_to_corners_long),
-            checked = snap,
-            onCheckedChange = viewModel::setSnap
-        )
+        Preference(
+            stringResource(R.string.prefs_support),
+            summary = stringResource(R.string.prefs_support_long),
+        ) {
+            // TODO
+        }
+    }
+
+    item {
+        Preference(
+            stringResource(R.string.about_freebloks),
+            summary = stringResource(R.string.copyright_string),
+        ) {
+            // TODO
+        }
     }
 }
