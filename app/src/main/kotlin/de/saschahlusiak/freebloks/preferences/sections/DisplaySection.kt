@@ -1,4 +1,4 @@
-package de.saschahlusiak.freebloks.preferences
+package de.saschahlusiak.freebloks.preferences.sections
 
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.getValue
@@ -7,12 +7,14 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.theme.Theme
+import de.saschahlusiak.freebloks.preferences.SettingsActivityViewModel
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 import de.saschahlusiak.freebloks.ui.preferences.Preference
 
-internal fun LazyListScope.displayItems(
-    viewModel: SettingsActivityViewModel
+internal fun LazyListScope.displaySection(
+    viewModel: SettingsActivityViewModel,
+    onTheme: () -> Unit,
+    onBoardTheme: () -> Unit
 ) {
     item {
         val seeds by viewModel.seeds.collectAsStateWithLifecycle()
@@ -49,19 +51,17 @@ internal fun LazyListScope.displayItems(
         val theme by viewModel.theme.collectAsStateWithLifecycle()
         Preference(
             title = stringResource(R.string.prefs_board_theme),
-            summary = theme.getLabel(LocalContext.current)
-        ) {
-            // TODO
-        }
+            summary = theme.getLabel(LocalContext.current),
+            onClick = onTheme
+        )
     }
 
     item {
         val theme by viewModel.boardTheme.collectAsStateWithLifecycle()
         Preference(
             title = stringResource(R.string.prefs_board_theme),
-            summary = theme.getLabel(LocalContext.current)
-        ) {
-            // TODO
-        }
+            summary = theme.getLabel(LocalContext.current),
+            onClick = onBoardTheme
+        )
     }
 }

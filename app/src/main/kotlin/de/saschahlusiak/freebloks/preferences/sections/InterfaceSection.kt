@@ -1,13 +1,14 @@
-package de.saschahlusiak.freebloks.preferences
+package de.saschahlusiak.freebloks.preferences.sections
 
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
+import de.saschahlusiak.freebloks.preferences.SettingsActivityViewModel
 import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
 
-internal fun LazyListScope.interfaceItems(
+internal fun LazyListScope.interfaceSection(
     viewModel: SettingsActivityViewModel
 ) {
     item {

@@ -19,6 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.preferences.sections.aboutSection
+import de.saschahlusiak.freebloks.preferences.sections.displaySection
+import de.saschahlusiak.freebloks.preferences.sections.interfaceSection
+import de.saschahlusiak.freebloks.preferences.sections.miscSection
+import de.saschahlusiak.freebloks.preferences.sections.statisticsSection
 import de.saschahlusiak.freebloks.ui.preferences.PreferenceHeading
 import de.saschahlusiak.freebloks.utils.Previews
 
@@ -33,7 +38,9 @@ fun SettingsScreen(
     onAbout: () -> Unit,
     onSupport: () -> Unit,
     onRate: () -> Unit,
-    onStatistics: () -> Unit
+    onStatistics: () -> Unit,
+    onTheme: () -> Unit,
+    onBoardTheme: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -55,19 +62,19 @@ fun SettingsScreen(
             )
         ) {
             heading(R.string.prefs_interface)
-            interfaceItems(viewModel)
+            interfaceSection(viewModel)
             item { HorizontalDivider() }
 
             heading(R.string.prefs_display)
-            displayItems(viewModel)
+            displaySection(viewModel, onTheme = onTheme, onBoardTheme = onBoardTheme)
             item { HorizontalDivider() }
 
             heading(R.string.prefs_misc)
-            miscItems(viewModel)
+            miscSection(viewModel)
             item { HorizontalDivider() }
 
             heading(R.string.prefs_statistics)
-            statisticsItems(onStatistics = onStatistics)
+            statisticsSection(onStatistics = onStatistics)
             item { HorizontalDivider() }
 
             heading(R.string.google_play_games)
@@ -80,7 +87,7 @@ fun SettingsScreen(
             item { HorizontalDivider() }
 
             heading(R.string.about)
-            aboutItems(
+            aboutSection(
                 onRate = onRate,
                 onAbout = onAbout,
                 onSupport = onSupport
