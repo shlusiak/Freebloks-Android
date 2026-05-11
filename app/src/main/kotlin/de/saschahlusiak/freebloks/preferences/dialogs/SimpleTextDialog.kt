@@ -1,6 +1,5 @@
 package de.saschahlusiak.freebloks.preferences.dialogs
 
-import android.R
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -58,12 +57,12 @@ internal fun SimpleTextDialog(
                 onChange(value)
                 onDismiss()
             }) {
-                Text(stringResource(R.string.ok))
+                Text(stringResource(android.R.string.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(android.R.string.cancel))
             }
         }
     )

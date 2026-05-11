@@ -17,9 +17,6 @@ class SettingsActivityViewModel @Inject constructor(
     private val prefs: Preferences,
     private val themeManager: ThemeManager
 ): ViewModel() {
-    val isSignedIn = googleHelper.signedIn
-    val googlePlayName = googleHelper.playerName
-
     val themes = themeManager.backgroundThemes
     val boardThemes = themeManager.boardThemes
 

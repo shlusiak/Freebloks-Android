@@ -154,12 +154,7 @@
         <item>Reduzido (30 fps)</item>
         <item>Completo (60 fps)</item>
     </string-array> 
-    <string-array name="prefs_animations_values" translatable="false" >
-        <item>2</item>
-        <item>1</item>
-        <item>0</item>
-    </string-array> 
-    
+
     <string name="prefs_skip_intro_long">Pular animação de introdução do app</string>
     <string name="prefs_skip_intro">Pular introdução</string>
     <string name="prefs_auto_resume_long">Continuar automaticamente a última partida</string>

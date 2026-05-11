@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -125,9 +126,7 @@ private val shadow = TextStyle(
 
 @Composable
 fun revealBrush(color: Color): Brush {
-    val screenWidth = with(LocalDensity.current) {
-        LocalConfiguration.current.screenWidthDp.dp.toPx()
-    }
+    val screenWidth = LocalWindowInfo.current.containerSize.width.toFloat()
     var previous by remember { mutableStateOf(color) }
     var current by remember { mutableStateOf(color) }
     val radius = remember { Animatable(1f) }

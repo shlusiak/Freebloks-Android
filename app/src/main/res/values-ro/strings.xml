@@ -177,11 +177,6 @@
         <item>Reduse (30 fps)</item>
         <item>Complete (60 fps)</item>
     </string-array>
-    <string-array name="prefs_animations_values" translatable="false" >
-        <item>2</item>
-        <item>1</item>
-        <item>0</item>
-    </string-array>
 
     <string name="prefs_skip_intro_long">Sari peste animaţia de intro la pornirea aplicaţiei</string>
     <string name="prefs_skip_intro">Sari peste intro</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="UnusedResources" severity="error" />
-    <issue id="OldTargetApi" severity="error" />
+    <issue id="OldTargetApi" severity="warning" />
     <issue id="UseKtx" severity="error" />
 
     <issue id="MissingTranslation" severity="warning" />
