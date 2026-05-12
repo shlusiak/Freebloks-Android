@@ -14,8 +14,8 @@ android {
         targetSdk = 36
         ndkVersion = "28.2.13676358"
 
-        versionCode = 172
-        versionName = "1.7.2"
+        versionCode = 180
+        versionName = "1.8.0"
 
         @Suppress("UnstableApiUsage")
         androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt", "ro", "ru", "zh-rHK")
