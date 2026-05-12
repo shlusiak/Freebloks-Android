@@ -123,7 +123,8 @@ fun LobbyScreen(
                         Text(text = stringResource(id = android.R.string.cancel))
                     }
 
-                    val isChat = message.value.isNotBlank()
+                    val canStart = (status != null && status.player >= 1 && status.clients > 1) || BuildConfig.DEBUG
+                    val isChat = !canStart || message.value.isNotBlank()
                     Button(
                         onClick = {
                             if (isChat) {
@@ -136,7 +137,7 @@ fun LobbyScreen(
                         modifier = Modifier
                             .weight(1f)
                             .heightIn(min = MaterialTheme.dimensions.buttonSize),
-                        enabled = isChat || (status != null && status.player >= 1 && status.clients > 1) || BuildConfig.DEBUG
+                        enabled = (isChat && message.value.isNotBlank()) || canStart
                     ) {
                         AnimatedContent(isChat) { isChat ->
                             if (isChat) {
