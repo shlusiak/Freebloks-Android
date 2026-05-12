@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,11 +29,14 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.utils.Previews
 
 @Composable
-internal fun ChatTextField(modifier: Modifier = Modifier, onChat: (String) -> Unit) {
-    var message by rememberSaveable { mutableStateOf("") }
-
+internal fun ChatTextField(
+    message: MutableState<String>,
+    inlineSend: Boolean,
+    modifier: Modifier = Modifier,
+    onChat: (String) -> Unit
+) {
     OutlinedTextField(
-        value = message,
+        value = message.value,
         modifier = modifier.fillMaxWidth(),
         placeholder = { Text(stringResource(id = R.string.lobby_message_hint)) },
         keyboardOptions = KeyboardOptions(
@@ -41,25 +45,27 @@ internal fun ChatTextField(modifier: Modifier = Modifier, onChat: (String) -> Un
         ),
         singleLine = true,
         keyboardActions = KeyboardActions {
-            if (message.isNotBlank()) {
-                onChat(message)
-                message = ""
+            if (message.value.isNotBlank()) {
+                onChat(message.value)
+                message.value = ""
             }
         },
         shape = CircleShape,
         trailingIcon = {
-            FilledIconButton(
-                modifier = Modifier.padding(end = 6.dp),
-                enabled = message.isNotBlank(),
-                onClick = {
-                    onChat(message)
-                    message = ""
+            if (inlineSend) {
+                FilledIconButton(
+                    modifier = Modifier.padding(end = 6.dp),
+                    enabled = message.value.isNotBlank(),
+                    onClick = {
+                        onChat(message.value)
+                        message.value = ""
+                    }
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "")
                 }
-            ) {
-                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "")
             }
         },
-        onValueChange = { message = it },
+        onValueChange = { message.value  = it },
     )
 }
 
@@ -69,7 +75,9 @@ private fun Preview() {
     AppTheme {
         Surface {
             Box {
-                ChatTextField { _ -> }
+                val message = rememberSaveable { mutableStateOf("") }
+
+                ChatTextField(message, true) { _ -> }
             }
         }
     }

@@ -1,23 +1,42 @@
 package de.saschahlusiak.freebloks.game.lobby
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.R
@@ -56,6 +75,8 @@ fun LobbyScreen(
                 .fillMaxWidth(),
             verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
         ) {
+            val message = rememberSaveable { mutableStateOf("") }
+
             Text(
                 text = stringResource(id = if (isRunning) R.string.chat else R.string.waiting_for_players),
                 style = MaterialTheme.typography.titleMedium,
@@ -85,6 +106,8 @@ fun LobbyScreen(
             )
 
             ChatTextField(
+                message = message,
+                inlineSend = false,
                 modifier = Modifier.focusRequester(focusRequester),
                 onChat = onChat
             )
@@ -100,14 +123,28 @@ fun LobbyScreen(
                         Text(text = stringResource(id = android.R.string.cancel))
                     }
 
+                    val isChat = message.value.isNotBlank()
                     Button(
-                        onClick = onStart,
+                        onClick = {
+                            if (isChat) {
+                                onChat(message.value)
+                                message.value = ""
+                            } else {
+                                onStart()
+                            }
+                        },
                         modifier = Modifier
                             .weight(1f)
                             .heightIn(min = MaterialTheme.dimensions.buttonSize),
-                        enabled = (status != null && status.player >= 1 && status.clients > 1) || BuildConfig.DEBUG
+                        enabled = isChat || (status != null && status.player >= 1 && status.clients > 1) || BuildConfig.DEBUG
                     ) {
-                        Text(stringResource(id = R.string.start))
+                        AnimatedContent(isChat) { isChat ->
+                            if (isChat) {
+                                Icon(Icons.AutoMirrored.Default.Send, "")
+                            } else {
+                                Text(stringResource(id = R.string.start))
+                            }
+                        }
                     }
                 }
             }
