@@ -10,6 +10,8 @@ import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.util.AnimationType
 import de.saschahlusiak.freebloks.util.PreferenceDelegate
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.days
+import kotlin.time.DurationUnit
 
 class Preferences @Inject constructor(
     @ApplicationContext private val context: Context
@@ -64,6 +66,15 @@ class Preferences @Inject constructor(
     var snapAid by booleanPreference("snap_aid", default = true)
 
     var skipIntro by booleanPreference("skip_intro")
+
+    fun showExtraSupport(): Boolean {
+        val minElapsed = 4.days.toLong(DurationUnit.MILLISECONDS)
+
+        if (numberOfStarts < 10) return false
+        if (System.currentTimeMillis() - firstStarted < minElapsed) return false
+
+        return true
+    }
 }
 
 private fun Preferences.stringPreference(name: String, default: String = "") = PreferenceDelegate(prefs, name, default)

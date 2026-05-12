@@ -15,12 +15,11 @@ import androidx.compose.material.icons.rounded.QuestionMark
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -57,7 +56,7 @@ fun MainMenuContent(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (titleOutlined) {
-                    OutlinedButton(
+                    FilledTonalButton(
                         onClick = onTitleClick,
                         modifier = Modifier
                     ) { Text(title) }

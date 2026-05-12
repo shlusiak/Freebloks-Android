@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.preferences
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.saschahlusiak.freebloks.BuildConfig
+import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.Theme

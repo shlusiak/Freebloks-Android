@@ -12,9 +12,15 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import androidx.core.net.toUri
+import de.saschahlusiak.freebloks.BuildConfig
+import de.saschahlusiak.freebloks.app.Preferences
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupportFragment : DialogFragment() {
+    @Inject
+    lateinit var prefs: Preferences
+
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +39,7 @@ class SupportFragment : DialogFragment() {
         view.setContent {
             AppTheme {
                 SupportScreen(
-                    showExtra = !Global.IS_GOOGLE,
+                    showExtra = prefs.showExtraSupport() || !Global.IS_GOOGLE,
                     onDismiss = ::onSkipButtonPress,
                     onFreebloksVIP = ::onFreebloksVIPClick,
                     onPaypal = ::onPayPalClick,
