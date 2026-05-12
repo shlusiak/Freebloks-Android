@@ -1,16 +1,15 @@
-package de.saschahlusiak.freebloks.preferences
+package de.saschahlusiak.freebloks.preferences.sections
 
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.ui.preferences.CheckboxPreference
+import de.saschahlusiak.freebloks.preferences.heading
 import de.saschahlusiak.freebloks.ui.preferences.Preference
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
-import kotlin.math.sign
 
-internal fun LazyListScope.googlePlayGamesItems(
+internal fun LazyListScope.googlePlaySection(
     bridge: GooglePlayGamesHelper,
     onSignIn: () -> Unit,
     onAchievements: () -> Unit,

@@ -19,6 +19,8 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.fragment.ktx)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui.tooling)
 
     api(libs.compose.runtime)
 }

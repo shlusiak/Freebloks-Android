@@ -24,6 +24,7 @@ import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.preferences.sections.aboutSection
 import de.saschahlusiak.freebloks.preferences.sections.displaySection
+import de.saschahlusiak.freebloks.preferences.sections.googlePlaySection
 import de.saschahlusiak.freebloks.preferences.sections.interfaceSection
 import de.saschahlusiak.freebloks.preferences.sections.miscSection
 import de.saschahlusiak.freebloks.preferences.sections.statisticsSection
@@ -74,7 +75,7 @@ fun SettingsScreen(
             statisticsSection(onStatistics = onStatistics)
             divider()
 
-            googlePlayGamesItems(
+            googlePlaySection(
                 bridge = viewModel.googleHelper,
                 onSignIn = onSignIn,
                 onAchievements = onAchievements,
