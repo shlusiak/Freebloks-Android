@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -121,7 +122,7 @@ fun AboutScreen(
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 if (!Global.IS_VIP) {
-                    OutlinedButton(
+                    FilledTonalButton(
                         onClick = onSupport,
                         modifier = Modifier
                             .weight(1f)
