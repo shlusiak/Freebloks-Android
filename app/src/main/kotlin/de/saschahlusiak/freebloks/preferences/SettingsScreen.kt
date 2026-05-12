@@ -56,13 +56,7 @@ fun SettingsScreen(
             )
         }
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = contentPadding.calculateTopPadding()),
-            contentPadding = PaddingValues(
-                bottom = contentPadding.calculateBottomPadding()
-            )
-        ) {
+        LazyColumn(contentPadding = contentPadding) {
             interfaceSection(viewModel)
             divider()
 
@@ -99,20 +93,10 @@ internal fun LazyListScope.divider() {
 internal fun LazyListScope.heading(
     @StringRes title: Int
 ) {
-    stickyHeader {
+    item {
         PreferenceHeading(
             title = stringResource(title),
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )
-    }
-}
-
-@Previews
-@Composable
-private fun Preview() {
-    AppTheme {
-//        SettingsScreen(
-//            onBack = {}
-//        )
     }
 }
