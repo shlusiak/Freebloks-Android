@@ -1,7 +1,6 @@
 package de.saschahlusiak.freebloks.support
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,21 +11,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
-import javax.inject.Inject
 import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class SupportFragment : DialogFragment() {
-    @Inject
-    lateinit var analytics: AnalyticsProvider
-
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        analytics.logEvent("support_show", null)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -52,26 +44,20 @@ class SupportFragment : DialogFragment() {
     }
 
     private fun onLink(link: String) {
-        analytics.logEvent("support_github", null)
-
         startActivity(
             Intent(Intent.ACTION_VIEW, link.toUri())
         )
     }
 
     private fun onSkipButtonPress() {
-        analytics.logEvent("support_skip", null)
-
         dismiss()
     }
 
     private fun onFreebloksVIPClick() {
-        analytics.logEvent("support_freebloksvip", null)
         startActivity(freebloksVipIntent)
     }
 
     private fun onPayPalClick() {
-        analytics.logEvent("support_paypal", null)
         startActivity(paypalIntent)
     }
 

@@ -31,7 +31,6 @@ import de.saschahlusiak.freebloks.model.GameConfig
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothClientToSocketThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread
 import de.saschahlusiak.freebloks.network.bluetooth.BluetoothServerThread.OnBluetoothConnectedListener
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,9 +42,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
 
     private var bluetoothServer: BluetoothServerThread? = null
     private val listener get() = activity as? OnStartCustomGameListener
-
-    @Inject
-    lateinit var analytics: AnalyticsProvider
 
     @Inject
     lateinit var crashReporter: CrashReporter
@@ -149,8 +145,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
     }
 
     private fun onHostGameClicked(name: String) {
-        analytics.logEvent("multiplayer_host_click", null)
-
         viewModel.name.value = name
         viewModel.save()
 
@@ -163,7 +157,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
         viewModel.name.value = name
         viewModel.save()
 
-        analytics.logEvent("multiplayer_internet_click", null)
         val config = GameConfig(
             isLocal = false,
             server = Global.DEFAULT_SERVER_ADDRESS,
@@ -181,7 +174,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
         viewModel.server.value = server
         viewModel.save()
 
-        analytics.logEvent("multiplayer_wireless_click", null)
         val config = GameConfig(isLocal = false, server = server, showLobby = true)
         listener?.onStartClientGameWithConfig(config, name)
 
@@ -196,7 +188,6 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
         viewModel.save()
 
         Log.i(TAG, "Device selected: " + device.name)
-        analytics.logEvent("multiplayer_bluetooth_click", null)
         listener?.onConnectToBluetoothDevice(config, name, device)
         dismiss()
     }

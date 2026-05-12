@@ -12,10 +12,6 @@ import javax.inject.Singleton
 object ConfigModule {
     @Provides
     @Singleton
-    fun provideAnalytics(): AnalyticsProvider = EmptyAnalyticsProvider()
-
-    @Provides
-    @Singleton
     fun provideGamesHelper(): GooglePlayGamesHelper = EmptyGooglePlayGamesHelper()
 
     @Provides

@@ -1,24 +1,30 @@
 package de.saschahlusiak.freebloks.game.rate
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Coffee
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,20 +33,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.BuildConfig
 import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
-import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.Preferences
+import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.support.SupportFragment
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.Dialog
 import de.saschahlusiak.freebloks.utils.Previews
 import javax.inject.Inject
-import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class RateAppFragment : DialogFragment() {
@@ -50,9 +55,6 @@ class RateAppFragment : DialogFragment() {
     @Inject
     lateinit var prefs: Preferences
 
-    @Inject
-    lateinit var analytics: AnalyticsProvider
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         ComposeView(requireContext())
 
@@ -61,8 +63,6 @@ class RateAppFragment : DialogFragment() {
 
         view as ComposeView
         view.setContent { Content() }
-
-        analytics.logEvent("rate_show", null)
     }
 
     @Composable
@@ -109,16 +109,28 @@ class RateAppFragment : DialogFragment() {
 
                     if (!Global.IS_VIP) {
                         HorizontalDivider(
-                            Modifier.padding(top = MaterialTheme.dimensions.innerPaddingMedium)
+                            Modifier.padding(
+                                top = MaterialTheme.dimensions.innerPaddingMedium,
+                                bottom = MaterialTheme.dimensions.innerPaddingMedium
+                            )
                         )
-                        TextButton(
-                            onClick = {
-                                analytics.logEvent("rate_support_click", null)
 
-                                SupportFragment().show(parentFragmentManager, null)
-                            },
-                        ) {
-                            Text(stringResource(id = R.string.rate_freebloks_support_link))
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            ElevatedButton(
+                                onClick = {
+                                    SupportFragment().show(parentFragmentManager, null)
+                                },
+                                modifier = Modifier.align(Alignment.Center)
+                            ) {
+                                Text(stringResource(id = R.string.rate_freebloks_support_link))
+                            }
+
+                            Icon(
+                                imageVector = Icons.Outlined.Coffee,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.outline,
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            )
                         }
                     }
                 }
@@ -128,36 +140,36 @@ class RateAppFragment : DialogFragment() {
 
     @Composable
     private fun ButtonRow() {
-        Row {
-            FilledTonalButton(
+        Row(horizontalArrangement = spacedBy(6.dp)) {
+            Button(
                 onClick = {
-                    analytics.logEvent("rate_no_click", null)
                     prefs.rateShowAgain = false
 
                     dismiss()
                 },
-                Modifier
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier
                     .weight(1f)
                     .heightIn(MaterialTheme.dimensions.buttonSize)
             ) {
                 Text(stringResource(id = R.string.rate_never))
             }
 
-            TextButton(
-                onClick = {
-                    analytics.logEvent("rate_later_click", null)
-                    dismiss()
-                },
-                Modifier
+            Button(
+                onClick = ::dismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                modifier = Modifier
                     .weight(1f)
                     .heightIn(MaterialTheme.dimensions.buttonSize)
             ) {
                 Text(stringResource(id = R.string.rate_later))
             }
 
-            FilledTonalButton(
+            Button(
                 onClick = {
-                    analytics.logEvent("rate_yes_click", null)
                     val intent = Intent(
                         "android.intent.action.VIEW",
                         Global.getMarketURLString(BuildConfig.APPLICATION_ID).toUri()
@@ -167,7 +179,8 @@ class RateAppFragment : DialogFragment() {
                     dismiss()
                     startActivity(intent)
                 },
-                Modifier
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
                     .weight(1f)
                     .heightIn(MaterialTheme.dimensions.buttonSize)
             ) {

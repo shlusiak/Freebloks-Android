@@ -18,7 +18,6 @@ import de.saschahlusiak.freebloks.game.FreebloksActivityViewModel
 import de.saschahlusiak.freebloks.game.OnStartCustomGameListener
 import de.saschahlusiak.freebloks.game.lobby.LobbyDialog
 import de.saschahlusiak.freebloks.statistics.StatisticsActivity
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import javax.inject.Inject
 
@@ -32,9 +31,6 @@ class GameFinishFragment : DialogFragment() {
     private val listener get() = requireActivity() as OnStartCustomGameListener
 
     override fun getTheme() = R.style.Theme_Freebloks_Dialog_MinWidth
-
-    @Inject
-    lateinit var analytics: AnalyticsProvider
 
     @Inject
     lateinit var gameHelper: GooglePlayGamesHelper
@@ -73,15 +69,12 @@ class GameFinishFragment : DialogFragment() {
     }
 
     private fun onChat(message: String) {
-        analytics.logEvent("finish_chat")
-
         activityViewModel.client?.sendChat(message)
 
         LobbyDialog().show(parentFragmentManager, null)
     }
 
     private fun onNewGame() {
-        analytics.logEvent("finish_new_game_click")
         dismiss()
         if (activityViewModel.client?.config?.showLobby == true) {
             listener.restartGameWithLastConfiguration()
@@ -91,12 +84,10 @@ class GameFinishFragment : DialogFragment() {
     }
 
     private fun onAchievements() {
-        analytics.logEvent("finish_achievements_click")
         gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
     }
 
     private fun onLeaderboard() {
-        analytics.logEvent("finish_leaderboard_click")
         gameHelper.startLeaderboardIntent(
             this,
             getString(R.string.leaderboard_points_total),
@@ -105,16 +96,8 @@ class GameFinishFragment : DialogFragment() {
     }
 
     private fun onStatistics() {
-        analytics.logEvent("finish_statistics_click")
-
         val intent = Intent(requireContext(), StatisticsActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun onMainMenu() {
-        analytics.logEvent("finish_main_menu_click")
-        dismiss()
-        listener.showMainMenu()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

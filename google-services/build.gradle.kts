@@ -24,6 +24,5 @@ dependencies {
     implementation(libs.play.services.games)
     implementation(libs.play.services.auth)
 
-    implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
 }

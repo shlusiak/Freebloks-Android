@@ -10,7 +10,6 @@ import de.saschahlusiak.freebloks.database.entity.HighScoreEntry
 import de.saschahlusiak.freebloks.model.GameMode
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.colorOf
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +46,6 @@ data class GooglePlayGamesData(
 class StatisticsViewModel @Inject constructor(
     val gamesHelper: GooglePlayGamesHelper,
     prefs: Preferences,
-    private val analytics: AnalyticsProvider,
     private val db: HighScoreDatabase
 ) : ViewModel() {
     internal val gameMode = MutableStateFlow(prefs.gameMode)
@@ -81,7 +79,6 @@ class StatisticsViewModel @Inject constructor(
 
     fun resetStatistics() {
         viewModelScope.launch {
-            analytics.logEvent("clear_statistics")
             db.clear()
         }
     }

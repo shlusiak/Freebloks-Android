@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import de.saschahlusiak.freebloks.app.theme.AppTheme
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import javax.inject.Inject
 import androidx.core.net.toUri
@@ -16,9 +15,6 @@ import androidx.core.net.toUri
 @AndroidEntryPoint
 class RulesActivity : AppCompatActivity() {
     private val youtubeLink = "https://www.youtube.com/watch?v=pc8nmWpcQWs"
-
-    @Inject
-    lateinit var analytics: AnalyticsProvider
 
     @Inject
     lateinit var crashReporter: CrashReporter
@@ -35,15 +31,12 @@ class RulesActivity : AppCompatActivity() {
                 )
             }
         }
-
-        analytics.logEvent("rules_show")
     }
 
     private fun onYoutubeButtonClick() {
         runCatching {
             val intent = Intent(Intent.ACTION_VIEW, youtubeLink.toUri())
             startActivity(intent)
-            analytics.logEvent("rules_video_click")
         }.onFailure {
             crashReporter.logException(it)
         }

@@ -95,7 +95,6 @@ import de.saschahlusiak.freebloks.support.SupportFragment
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.theme.ThemeManager
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.view.Freebloks3DView
 import de.saschahlusiak.freebloks.view.scene.Scene
@@ -117,9 +116,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 
     @Inject
     lateinit var prefs: Preferences
-
-    @Inject
-    lateinit var analytics: AnalyticsProvider
 
     @Inject
     lateinit var crashReporter: CrashReporter
@@ -621,7 +617,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     }
 
     private fun onChatButtonClick() {
-        analytics.logEvent("game_chat_click", null)
         LobbyDialog().show(supportFragmentManager, null)
     }
 
@@ -700,7 +695,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     override fun onLobbyDialogCancelled() {
         val client = viewModel.client
         if ((client != null) && !client.game.isStarted && !client.game.isFinished) {
-            analytics.logEvent("lobby_close", null)
             viewModel.disconnectClient()
             showMainMenu()
         }
@@ -765,14 +759,10 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
 //region Menu handling
 
     private fun onResetRotationButtonClick() {
-        analytics.logEvent("game_reset_rotation_click")
-
         scene.boardObject.resetRotation()
     }
 
     private fun onNewGameButtonClick() {
-        analytics.logEvent("game_new_game_click")
-
         hideMenu()
 
         if (viewModel.intro.value != null) viewModel.intro.value?.cancel() else {
@@ -787,31 +777,23 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     }
 
     private fun onHintButtonClick() {
-        analytics.logEvent("game_hint_click")
-
         hideMenu()
         scene.currentStone.stopDragging()
         viewModel.requestHint()
     }
 
     private fun onSoundButtonClick() {
-        analytics.logEvent("game_sound_click")
-
         val soundOn = viewModel.toggleSound()
         Toast.makeText(this, if (soundOn) R.string.sound_on else R.string.sound_off, Toast.LENGTH_SHORT).show()
     }
 
     private fun onUndoButtonClick() {
-        analytics.logEvent("game_undo_click")
-
         hideMenu()
         viewModel.requestUndo()
         scene.playSound(FeedbackType.UndoStone)
     }
 
     private fun onPreferencesButtonClick() {
-        analytics.logEvent("game_settings_click")
-
         hideMenu()
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
@@ -850,7 +832,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             putInt("clients", lastStatus.clients)
             putInt("players", lastStatus.player)
         }
-        analytics.logEvent("game_finished", b)
 
 //        viewModel.sounds.play(FeedbackType.GameOver)
         lifecycleScope.launch {
@@ -873,12 +854,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
     @UiThread
     override fun onConnected(client: GameClient) {
         if (client.config.showLobby) {
-            val server = client.config.server ?: "localhost"
-            val bundle = Bundle().apply {
-                putString("server", server)
-            }
-            analytics.logEvent("lobby_show", bundle)
-
             lifecycleScope.launch {
                 withStarted {
                     LobbyDialog().show(supportFragmentManager, null)

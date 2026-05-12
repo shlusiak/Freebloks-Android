@@ -13,10 +13,6 @@ import javax.inject.Singleton
 object ConfigModule {
     @Provides
     @Singleton
-    fun provideAnalytics(impl: FirebaseAnalyticsProvider): AnalyticsProvider = impl
-
-    @Provides
-    @Singleton
     fun provideGamesHelper(impl: DefaultGooglePlayGamesHelper): GooglePlayGamesHelper = impl
 
     @Provides

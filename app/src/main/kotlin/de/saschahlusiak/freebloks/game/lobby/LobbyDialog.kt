@@ -33,7 +33,6 @@ import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.model.defaultBoardSize
 import de.saschahlusiak.freebloks.model.defaultStoneSet
 import de.saschahlusiak.freebloks.network.message.MessageServerStatus
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,9 +42,6 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     private val viewModel: FreebloksActivityViewModel by viewModels(ownerProducer = { requireActivity() })
     private val client get() = viewModel.client
     private val listener get() = activity as LobbyDialogDelegate
-
-    @Inject
-    lateinit var analytics: AnalyticsProvider
 
     private val permissionRequester = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
         // ignore result
@@ -167,7 +163,6 @@ class LobbyDialog : DialogFragment(), GameEventObserver, OnItemClickListener {
     }
 
     private fun sendChat(message: String) {
-        analytics.logEvent("lobby_chat")
         client?.sendChat(message)
     }
 

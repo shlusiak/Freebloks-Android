@@ -39,7 +39,6 @@ import de.saschahlusiak.freebloks.network.message.MessageServerStatus
 import de.saschahlusiak.freebloks.server.JNIServer
 import de.saschahlusiak.freebloks.theme.BaseSounds
 import de.saschahlusiak.freebloks.theme.DefaultSounds
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import de.saschahlusiak.freebloks.utils.CrashReporter
 import de.saschahlusiak.freebloks.utils.GooglePlayGamesHelper
 import de.saschahlusiak.freebloks.util.AnimationType
@@ -81,7 +80,6 @@ data class SheetPlayer(
 class FreebloksActivityViewModel @Inject constructor(
     app: Application,
     private val crashReporter: CrashReporter,
-    private val analytics: AnalyticsProvider,
     private val prefs: Preferences,
     val gameHelper: GooglePlayGamesHelper
 ) : ViewModel(), GameEventObserver, SceneDelegate {
@@ -377,8 +375,6 @@ class FreebloksActivityViewModel @Inject constructor(
 
         Log.i(tag, "Connection successful")
 
-        analytics.logEvent("bluetooth_connected", null)
-
         val requestPlayers = config.requestPlayers
         if (requestPlayers == null) {
             client.requestPlayer(-1, clientName)
@@ -511,11 +507,6 @@ class FreebloksActivityViewModel @Inject constructor(
             putInt("h", game.board.height)
             putInt("clients", lastStatus.clients)
             putInt("players", lastStatus.player)
-        }
-
-        analytics.logEvent("game_started", b)
-        if (lastStatus.clients >= 2) {
-            analytics.logEvent("game_start_multiplayer", b)
         }
     }
 

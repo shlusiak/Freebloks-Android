@@ -31,7 +31,6 @@ import de.saschahlusiak.freebloks.game.multiplayer.MultiplayerFragment
 import de.saschahlusiak.freebloks.game.newgame.NewGameFragment
 import de.saschahlusiak.freebloks.preferences.SettingsActivity
 import de.saschahlusiak.freebloks.rules.RulesActivity
-import de.saschahlusiak.freebloks.utils.AnalyticsProvider
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,9 +40,6 @@ class MainMenuFragment : DialogFragment() {
     private var appIconIsSupport = false
 
     private val viewModel by lazy { ViewModelProvider(requireActivity()).get(FreebloksActivityViewModel::class.java) }
-
-    @Inject
-    lateinit var analytics: AnalyticsProvider
 
     @Inject
     lateinit var prefs: Preferences
@@ -57,9 +53,6 @@ class MainMenuFragment : DialogFragment() {
         val starts = prefs.numberOfStarts
 
         appIconIsSupport = !Global.IS_VIP && (starts % Global.SUPPORT_STARTS == 0L)
-        if (appIconIsSupport) {
-            analytics.logEvent("menu_show_support", null)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -107,47 +100,36 @@ class MainMenuFragment : DialogFragment() {
     }
 
     private fun onNewGame() {
-        analytics.logEvent("menu_new_game_click", null)
         NewGameFragment().show(parentFragmentManager, null)
     }
 
     private fun onResumeGame() {
-        analytics.logEvent("menu_resume_click", null)
         dismiss()
     }
 
     private fun onSettings() {
-        analytics.logEvent("menu_settings_click", null)
         val intent = Intent(context, SettingsActivity::class.java)
         requireContext().startActivity(intent)
     }
 
     private fun onAbout() {
         if (appIconIsSupport) {
-            analytics.logEvent("menu_support_click", null)
-
             SupportFragment().show(parentFragmentManager, null)
         } else {
-            analytics.logEvent("menu_about_click", null)
-
             AboutFragment().show(parentFragmentManager, null)
         }
     }
 
     private fun onMultiplayer() {
-        analytics.logEvent("menu_multiplayer_click", null)
         MultiplayerFragment().show(parentFragmentManager, null)
     }
 
     private fun onHelp() {
-        analytics.logEvent("menu_rules_click", null)
         val intent = Intent(context, RulesActivity::class.java)
         requireContext().startActivity(intent)
     }
 
     private fun onToggleSound() {
-        analytics.logEvent("menu_sound_click", null)
-
         val soundOn = viewModel.toggleSound()
         Toast.makeText(
             requireContext(),
