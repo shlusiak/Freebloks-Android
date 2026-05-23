@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.preferences.sections
 
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +26,7 @@ internal fun LazyListScope.miscSection(
         Preference(
             title = stringResource(R.string.prefs_player_name),
             summary = name.ifBlank { stringResource(R.string.prefs_player_name_default) },
+            summaryColor = MaterialTheme.colorScheme.primary,
             onClick = { nameVisible = true }
         )
         if (nameVisible) {

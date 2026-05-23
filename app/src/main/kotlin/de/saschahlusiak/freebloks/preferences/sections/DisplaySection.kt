@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.preferences.sections
 
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +50,8 @@ internal fun LazyListScope.displaySection(
         var visible by remember { mutableStateOf(false) }
         Preference(
             title = stringResource(R.string.prefs_show_animations),
-            summary = stringArrayResource(R.array.prefs_animations_labels)[animations.ordinal]
+            summary = stringArrayResource(R.array.prefs_animations_labels)[animations.ordinal],
+            summaryColor = MaterialTheme.colorScheme.primary
         ) { visible = true }
         if (visible) {
             MultipleChoiceDialog(
@@ -68,6 +70,7 @@ internal fun LazyListScope.displaySection(
         Preference(
             title = stringResource(R.string.prefs_board_theme),
             summary = theme.getLabel(LocalContext.current),
+            summaryColor = MaterialTheme.colorScheme.primary,
             onClick = { visible = true }
         )
         if (visible) {
@@ -87,6 +90,7 @@ internal fun LazyListScope.displaySection(
         Preference(
             title = stringResource(R.string.prefs_board_theme),
             summary = theme.getLabel(LocalContext.current),
+            summaryColor = MaterialTheme.colorScheme.primary,
             onClick = { visible = true }
         )
         if (visible) {

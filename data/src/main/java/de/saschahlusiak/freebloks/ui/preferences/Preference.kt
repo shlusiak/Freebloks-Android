@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 private val disabledColors
     @Composable
@@ -22,6 +23,7 @@ fun Preference(
     title: String,
     summary: String?,
     modifier: Modifier = Modifier,
+    summaryColor: Color = Color.Unspecified,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -29,6 +31,8 @@ fun Preference(
         headlineContent = { Text(title) },
         supportingContent = summary?.let { { Text(it) } },
         modifier = modifier.clickable(onClick = onClick, enabled = enabled),
-        colors = if (enabled) ListItemDefaults.colors() else disabledColors
+        colors = if (enabled) ListItemDefaults.colors(
+            supportingColor = summaryColor
+        ) else disabledColors
     )
 }
