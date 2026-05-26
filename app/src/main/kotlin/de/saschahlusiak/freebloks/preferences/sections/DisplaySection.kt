@@ -68,7 +68,7 @@ internal fun LazyListScope.displaySection(
         val theme by viewModel.theme.collectAsStateWithLifecycle()
         var visible by remember { mutableStateOf(false) }
         Preference(
-            title = stringResource(R.string.prefs_board_theme),
+            title = stringResource(R.string.prefs_background_theme),
             summary = theme.getLabel(LocalContext.current),
             summaryColor = MaterialTheme.colorScheme.primary,
             onClick = { visible = true }
