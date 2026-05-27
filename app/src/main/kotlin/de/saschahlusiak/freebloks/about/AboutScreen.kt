@@ -122,7 +122,7 @@ fun AboutScreen(
                 horizontalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium)
             ) {
                 if (!Global.IS_VIP) {
-                    FilledTonalButton(
+                    OutlinedButton(
                         onClick = onSupport,
                         modifier = Modifier
                             .weight(1f)
