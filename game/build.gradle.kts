@@ -4,8 +4,8 @@ plugins {
 
 android {
     defaultConfig {
-        compileSdk = 37
-        minSdk = 23
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
     }
     testOptions {
         unitTests {

@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    compileSdk = 37
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 23
+        minSdk = libs.versions.minSdk.get().toInt()
     }
 
     buildFeatures {

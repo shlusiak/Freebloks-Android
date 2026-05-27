@@ -9,10 +9,10 @@ plugins {
 
 android {
     defaultConfig {
-        compileSdk = 37
-        minSdk = 23
-        targetSdk = 36
-        ndkVersion = "28.2.13676358"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        ndkVersion = libs.versions.ndkVersion.get()
 
         versionCode = 180
         versionName = "1.8.0"
