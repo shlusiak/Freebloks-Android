@@ -64,8 +64,8 @@
     </style>
 
     <style name="Theme.Freebloks.Dialog.MinWidth" parent="ThemeOverlay.Material3.Dialog" >
-        <item name="windowMinWidthMajor">@dimen/abc_dialog_min_width_major</item>
-        <item name="windowMinWidthMinor">@dimen/abc_dialog_min_width_minor</item>
+        <item name="windowMinWidthMajor" tools:ignore="PrivateResource">@dimen/abc_dialog_min_width_major</item>
+        <item name="windowMinWidthMinor" tools:ignore="PrivateResource">@dimen/abc_dialog_min_width_minor</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustNothing</item>
     </style>
 
