@@ -10,6 +10,7 @@
 
     <issue id="IconMissingDensityFolder" severity="ignore" />
 
-    <issue id="AndroidGradlePluginVersion" severity="ignore" />
-    <issue id="NewerVersionAvailable" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="warning" />
+    <issue id="NewerVersionAvailable" severity="warning" />
+    <issue id="GradleDependency" severity="warning"/>
 </lint>
