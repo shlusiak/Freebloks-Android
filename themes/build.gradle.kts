@@ -22,11 +22,6 @@ android {
         warningsAsErrors = true
     }
     namespace = "de.saschahlusiak.freebloks.theme"
-    kotlin {
-        compilerOptions {
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
-        }
-    }
 }
 
 dependencies {

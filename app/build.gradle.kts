@@ -71,12 +71,6 @@ android {
     namespace = "de.saschahlusiak.freebloks"
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
-    }
-}
-
 val googleImplementation by configurations
 //val amazonImplementation by configurations
 
@@ -99,6 +93,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    ksp(libs.kotlin.metadata)
 
     implementation(libs.material)
 
