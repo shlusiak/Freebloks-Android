@@ -82,7 +82,7 @@
         <item quantity="other">残り %1$d ストーン</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="other">%1$d ポイント</item>
+        <item quantity="other">%1$s ポイント</item>
     </plurals>
     <string-array name="places">
         <item>最初の場所</item>
