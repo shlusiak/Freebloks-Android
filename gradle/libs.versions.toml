@@ -44,6 +44,7 @@ activity-compose = { group = "androidx.activity", name = "activity-compose" }
 # Compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended-android" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

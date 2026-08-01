@@ -32,7 +32,8 @@ fun Preference(
         supportingContent = summary?.let { { Text(it) } },
         modifier = modifier.clickable(onClick = onClick, enabled = enabled),
         colors = if (enabled) ListItemDefaults.colors(
-            supportingColor = summaryColor
+            supportingColor = summaryColor,
+            containerColor = Color.Transparent
         ) else disabledColors
     )
 }

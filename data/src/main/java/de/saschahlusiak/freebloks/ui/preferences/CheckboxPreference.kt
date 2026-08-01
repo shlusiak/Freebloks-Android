@@ -3,9 +3,11 @@ package de.saschahlusiak.freebloks.ui.preferences
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun CheckboxPreference(
@@ -17,6 +19,7 @@ fun CheckboxPreference(
 ) {
     ListItem(
         headlineContent = { Text(title) },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         supportingContent = summary?.let { { Text(it) } },
         trailingContent = {
             Checkbox(checked = checked, onCheckedChange = onCheckedChange)

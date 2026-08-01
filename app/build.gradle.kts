@@ -100,6 +100,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.compose.material3)
+    implementation(libs.compose.material3.adaptive)
     implementation(libs.compose.material.icons)
     implementation(libs.compose.animation)
     implementation(libs.coil.compose)
@@ -107,6 +108,6 @@ dependencies {
 
     implementation(libs.preference.ktx)
 
-    /// NON-FREE DEPENDENCIES, only included in "google" store flavor, excluded in "fdroid"
+    /// NON-FREE DEPENDENCIES, only included in "google" store flavour, excluded in "fdroid"
     googleImplementation(project(":google-services"))
 }
