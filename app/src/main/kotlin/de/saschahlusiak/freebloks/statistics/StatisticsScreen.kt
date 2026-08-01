@@ -51,7 +51,6 @@ internal fun StatisticsContent(
     gamesData: GooglePlayGamesData?,
     onGameMode: (GameMode) -> Unit,
     onSignIn: () -> Unit,
-    onSignOut: () -> Unit,
     onLeaderboards: () -> Unit,
     onAchievements: () -> Unit
 ) {
@@ -70,7 +69,7 @@ internal fun StatisticsContent(
         }
 
         if (data != null) {
-            StatisticsTable(data, gamesData, onSignIn, onSignOut, onLeaderboards, onAchievements)
+            StatisticsTable(data, gamesData, onSignIn, onLeaderboards, onAchievements)
         } else {
             Row(
                 modifier = Modifier
@@ -167,7 +166,6 @@ private fun StatisticsTable(
     data: StatisticsData,
     gamesData: GooglePlayGamesData?,
     onSignIn: () -> Unit,
-    onSignOut: () -> Unit,
     onLeaderboards: () -> Unit,
     onAchievements: () -> Unit
 ) {
@@ -258,7 +256,7 @@ private fun StatisticsTable(
             Column(
                 verticalArrangement = spacedBy(MaterialTheme.dimensions.innerPaddingMedium),
             ) {
-                GooglePlayData(gamesData, onSignIn, onSignOut, onLeaderboards, onAchievements)
+                GooglePlayData(gamesData, onSignIn, onLeaderboards, onAchievements)
             }
         }
     }
@@ -268,7 +266,6 @@ private fun StatisticsTable(
 private fun ColumnScope.GooglePlayData(
     data: GooglePlayGamesData,
     onSignIn: () -> Unit,
-    onSignOut: () -> Unit,
     onLeaderboards: () -> Unit,
     onAchievements: () -> Unit
 ) {
@@ -305,10 +302,6 @@ private fun ColumnScope.GooglePlayData(
         ) {
             Text(text = stringResource(id = R.string.google_play_games_achievements))
         }
-    }
-
-    TextButton(onClick = { onSignOut() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-        Text(text = stringResource(id = R.string.google_play_games_signout))
     }
 }
 
@@ -349,7 +342,6 @@ private fun Preview() {
                 gameMode = data.gameMode,
                 onGameMode = {},
                 onSignIn = {},
-                onSignOut = {},
                 onLeaderboards = {},
                 onAchievements = {}
             )

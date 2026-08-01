@@ -41,7 +41,7 @@ class GameFinishFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view as ComposeView
         dialog?.window?.setBackgroundDrawable(null)
-        dialog?.window?.let { gameHelper.setWindowForPopups(it) }
+//        dialog?.window?.let { gameHelper.setWindowForPopups(it) }
 
         view.setContent {
             AppTheme {
@@ -84,12 +84,12 @@ class GameFinishFragment : DialogFragment() {
     }
 
     private fun onAchievements() {
-        gameHelper.startAchievementsIntent(this, REQUEST_ACHIEVEMENTS)
+        gameHelper.startAchievementsIntent(requireActivity(), REQUEST_ACHIEVEMENTS)
     }
 
     private fun onLeaderboard() {
         gameHelper.startLeaderboardIntent(
-            this,
+            requireActivity(),
             getString(R.string.leaderboard_points_total),
             REQUEST_LEADER_BOARD
         )

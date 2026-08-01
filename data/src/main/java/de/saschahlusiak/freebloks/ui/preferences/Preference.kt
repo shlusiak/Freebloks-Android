@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 private val disabledColors
     @Composable
     get() = ListItemDefaults.colors(
+        containerColor = Color.Transparent,
         headlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
         supportingColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
         leadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),

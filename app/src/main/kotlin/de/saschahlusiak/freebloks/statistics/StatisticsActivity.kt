@@ -91,7 +91,6 @@ class StatisticsActivity : AppCompatActivity() {
                 gamesData = gamesData,
                 onGameMode = setGameMode,
                 onSignIn = ::onSignIn,
-                onSignOut = ::onSignOut,
                 onLeaderboards = ::onLeaderboards,
                 onAchievements = ::onAchievements
             )
@@ -99,11 +98,7 @@ class StatisticsActivity : AppCompatActivity() {
     }
 
     private fun onSignIn() {
-        viewModel.gamesHelper.beginUserInitiatedSignIn(this@StatisticsActivity, REQUEST_SIGN_IN)
-    }
-
-    private fun onSignOut() {
-        viewModel.gamesHelper.startSignOut()
+        viewModel.gamesHelper.beginUserInitiatedSignIn(this@StatisticsActivity)
     }
 
     private fun onAchievements() {
@@ -127,24 +122,8 @@ class StatisticsActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_SIGN_IN -> viewModel.gamesHelper.onActivityResult(resultCode, data) { error ->
-                MaterialAlertDialogBuilder(this).apply {
-                    setMessage(error ?: getString(R.string.google_play_games_signin_failed))
-                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss() }
-                    show()
-                }
-            }
-
-            else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
     companion object {
         private const val REQUEST_LEADERBOARD = 1
         private const val REQUEST_ACHIEVEMENTS = 2
-        private const val REQUEST_SIGN_IN = 3
     }
 }

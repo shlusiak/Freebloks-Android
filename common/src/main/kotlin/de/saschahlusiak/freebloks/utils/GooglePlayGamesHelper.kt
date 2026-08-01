@@ -1,15 +1,10 @@
 package de.saschahlusiak.freebloks.utils
 
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.view.View
-import android.view.Window
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
-import androidx.fragment.app.Fragment
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -33,13 +28,9 @@ interface GooglePlayGamesHelper {
 
     val isSignedIn: Boolean
 
-    fun setWindowForPopups(window: Window) {}
+    fun initialise(activity: Activity) { }
 
-    fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) {}
-
-    fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) {}
-
-    fun startSignOut() {}
+    fun beginUserInitiatedSignIn(activity: Activity) {}
 
     fun unlock(@StringRes achievement: Int) {}
 
@@ -50,16 +41,6 @@ interface GooglePlayGamesHelper {
     fun startAchievementsIntent(activity: Activity, requestCode: Int) {}
 
     fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) {}
-
-    fun startAchievementsIntent(fragment: Fragment, requestCode: Int) {}
-
-    fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) {}
-
-    fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) {}
-
-    fun newSignInButton(context: Context): View? {
-        return null
-    }
 
     suspend fun fetchPlayerImage(uri: Uri?): Drawable?
 }
@@ -75,17 +56,13 @@ class EmptyGooglePlayGamesHelper : GooglePlayGamesHelper {
         get() = false
 
     override val isSignedIn: Boolean
-        get() = (signedIn.value == true)
+        get() = signedIn.value
 
     override val leaderboardFlow = flowOf(emptyList<LeaderboardEntry>())
 
-    override fun setWindowForPopups(window: Window) {}
+    override fun initialise(activity: Activity) { }
 
-    override fun beginUserInitiatedSignIn(activity: Activity, requestCode: Int) {}
-
-    override fun beginUserInitiatedSignIn(fragment: Fragment, requestCode: Int) {}
-
-    override fun startSignOut() {}
+    override fun beginUserInitiatedSignIn(activity: Activity) {}
 
     override fun unlock(achievement: Int) {}
 
@@ -96,16 +73,6 @@ class EmptyGooglePlayGamesHelper : GooglePlayGamesHelper {
     override fun startAchievementsIntent(activity: Activity, requestCode: Int) {}
 
     override fun startLeaderboardIntent(activity: Activity, leaderboard: String, requestCode: Int) {}
-
-    override fun startAchievementsIntent(fragment: Fragment, requestCode: Int) {}
-
-    override fun startLeaderboardIntent(fragment: Fragment, leaderboard: String, requestCode: Int) {}
-
-    override fun onActivityResult(responseCode: Int, data: Intent?, onError: (String?) -> Unit) {}
-
-    override fun newSignInButton(context: Context): View? {
-        return null
-    }
 
     override suspend fun fetchPlayerImage(uri: Uri?) = null
 }

@@ -21,11 +21,10 @@ internal fun LazyListScope.googlePlaySection(
         val name by bridge.playerName.collectAsStateWithLifecycle()
         if (name != null) {
             Preference(
-                title = stringResource(R.string.google_play_games_signout),
-                summary = stringResource(R.string.google_play_games_signout_long, name ?: ""),
-            ) {
-                bridge.startSignOut()
-            }
+                title = stringResource(R.string.google_play_games_signout_long, name ?: ""),
+                summary = null,
+                enabled = false
+            ) { }
         } else {
             Preference(
                 title = stringResource(R.string.google_play_games_signin),

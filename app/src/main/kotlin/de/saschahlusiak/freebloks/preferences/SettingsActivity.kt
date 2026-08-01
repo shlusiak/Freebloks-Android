@@ -23,7 +23,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private val viewModel: SettingsActivityViewModel by viewModels()
 
-    private val REQUEST_GOOGLE_SIGN_IN = 1000
     private val REQUEST_GOOGLE_LEADERBOARD = 1001
     private val REQUEST_GOOGLE_ACHIEVEMENTS = 1002
 
@@ -55,10 +54,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun onSignIn() {
-        viewModel.googleHelper.beginUserInitiatedSignIn(
-            activity = this,
-            requestCode = REQUEST_GOOGLE_SIGN_IN
-        )
+        viewModel.googleHelper.beginUserInitiatedSignIn(this)
     }
 
     private fun onAchievements() {
@@ -92,19 +88,5 @@ class SettingsActivity : AppCompatActivity() {
     private fun onStatistics() {
         val intent = Intent(this, StatisticsActivity::class.java)
         startActivity(intent)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_GOOGLE_SIGN_IN -> viewModel.googleHelper.onActivityResult(resultCode, data) { error ->
-                MaterialAlertDialogBuilder(this).apply {
-                    setMessage(error ?: getString(R.string.google_play_games_signin_failed))
-                    setPositiveButton(android.R.string.ok) { d, _ -> d.dismiss() }
-                    show()
-                }
-            }
-        }
     }
 }

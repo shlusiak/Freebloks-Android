@@ -109,15 +109,10 @@ fun SettingsScreen(
                             isSelected = selection == 3
                         ) { selection = 3 }
                         SectionItem(
-                            label = stringResource(R.string.google_play_games),
-                            icon = Icons.Outlined.VideogameAsset,
-                            isSelected = selection == 4
-                        ) { selection = 4 }
-                        SectionItem(
                             label = stringResource(R.string.about),
                             icon = Icons.Outlined.Info,
-                            isSelected = selection == 5
-                        ) { selection = 5 }
+                            isSelected = selection == 4
+                        ) { selection = 4 }
                     }
                 }
 
@@ -134,9 +129,13 @@ fun SettingsScreen(
                             0 -> interfaceSection(viewModel)
                             1 -> displaySection(viewModel)
                             2 -> miscSection(viewModel)
-                            3 -> statisticsSection(onStatistics)
-                            4 -> googlePlaySection(viewModel.googleHelper, onSignIn, onAchievements, onLeaderboard)
-                            5 -> aboutSection(onRate, onAbout, onSupport)
+                            3 -> {
+                                googlePlaySection(viewModel.googleHelper, onSignIn, onAchievements, onLeaderboard)
+                                divider()
+
+                                statisticsSection(onStatistics)
+                            }
+                            4 -> aboutSection(onRate, onAbout, onSupport)
                         }
                     }
                 }

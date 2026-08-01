@@ -1,7 +1,7 @@
 [versions]
 compileSdk = "37"
 targetSdk = "37"
-minSdk = "23"
+minSdk = "24"
 ndkVersion = "29.0.14206865"
 
 agp = "9.3.1"
@@ -21,8 +21,7 @@ kotlin = "2.4.10"
 ksp = "2.3.9"
 material = "1.14.0"
 mockito = "5.23.0"
-play-services-auth = "21.6.0"
-play-services-games = "24.0.0"
+play-services-games = "22.0.0"
 preference-ktx = "1.2.1"
 room = "2.8.4"
 
@@ -67,8 +66,7 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 
 # Google Play / Firebase
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
-play-services-games = { group = "com.google.android.gms", name = "play-services-games", version.ref = "play-services-games" }
-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
+play-services-games = { group = "com.google.android.gms", name = "play-services-games-v2", version.ref = "play-services-games" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebase-crashlytics" }
 
 [plugins]

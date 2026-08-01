@@ -22,7 +22,6 @@ dependencies {
     implementation(libs.core.ktx)
 
     implementation(libs.play.services.games)
-    implementation(libs.play.services.auth)
 
     implementation(libs.firebase.crashlytics)
 }
