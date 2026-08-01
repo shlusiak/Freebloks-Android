@@ -1,0 +1,4 @@
+* Bessere Unterstützung für Tablets
+* Zweispaltige Einstellungen für Tablets
+* Migriere Google Play Games API zu v2
+* Leanback Launcher Unterstützung für Google TV

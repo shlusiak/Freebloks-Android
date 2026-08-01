@@ -1,0 +1,4 @@
+* Improve tablet support
+* Bring back two pane settings screen
+* Migrate Google Play Games to v2
+* Add leanback launcher support for Google TV
