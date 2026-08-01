@@ -56,8 +56,8 @@
         <item quantity="other">%1$d fichas restantes</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d punto</item>
-        <item quantity="other">%1$d puntos</item>
+        <item quantity="one">%1$s punto</item>
+        <item quantity="other">%1$s puntos</item>
     </plurals>
 
     <string-array name="places">

@@ -193,7 +193,7 @@ fun StatusRow(data: StatusData) {
 
             is StatusData.Player -> {
                 Text(
-                    text = pluralStringResource(id = R.plurals.number_of_points, data.points, data.points),
+                    text = pluralStringResource(id = R.plurals.number_of_points, data.points, data.points.toString()),
                     modifier = Modifier.align(alignment = CenterStart),
                     color = contentColor,
                     style = MaterialTheme.typography.labelMedium

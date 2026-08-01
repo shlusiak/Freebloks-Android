@@ -83,8 +83,8 @@
         <item quantity="other">%1$d pedras restantes</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d ponto</item>
-        <item quantity="other">%1$d pontos</item>
+        <item quantity="one">%1$s ponto</item>
+        <item quantity="other">%1$s pontos</item>
     </plurals>
     <string-array name="places">
         <item>1o lugar</item>

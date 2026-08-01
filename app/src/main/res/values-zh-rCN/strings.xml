@@ -106,8 +106,8 @@
         <item quantity="other">剩下 %1$d 个方块</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d 分</item>
-        <item quantity="other">%1$d 分</item>
+        <item quantity="one">%1$s 分</item>
+        <item quantity="other">%1$s 分</item>
     </plurals>
     <string-array name="places">
         <item>第 1 名</item>

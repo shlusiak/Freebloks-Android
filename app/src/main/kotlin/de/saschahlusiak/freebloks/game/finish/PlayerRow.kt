@@ -150,7 +150,7 @@ fun PlayerRow(
                             text = pluralStringResource(
                                 id = R.plurals.number_of_points,
                                 count = score.totalPoints,
-                                score.totalPoints
+                                score.totalPoints.toString()
                             ),
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge.merge(shadow)

@@ -83,8 +83,8 @@
         <item quantity="other">%1$d pièces restantes</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d point</item>
-        <item quantity="other">%1$d points</item>
+        <item quantity="one">%1$s point</item>
+        <item quantity="other">%1$s points</item>
     </plurals>
     <string-array name="places">
         <item>1re place</item>

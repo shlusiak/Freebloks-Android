@@ -80,8 +80,8 @@
         <item quantity="other">Осталось %1$d фишек</item>
     </plurals>
     <plurals name="number_of_points" tools:ignore="MissingQuantity">
-        <item quantity="one">%1$d очко</item>
-        <item quantity="other">%1$d очков</item>
+        <item quantity="one">%1$s очко</item>
+        <item quantity="other">%1$s очков</item>
     </plurals>
     <string-array name="places">
         <item>1е место</item>

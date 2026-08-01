@@ -111,8 +111,8 @@
         <item quantity="other">%1$d stones left</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d point</item>
-        <item quantity="other">%1$d points</item>
+        <item quantity="one">%1$s point</item>
+        <item quantity="other">%1$s points</item>
     </plurals>
     <string-array name="places">
         <item>1st place</item>

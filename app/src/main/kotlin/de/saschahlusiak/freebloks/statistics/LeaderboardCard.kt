@@ -37,7 +37,7 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import de.saschahlusiak.freebloks.utils.Previews
-
+import java.text.NumberFormat.*
 
 @Composable
 internal fun LeaderboardCard(
@@ -93,8 +93,14 @@ internal fun LeaderboardCard(
 
             Spacer(modifier = Modifier.weight(1f))
 
+            val nf = getNumberInstance()
+
             Text(
-                pluralStringResource(id = R.plurals.number_of_points, entry.points, entry.points),
+                pluralStringResource(
+                    id = R.plurals.number_of_points,
+                    entry.points,
+                    nf.format(entry.points)
+                ),
                 style = MaterialTheme.typography.labelLarge
             )
         }

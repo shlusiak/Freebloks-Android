@@ -99,8 +99,8 @@
         <item quantity="other">%1$d piese rămase</item>
     </plurals>
     <plurals name="number_of_points">
-        <item quantity="one">%1$d punct</item>
-        <item quantity="other">%1$d puncte</item>
+        <item quantity="one">%1$s punct</item>
+        <item quantity="other">%1$s puncte</item>
     </plurals>
     <string-array name="places">
         <item>Locul 1</item>
