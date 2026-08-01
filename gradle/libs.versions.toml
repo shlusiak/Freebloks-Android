@@ -5,7 +5,7 @@ minSdk = "23"
 ndkVersion = "29.0.14206865"
 
 agp = "9.3.1"
-coil-compose = "2.7.0"
+coil-compose = "3.5.0"
 compose-bom = "2026.06.01"
 compose-runtime = "1.11.4"
 core-ktx = "1.19.0"
@@ -60,7 +60,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 # Coil
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-compose" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-compose" }
 
 # Coroutines
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }

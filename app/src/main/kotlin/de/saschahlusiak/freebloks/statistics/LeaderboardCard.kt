@@ -1,12 +1,10 @@
 package de.saschahlusiak.freebloks.statistics
 
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.shapes.Shape
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
