@@ -50,7 +50,6 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Se connecter</string>
     <string name="google_play_games_signin_long">Se connecter avec Google Play Games</string>
-    <string name="google_play_games_signout">Se déconnecter</string>
     <string name="google_play_games_signout_long">Se connecter  en tant que %1$s</string>
     <string name="google_play_games_leaderboard">Meilleurs scores</string>
     <string name="google_play_games_leaderboard_long">Afficher les scores des personnes de vos cercles</string>
@@ -176,7 +175,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="bluetooth_disabled_message">Bluetooth est désactivé ou aucun appareil n\'est jumelé</string>
     <string name="multiple_players">Plusieurs joueurs</string>
-    <string name="google_play_games_signin_failed">La connexion a échoué. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="message_notification_title">Message de %1$s</string>
     <string name="support_skip">Plus tard</string>
     <string name="support_thank_you">Merci d\'avoir amélioré Freebloks!</string>

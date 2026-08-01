@@ -52,7 +52,6 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">サインイン</string>
     <string name="google_play_games_signin_long">Google+ でサインイン</string>
-    <string name="google_play_games_signout">サインアウト</string>
     <string name="google_play_games_signout_long">Google+ に %1$s としてサインインしました</string>
     <string name="google_play_games_leaderboard">リーダーボード</string>
     <string name="google_play_games_leaderboard_long">人々のスコアをサークルに表示します</string>

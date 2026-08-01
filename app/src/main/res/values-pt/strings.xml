@@ -50,7 +50,6 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Entrar</string>
     <string name="google_play_games_signin_long">Entrar com Google Play Games</string>
-    <string name="google_play_games_signout">Sair</string>
     <string name="google_play_games_signout_long">Entrou com Google+ como %1$s</string>
     <string name="google_play_games_leaderboard">Classificação</string>
     <string name="google_play_games_leaderboard_long">Mostrar pontos das pessoas nos seus círculos</string>

@@ -48,7 +48,6 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Войти</string>
     <string name="google_play_games_signin_long">Войти через Google Play Games</string>
-    <string name="google_play_games_signout">Выйти</string>
     <string name="google_play_games_signout_long">Вошли через Google+ как %1$s</string>
     <string name="google_play_games_leaderboard">Список лучших</string>
     <string name="google_play_games_leaderboard_long">Показать результат людей из ваших кругов</string>

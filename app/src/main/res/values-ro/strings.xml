@@ -65,13 +65,11 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Înregistrare</string>
     <string name="google_play_games_signin_long">Înregistrare în Google Play Games</string>
-    <string name="google_play_games_signout">Închide sesiunea</string>
     <string name="google_play_games_signout_long">Înregistrat ca %1$s</string>
     <string name="google_play_games_leaderboard">Clasament</string>
     <string name="google_play_games_leaderboard_long">Arată clasamentul global</string>
     <string name="google_play_games_achievements">Succese</string>
     <string name="google_play_games_achievements_long">Arată succesele obţinute</string>
-    <string name="google_play_games_signin_failed">Nu te-ai putut înregistra. Verifică-ţi conexiunea şi încearcă din nou.</string>
 
     <string name="waiting_for_players">Aşteptăm jucătorii</string>
     <plurals name="connected_clients">

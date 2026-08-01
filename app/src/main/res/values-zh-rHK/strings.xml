@@ -72,13 +72,11 @@
     <string name="google_play_games">Google Play 遊戲</string>
     <string name="google_play_games_signin">登入</string>
     <string name="google_play_games_signin_long">登入 Google Play 遊戲</string>
-    <string name="google_play_games_signout">登出</string>
     <string name="google_play_games_signout_long">已登入 %1$s</string>
     <string name="google_play_games_leaderboard">排行榜</string>
     <string name="google_play_games_leaderboard_long">查看全球排行榜</string>
     <string name="google_play_games_achievements">成就</string>
     <string name="google_play_games_achievements_long">查看已獲得的成就</string>
-    <string name="google_play_games_signin_failed">登入失敗，請檢查網路連線，然後再試一次！</string>
 
     <string name="waiting_for_players">正在等待玩家加入……</string>
     <plurals name="connected_clients">

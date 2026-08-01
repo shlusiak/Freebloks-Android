@@ -142,7 +142,6 @@
     <string name="google_play_games">Google Play Juegos</string>
     <string name="google_play_games_signin">Iniciar sesión</string>
     <string name="google_play_games_signin_long">Iniciar sesión en Google Play Juegos</string>
-    <string name="google_play_games_signout">Cerrar sesión</string>
     <string name="google_play_games_signout_long">Conectado como %1$s</string>
     <string name="message_notification_title">Mensaje de %1$s</string>
     <string name="random_color">Color aleatorio</string>

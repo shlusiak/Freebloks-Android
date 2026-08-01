@@ -64,13 +64,11 @@
     <string name="google_play_games">Google Play Games</string>
     <string name="google_play_games_signin">Anmelden</string>
     <string name="google_play_games_signin_long">Bei Google Play Games anmelden</string>
-    <string name="google_play_games_signout">Abmelden</string>
     <string name="google_play_games_signout_long">Als %1$s angemeldet</string>
     <string name="google_play_games_leaderboard">Bestenliste</string>
     <string name="google_play_games_leaderboard_long">Zeige globale Bestenliste an</string>
     <string name="google_play_games_achievements">Erfolge</string>
     <string name="google_play_games_achievements_long">Zeige erspielte Erfolge an</string>
-    <string name="google_play_games_signin_failed">Anmelden fehlgeschlagen. Bitte überprüfe deine Internetverbindung und versuche es erneut.</string>
 
     <string name="waiting_for_players">Warte auf Spieler</string>
     <plurals name="connected_clients">
