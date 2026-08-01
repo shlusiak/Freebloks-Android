@@ -14,15 +14,15 @@ internal val TabletTypography = Typography(
     headlineMedium = DefaultTypography.headlineMedium.copy(fontSize = 32.sp, lineHeight = 36.sp), // 28
     headlineSmall = DefaultTypography.headlineSmall.copy(fontSize = 28.sp, lineHeight = 34.sp), // 24
 
-    titleLarge = DefaultTypography.titleLarge.copy(fontSize = 26.sp, lineHeight = 32.sp), // 22
-    titleMedium = DefaultTypography.titleMedium.copy(fontSize = 20.sp, lineHeight = 26.sp), // 16
-    titleSmall = DefaultTypography.titleSmall.copy(fontSize = 18.sp, lineHeight = 22.sp), // 14
+    titleLarge = DefaultTypography.titleLarge.copy(fontSize = 24.sp, lineHeight = 30.sp), // 22
+    titleMedium = DefaultTypography.titleMedium.copy(fontSize = 19.sp, lineHeight = 24.sp), // 16
+    titleSmall = DefaultTypography.titleSmall.copy(fontSize = 17.sp, lineHeight = 21.sp), // 14
 
-    bodyLarge = DefaultTypography.bodyLarge.copy(fontSize = 19.sp, lineHeight = 22.sp), // 16
-    bodyMedium = DefaultTypography.bodyMedium.copy(fontSize = 17.sp, lineHeight = 21.sp), // 14
-    bodySmall = DefaultTypography.bodySmall.copy(fontSize = 16.sp, lineHeight = 20.sp), // 12
+    bodyLarge = DefaultTypography.bodyLarge.copy(fontSize = 18.sp, lineHeight = 21.sp), // 16
+    bodyMedium = DefaultTypography.bodyMedium.copy(fontSize = 17.sp, lineHeight = 20.sp), // 14
+    bodySmall = DefaultTypography.bodySmall.copy(fontSize = 16.sp, lineHeight = 19.sp), // 12
 
-    labelLarge = DefaultTypography.labelLarge.copy(fontSize = 18.sp, lineHeight = 23.sp), // 14
+    labelLarge = DefaultTypography.labelLarge.copy(fontSize = 17.sp, lineHeight = 23.sp), // 14
     labelMedium = DefaultTypography.labelMedium.copy(fontSize = 16.sp, lineHeight = 20.sp), // 12
     labelSmall = DefaultTypography.labelSmall.copy(fontSize = 15.sp, lineHeight = 19.sp), // 11
 )

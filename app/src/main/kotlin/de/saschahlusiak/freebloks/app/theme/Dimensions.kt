@@ -12,6 +12,8 @@ data class Dimensions(
     val dialogCornerRadius: Dp = 12.dp,
     val buttonSize: Dp = 44.dp,
 
+    val iconButtonSize: Dp = 42.dp,
+
     val mainMenuPadding: Dp = 16.dp,
     val mainMenuButtonMargin: Dp = 10.dp,
     val mainMenuButtonHeight: Dp = 52.dp,
@@ -28,6 +30,7 @@ val TabletDimensions = Dimensions(
     dialogPadding = 20.dp,
     dialogCornerRadius = 16.dp,
     buttonSize = 52.dp,
+    iconButtonSize = 48.dp,
     mainMenuPadding = 20.dp,
     mainMenuButtonMargin = 12.dp,
     mainMenuButtonHeight = 64.dp,

@@ -29,8 +29,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.automirrored.rounded.VolumeOff
@@ -46,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -73,6 +76,7 @@ import de.saschahlusiak.freebloks.Global
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.app.Preferences
 import de.saschahlusiak.freebloks.app.theme.AppTheme
+import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.app.theme.pillButtonBackground
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
@@ -342,7 +346,6 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         Box(Modifier.fillMaxSize()) {
             AndroidView(factory = { view }, modifier = Modifier.fillMaxSize())
 
-
             if (!intro) {
                 Row(
                     Modifier
@@ -387,21 +390,37 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             val canUndo by viewModel.canRequestUndo.collectAsState()
 
             Row(modifier = Modifier.padding(2.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                IconButton(onClick = ::onSoundButtonClick) {
+                IconButton(
+                    onClick = ::onSoundButtonClick,
+                    modifier = Modifier.size(MaterialTheme.dimensions.iconButtonSize)
+                ) {
                     val colors = IconButtonDefaults.iconButtonColors()
                     Icon(
                         if (soundsEnabled) Icons.AutoMirrored.Rounded.VolumeUp else Icons.AutoMirrored.Rounded.VolumeOff,
                         contentDescription = null,
-                        tint = if (soundsEnabled) colors.contentColor else colors.disabledContentColor
+                        tint = if (soundsEnabled) colors.contentColor else colors.disabledContentColor,
+                        modifier = Modifier.fillMaxSize(0.6f)
                     )
                 }
 
-                IconButton(onClick = ::onHintButtonClick, enabled = canRequestHint) {
-                    Icon(Icons.Outlined.Info, contentDescription = "")
+                IconButton(
+                    onClick = ::onHintButtonClick, enabled = canRequestHint,
+                    modifier = Modifier.size(MaterialTheme.dimensions.iconButtonSize)
+                ) {
+                    Icon(
+                        Icons.Outlined.Info, contentDescription = "",
+                        modifier = Modifier.fillMaxSize(0.6f)
+                    )
                 }
 
-                IconButton(onClick = ::onUndoButtonClick, enabled = canUndo) {
-                    Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = "")
+                IconButton(
+                    onClick = ::onUndoButtonClick, enabled = canUndo,
+                    modifier = Modifier.size(MaterialTheme.dimensions.iconButtonSize)
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.Undo, contentDescription = "",
+                        modifier = Modifier.fillMaxSize(0.6f)
+                    )
                 }
             }
         }
@@ -421,21 +440,37 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
                     .animateContentSize(),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                IconButton(onClick = { menuShown = !menuShown }) {
+                IconButton(
+                    onClick = { menuShown = !menuShown },
+                    modifier = Modifier.size(MaterialTheme.dimensions.iconButtonSize)
+                ) {
                     Icon(
                         Icons.Rounded.MoreVert,
-                        contentDescription = ""
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxSize(0.6f)
                     )
                 }
 
                 AnimatedVisibility(visible = menuShown) {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        IconButton(onClick = ::onNewGameButtonClick) {
-                            Icon(Icons.Rounded.Autorenew, contentDescription = "")
+                        IconButton(
+                            onClick = ::onNewGameButtonClick,
+                            modifier = Modifier.size(MaterialTheme.dimensions.iconButtonSize)
+                        ) {
+                            Icon(
+                                Icons.Rounded.Autorenew, contentDescription = "",
+                                modifier = Modifier.fillMaxSize(0.6f)
+                            )
                         }
 
-                        IconButton(onClick = ::onPreferencesButtonClick) {
-                            Icon(Icons.Rounded.Settings, contentDescription = "")
+                        IconButton(
+                            onClick = ::onPreferencesButtonClick,
+                            modifier = Modifier.size(MaterialTheme.dimensions.iconButtonSize)
+                        ) {
+                            Icon(
+                                Icons.Rounded.Settings, contentDescription = "",
+                                modifier = Modifier.fillMaxSize(0.6f)
+                            )
                         }
                     }
                 }
