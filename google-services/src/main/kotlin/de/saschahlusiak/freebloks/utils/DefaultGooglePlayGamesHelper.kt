@@ -38,9 +38,7 @@ class DefaultGooglePlayGamesHelper @Inject constructor(
     override val signedIn = MutableStateFlow(false)
     override val playerName = MutableStateFlow<String?>(null)
     override val isAvailable: Boolean
-        get() {
-            return true
-        }
+        get() { return true }
     override val isSignedIn: Boolean
         get() = signedIn.value
 

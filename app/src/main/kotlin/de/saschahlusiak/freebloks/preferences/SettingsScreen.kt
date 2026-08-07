@@ -135,7 +135,7 @@ fun SettingsScreen(
 
                                 statisticsSection(onStatistics)
                             }
-                            4 -> aboutSection(onRate, onAbout, onSupport)
+                            4 -> aboutSection(onRate, onSupport, onAbout)
                         }
                     }
                 }
