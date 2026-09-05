@@ -35,7 +35,7 @@ import de.saschahlusiak.freebloks.app.theme.AppTheme
 import de.saschahlusiak.freebloks.app.theme.dimensions
 import de.saschahlusiak.freebloks.utils.LeaderboardEntry
 import de.saschahlusiak.freebloks.utils.Previews
-import java.text.NumberFormat.*
+import java.text.NumberFormat
 
 @Composable
 internal fun LeaderboardCard(
@@ -91,7 +91,7 @@ internal fun LeaderboardCard(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            val nf = getNumberInstance()
+            val nf = NumberFormat.getNumberInstance()
 
             Text(
                 pluralStringResource(
