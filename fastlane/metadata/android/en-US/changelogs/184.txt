@@ -1,0 +1,1 @@
+* Fix incorrect navigation to about screen from settings
