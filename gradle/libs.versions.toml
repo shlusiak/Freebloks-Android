@@ -6,11 +6,11 @@ ndkVersion = "29.0.14206865"
 
 agp = "9.4.0"
 coil-compose = "3.6.2"
-compose-bom = "2026.08.00"
-compose-runtime = "1.12.0"
+compose-bom = "2026.09.00"
+compose-runtime = "1.12.1"
 core-ktx = "1.19.0"
 coroutines = "1.11.0"
-firebase-crashlytics = "20.1.0"
+firebase-crashlytics = "20.1.1"
 firebase-crashlytics-gradle = "3.0.8"
 fragment-ktx = "1.9.0"
 google-services = "4.5.0"
@@ -23,7 +23,7 @@ material = "1.14.0"
 mockito = "5.23.0"
 play-services-games = "22.0.0"
 preference-ktx = "1.2.1"
-room = "2.8.4"
+room = "2.8.5"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
