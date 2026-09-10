@@ -14,8 +14,8 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         ndkVersion = libs.versions.ndkVersion.get()
 
-        versionCode = 183
-        versionName = "1.8.3"
+        versionCode = 184
+        versionName = "1.8.4"
 
         @Suppress("UnstableApiUsage")
         androidResources.localeFilters += setOf("en", "de", "es", "fr", "ja", "pt", "ro", "ru", "zh-rHK")
