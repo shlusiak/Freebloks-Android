@@ -1,8 +1,8 @@
 package de.saschahlusiak.freebloks.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.Query
 import de.saschahlusiak.freebloks.database.entity.HighScoreEntry
 import de.saschahlusiak.freebloks.database.entity.HighScoreEntry.Companion.FLAG_PERFECT
 import kotlinx.coroutines.flow.Flow

@@ -37,7 +37,6 @@ class GameFinishFragmentViewModel @Inject constructor(
     val gameMode get() = game.gameMode
     val canChat: Boolean
 
-    // LiveData
     val isSignedIn = gameHelper.signedIn
 
     init {

@@ -13,9 +13,8 @@ android {
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
     }
-    room {
+    room3 {
         schemaDirectory("$projectDir/schemas")
-        generateKotlin = true
     }
     buildFeatures {
         compose = true
@@ -30,7 +29,6 @@ dependencies {
     implementation(project(":game"))
 
     implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
     implementation(platform(libs.compose.bom))

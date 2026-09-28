@@ -1,10 +1,10 @@
 package de.saschahlusiak.freebloks.database
 
 import android.app.Application
-import androidx.room.AutoMigration
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room3.AutoMigration
+import androidx.room3.Database
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

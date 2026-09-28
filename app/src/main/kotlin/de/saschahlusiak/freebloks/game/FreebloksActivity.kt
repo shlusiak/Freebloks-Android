@@ -733,7 +733,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         }
     }
 
-//region LiveData Observers
+//region Observers
 
     private fun onConnectionStatusChanged(status: ConnectionStatus) {
         Log.d(tag, "Connection status: $status")
