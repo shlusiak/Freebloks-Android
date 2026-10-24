@@ -59,7 +59,20 @@ class WheelRenderer {
                     mv.rotate(rotate, 0f, 1f, 0f)
                     mv.translate(offset, 0f, offset)
                     mv.withPush {
-                        boardRenderer.renderShapeShadow(ctx, s.shape, wheel.playerColor, Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
+                        boardRenderer.renderShapeShadow(
+                            ctx,
+                            s.shape,
+                            wheel.playerColor,
+                            Orientation.Default,
+                            y,
+                            0f,
+                            0f,
+                            1f,
+                            0f,
+                            rotate,
+                            alpha,
+                            1.0f
+                        )
                     }
                     mv.translate(0f, y, 0f)
                     boardRenderer.renderShape(
