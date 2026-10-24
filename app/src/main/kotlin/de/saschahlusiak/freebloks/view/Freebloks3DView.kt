@@ -37,7 +37,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     fun setScene(scene: Scene) {
         this.scene = scene
         renderer = Gles2Renderer(context, scene).apply {
-            zoom = scale
+            camera.zoom = scale
         }
         setEGLContextClientVersion(2)
         setEGLConfigChooser(GLConfigChooser(2))
@@ -63,7 +63,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
                     scene.basePlayer = i
                     break
                 }
-                renderer.updateModelViewMatrix = true
+                renderer.camera.updateModelViewMatrix = true
                 scene.wheel.update(scene.boardObject.showWheelPlayer)
                 newCurrentPlayer(game.currentPlayer)
             }
@@ -80,7 +80,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val modelPoint = renderer.windowToModel(PointF(event.x, event.y))
+        val modelPoint = renderer.camera.windowToModel(PointF(event.x, event.y))
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -93,8 +93,8 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
                     if (scale > 3.0f) scale = 3.0f
                     if (scale < 0.3f) scale = 0.3f
                     oldDist = newDist
-                    renderer.updateModelViewMatrix = true
-                    renderer.zoom = scale
+                    renderer.camera.updateModelViewMatrix = true
+                    renderer.camera.zoom = scale
                     requestRender()
                 }
             } else {
@@ -116,7 +116,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        renderer.updateModelViewMatrix = true
+        renderer.camera.updateModelViewMatrix = true
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
@@ -215,7 +215,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
             break
         }
         scene.wheel.update(scene.boardObject.showWheelPlayer)
-        renderer.updateModelViewMatrix = true
+        renderer.camera.updateModelViewMatrix = true
         scene.reset()
         requestRender()
     }
@@ -302,8 +302,8 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
 
     fun setScale(scale: Float) {
         this.scale = scale
-        renderer.zoom = scale
-        renderer.updateModelViewMatrix = true
+        renderer.camera.zoom = scale
+        renderer.camera.updateModelViewMatrix = true
     }
 
     fun getScale(): Float {

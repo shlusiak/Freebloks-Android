@@ -5,8 +5,6 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.view.scene.Scene
-import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
-import de.saschahlusiak.freebloks.view.gles2.Gles2Context
 
 abstract class AbsShapeEffect internal constructor(
     protected val scene: Scene,
@@ -29,5 +27,5 @@ abstract class AbsShapeEffect internal constructor(
         return shape.isStone(sx, sy, orientation)
     }
 
-    override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) { }
+    override fun renderShadow(canvas: EffectCanvas) { }
 }

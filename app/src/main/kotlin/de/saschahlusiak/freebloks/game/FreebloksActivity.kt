@@ -203,7 +203,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
             view.setGameClient(client)
         } else if (savedInstanceState == null) {
             if (viewModel.showIntro) {
-                viewModel.intro.value = Intro(applicationContext, scene, this)
+                viewModel.intro.value = Intro(scene, this)
                 scene.intro = viewModel.intro.value
             } else {
                 onIntroCompleted()

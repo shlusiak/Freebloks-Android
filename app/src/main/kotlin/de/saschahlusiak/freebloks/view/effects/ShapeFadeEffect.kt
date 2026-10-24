@@ -3,8 +3,6 @@ package de.saschahlusiak.freebloks.view.effects
 import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
-import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
-import de.saschahlusiak.freebloks.view.gles2.Gles2Context
 import kotlin.math.cos
 
 class ShapeFadeEffect(model: Scene, turn: Turn, private val numberOfIterations: Float) : AbsShapeEffect(model, turn) {
@@ -16,15 +14,15 @@ class ShapeFadeEffect(model: Scene, turn: Turn, private val numberOfIterations: 
         return time > timePerIteration * numberOfIterations
     }
 
-    override fun render(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
+    override fun render(canvas: EffectCanvas) {
         val amp = cos(time / timePerIteration * Math.PI.toFloat() * 2.0f) * 0.5f + 0.5f
         val alpha = fromAlpha + amp * (toAlpha - fromAlpha)
-        ctx.modelView.push()
-        ctx.modelView.translate(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
-            0f,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
-        renderer.renderShape(ctx, color, shape, orientation, alpha * BoardRenderer.defaultStoneAlpha)
-        ctx.modelView.pop()
+        canvas.matrix.withPush {
+            canvas.matrix.translate(
+                -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
+                0f,
+                -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
+            canvas.shape(color, shape, orientation, alpha * BoardRenderer.defaultStoneAlpha)
+        }
     }
 }

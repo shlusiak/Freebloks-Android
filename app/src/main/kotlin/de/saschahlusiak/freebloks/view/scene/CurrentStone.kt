@@ -1,18 +1,9 @@
 package de.saschahlusiak.freebloks.view.scene
 
-import android.content.Context
-import android.graphics.BitmapFactory
-import android.opengl.GLES20
-import android.opengl.GLUtils
-import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.SimpleModel
-import de.saschahlusiak.freebloks.view.gles2.Gles2Model
-import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
-import de.saschahlusiak.freebloks.view.gles2.Gles2Textures
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.floor
@@ -26,7 +17,8 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     var stone: Stone? = null
         private set
 
-    private var currentColor = StoneColor.White
+    internal var currentColor = StoneColor.White
+        private set
 
     /**
      * Current position in board coordinates
@@ -42,9 +34,11 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     internal var isValid = false
     private var stoneRelX = 0f
     private var stoneRelY = 0f
-    private var rotateAngle = 0f
+    internal var rotateAngle = 0f
+        private set
     var status: Status = Status.IDLE
-    private var orientation = Orientation()
+    internal var orientation = Orientation()
+        private set
     val hoverHeightLow = 0.55f
     val hoverHeightHigh = 0.55f
 
@@ -52,114 +46,6 @@ class CurrentStone(private val scene: Scene) : SceneElement {
      * Model coordinates of last touch down event, to detect taps
      */
     private var lastTouchPos = PointF()
-
-    private fun buildOverlayModel() = SimpleModel(4, 2).apply {
-        addVertex(-overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 0f, 0f)
-        addVertex(+overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 1f, 0f)
-        addVertex(+overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 1f, 1f)
-        addVertex(-overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 0f, 1f)
-        addIndex(0, 1, 2)
-        addIndex(0, 2, 3)
-        commit()
-    }
-
-    private val overlay = Gles2Model(buildOverlayModel())
-    private val white = floatArrayOf(1f, 1f, 1f, 1f)
-    private val texture = IntArray(3)
-
-    fun updateTexture(context: Context) {
-        overlay.invalidate()
-        val ids = intArrayOf(R.drawable.stone_overlay_green, R.drawable.stone_overlay_red, R.drawable.stone_overlay_shadow)
-        for (i in ids.indices) {
-            val bitmap = BitmapFactory.decodeResource(context.resources, ids[i])
-            Gles2Textures.delete(texture[i])
-            texture[i] = Gles2Textures.fromBitmap(bitmap)
-            bitmap.recycle()
-        }
-    }
-
-    @Synchronized
-    fun render(renderer: Gles2Renderer) {
-        val stone = stone ?: return
-        val ctx = renderer.ctx
-        val mv = ctx.modelView
-
-        var hoverHeight = if (status == Status.IDLE) hoverHeightLow else hoverHeightHigh
-
-        val offset = stone.shape.size.toFloat() - 1.0f
-        val currentPlayer = scene.game.currentPlayer
-        if (currentPlayer < 0) return
-
-        if (status == Status.FLIPPING_HORIZONTAL || status == Status.FLIPPING_VERTICAL)
-            hoverHeight += abs(sin(rotateAngle / 180f * Math.PI.toFloat()) * overlayRadius * 0.4f)
-
-        fun applyRotation() {
-            if (status == Status.ROTATING) mv.rotate(rotateAngle, 0f, 1f, 0f)
-            if (status == Status.FLIPPING_HORIZONTAL) mv.rotate(rotateAngle, 0f, 0f, 1f)
-            if (status == Status.FLIPPING_VERTICAL) mv.rotate(rotateAngle, 1f, 0f, 0f)
-        }
-
-        GLES20.glDisable(GLES20.GL_CULL_FACE)
-        mv.push()
-        mv.translate(
-            BoardRenderer.stoneSize * ((-(scene.board.width - 1)).toFloat() + 2.0f * pos.x + offset),
-            0f,
-            BoardRenderer.stoneSize * ((-(scene.board.width - 1)).toFloat() + 2.0f * pos.y + offset)
-        )
-
-        /* STONE SHADOW */
-        mv.push()
-        val baseAngle = scene.baseAngle
-        mv.rotate(baseAngle, 0f, 1f, 0f)
-        mv.translate(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
-        mv.rotate(-baseAngle, 0f, 1f, 0f)
-        applyRotation()
-        mv.scale(1.09f, 0.01f, 1.09f)
-        mv.translate(-BoardRenderer.stoneSize * offset, 0f, -BoardRenderer.stoneSize * offset)
-        renderer.boardRenderer.renderShapeShadow(ctx, currentColor, stone.shape, orientation, 0.80f)
-        mv.pop()
-
-        GLES20.glEnable(GLES20.GL_BLEND)
-        ctx.lighting = false
-        ctx.textured = true
-        ctx.setColor(white)
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-        overlay.bind()
-
-        /* OVERLAY SHADOW */
-        mv.push()
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture[2])
-        mv.rotate(baseAngle, 0f, 1f, 0f)
-        mv.translate(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
-        mv.rotate(-baseAngle, 0f, 1f, 0f)
-        applyRotation()
-        mv.scale(1.0f, 0.01f, 1.0f)
-        ctx.apply()
-        overlay.draw()
-        mv.pop()
-
-        /* OVERLAY */
-        mv.push()
-        mv.translate(0f, hoverHeight, 0f)
-        applyRotation()
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (isValid) texture[0] else texture[1])
-        ctx.apply()
-        overlay.draw()
-        GLES20.glEnable(GLES20.GL_CULL_FACE)
-        ctx.lighting = true
-        ctx.textured = false
-
-        /* STONE */
-        mv.pop()
-        mv.translate(0f, hoverHeight, 0f)
-        applyRotation()
-        mv.translate(-BoardRenderer.stoneSize * offset, 0f, -BoardRenderer.stoneSize * offset)
-        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
-
-        val alpha = if (status != Status.IDLE || isValid) 1.0f else BoardRenderer.defaultStoneAlpha
-        renderer.boardRenderer.renderShape(ctx, currentColor, stone.shape, orientation, alpha)
-        mv.pop()
-    }
 
     private fun moveTo(toX: Float, toY: Float): Boolean {
         var x = toX
@@ -462,6 +348,6 @@ class CurrentStone(private val scene: Scene) : SceneElement {
 
     companion object {
         private val tag = CurrentStone::class.java.simpleName
-        private const val overlayRadius = 6.0f
+        internal const val overlayRadius = 6.0f
     }
 }

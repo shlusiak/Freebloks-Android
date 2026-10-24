@@ -136,15 +136,14 @@ class Gles2BoardRenderer(private val resources: Resources) {
 
                 if (seedsPlayer >= 0 && board.getFieldStatus(seedsPlayer, y, x) == Board.FIELD_ALLOWED) {
                     ctx.textured = false
-                    GLES20.glEnable(GLES20.GL_BLEND)
-                    GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+                    ctx.blend(Gles2Context.Blend.Alpha)
                     ctx.setColor(materialBoardDiffuseSeed)
 
                     draw(ctx, field)
 
                     ctx.setColor(rgba)
                     ctx.textured = hasTexture
-                    GLES20.glDisable(GLES20.GL_BLEND)
+                    ctx.blend(Gles2Context.Blend.Off)
                 }
 
                 tex.translate(stoneSize * 4.0f, 0f, 0f)
@@ -163,7 +162,7 @@ class Gles2BoardRenderer(private val resources: Resources) {
         border.bind()
 
         /* we want the border in the depth buffer so it can cover the stones rendered later */
-        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
+        ctx.depthTest(true)
         for (i in 0..3) {
             draw(ctx, border)
             mv.rotate(90f, 0f, 1f, 0f)
@@ -187,6 +186,20 @@ class Gles2BoardRenderer(private val resources: Resources) {
     }
 
     /**
+     * Renders a single stone at the current position with the given premultiplied RGBA colour, blended.
+     */
+    fun renderStone(ctx: Gles2Context, rgba: FloatArray) {
+        ctx.blend(Gles2Context.Blend.Premultiplied)
+        ctx.lighting = true
+        ctx.textured = false
+        ctx.setColor(rgba)
+        ctx.setSpecular(materialStoneSpecular, materialStoneShininess)
+        stone.bind()
+        draw(ctx, stone)
+        ctx.blend(Gles2Context.Blend.Off)
+    }
+
+    /**
      * Render the shadow of the shape at the current position.
      */
     fun renderShapeShadow(ctx: Gles2Context, color: StoneColor, shape: Shape, orientation: Orientation, alpha: Float) {
@@ -202,8 +215,7 @@ class Gles2BoardRenderer(private val resources: Resources) {
 
         shadow.bind()
 
-        GLES20.glEnable(GLES20.GL_BLEND)
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        ctx.blend(Gles2Context.Blend.Premultiplied)
         ctx.textured = true
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, shadowTexture)
 
@@ -220,7 +232,7 @@ class Gles2BoardRenderer(private val resources: Resources) {
             mv.translate(-j * stoneSize * 2.0f, 0f, stoneSize * 2.0f)
         }
         ctx.textured = false
-        GLES20.glDisable(GLES20.GL_BLEND)
+        ctx.blend(Gles2Context.Blend.Off)
     }
 
     fun renderShapeShadow(
@@ -261,8 +273,7 @@ class Gles2BoardRenderer(private val resources: Resources) {
         tmp[2] = c[2] * alpha
         tmp[3] = alpha
 
-        GLES20.glEnable(GLES20.GL_BLEND)
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        ctx.blend(Gles2Context.Blend.Premultiplied)
         ctx.lighting = true
         ctx.textured = false
         ctx.setColor(tmp)
@@ -282,6 +293,6 @@ class Gles2BoardRenderer(private val resources: Resources) {
             mv.translate(-j * stoneSize * 2.0f, 0f, stoneSize * 2.0f)
             i++
         }
-        GLES20.glDisable(GLES20.GL_BLEND)
+        ctx.blend(Gles2Context.Blend.Off)
     }
 }

@@ -7,7 +7,6 @@ import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -20,7 +19,8 @@ class Wheel(private val scene: Scene) : SceneElement {
     /* returns the currently highlighted stone in the wheel */
     var currentStone: Stone? = null
 
-    private var currentOffset = 0f
+    internal var currentOffset = 0f
+        private set
 
     /* the offset on last touch down; rotate back to here when idle */
     private var lastOffset = 0f
@@ -37,9 +37,11 @@ class Wheel(private val scene: Scene) : SceneElement {
     /* returns the player number currently shown in the wheel (aka. last call of update) */
     var currentPlayer: Int = -1
         private set
-    private var playerColor: StoneColor = StoneColor.White
+    internal var playerColor: StoneColor = StoneColor.White
+        private set
 
-    private var movesLeft = false
+    internal var movesLeft = false
+        private set
 
     /**
      * Last model coordinates of touch down event
@@ -205,68 +207,6 @@ class Wheel(private val scene: Scene) : SceneElement {
     }
 
 
-    @Synchronized
-    fun render(renderer: Gles2Renderer) {
-        val mv = renderer.ctx.modelView
-        mv.translate(-currentOffset, 0f, BoardRenderer.stoneSize * (scene.board.width + 10))
-        for (i in stones.indices.reversed()) {
-            val s = stones[i]
-
-            if (s.available - (if (s == scene.currentStone.stone) 1 else 0) > 0) {
-                val col = (i / 2).toFloat()
-                val row = i % 2.toFloat()
-                val offset = -(s.shape.size.toFloat() - 1.0f) * BoardRenderer.stoneSize
-                val x = col * STONE_SPACING
-                val effect = 12.5f / (12.5f + (abs(x - currentOffset) * 0.5f).pow(2.5f))
-                var y = 0.35f + effect * 0.75f
-                val z = row * STONE_SPACING
-                val scale = 0.9f + effect * 0.3f
-                var rotate = -scene.baseAngle
-                if (!scene.verticalLayout) rotate -= 90.0f
-                var alpha = 1.0f
-                if (currentStone == s && s != scene.currentStone.stone) y += 1.2f
-                if (!movesLeft && !scene.game.isFinished) alpha *= 0.65f
-                alpha *= 0.75f + effect * 0.25f
-                mv.push()
-                mv.translate(x, 0f, z)
-                mv.scale(scale, scale, scale)
-
-                if (s.available > 1 && s == currentStone && s != scene.currentStone.stone) {
-                    mv.push()
-                    mv.translate(BoardRenderer.stoneSize, 0f, BoardRenderer.stoneSize * 0.6f)
-                    mv.rotate(rotate, 0f, 1f, 0f)
-                    mv.scale(0.85f, 0.85f, 0.85f)
-                    mv.translate(offset, 0f, offset)
-                    renderer.boardRenderer.renderShape(renderer.ctx, playerColor, s.shape, Orientation.Default, alpha)
-                    mv.pop()
-                }
-
-                mv.rotate(rotate, 0f, 1f, 0f)
-                mv.translate(offset, 0f, offset)
-                mv.push()
-                renderer.boardRenderer.renderShapeShadow(
-                    renderer.ctx,
-                    s.shape, playerColor, Orientation.Default,
-                    y,
-                    0f, 0f, 1f, 0f,
-                    rotate,
-                    alpha,
-                    1.0f
-                )
-                mv.pop()
-                mv.translate(0f, y, 0f)
-                renderer.boardRenderer.renderShape(
-                    renderer.ctx,
-                    if (s == currentStone && s != scene.currentStone.stone) StoneColor.White else playerColor,
-                    s.shape,
-                    Orientation.Default,
-                    alpha
-                )
-                mv.pop()
-            }
-        }
-    }
-
     override fun execute(elapsed: Float): Boolean {
         val EPSILON = 0.5f
         if (status == Status.IDLE && abs(currentOffset - lastOffset) > EPSILON) {
@@ -324,7 +264,7 @@ class Wheel(private val scene: Scene) : SceneElement {
     companion object {
         private val tag = Wheel::class.java.simpleName
 
-        private const val STONE_SPACING = 5.5f * BoardRenderer.stoneSize * 2.0f
+        internal const val STONE_SPACING = 5.5f * BoardRenderer.stoneSize * 2.0f
         private const val MAX_FLING_SPEED = 100.0f
         private const val MIN_FLING_SPEED = 2.0f
         private const val MAX_STONE_DRAG_DISTANCE = 3.5f

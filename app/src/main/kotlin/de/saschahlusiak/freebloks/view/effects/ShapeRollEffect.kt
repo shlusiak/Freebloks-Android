@@ -4,8 +4,6 @@ import de.saschahlusiak.freebloks.model.Turn
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
-import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
-import de.saschahlusiak.freebloks.view.gles2.Gles2Context
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -74,35 +72,35 @@ class ShapeRollEffect(
         return true
     }
 
-    override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
-        ctx.modelView.push()
-        ctx.modelView.translate(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
-            0f,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
-        )
-        renderer.renderShapeShadow(ctx,
-            shape, color, orientation,
-            z,
-            r, ax, ay, az,
-            scene.boardObject.currentAngle - scene.baseAngle,
-            1.0f, 1.0f
-        )
-        ctx.modelView.pop()
+    override fun renderShadow(canvas: EffectCanvas) {
+        canvas.matrix.withPush {
+            canvas.matrix.translate(
+                -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
+                0f,
+                -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
+            )
+            canvas.shapeShadow(
+                shape, color, orientation,
+                z,
+                r, ax, ay, az,
+                scene.boardObject.currentAngle - scene.baseAngle,
+                1.0f, 1.0f
+            )
+        }
     }
 
-    override fun render(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
-        val mv = ctx.modelView
-        mv.push()
-        val offset = shape.size.toFloat() - 1.0f
-        mv.translate(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
-            z,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
-        mv.translate(BoardRenderer.stoneSize * offset, 0f, BoardRenderer.stoneSize * offset)
-        mv.rotate(r, ax, ay, az)
-        mv.translate(-BoardRenderer.stoneSize * offset, 0f, -BoardRenderer.stoneSize * offset)
-        renderer.renderShape(ctx, color, shape, orientation, BoardRenderer.defaultStoneAlpha)
-        mv.pop()
+    override fun render(canvas: EffectCanvas) {
+        val mv = canvas.matrix
+        mv.withPush {
+            val offset = shape.size.toFloat() - 1.0f
+            mv.translate(
+                -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
+                z,
+                -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
+            mv.translate(BoardRenderer.stoneSize * offset, 0f, BoardRenderer.stoneSize * offset)
+            mv.rotate(r, ax, ay, az)
+            mv.translate(-BoardRenderer.stoneSize * offset, 0f, -BoardRenderer.stoneSize * offset)
+            canvas.shape(color, shape, orientation, BoardRenderer.defaultStoneAlpha)
+        }
     }
 }

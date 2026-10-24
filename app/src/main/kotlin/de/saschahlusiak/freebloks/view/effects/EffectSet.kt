@@ -1,8 +1,6 @@
 package de.saschahlusiak.freebloks.view.effects
 
 import java.util.*
-import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
-import de.saschahlusiak.freebloks.view.gles2.Gles2Context
 
 /**
  * Chain of effects, to be played one after each other.
@@ -29,11 +27,11 @@ class EffectSet : ArrayList<AbsShapeEffect>(), Effect {
         return false
     }
 
-    override fun render(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
-        if (size > 0) get(0).render(ctx, renderer)
+    override fun render(canvas: EffectCanvas) {
+        if (size > 0) get(0).render(canvas)
     }
 
-    override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
-        if (size > 0) get(0).renderShadow(ctx, renderer)
+    override fun renderShadow(canvas: EffectCanvas) {
+        if (size > 0) get(0).renderShadow(canvas)
     }
 }
