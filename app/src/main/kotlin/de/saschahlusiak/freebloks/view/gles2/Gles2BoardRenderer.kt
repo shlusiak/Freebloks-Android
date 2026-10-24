@@ -25,9 +25,16 @@ class Gles2BoardRenderer(private val resources: Resources) {
         val materialStoneSpecular = floatArrayOf(0.3f, 0.3f, 0.3f)
         const val materialStoneShininess = 30.0f
         private val materialBlack = floatArrayOf(0f, 0f, 0f)
+
+        private const val textureScale = 0.12f
+        private const val textureRotation = 1.0f
     }
 
+    /** A single field, used to highlight seeds. */
     private val field = Gles2Model(BoardModels.buildSingleBoardFieldModel())
+
+    /** All fields of a board of the given size in one model, cached per size. */
+    private val boards = HashMap<Pair<Int, Int>, Gles2Model>()
     private var border = Gles2Model(BoardModels.buildBorderModel(Board.DEFAULT_BOARD_SIZE))
     val stone = Gles2Model(BoardModels.buildStoneModel())
     private val shadow = Gles2Model(BoardModels.buildStoneShadow())
@@ -53,6 +60,7 @@ class Gles2BoardRenderer(private val resources: Resources) {
     fun onSurfaceCreated() {
         stone.invalidate()
         field.invalidate()
+        boards.clear()
         border.invalidate()
         shadow.invalidate()
         boardTexture = 0
@@ -103,9 +111,6 @@ class Gles2BoardRenderer(private val resources: Resources) {
             valid = true
         }
 
-        val textureScale = 0.12f
-        val textureRotation = 1.0f
-
         ctx.lighting = true
         ctx.setSpecular(materialBoardSpecular, materialBoardShininess)
         ctx.setColor(rgba)
@@ -114,50 +119,48 @@ class Gles2BoardRenderer(private val resources: Resources) {
         if (hasTexture) {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, boardTexture)
         }
-        field.bind()
-
-        val tex = ctx.texture
-        tex.loadIdentity()
-        tex.scale(textureScale, textureScale, 1f)
-        tex.rotate(textureRotation, 0f, 0f, 1f)
-        tex.push()
 
         val mv = ctx.modelView
         val w = board.width
         val h = board.height
 
-        mv.push()
-        mv.translate(-stoneSize * (w - 1).toFloat(), 0f, -stoneSize * (h - 1).toFloat())
+        // the texture coordinates are baked into the model
+        ctx.texture.loadIdentity()
+        val fields = boards.getOrPut(w to h) {
+            Gles2Model(BoardModels.buildBoardModel(w, h, stoneSize * 4.0f, textureScale, textureRotation))
+        }
+        fields.bind()
+        draw(ctx, fields)
 
-        for (y in 0 until h) {
-            var x = 0
-            while (x < w) {
-                draw(ctx, field)
+        /* seeds, highlighted on top of their field */
+        if (seedsPlayer >= 0) {
+            var bound = false
+            for (y in 0 until h) for (x in 0 until w) {
+                if (board.getFieldStatus(seedsPlayer, y, x) != Board.FIELD_ALLOWED) continue
 
-                if (seedsPlayer >= 0 && board.getFieldStatus(seedsPlayer, y, x) == Board.FIELD_ALLOWED) {
+                if (!bound) {
+                    bound = true
                     ctx.textured = false
                     ctx.blend(Gles2Context.Blend.Alpha)
                     ctx.setColor(materialBoardDiffuseSeed)
-
-                    draw(ctx, field)
-
-                    ctx.setColor(rgba)
-                    ctx.textured = hasTexture
-                    ctx.blend(Gles2Context.Blend.Off)
+                    field.bind()
                 }
-
-                tex.translate(stoneSize * 4.0f, 0f, 0f)
-                mv.translate(stoneSize * 2.0f, 0f, 0f)
-                x++
+                mv.withPush {
+                    mv.translate(-stoneSize * (w - 1) + stoneSize * 2.0f * x, 0f, -stoneSize * (h - 1) + stoneSize * 2.0f * y)
+                    draw(ctx, field)
+                }
             }
-            tex.translate(-x * stoneSize * 4.0f, stoneSize * 4.0f, 0f)
-            mv.translate(-x * stoneSize * 2.0f, 0f, stoneSize * 2.0f)
+            ctx.blend(Gles2Context.Blend.Off)
         }
 
-        tex.pop()
-        mv.pop()
-
         ctx.setColor(rgba)
+
+        // the border uses plain model space coordinates for its texture
+        val tex = ctx.texture
+        tex.loadIdentity()
+        tex.scale(textureScale, textureScale, 1f)
+        tex.rotate(textureRotation, 0f, 0f, 1f)
+        ctx.textured = hasTexture
 
         border.bind()
 
