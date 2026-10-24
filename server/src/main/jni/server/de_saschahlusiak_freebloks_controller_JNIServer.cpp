@@ -1,19 +1,28 @@
+#include <stdarg.h>
+#include <stdio.h>
+#include <pthread.h>
+#include <bits/pthread_types.h>
+#include <bits/sysconf.h>
+#include <jni.h>
+#include <android/log.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <unistd.h>
 #include "de_saschahlusiak_freebloks_controller_JNIServer.h"
-#include <pthread.h>
-#include "github/src/spielserver.h"
 
-class CAndroidLogWriter: public CLogWriter {
+#include "github/src/gameserver.h"
+#include "github/src/logger.h"
+#include "github/src/constants.h"
+#include "github/src/game.h"
+
+class CAndroidLogWriter : public CLogWriter {
 public:
-	virtual void log(const char* fmt, va_list va);
+	virtual void log(const char *fmt, va_list va);
 };
 
-void CAndroidLogWriter::log(const char* fmt, va_list va)
-{
+void CAndroidLogWriter::log(const char *fmt, va_list va) {
 	CLogWriter::log(fmt, va);
 	__android_log_vprint(ANDROID_LOG_INFO, "server", fmt, va);
 }
@@ -23,67 +32,55 @@ static int server_count = 0;
 static CLogger logger(androidLogWriter);
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_get_1number_1of_1processors
-  (JNIEnv *je, jobject jc)
-{
+		(JNIEnv *je, jobject jc) {
 	return sysconf(_SC_NPROCESSORS_CONF);
 }
 
-/**
- * Funktion kriegt einen CServerListener und wartet so lange, bis das Spiel gestartet wurde
- **/
-static int EstablishGame(CServerListener* listener)
-{
+static int EstablishGame(CServerListener *listener) {
 	int ret;
-	do
-	{
-		/* Listener auf einen Client warten oder eine Netzwerknachricht verarbeiten lassen */
-		ret=listener->wait_for_player(false, NULL);
-		/* Bei Fehler: Raus hier */
-		if (ret==-1)
-		{
+	do {
+		ret = listener->wait_for_player(false, NULL);
+		if (ret == -1) {
 			perror("wait(): ");
 			return -1;
 		}
 		if (listener->get_game()->num_clients() <= 0)
 			return -1;
-		/* Solange, wie kein aktueller Spieler festgelegt ist: Spiel laeuft noch nicht */
 
 		/* assign all PLAYER_LOCAL players to first client */
 		listener->get_game()->assign_local_players();
-
-	}while (listener->get_game()->current_player()==-1);
+	} while (listener->get_game()->current_player() == -1);
 
 	return 0;
 }
 
-void* gameRunThread(void* param)
-{
-	CServerListener *listener = (CServerListener*)param;
+void *gameRunThread(void *param) {
+	CServerListener *listener = (CServerListener *) param;
 
 	int server_id = server_count++;
 
 	listener->setLogger(&logger);
 	listener->get_game()->setLogger(&logger);
 
-	logger.logLine("[%d] waiting for players", server_id);
+	logger.log(LOGLEVEL_INFO, "[%d] waiting for players", server_id);
 
 	if (EstablishGame(listener) == -1) {
 		listener->close();
 		delete listener;
-		logger.logLine("[%d] game not established", server_id);
+		logger.log(LOGLEVEL_INFO, "[%d] game not established", server_id);
 		return NULL;
 	}
 
-	logger.logLine("[%d] game started", server_id);
+	logger.log(LOGLEVEL_INFO, "[%d] game started", server_id);
 
-	CSpielServer* game = listener->get_game();
+	CGameServer *game = listener->get_game();
 
 	listener->close();
 
 	game->run();
 
 	delete listener;
-	logger.logLine("[%d] server thread going down", server_id);
+	logger.log(LOGLEVEL_INFO, "[%d] server thread going down", server_id);
 
 	return NULL;
 }
@@ -109,38 +106,37 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServ
 	int ret;
 	pthread_t pt;
 
-	int i,j;
+	int i, j;
 
-	const char* _interface= nullptr;
+	const char *_interface = nullptr;
 	if (interface != nullptr) {
 		_interface = je->GetStringUTFChars(interface, nullptr);
 	}
 
-	CServerListener* listener=new CServerListener();
-	CSpielServer* game;
+	CServerListener *listener = new CServerListener();
+	CGameServer *game;
 
-	ret=listener->init(_interface, port);
+	ret = listener->init(_interface, port);
 	if (interface != nullptr) {
 		je->ReleaseStringUTFChars(interface, _interface);
 	}
 
-	if (ret!=0)
-	{
-	    return -1;
+	if (ret != 0) {
+		return -1;
 	}
-	listener->new_game(max_humans, ki_mode, (GAMEMODE)(int)gamemode, ki_threads, force_delay);
+	listener->new_game(max_humans, ki_mode, (GAMEMODE) (int) gamemode, ki_threads, force_delay);
 	game = listener->get_game();
 	game->set_field_size(field_size_x, field_size_y);
 
-	game->start_new_game((GAMEMODE)(int)gamemode);
+	game->start_new_game((GAMEMODE) (int) gamemode);
 
 	/* copy player to game, map local players to client 0 */
 	jint *tmp = je->GetIntArrayElements(spieler, 0);
 	for (i = 0; i < PLAYER_MAX; i++) {
 		if (tmp[i] == PLAYER_LOCAL)
-			game->setSpieler(i, PLAYER_LOCAL); /* local players will later be mapped to first connecting client */
+			game->setPlayer(i, PLAYER_LOCAL); /* local players will later be mapped to first connecting client */
 		else
-			game->setSpieler(i, PLAYER_COMPUTER);
+			game->setPlayer(i, PLAYER_COMPUTER);
 	}
 	/* set current player */
 	game->setCurrentPlayer(current_player);
@@ -157,14 +153,15 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServ
 			game->get_player(i)->get_stone(j).set_available(tmp[i * STONE_COUNT_ALL_SHAPES + j]);
 		}
 
-	if (pthread_create(&pt,NULL,gameRunThread,(void*)listener))
+	if (pthread_create(&pt, NULL, gameRunThread, (void *) listener))
 		perror("pthread_create");
 	if (pthread_detach(pt))perror("pthread_detach");
+
 	return 0;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServer_native_1run_1server(
-		JNIEnv * je,
+		JNIEnv *je,
 		jobject jc,
 		jstring interface,
 		jint port,
@@ -179,41 +176,40 @@ extern "C" JNIEXPORT jint JNICALL Java_de_saschahlusiak_freebloks_server_JNIServ
 	int ret;
 	pthread_t pt;
 
-	const char* _interface= nullptr;
+	const char *_interface = nullptr;
 	if (interface != nullptr) {
 		_interface = je->GetStringUTFChars(interface, nullptr);
 	}
 
-	CServerListener* listener=new CServerListener();
-	ret=listener->init(_interface, port);
+	CServerListener *listener = new CServerListener();
+	ret = listener->init(_interface, port);
 
 	if (interface != nullptr) {
 		je->ReleaseStringUTFChars(interface, _interface);
 	}
-	if (ret!=0)
-	{
-		logger.log("CServerListener::init returned %d", ret);
-	    return ret;
+	if (ret != 0) {
+		logger.log(LOGLEVEL_INFO, "CServerListener::init returned %d", ret);
+		return ret;
 	}
 
-	logger.log("Server spawned successfully");
+	logger.log(LOGLEVEL_INFO, "Server spawned successfully");
 
-	listener->new_game(max_humans, ki_mode, (GAMEMODE)gamemode, ki_threads, force_delay);
+	listener->new_game(max_humans, ki_mode, (GAMEMODE) gamemode, ki_threads, force_delay);
 	listener->get_game()->set_field_size(field_size_x, field_size_y);
 
 	if (stones != NULL) {
 		jint *tmp = je->GetIntArrayElements(stones, 0);
 		int8 stones[STONE_COUNT_ALL_SHAPES];
-		for (int i = 0; i < STONE_COUNT_ALL_SHAPES; i++)
-		{
+		for (int i = 0; i < STONE_COUNT_ALL_SHAPES; i++) {
 			stones[i] = tmp[i];
 		}
 		listener->get_game()->set_stone_numbers(stones);
 	}
-	listener->get_game()->start_new_game((GAMEMODE)gamemode);
+	listener->get_game()->start_new_game((GAMEMODE) gamemode);
 
-	if (pthread_create(&pt,NULL,gameRunThread,(void*)listener))
+	if (pthread_create(&pt, NULL, gameRunThread, (void *) listener))
 		perror("pthread_create");
 	if (pthread_detach(pt))perror("pthread_detach");
+
 	return 0;
 }

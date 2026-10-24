@@ -2,7 +2,7 @@
 compileSdk = "37"
 targetSdk = "37"
 minSdk = "24"
-ndkVersion = "29.0.14206865"
+ndkVersion = "30.0.16248370"
 
 agp = "9.4.1"
 coil-compose = "3.6.3"

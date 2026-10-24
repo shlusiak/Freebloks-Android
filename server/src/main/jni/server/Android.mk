@@ -9,11 +9,11 @@ LOCAL_SRC_FILES := github/src/board.cpp \
 	github/src/game.cpp \
 	github/src/player.cpp \
 	github/src/turnpool.cpp \
-	github/src/spielserver.cpp \
+	github/src/gameserver.cpp \
 	github/src/network.cpp \
 	github/src/logger.cpp \
 	github/src/timer.cpp \
-	github/src/ki.cpp \
+	github/src/ai.cpp \
 	github/src/constants.cpp \
 	de_saschahlusiak_freebloks_controller_JNIServer.cpp
 
