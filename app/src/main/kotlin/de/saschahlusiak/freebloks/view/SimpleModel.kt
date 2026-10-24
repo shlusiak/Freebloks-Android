@@ -20,6 +20,8 @@ open class SimpleModel(numVertices: Int, private val numTriangles: Int, private 
 
     internal var vbo: IntArray? = null
 
+    val numIndices: Int get() = numTriangles * 3
+
     fun commit() {
         vertexBuffer.position(0)
         indexBuffer.position(0)
