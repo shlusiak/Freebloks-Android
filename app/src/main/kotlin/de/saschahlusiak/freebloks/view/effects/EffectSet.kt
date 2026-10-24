@@ -2,6 +2,8 @@ package de.saschahlusiak.freebloks.view.effects
 
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import java.util.*
+import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2Context
 import javax.microedition.khronos.opengles.GL11
 
 /**
@@ -35,5 +37,13 @@ class EffectSet : ArrayList<AbsShapeEffect>(), Effect {
             return b
         }
         return false
+    }
+
+    override fun render(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
+        if (size > 0) get(0).render(ctx, renderer)
+    }
+
+    override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
+        if (size > 0) get(0).renderShadow(ctx, renderer)
     }
 }

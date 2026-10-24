@@ -5,6 +5,8 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
+import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2Context
 import javax.microedition.khronos.opengles.GL11
 
 class PhysicalShapeEffect(
@@ -141,5 +143,37 @@ class PhysicalShapeEffect(
 
     fun unsetDestination() {
         targetY = -200.0f
+    }
+
+    override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
+        val alpha = 0.60f - currentY / 20.0f
+        val mv = ctx.modelView
+
+        mv.push()
+        mv.scale(1f, 0.01f, 1f)
+        mv.translate(currentX, 0f, currentZ)
+        mv.translate(-2.5f * currentY * 0.11f, 0f, 2.0f * currentY * 0.11f)
+        mv.rotate(ang, ax, ay, az)
+        mv.scale(1.0f + currentY / 18.0f, 1f, 1.0f + currentY / 18.0f)
+        mv.translate(
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f,
+            0.0f,
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f
+        )
+        renderer.renderShapeShadow(ctx, color, shape, orientation, alpha)
+        mv.pop()
+    }
+
+    override fun render(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
+        val mv = ctx.modelView
+        mv.push()
+        mv.translate(currentX, currentY, currentZ)
+        mv.rotate(ang, ax, ay, az)
+        mv.translate(
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f,
+            0.0f,
+            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f)
+        renderer.renderShape(ctx, color, shape, orientation, BoardRenderer.defaultStoneAlpha)
+        mv.pop()
     }
 }

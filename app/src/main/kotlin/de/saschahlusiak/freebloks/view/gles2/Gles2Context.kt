@@ -51,6 +51,13 @@ class Gles2Context {
         lightDir[2] = m[2] * x + m[6] * y + m[10] * z
     }
 
+    fun setColor(c: FloatArray) = System.arraycopy(c, 0, color, 0, 4)
+
+    fun setSpecular(s: FloatArray, shininess: Float) {
+        System.arraycopy(s, 0, specular, 0, 3)
+        this.shininess = shininess
+    }
+
     fun setMaterial(color: FloatArray, specular: FloatArray? = null, shininess: Float = 0f) {
         System.arraycopy(color, 0, this.color, 0, 4)
         if (specular != null) System.arraycopy(specular, 0, this.specular, 0, 3) else this.specular.fill(0f)

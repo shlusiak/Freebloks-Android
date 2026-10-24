@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.view.scene
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.opengl.GLES20
 import android.opengl.GLUtils
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.model.*
@@ -10,6 +11,9 @@ import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.SimpleModel
+import de.saschahlusiak.freebloks.view.gles2.Gles2Model
+import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2Textures
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL10.*
 import javax.microedition.khronos.opengles.GL11
@@ -56,16 +60,22 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     private var lastTouchPos = PointF()
 
     init {
-        overlay = SimpleModel(4, 2, false).apply {
-            addVertex(-overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 0f, 0f)
-            addVertex(+overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 1f, 0f)
-            addVertex(+overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 1f, 1f)
-            addVertex(-overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 0f, 1f)
-            addIndex(0, 1, 2)
-            addIndex(0, 2, 3)
-            commit()
-        }
+        overlay = buildOverlayModel()
     }
+
+    private fun buildOverlayModel() = SimpleModel(4, 2, false).apply {
+        addVertex(-overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 0f, 0f)
+        addVertex(+overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 1f, 0f)
+        addVertex(+overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 1f, 1f)
+        addVertex(-overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 0f, 1f)
+        addIndex(0, 1, 2)
+        addIndex(0, 2, 3)
+        commit()
+    }
+
+    private val overlayGles2 = Gles2Model(buildOverlayModel())
+    private val textureGles2 = IntArray(3)
+    private val white = floatArrayOf(1f, 1f, 1f, 1f)
 
     fun updateTexture(context: Context, gl: GL10) {
         gl.glGenTextures(3, texture, 0)
@@ -196,6 +206,102 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         val alpha = if (status != Status.IDLE || isValid) 1.0f else BoardRenderer.defaultStoneAlpha
         renderer.boardRenderer.renderShape(gl, currentColor, stone.shape, orientation, alpha)
         gl.glPopMatrix()
+    }
+
+    /** GLES 2.0 variant of [updateTexture]. */
+    fun updateTexture(context: Context) {
+        overlayGles2.invalidate()
+        val ids = intArrayOf(R.drawable.stone_overlay_green, R.drawable.stone_overlay_red, R.drawable.stone_overlay_shadow)
+        for (i in ids.indices) {
+            val bitmap = BitmapFactory.decodeResource(context.resources, ids[i])
+            Gles2Textures.delete(textureGles2[i])
+            textureGles2[i] = Gles2Textures.fromBitmap(bitmap)
+            bitmap.recycle()
+        }
+    }
+
+    /** GLES 2.0 variant of [render]. */
+    @Synchronized
+    fun render(renderer: Gles2Renderer) {
+        val stone = stone ?: return
+        val ctx = renderer.ctx
+        val mv = ctx.modelView
+
+        var hoverHeight = if (status == Status.IDLE) hoverHeightLow else hoverHeightHigh
+
+        val offset = stone.shape.size.toFloat() - 1.0f
+        val currentPlayer = scene.game.currentPlayer
+        if (currentPlayer < 0) return
+
+        if (status == Status.FLIPPING_HORIZONTAL || status == Status.FLIPPING_VERTICAL)
+            hoverHeight += abs(sin(rotateAngle / 180f * Math.PI.toFloat()) * overlayRadius * 0.4f)
+
+        fun applyRotation() {
+            if (status == Status.ROTATING) mv.rotate(rotateAngle, 0f, 1f, 0f)
+            if (status == Status.FLIPPING_HORIZONTAL) mv.rotate(rotateAngle, 0f, 0f, 1f)
+            if (status == Status.FLIPPING_VERTICAL) mv.rotate(rotateAngle, 1f, 0f, 0f)
+        }
+
+        GLES20.glDisable(GLES20.GL_CULL_FACE)
+        mv.push()
+        mv.translate(
+            BoardRenderer.stoneSize * ((-(scene.board.width - 1)).toFloat() + 2.0f * pos.x + offset),
+            0f,
+            BoardRenderer.stoneSize * ((-(scene.board.width - 1)).toFloat() + 2.0f * pos.y + offset)
+        )
+
+        /* STONE SHADOW */
+        mv.push()
+        val baseAngle = scene.baseAngle
+        mv.rotate(baseAngle, 0f, 1f, 0f)
+        mv.translate(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
+        mv.rotate(-baseAngle, 0f, 1f, 0f)
+        applyRotation()
+        mv.scale(1.09f, 0.01f, 1.09f)
+        mv.translate(-BoardRenderer.stoneSize * offset, 0f, -BoardRenderer.stoneSize * offset)
+        renderer.boardRenderer.renderShapeShadow(ctx, currentColor, stone.shape, orientation, 0.80f)
+        mv.pop()
+
+        GLES20.glEnable(GLES20.GL_BLEND)
+        ctx.lighting = false
+        ctx.textured = true
+        ctx.setColor(white)
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        overlayGles2.bind()
+
+        /* OVERLAY SHADOW */
+        mv.push()
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureGles2[2])
+        mv.rotate(baseAngle, 0f, 1f, 0f)
+        mv.translate(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
+        mv.rotate(-baseAngle, 0f, 1f, 0f)
+        applyRotation()
+        mv.scale(1.0f, 0.01f, 1.0f)
+        ctx.apply()
+        overlayGles2.draw()
+        mv.pop()
+
+        /* OVERLAY */
+        mv.push()
+        mv.translate(0f, hoverHeight, 0f)
+        applyRotation()
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (isValid) textureGles2[0] else textureGles2[1])
+        ctx.apply()
+        overlayGles2.draw()
+        GLES20.glEnable(GLES20.GL_CULL_FACE)
+        ctx.lighting = true
+        ctx.textured = false
+
+        /* STONE */
+        mv.pop()
+        mv.translate(0f, hoverHeight, 0f)
+        applyRotation()
+        mv.translate(-BoardRenderer.stoneSize * offset, 0f, -BoardRenderer.stoneSize * offset)
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
+
+        val alpha = if (status != Status.IDLE || isValid) 1.0f else BoardRenderer.defaultStoneAlpha
+        renderer.boardRenderer.renderShape(ctx, currentColor, stone.shape, orientation, alpha)
+        mv.pop()
     }
 
     private fun moveTo(toX: Float, toY: Float): Boolean {

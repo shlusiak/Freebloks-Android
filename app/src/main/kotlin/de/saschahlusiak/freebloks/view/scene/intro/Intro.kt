@@ -1,6 +1,7 @@
 package de.saschahlusiak.freebloks.view.scene.intro
 
 import android.content.Context
+import android.opengl.GLES20
 import android.opengl.GLU
 import android.os.Handler
 import android.os.Looper
@@ -11,12 +12,14 @@ import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.view.BackgroundRenderer
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2BackgroundRenderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.sin
 
-class Intro(context: Context, private val scene: Scene, var listener: IntroDelegate?) {
+class Intro(private val context: Context, private val scene: Scene, var listener: IntroDelegate?) {
 
     companion object {
         private const val INTRO_SPEED = 1.2f
@@ -30,6 +33,7 @@ class Intro(context: Context, private val scene: Scene, var listener: IntroDeleg
 
     private val handler = Handler(Looper.getMainLooper())
     private val backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
+    private val backgroundRendererGles2 by lazy { Gles2BackgroundRenderer(context.resources, ColorThemes.Blue) }
     private val board = Board(20)
     internal val effects = Effects(scene)
     private var anim = 0.0f
@@ -178,6 +182,70 @@ class Intro(context: Context, private val scene: Scene, var listener: IntroDeleg
 
             gl.glEnable(GL10.GL_DEPTH_TEST)
             for (i in effects.indices) effects[i].render(gl, renderer.boardRenderer)
+        }
+    }
+
+    /** GLES 2.0 context was (re)created. */
+    fun onSurfaceCreated() {
+        backgroundRendererGles2.onSurfaceCreated()
+    }
+
+    /** GLES 2.0 variant of [render]. */
+    fun render(renderer: Gles2Renderer) {
+        val ctx = renderer.ctx
+        val mv = ctx.modelView
+        mv.loadIdentity()
+        backgroundRendererGles2.render(ctx)
+
+        if (scene.verticalLayout) {
+            mv.translate(0f, 4.5f, 0f)
+        } else {
+            mv.translate(0f, 1.5f, 0f)
+        }
+        mv.lookAt(0f, if (scene.verticalLayout) 4.0f else 1.0f, renderer.fixedZoom * 1.1f, 0f, 0f, 0f, 0f, 1f, 0f)
+
+        mv.rotate(50f, 1f, 0f, 0f)
+        val angle1 = 180.0f
+        val angle2 = -60.0f
+        val matrixAnim = sin((anim - MATRIX_START_LEFT) / (MATRIX_STOP_LEFT - MATRIX_START_LEFT) * Math.PI.toFloat() - Math.PI.toFloat() / 2.0f) / 2.0f + 0.5f
+
+        if (phase == Phase.Freebloks) {
+            if (anim < MATRIX_START_LEFT) {
+                mv.rotate(angle2, 1f, 0f, 0f)
+                mv.rotate(angle1, 0f, 1f, 0f)
+            } else if (anim < MATRIX_STOP_LEFT) {
+                mv.rotate(angle2 - matrixAnim * matrixAnim * angle2, 1f, 0f, 0f)
+                mv.rotate(angle1 - matrixAnim * angle1, 0f, 1f, 0f)
+            }
+
+            if (anim < MATRIX_START_LEFT) {
+                mv.translate(0.0f, -14.0f + anim / MATRIX_START_LEFT * 4.0f, 0.0f)
+            } else if (anim < MATRIX_STOP_LEFT) {
+                mv.translate(0f, -10 + 10 * (matrixAnim * matrixAnim), 0f)
+            }
+        }
+
+        ctx.setLightPosition(renderer.lightPos[0], renderer.lightPos[1], renderer.lightPos[2])
+
+        mv.push()
+        if (flipAnimation > 0.0001f) {
+            mv.translate(0f, 0f, 20 * BoardRenderer.stoneSize)
+            mv.rotate(flipAnimation * WIPE_ANGLE, 1f, 0f, 0f)
+            mv.translate(0f, 0f, -20 * BoardRenderer.stoneSize)
+        }
+
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST)
+        renderer.boardRenderer.renderBoard(ctx, board, -1)
+
+        mv.pop()
+
+        // render the stones, which are purely effects
+        synchronized(effects) {
+            GLES20.glDisable(GLES20.GL_DEPTH_TEST)
+            for (i in effects.indices) effects[i].renderShadow(ctx, renderer.boardRenderer)
+
+            GLES20.glEnable(GLES20.GL_DEPTH_TEST)
+            for (i in effects.indices) effects[i].render(ctx, renderer.boardRenderer)
         }
     }
 }

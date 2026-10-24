@@ -17,6 +17,7 @@ import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.effects.*
 import de.saschahlusiak.freebloks.util.AnimationType
+import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -47,8 +48,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     }
 
     private fun createRenderer(scene: Scene): RendererBackend = if (Feature.GLES2_RENDERER) {
-        // TODO: Gles2Renderer(context, scene), added once the GLES 2.0 backend exists
-        FreebloksRenderer(context, scene)
+        Gles2Renderer(context, scene)
     } else {
         FreebloksRenderer(context, scene)
     }

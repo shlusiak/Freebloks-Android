@@ -8,6 +8,7 @@ import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.FreebloksRenderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import javax.microedition.khronos.opengles.GL11
 import kotlin.math.abs
 import kotlin.math.pow
@@ -255,6 +256,60 @@ class Wheel(private val scene: Scene) : SceneElement {
                     alpha
                 )
                 gl.glPopMatrix()
+            }
+        }
+    }
+
+    /** GLES 2.0 variant of [render]. */
+    @Synchronized
+    fun render(renderer: Gles2Renderer) {
+        val mv = renderer.ctx.modelView
+        mv.translate(-currentOffset, 0f, BoardRenderer.stoneSize * (scene.board.width + 10))
+        for (i in stones.indices.reversed()) {
+            val s = stones[i]
+
+            if (s.available - (if (s == scene.currentStone.stone) 1 else 0) > 0) {
+                val col = (i / 2).toFloat()
+                val row = i % 2.toFloat()
+                val offset = -(s.shape.size.toFloat() - 1.0f) * BoardRenderer.stoneSize
+                val x = col * STONE_SPACING
+                val effect = 12.5f / (12.5f + (abs(x - currentOffset) * 0.5f).pow(2.5f))
+                var y = 0.35f + effect * 0.75f
+                val z = row * STONE_SPACING
+                val scale = 0.9f + effect * 0.3f
+                var rotate = -scene.baseAngle
+                if (!scene.verticalLayout) rotate -= 90.0f
+                var alpha = 1.0f
+                if (currentStone == s && s != scene.currentStone.stone) y += 1.2f
+                if (!movesLeft && !scene.game.isFinished) alpha *= 0.65f
+                alpha *= 0.75f + effect * 0.25f
+                mv.push()
+                mv.translate(x, 0f, z)
+                mv.scale(scale, scale, scale)
+
+                if (s.available > 1 && s == currentStone && s != scene.currentStone.stone) {
+                    mv.push()
+                    mv.translate(BoardRenderer.stoneSize, 0f, BoardRenderer.stoneSize * 0.6f)
+                    mv.rotate(rotate, 0f, 1f, 0f)
+                    mv.scale(0.85f, 0.85f, 0.85f)
+                    mv.translate(offset, 0f, offset)
+                    renderer.boardRenderer.renderShape(renderer.ctx, playerColor, s.shape, Orientation.Default, alpha)
+                    mv.pop()
+                }
+                mv.rotate(rotate, 0f, 1f, 0f)
+                mv.translate(offset, 0f, offset)
+                mv.push()
+                renderer.boardRenderer.renderShapeShadow(renderer.ctx, s.shape, playerColor, Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
+                mv.pop()
+                mv.translate(0f, y, 0f)
+                renderer.boardRenderer.renderShape(
+                    renderer.ctx,
+                    if (s == currentStone && s != scene.currentStone.stone) StoneColor.White else playerColor,
+                    s.shape,
+                    Orientation.Default,
+                    alpha
+                )
+                mv.pop()
             }
         }
     }
