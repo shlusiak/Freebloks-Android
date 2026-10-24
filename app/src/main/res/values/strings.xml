@@ -6,7 +6,7 @@
     <string name="notification_channel_default" translatable="false">General</string>
 
     <string name="play_again">Play again</string>
-    <string name="new_game">New Game</string>
+    <string name="new_game">New game</string>
     <string name="resume_game">Resume</string>
     <string name="host_game">Host</string>
     <string name="multiplayer">Multiplayer</string>
@@ -44,15 +44,15 @@
         <item quantity="one">%1$d move</item>
         <item quantity="other">%1$d moves</item>
     </plurals>
-    <string name="touch_to_skip">touch to skip</string>
-    <string name="no_player">no player</string>
-    <string name="not_connected">not connected</string>
+    <string name="touch_to_skip">Touch to skip</string>
+    <string name="no_player">No player</string>
+    <string name="not_connected">Not connected</string>
     <string name="your_turn">It’s your turn, %1$s!</string>
     <string name="difficulty">Difficulty</string>
     <string name="start">Start</string>
-    <string name="custom_game">Custom Game</string>
-    <string name="sound_on">Sound On</string>
-    <string name="sound_off">Sound Off</string>
+    <string name="custom_game">Custom game</string>
+    <string name="sound_on">Sound on</string>
+    <string name="sound_off">Sound off</string>
 
     <string name="statistics">Statistics</string>
     <string name="prefs_clear_statistics">Reset</string>
@@ -119,7 +119,7 @@
         <item>4th place</item>
     </string-array>
 
-    <string name="game_finished">Game Over</string>
+    <string name="game_finished">Game over</string>
     <string name="random_color">Random color</string>
 
     <string name="white">White</string>
@@ -131,11 +131,11 @@
     <string name="purple">Purple</string>
 
     <string-array name="difficulties">
-        <item>nuts</item>
-        <item>hard</item>
-        <item>medium</item>
-        <item>easy</item>
-        <item>very easy</item>
+        <item>Nuts</item>
+        <item>Hard</item>
+        <item>Medium</item>
+        <item>Easy</item>
+        <item>Very easy</item>
     </string-array>
     <string-array name="game_modes">
         <item>2 Players, 2 Colors</item>
@@ -209,7 +209,7 @@
     <string name="blokus_junior" translatable="false">Blokus Junior</string>
 
     <string name="rules_title">Blokus rules</string>
-    <string name="rules_youtube">Watch How-To Video</string>
+    <string name="rules_youtube">Watch how-to video</string>
     <string name="rules_how_to_play">How to play</string>
     <string name="rules_how_to_play_1">Swipe the list of pieces to find and select the piece you want to play, then drag it onto the board.</string>
     <string name="rules_how_to_play_2">Touch the handles on the side of the piece to move, rotate and flip it into position. Tap the piece to place it onto the board.</string>
