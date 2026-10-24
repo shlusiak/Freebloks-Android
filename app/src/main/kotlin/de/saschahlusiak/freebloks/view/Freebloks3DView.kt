@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import de.saschahlusiak.freebloks.Feature
 import de.saschahlusiak.freebloks.client.GameClient
 import de.saschahlusiak.freebloks.client.GameEventObserver
 import de.saschahlusiak.freebloks.model.*
@@ -22,7 +23,7 @@ import kotlin.random.Random
 
 class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs), GameEventObserver {
 	private lateinit var scene: Scene
-    private lateinit var renderer: FreebloksRenderer
+    private lateinit var renderer: RendererBackend
 
     private var scale = 1.0f
     private var thread: AnimateThread? = null
@@ -34,19 +35,26 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
     }
 
     fun setScene(scene: Scene) {
-        setEGLConfigChooser(GLConfigChooser(2))
         this.scene = scene
-        renderer = FreebloksRenderer(context, scene).apply {
+        renderer = createRenderer(scene).apply {
             zoom = scale
         }
+        setEGLContextClientVersion(renderer.glesVersion)
+        setEGLConfigChooser(GLConfigChooser(2, renderer.glesVersion))
         setRenderer(renderer)
         renderMode = RENDERMODE_WHEN_DIRTY
         debugFlags = DEBUG_CHECK_GL_ERROR
     }
 
+    private fun createRenderer(scene: Scene): RendererBackend = if (Feature.GLES2_RENDERER) {
+        // TODO: Gles2Renderer(context, scene), added once the GLES 2.0 backend exists
+        FreebloksRenderer(context, scene)
+    } else {
+        FreebloksRenderer(context, scene)
+    }
+
     fun setTheme(backgroundTheme: Theme, boardTheme: Theme) {
-        renderer.backgroundRenderer.setTheme(backgroundTheme)
-        renderer.boardRenderer.setTheme(boardTheme)
+        renderer.setTheme(backgroundTheme, boardTheme)
     }
 
     fun setGameClient(client: GameClient?) {
@@ -232,7 +240,7 @@ class Freebloks3DView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(c
         if (status.width != scene.boardObject.lastSize) {
             scene.boardObject.lastSize = status.width
             queueEvent {
-                renderer.boardRenderer.setBoardSize(scene.board.width)
+                renderer.setBoardSize(scene.board.width)
                 requestRender()
             }
         }

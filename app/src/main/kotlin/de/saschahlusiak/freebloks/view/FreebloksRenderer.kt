@@ -1,12 +1,12 @@
 package de.saschahlusiak.freebloks.view
 
 import android.content.Context
-import android.opengl.GLSurfaceView
 import android.opengl.GLU
 import android.util.Log
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.model.colorOf
 import de.saschahlusiak.freebloks.theme.ColorThemes
+import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.egl.EGLConfig
@@ -15,7 +15,7 @@ import javax.microedition.khronos.opengles.GL11
 import kotlin.math.cos
 import kotlin.math.sin
 
-class FreebloksRenderer(private val context: Context, private val scene: Scene) : GLSurfaceView.Renderer {
+class FreebloksRenderer(private val context: Context, private val scene: Scene) : RendererBackend {
     private val tag = FreebloksRenderer::class.java.simpleName
 
     private val lightAmbientColor = floatArrayOf(0.35f, 0.35f, 0.35f, 1.0f)
@@ -33,7 +33,9 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
     val fixedZoom = 55.0f
     private val mAngleX = 70.0f
 
-	var zoom = 0f
+    override val glesVersion = 1
+
+    override var zoom = 0f
     private val viewport = IntArray(4)
     private val projectionMatrix = FloatArray(16)
     private val modelViewMatrix = FloatArray(16)
@@ -41,13 +43,22 @@ class FreebloksRenderer(private val context: Context, private val scene: Scene) 
     val backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
     private val outputFar = FloatArray(4)
     private val outputNear = FloatArray(4)
-    var updateModelViewMatrix = true
+    override var updateModelViewMatrix = true
 
-    fun init(boardSize: Int) {
+    override fun init(boardSize: Int) {
         boardRenderer.setBoardSize(boardSize)
     }
 
-    fun windowToModel(point: PointF): PointF {
+    override fun setBoardSize(size: Int) {
+        boardRenderer.setBoardSize(size)
+    }
+
+    override fun setTheme(backgroundTheme: Theme, boardTheme: Theme) {
+        backgroundRenderer.setTheme(backgroundTheme)
+        boardRenderer.setTheme(boardTheme)
+    }
+
+    override fun windowToModel(point: PointF): PointF {
         synchronized(outputFar) {
             GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputNear, 0)
             GLU.gluUnProject(point.x, viewport[3] - point.y, 1.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputFar, 0)
