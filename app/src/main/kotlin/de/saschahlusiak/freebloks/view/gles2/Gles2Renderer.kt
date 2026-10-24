@@ -2,6 +2,7 @@ package de.saschahlusiak.freebloks.view.gles2
 
 import android.content.Context
 import android.opengl.GLES20
+import android.opengl.GLSurfaceView
 import android.opengl.GLU
 import android.opengl.Matrix
 import android.util.Log
@@ -11,7 +12,6 @@ import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.RendererBackend
 import de.saschahlusiak.freebloks.view.scene.Scene
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -19,12 +19,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * Shader based OpenGL ES 2.0 counterpart of [de.saschahlusiak.freebloks.view.FreebloksRenderer].
+ * Shader based OpenGL ES 2.0.
  */
-class Gles2Renderer(private val context: Context, private val scene: Scene) : RendererBackend {
+class Gles2Renderer(private val context: Context, private val scene: Scene) : GLSurfaceView.Renderer {
     private val tag = Gles2Renderer::class.java.simpleName
-
-    override val glesVersion = 2
 
     /** Light position (w = 0, directional) in the eye space of the camera. */
     val lightPos = floatArrayOf(2.5f, 5f, -2.0f, 0.0f)
@@ -35,32 +33,32 @@ class Gles2Renderer(private val context: Context, private val scene: Scene) : Re
     val fixedZoom = 55.0f
     private val mAngleX = 70.0f
 
-    override var zoom = 0f
+    var zoom = 0f
     private val viewport = intArrayOf(0, 0, 1, 1)
     private val projectionMatrix = FloatArray(16).also { Matrix.setIdentityM(it, 0) }
     private val modelViewMatrix = FloatArray(16).also { Matrix.setIdentityM(it, 0) }
     private val outputFar = FloatArray(4)
     private val outputNear = FloatArray(4)
-    override var updateModelViewMatrix = true
+    var updateModelViewMatrix = true
 
     val ctx = Gles2Context()
     val boardRenderer = Gles2BoardRenderer(context.resources)
     val backgroundRenderer = Gles2BackgroundRenderer(context.resources, ColorThemes.Blue)
 
-    override fun init(boardSize: Int) {
+    fun init(boardSize: Int) {
         boardRenderer.setBoardSize(boardSize)
     }
 
-    override fun setBoardSize(size: Int) {
+    fun setBoardSize(size: Int) {
         boardRenderer.setBoardSize(size)
     }
 
-    override fun setTheme(backgroundTheme: Theme, boardTheme: Theme) {
+    fun setTheme(backgroundTheme: Theme, boardTheme: Theme) {
         backgroundRenderer.setTheme(backgroundTheme)
         boardRenderer.setTheme(boardTheme)
     }
 
-    override fun windowToModel(point: PointF): PointF {
+    fun windowToModel(point: PointF): PointF {
         synchronized(outputFar) {
             GLU.gluUnProject(point.x, viewport[3] - point.y, 0.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputNear, 0)
             GLU.gluUnProject(point.x, viewport[3] - point.y, 1.0f, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0, outputFar, 0)

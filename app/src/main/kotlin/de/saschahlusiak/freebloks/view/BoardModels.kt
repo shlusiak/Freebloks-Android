@@ -21,7 +21,7 @@ object BoardModels {
      * Builds a SimpleModel for a single field of the board, which is half a stone and is "deep".
      */
     fun buildSingleBoardFieldModel(): SimpleModel {
-        return SimpleModel(8, 10, true).apply {
+        return SimpleModel(8, 10).apply {
             /* bottom, inner */
             addVertex(-r2, y1, +r2, 0f, 1f, 0f, -r2, r2)
             addVertex(+r2, y1, +r2, 0f, 1f, 0f, r2, r2)
@@ -53,7 +53,7 @@ object BoardModels {
      * Builds the planar shadow quad for a single stone
      */
     fun buildStoneShadow(): SimpleModel {
-        return SimpleModel(4, 2, false).apply {
+        return SimpleModel(4, 2).apply {
             addVertex(-r1, 0f, +r1, 0f, 1f, 0f, 0f, 0f)
             addVertex(+r1, 0f, +r1, 0f, 1f, 0f, 1f, 0f)
             addVertex(+r1, 0f, -r1, 0f, 1f, 0f, 1f, 1f)
@@ -68,7 +68,7 @@ object BoardModels {
      * Builds the model of a full player's stone, including top and bottom
      */
     fun buildStoneModel(): SimpleModel {
-        return SimpleModel(12, 20, true).apply {
+        return SimpleModel(12, 20).apply {
             /* top, inner */
             addVertex(-r2, -y1, +r2, 0f, 1f, 0f, 0f, 0f)
             addVertex(+r2, -y1, +r2, 0f, 1f, 0f, 0f, 0f)
@@ -118,7 +118,7 @@ object BoardModels {
      * Builds the square model of the border of the field with the given size
      */
     fun buildBorderModel(boardSize: Int): SimpleModel {
-        return SimpleModel(12, 6, true).apply {
+        return SimpleModel(12, 6).apply {
             val w1 = stoneSize * boardSize
             val w2 = w1 + borderWidth
 

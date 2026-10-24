@@ -7,7 +7,7 @@ import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.view.SimpleModel
 
 /**
- * GLES 2.0 counterpart of [de.saschahlusiak.freebloks.view.BackgroundRenderer]. Also clears the frame.
+ * Renders the background and clears the frame.
  */
 class Gles2BackgroundRenderer(private val resources: Resources, private var theme: Theme) {
     private val rgba = floatArrayOf(0f, 0f, 0f, 1f)
@@ -15,7 +15,7 @@ class Gles2BackgroundRenderer(private val resources: Resources, private var them
     private val size = 80.0f
     private val textures = 15.0f
 
-    private val model = Gles2Model(SimpleModel(4, 2, false).apply {
+    private val model = Gles2Model(SimpleModel(4, 2).apply {
         addVertex(-size, 0f, -size, 0f, 1f, 0f, 0f, 0f)
         addVertex(size, 0f, -size, 0f, 1f, 0f, textures, 0f)
         addVertex(size, 0f, size, 0f, 1f, 0f, textures, textures)

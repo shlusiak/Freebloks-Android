@@ -6,15 +6,9 @@ import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLDisplay
 
-internal class GLConfigChooser(private val msaa: Int, private val glesVersion: Int = 1) : EGLConfigChooser {
+internal class GLConfigChooser(private val msaa: Int) : EGLConfigChooser {
     private val tag = GLConfigChooser::class.java.simpleName
     private val mValue = IntArray(1)
-
-    /** Attributes selecting the renderable type; empty for GLES 1.x, which is the EGL default. */
-    private val renderableSpec: IntArray = if (glesVersion >= 2)
-        intArrayOf(EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT)
-    else
-        intArrayOf()
 
     override fun chooseConfig(egl: EGL10, display: EGLDisplay): EGLConfig {
         var numConfigs = 0
@@ -29,7 +23,7 @@ internal class GLConfigChooser(private val msaa: Int, private val glesVersion: I
                 EGL10.EGL_DEPTH_SIZE, 16,
                 EGL10.EGL_SAMPLE_BUFFERS, 1 /* true */,
                 EGL10.EGL_SAMPLES, msaa,
-                *renderableSpec,
+                EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                 EGL10.EGL_NONE
             )
             if (egl.eglChooseConfig(display, configSpec, null, 0, mValue)) {
@@ -44,7 +38,7 @@ internal class GLConfigChooser(private val msaa: Int, private val glesVersion: I
                 EGL10.EGL_GREEN_SIZE, 6,
                 EGL10.EGL_BLUE_SIZE, 5,
                 EGL10.EGL_DEPTH_SIZE, 16,
-                *renderableSpec,
+                EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                 EGL10.EGL_NONE
             )
             require(egl.eglChooseConfig(display, configSpec, null, 0, mValue))

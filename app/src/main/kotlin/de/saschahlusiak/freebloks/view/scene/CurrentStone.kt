@@ -9,14 +9,10 @@ import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.SimpleModel
 import de.saschahlusiak.freebloks.view.gles2.Gles2Model
 import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Textures
-import javax.microedition.khronos.opengles.GL10
-import javax.microedition.khronos.opengles.GL10.*
-import javax.microedition.khronos.opengles.GL11
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.floor
@@ -47,8 +43,6 @@ class CurrentStone(private val scene: Scene) : SceneElement {
     private var stoneRelX = 0f
     private var stoneRelY = 0f
     private var rotateAngle = 0f
-    private val texture = IntArray(3)
-    private val overlay: SimpleModel
     var status: Status = Status.IDLE
     private var orientation = Orientation()
     val hoverHeightLow = 0.55f
@@ -59,11 +53,7 @@ class CurrentStone(private val scene: Scene) : SceneElement {
      */
     private var lastTouchPos = PointF()
 
-    init {
-        overlay = buildOverlayModel()
-    }
-
-    private fun buildOverlayModel() = SimpleModel(4, 2, false).apply {
+    private fun buildOverlayModel() = SimpleModel(4, 2).apply {
         addVertex(-overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 0f, 0f)
         addVertex(+overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 1f, 0f)
         addVertex(+overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 1f, 1f)
@@ -73,154 +63,21 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         commit()
     }
 
-    private val overlayGles2 = Gles2Model(buildOverlayModel())
-    private val textureGles2 = IntArray(3)
+    private val overlay = Gles2Model(buildOverlayModel())
     private val white = floatArrayOf(1f, 1f, 1f, 1f)
+    private val texture = IntArray(3)
 
-    fun updateTexture(context: Context, gl: GL10) {
-        gl.glGenTextures(3, texture, 0)
-
-        var bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_overlay_green)
-        gl.glBindTexture(GL_TEXTURE_2D, texture[0])
-
-        if (gl is GL11) {
-            gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST)
-            gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
-        } else {
-            gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        }
-        gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0)
-        bitmap.recycle()
-
-        bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_overlay_red)
-        gl.glBindTexture(GL_TEXTURE_2D, texture[1])
-        if (gl is GL11) {
-            gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST)
-            gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
-        } else {
-            gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        }
-        gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0)
-        bitmap.recycle()
-
-        bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.stone_overlay_shadow)
-        gl.glBindTexture(GL_TEXTURE_2D, texture[2])
-        if (gl is GL11) {
-            gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST)
-            gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE.toFloat())
-        } else {
-            gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        }
-        gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0)
-        bitmap.recycle()
-    }
-
-    //	final float diffuse_red[] = { 1.0f, 0.5f, 0.5f, 1.0f };
-    //	final float diffuse_green[] = { 0.5f, 1.0f, 0.5f, 1.0f };
-    //	final float diffuse_white[] = { 1.0f, 1.0f, 1.0f, 0.6f };
-    @Synchronized
-    fun render(renderer: FreebloksRenderer, gl: GL11) {
-        val stone = stone ?: return
-
-        var hoverHeight = if (status == Status.IDLE) hoverHeightLow else hoverHeightHigh
-
-        val offset = stone.shape.size.toFloat() - 1.0f
-        val currentPlayer = scene.game.currentPlayer
-        if (currentPlayer < 0) return
-
-        if (status == Status.FLIPPING_HORIZONTAL || status == Status.FLIPPING_VERTICAL)
-            hoverHeight += abs(sin(rotateAngle / 180f * Math.PI.toFloat()) * overlayRadius * 0.4f)
-
-        gl.glDisable(GL_CULL_FACE)
-        gl.glPushMatrix()
-        gl.glTranslatef(
-            BoardRenderer.stoneSize * ((-(scene.board.width - 1)).toFloat() + 2.0f * pos.x + offset),
-            0f,
-            BoardRenderer.stoneSize * ((-(scene.board.width - 1)).toFloat() + 2.0f * pos.y + offset)
-        )
-
-        /* STONE SHADOW */
-        gl.glPushMatrix()
-
-        val baseAngle = scene.baseAngle
-        gl.glRotatef(baseAngle, 0f, 1f, 0f)
-        gl.glTranslatef(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
-        gl.glRotatef(-baseAngle, 0f, 1f, 0f)
-        if (status == Status.ROTATING) gl.glRotatef(rotateAngle, 0f, 1f, 0f)
-        if (status == Status.FLIPPING_HORIZONTAL) gl.glRotatef(rotateAngle, 0f, 0f, 1f)
-        if (status == Status.FLIPPING_VERTICAL) gl.glRotatef(rotateAngle, 1f, 0f, 0f)
-        gl.glScalef(1.09f, 0.01f, 1.09f)
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * offset,
-            0f,
-            -BoardRenderer.stoneSize * offset
-        )
-        renderer.boardRenderer.renderShapeShadow(gl, currentColor, stone.shape, orientation, 0.80f)
-        gl.glPopMatrix()
-        gl.glEnable(GL_TEXTURE_2D)
-        gl.glEnable(GL_BLEND)
-        gl.glDisable(GL_LIGHTING)
-        gl.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
-        overlay.bindBuffers(gl)
-
-        /* OVERLAY SHADOW */
-        gl.glPushMatrix()
-        gl.glBindTexture(GL_TEXTURE_2D, texture[2])
-        gl.glRotatef(baseAngle, 0f, 1f, 0f)
-        gl.glTranslatef(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
-        gl.glRotatef(-baseAngle, 0f, 1f, 0f)
-        if (status == Status.ROTATING) gl.glRotatef(rotateAngle, 0f, 1f, 0f)
-        if (status == Status.FLIPPING_HORIZONTAL) gl.glRotatef(rotateAngle, 0f, 0f, 1f)
-        if (status == Status.FLIPPING_VERTICAL) gl.glRotatef(rotateAngle, 1f, 0f, 0f)
-        gl.glScalef(1.0f, 0.01f, 1.0f)
-        overlay.drawElements(gl, GL_TRIANGLES)
-        gl.glPopMatrix()
-
-        /* OVERLAY */
-        gl.glPushMatrix()
-        gl.glTranslatef(0f, hoverHeight, 0f)
-        if (status == Status.ROTATING) gl.glRotatef(rotateAngle, 0f, 1f, 0f)
-        if (status == Status.FLIPPING_HORIZONTAL) gl.glRotatef(rotateAngle, 0f, 0f, 1f)
-        if (status == Status.FLIPPING_VERTICAL) gl.glRotatef(rotateAngle, 1f, 0f, 0f)
-        gl.glBindTexture(GL_TEXTURE_2D, if (isValid) texture[0] else texture[1])
-        overlay.drawElements(gl, GL_TRIANGLES)
-        gl.glEnable(GL_CULL_FACE)
-        gl.glEnable(GL_LIGHTING)
-        gl.glDisable(GL_TEXTURE_2D)
-
-        /* STONE */
-        gl.glPopMatrix()
-        gl.glTranslatef(0f,
-            hoverHeight, 0f)
-        if (status == Status.ROTATING) gl.glRotatef(rotateAngle, 0f, 1f, 0f)
-        if (status == Status.FLIPPING_HORIZONTAL) gl.glRotatef(rotateAngle, 0f, 0f, 1f)
-        if (status == Status.FLIPPING_VERTICAL) gl.glRotatef(rotateAngle, 1f, 0f, 0f)
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * offset, 0f,
-            -BoardRenderer.stoneSize * offset)
-        gl.glEnable(GL_DEPTH_TEST)
-
-        val alpha = if (status != Status.IDLE || isValid) 1.0f else BoardRenderer.defaultStoneAlpha
-        renderer.boardRenderer.renderShape(gl, currentColor, stone.shape, orientation, alpha)
-        gl.glPopMatrix()
-    }
-
-    /** GLES 2.0 variant of [updateTexture]. */
     fun updateTexture(context: Context) {
-        overlayGles2.invalidate()
+        overlay.invalidate()
         val ids = intArrayOf(R.drawable.stone_overlay_green, R.drawable.stone_overlay_red, R.drawable.stone_overlay_shadow)
         for (i in ids.indices) {
             val bitmap = BitmapFactory.decodeResource(context.resources, ids[i])
-            Gles2Textures.delete(textureGles2[i])
-            textureGles2[i] = Gles2Textures.fromBitmap(bitmap)
+            Gles2Textures.delete(texture[i])
+            texture[i] = Gles2Textures.fromBitmap(bitmap)
             bitmap.recycle()
         }
     }
 
-    /** GLES 2.0 variant of [render]. */
     @Synchronized
     fun render(renderer: Gles2Renderer) {
         val stone = stone ?: return
@@ -267,27 +124,27 @@ class CurrentStone(private val scene: Scene) : SceneElement {
         ctx.textured = true
         ctx.setColor(white)
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-        overlayGles2.bind()
+        overlay.bind()
 
         /* OVERLAY SHADOW */
         mv.push()
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureGles2[2])
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture[2])
         mv.rotate(baseAngle, 0f, 1f, 0f)
         mv.translate(2.5f * hoverHeight * 0.08f, 0f, 2.0f * hoverHeight * 0.08f)
         mv.rotate(-baseAngle, 0f, 1f, 0f)
         applyRotation()
         mv.scale(1.0f, 0.01f, 1.0f)
         ctx.apply()
-        overlayGles2.draw()
+        overlay.draw()
         mv.pop()
 
         /* OVERLAY */
         mv.push()
         mv.translate(0f, hoverHeight, 0f)
         applyRotation()
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (isValid) textureGles2[0] else textureGles2[1])
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, if (isValid) texture[0] else texture[1])
         ctx.apply()
-        overlayGles2.draw()
+        overlay.draw()
         GLES20.glEnable(GLES20.GL_CULL_FACE)
         ctx.lighting = true
         ctx.textured = false

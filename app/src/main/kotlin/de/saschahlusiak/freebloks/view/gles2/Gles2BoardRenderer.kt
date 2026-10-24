@@ -12,11 +12,10 @@ import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.Theme
 import de.saschahlusiak.freebloks.view.BoardModels
-import de.saschahlusiak.freebloks.view.BoardRenderer.Companion.stoneSize
+import de.saschahlusiak.freebloks.view.BoardRenderer.stoneSize
 
 /**
- * GLES 2.0 counterpart of [de.saschahlusiak.freebloks.view.BoardRenderer]. The order of GL state changes mirrors the
- * original on purpose, so both produce the same image.
+ * Renders the board, stones and shadows.
  */
 class Gles2BoardRenderer(private val resources: Resources) {
     companion object {

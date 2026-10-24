@@ -5,7 +5,6 @@ import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Context
-import javax.microedition.khronos.opengles.GL11
 import kotlin.math.pow
 
 class ShapeUndoEffect(model: Scene, turn: Turn) : AbsShapeEffect(model, turn) {
@@ -27,38 +26,6 @@ class ShapeUndoEffect(model: Scene, turn: Turn) : AbsShapeEffect(model, turn) {
         z = 13.0f * phase
         rot = phase * 65.0f
         return true
-    }
-
-    override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
-        gl.glPushMatrix()
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
-            0f,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
-        )
-
-        renderer.renderShapeShadow(gl,
-            shape, color, orientation,
-            z,
-            rot, 0f, 1f, 0f,
-            scene.boardObject.currentAngle - scene.baseAngle,
-            alpha, 1.0f
-
-        )
-        gl.glPopMatrix()
-    }
-
-    override fun render(gl: GL11, renderer: BoardRenderer) {
-        gl.glPushMatrix()
-        gl.glTranslatef(0f, z, 0f)
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
-            0f,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat()
-        )
-        gl.glRotatef(rot, 0f, 1f, 0f)
-        renderer.renderShape(gl, color, shape, orientation, alpha * BoardRenderer.defaultStoneAlpha)
-        gl.glPopMatrix()
     }
 
     override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) {

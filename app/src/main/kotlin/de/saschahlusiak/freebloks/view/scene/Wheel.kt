@@ -7,9 +7,7 @@ import de.saschahlusiak.freebloks.model.*
 import de.saschahlusiak.freebloks.theme.FeedbackType
 import de.saschahlusiak.freebloks.utils.PointF
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
-import javax.microedition.khronos.opengles.GL11
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -206,61 +204,7 @@ class Wheel(private val scene: Scene) : SceneElement {
         }
     }
 
-    @Synchronized
-    fun render(renderer: FreebloksRenderer, gl: GL11) {
-        gl.glTranslatef(-currentOffset, 0f, BoardRenderer.stoneSize * (scene.board.width + 10))
-        for (i in stones.indices.reversed()) {
-            val s = stones[i]
 
-            if (s.available - (if (s == scene.currentStone.stone) 1 else 0) > 0) {
-                val col = (i / 2).toFloat()
-                val row = i % 2.toFloat()
-                val offset = -(s.shape.size.toFloat() - 1.0f) * BoardRenderer.stoneSize
-                val x = col * STONE_SPACING
-                val effect = 12.5f / (12.5f + (abs(x - currentOffset) * 0.5f).pow(2.5f))
-                var y = 0.35f + effect * 0.75f
-                val z = row * STONE_SPACING
-                val scale = 0.9f + effect * 0.3f
-                var rotate = -scene.baseAngle
-                if (!scene.verticalLayout) rotate -= 90.0f
-                var alpha = 1.0f
-                if (currentStone == s && s != scene.currentStone.stone) y += 1.2f
-                if (!movesLeft && !scene.game.isFinished) alpha *= 0.65f
-                alpha *= 0.75f + effect * 0.25f
-                gl.glPushMatrix()
-                gl.glTranslatef(x, 0f, z)
-                gl.glScalef(scale, scale, scale)
-
-                if (s.available > 1 && s == currentStone && s != scene.currentStone.stone) {
-                    gl.glPushMatrix()
-                    gl.glTranslatef(BoardRenderer.stoneSize, 0f, BoardRenderer.stoneSize * 0.6f)
-                    gl.glRotatef(rotate, 0f, 1f, 0f)
-                    gl.glScalef(0.85f, 0.85f, 0.85f)
-                    gl.glTranslatef(offset, 0f, offset)
-
-                    //	gl.glTranslatef(BoardRenderer.stone_size * 0.5f, y - 1.2f, BoardRenderer.stone_size * 0.5f);
-                    renderer.boardRenderer.renderShape(gl, playerColor, s.shape, Orientation.Default, alpha)
-                    gl.glPopMatrix()
-                }
-                gl.glRotatef(rotate, 0f, 1f, 0f)
-                gl.glTranslatef(offset, 0f, offset)
-                gl.glPushMatrix()
-                renderer.boardRenderer.renderShapeShadow(gl, s.shape, playerColor, Orientation.Default, y, 0f, 0f, 1f, 0f, rotate, alpha, 1.0f)
-                gl.glPopMatrix()
-                gl.glTranslatef(0f, y, 0f)
-                renderer.boardRenderer.renderShape(
-                    gl,
-                    if (s == currentStone && s != scene.currentStone.stone) StoneColor.White else playerColor,
-                    s.shape,
-                    Orientation.Default,
-                    alpha
-                )
-                gl.glPopMatrix()
-            }
-        }
-    }
-
-    /** GLES 2.0 variant of [render]. */
     @Synchronized
     fun render(renderer: Gles2Renderer) {
         val mv = renderer.ctx.modelView

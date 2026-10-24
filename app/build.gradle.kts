@@ -78,7 +78,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.opengl.api)
     testImplementation(libs.junit.ext)
 
     implementation(project(":common"))

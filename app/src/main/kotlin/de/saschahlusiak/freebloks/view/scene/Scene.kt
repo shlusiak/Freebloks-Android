@@ -14,7 +14,7 @@ import de.saschahlusiak.freebloks.view.effects.Effect
 import de.saschahlusiak.freebloks.view.effects.EffectSet
 import de.saschahlusiak.freebloks.view.effects.ShapeFadeEffect
 import de.saschahlusiak.freebloks.view.effects.ShapeRollEffect
-import de.saschahlusiak.freebloks.view.FreebloksRenderer
+import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import de.saschahlusiak.freebloks.view.scene.intro.Intro
 import java.util.*
 import kotlin.random.Random
@@ -207,7 +207,7 @@ class Scene(
      * Converts a point from model coordinates to absolute board coordinates, with blue starting point being 0/19
      * and yellow starting point being 0/0.
      *
-     * @see [FreebloksRenderer.windowToModel]
+     * @see [Gles2Renderer.windowToModel]
      *
      * @param point, input will be modified
      * @return point

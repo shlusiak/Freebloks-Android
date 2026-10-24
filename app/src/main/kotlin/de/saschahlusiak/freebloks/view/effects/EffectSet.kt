@@ -1,10 +1,8 @@
 package de.saschahlusiak.freebloks.view.effects
 
-import de.saschahlusiak.freebloks.view.BoardRenderer
 import java.util.*
 import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Context
-import javax.microedition.khronos.opengles.GL11
 
 /**
  * Chain of effects, to be played one after each other.
@@ -12,14 +10,6 @@ import javax.microedition.khronos.opengles.GL11
 class EffectSet : ArrayList<AbsShapeEffect>(), Effect {
     override fun isEffected(x: Int, y: Int): Boolean {
         return if (size > 0) get(0).isEffected(x, y) else false
-    }
-
-    override fun render(gl: GL11, renderer: BoardRenderer) {
-        if (size > 0) get(0).render(gl, renderer)
-    }
-
-    override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
-        if (size > 0) get(0).renderShadow(gl, renderer)
     }
 
     override fun isDone(): Boolean {

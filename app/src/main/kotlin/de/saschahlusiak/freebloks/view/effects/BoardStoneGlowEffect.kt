@@ -4,10 +4,8 @@ import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import android.opengl.GLES20
-import javax.microedition.khronos.opengles.GL10
 import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Context
-import javax.microedition.khronos.opengles.GL11
 import kotlin.math.sin
 
 class BoardStoneGlowEffect(
@@ -47,28 +45,6 @@ class BoardStoneGlowEffect(
         color[2] = (color1[2] * (1.0f - blend) + color2[2] * blend) * color[3]
 
         return super.execute(elapsed)
-    }
-
-    override fun render(gl: GL11, renderer: BoardRenderer) {
-        gl.glEnable(GL10.GL_BLEND)
-        gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA)
-        gl.glPushMatrix()
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * (model.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
-            0f,
-            -BoardRenderer.stoneSize * (model.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat()
-        )
-
-        with (renderer) {
-            gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, color, 0)
-            gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, BoardRenderer.materialStoneSpecular, 0)
-            gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, BoardRenderer.materialStoneShininess, 0)
-            stone.bindBuffers(gl)
-            stone.drawElements(gl, GL10.GL_TRIANGLES)
-        }
-
-        gl.glPopMatrix()
-        gl.glDisable(GL10.GL_BLEND)
     }
 
     override fun render(ctx: Gles2Context, renderer: Gles2BoardRenderer) {

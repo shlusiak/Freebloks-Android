@@ -7,7 +7,6 @@ import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Context
-import javax.microedition.khronos.opengles.GL11
 
 class PhysicalShapeEffect(
     model: Scene,
@@ -57,36 +56,6 @@ class PhysicalShapeEffect(
     private var targetX = 0f
     private var targetY = 0f
     private var targetZ = 0f
-
-    override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
-        val alpha = 0.60f - currentY / 20.0f
-
-        gl.glPushMatrix()
-        gl.glScalef(1f, 0.01f, 1f)
-        gl.glTranslatef(currentX, 0f, currentZ)
-        gl.glTranslatef(-2.5f * currentY * 0.11f, 0f, 2.0f * currentY * 0.11f)
-        gl.glRotatef(ang, ax, ay, az)
-        gl.glScalef(1.0f + currentY / 18.0f, 1f, 1.0f + currentY / 18.0f)
-        gl.glTranslatef(
-            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f,
-            0.0f,
-            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f
-        )
-        renderer.renderShapeShadow(gl, color, shape, orientation, alpha)
-        gl.glPopMatrix()
-    }
-
-    override fun render(gl: GL11, renderer: BoardRenderer) {
-        gl.glPushMatrix()
-        gl.glTranslatef(currentX, currentY, currentZ)
-        gl.glRotatef(ang, ax, ay, az)
-        gl.glTranslatef(
-            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f,
-            0.0f,
-            +BoardRenderer.stoneSize - shape.size.toFloat() / 2.0f * BoardRenderer.stoneSize * 2.0f)
-        renderer.renderShape(gl, color, shape, orientation, BoardRenderer.defaultStoneAlpha)
-        gl.glPopMatrix()
-    }
 
     override fun isDone(): Boolean {
         return false

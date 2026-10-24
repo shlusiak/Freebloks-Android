@@ -9,14 +9,10 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import de.saschahlusiak.freebloks.model.Board
 import de.saschahlusiak.freebloks.theme.ColorThemes
-import de.saschahlusiak.freebloks.view.BackgroundRenderer
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.FreebloksRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2BackgroundRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Renderer
 import de.saschahlusiak.freebloks.view.scene.Scene
-import javax.microedition.khronos.opengles.GL10
-import javax.microedition.khronos.opengles.GL11
 import kotlin.math.sin
 
 class Intro(private val context: Context, private val scene: Scene, var listener: IntroDelegate?) {
@@ -32,8 +28,7 @@ class Intro(private val context: Context, private val scene: Scene, var listener
     }
 
     private val handler = Handler(Looper.getMainLooper())
-    private val backgroundRenderer = BackgroundRenderer(context.resources, ColorThemes.Blue)
-    private val backgroundRendererGles2 by lazy { Gles2BackgroundRenderer(context.resources, ColorThemes.Blue) }
+    private val backgroundRenderer by lazy { Gles2BackgroundRenderer(context.resources, ColorThemes.Blue) }
     private val board = Board(20)
     internal val effects = Effects(scene)
     private var anim = 0.0f
@@ -128,74 +123,16 @@ class Intro(private val context: Context, private val scene: Scene, var listener
         effects.startFlipBoard(WIPE_ANGLE, WIPE_SPEED)
     }
 
-    fun render(gl: GL11, renderer: FreebloksRenderer) {
-        gl.glLoadIdentity()
-        backgroundRenderer.render(gl)
-
-        gl.glMatrixMode(GL11.GL_MODELVIEW)
-        if (scene.verticalLayout) {
-            gl.glTranslatef(0f, 4.5f, 0f)
-        } else {
-            gl.glTranslatef(0f, 1.5f, 0f)
-        }
-        GLU.gluLookAt(gl, 0f, if (scene.verticalLayout) 4.0f else 1.0f, renderer.fixedZoom * 1.1f, 0f, 0f, 0f, 0f, 1f, 0f)
-
-        gl.glRotatef(50f, 1f, 0f, 0f)
-        val angle1 = 180.0f
-        val angle2 = -60.0f
-        val matrixAnim = sin((anim - MATRIX_START_LEFT) / (MATRIX_STOP_LEFT - MATRIX_START_LEFT) * Math.PI.toFloat() - Math.PI.toFloat() / 2.0f) / 2.0f + 0.5f
-
-        if (phase == Phase.Freebloks) {
-            if (anim < MATRIX_START_LEFT) {
-                gl.glRotatef(angle2, 1f, 0f, 0f)
-                gl.glRotatef(angle1, 0f, 1f, 0f)
-            } else if (anim < MATRIX_STOP_LEFT) {
-                gl.glRotatef(angle2 - matrixAnim * matrixAnim * angle2, 1f, 0f, 0f)
-                gl.glRotatef(angle1 - matrixAnim * angle1, 0f, 1f, 0f)
-            }
-
-            if (anim < MATRIX_START_LEFT) {
-                gl.glTranslatef(0.0f, -14.0f + anim / MATRIX_START_LEFT * 4.0f, 0.0f)
-            } else if (anim < MATRIX_STOP_LEFT) {
-                gl.glTranslatef(0f, -10 + 10 * (matrixAnim * matrixAnim), 0f)
-            }
-        }
-
-        gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, renderer.lightPos, 0)
-
-        gl.glPushMatrix()
-        if (flipAnimation > 0.0001f) {
-            gl.glTranslatef(0f, 0f, 20 * BoardRenderer.stoneSize)
-            gl.glRotatef(flipAnimation * WIPE_ANGLE, 1f, 0f, 0f)
-            gl.glTranslatef(0f, 0f, -20 * BoardRenderer.stoneSize)
-        }
-
-        gl.glDisable(GL10.GL_DEPTH_TEST)
-        renderer.boardRenderer.renderBoard(gl, board, -1)
-
-        gl.glPopMatrix()
-
-        // render the stones, which are purely effects
-        synchronized(effects) {
-            gl.glDisable(GL10.GL_DEPTH_TEST)
-            for (i in effects.indices) effects[i].renderShadow(gl, renderer.boardRenderer)
-
-            gl.glEnable(GL10.GL_DEPTH_TEST)
-            for (i in effects.indices) effects[i].render(gl, renderer.boardRenderer)
-        }
-    }
-
-    /** GLES 2.0 context was (re)created. */
+    /** The GL context was (re)created. */
     fun onSurfaceCreated() {
-        backgroundRendererGles2.onSurfaceCreated()
+        backgroundRenderer.onSurfaceCreated()
     }
 
-    /** GLES 2.0 variant of [render]. */
     fun render(renderer: Gles2Renderer) {
         val ctx = renderer.ctx
         val mv = ctx.modelView
         mv.loadIdentity()
-        backgroundRendererGles2.render(ctx)
+        backgroundRenderer.render(ctx)
 
         if (scene.verticalLayout) {
             mv.translate(0f, 4.5f, 0f)

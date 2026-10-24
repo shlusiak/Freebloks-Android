@@ -6,7 +6,6 @@ import de.saschahlusiak.freebloks.view.BoardRenderer
 import de.saschahlusiak.freebloks.view.scene.Scene
 import de.saschahlusiak.freebloks.view.gles2.Gles2BoardRenderer
 import de.saschahlusiak.freebloks.view.gles2.Gles2Context
-import javax.microedition.khronos.opengles.GL11
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -73,44 +72,6 @@ class ShapeRollEffect(
         r += vr * elapsed
         super.execute(elapsed)
         return true
-    }
-
-    override fun renderShadow(gl: GL11, renderer: BoardRenderer) {
-        gl.glPushMatrix()
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x,
-            0f,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y
-        )
-        renderer.renderShapeShadow(gl,
-            shape, color, orientation,
-            z,
-            r, ax, ay, az,
-            scene.boardObject.currentAngle - scene.baseAngle,
-            1.0f, 1.0f
-        )
-
-        gl.glPopMatrix()
-    }
-
-    override fun render(gl: GL11, renderer: BoardRenderer) {
-        gl.glPushMatrix()
-        val offset = shape.size.toFloat() - 1.0f
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * (scene.board.width - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * x.toFloat(),
-            z,
-            -BoardRenderer.stoneSize * (scene.board.height - 1).toFloat() + BoardRenderer.stoneSize * 2.0f * y.toFloat())
-        gl.glTranslatef(
-            BoardRenderer.stoneSize * offset, 0f,
-            BoardRenderer.stoneSize * offset
-        )
-        gl.glRotatef(r, ax, ay, az)
-        gl.glTranslatef(
-            -BoardRenderer.stoneSize * offset, 0f,
-            -BoardRenderer.stoneSize * offset
-        )
-        renderer.renderShape(gl, color, shape, orientation, BoardRenderer.defaultStoneAlpha)
-        gl.glPopMatrix()
     }
 
     override fun renderShadow(ctx: Gles2Context, renderer: Gles2BoardRenderer) {
