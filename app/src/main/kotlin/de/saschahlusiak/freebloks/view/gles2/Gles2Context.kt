@@ -34,29 +34,74 @@ class Gles2Context {
     val texture = MatrixStack(4)
 
     /** Light direction in eye space, pointing towards the light. */
-    val lightDir = floatArrayOf(0f, 1f, 0f)
-    val lightAmbient = floatArrayOf(0.35f, 0.35f, 0.35f)
-    val lightDiffuse = floatArrayOf(0.8f, 0.8f, 0.8f)
-    val lightSpecular = floatArrayOf(1f, 1f, 1f)
-    /** GL_LIGHT_MODEL_AMBIENT default. */
-    val globalAmbient = floatArrayOf(0.2f, 0.2f, 0.2f)
-
-    var lighting = true
-    var textured = false
+    private val lightDir = floatArrayOf(0f, 1f, 0f)
+    private var lightDirDirty = true
 
     /** Ambient and diffuse material, or the flat colour when [lighting] is off. */
     val color = floatArrayOf(1f, 1f, 1f, 1f)
     val specular = floatArrayOf(0f, 0f, 0f)
     var shininess = 0f
 
+    var lighting = true
+    var textured = false
+
     private val mvp = FloatArray(16)
     private val inv = FloatArray(16)
     private val normalMatrix = FloatArray(9)
 
+    /** Uniform locations, resolved once per program. */
+    private var uMVP = 0
+    private var uTexMatrix = 0
+    private var uNormalMatrix = 0
+    private var uLightDir = 0
+    private var uSpecular = 0
+    private var uShininess = 0
+    private var uColor = 0
+    private var uLighting = 0
+    private var uTexture = 0
+
+    /** The values last sent to the program; NaN (or -1) never matches, so the first draw uploads everything. */
+    private val sentMvp = FloatArray(16)
+    private val sentTexMatrix = FloatArray(16)
+    private val sentNormalMatrix = FloatArray(9)
+    private val sentColor = FloatArray(4)
+    private val sentSpecular = FloatArray(3)
+    private var sentShininess = Float.NaN
+    private var sentLighting = -1
+    private var sentTexture = -1
+
     fun create() {
         program = ShaderProgram(Shaders.VERTEX, Shaders.FRAGMENT)
-        program.use()
-        GLES20.glUniform1i(program.uniform("uSampler"), 0)
+        val p = program
+        p.use()
+        GLES20.glUniform1i(p.uniform("uSampler"), 0)
+
+        uMVP = p.uniform("uMVP")
+        uTexMatrix = p.uniform("uTexMatrix")
+        uNormalMatrix = p.uniform("uNormalMatrix")
+        uLightDir = p.uniform("uLightDir")
+        uSpecular = p.uniform("uSpecular")
+        uShininess = p.uniform("uShininess")
+        uColor = p.uniform("uColor")
+        uLighting = p.uniform("uLighting")
+        uTexture = p.uniform("uTexture")
+
+        // the light never changes, except for its direction
+        GLES20.glUniform3fv(p.uniform("uLightAmbient"), 1, floatArrayOf(0.35f, 0.35f, 0.35f), 0)
+        GLES20.glUniform3fv(p.uniform("uLightDiffuse"), 1, floatArrayOf(0.8f, 0.8f, 0.8f), 0)
+        GLES20.glUniform3fv(p.uniform("uLightSpecular"), 1, floatArrayOf(1f, 1f, 1f), 0)
+        // GL_LIGHT_MODEL_AMBIENT default
+        GLES20.glUniform3fv(p.uniform("uGlobalAmbient"), 1, floatArrayOf(0.2f, 0.2f, 0.2f), 0)
+
+        lightDirDirty = true
+        sentMvp.fill(Float.NaN)
+        sentTexMatrix.fill(Float.NaN)
+        sentNormalMatrix.fill(Float.NaN)
+        sentColor.fill(Float.NaN)
+        sentSpecular.fill(Float.NaN)
+        sentShininess = Float.NaN
+        sentLighting = -1
+        sentTexture = -1
 
         // a new context: nothing is known about its state
         blendState = null
@@ -104,6 +149,7 @@ class Gles2Context {
         lightDir[0] = m[o] * x + m[o + 4] * y + m[o + 8] * z
         lightDir[1] = m[o + 1] * x + m[o + 5] * y + m[o + 9] * z
         lightDir[2] = m[o + 2] * x + m[o + 6] * y + m[o + 10] * z
+        lightDirDirty = true
     }
 
     fun setColor(c: FloatArray) = System.arraycopy(c, 0, color, 0, 4)
@@ -113,35 +159,73 @@ class Gles2Context {
         this.shininess = shininess
     }
 
-    /** Uploads all state. Call after binding the [Gles2Model] and before [Gles2Model.draw]. */
+    /**
+     * Uploads the state that changed since the last call. Call after binding the [Gles2Model] and before
+     * [Gles2Model.draw].
+     */
     fun apply() {
-        val p = program
-        p.use()
-
         val mv = modelView.array
         val o = modelView.offset
         Matrix.multiplyMM(mvp, 0, projection, 0, mv, o)
-        GLES20.glUniformMatrix4fv(p.uniform("uMVP"), 1, false, mvp, 0)
-        GLES20.glUniformMatrix4fv(p.uniform("uTexMatrix"), 1, false, texture.array, texture.offset)
+        if (changed(sentMvp, mvp, 0, 16))
+            GLES20.glUniformMatrix4fv(uMVP, 1, false, mvp, 0)
+        if (changed(sentTexMatrix, texture.array, texture.offset, 16))
+            GLES20.glUniformMatrix4fv(uTexMatrix, 1, false, texture.array, texture.offset)
+
+        val lit = if (lighting) 1 else 0
+        if (lit != sentLighting) {
+            GLES20.glUniform1i(uLighting, lit)
+            sentLighting = lit
+        }
+        val tex = if (textured) 1 else 0
+        if (tex != sentTexture) {
+            GLES20.glUniform1i(uTexture, tex)
+            sentTexture = tex
+        }
+        if (changed(sentColor, color, 0, 4))
+            GLES20.glUniform4fv(uColor, 1, color, 0)
 
         if (lighting) {
-            // inverse transpose of the upper 3x3: invert the full matrix, then read the transposed upper 3x3
-            if (Matrix.invertM(inv, 0, mv, o)) {
-                for (c in 0 until 3) for (r in 0 until 3) normalMatrix[c * 3 + r] = inv[r * 4 + c]
-            } else {
-                for (c in 0 until 3) for (r in 0 until 3) normalMatrix[c * 3 + r] = mv[o + c * 4 + r]
+            updateNormalMatrix(mv, o)
+            if (changed(sentNormalMatrix, normalMatrix, 0, 9))
+                GLES20.glUniformMatrix3fv(uNormalMatrix, 1, false, normalMatrix, 0)
+
+            if (lightDirDirty) {
+                GLES20.glUniform3fv(uLightDir, 1, lightDir, 0)
+                lightDirDirty = false
             }
-            GLES20.glUniformMatrix3fv(p.uniform("uNormalMatrix"), 1, false, normalMatrix, 0)
-            GLES20.glUniform3fv(p.uniform("uLightDir"), 1, lightDir, 0)
-            GLES20.glUniform3fv(p.uniform("uLightAmbient"), 1, lightAmbient, 0)
-            GLES20.glUniform3fv(p.uniform("uLightDiffuse"), 1, lightDiffuse, 0)
-            GLES20.glUniform3fv(p.uniform("uLightSpecular"), 1, lightSpecular, 0)
-            GLES20.glUniform3fv(p.uniform("uGlobalAmbient"), 1, globalAmbient, 0)
-            GLES20.glUniform3fv(p.uniform("uSpecular"), 1, specular, 0)
-            GLES20.glUniform1f(p.uniform("uShininess"), shininess)
+            if (changed(sentSpecular, specular, 0, 3))
+                GLES20.glUniform3fv(uSpecular, 1, specular, 0)
+            if (shininess != sentShininess) {
+                GLES20.glUniform1f(uShininess, shininess)
+                sentShininess = shininess
+            }
         }
-        GLES20.glUniform1i(p.uniform("uLighting"), if (lighting) 1 else 0)
-        GLES20.glUniform1i(p.uniform("uTexture"), if (textured) 1 else 0)
-        GLES20.glUniform4fv(p.uniform("uColor"), 1, color, 0)
+    }
+
+    /**
+     * The matrix to transform normals with: the inverse transpose of the upper 3x3 of the model view matrix. Without a
+     * non-uniform scale that is the upper 3x3 itself (the shader normalizes, so a uniform scale does not matter),
+     * which saves inverting a 4x4 matrix per draw call.
+     */
+    private fun updateNormalMatrix(mv: FloatArray, o: Int) {
+        if (!modelView.hasNonUniformScale || !Matrix.invertM(inv, 0, mv, o)) {
+            for (c in 0 until 3) for (r in 0 until 3) normalMatrix[c * 3 + r] = mv[o + c * 4 + r]
+        } else {
+            for (c in 0 until 3) for (r in 0 until 3) normalMatrix[c * 3 + r] = inv[r * 4 + c]
+        }
+    }
+
+    /** Copies [n] floats of [src] over [sent] and returns true if any differed. */
+    private fun changed(sent: FloatArray, src: FloatArray, srcOffset: Int, n: Int): Boolean {
+        var different = false
+        for (i in 0 until n) {
+            val v = src[srcOffset + i]
+            if (sent[i] != v) {
+                sent[i] = v
+                different = true
+            }
+        }
+        return different
     }
 }
