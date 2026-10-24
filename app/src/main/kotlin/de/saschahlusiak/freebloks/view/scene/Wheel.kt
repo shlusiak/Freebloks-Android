@@ -245,7 +245,7 @@ class Wheel(private val scene: Scene) : SceneElement {
                 gl.glRotatef(rotate, 0f, 1f, 0f)
                 gl.glTranslatef(offset, 0f, offset)
                 gl.glPushMatrix()
-                renderer.boardRenderer.renderShapeShadow(gl, s.shape, playerColor, Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
+                renderer.boardRenderer.renderShapeShadow(gl, s.shape, playerColor, Orientation.Default, y, 0f, 0f, 1f, 0f, rotate, alpha, 1.0f)
                 gl.glPopMatrix()
                 gl.glTranslatef(0f, y, 0f)
                 renderer.boardRenderer.renderShape(
@@ -296,10 +296,19 @@ class Wheel(private val scene: Scene) : SceneElement {
                     renderer.boardRenderer.renderShape(renderer.ctx, playerColor, s.shape, Orientation.Default, alpha)
                     mv.pop()
                 }
+
                 mv.rotate(rotate, 0f, 1f, 0f)
                 mv.translate(offset, 0f, offset)
                 mv.push()
-                renderer.boardRenderer.renderShapeShadow(renderer.ctx, s.shape, playerColor, Orientation.Default, y, 0f, 0f, 0f, 0f, rotate, alpha, 1.0f)
+                renderer.boardRenderer.renderShapeShadow(
+                    renderer.ctx,
+                    s.shape, playerColor, Orientation.Default,
+                    y,
+                    0f, 0f, 1f, 0f,
+                    rotate,
+                    alpha,
+                    1.0f
+                )
                 mv.pop()
                 mv.translate(0f, y, 0f)
                 renderer.boardRenderer.renderShape(
