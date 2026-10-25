@@ -63,21 +63,26 @@ class Gles2Renderer(private val context: Context, private val scene: Scene) : GL
         }
         introRenderer = null
 
-        renderBoard()
+        // Read once: the scene is changed by other threads while we draw, and the overlays must undo exactly the
+        // rotation the board was drawn with.
+        val cameraAngle = scene.baseAngle
+        val boardAngle = scene.boardObject.currentAngle
+
+        renderBoard(cameraAngle, boardAngle)
         renderEffects()
-        renderOverlays()
+        renderOverlays(cameraAngle, boardAngle)
     }
 
     /** Sets up the camera and draws the background, the board and the stones on it. */
-    private fun renderBoard() {
+    private fun renderBoard(cameraAngle: Float, boardAngle: Float) {
         val mv = ctx.modelView
         val board = scene.game.board
 
-        camera.loadView(mv, scene.verticalLayout, scene.baseAngle)
+        camera.loadView(mv, scene.verticalLayout, cameraAngle)
         ctx.setLightPosition(lightPos[0], lightPos[1], lightPos[2])
 
         ctx.depthTest(false)
-        mv.rotate(scene.boardObject.currentAngle, 0f, 1f, 0f)
+        mv.rotate(boardAngle, 0f, 1f, 0f)
 
         backgroundRenderer.render(ctx)
         boardRenderer.renderBoard(ctx, scene.board, scene.boardObject.showSeedsPlayer)
@@ -132,21 +137,20 @@ class Gles2Renderer(private val context: Context, private val scene: Scene) : GL
     }
 
     /** Draws what is in front of the board: the wheel and the stone being dragged. */
-    private fun renderOverlays() {
+    private fun renderOverlays(cameraAngle: Float, boardAngle: Float) {
         val mv = ctx.modelView
-        val cameraAngle = scene.baseAngle
 
         ctx.depthTest(false)
-        mv.rotate(-scene.boardObject.currentAngle, 0f, 1f, 0f)
+        mv.rotate(-boardAngle, 0f, 1f, 0f)
         mv.withPush {
             /* reverse the cameraAngle to always fix wheel in front of camera */
             mv.rotate(cameraAngle, 0f, 1f, 0f)
             if (!scene.verticalLayout) mv.rotate(90.0f, 0f, 1f, 0f)
-            wheelRenderer.render(ctx, boardRenderer, scene)
+            wheelRenderer.render(ctx, boardRenderer, scene, cameraAngle)
         }
 
         /* render current player stone on the field */
-        if (scene.game.isLocalPlayer()) currentStoneRenderer.render(ctx, boardRenderer, scene)
+        if (scene.game.isLocalPlayer()) currentStoneRenderer.render(ctx, boardRenderer, scene, cameraAngle)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

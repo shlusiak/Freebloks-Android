@@ -43,7 +43,7 @@ class CurrentStoneRenderer(private val context: Context) {
         }
     }
 
-    fun render(ctx: Gles2Context, boardRenderer: Gles2BoardRenderer, scene: Scene) {
+    fun render(ctx: Gles2Context, boardRenderer: Gles2BoardRenderer, scene: Scene, baseAngle: Float) {
         val currentStone = scene.currentStone
         synchronized(currentStone) {
             val stone = currentStone.stone ?: return
@@ -62,7 +62,6 @@ class CurrentStoneRenderer(private val context: Context) {
                 hoverHeight += abs(sin(rotateAngle / 180f * Math.PI.toFloat()) * overlayRadius * 0.4f)
 
             val mv = ctx.modelView
-            val baseAngle = scene.baseAngle
 
             fun applyRotation() {
                 if (status == Status.ROTATING) mv.rotate(rotateAngle, 0f, 1f, 0f)

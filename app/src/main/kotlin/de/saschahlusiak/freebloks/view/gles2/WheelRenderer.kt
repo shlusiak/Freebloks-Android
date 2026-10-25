@@ -12,7 +12,7 @@ import kotlin.math.pow
  * Draws the wheel of stones the current player can pick from.
  */
 class WheelRenderer {
-    fun render(ctx: Gles2Context, boardRenderer: Gles2BoardRenderer, scene: Scene) {
+    fun render(ctx: Gles2Context, boardRenderer: Gles2BoardRenderer, scene: Scene, cameraAngle: Float) {
         val wheel = scene.wheel
         val mv = ctx.modelView
 
@@ -35,7 +35,7 @@ class WheelRenderer {
                 var y = 0.35f + effect * 0.75f
                 val z = row * Wheel.STONE_SPACING
                 val scale = 0.9f + effect * 0.3f
-                var rotate = -scene.baseAngle
+                var rotate = -cameraAngle
                 if (!scene.verticalLayout) rotate -= 90.0f
                 var alpha = 1.0f
                 val isHighlighted = highlighted == s && s != selectedStone
