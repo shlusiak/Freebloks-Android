@@ -1,7 +1,7 @@
 [versions]
 compileSdk = "37"
 targetSdk = "37"
-minSdk = "24"
+minSdk = "26"
 ndkVersion = "30.0.16248370"
 
 agp = "9.4.1"
@@ -31,7 +31,6 @@ junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "junit-
 kotlin-metadata = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlin" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
-opengl-api = { group = "org.khronos", name = "opengl-api", version = "gl1.1-android-2.1_r1" }
 
 # AndroidX
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment-ktx" }

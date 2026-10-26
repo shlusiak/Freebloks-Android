@@ -67,9 +67,7 @@ class MultiplayerNotificationManager(
      * Immediately start observing game events.
      */
     init {
-        if (Build.VERSION.SDK_INT >= 26) {
-            createNotificationChannels()
-        }
+        createNotificationChannels()
         client.addObserver(this)
     }
 
@@ -110,7 +108,6 @@ class MultiplayerNotificationManager(
     /**
      * Create any required notification channels
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private fun createNotificationChannels() {
         val defaultChannel = NotificationChannel(
             CHANNEL_DEFAULT,

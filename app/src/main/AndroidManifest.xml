@@ -3,8 +3,7 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="preferExternal"
-    android:targetSandboxVersion="2"
-    tools:targetApi="o">
+    android:targetSandboxVersion="2">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
