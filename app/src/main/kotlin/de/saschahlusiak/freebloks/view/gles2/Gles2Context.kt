@@ -5,9 +5,9 @@ import android.opengl.Matrix
 import de.saschahlusiak.freebloks.view.MatrixStack
 
 /**
- * Holds the state the fixed function pipeline kept implicitly (matrices, light, material, texture on/off) and
- * uploads it to the shader right before a draw call. Also owns the fixed-function style GL switches (blending, depth
- * test, face culling), so the state is always known and redundant GL calls are skipped.
+ * Holds the render state (matrices, light, material, texture on/off) and uploads it to the shader right before a draw
+ * call. Also owns the GL switches (blending, depth test, face culling), so the state is always known and redundant GL
+ * calls are skipped.
  *
  * Must only be used on the GL thread. Call [create] from onSurfaceCreated.
  */
@@ -90,7 +90,7 @@ class Gles2Context {
         GLES20.glUniform3fv(p.uniform("uLightAmbient"), 1, floatArrayOf(0.35f, 0.35f, 0.35f), 0)
         GLES20.glUniform3fv(p.uniform("uLightDiffuse"), 1, floatArrayOf(0.8f, 0.8f, 0.8f), 0)
         GLES20.glUniform3fv(p.uniform("uLightSpecular"), 1, floatArrayOf(1f, 1f, 1f), 0)
-        // GL_LIGHT_MODEL_AMBIENT default
+        // ambient light of the scene
         GLES20.glUniform3fv(p.uniform("uGlobalAmbient"), 1, floatArrayOf(0.2f, 0.2f, 0.2f), 0)
 
         lightDirDirty = true
@@ -141,9 +141,9 @@ class Gles2Context {
         if (enabled) GLES20.glEnable(GLES20.GL_CULL_FACE) else GLES20.glDisable(GLES20.GL_CULL_FACE)
     }
 
-    /** Sets the light from eye-space position (w = 0 means directional), like glLightfv(GL_POSITION). */
+    /** Sets the light from eye-space position (w = 0 means directional), */
     fun setLightPosition(x: Float, y: Float, z: Float) {
-        // the fixed function pipeline transforms the position by the model view matrix at call time
+        // the position is transformed by the model view matrix at the time of the call
         val m = modelView.array
         val o = modelView.offset
         lightDir[0] = m[o] * x + m[o + 4] * y + m[o + 8] * z

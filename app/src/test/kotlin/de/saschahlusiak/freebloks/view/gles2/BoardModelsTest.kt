@@ -1,5 +1,6 @@
-package de.saschahlusiak.freebloks.view
+package de.saschahlusiak.freebloks.view.gles2
 
+import de.saschahlusiak.freebloks.view.BoardRenderer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

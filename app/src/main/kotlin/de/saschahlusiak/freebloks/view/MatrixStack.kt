@@ -3,8 +3,8 @@ package de.saschahlusiak.freebloks.view
 import android.opengl.Matrix
 
 /**
- * A stack of 4x4 column-major matrices with the semantics of the fixed function pipeline's matrix stack
- * (glPushMatrix, glTranslatef, glRotatef, ...): all operations post-multiply the current matrix.
+ * A stack of 4x4 column-major matrices, like the classic OpenGL matrix stack (push, pop, translate, rotate, scale):
+ * all operations post-multiply the current matrix.
  *
  * The matrices live back to back in one array. The current one is at [array] from [offset], which is what
  * [android.opengl.Matrix] and glUniformMatrix4fv take, so nothing needs to be copied or allocated to use it.

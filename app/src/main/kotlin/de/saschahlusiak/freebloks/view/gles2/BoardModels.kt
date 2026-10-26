@@ -1,7 +1,9 @@
-package de.saschahlusiak.freebloks.view
+package de.saschahlusiak.freebloks.view.gles2
+
+import de.saschahlusiak.freebloks.view.BoardRenderer
 
 /**
- * The geometry of the board, stones and shadows, used by the renderer.
+ * The geometry of the board, stones and shadows.
  */
 object BoardModels {
     private const val stoneSize = BoardRenderer.stoneSize
@@ -49,10 +51,10 @@ object BoardModels {
     )
 
     /**
-     * Builds a SimpleModel for a single field of the board, which is half a stone and is "deep".
+     * Builds a Gles2Model for a single field of the board, which is half a stone and is "deep".
      */
-    fun buildSingleBoardFieldModel(): SimpleModel {
-        return SimpleModel(fieldVertices.size, fieldIndices.size / 3).apply {
+    fun buildSingleBoardFieldModel(): Gles2Model {
+        return Gles2Model(fieldVertices.size, fieldIndices.size / 3).apply {
             for (v in fieldVertices) addVertex(v[0], v[1], v[2], v[3], v[4], v[5], v[0], v[2])
             for (i in fieldIndices.indices step 3) addIndex(fieldIndices[i], fieldIndices[i + 1], fieldIndices[i + 2])
             commit()
@@ -65,7 +67,7 @@ object BoardModels {
      * The texture coordinates are baked: the texture is shifted by [textureShift] per field, so it continues
      * across fields, then rotated by [textureRotation] degrees and scaled by [textureScale].
      */
-    fun buildBoardModel(width: Int, height: Int, textureShift: Float, textureScale: Float, textureRotation: Float): SimpleModel {
+    fun buildBoardModel(width: Int, height: Int, textureShift: Float, textureScale: Float, textureRotation: Float): Gles2Model {
         val perField = fieldVertices.size
         require(width * height * perField <= 0xffff) { "board of $width x $height is too big for 16 bit indices" }
 
@@ -73,7 +75,7 @@ object BoardModels {
         val cos = kotlin.math.cos(angle).toFloat()
         val sin = kotlin.math.sin(angle).toFloat()
 
-        return SimpleModel(width * height * perField, width * height * fieldIndices.size / 3).apply {
+        return Gles2Model(width * height * perField, width * height * fieldIndices.size / 3).apply {
             for (y in 0 until height) for (x in 0 until width) {
                 val cx = -stoneSize * (width - 1) + stoneSize * 2.0f * x
                 val cz = -stoneSize * (height - 1) + stoneSize * 2.0f * y
@@ -99,8 +101,8 @@ object BoardModels {
     /**
      * Builds the planar shadow quad for a single stone
      */
-    fun buildStoneShadow(): SimpleModel {
-        return SimpleModel(4, 2).apply {
+    fun buildStoneShadow(): Gles2Model {
+        return Gles2Model(4, 2).apply {
             addVertex(-r1, 0f, +r1, 0f, 1f, 0f, 0f, 0f)
             addVertex(+r1, 0f, +r1, 0f, 1f, 0f, 1f, 0f)
             addVertex(+r1, 0f, -r1, 0f, 1f, 0f, 1f, 1f)
@@ -114,8 +116,8 @@ object BoardModels {
     /**
      * Builds the model of a full player's stone, including top and bottom
      */
-    fun buildStoneModel(): SimpleModel {
-        return SimpleModel(12, 20).apply {
+    fun buildStoneModel(): Gles2Model {
+        return Gles2Model(12, 20).apply {
             /* top, inner */
             addVertex(-r2, -y1, +r2, 0f, 1f, 0f, 0f, 0f)
             addVertex(+r2, -y1, +r2, 0f, 1f, 0f, 0f, 0f)
@@ -164,8 +166,8 @@ object BoardModels {
     /**
      * Builds the square model of the border of the field with the given size
      */
-    fun buildBorderModel(boardSize: Int): SimpleModel {
-        return SimpleModel(12, 6).apply {
+    fun buildBorderModel(boardSize: Int): Gles2Model {
+        return Gles2Model(12, 6).apply {
             val w1 = stoneSize * boardSize
             val w2 = w1 + borderWidth
 

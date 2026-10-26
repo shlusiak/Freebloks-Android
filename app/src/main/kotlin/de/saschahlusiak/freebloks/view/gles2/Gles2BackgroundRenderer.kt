@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.opengl.GLES20
 import de.saschahlusiak.freebloks.ktx.KTX
 import de.saschahlusiak.freebloks.theme.Theme
-import de.saschahlusiak.freebloks.view.SimpleModel
 
 /**
  * Renders the background and clears the frame.
@@ -15,7 +14,7 @@ class Gles2BackgroundRenderer(private val resources: Resources, private var them
     private val size = 80.0f
     private val textures = 15.0f
 
-    private val model = Gles2Model(SimpleModel(4, 2).apply {
+    private val model = Gles2Model(4, 2).apply {
         addVertex(-size, 0f, -size, 0f, 1f, 0f, 0f, 0f)
         addVertex(size, 0f, -size, 0f, 1f, 0f, textures, 0f)
         addVertex(size, 0f, size, 0f, 1f, 0f, textures, textures)
@@ -23,7 +22,7 @@ class Gles2BackgroundRenderer(private val resources: Resources, private var them
         addIndex(0, 2, 1)
         addIndex(0, 3, 2)
         commit()
-    })
+    }
 
     private var texture = 0
     private var hasTexture = false

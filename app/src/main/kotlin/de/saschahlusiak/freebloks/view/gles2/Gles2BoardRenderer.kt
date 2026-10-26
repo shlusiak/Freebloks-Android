@@ -11,7 +11,6 @@ import de.saschahlusiak.freebloks.model.Shape
 import de.saschahlusiak.freebloks.model.StoneColor
 import de.saschahlusiak.freebloks.theme.ColorThemes
 import de.saschahlusiak.freebloks.theme.Theme
-import de.saschahlusiak.freebloks.view.BoardModels
 import de.saschahlusiak.freebloks.view.BoardRenderer.stoneSize
 
 /**
@@ -31,13 +30,13 @@ class Gles2BoardRenderer(private val resources: Resources) {
     }
 
     /** A single field, used to highlight seeds. */
-    private val field = Gles2Model(BoardModels.buildSingleBoardFieldModel())
+    private val field = BoardModels.buildSingleBoardFieldModel()
 
     /** All fields of a board of the given size in one model, cached per size. */
     private val boards = HashMap<Pair<Int, Int>, Gles2Model>()
-    private var border = Gles2Model(BoardModels.buildBorderModel(Board.DEFAULT_BOARD_SIZE))
-    val stone = Gles2Model(BoardModels.buildStoneModel())
-    private val shadow = Gles2Model(BoardModels.buildStoneShadow())
+    private var border = BoardModels.buildBorderModel(Board.DEFAULT_BOARD_SIZE)
+    val stone = BoardModels.buildStoneModel()
+    private val shadow = BoardModels.buildStoneShadow()
 
     private var theme: Theme = ColorThemes.Black
     private var boardTexture = 0
@@ -53,7 +52,8 @@ class Gles2BoardRenderer(private val resources: Resources) {
     }
 
     fun setBoardSize(boardSize: Int) {
-        border = Gles2Model(BoardModels.buildBorderModel(boardSize))
+        border.release()
+        border = BoardModels.buildBorderModel(boardSize)
     }
 
     /** The GL context was (re)created: all GL objects are gone. */
@@ -127,7 +127,7 @@ class Gles2BoardRenderer(private val resources: Resources) {
         // the texture coordinates are baked into the model
         ctx.texture.loadIdentity()
         val fields = boards.getOrPut(w to h) {
-            Gles2Model(BoardModels.buildBoardModel(w, h, stoneSize * 4.0f, textureScale, textureRotation))
+            BoardModels.buildBoardModel(w, h, stoneSize * 4.0f, textureScale, textureRotation)
         }
         fields.bind()
         draw(ctx, fields)

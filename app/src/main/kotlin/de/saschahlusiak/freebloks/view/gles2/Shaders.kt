@@ -1,11 +1,11 @@
 package de.saschahlusiak.freebloks.view.gles2
 
 /**
- * Emulates the fixed function pipeline as used by the GLES 1.x renderer: one directional light in eye space,
- * Gouraud (per-vertex) lighting with GL_AMBIENT_AND_DIFFUSE material, non-local viewer specular, GL_NORMALIZE,
- * GL_MODULATE texturing through a texture matrix.
+ * One directional light in eye space, Gouraud (per-vertex) lighting with a material that has the same ambient and
+ * diffuse colour, non-local viewer specular, normalized normals, and texturing modulated with the lit colour through a
+ * texture matrix.
  *
- * Lighting reference (OpenGL ES 1.1 spec, section 2.13.1):
+ * Lighting:
  *   color = matAmb * (globalAmbient + lightAmb) + matDiff * lightDiff * max(N.L, 0)
  *           + (N.L > 0 ? matSpec * lightSpec * pow(max(N.H, 0), shininess) : 0), alpha = matDiff.a
  * with H = normalize(L + (0, 0, 1)) for a non-local viewer, then clamped to [0, 1].
@@ -43,7 +43,7 @@ object Shaders {
                 return;
             }
 
-            // normalize() replaces GL_NORMALIZE: normals are not unit length and shadows are scaled non-uniformly
+            // normals are not unit length and shadows are scaled non-uniformly
             vec3 n = normalize(uNormalMatrix * aNormal);
             vec3 l = normalize(uLightDir);
             float nDotL = max(dot(n, l), 0.0);

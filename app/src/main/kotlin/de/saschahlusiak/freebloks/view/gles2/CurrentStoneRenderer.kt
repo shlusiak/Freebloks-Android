@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.opengl.GLES20
 import de.saschahlusiak.freebloks.R
 import de.saschahlusiak.freebloks.view.BoardRenderer
-import de.saschahlusiak.freebloks.view.SimpleModel
 import de.saschahlusiak.freebloks.view.scene.CurrentStone
 import de.saschahlusiak.freebloks.view.scene.CurrentStone.Status
 import de.saschahlusiak.freebloks.view.scene.Scene
@@ -18,7 +17,7 @@ import kotlin.math.sin
 class CurrentStoneRenderer(private val context: Context) {
     private val overlayRadius = CurrentStone.overlayRadius
 
-    private val overlay = Gles2Model(SimpleModel(4, 2).apply {
+    private val overlay = Gles2Model(4, 2).apply {
         addVertex(-overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 0f, 0f)
         addVertex(+overlayRadius, 0f, overlayRadius, 0f, -1f, 0f, 1f, 0f)
         addVertex(+overlayRadius, 0f, -overlayRadius, 0f, -1f, 0f, 1f, 1f)
@@ -26,7 +25,7 @@ class CurrentStoneRenderer(private val context: Context) {
         addIndex(0, 1, 2)
         addIndex(0, 2, 3)
         commit()
-    })
+    }
 
     private val white = floatArrayOf(1f, 1f, 1f, 1f)
     private val textures = IntArray(3)
