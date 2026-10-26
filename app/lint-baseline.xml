@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 8.12.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.2)" variant="all" version="8.12.2">
 
-    <issue
-        id="RestrictedApi"
-        message="TypedArrayUtils.getAttr can only be called from within the same library group prefix (referenced groupId=`androidx.core` with prefix androidx from groupId=`Freebloks-Android`)"
-        errorLine1="    @Keep constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, TypedArrayUtils.getAttr(context, androidx.preference.R.attr.checkBoxPreferenceStyle, android.R.attr.checkBoxPreferenceStyle))"
-        errorLine2="                                                                                                     ~~~~~~~">
-        <location
-            file="src/main/kotlin/de/saschahlusiak/freebloks/preferences/types/SelectablePreference.kt"
-            line="13"
-            column="102"/>
-    </issue>
 
     <issue
         id="MissingTranslation"
@@ -210,16 +200,6 @@
             column="14"/>
     </issue>
 
-    <issue
-        id="MissingTranslation"
-        message="&quot;google_play_games_signin_failed&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;google_play_games_signin_failed&quot;>Failed to sign in. Please check your network connection and try again.&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="86"
-            column="13"/>
-    </issue>
 
     <issue
         id="MissingTranslation"

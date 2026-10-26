@@ -9,9 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
