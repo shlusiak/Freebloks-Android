@@ -181,4 +181,17 @@
     <string name="advanced">Avançado</string>
     <string name="prefs_rules">Mostrar regras&#8230;</string>
     <string name="prefs_rules_long">Mostra as regras do jogo</string>
+    <string name="clear_statistics_question">Tem certeza de que deseja apagar todas as estatísticas?</string>
+    <string name="prefs_clear_statistics_long">Restaurar todas as estatísticas</string>
+    <string name="quantities">Quantidade de pedras</string>
+    <string name="monomino">Monominós</string>
+    <string name="domino">Dominós</string>
+    <string name="tromino">Triminós</string>
+    <string name="tetromino">Tetraminós</string>
+    <string name="pentomino">Pentaminós</string>
+    <plurals name="games">
+        <item quantity="one">%1$d partida</item>
+        <item quantity="other">%1$d partidas</item>
+    </plurals>
+    <string name="prefs_board_theme">Tema do tabuleiro</string>
 </resources>

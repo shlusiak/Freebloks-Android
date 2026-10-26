@@ -181,4 +181,17 @@
     <string name="advanced">Avancé</string>
     <string name="prefs_rules">Afficher les règles&#8230;</string>
     <string name="prefs_rules_long">Montrez les règles du jeu</string>
+    <string name="clear_statistics_question">Êtes-vous sûr de vouloir effacer toutes les statistiques&#160;?</string>
+    <string name="prefs_clear_statistics_long">Remettre à zéro toutes les statistiques</string>
+    <string name="quantities">Nombre de pièces</string>
+    <string name="monomino">Monominos</string>
+    <string name="domino">Dominos</string>
+    <string name="tromino">Triominos</string>
+    <string name="tetromino">Tétrominos</string>
+    <string name="pentomino">Pentominos</string>
+    <plurals name="games">
+        <item quantity="one">%1$d partie</item>
+        <item quantity="other">%1$d parties</item>
+    </plurals>
+    <string name="prefs_board_theme">Thème du plateau</string>
 </resources>

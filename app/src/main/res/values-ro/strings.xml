@@ -211,4 +211,12 @@
 
     <string name="rules_duo_1">Blokus Duo se joacă cu doi jucători, pe o tablă mult mai mică, însă cu aceleaşi piese ca Blokus Clasic. Cele două pătrăţele iniţiale se plasează mai aproape de centru.</string>
     <string name="rules_junior_1">Blokus Junior se adresează copiilor. La fel ca Blokus Duo, se joacă cu doi jucători pe o tablă de 14×14, însă se utilizează doar o parte din piese, şi anume acelea cu o formă mai simplă. Există 12 piese unice, iar fiecare jucător primeşte câte două din fiecare fel.</string>
+    <string name="clear_statistics_question">Eşti sigur că vrei să ştergi toate statisticile?</string>
+    <string name="prefs_clear_statistics_long">Resetează toate statisticile</string>
+    <string name="quantities">Număr de piese</string>
+    <plurals name="games">
+        <item quantity="one">%1$d joc</item>
+        <item quantity="few">%1$d jocuri</item>
+        <item quantity="other">%1$d de jocuri</item>
+    </plurals>
 </resources>

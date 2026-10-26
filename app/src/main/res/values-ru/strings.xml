@@ -170,4 +170,24 @@
     <string name="disconnect">Отключить</string>
     <string name="prefs_rules">Показать правила&#8230;</string>
     <string name="prefs_rules_long">Покажи правила игры</string>
+    <string name="clear_statistics_question">Вы уверены, что хотите удалить всю статистику?</string>
+    <string name="prefs_clear_statistics_long">Сбросить всю статистику</string>
+    <string name="quantities">Количество фигурок</string>
+    <string name="monomino">Мономино</string>
+    <string name="domino">Домино</string>
+    <string name="tromino">Тримино</string>
+    <string name="tetromino">Тетромино</string>
+    <string name="pentomino">Пентамино</string>
+    <plurals name="games">
+        <item quantity="one">%1$d игра</item>
+        <item quantity="few">%1$d игры</item>
+        <item quantity="many">%1$d игр</item>
+        <item quantity="other">%1$d игры</item>
+    </plurals>
+    <string-array name="prefs_animations_labels">
+        <item>Выкл.</item>
+        <item>Сниженная (30 fps)</item>
+        <item>Полная (60 fps)</item>
+    </string-array>
+    <string name="prefs_board_theme">Тема доски</string>
 </resources>

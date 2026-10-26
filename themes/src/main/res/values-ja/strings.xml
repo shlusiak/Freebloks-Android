@@ -10,4 +10,9 @@
     <string name="theme_velvet">ベルベット</string>
     <string name="theme_carpet">カーペット</string>
     <string name="theme_grass">草原</string>
+    <string name="theme_green">緑</string>
+    <string name="theme_white">白</string>
+    <string name="theme_grey">ライトグレー</string>
+    <string name="theme_marble">大理石</string>
+    <string name="theme_granite">御影石</string>
 </resources>

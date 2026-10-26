@@ -10,4 +10,9 @@
     <string name="theme_velvet">Velours</string>
     <string name="theme_carpet">Tapis</string>
     <string name="theme_grass">Pelouse</string>
+    <string name="theme_green">Vert</string>
+    <string name="theme_white">Blanc</string>
+    <string name="theme_grey">Gris clair</string>
+    <string name="theme_marble">Marbre</string>
+    <string name="theme_granite">Granit</string>
 </resources>

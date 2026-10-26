@@ -160,4 +160,31 @@
     <string name="google_play_games_leaderboard_long">Mostrar la tabla de clasificación global</string>
     <string name="google_play_games_achievements">Logros</string>
     <string name="google_play_games_achievements_long">Mostrar logros obtenidos</string>
+    <string name="clear_statistics_question">¿Estás seguro de que deseas eliminar todas las estadísticas?</string>
+    <string name="prefs_clear_statistics_long">Eliminar todas las estadísticas</string>
+    <string name="quantities">Cantidad de fichas</string>
+    <string name="monomino">Monominós</string>
+    <string name="domino">Dominós</string>
+    <string name="tromino">Triominós</string>
+    <string name="tetromino">Tetrominós</string>
+    <string name="pentomino">Pentominós</string>
+    <plurals name="games">
+        <item quantity="one">%1$d partida</item>
+        <item quantity="other">%1$d partidas</item>
+    </plurals>
+    <string-array name="prefs_animations_labels">
+        <item>Desactivadas</item>
+        <item>Reducidas (30 fps)</item>
+        <item>Completas (60 fps)</item>
+    </string-array>
+    <string name="prefs_board_theme">Tema del tablero</string>
+    <string name="statistics_label_games_played">Partidas jugadas</string>
+    <string name="statistics_label_good_games">Buenas (+15)</string>
+    <string name="statistics_label_perfect_games">Perfectas (+20)</string>
+    <string name="statistics_label_1st">1.er puesto</string>
+    <string name="statistics_label_2nd">2.º puesto</string>
+    <string name="statistics_label_3rd">3.er puesto</string>
+    <string name="statistics_label_4th">4.º puesto</string>
+    <string name="statistics_label_stones_used">Fichas usadas</string>
+    <string name="statistics_label_points_total">Total de puntos</string>
 </resources>

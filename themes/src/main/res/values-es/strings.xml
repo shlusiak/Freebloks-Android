@@ -7,7 +7,12 @@
     <string name="theme_wood">Madera</string>
     <string name="theme_bricks">Ladrillos</string>
     <string name="theme_metal">Metal</string>
-    <string name="theme_velvet">Velvet</string>
-    <string name="theme_carpet">Carpet</string>
-    <string name="theme_grass">Grass</string>
+    <string name="theme_velvet">Terciopelo</string>
+    <string name="theme_carpet">Alfombra</string>
+    <string name="theme_grass">Césped</string>
+    <string name="theme_green">Verde</string>
+    <string name="theme_white">Blanco</string>
+    <string name="theme_grey">Gris claro</string>
+    <string name="theme_marble">Mármol</string>
+    <string name="theme_granite">Granito</string>
 </resources>

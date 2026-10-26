@@ -197,7 +197,7 @@
     <string name="prefs_player_name_default">[默认]</string>
     <string name="prefs_background_theme">背景主題</string>
     <string name="prefs_board_theme">棋盤主題</string>
-    <string name="prefs_statistics">Statistics</string>
+    <string name="prefs_statistics">統計資料</string>
     <string name="prefs_statistics_long">顯示游戏統計</string>
 
     <string name="rules_title">Blokus 玩法說明</string>

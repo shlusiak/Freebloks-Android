@@ -6,8 +6,13 @@
     <string name="theme_striped_cloth">В клеточку</string>
     <string name="theme_wood">Дерево</string>
     <string name="theme_bricks">Кирпич</string>
-    <string name="theme_metal">Metal</string>
-    <string name="theme_velvet">Velvet</string>
-    <string name="theme_carpet">Carpet</string>
-    <string name="theme_grass">Grass</string>
+    <string name="theme_metal">Металл</string>
+    <string name="theme_velvet">Бархат</string>
+    <string name="theme_carpet">Ковёр</string>
+    <string name="theme_grass">Трава</string>
+    <string name="theme_green">Зелёная</string>
+    <string name="theme_white">Белая</string>
+    <string name="theme_grey">Светло-серая</string>
+    <string name="theme_marble">Мрамор</string>
+    <string name="theme_granite">Гранит</string>
 </resources>

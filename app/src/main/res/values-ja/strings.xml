@@ -200,4 +200,12 @@
 
     <string name="rules_duo_1">Freebloksデュオは2人専用で、より小さなボードを使用しますが、使用するピースはクラシックと同じです。開始地点は中央寄りに配置されます。</string>
     <string name="rules_junior_1">Freebloksジュニアは小さな子ども向けです。デュオと同様、14×14のボードで2人用ですが、より簡単な形状のピースを一部だけ使用します。全部で12種類のピースがあり、各プレイヤーはそれぞれ2つずつ持ちます。</string>
+    <string name="clear_statistics_question">すべての状態を消去してもよろしいですか?</string>
+    <string name="prefs_clear_statistics_long">すべての状態をリセット</string>
+    <string name="quantities">ストーン数</string>
+    <string name="monomino">モノミノ</string>
+    <string name="domino">ドミノ</string>
+    <string name="tromino">トロミノ</string>
+    <string name="tetromino">テトロミノ</string>
+    <string name="pentomino">ペントミノ</string>
 </resources>
