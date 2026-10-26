@@ -1,9 +1,12 @@
 package de.saschahlusiak.freebloks.theme
 
 import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import de.saschahlusiak.freebloks.theme.FeedbackType.*
 
-class DefaultSounds(context: Context): BaseSounds(context) {
+class DefaultSounds(context: Context) : BaseSounds(context) {
     override val soundResources: Collection<Int>
         get() = listOf(
             R.raw.click1,
@@ -21,7 +24,7 @@ class DefaultSounds(context: Context): BaseSounds(context) {
             StoneHasBeenSet -> {
                 play(R.raw.click1, volume, speed)
 
-                vibrate(VIBRATE_SET_STONE)
+                vibrate(vibrationClick)
             }
 
             StoneBounce -> play(R.raw.click1, volume, speed)
@@ -36,13 +39,22 @@ class DefaultSounds(context: Context): BaseSounds(context) {
 
                 // only vibrate if sounds are off, otherwise it is too much
                 if (!soundsEnabled)
-                    vibrate(VIBRATE_STONE_SNAP)
+                    vibrate(vibrationTick)
             }
         }
     }
 
     companion object {
-        private const val VIBRATE_SET_STONE = 65L
-        private const val VIBRATE_STONE_SNAP = 40L
+        private val vibrationTick = if (Build.VERSION.SDK_INT >= 29) {
+            VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
+        } else {
+            VibrationEffect.createOneShot(40L, DEFAULT_AMPLITUDE)
+        }
+
+        private val vibrationClick = if (Build.VERSION.SDK_INT >= 29) {
+            VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+        } else {
+            VibrationEffect.createOneShot(65L, DEFAULT_AMPLITUDE)
+        }
     }
 }
