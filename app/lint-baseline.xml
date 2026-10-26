@@ -1,216 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 8.12.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.2)" variant="all" version="8.12.2">
+<issues format="6" by="lint 9.4.1" type="baseline" client="gradle" dependencies="false" name="AGP (9.4.1)" variant="all" version="9.4.1">
 
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;quantities&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;quantities&quot;>Quantities&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="34"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;monomino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;monomino&quot;>Monominos&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="35"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;domino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;domino&quot;>Dominos&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="36"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;tromino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;tromino&quot;>Trominos&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="37"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;tetromino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;tetromino&quot;>Tetrominos&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="38"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;pentomino&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;pentomino&quot;>Pentominos&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="39"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;prefs_clear_statistics_long&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;prefs_clear_statistics_long&quot;>Reset all statistics&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="59"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;clear_statistics_question&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;ja&quot; (Japanese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;clear_statistics_question&quot;>Are you sure you want to clear all statistics?&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="60"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_games_played&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_games_played&quot;>Games played&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="62"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_good_games&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_good_games&quot;>Good (+15)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="63"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_perfect_games&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_perfect_games&quot;>Perfect (+20)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="64"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_1st&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_1st&quot;>1st&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="65"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_2nd&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_2nd&quot;>2nd&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="66"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_3rd&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_3rd&quot;>3rd&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="67"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_4th&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_4th&quot;>4th&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="68"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_stones_used&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_stones_used&quot;>Stones used&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="69"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;statistics_label_points_total&quot; is not translated in &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;statistics_label_points_total&quot;>Points total&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="70"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;games&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;ro&quot; (Romanian), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;plurals name=&quot;games&quot;>"
-        errorLine2="             ~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="72"
-            column="14"/>
-    </issue>
-
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;prefs_board_theme&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;prefs_board_theme&quot;>Board theme&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="211"
-            column="13"/>
-    </issue>
 
     <issue
         id="MissingTranslation"
@@ -219,18 +9,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="218"
+            line="211"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
         message="&quot;rules_youtube&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;fr&quot; (French), &quot;es&quot; (Spanish)"
-        errorLine1="    &lt;string name=&quot;rules_youtube&quot;>Watch How-To Video&lt;/string>"
+        errorLine1="    &lt;string name=&quot;rules_youtube&quot;>Watch how-to video&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="219"
+            line="212"
             column="13"/>
     </issue>
 
@@ -241,7 +31,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="220"
+            line="213"
             column="13"/>
     </issue>
 
@@ -252,7 +42,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="221"
+            line="214"
             column="13"/>
     </issue>
 
@@ -263,7 +53,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="222"
+            line="215"
             column="13"/>
     </issue>
 
@@ -274,7 +64,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="223"
+            line="216"
             column="13"/>
     </issue>
 
@@ -285,7 +75,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="224"
+            line="217"
             column="13"/>
     </issue>
 
@@ -296,7 +86,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="225"
+            line="218"
             column="13"/>
     </issue>
 
@@ -307,7 +97,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="226"
+            line="219"
             column="13"/>
     </issue>
 
@@ -318,7 +108,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="227"
+            line="220"
             column="13"/>
     </issue>
 
@@ -329,7 +119,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="228"
+            line="221"
             column="13"/>
     </issue>
 
@@ -340,7 +130,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="229"
+            line="222"
             column="13"/>
     </issue>
 
@@ -351,7 +141,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="230"
+            line="223"
             column="13"/>
     </issue>
 
@@ -362,7 +152,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="231"
+            line="224"
             column="13"/>
     </issue>
 
@@ -373,7 +163,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="232"
+            line="225"
             column="13"/>
     </issue>
 
@@ -384,7 +174,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="234"
+            line="227"
             column="13"/>
     </issue>
 
@@ -395,7 +185,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="235"
+            line="228"
             column="13"/>
     </issue>
 
@@ -406,7 +196,7 @@
         errorLine2="                                ~~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
-            line="149"
+            line="148"
             column="33"/>
     </issue>
 
@@ -545,7 +335,7 @@
     <issue
         id="UnusedResources"
         message="The resource `R.string.custom_game` appears to be unused"
-        errorLine1="    &lt;string name=&quot;custom_game&quot;>Custom Game&lt;/string>"
+        errorLine1="    &lt;string name=&quot;custom_game&quot;>Custom game&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -582,7 +372,7 @@
         errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="89"
+            line="87"
             column="14"/>
     </issue>
 
@@ -593,7 +383,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="94"
+            line="92"
             column="13"/>
     </issue>
 
@@ -604,7 +394,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="100"
+            line="98"
             column="13"/>
     </issue>
 
@@ -615,7 +405,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="165"
+            line="163"
             column="13"/>
     </issue>
 
@@ -626,7 +416,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="177"
+            line="175"
             column="13"/>
     </issue>
 
@@ -637,13 +427,13 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="178"
+            line="176"
             column="13"/>
     </issue>
 
     <issue
         id="IconDensities"
-        message="Missing the following drawables in `drawable-hdpi`: ic_preferences_about.webp, ic_preferences_coffee.webp, ic_preferences_display.webp, ic_preferences_interface.webp, ic_preferences_misc.webp... (4 more)">
+        message="Missing the following drawables in `drawable-hdpi`: ic_star.webp, image_ribbon.webp, logo_paypal.webp">
         <location
             file="src/main/res/drawable-hdpi"/>
     </issue>
@@ -657,7 +447,7 @@
 
     <issue
         id="IconDensities"
-        message="Missing the following drawables in `drawable-xxhdpi`: ic_preferences_about.webp, ic_preferences_coffee.webp, ic_preferences_display.webp, ic_preferences_interface.webp, ic_preferences_misc.webp... (6 more)">
+        message="Missing the following drawables in `drawable-xxhdpi`: image_ribbon.webp, rules_1.webp, rules_2.webp, rules_3.webp, rules_4.webp">
         <location
             file="src/main/res/drawable-xxhdpi"/>
     </issue>
