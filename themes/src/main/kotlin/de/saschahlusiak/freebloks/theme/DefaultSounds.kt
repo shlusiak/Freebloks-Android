@@ -43,18 +43,4 @@ class DefaultSounds(context: Context) : BaseSounds(context) {
             }
         }
     }
-
-    companion object {
-        private val vibrationTick = if (Build.VERSION.SDK_INT >= 29) {
-            VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
-        } else {
-            VibrationEffect.createOneShot(40L, DEFAULT_AMPLITUDE)
-        }
-
-        private val vibrationClick = if (Build.VERSION.SDK_INT >= 29) {
-            VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
-        } else {
-            VibrationEffect.createOneShot(65L, DEFAULT_AMPLITUDE)
-        }
-    }
 }

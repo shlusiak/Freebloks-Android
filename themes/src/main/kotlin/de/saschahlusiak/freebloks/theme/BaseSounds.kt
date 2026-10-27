@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Build
 import android.os.VibrationEffect
+import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
@@ -87,5 +88,17 @@ abstract class BaseSounds(context: Context) : FeedbackProvider {
     companion object {
         private val tag = BaseSounds::class.java.simpleName
         private const val GLOBAL_VOLUME = 0.5f
+
+        internal val vibrationTick = if (Build.VERSION.SDK_INT >= 29) {
+            VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
+        } else {
+            VibrationEffect.createOneShot(40L, DEFAULT_AMPLITUDE)
+        }
+
+        internal val vibrationClick = if (Build.VERSION.SDK_INT >= 29) {
+            VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+        } else {
+            VibrationEffect.createOneShot(65L, DEFAULT_AMPLITUDE)
+        }
     }
 }

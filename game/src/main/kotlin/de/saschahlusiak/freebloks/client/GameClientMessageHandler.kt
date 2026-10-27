@@ -104,7 +104,7 @@ class GameClientMessageHandler(private val game: Game): MessageHandler {
 
         when(message) {
             is MessageGrantPlayer -> {
-                assert(!game.isStarted) { "received MSG_REVOKE_PLAYER but game is running" }
+                assert(!game.isStarted) { "received MSG_GRANT_PLAYER but game is running" }
                 game.setPlayerType(message.player, Game.PLAYER_LOCAL)
             }
 
