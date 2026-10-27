@@ -497,21 +497,6 @@ class FreebloksActivityViewModel @Inject constructor(
         // we start a new local game without any player name, and it allows the
         // lobby to set a new name in the preferences before game start.
         reloadPreferences()
-
-        // Send analytics event
-        val lastStatus = lastStatus.value ?: return
-
-        val client = client ?: return
-        val game = client.game
-
-        val b = Bundle().apply {
-            putString("server", client.config.server ?: "")
-            putString("game_mode", game.gameMode.toString())
-            putInt("w", game.board.width)
-            putInt("h", game.board.height)
-            putInt("clients", lastStatus.clients)
-            putInt("players", lastStatus.player)
-        }
     }
 
     @UiThread
