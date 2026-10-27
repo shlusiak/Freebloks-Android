@@ -60,6 +60,7 @@ import java.io.ByteArrayOutputStream
 import java.net.NetworkInterface
 import java.net.SocketException
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 enum class ConnectionStatus {
     Disconnected, Connecting, Connected, Failed
@@ -266,7 +267,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val client = client ?: return
         Log.d(tag, "startConnectingClient")
 
-        withTimeoutOrNull(200) {
+        withTimeoutOrNull(200.milliseconds) {
             connectJob?.cancelAndJoin()
         }
 
@@ -357,7 +358,7 @@ class FreebloksActivityViewModel @Inject constructor(
         val client = client ?: return@launch
         val config = client.config
 
-        withTimeoutOrNull(200) {
+        withTimeoutOrNull(200.milliseconds) {
             connectJob?.cancelAndJoin()
         }
 
