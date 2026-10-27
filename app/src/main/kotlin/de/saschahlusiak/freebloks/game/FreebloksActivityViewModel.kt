@@ -209,6 +209,9 @@ class FreebloksActivityViewModel @Inject constructor(
         val game = client.game
 
         if (!game.isStarted || game.isFinished) return
+        // there is no current player between MSG_START_GAME or a local setStone() and the next MSG_CURRENT_PLAYER;
+        // such a state can not be resumed
+        if (game.currentPlayer < 0) return
 
         MainScope().launch(Dispatchers.IO) {
             val p = Parcel.obtain()

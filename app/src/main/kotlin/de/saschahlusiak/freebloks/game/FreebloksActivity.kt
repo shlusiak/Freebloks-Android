@@ -328,7 +328,7 @@ class FreebloksActivity : AppCompatActivity(), GameEventObserver, IntroDelegate,
         client?.run {
             val game = client.game
             synchronized(client) {
-                if (game.isStarted && !game.isFinished) {
+                if (game.isStarted && !game.isFinished && game.currentPlayer >= 0) {
                     outState.putSerializable("game", game)
                 }
             }
