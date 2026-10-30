@@ -1,0 +1,2 @@
+* Fix local network games in Android 17
+* Add back send button in in-game chat
