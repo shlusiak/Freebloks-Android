@@ -107,7 +107,7 @@ fun LobbyScreen(
 
             ChatTextField(
                 message = message,
-                inlineSend = false,
+                inlineSend = isRunning,
                 modifier = Modifier.focusRequester(focusRequester),
                 onChat = onChat
             )
@@ -169,7 +169,7 @@ internal val previewStatus = MessageServerStatus(
 private fun Preview() {
     AppTheme {
         LobbyScreen(
-            isRunning = false,
+            isRunning = true,
             chatHistory = chatHistory,
             status = previewStatus,
             players = listOf(
