@@ -4,7 +4,7 @@ targetSdk = "37"
 minSdk = "26"
 ndkVersion = "30.0.16248370"
 
-agp = "9.4.1"
+agp = "9.5.0"
 coil-compose = "3.6.3"
 compose-bom = "2026.09.00"
 compose-runtime = "1.12.1"
