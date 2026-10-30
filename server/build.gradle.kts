@@ -3,11 +3,10 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    ndkVersion = libs.versions.ndkVersion.get()
-
     defaultConfig {
+        compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
+        ndkVersion = libs.versions.ndkVersion.get()
     }
 
     externalNativeBuild {

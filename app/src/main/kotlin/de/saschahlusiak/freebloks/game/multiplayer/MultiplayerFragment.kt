@@ -137,6 +137,10 @@ class MultiplayerFragment : DialogFragment(), OnBluetoothConnectedListener {
             return null
         }
 
+        if (Build.VERSION.SDK_INT >= 37) {
+            requestBluetoothPermission.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
+        }
+
         if (!adapter.isEnabled) return null
 
         return BluetoothServerThread(adapter, crashReporter, this).also {
